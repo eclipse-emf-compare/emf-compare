@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Doc Plug-in for EMF Comapre
+Bundle-SymbolicName: org.eclipse.emf.compare.doc; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
