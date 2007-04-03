@@ -262,13 +262,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.compare.diff.generic.merge"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.compare.match"
          download-size="0"
          install-size="0"
