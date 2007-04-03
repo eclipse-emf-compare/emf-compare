@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.emf.compare.diff/src"
+    editDirectory="/org.eclipse.emf.compare.diff.edit/src" editorDirectory="/org.eclipse.emf.compare.diff.editor/src"
+    modelPluginID="org.eclipse.emf.compare.diff" modelName="Diff" editPluginClass="org.eclipse.emf.compare.diff.provider.DiffEditPlugin"
+    editorPluginClass="org.eclipse.emf.compare.diff.presentation.DiffEditorPlugin"
+    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" usedGenPackages="../../../plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>diff.ecore</foreignModel>
+  <genPackages prefix="Diff" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
+      ecorePackage="diff.ecore#/">
+    <genClasses ecoreClass="diff.ecore#//DiffModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/right"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/ownedElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//AttributeChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/attribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/leftElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/rightElement"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//ReferenceChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceChange/reference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceChange/rightElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceChange/leftElement"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//ModelElementChange"/>
+    <genClasses ecoreClass="diff.ecore#//AddModelElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddModelElement/leftParent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddModelElement/rightElement"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//RemoveModelElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveModelElement/rightParent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveModelElement/leftElement"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//UpdateModelElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateModelElement/rightElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateModelElement/leftElement"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//MoveModelElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//MoveModelElement/leftParent"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//MoveModelElement/rightParent"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//AddAttribute"/>
+    <genClasses ecoreClass="diff.ecore#//RemoveAttribute"/>
+    <genClasses ecoreClass="diff.ecore#//UpdateAttribute"/>
+    <genClasses ecoreClass="diff.ecore#//AddReferenceValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddReferenceValue/leftAddedTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddReferenceValue/rightAddedTarget"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//RemoveReferenceValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveReferenceValue/leftRemovedTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveReferenceValue/rightRemovedTarget"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//UpdateReference"/>
+  </genPackages>
+</genmodel:GenModel>
