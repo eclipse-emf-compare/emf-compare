@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.UmlCompare"
+            nameFilter="*.uml"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.uml.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.uml.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.uml.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.uml.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.uml.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.ecore"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLatestFromRepositoryAction"
+               label="Latest from repository"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithLatestFromRepository"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- added for XMI files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.xmi"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of XMI contribution -->
+       <!-- added for Library files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.library"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of Library contribution -->
+        <!-- added for UML2 files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.uml2"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of uml2 contribution -->
+        <!-- added for uml13 files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.uml13"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of uml13 contribution -->
+        <!-- added for uml14 files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.uml14"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of uml14 contribution -->
+        <!-- added for cinematic files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.cinematic"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of cinematic contribution -->
+        <!-- added for entity files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.entity"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of entity contribution -->
+      
+        <!-- added for bp files -->
+          <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.EcoreCompare"
+            nameFilter="*.bp"
+            objectClass="org.eclipse.core.resources.IFile">
+            <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithEachOtherAction"
+               label="Each other"
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithEachOther"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.CompareWithLocalHistoryAction"
+               label="Local history..."
+               menubarPath="compareWithMenu/compareWithGroup"
+               overrideActionId="compareWithHistory"/>
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ExplicitThreeWayCompareAction"
+               enablesFor="3"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ExplicitThreeWayCompareAction"
+               label="Ancestor enabled"
+               menubarPath="compareWithMenu/compareWithGroup"/>   
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.ReplaceWithHistoryAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.ReplaceWithHistoryAction"
+               label="Local History..."
+               menubarPath="replaceWithMenu/replaceWithGroup"
+               overrideActionId="replaceFromHistory"/>
+           <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.AutomaticMergeAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.legacy.actions.ecore.AutomaticMergeAction"
+               label="Automatic Merge"
+               menuBarPath="compareWithMenu/compareWithGroup"
+               menubarPath="com.intalio.uml.compare.MergeMenu/mergeGroup"/>
+      </objectContribution>
+      <!-- end of bp contribution -->
+      
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.legacy.actions.menus"
+            objectClass="org.eclipse.core.resources.IResource">
+            
+            <enablement>
+            
+    			  <adapt type="org.eclipse.core.resources.IResource">
+    			  <or>
+              
+				<test
+                    property="org.eclipse.core.resources.extension"
+                    value="uml"/>
+                    <test
+                    property="org.eclipse.core.resources.extension"
+                    value="ecore"/>
+                    </or>
+           </adapt>
+         
+         </enablement>
+            <menu
+                  id="com.intalio.uml.compare.MergeMenu"
+                  label="Merge"
+                  path="additions">
+               <separator name="mergeGroup"/>
+            </menu>
+        </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.ui.eachOtherAsModel"
+            nameFilter="*"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.ui.legacy.actions.CompareWithEachOtherAction"
+               enablesFor="2"
+               id="org.eclipse.emf.compare.ui.action1"
+               label="Each Other as Models"
+               menubarPath="compareWithMenu/compareWithGroup"
+               tooltip="Compare two files as EMF models"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.themes">
+      <colorDefinition
+            label="Comparison color for incoming"
+            categoryId="org.eclipse.compare.contentmergeviewer.UMLContentMergeViewer"
+            value="COLOR_BLUE"
+            id="INCOMING_COLOR">
+         <description>
+            Comparison color for incoming items
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            label="Comparison color for outgoing"
+            categoryId="org.eclipse.compare.contentmergeviewer.UMLContentMergeViewer"
+            value="COLOR_BLACK"
+            id="OUTGOING_COLOR">
+         <description>
+            Added elements
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            label="Conflict"
+            categoryId="org.eclipse.compare.contentmergeviewer.UMLContentMergeViewer"
+            value="COLOR_RED"
+            id="CONFLICTING_COLOR">
+         <description>
+            
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            label="Resolved"
+            categoryId="org.eclipse.compare.contentmergeviewer.UMLContentMergeViewer"
+            value="COLOR_GREEN"
+            id="RESOLVED_COLOR">
+         <description>
+            Resolved
+         </description>
+      </colorDefinition>
+  </extension>
+
+</plugin>
