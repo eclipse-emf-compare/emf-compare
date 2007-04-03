@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.emf.compare.tests.createMatches"
+            objectClass="org.eclipse.core.resources.IFolder">
+         <action
+               class="org.eclipse.emf.compare.match.statistic.test.CreateMatchesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.tests.createMatchesAction"
+               label="Create Match unit-test results"
+               menubarPath="compareWithMenu/compareWithGroup"/>
+      </objectContribution>
+  </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.AEngine"
+            fileExtension="a"
+            priority="low"/>
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.BEngine"
+            fileExtension="b"
+            priority="low"/>
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.CHighEngine"
+            fileExtension="c"
+            priority="high"/>
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.CLowEngine"
+            fileExtension="c"
+            priority="low"/>
+            <!--
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.GenericHighestEngine"
+            fileExtension="*"
+            priority="highest"/>
+            -->
+   </extension>
+</plugin>

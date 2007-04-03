@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<match:MatchModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0">
+  <matchedElements xsi:type="match:Match2Elements" similarity="0.8">
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@elementType"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@elementType"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@viewmap"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@viewmap"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@viewmap/@attributes.0"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@viewmap/@attributes.0"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@labels.0/@viewmap"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@labels.0/@viewmap"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@labels.0/@modelFacet"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@labels.0/@modelFacet"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0/@labels.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0/@labels.0"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.0"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.0"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer/@initializers.0"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer/@initializers.0"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1/@labelModelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1/@labelModelFacet"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.1"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.1"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@viewmap/@attributes.0"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@viewmap/@attributes.0"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@labels.0/@viewmap"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@labels.0/@viewmap"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@labels.0/@modelFacet"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@labels.0/@modelFacet"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2/@labels.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2/@labels.0"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@childNodes.2"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@childNodes.2"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@viewmap/@attributes.0"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@viewmap/@attributes.0"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@labels.0/@viewmap"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@labels.0/@viewmap"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@labels.0/@modelFacet"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@labels.0/@modelFacet"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0/@labels.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0/@labels.0"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@topLevelNodes.0"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@topLevelNodes.0"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.0/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.0/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.0/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.0/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.0/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.0/@modelFacet"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.0"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.0"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementSelector"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementSelector"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementInitializer/@initializers.0"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementInitializer/@initializers.0"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementInitializer"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@modelFacet/@modelElementInitializer"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@labels.0/@viewmap/@attributes.0"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@labels.0/@viewmap/@attributes.0"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@labels.0/@viewmap"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@labels.0/@viewmap"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.8">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@labels.0/@modelFacet"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@labels.0/@modelFacet"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1/@labels.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1/@labels.0"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.1"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.1"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@elementType"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@elementType"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@viewmap"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementSelector"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementSelector"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementInitializer/@initializers.0"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementInitializer/@initializers.0"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementInitializer"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@modelFacet/@modelElementInitializer"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@modelFacet"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@modelFacet"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@labels.0/@viewmap/@attributes.0"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@labels.0/@viewmap/@attributes.0"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@labels.0/@viewmap"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@labels.0/@viewmap"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="0.6000000000000001">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@labels.0/@modelFacet"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@labels.0/@modelFacet"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2/@labels.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2/@labels.0"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@links.2"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@links.2"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.0/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.0/@viewmap"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.0"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.0"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.1/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.1/@viewmap"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.1"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.1"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.2/@viewmap"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.2/@viewmap"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@compartments.2"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@compartments.2"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.0/@entries.0"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.0/@entries.0"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.0/@entries.1"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.0/@entries.1"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.0/@entries.2"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.0/@entries.2"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.0"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.0"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.1/@entries.0"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.1/@entries.0"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.1/@entries.1"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.1/@entries.1"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.1/@entries.2"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.1/@entries.2"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette/@groups.1"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette/@groups.1"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram/@palette"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram/@palette"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@diagram"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@diagram"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@plugin"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@plugin"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@editor"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@editor"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@expressionProviders/@providers.0"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@expressionProviders/@providers.0"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#//@expressionProviders"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#//@expressionProviders"/>
+    </subMatchElements>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.bkp.gmfgen#/"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/gmfgen/entity.gmfgen#/"/>
+  </matchedElements>
+</match:MatchModel>

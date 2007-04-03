@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:DiffModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0">
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//ToolGroupItem"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//Separator"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//ToolGroup"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//GenElementInitializer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//GenFeatureSeqInitializer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#/"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//GenFeatureValueSpec"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage/GenNotationElementTarget"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage/GenMeasurable"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage/GenExpressionProviderContainer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage/GenExpressionProviderBase"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/EditorCandies"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/GenNode"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/LinkModelFacet"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:RemoveModelElement">
+    <rightParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1/aNewPackage2/aNewPackage3"/>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/aNewPackage2/aNewPackage3/GenMetricRule"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#/"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//GenNotationElementTarget"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#/"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//GenMeasurable"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#/"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//GenExpressionProviderContainer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#/"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//GenExpressionProviderBase"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/ToolGroupItem"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/Separator"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/ToolGroup"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/GenElementInitializer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/GenFeatureSeqInitializer"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage/GenFeatureValueSpec"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/aNewPackage2"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1/aNewPackage2/EditorCandies"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/aNewPackage2"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1/aNewPackage2/GenNode"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/aNewPackage2"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1/aNewPackage2/LinkModelFacet"/>
+  </ownedElements>
+  <ownedElements xsi:type="diff:AddModelElement">
+    <leftParent href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgen.ecore#//aNewPackage1/aNewPackage2"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/manyMoves/gmfgenMoves.ecore#//aNewPackage1/aNewPackage2/GenMetricRule"/>
+  </ownedElements>
+</diff:DiffModel>

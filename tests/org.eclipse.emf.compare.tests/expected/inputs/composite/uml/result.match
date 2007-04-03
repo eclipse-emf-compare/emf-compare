@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<match:MatchModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0">
+  <matchedElements xsi:type="match:Match2Elements" similarity="0.9896551724137932">
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.991304347826087">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
+            </subMatchElements>
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
+            </subMatchElements>
+            <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
+            <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0" leftElement="/" rightElement="/">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0" leftElement="//@upperValue" rightElement="//@upperValue"/>
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0" leftElement="//@lowerValue" rightElement="//@lowerValue"/>
+          </subMatchElements>
+          <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
+          <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
+        </subMatchElements>
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
+        <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
+      </subMatchElements>
+      <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
+      <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
+    </subMatchElements>
+    <leftElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
+    <rightElement href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
+  </matchedElements>
+  <unMatchedElements>
+    <element href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
+  </unMatchedElements>
+  <unMatchedElements>
+    <element href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+  </unMatchedElements>
+  <unMatchedElements>
+    <element href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
+  </unMatchedElements>
+  <unMatchedElements>
+    <element href="/org.eclipse.emf.compare.tests/inputs/composite/uml/mm2.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+  </unMatchedElements>
+</match:MatchModel>
