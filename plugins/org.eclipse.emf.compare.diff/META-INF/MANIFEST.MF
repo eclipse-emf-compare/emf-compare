@@ -8,6 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.diff.api,
+ org.eclipse.emf.compare.diff.generic,
  org.eclipse.emf.compare.diff.impl,
  org.eclipse.emf.compare.diff.service,
  org.eclipse.emf.compare.diff.util,

@@ -5,7 +5,7 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.1 2007/04/03 06:45:31 cbrun Exp $
+ $Id: plugin.xml,v 1.2 2007/04/03 07:05:53 cbrun Exp $
 -->
 
 <plugin>
@@ -18,6 +18,18 @@
        class = "org.eclipse.emf.compare.diff.DiffPackage"
        genModel = "model/diff.genmodel" /> 
   </extension>
+  <extension
+         point="org.eclipse.emf.compare.diff.engine">
+      <engine
+            engineClass="org.eclipse.emf.compare.diff.generic.DiffMaker"
+            priority="low"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.diff.mergeFactory">
+      <factory
+            class="org.eclipse.emf.compare.diff.generic.merge.impl.DefaultMergeFactory"
+            priority="low"/>
+   </extension>
 
 </plugin>
 
