@@ -5,7 +5,7 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.1 2007/04/03 06:49:31 cbrun Exp $
+ $Id: plugin.xml,v 1.2 2007/04/03 07:05:55 cbrun Exp $
 -->
 
 <plugin>
@@ -17,6 +17,14 @@
        class = "org.eclipse.emf.compare.match.MatchPackage"
        genModel = "model/match.genmodel" /> 
   </extension>
+  
+  <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <engine
+            engineClass="org.eclipse.emf.compare.match.statistic.DifferencesServices"
+            fileExtension="*"
+            priority="low"/>
+   </extension>
 
 </plugin>
 

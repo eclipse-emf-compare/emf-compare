@@ -10,9 +10,12 @@ Export-Package: org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.match.api,
  org.eclipse.emf.compare.match.impl,
  org.eclipse.emf.compare.match.service,
+ org.eclipse.emf.compare.match.statistic,
+ org.eclipse.emf.compare.match.statistic.similarity,
  org.eclipse.emf.compare.match.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
  org.eclipse.emf.compare
 Eclipse-LazyStart: true
 Bundle-Activator: org.eclipse.emf.compare.MatchPlugin
