@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.emf.compare.tests.diff.extension/src"
+    modelPluginID="org.eclipse.emf.compare.tests.diff.extension" modelName="Diff_extension"
+    importerID="org.eclipse.emf.importer.ecore" usedGenPackages="../../../plugin/org.eclipse.emf.compare.diff/model/diff.genmodel#//diff">
+  <foreignModel>diff_extension.ecore</foreignModel>
+  <genPackages prefix="Diff_extension" disposableProviderFactory="true" ecorePackage="diff_extension.ecore#/">
+    <genClasses ecoreClass="diff_extension.ecore#//RenameModelElement"/>
+    <genClasses ecoreClass="diff_extension.ecore#//MoveModelElement"/>
+  </genPackages>
+</genmodel:GenModel>

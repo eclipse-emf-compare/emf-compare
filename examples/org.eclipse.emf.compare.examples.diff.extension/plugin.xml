@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id: plugin.xml,v 1.1 2007/04/03 06:36:44 cbrun Exp $
+-->
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.eclipse.org/emf/compare/sample/diff_extension/1.0" 
+       class = "diff_extension.Diff_extensionPackage"
+       genModel = "model/diff_extension.genmodel" /> 
+  </extension>
+
+</plugin>
+
