@@ -17,7 +17,7 @@ public class CompareEngineUIPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	/**
-	 * 
+	 * the plugin ID
 	 */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ui.legacy";
 

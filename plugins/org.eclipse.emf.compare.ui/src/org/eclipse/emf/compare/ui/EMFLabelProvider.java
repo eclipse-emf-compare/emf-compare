@@ -17,8 +17,17 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+/**
+ * Generic emf label provider
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class EMFLabelProvider extends AdapterFactoryLabelProvider {
-
+	/**
+	 * Initializer
+	 * 
+	 */
 	public EMFLabelProvider() {
 		super(EMFAdapterFactoryProvider.getAdapterFactory());
 	}

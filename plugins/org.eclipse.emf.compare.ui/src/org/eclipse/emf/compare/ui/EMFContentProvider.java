@@ -18,10 +18,20 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 
+/**
+ * Generic emf content provider
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class EMFContentProvider extends AdapterFactoryContentProvider {
 
 	private ResourceSet resourceSet;
 
+	/**
+	 * Initializer
+	 * 
+	 */
 	public EMFContentProvider() {
 		super(EMFAdapterFactoryProvider.getAdapterFactory());
 		this.resourceSet = new ResourceSetImpl();

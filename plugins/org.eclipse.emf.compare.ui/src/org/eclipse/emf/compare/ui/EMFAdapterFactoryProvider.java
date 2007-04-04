@@ -21,13 +21,17 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 
 /**
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public final class EMFAdapterFactoryProvider {
 
 	private static ComposedAdapterFactory adapterFactory;
 
+	/**
+	 * 
+	 * @return the default EMF factory list
+	 */
 	public final static List<AdapterFactory> createFactoryList() {
 		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
 		// this is my provider generated in the .Edit plugin for me. Replace
@@ -43,6 +47,10 @@ public final class EMFAdapterFactoryProvider {
 		return factories;
 	}
 
+	/**
+	 * 
+	 * @return the adapter factory
+	 */
 	public final static ComposedAdapterFactory getAdapterFactory() {
 		if (adapterFactory == null) {
 			adapterFactory = new ComposedAdapterFactory(createFactoryList());
