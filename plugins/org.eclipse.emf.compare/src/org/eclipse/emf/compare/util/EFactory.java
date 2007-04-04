@@ -194,7 +194,7 @@ public class EFactory {
 			try {
 				Class c = Class.forName(ETools.getEClassifierPath(feature
 						.getEType()));
-				Method m = c.getMethod("get", new Class[] { String.class });
+				Method m = c.getMethod("get", new Class[] { String.class }); //$NON-NLS-1$
 				arg = m.invoke(c, new Object[] { arg });
 				object.eSet(feature, arg);
 			} catch (Exception e) {
@@ -226,7 +226,7 @@ public class EFactory {
 			try {
 				Class c = loader.loadClass(ETools.getEClassifierPath(feature
 						.getEType()));
-				Method m = c.getMethod("get", new Class[] { String.class });
+				Method m = c.getMethod("get", new Class[] { String.class }); //$NON-NLS-1$
 				arg = m.invoke(c, new Object[] { arg });
 				object.eSet(feature, arg);
 			} catch (Exception e) {

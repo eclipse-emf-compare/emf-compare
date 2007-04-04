@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: EMFComparePlugin.java,v 1.1 2007/04/03 06:43:23 cbrun Exp $
+ * $Id: EMFComparePlugin.java,v 1.2 2007/04/04 06:51:46 cbrun Exp $
  */
 package org.eclipse.emf.compare;
 
@@ -27,8 +27,10 @@ import org.osgi.framework.BundleContext;
  */
 public class EMFComparePlugin extends Plugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare";
+	/**
+	 * The plugin ID
+	 */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
 
 	// The shared instance
 	private static EMFComparePlugin plugin;
@@ -65,7 +67,11 @@ public class EMFComparePlugin extends Plugin {
 	public static EMFComparePlugin getDefault() {
 		return plugin;
 	}
-	
+	/**
+	 * Trace an Exception in the error log
+	 * @param e : the exception
+	 * @param blocker : if it's 
+	 */
 	public void log(Exception e,boolean blocker)
 	{
 		if (e instanceof CoreException) {
@@ -90,7 +96,7 @@ public class EMFComparePlugin extends Plugin {
 	 */
 	public void log(String message, boolean blocker) {
 		int severity = (blocker) ? IStatus.ERROR : IStatus.WARNING;
-		log(new Status(severity, PLUGIN_ID, severity, ((message != null) ? message.trim().replaceFirst("\n", ";\n") : "Unknown EMF Compare problem"), null));
+		log(new Status(severity, PLUGIN_ID, severity, ((message != null) ? message.trim().replaceFirst("\n", ";\n") : "Unknown EMF Compare problem"), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
