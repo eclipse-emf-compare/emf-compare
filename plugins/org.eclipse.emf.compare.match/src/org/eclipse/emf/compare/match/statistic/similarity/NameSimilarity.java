@@ -155,6 +155,15 @@ public class NameSimilarity {
 		return result;
 	}
 
+	/**
+	 * Find the similar objects
+	 * 
+	 * @param data
+	 * @param search
+	 * @param threshold
+	 * @return a list with the similar objects
+	 * @throws FactoryException
+	 */
 	public static List findInList(List data, EObject search, double threshold)
 			throws FactoryException {
 		List result = new LinkedList();
@@ -183,7 +192,7 @@ public class NameSimilarity {
 	 * Return a list of String representing the object content.
 	 * 
 	 * @param current
-	 * @return
+	 * @return a list of String representing the object content.
 	 * @throws FactoryException
 	 */
 	public static Collection contentValueListWithName(EObject current)
@@ -201,12 +210,12 @@ public class NameSimilarity {
 				Object next = it.next();
 				if (next instanceof EObject) {
 					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name");
+					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
 					// get the feature name and the feature value
 					String value = EFactory
 							.eGetAsString(current, attributeName);
 					if (value != null && value.length() < 30)
-						result.add(attributeName + " : " + value);
+						result.add(attributeName + " : " + value);//$NON-NLS-1$
 				}
 			}
 
@@ -218,13 +227,13 @@ public class NameSimilarity {
 	 * Return a String representing the object value
 	 * 
 	 * @param current
-	 * @return
+	 * @return a String representing the object value
 	 * @throws FactoryException
 	 */
 	public static String contentValueWithName(EObject current)
 			throws FactoryException {
 		Collection values = contentValueListWithName(current);
-		String result = "";
+		String result = "";//$NON-NLS-1$
 		Iterator it = values.iterator();
 		while (it.hasNext())
 			result += (String) it.next();
@@ -235,12 +244,12 @@ public class NameSimilarity {
 	 * Return a string representations of all the features value
 	 * 
 	 * @param current
-	 * @return
+	 * @return a string representations of all the features value
 	 * @throws FactoryException
 	 */
 	public static String contentValue(EObject current) throws FactoryException {
 		EObject eclass = current.eClass();
-		String result = "";
+		String result = "";//$NON-NLS-1$
 		List eclassAttributes = new LinkedList();
 		if (eclass instanceof EClass)
 
@@ -256,13 +265,13 @@ public class NameSimilarity {
 				Object next = it.next();
 				if (next instanceof EObject) {
 					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name");
+					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
 					// get the feature name and the feature value
 					String value = EFactory
 							.eGetAsString(current, attributeName);
 					if (value != null && value.length() < 40)
 						result += EFactory.eGetAsString(current, attributeName)
-								+ " ";
+								+ " ";//$NON-NLS-1$
 				}
 			}
 
@@ -274,14 +283,14 @@ public class NameSimilarity {
 	 * find the property most similar to a name one on any object
 	 * 
 	 * @param current
-	 * @return
+	 * @return the property most similar to a name one on any object
 	 * @throws ENodeCastException
 	 * @throws FactoryException
 	 */
 	public static String findName(EObject current) throws FactoryException {
 
 		if (current == null)
-			return "";
+			return "";//$NON-NLS-1$
 
 		EAttribute nameFeature = findNameFeature(current);
 		if (nameFeature != null) {
@@ -291,9 +300,10 @@ public class NameSimilarity {
 			if (result != null)
 				return result;
 			else
-				return current.eClass().getName(); // TODOCBR, if the element as an
-											// attribute, pick one, else use the
-											// Class name
+				return current.eClass().getName(); // TODOCBR, if the element
+			// as an
+			// attribute, pick one, else use the
+			// Class name
 		} else {// eClass has no features, just keep the toString...
 			return current.eClass().getName();
 		}
@@ -304,7 +314,7 @@ public class NameSimilarity {
 	 * Return the feature which seems to be the name
 	 * 
 	 * @param current
-	 * @return
+	 * @return the feature which seems to be the name
 	 * @throws FactoryException
 	 */
 	public static EAttribute findNameFeature(EObject current)
@@ -327,11 +337,11 @@ public class NameSimilarity {
 				Object next = it.next();
 				if (next instanceof EObject) {
 					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name");
+					String attributeName = EFactory.eGetAsString(obj, "name"); //$NON-NLS-1$
 					// if the attributeName is more similar with "name" than
 					// the other one
-					if (nameSimilarityMetric(attributeName, "name") > max) {
-						max = nameSimilarityMetric(attributeName, "name");
+					if (nameSimilarityMetric(attributeName, "name") > max) {//$NON-NLS-1$
+						max = nameSimilarityMetric(attributeName, "name");//$NON-NLS-1$
 						bestFeature = (EAttribute) obj;
 					}
 
@@ -345,8 +355,14 @@ public class NameSimilarity {
 
 	private static double lastScore = 100;
 
-	private static String lastSearch = "";
+	private static String lastSearch = ""; //$NON-NLS-1$
 
+	/**
+	 * 
+	 * @param current
+	 * @param str
+	 * @return the most similar object not yet found
+	 */
 	public EObject findIncremental(EObject current, String str) {
 		if (!str.equals(lastSearch))
 			lastScore = 100;

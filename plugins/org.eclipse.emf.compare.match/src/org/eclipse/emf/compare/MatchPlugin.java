@@ -8,8 +8,10 @@ import org.osgi.framework.BundleContext;
  */
 public class MatchPlugin extends Plugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.match";
+	/**
+	 * The plugin ID
+	 */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.match"; //$NON-NLS-1$
 
 	// The shared instance
 	private static MatchPlugin plugin;

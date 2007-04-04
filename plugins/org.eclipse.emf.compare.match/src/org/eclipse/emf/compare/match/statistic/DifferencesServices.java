@@ -11,7 +11,6 @@
 
 package org.eclipse.emf.compare.match.statistic;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchFactory;
@@ -34,27 +32,23 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ETools;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * These services are usefull when one want to compare models
  * 
  * more precisely using the method modelDiff.
  * 
- * Known bugs and limitation: 1°- modeldiff only works if the two roots given
+ * Known bugs and limitation: 1ï¿½- modeldiff only works if the two roots given
  * are similar
  * 
  * @author www.obeo.fr
  * 
  */
 public class DifferencesServices implements MatchEngine {
-	public static double THRESHOLD = 0.96;
+	private static double THRESHOLD = 0.96;
 
-	public static double STRONGER_THRESHOLD = 0.96;
+	private static double STRONGER_THRESHOLD = 0.96;
 
 	/**
 	 * Strong strategy considers only ADD, REMOVE or CHANGE operations
@@ -181,6 +175,13 @@ public class DifferencesServices implements MatchEngine {
 		}
 	}
 
+	/**
+	 * 
+	 * @param obj1
+	 * @param obj2
+	 * @return an absolute comparison metric
+	 * @throws FactoryException
+	 */
 	public double absoluteMetric(EObject obj1, EObject obj2)
 
 	throws FactoryException {
@@ -205,7 +206,7 @@ public class DifferencesServices implements MatchEngine {
 	 *            left model element
 	 * @param right
 	 *            right model element
-	 * @return
+	 * @return true if both elements have the same serialization ID
 	 */
 	private boolean haveSameXmiId(EObject left, EObject right) {
 		if (left.eResource() instanceof XMLResource
@@ -224,7 +225,7 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @param obj1
 	 * @param obj2
-	 * @return
+	 * @return true if both elements have the same serialization ID
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
@@ -268,10 +269,9 @@ public class DifferencesServices implements MatchEngine {
 		} else {// STRONG STRATEGY
 			double nameSimilarity = nameSimilarity(obj1, obj2);
 			boolean hasSameUri = hasSameUri(obj1, obj2);
-			
+
 			if (nameSimilarity == 1 && hasSameUri)
 				return true;
-
 
 			double contentSimilarity = contentSimilarity(obj1, obj2);
 
@@ -302,32 +302,15 @@ public class DifferencesServices implements MatchEngine {
 		}
 	}
 
-
 	private boolean hasSameUri(EObject obj1, EObject obj2) {
 		return ETools.getURI(obj1).equals(ETools.getURI(obj2));
 	}
-
 
 	private HashMap EObjectToMapping = new HashMap();
 
 	private Collection stillToFindFromModel1 = new ArrayList();
 
 	private Collection stillToFindFromModel2 = new ArrayList();
-
-	public void save(EObject root, String path) throws IOException {
-		URI modelURI = URI.createPlatformResourceURI(path, true);
-		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
-		Resource newModelResource = resourceSet.createResource(modelURI);
-		newModelResource.getContents().add(root);
-		Map options = new HashMap();
-		options.put(XMLResource.OPTION_ENCODING, System
-				.getProperty("file.encoding"));
-		newModelResource.save(options);
-
-	}
 
 	/**
 	 * This method is an indirection for adding Mappings in the current
@@ -360,7 +343,7 @@ public class DifferencesServices implements MatchEngine {
 	 *            the first root element
 	 * @param root2
 	 *            the second root element
-	 * @return
+	 * @return  a mapping model between the two other models..
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
@@ -394,8 +377,8 @@ public class DifferencesServices implements MatchEngine {
 					redirectedAdd(rootMapping, "subMatchElements", map);
 					// if it has not been mapped while browsing the trees at the
 					// same time it probably is a moved element
-				}				
-				
+				}
+
 				// now the other elements won't be mapped, keep them in the
 				// model
 				if (stillToFindFromModel1.size() + stillToFindFromModel2.size() < 200) {
@@ -422,10 +405,10 @@ public class DifferencesServices implements MatchEngine {
 				stillToFindFromModel2 = new ArrayList();
 
 			} else {
-				// FIX here for known bug and limitation n°1
+				// FIX here for known bug and limitation nï¿½1
 			}
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e,false);
+			EMFComparePlugin.getDefault().log(e, false);
 		}
 		return root;
 	}
@@ -441,7 +424,7 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @param current1
 	 * @param current2
-	 * @return
+	 * @return the mapping for current1 and current2
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
@@ -476,7 +459,7 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @param list1
 	 * @param list2
-	 * @return
+	 * @return a list containing mappings of the nodes of both lists
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */

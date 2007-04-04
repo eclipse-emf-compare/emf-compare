@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.match.api.MatchEngine;
  * Contribution representation one may give throught the "match engine"
  * extension point.
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class EngineDescriptor implements Comparable {
@@ -38,9 +38,9 @@ public class EngineDescriptor implements Comparable {
 	 */
 	public EngineDescriptor(IConfigurationElement element) {
 		this.element = element;
-		fileExtension = getAttribute("fileExtension", "*");
-		priority = getAttribute("priority", "low");
-		engineClassName = getAttribute("engineClass", null);
+		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
+		priority = getAttribute("priority", "low");  //$NON-NLS-1$//$NON-NLS-2$
+		engineClassName = getAttribute("engineClass", null); //$NON-NLS-1$
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class EngineDescriptor implements Comparable {
 	 * 
 	 * @param name
 	 * @param defaultValue
-	 * @return
+	 * @return the descriptor attribute
 	 */
 	private String getAttribute(String name, String defaultValue) {
 		String value = element.getAttribute(name);
@@ -56,13 +56,13 @@ public class EngineDescriptor implements Comparable {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException("Missing " + name + " attribute");
+		throw new IllegalArgumentException("Missing " + name + " attribute");//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
 	 * Return the file extension the engine should handle
 	 * 
-	 * @return
+	 * @return the file extension
 	 */
 	public String getFileExtension() {
 		return fileExtension;
@@ -71,7 +71,7 @@ public class EngineDescriptor implements Comparable {
 	/**
 	 * Return the engine priority
 	 * 
-	 * @return
+	 * @return the engine priority
 	 */
 	public String getPriority() {
 		return priority.toLowerCase();
@@ -80,7 +80,7 @@ public class EngineDescriptor implements Comparable {
 	/**
 	 * Return the engine class name
 	 * 
-	 * @return
+	 * @return the engine class name
 	 */
 	public String getEngineClassName() {
 		return engineClassName;
@@ -88,30 +88,34 @@ public class EngineDescriptor implements Comparable {
 
 	private MatchEngine engine = null;
 
+	/**
+	 * 
+	 * @return the engine instance
+	 */
 	public MatchEngine getEngineInstance() {
 		if (engine == null)
 			;
 		{
 			try {
 				engine = (MatchEngine) element
-						.createExecutableExtension("engineClass");
+						.createExecutableExtension("engineClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
-				EMFComparePlugin.getDefault().log(e,false);
+				EMFComparePlugin.getDefault().log(e, false);
 			}
 		}
 		return engine;
 	}
 
 	private int getPriorityValue(String priority) {
-		if (priority.equals("lowest"))
+		if (priority.equals("lowest")) //$NON-NLS-1$
 			return 1;
-		if (priority.equals("low"))
+		if (priority.equals("low")) //$NON-NLS-1$
 			return 2;
-		if (priority.equals("normal"))
+		if (priority.equals("normal")) //$NON-NLS-1$
 			return 3;
-		if (priority.equals("high"))
+		if (priority.equals("high")) //$NON-NLS-1$
 			return 4;
-		if (priority.equals("highest"))
+		if (priority.equals("highest")) //$NON-NLS-1$
 			return 5;
 		return 0;
 	}
@@ -140,9 +144,7 @@ public class EngineDescriptor implements Comparable {
 				return 0;
 			else
 				return 1;
-		} else {
-			System.err.println("Silly compare with" + other);
-		}
+		} 
 		return 1;
 	}
 

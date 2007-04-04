@@ -20,12 +20,17 @@ import org.osgi.framework.BundleContext;
  */
 public class MatchingSimilarityPlugin extends Plugin {
 
-	/* (non-Javadoc) */
+	/**
+	 * 
+	 * @return the plugin ID
+	 */
 	public String getID() {
 		return PLUGIN_ID;
 	}
 	
-	// The plug-in ID
+	/**
+	 * the plugin ID
+	 */
 	public static final String PLUGIN_ID = "fr.obeo.mda.evolution.detection.similarity";
 
 	// The shared instance

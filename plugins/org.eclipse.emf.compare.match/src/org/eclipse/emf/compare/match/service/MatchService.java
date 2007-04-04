@@ -27,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Service facade for matching models
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class MatchService {
@@ -95,6 +95,11 @@ public class MatchService {
 		return desc;
 	}
 
+	/**
+	 * Return the singleton instance
+	 * 
+	 * @return the singleton instance
+	 */
 	public static MatchService getInstance() {
 		if (service == null)
 			service = new MatchService();
@@ -120,19 +125,29 @@ public class MatchService {
 		result = currentEngine.modelMatch(leftRoot, rightRoot);
 		return result;
 	}
-	
-	
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot,EObject ancestor) {
-			MatchModel result = null;
-			//TODOCBR code 3 Way match
-			return result;
-		}
-		
+
+	/**
+	 * 
+	 * @param leftRoot :
+	 *            left model
+	 * @param rightRoot :
+	 *            right model
+	 * @param ancestor :
+	 *            common ancestor model
+	 * @return the match model
+	 */
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot,
+			EObject ancestor) {
+		MatchModel result = null;
+		// TODOCBR code 3 Way match
+		return result;
+	}
 
 	/**
 	 * Return the best match engine from a file extension
 	 * 
-	 * @param extension : file extension
+	 * @param extension :
+	 *            file extension
 	 * @return best match engine
 	 */
 	public MatchEngine getBestMatchEngine(String extension) {
