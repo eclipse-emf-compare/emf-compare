@@ -23,12 +23,17 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Abstract class for every merger
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class AbstractMerger {
 	protected DiffElement diff = null;
 
+	/**
+	 * Create a merger from a delta
+	 * 
+	 * @param element
+	 */
 	public AbstractMerger(DiffElement element) {
 		diff = element;
 	}
@@ -53,7 +58,7 @@ public class AbstractMerger {
 	/**
 	 * Return true if one can apply the difference in the original model
 	 * 
-	 * @return
+	 * @return true if the merger is able to apply in origin
 	 */
 	public boolean canApplyInOrigin() {
 		return true;
@@ -62,7 +67,7 @@ public class AbstractMerger {
 	/**
 	 * Return true if one can undo the difference in the target model
 	 * 
-	 * @return
+	 * @return true if the merger is able to undo in target
 	 */
 	public boolean canUndoInTarget() {
 		return true;
@@ -74,7 +79,7 @@ public class AbstractMerger {
 	public void setDiffElement(DiffElement elem) {
 		diff = elem;
 	}
-	
+
 	protected void removeFromContainer(EObject obj) {
 
 		EObject parent = obj.eContainer();
@@ -83,7 +88,7 @@ public class AbstractMerger {
 		// now removes all the dangling references
 		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
 				.getRootContainer(parent).eResource()) {
-					private static final long serialVersionUID = -6324609614260707598L;
+			private static final long serialVersionUID = -6324609614260707598L;
 
 			{
 				crossReference();
@@ -101,13 +106,11 @@ public class AbstractMerger {
 			}
 		}
 	}
-		
-	
-	protected void removeDanglingReferences(EObject deletedObject)
-	{
+
+	protected void removeDanglingReferences(EObject deletedObject) {
 		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
 				.getRootContainer(deletedObject).eResource()) {
-					private static final long serialVersionUID = 769922667795187353L;
+			private static final long serialVersionUID = 769922667795187353L;
 
 			{
 				crossReference();

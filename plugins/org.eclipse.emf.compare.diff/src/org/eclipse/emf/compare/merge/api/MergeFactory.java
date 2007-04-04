@@ -15,10 +15,15 @@ import org.eclipse.emf.compare.diff.DiffElement;
 /**
  * A Merge factory handle the merge creation for DiffElements
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public abstract class MergeFactory {
+	/**
+	 * 
+	 * @param element
+	 * @return the corresponding merger
+	 */
 	public abstract AbstractMerger createMerger(DiffElement element);
 
 }

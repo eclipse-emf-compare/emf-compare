@@ -13,6 +13,13 @@ package org.eclipse.emf.compare.diff.api;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.match.MatchModel;
 
+/**
+ * A Diff engine has the responsability to provide a diff (or delta) model from
+ * a matching model
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public interface DiffEngine {
 	/**
 	 * Return a diffmodel created using the match model. This implementation is

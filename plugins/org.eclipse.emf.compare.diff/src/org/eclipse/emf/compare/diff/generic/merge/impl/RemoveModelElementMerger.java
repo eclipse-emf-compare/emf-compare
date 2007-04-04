@@ -22,11 +22,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Merger for a diff element
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class RemoveModelElementMerger extends AbstractMerger {
-
+	/**
+	 * Constructs a merger
+	 * 
+	 * @param element :
+	 *            the corresponding delta
+	 */
 	public RemoveModelElementMerger(DiffElement element) {
 		super(element);
 	}
@@ -40,7 +45,7 @@ public class RemoveModelElementMerger extends AbstractMerger {
 		// now removes all the dangling references
 		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
 				.getRootContainer(parent).eResource()) {
-					private static final long serialVersionUID = 616050158241084372L;
+			private static final long serialVersionUID = 616050158241084372L;
 
 			{
 				crossReference();

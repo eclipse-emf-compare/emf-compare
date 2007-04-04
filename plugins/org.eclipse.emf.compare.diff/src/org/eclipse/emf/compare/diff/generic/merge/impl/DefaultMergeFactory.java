@@ -9,6 +9,12 @@ import org.eclipse.emf.compare.diff.UpdateAttribute;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 
+/**
+ * The merge factory build a merger from any kind of delta
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class DefaultMergeFactory extends MergeFactory {
 	public AbstractMerger createMerger(DiffElement element) {
 		if (element instanceof AddModelElement)

@@ -18,7 +18,9 @@ import org.osgi.framework.BundleContext;
  */
 public class DiffPlugin extends Plugin {
 
-	// The plug-in ID
+	/**
+	 *  The plug-in ID
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diff";
 
 	// The shared instance

@@ -9,16 +9,20 @@ import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 
 /**
  * Merger for a diff element
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class AddReferenceValueMerger extends AbstractMerger {
-
+	/**
+	 * Constructs a merger
+	 * 
+	 * @param element :
+	 *            the corresponding delta
+	 */
 	public AddReferenceValueMerger(DiffElement element) {
 		super(element);
 	}
@@ -30,7 +34,7 @@ public class AddReferenceValueMerger extends AbstractMerger {
 			Iterator oldTarget = diff.getLeftAddedTarget().iterator();
 			while (oldTarget.hasNext()) {
 				try {
-					EFactory.eAdd(element, ((EReference) diff.getReference())
+					EFactory.eAdd(element, (diff.getReference())
 							.getName(), oldTarget.next());
 				} catch (FactoryException e) {
 					EMFComparePlugin.getDefault().log(e, true);
@@ -55,7 +59,7 @@ public class AddReferenceValueMerger extends AbstractMerger {
 		Iterator newTarget = diff.getRightAddedTarget().iterator();
 		while (newTarget.hasNext()) {
 			try {
-				EFactory.eRemove(element, ((EReference) diff.getReference())
+				EFactory.eRemove(element, ( diff.getReference())
 						.getName(), newTarget.next());
 			} catch (FactoryException e) {
 				EMFComparePlugin.getDefault().log(e, true);

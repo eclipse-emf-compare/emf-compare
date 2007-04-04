@@ -14,7 +14,7 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
 /**
  * Services for merging models
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class MergeService {
@@ -33,7 +33,7 @@ public class MergeService {
 
 	private void parseExtensionMetadata() {
 		IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint(DiffPlugin.PLUGIN_ID, "mergeFactory")
+				.getExtensionPoint(DiffPlugin.PLUGIN_ID, "mergeFactory") //$NON-NLS-1$
 				.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			IConfigurationElement[] configElements = extensions[i]
@@ -61,7 +61,7 @@ public class MergeService {
 		return null;
 	}
 
-	private static final String TAG_ENGINE = "factory";
+	private static final String TAG_ENGINE = "factory"; //$NON-NLS-1$
 
 	private FactoryDescriptor parseEngine(IConfigurationElement configElements) {
 		if (!configElements.getName().equals(TAG_ENGINE))
@@ -73,7 +73,7 @@ public class MergeService {
 	/**
 	 * get the singleton instance
 	 * 
-	 * @return
+	 * @return the singleton instance
 	 */
 	public static MergeService getInstance() {
 		if (service == null)
@@ -84,7 +84,7 @@ public class MergeService {
 	/**
 	 * Return the best merge factory found
 	 * 
-	 * @return
+	 * @return the best merge factory found
 	 */
 	public MergeFactory getBestFactory() {
 		FactoryDescriptor desc = getBestDescriptor();
@@ -92,6 +92,12 @@ public class MergeService {
 		return currentEngine;
 	}
 
+	/**
+	 * 
+	 * @param extension :
+	 *            file extension
+	 * @return the best merge factory found for this file extension
+	 */
 	public MergeFactory getBestDiffEngine(String extension) {
 		FactoryDescriptor desc = getBestDescriptor();
 		return desc.getEngineInstance();

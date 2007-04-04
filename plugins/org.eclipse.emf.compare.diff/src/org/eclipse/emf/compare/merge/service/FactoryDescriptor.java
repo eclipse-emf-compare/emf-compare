@@ -8,7 +8,7 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
 /**
  * Descriptor class for MergeFactory contribution
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class FactoryDescriptor implements Comparable {
@@ -18,10 +18,15 @@ public class FactoryDescriptor implements Comparable {
 
 	protected IConfigurationElement element;
 
+	/**
+	 * Create a descriptor
+	 * 
+	 * @param element
+	 */
 	public FactoryDescriptor(IConfigurationElement element) {
 		this.element = element;
-		priority = getAttribute("priority", "low");
-		factoryClassName = getAttribute("class", null);
+		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
+		factoryClassName = getAttribute("class", null); //$NON-NLS-1$
 	}
 
 	private String getAttribute(String name, String defaultValue) {
@@ -30,26 +35,39 @@ public class FactoryDescriptor implements Comparable {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException("Missing " + name + " attribute");
+		throw new IllegalArgumentException("Missing " + name + " attribute"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
+	/**
+	 * Return the engine priority
+	 * 
+	 * @return the engine priority
+	 */
 	public String getPriority() {
 		return priority.toLowerCase();
 	}
 
+	/**
+	 * 
+	 * @return the factory class name
+	 */
 	public String getFactoryClassName() {
 		return factoryClassName;
 	}
 
 	private MergeFactory factory = null;
 
+	/**
+	 * 
+	 * @return the engine instances
+	 */
 	public MergeFactory getEngineInstance() {
 		if (factory == null)
 			;
 		{
 			try {
 				factory = (MergeFactory) element
-						.createExecutableExtension("class");
+						.createExecutableExtension("class"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.getDefault().log(e, false);
 			}
@@ -58,15 +76,15 @@ public class FactoryDescriptor implements Comparable {
 	}
 
 	private int getPriorityValue(String priority) {
-		if (priority.equals("lowest"))
+		if (priority.equals("lowest")) //$NON-NLS-1$
 			return 1;
-		if (priority.equals("low"))
+		if (priority.equals("low")) //$NON-NLS-1$
 			return 2;
-		if (priority.equals("normal"))
+		if (priority.equals("normal")) //$NON-NLS-1$
 			return 3;
-		if (priority.equals("high"))
+		if (priority.equals("high")) //$NON-NLS-1$
 			return 4;
-		if (priority.equals("highest"))
+		if (priority.equals("highest")) //$NON-NLS-1$
 			return 5;
 		return 0;
 	}
@@ -94,9 +112,7 @@ public class FactoryDescriptor implements Comparable {
 				return 0;
 			else
 				return 1;
-		} else {
-			System.err.println("Silly compare with" + other);
-		}
+		} 
 		return 1;
 	}
 

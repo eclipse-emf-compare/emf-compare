@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.match.MatchModel;
 /**
  * TODOCBR doc
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class DiffService {
@@ -75,7 +75,6 @@ public class DiffService {
 
 	private static final String TAG_ENGINE = "engine";
 
-
 	private EngineDescriptor parseEngine(IConfigurationElement configElements) {
 		if (!configElements.getName().equals(TAG_ENGINE))
 			return null;
@@ -83,6 +82,10 @@ public class DiffService {
 		return desc;
 	}
 
+	/**
+	 * 
+	 * @return the singleton instance
+	 */
 	public static DiffService getInstance() {
 		if (service == null)
 			service = new DiffService();
@@ -90,10 +93,10 @@ public class DiffService {
 	}
 
 	/**
-	 * TODOCBR doc
+	 * Build diff model from a match model
 	 * 
 	 * @param match
-	 * @return
+	 * @return the corresponding diff model
 	 */
 	public DiffModel doDiff(MatchModel match) {
 		DiffModel result = null;
@@ -103,6 +106,12 @@ public class DiffService {
 		return result;
 	}
 
+	/**
+	 * Return the best diff engine from a file extension
+	 * 
+	 * @param extension
+	 * @return the best diff engine
+	 */
 	public DiffEngine getBestDiffEngine(String extension) {
 		EngineDescriptor desc = getBestDescriptor();
 		return desc.getEngineInstance();

@@ -12,11 +12,16 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Merger for a diff element
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class UpdateAttributeMerger extends AbstractMerger {
-
+	/**
+	 * Constructs a merger
+	 * 
+	 * @param element :
+	 *            the corresponding delta
+	 */
 	public UpdateAttributeMerger(DiffElement element) {
 		super(element);
 	}
@@ -25,7 +30,7 @@ public class UpdateAttributeMerger extends AbstractMerger {
 		UpdateAttribute diff = (UpdateAttribute) this.diff;
 		EObject element = diff.getRightElement();
 		EObject origin = diff.getLeftElement();
-		EAttribute attr = (EAttribute) diff.getAttribute();
+		EAttribute attr =  diff.getAttribute();
 		try {
 			EFactory.eSet(origin, attr.getName(), EFactory.eGet(element, attr
 					.getName()));
@@ -49,7 +54,7 @@ public class UpdateAttributeMerger extends AbstractMerger {
 		UpdateAttribute diff = (UpdateAttribute) this.diff;
 		EObject element = diff.getRightElement();
 		EObject origin = diff.getLeftElement();
-		EAttribute attr = (EAttribute) diff.getAttribute();
+		EAttribute attr = diff.getAttribute();
 		try {
 			EFactory.eSet(element, attr.getName(), EFactory.eGet(origin, attr
 					.getName()));

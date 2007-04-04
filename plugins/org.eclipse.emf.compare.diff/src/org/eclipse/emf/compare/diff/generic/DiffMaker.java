@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  * This class is usefull when one want's to determine a diff from a matching
  * model
  * 
- * @author Cédric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class DiffMaker implements DiffEngine {
