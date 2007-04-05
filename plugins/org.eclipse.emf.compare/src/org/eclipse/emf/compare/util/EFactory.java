@@ -129,38 +129,6 @@ public class EFactory {
 		}
 	}
 
-	/**
-	 * Returns the factory path.
-	 * 
-	 * @return the factory path
-	 */
-	public String getPath() {
-		return id;
-	}
-
-	/**
-	 * Creates an instance of the classifier whose name is given.
-	 * <p>
-	 * Sample : Creates an instance of java.resources.Folder if name equals
-	 * "Folder" or "resources.Folder".
-	 * 
-	 * @param name
-	 *            is the name of the classifier to be created
-	 * @return the new EObject
-	 * @throws FactoryException
-	 */
-	public EObject eCreate(String name) throws FactoryException {
-		ClassLoader old = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(loader);
-		try {
-			String createName = "create" + name.substring(0, 1).toUpperCase()
-					+ name.substring(1);
-			return (EObject) eCall(factoryImpl, createName, null);
-		} finally {
-			Thread.currentThread().setContextClassLoader(old);
-		}
-	}
-
 	private static Object eCall(Object object, String name, Object arg)
 			throws FactoryException {
 		try {

@@ -16,10 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -105,30 +101,6 @@ public class ETools {
 	
 	
 	
-	/**
-	 * Indicates if the metamodel nsURI or the metamodel file path exists.
-	 * @param path is the metamodel nsURI or the metamodel file path
-	 * @param nsUriOnly indicates if only nsURI are allowed
-	 * @return true if the metamodel nsURI exists or if the metamodel file path exists
-	 */
-	public static boolean validateURI(String path, boolean nsUriOnly){
-		path = path.trim();
-		EPackage regValue = EPackage.Registry.INSTANCE.getEPackage(path);
-		if (regValue != null){
-			return true;
-		}else if (nsUriOnly){
-			return false;
-		}else{
-			IPath ecorePath = new Path(path);
-			if (ecorePath.segmentCount() >= 2){
-				ecorePath = ecorePath.removeFileExtension().addFileExtension("ecore");
-				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-				return root.exists(new Path(path)) && root.exists(ecorePath);
-			}else{
-				return false;
-			}
-		}
-	}
 	
 	/**
 	 * Search all the classifiers recursively in a package.
