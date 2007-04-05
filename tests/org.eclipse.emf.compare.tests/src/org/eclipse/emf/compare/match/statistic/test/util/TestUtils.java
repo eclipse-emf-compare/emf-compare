@@ -65,7 +65,7 @@ public class TestUtils {
 		try {
 			if (Platform.isRunning()) {
 				final File file = new File(FileLocator.toFileURL(
-						Platform.getBundle(pluginID).getEntry("/")).getFile());
+						Platform.getBundle(pluginID).getEntry("/")).getFile()); //$NON-NLS-1$
 				if (file.isDirectory()) {
 					return file.getAbsolutePath();
 				}
@@ -78,7 +78,7 @@ public class TestUtils {
 		for (int i = 0, maxi = plugins.length; i < maxi; i++) {
 			if (plugins[i].isDirectory()) {
 				final String name = plugins[i].getName();
-				if (name.equals(pluginID) || name.startsWith(pluginID + "_")) {
+				if (name.equals(pluginID) || name.startsWith(pluginID + "_")) { //$NON-NLS-1$
 					return plugins[i].getAbsolutePath();
 				}
 			}
