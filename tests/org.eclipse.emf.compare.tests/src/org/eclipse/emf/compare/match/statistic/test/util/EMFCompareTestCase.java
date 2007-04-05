@@ -21,15 +21,34 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
+/**
+ * TestCase with usefull utility methods
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class EMFCompareTestCase extends TestCase {
-
+	/**
+	 * Assert file contents are strictly equals
+	 * 
+	 * @param file1
+	 * @param file2
+	 */
 	public void assertFileContentsEqual(final File file1, final File file2) {
 		assertTrue("File contents are not equals for " + file1.getName()
 				+ " and " + file2.getName(), TestUtils.readFile(file1, false)
 				.equals(TestUtils.readFile(file2, false)));
 	}
 
-	public void save(final EObject root, final File outputFile) throws IOException {
+	/**
+	 * Save a model in a file
+	 * 
+	 * @param root
+	 * @param outputFile
+	 * @throws IOException
+	 */
+	public void save(final EObject root, final File outputFile)
+			throws IOException {
 		final FileOutputStream out = new FileOutputStream(outputFile);
 
 		final XMIResourceImpl resource = new XMIResourceImpl();
@@ -38,13 +57,25 @@ public class EMFCompareTestCase extends TestCase {
 
 	}
 
+	/**
+	 * @param path
+	 * @return a file bundled inside a plugin knowing it's path
+	 */
 	public File pluginFile(final String path) {
 		return new File(TestUtils.getPluginDirectory() + path);
 	}
 
-	public void compareDirs(final File dir1, final File dir2, final String fileNameSuffixExpected) {
+	/**
+	 * Compare two dirs
+	 * 
+	 * @param dir1
+	 * @param dir2
+	 * @param fileNameSuffixExpected
+	 */
+	public void compareDirs(final File dir1, final File dir2,
+			final String fileNameSuffixExpected) {
 		if (!dir1.isDirectory() || !dir2.isDirectory()) {
-			throw new RuntimeException("dir1 and dir2 are not folders! ");
+			throw new RuntimeException("dir1 and dir2 are not folders! "); //$NON-NLS-1$
 		}
 
 		// saving files from dir2 in a hashmap
@@ -61,13 +92,19 @@ public class EMFCompareTestCase extends TestCase {
 						+ fileNameSuffixExpected));
 			} else {
 				throw new RuntimeException(file1.getName()
-						+ fileNameSuffixExpected + " is missing for comparison");
+						+ fileNameSuffixExpected + " is missing for comparison"); //$NON-NLS-1$
 			}
 
 		}
 
 	}
 
+	/**
+	 * load a model from an IFile
+	 * 
+	 * @param file
+	 * @return loaded model
+	 */
 	public EObject load(final IFile file) {
 		EObject result = null;
 		final URI modelURI = URI.createURI(file.getFullPath().toString());
@@ -83,6 +120,12 @@ public class EMFCompareTestCase extends TestCase {
 		return result;
 	}
 
+	/**
+	 * Load a model from a java.io.File
+	 * 
+	 * @param file
+	 * @return the model
+	 */
 	public static EObject load(final File file) {
 		try {
 			final FileInputStream in = new FileInputStream(file);
@@ -99,6 +142,12 @@ public class EMFCompareTestCase extends TestCase {
 
 	}
 
+	/**
+	 * Load a model from an InputStream
+	 * 
+	 * @param in
+	 * @return the model
+	 */
 	public static EObject load(final InputStream in) {
 		final XMIResourceImpl resource = new XMIResourceImpl();
 
@@ -114,6 +163,12 @@ public class EMFCompareTestCase extends TestCase {
 		return result;
 	}
 
+	/**
+	 * Save a model 
+	 * @param root
+	 * @param path
+	 * @throws IOException
+	 */
 	public void save(final EObject root, final String path) throws IOException {
 		final URI modelURI = URI.createURI(path);
 		final ResourceSet resourceSet = new ResourceSetImpl();

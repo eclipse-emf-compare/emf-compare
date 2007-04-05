@@ -26,15 +26,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+/**
+ * Initialize an "expected" directory from an input one browsing the
+ * subdirectories. If a directory contains 2 models, then a 2way comparison is
+ * done, if there's 3 a 3Way comparison is done with the first model as ancestor
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class CreateMatchesAction extends EMFCompareTestCase implements
 		IObjectActionDelegate {
 
-	private final String MATCH_DIR = "expected/";
+	private final String MATCH_DIR = "expected/"; //$NON-NLS-1$
 
 	/**
 	 * return true if the folder contains 2 models we could compare.
 	 * 
-	 * @return
+	 * @return true if the folder contains 2 models we could compare.
 	 * @throws CoreException
 	 */
 	private boolean is2WayComparable(final IFolder folder) throws CoreException {
@@ -53,6 +61,14 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 
 	}
 
+	/**
+	 * Create match models in the match_dir from models found in input_dir
+	 * 
+	 * @param input_dir
+	 * @param match_dir
+	 * @throws CoreException
+	 * @throws FactoryException
+	 */
 	public void doCreateMatches(final IFolder input_dir, final IFolder match_dir)
 			throws CoreException, FactoryException {
 		if (is2WayComparable(input_dir)) {
@@ -62,13 +78,13 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 				if (input_dir.members()[i] instanceof IFile
 						&& !((IFile) input_dir.members()[i]).isDerived()
 						&& !((IFile) input_dir.members()[i]).getName()
-								.startsWith(".")) {
+								.startsWith(".")) { //$NON-NLS-1$
 					models.add(load((IFile) input_dir.members()[i]));
 				}
 			}
 			if (models.size() != 2) {
 				System.err
-						.println("ERROR : missing model or unable to load it - size : "
+						.println("ERROR : missing model or unable to load it - size : " //$NON-NLS-1$
 								+ models.size());
 			} else {
 				// System.out.println("Creating match in " +
@@ -77,16 +93,16 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 				// + "models =" + models);
 				final Date start = Calendar.getInstance().getTime();
 
-				final MatchModel match = new MatchService().doMatch((EObject) models
-						.get(0), (EObject) models.get(1));
+				final MatchModel match = new MatchService().doMatch(
+						(EObject) models.get(0), (EObject) models.get(1));
 				final String matchFile = match_dir.getFullPath().toString()
-						+ "/result.match";
+						+ "/result.match"; //$NON-NLS-1$
 				final String diffFile = match_dir.getFullPath().toString()
-						+ "/result.diff";
+						+ "/result.diff"; //$NON-NLS-1$
 				final DiffMaker diffM = new DiffMaker();
 				final DiffModel diff = diffM.doDiff(match);
 				final Date end = Calendar.getInstance().getTime();
-				log(getSize((EObject) models.get(0)) + ";"
+				log(getSize((EObject) models.get(0)) + ";" //$NON-NLS-1$
 						+ (end.getTime() - start.getTime()));
 				try {
 					save(match, matchFile);
@@ -111,10 +127,16 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 		return result;
 	}
 
+	/**
+	 * Create the matches and diff browsing the rootInput
+	 * 
+	 * @param rootInput
+	 */
 	public void createMatches(final IFolder rootInput) {
 
 		try {
-			final IFolder rootMatch = rootInput.getProject().getFolder(this.MATCH_DIR);
+			final IFolder rootMatch = rootInput.getProject().getFolder(
+					this.MATCH_DIR);
 			if (!rootMatch.exists()) {
 				rootMatch.create(true, true, null);
 			}
@@ -143,7 +165,8 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 		}
 	}
 
-	protected IFolder getMatchDirFromInput(final IFolder folder) throws CoreException {
+	protected IFolder getMatchDirFromInput(final IFolder folder)
+			throws CoreException {
 		final IPath relativePath = folder.getProjectRelativePath();
 		final IFolder result = folder.getProject().getFolder(
 				this.MATCH_DIR + relativePath.toString());
@@ -154,20 +177,22 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 
 	}
 
-	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
+	public void setActivePart(final IAction action,
+			final IWorkbenchPart targetPart) {
 	}
 
 	public void run(final IAction action) {
-		log("Performances measure done the "
+		log("Performances measure done the " //$NON-NLS-1$
 				+ Calendar.getInstance().getTime().toLocaleString());
-		log("Number of elements;Time");
+		log("Number of elements;Time"); //$NON-NLS-1$
 		createMatches(((IFolder) this.selection.getFirstElement()));
 
 	}
 
 	private IStructuredSelection selection;
 
-	public void selectionChanged(final IAction action, final ISelection selection) {
+	public void selectionChanged(final IAction action,
+			final ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;
 		}

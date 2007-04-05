@@ -10,11 +10,21 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin;
 
+/**
+ * Utils for handling files and file content
+ * 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
+ * 
+ */
 public class TestUtils {
 	private static final String PLUGIN_ID = ""; // TODO check that Id
 
 	private static final String CLASS_FILE = "";
 
+	/**
+	 * 
+	 * @return the plugin directory
+	 */
 	public static String getPluginDirectory() {
 		try {
 			return new File(FileLocator
@@ -46,6 +56,11 @@ public class TestUtils {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param pluginID
+	 * @return the plugin main directory
+	 */
 	public static String getPluginDirectory(final String pluginID) {
 		try {
 			if (Platform.isRunning()) {
@@ -72,7 +87,14 @@ public class TestUtils {
 		return null;
 	}
 
-	public static String readFile(final File file, final boolean useSystemLineSeparator) {
+	/**
+	 * 
+	 * @param file
+	 * @param useSystemLineSeparator
+	 * @return the file content
+	 */
+	public static String readFile(final File file,
+			final boolean useSystemLineSeparator) {
 		final StringBuffer stringBuffer = new StringBuffer();
 		try {
 			final BufferedReader in = new BufferedReader(new FileReader(file));
@@ -101,6 +123,11 @@ public class TestUtils {
 		return stringBuffer.toString();
 	}
 
+	/**
+	 * delete a file
+	 * 
+	 * @param file
+	 */
 	public static void delete(final File file) {
 		if (file.isDirectory()) {
 			final File[] children = file.listFiles();
