@@ -85,7 +85,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.uml2.uml.Element;
 
 public class ModelContentMergeViewer extends ContentMergeViewer {
 	public static final String UNDO_ID = "undo"; //$NON-NLS-1$
@@ -534,9 +533,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				return ((Match2Elements) parentElement).getSubMatchElements()
 						.toArray();
 			}
-			if (parentElement instanceof Element) {
-				return ((Element) parentElement).getOwnedElements().toArray();
-			}
 			return null;
 		}
 
@@ -549,9 +545,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 			if (element instanceof Match2Elements) {
 				return ((Match2Elements) element).eContainer();
-			}
-			if (element instanceof Element) {
-				return ((Element) element).getOwner();
 			}
 			return null;
 		}
@@ -584,9 +577,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				}
 				return (((Match2Elements) element).getSubMatchElements().size() > 0)
 						|| hasChildren;
-			}
-			if (element instanceof Element) {
-				return ((Element) element).getOwnedElements().isEmpty();
 			}
 			return false;
 		}
@@ -733,11 +723,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 								// case in which children elements were added to
 								// new
 								// elements
-								if ((leftItem.getItems().length != 0)
-										&& (leftItem.getItems()[0].getData() instanceof Element)) {
-									heightFactor = heightFactor(heightFactor,
-											leftItem);
-								}
 							}
 							ly = leftItem.getBounds().y;
 							lh = leftItem.getBounds().height * heightFactor;
@@ -779,12 +764,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 								// case in which children elements were added to
 								// new
 								// elements
-								if ((rightItem.getItems().length != 0)
-										&& (rightItem.getItems()[0].getData() instanceof Element)) {
-									heightFactor = heightFactor(heightFactor,
-											rightItem);
-
-								}
 							}
 							ry = rightItem.getBounds().y;
 							rh = rightItem.getBounds().height * heightFactor;
@@ -1858,11 +1837,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 								// case in which children elements were added to
 								// new
 								// elements
-								if ((item.getItems().length != 0)
-										&& (item.getItems()[0].getData() instanceof Element)) {
-									heightFactor = heightFactor(heightFactor,
-											item);
-								}
 							}
 							y = item.getBounds().y;
 							h = item.getBounds().height * heightFactor;

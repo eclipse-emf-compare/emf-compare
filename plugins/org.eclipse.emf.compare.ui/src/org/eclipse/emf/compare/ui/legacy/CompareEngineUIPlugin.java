@@ -15,11 +15,10 @@ import org.osgi.framework.BundleContext;
 
 public class CompareEngineUIPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
 	/**
 	 * the plugin ID
 	 */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ui.legacy";
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.ui.legacy"; //$NON-NLS-1$
 
 	// The shared instance
 	private static CompareEngineUIPlugin plugin;

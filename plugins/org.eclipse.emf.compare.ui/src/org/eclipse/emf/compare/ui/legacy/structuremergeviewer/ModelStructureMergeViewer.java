@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.DiffElement;

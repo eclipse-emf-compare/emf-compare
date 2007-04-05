@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchElement;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.uml2.uml.Element;
 
 /**
  * 
@@ -50,9 +49,6 @@ public class ModelCompareInput implements ICompareInput {
 		}
 
 		public String getType() {
-			if (this.object instanceof Element) {
-				return DiffConstants.ELEMENT_TYPE;
-			}
 			if (this.object instanceof MatchElement) {
 				return DiffConstants.DELTA_TYPE;
 			}
