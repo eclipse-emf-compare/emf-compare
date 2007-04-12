@@ -186,11 +186,6 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			final MatchModel match = new MatchService()
 					.doMatch(leftModel, rightModel,monitor);
 			final DiffModel diff = new DiffService().doDiff(match);
-			/* Saving the model for William	 */
-//			String diffFile = "/" + this.leftModelFile.getProject().getName() +"/" + this.leftModelFile.getProjectRelativePath().toString() + ".diff";
-//			save(diff,diffFile);
-			
-			/* end of william bugfix */
 			final ModelCompareInput input = new ModelCompareInput(match, diff);
 			input.addCompareInputChangeListener(this.inputListener);
 			input.setLeftStorage(this.leftModelFile);
