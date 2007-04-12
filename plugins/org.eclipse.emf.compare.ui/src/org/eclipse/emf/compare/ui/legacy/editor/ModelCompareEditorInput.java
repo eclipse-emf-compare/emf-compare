@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,11 +50,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -182,9 +184,13 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			final EObject rightModel = load(((IFile) this.rightModelFile).getContents(),
 					resourceSet);
 			final MatchModel match = new MatchService()
-					.doMatch(leftModel, rightModel);
+					.doMatch(leftModel, rightModel,monitor);
 			final DiffModel diff = new DiffService().doDiff(match);
-
+			/* Saving the model for William	 */
+//			String diffFile = "/" + this.leftModelFile.getProject().getName() +"/" + this.leftModelFile.getProjectRelativePath().toString() + ".diff";
+//			save(diff,diffFile);
+			
+			/* end of william bugfix */
 			final ModelCompareInput input = new ModelCompareInput(match, diff);
 			input.addCompareInputChangeListener(this.inputListener);
 			input.setLeftStorage(this.leftModelFile);
@@ -192,8 +198,23 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			return checkInputHasDiffs() ? input : null;
 		} catch (final CoreException e) {
 			EMFComparePlugin.getDefault().log(e, false);
-		}
+		} 
 		return null;
+
+	}
+	
+	public void save(final EObject root, final String path) throws IOException {
+		final URI modelURI = URI.createURI(path);
+		final ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+						new XMIResourceFactoryImpl());
+		final Resource newModelResource = resourceSet.createResource(modelURI);
+		newModelResource.getContents().add(root);
+		final Map options = new HashMap();
+		options.put(XMLResource.OPTION_ENCODING, System
+				.getProperty("file.encoding"));
+		newModelResource.save(options);
 
 	}
 
@@ -383,6 +404,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 
 			// define groups
 			manager.add(new Separator("filter"));
+			/*
 
 			// add actions
 			final Action a = new Action() {
@@ -413,7 +435,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			b.setChecked(false);
 			this.pseudoConflictFilterItem = new ActionContributionItem(b);
 			manager.appendToGroup("filter", this.pseudoConflictFilterItem);
-
+			 */
 			manager.update(true);
 		}
 		return fComposite;

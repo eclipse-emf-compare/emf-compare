@@ -122,8 +122,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	public static final int PROPERTIES_TAB = 1;
 
-	public static final int DIAGRAM_TAB = 2;
-
 	// Colors
 	private RGB fBackground;
 
@@ -938,8 +936,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			// }
 			// FIXMECBR handle property tabs
 			break;
-		case DIAGRAM_TAB:
-			break;
 		default:
 			throw new IllegalStateException("Invalid value for selected tab");
 		}
@@ -1185,9 +1181,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case PROPERTIES_TAB:
 				this.properties.getTable().setBounds(this.tabFolder.getClientArea());
 				break;
-			case DIAGRAM_TAB:
-				// TODO
-				break;
 			}
 		}
 
@@ -1201,8 +1194,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				return this.tree.getVisibleParentElement((TreeItem) item);
 			case PROPERTIES_TAB:
 				return null;
-			case DIAGRAM_TAB:
-				return null; // TODO
 			default:
 				throw new IllegalStateException(
 						"Invalid value for tab selection");
@@ -1221,8 +1212,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				if (object instanceof DiffElement) {
 					return this.properties.find((DiffElement) object);
 				}
-			case DIAGRAM_TAB:
-				return null; // TODO
 			default:
 				throw new IllegalStateException(
 						"Invalid value for tab selection");
@@ -1240,8 +1229,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case PROPERTIES_TAB:
 				return this.properties.getTable().getClientArea().height
 						- this.properties.getTable().getHeaderHeight();
-			case DIAGRAM_TAB:
-				return 0; // TODO
 			default:
 				throw new IllegalStateException(
 						"Invalid value for tab selection");
@@ -1257,8 +1244,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				return this.tree.getVisibleElements();
 			case PROPERTIES_TAB:
 				return null;
-			case DIAGRAM_TAB:
-				return null; // TODO
 			default:
 				throw new IllegalStateException(
 						"Invalid value for tab selection");
@@ -1274,8 +1259,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				return this.tree.getTree().getVerticalBar().getMaximum();
 			case PROPERTIES_TAB:
 				return 0; // TODO
-			case DIAGRAM_TAB:
-				return 0; // TODO
 			default:
 				throw new IllegalStateException(
 						"Invalid value for tab selection");
@@ -1290,8 +1273,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case TREE_TAB:
 				return this.tree.getTree().getVerticalBar().getSelection();
 			case PROPERTIES_TAB:
-				return 0;
-			case DIAGRAM_TAB:
 				return 0;
 			default:
 				throw new IllegalStateException(
@@ -1378,9 +1359,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case PROPERTIES_TAB:
 				this.properties.setInput(input);
 				break;
-			case DIAGRAM_TAB:
-				// TODO
-				break;
 			default:
 				throw new IllegalStateException("Unknow tab selection index");
 			}
@@ -1439,9 +1417,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case PROPERTIES_TAB:
 				this.properties.setInput(selectedDelta);
 				break;
-			case DIAGRAM_TAB:
-				// TODO
-				break;
 			}
 
 		}
@@ -1464,9 +1439,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final CTabItem propertiesTab = new CTabItem(this.tabFolder, SWT.NONE);
 			propertiesTab.setText("Properties");
 
-			final CTabItem diagramTab = new CTabItem(this.tabFolder, SWT.NONE);
-			diagramTab.setText("Diagram");
-			diagramTab.setControl(new Composite(this.tabFolder, SWT.NONE));
 
 			Composite panel = new Composite(this.tabFolder, SWT.NONE);
 			panel.setLayout(new GridLayout());
@@ -1490,11 +1462,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					} else {
 						if (e.item.equals(propertiesTab)) {
 							ModelContentMergeViewerPart.this.selectedTab = PROPERTIES_TAB;
-						} else {
-							if (e.item.equals(diagramTab)) {
-								ModelContentMergeViewerPart.this.selectedTab = DIAGRAM_TAB;
-							}
-						}
+						} 
 					}
 					fireSelectedtabChanged();
 				}
@@ -1505,11 +1473,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					} else {
 						if (e.item.equals(propertiesTab)) {
 							ModelContentMergeViewerPart.this.selectedTab = PROPERTIES_TAB;
-						} else {
-							if (e.item.equals(diagramTab)) {
-								ModelContentMergeViewerPart.this.selectedTab = DIAGRAM_TAB;
-							}
-						}
+						} 
 					}
 					fireSelectedtabChanged();
 				}
@@ -1631,9 +1595,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			case PROPERTIES_TAB:
 				paintProperties(event);
 				break;
-			case DIAGRAM_TAB:
-				// TODO add diagram support
-				break;
 			default:
 				throw new IllegalStateException("Invalid index for tab");
 			}
@@ -1646,9 +1607,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				break;
 			case PROPERTIES_TAB:
 				this.properties.getTable().redraw();
-				break;
-			case DIAGRAM_TAB:
-				// TODO add diagram support
 				break;
 			default:
 				throw new IllegalStateException("Invalid index for tab");
@@ -1996,8 +1954,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					this.properties.setInput(findMatchFromDiff((targt)));
 					this.properties.showItem(diff);
 				}
-				break;
-			case DIAGRAM_TAB:
 				break;
 			}
 

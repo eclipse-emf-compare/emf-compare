@@ -106,7 +106,7 @@ public class ModelCompareEditorHistoryInput extends ModelCompareEditorInput {
 			final EObject rightModel = load(((IFile) this.rightModelFile).getContents(),
 					resourceSet);
 			final MatchModel match = new MatchService()
-					.doMatch(leftModel, rightModel);
+					.doMatch(leftModel, rightModel,monitor);
 
 			final DiffModel diff = new DiffService().doDiff(match);
 			input = new ModelCompareInput(match, diff);
