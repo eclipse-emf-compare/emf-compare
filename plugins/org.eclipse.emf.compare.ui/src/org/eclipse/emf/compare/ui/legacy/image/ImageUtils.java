@@ -14,7 +14,7 @@ import org.eclipse.emf.compare.ui.legacy.CompareEngineUIPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public enum ImageUtils {
-	SHOW_PSEUDO_CONFLICTS("showPseudoConflicts"), SHOW_NO_DIFFS("showNoDiffs"), EDITOR_ICON(
+	SHOW_PSEUDO_CONFLICTS("showPseudoConflicts"), SAVE_DIFF("save"), EDITOR_ICON(
 			"editorIcon"), DIFFERENCES_ICON("differencesIcon");
 	private final String path;
 
