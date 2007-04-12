@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchFactory;
@@ -343,13 +344,23 @@ public class DifferencesServices implements MatchEngine {
 	 *            the first root element
 	 * @param root2
 	 *            the second root element
-	 * @return  a mapping model between the two other models..
+	 * @return a mapping model between the two other models..
+	 * @throws InterruptedException 
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
-	public MatchModel modelMatch(EObject root1, EObject root2) {
+	public MatchModel modelMatch(EObject root1, EObject root2,
+			IProgressMonitor monitor) throws InterruptedException {
 		// ModificationLog diffResult;
 		MatchModel root = matchFactory.createMatchModel();
+		int size = 1;
+		Iterator sizeit = root1.eAllContents();
+		while (sizeit.hasNext()) {
+			sizeit.next();
+			size++;
+		}
+		monitor.beginTask("Comparing model",size);
+		monitor.subTask("Browsing model");
 
 		// Match2Elements associations = matchFactory.createMatch2Elements();
 		// EFactory.eAdd(root, "matchedElements", associations);
@@ -358,7 +369,8 @@ public class DifferencesServices implements MatchEngine {
 		// mappings..
 		try {
 			if (true && isSimilar(root1, root2)) {
-				Match2Elements rootMapping = recursiveMappings(root1, root2);
+				Match2Elements rootMapping = recursiveMappings(root1, root2,monitor);
+
 				redirectedAdd(root, "matchedElements", rootMapping);
 				// Keep current lists in a corner and init the objects list we
 				// still
@@ -370,7 +382,8 @@ public class DifferencesServices implements MatchEngine {
 				stillToFindFromModel1 = new ArrayList();
 				stillToFindFromModel2 = new ArrayList();
 				// now try to map not yet mapped elements...
-				Collection mappings = mapLists(still1, still2);
+				monitor.subTask("Matching remaining elements");		
+				Collection mappings = mapLists(still1, still2,monitor);
 				Iterator it = mappings.iterator();
 				while (it.hasNext()) {
 					Match2Elements map = (Match2Elements) it.next();
@@ -379,6 +392,7 @@ public class DifferencesServices implements MatchEngine {
 					// same time it probably is a moved element
 				}
 
+			
 				// now the other elements won't be mapped, keep them in the
 				// model
 				if (stillToFindFromModel1.size() + stillToFindFromModel2.size() < 200) {
@@ -405,7 +419,7 @@ public class DifferencesServices implements MatchEngine {
 				stillToFindFromModel2 = new ArrayList();
 
 			} else {
-				// FIX here for known bug and limitation n�1
+				// FIX here for known bug and limitation number 1
 			}
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, false);
@@ -426,13 +440,13 @@ public class DifferencesServices implements MatchEngine {
 	 * @param current2
 	 * @return the mapping for current1 and current2
 	 * @throws FactoryException
+	 * @throws InterruptedException 
 	 * @throws ENodeCastException
 	 */
-	private Match2Elements recursiveMappings(EObject current1, EObject current2)
-			throws FactoryException {
+	private Match2Elements recursiveMappings(EObject current1, EObject current2,IProgressMonitor monitor)
+			throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;
 		mapping = matchFactory.createMatch2Elements();
-
 		mapping.setLeftElement(current1);
 		mapping.setRightElement(current2);
 		EObjectToMapping.put(current1, mapping);
@@ -440,7 +454,7 @@ public class DifferencesServices implements MatchEngine {
 		MappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
 		Collection mapList = mapLists(current1.eContents(), current2
-				.eContents());
+				.eContents(),monitor);
 		// // in maplist we get other mappings
 		Iterator it = mapList.iterator();
 		while (it.hasNext()) {
@@ -448,7 +462,7 @@ public class DifferencesServices implements MatchEngine {
 			// here we now source and target are similars, then we should launch
 			// recursive mappings onto these objects
 			EFactory.eAdd(mapping, "subMatchElements", recursiveMappings(
-					subMapping.getLeftElement(), subMapping.getRightElement()));
+					subMapping.getLeftElement(), subMapping.getRightElement(),monitor));
 		}
 		return mapping;
 
@@ -461,10 +475,11 @@ public class DifferencesServices implements MatchEngine {
 	 * @param list2
 	 * @return a list containing mappings of the nodes of both lists
 	 * @throws FactoryException
+	 * @throws InterruptedException 
 	 * @throws ENodeCastException
 	 */
-	private Collection mapLists(Collection list1, Collection list2)
-			throws FactoryException {
+	private Collection mapLists(Collection list1, Collection list2,IProgressMonitor monitor)
+			throws FactoryException, InterruptedException {
 		Collection result = new ArrayList();
 
 		Collection notFoundList1 = new ArrayList();
@@ -502,6 +517,9 @@ public class DifferencesServices implements MatchEngine {
 				}
 
 			}
+			monitor.worked(1);
+			if (monitor.isCanceled())
+				throw new InterruptedException();
 		}
 		stillToFindFromModel2.addAll(notFoundList2);
 		stillToFindFromModel1.addAll(notFoundList1);

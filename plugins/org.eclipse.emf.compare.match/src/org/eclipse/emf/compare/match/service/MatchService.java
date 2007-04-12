@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.MatchPlugin;
 import org.eclipse.emf.compare.match.MatchModel;
@@ -113,16 +114,18 @@ public class MatchService {
 	 *            left model
 	 * @param rightRoot :
 	 *            right model
+	 * @param monitor 
 	 * @return matching model
+	 * @throws InterruptedException 
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot) {
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor) throws InterruptedException {
 		MatchModel result = null;
 		String extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null)
-			extension = rightRoot.eResource().getURI().fileExtension();
+			extension = rightRoot.eResource().getURI().fileExtension();		
 		EngineDescriptor desc = getBestDescriptor(extension);
 		MatchEngine currentEngine = desc.getEngineInstance();
-		result = currentEngine.modelMatch(leftRoot, rightRoot);
+		result = currentEngine.modelMatch(leftRoot, rightRoot,monitor);
 		return result;
 	}
 

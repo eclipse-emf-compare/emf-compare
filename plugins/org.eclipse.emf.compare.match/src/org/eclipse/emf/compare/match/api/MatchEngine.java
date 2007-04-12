@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.match.api;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 
@@ -27,8 +28,10 @@ public interface MatchEngine {
 	 * 
 	 * @param leftRoot left model
 	 * @param rightRoot right model
+	 * @param monitor 
 	 * @return the corresponding match
+	 * @throws InterruptedException 
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot);
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor) throws InterruptedException;
 
 }
