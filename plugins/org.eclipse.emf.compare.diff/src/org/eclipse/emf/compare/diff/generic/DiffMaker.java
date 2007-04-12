@@ -159,7 +159,6 @@ public class DiffMaker implements DiffEngine {
 			// if
 			// (!ETools.getURI(matchElement.getLeftElement()).equals(ETools.getURI(matchElement.getRightElement())))
 			{
-				System.err.println("moved element");
 				MoveModelElement operation = DiffFactory.eINSTANCE
 						.createMoveModelElement();
 				operation.setRightElement(matchElement.getRightElement());
