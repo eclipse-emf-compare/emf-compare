@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.generic.DiffMaker;
@@ -68,9 +69,10 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 	 * @param match_dir
 	 * @throws CoreException
 	 * @throws FactoryException
+	 * @throws InterruptedException 
 	 */
 	public void doCreateMatches(final IFolder input_dir, final IFolder match_dir)
-			throws CoreException, FactoryException {
+			throws CoreException, FactoryException, InterruptedException {
 		if (is2WayComparable(input_dir)) {
 			final List models = new ArrayList();
 
@@ -94,7 +96,7 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 				final Date start = Calendar.getInstance().getTime();
 
 				final MatchModel match = new MatchService().doMatch(
-						(EObject) models.get(0), (EObject) models.get(1));
+						(EObject) models.get(0), (EObject) models.get(1),new NullProgressMonitor());
 				final String matchFile = match_dir.getFullPath().toString()
 						+ "/result.match"; //$NON-NLS-1$
 				final String diffFile = match_dir.getFullPath().toString()
@@ -153,6 +155,8 @@ public class CreateMatchesAction extends EMFCompareTestCase implements
 						} catch (final CoreException e) {
 							e.printStackTrace();
 						} catch (final FactoryException e) {
+							e.printStackTrace();
+						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 						return true;
