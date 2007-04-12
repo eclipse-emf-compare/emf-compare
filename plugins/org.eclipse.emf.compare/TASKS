@@ -1,15 +1,16 @@
 ___ TODO ___
  - 3 Way compare
- - save diff action
  - remove UML2 dependencie for icons
  - complete documentation and tutorials
  - using functionnal ID through Ecore ID
  - merge on move
  - cleaning up API, 
- - cleaning up UI (remove uneeded buttons, diagram tabs...)
  - supporting dependancies design for merging
- - weight annotations for metamodel
+ - weight annotations for metamodels
  - suppress unused code
+ - cleanup GUI 
  
 ___ DONE ___
 12/04/2007 - progress monitor and cancel support
+12/04/2007 - cleaning up UI (remove uneeded buttons, diagram tabs...)
+12/04/2007 - save diff action
