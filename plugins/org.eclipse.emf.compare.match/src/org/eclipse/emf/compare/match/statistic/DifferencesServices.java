@@ -68,7 +68,6 @@ public class DifferencesServices implements MatchEngine {
 	 * nameSimilarity, valueSimilarity, relationSimilarity, TypeSimilarity]
 	 */
 	private Map metricsCache = new WeakHashMap();
-	
 
 	/**
 	 * If you put true here youl'll be able to have a look at the mapping
@@ -102,11 +101,6 @@ public class DifferencesServices implements MatchEngine {
 
 	private String RELATION_SIMILARITY = "r"; //$NON-NLS-1$
 
-	private boolean isInCache(EObject obj1, EObject obj2, String similarityKind) {
-		return metricsCache
-				.containsKey(pairHashCode(obj1, obj2, similarityKind));
-	}
-
 	private double getSimilarityFromCache(EObject obj1, EObject obj2,
 			String similarityKind) {
 		return ((Double) metricsCache.get(pairHashCode(obj1, obj2,
@@ -124,8 +118,9 @@ public class DifferencesServices implements MatchEngine {
 	private double nameSimilarity(EObject obj1, EObject obj2)
 			throws FactoryException {
 		try {
-			if (isInCache(obj1, obj2, NAME_SIMILARITY)) {
-				return getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+			Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+			if (value != null) {
+				return value;
 			} else {
 				double similarity = NameSimilarity.nameSimilarityMetric(
 						NameSimilarity.findName(obj1), NameSimilarity
@@ -140,8 +135,9 @@ public class DifferencesServices implements MatchEngine {
 
 	private double typeSimilarity(EObject obj1, EObject obj2)
 			throws FactoryException {
-		if (isInCache(obj1, obj2, TYPE_SIMILARITY)) {
-			return getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
+		Double value = getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
+		if (value != null) {
+			return value;
 		} else {
 			double similarity = StructureSimilarity.typeSimilarityMetric(obj1,
 					obj2);
@@ -153,8 +149,9 @@ public class DifferencesServices implements MatchEngine {
 
 	private double relationsSimilarity(EObject obj1, EObject obj2)
 			throws FactoryException {
-		if (isInCache(obj1, obj2, RELATION_SIMILARITY)) {
-			return getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
+		Double value = getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
+		if (value != null) {
+			return value;
 		} else {
 			double similarity = StructureSimilarity.relationsSimilarityMetric(
 					obj1, obj2, filter);
@@ -166,8 +163,9 @@ public class DifferencesServices implements MatchEngine {
 
 	private double contentSimilarity(EObject obj1, EObject obj2)
 			throws FactoryException {
-		if (isInCache(obj1, obj2, VALUE_SIMILARITY)) {
-			return getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		if (value != null) {
+			return value;
 		} else {
 			double similarity = NameSimilarity.nameSimilarityMetric(
 					NameSimilarity.contentValue(obj1, filter), NameSimilarity
@@ -309,7 +307,6 @@ public class DifferencesServices implements MatchEngine {
 		return ETools.getURI(obj1).equals(ETools.getURI(obj2));
 	}
 
-
 	private Collection stillToFindFromModel1 = new ArrayList();
 
 	private Collection stillToFindFromModel2 = new ArrayList();
@@ -338,10 +335,10 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @return an int meaning the number of siblings elements I will look in
 	 */
-	private int getDefaultSearchWindow()
-	{
+	private int getDefaultSearchWindow() {
 		return 100;
 	}
+
 	/**
 	 * Return a mapping model between the two other models..
 	 * 
@@ -405,36 +402,35 @@ public class DifferencesServices implements MatchEngine {
 				// now try to map not yet mapped elements...
 				monitor.subTask("Matching remaining elements");
 				// magic number to avoid too big complexity
-					Collection mappings = mapLists(still1, still2, getDefaultSearchWindow(),monitor);
-					Iterator it = mappings.iterator();
-					while (it.hasNext()) {
-						Match2Elements map = (Match2Elements) it.next();
-						redirectedAdd(rootMapping, "subMatchElements", map);
-						// if it has not been mapped while browsing the trees at
-						// the
-						// same time it probably is a moved element
-					}
+				Collection mappings = mapLists(still1, still2,
+						getDefaultSearchWindow(), monitor);
+				Iterator it = mappings.iterator();
+				while (it.hasNext()) {
+					Match2Elements map = (Match2Elements) it.next();
+					redirectedAdd(rootMapping, "subMatchElements", map);
+					// if it has not been mapped while browsing the trees at
+					// the
+					// same time it probably is a moved element
+				}
 
-					// now the other elements won't be mapped, keep them in the
-					// model
-						it = stillToFindFromModel1.iterator();
-						while (it.hasNext()) {
-							EObject element = (EObject) it.next();
-							UnMatchElement unMap = matchFactory
-									.createUnMatchElement();
-							unMap.setElement(element);
-							redirectedAdd(root, "unMatchedElements", unMap);
+				// now the other elements won't be mapped, keep them in the
+				// model
+				it = stillToFindFromModel1.iterator();
+				while (it.hasNext()) {
+					EObject element = (EObject) it.next();
+					UnMatchElement unMap = matchFactory.createUnMatchElement();
+					unMap.setElement(element);
+					redirectedAdd(root, "unMatchedElements", unMap);
 
-						}
-						it = stillToFindFromModel2.iterator();
-						while (it.hasNext()) {
-							EObject element = (EObject) it.next();
-							UnMatchElement unMap = matchFactory
-									.createUnMatchElement();
-							unMap.setElement(element);
-							redirectedAdd(root, "unMatchedElements", unMap);
+				}
+				it = stillToFindFromModel2.iterator();
+				while (it.hasNext()) {
+					EObject element = (EObject) it.next();
+					UnMatchElement unMap = matchFactory.createUnMatchElement();
+					unMap.setElement(element);
+					redirectedAdd(root, "unMatchedElements", unMap);
 
-						}
+				}
 				stillToFindFromModel1 = new ArrayList();
 				stillToFindFromModel2 = new ArrayList();
 
@@ -473,7 +469,7 @@ public class DifferencesServices implements MatchEngine {
 		MappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
 		Collection mapList = mapLists(current1.eContents(), current2
-				.eContents(), getDefaultSearchWindow(),monitor);
+				.eContents(), getDefaultSearchWindow(), monitor);
 		// // in maplist we get other mappings
 		Iterator it = mapList.iterator();
 		while (it.hasNext()) {
@@ -488,7 +484,8 @@ public class DifferencesServices implements MatchEngine {
 
 	}
 
-	private EObject findMostSimilar(EObject eObj, List list) throws FactoryException {
+	private EObject findMostSimilar(EObject eObj, List list)
+			throws FactoryException {
 		double max = 0;
 		EObject resultObject = null;
 		Iterator it = list.iterator();
@@ -513,12 +510,13 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws InterruptedException
 	 * @throws ENodeCastException
 	 */
-	private Collection mapLists(List list1, List list2,int window,
+	private Collection mapLists(List list1, List list2, int window,
 			IProgressMonitor monitor) throws FactoryException,
 			InterruptedException {
 		Collection result = new ArrayList();
-//		System.err.println("mapping to lists: " + list1.size() +","+ list2.size() + " first elem : " + list1.get(0) );
-		int curIndex = 0 - window/2;
+		// System.err.println("mapping to lists: " + list1.size() +","+
+		// list2.size() + " first elem : " + list1.get(0) );
+		int curIndex = 0 - window / 2;
 		Collection notFoundList1 = new ArrayList();
 		Collection notFoundList2 = new ArrayList();
 		// first init the not found list with all contents (we have found
@@ -532,128 +530,12 @@ public class DifferencesServices implements MatchEngine {
 		while (it1.hasNext()) {
 			EObject obj1 = (EObject) it1.next();
 			it2 = list2.iterator();
-			int index = curIndex < 0 ? 0 : curIndex;		
-			int end = curIndex + window > list2.size() ? list2.size() : curIndex  + window;
-			if (index >  end)
+			int index = curIndex < 0 ? 0 : curIndex;
+			int end = curIndex + window > list2.size() ? list2.size()
+					: curIndex + window;
+			if (index > end)
 				index = end;
-			EObject obj2 = findMostSimilar(obj1, list2.subList(index,end));
-			if (notFoundList1.contains(obj1)
-					&& notFoundList2.contains(obj2)
-					&& isSimilar(obj1, obj2)) {
-				Match2Elements mapping = matchFactory
-						.createMatch2Elements();
-				double metric = 1.0;
-				if (saveMapping) {
-					metric = absoluteMetric(obj1, obj2);
-				}
-				mapping.setLeftElement(obj1);
-				mapping.setRightElement(obj2);
-				mapping.setSimilarity(metric);
-				result.add(mapping);
-				notFoundList2.remove(obj2);
-				notFoundList1.remove(obj1);
-			}
-			curIndex+=1;
-			monitor.worked(1);
-			if (monitor.isCanceled())
-				throw new InterruptedException();
-		}
-		
-		
-		// now putting the not found elements aside for later
-		stillToFindFromModel2.addAll(notFoundList2);
-		stillToFindFromModel1.addAll(notFoundList1);
-		return result;
-	}
-	
-	/**
-	 * Return a list containing mappings of the nodes of both lists
-	 * 
-	 * @param list1
-	 * @param list2
-	 * @return a list containing mappings of the nodes of both lists
-	 * @throws FactoryException
-	 * @throws InterruptedException
-	 * @throws ENodeCastException
-	 */
-	/*private Collection mapListsSure(Collection list1, Collection list2,
-			IProgressMonitor monitor) throws FactoryException,
-			InterruptedException {
-		Collection result = new ArrayList();
-		Collection notFoundList1 = new ArrayList();
-		Collection notFoundList2 = new ArrayList();
-		// first init the not found list with all contents (we have found
-		// nothing yet)
-		notFoundList1.addAll(list1);
-		notFoundList2.addAll(list2);
-
-		Iterator it1 = list1.iterator();
-		Iterator it2 = null;
-		// then iterate over the 2 lists and compare the elements
-		while (it1.hasNext()) {
-			EObject obj1 = (EObject) it1.next();
-			it2 = list2.iterator();
-			EObject obj2 = findMostSimilar(obj1, list2);
-			if (notFoundList1.contains(obj1)
-					&& notFoundList2.contains(obj2)
-					&& isSimilar(obj1, obj2)) {
-				Match2Elements mapping = matchFactory
-						.createMatch2Elements();
-				double metric = 1.0;
-				if (saveMapping) {
-					metric = absoluteMetric(obj1, obj2);
-				}
-				mapping.setLeftElement(obj1);
-				mapping.setRightElement(obj2);
-				EObjectToMapping.put(obj1, mapping);
-				EObjectToMapping.put(obj2, mapping);
-				mapping.setSimilarity(metric);
-				result.add(mapping);
-				notFoundList2.remove(obj2);
-				notFoundList1.remove(obj1);
-		
-	
-			}
-			monitor.worked(1);
-			if (monitor.isCanceled())
-				throw new InterruptedException();
-		}
-		
-		
-		// now putting the not found elements aside for later
-		stillToFindFromModel2.addAll(notFoundList2);
-		stillToFindFromModel1.addAll(notFoundList1);
-		return result;
-	}*/
-	
-	/**
-	 * Return a list containing mappings of the nodes of both lists
-	 * 
-	 * @param list1
-	 * @param list2
-	 * @return a list containing mappings of the nodes of both lists
-	 * @throws FactoryException
-	 * @throws InterruptedException
-	 * @throws ENodeCastException
-	 */
-	/*private Collection mapListsQuick(Collection list1, Collection list2,
-			IProgressMonitor monitor) throws FactoryException,
-			InterruptedException {
-		Collection result = new ArrayList();
-		Collection notFoundList1 = new ArrayList();
-		Collection notFoundList2 = new ArrayList();
-		// first init the not found list with all contents (we have found
-		// nothing yet)
-		notFoundList1.addAll(list1);
-		notFoundList2.addAll(list2);
-
-		Iterator it1 = list1.iterator();
-		Iterator it2 = null;
-		// then iterate over the 2 lists and compare the elements
-		while (it1.hasNext()) {
-			EObject obj1 = (EObject) it1.next();
-			it2 = list2.iterator();
-			EObject obj2 = findMostSimilar(obj1, list2);
+			EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
 			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2)
 					&& isSimilar(obj1, obj2)) {
 				Match2Elements mapping = matchFactory.createMatch2Elements();
@@ -663,20 +545,90 @@ public class DifferencesServices implements MatchEngine {
 				}
 				mapping.setLeftElement(obj1);
 				mapping.setRightElement(obj2);
-				EObjectToMapping.put(obj1, mapping);
-				EObjectToMapping.put(obj2, mapping);
 				mapping.setSimilarity(metric);
 				result.add(mapping);
 				notFoundList2.remove(obj2);
 				notFoundList1.remove(obj1);
 			}
+			curIndex += 1;
 			monitor.worked(1);
 			if (monitor.isCanceled())
 				throw new InterruptedException();
 		}
+
+		// now putting the not found elements aside for later
 		stillToFindFromModel2.addAll(notFoundList2);
 		stillToFindFromModel1.addAll(notFoundList1);
 		return result;
-	}*/
+	}
+
+	/**
+	 * Return a list containing mappings of the nodes of both lists
+	 * 
+	 * @param list1
+	 * @param list2
+	 * @return a list containing mappings of the nodes of both lists
+	 * @throws FactoryException
+	 * @throws InterruptedException
+	 * @throws ENodeCastException
+	 */
+	/*
+	 * private Collection mapListsSure(Collection list1, Collection list2,
+	 * IProgressMonitor monitor) throws FactoryException, InterruptedException {
+	 * Collection result = new ArrayList(); Collection notFoundList1 = new
+	 * ArrayList(); Collection notFoundList2 = new ArrayList(); // first init
+	 * the not found list with all contents (we have found // nothing yet)
+	 * notFoundList1.addAll(list1); notFoundList2.addAll(list2);
+	 * 
+	 * Iterator it1 = list1.iterator(); Iterator it2 = null; // then iterate
+	 * over the 2 lists and compare the elements while (it1.hasNext()) { EObject
+	 * obj1 = (EObject) it1.next(); it2 = list2.iterator(); EObject obj2 =
+	 * findMostSimilar(obj1, list2); if (notFoundList1.contains(obj1) &&
+	 * notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) { Match2Elements
+	 * mapping = matchFactory .createMatch2Elements(); double metric = 1.0; if
+	 * (saveMapping) { metric = absoluteMetric(obj1, obj2); }
+	 * mapping.setLeftElement(obj1); mapping.setRightElement(obj2);
+	 * EObjectToMapping.put(obj1, mapping); EObjectToMapping.put(obj2, mapping);
+	 * mapping.setSimilarity(metric); result.add(mapping);
+	 * notFoundList2.remove(obj2); notFoundList1.remove(obj1); }
+	 * monitor.worked(1); if (monitor.isCanceled()) throw new
+	 * InterruptedException(); } // now putting the not found elements aside for
+	 * later stillToFindFromModel2.addAll(notFoundList2);
+	 * stillToFindFromModel1.addAll(notFoundList1); return result; }
+	 */
+
+	/**
+	 * Return a list containing mappings of the nodes of both lists
+	 * 
+	 * @param list1
+	 * @param list2
+	 * @return a list containing mappings of the nodes of both lists
+	 * @throws FactoryException
+	 * @throws InterruptedException
+	 * @throws ENodeCastException
+	 */
+	/*
+	 * private Collection mapListsQuick(Collection list1, Collection list2,
+	 * IProgressMonitor monitor) throws FactoryException, InterruptedException {
+	 * Collection result = new ArrayList(); Collection notFoundList1 = new
+	 * ArrayList(); Collection notFoundList2 = new ArrayList(); // first init
+	 * the not found list with all contents (we have found // nothing yet)
+	 * notFoundList1.addAll(list1); notFoundList2.addAll(list2);
+	 * 
+	 * Iterator it1 = list1.iterator(); Iterator it2 = null; // then iterate
+	 * over the 2 lists and compare the elements while (it1.hasNext()) { EObject
+	 * obj1 = (EObject) it1.next(); it2 = list2.iterator(); EObject obj2 =
+	 * findMostSimilar(obj1, list2); if (notFoundList1.contains(obj1) &&
+	 * notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) { Match2Elements
+	 * mapping = matchFactory.createMatch2Elements(); double metric = 1.0; if
+	 * (saveMapping) { metric = absoluteMetric(obj1, obj2); }
+	 * mapping.setLeftElement(obj1); mapping.setRightElement(obj2);
+	 * EObjectToMapping.put(obj1, mapping); EObjectToMapping.put(obj2, mapping);
+	 * mapping.setSimilarity(metric); result.add(mapping);
+	 * notFoundList2.remove(obj2); notFoundList1.remove(obj1); }
+	 * monitor.worked(1); if (monitor.isCanceled()) throw new
+	 * InterruptedException(); } stillToFindFromModel2.addAll(notFoundList2);
+	 * stillToFindFromModel1.addAll(notFoundList1); return result; }
+	 */
 
 }
