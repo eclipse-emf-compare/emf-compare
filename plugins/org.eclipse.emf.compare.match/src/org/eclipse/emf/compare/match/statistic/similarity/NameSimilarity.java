@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -73,6 +74,8 @@ public class NameSimilarity {
 				return 1.0;
 			return 0;
 		}
+		str1 = str1.toLowerCase();
+		str2 = str2.toLowerCase();
 
 		List pairs1 = pairs(str1);
 		List pairs2 = pairs(str2);
@@ -139,14 +142,14 @@ public class NameSimilarity {
 		while (it.hasNext()) {
 			Object next = it.next();
 			double similarity = nameSimilarityMetric(
-					contentValue((EObject) next), contentValue(search));
+					contentValue((EObject) next,null), contentValue(search,null));
 			if (next instanceof EObject
 					&& ((EObject) next).eClass().getName().equals(
 							search.eClass().getName()) && similarity > max
 					&& similarity > threshold) {
 
-				max = nameSimilarityMetric(contentValue((EObject) next),
-						contentValue(search));
+				max = nameSimilarityMetric(contentValue((EObject) next,null),
+						contentValue(search,null));
 				resultObject = (EObject) next;
 			}
 		}
@@ -174,12 +177,12 @@ public class NameSimilarity {
 		while (it.hasNext()) {
 			Object next = it.next();
 			double similarity = nameSimilarityMetric(
-					contentValue((EObject) next), contentValue(search));
+					contentValue((EObject) next,null), contentValue(search,null));
 			if (next instanceof EObject && similarity > max
 					&& similarity > threshold) {
 
-				max = nameSimilarityMetric(contentValue((EObject) next),
-						contentValue(search));
+				max = nameSimilarityMetric(contentValue((EObject) next,null),
+						contentValue(search,null));
 				resultObject = (EObject) next;
 			}
 		}
@@ -244,18 +247,25 @@ public class NameSimilarity {
 	 * Return a string representations of all the features value
 	 * 
 	 * @param current
+	 * @param filter
 	 * @return a string representations of all the features value
 	 * @throws FactoryException
 	 */
-	public static String contentValue(EObject current) throws FactoryException {
+	public static String contentValue(EObject current, MetamodelFilter filter)
+			throws FactoryException {
 		EObject eclass = current.eClass();
 		String result = "";//$NON-NLS-1$
 		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-
-		{
-			eclassAttributes = ((EClass) eclass).getEAllAttributes();
-			// result += ((EClass)eclass).getName();
+		if (filter != null) {
+			if (eclass instanceof EClass) {
+				eclassAttributes = filter.getFilteredFeatures(current);
+				// result += ((EClass)eclass).getName();
+			}
+		} else {
+			if (eclass instanceof EClass) {
+				eclassAttributes = ((EClass) eclass).getEAllAttributes();
+				// result += ((EClass)eclass).getName();
+			}
 		}
 		// first, find the eclass structural feature most similar with name
 		if (eclassAttributes.size() > 0) {
@@ -297,7 +307,7 @@ public class NameSimilarity {
 			String bestFeatureName = nameFeature.getName();
 			// now we should return the feature value
 			String result = EFactory.eGetAsString(current, bestFeatureName);
-			if (result != null)
+			if (result != null && !result.equals("")) //$NON-NLS-1$
 				return result;
 			else
 				return current.eClass().getName(); // TODOCBR, if the element

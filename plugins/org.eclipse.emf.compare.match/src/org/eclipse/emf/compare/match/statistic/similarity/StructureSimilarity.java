@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EClass;
@@ -54,16 +55,17 @@ public class StructureSimilarity {
 	 * 
 	 * @param obj1
 	 * @param obj2
+	 * @param filter
 	 * @return a double representing the relation similarity
 	 * @throws ENodeCastException
 	 * @throws FactoryException
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
-	public static double relationsSimilarityMetric(EObject obj1, EObject obj2)
-			throws FactoryException {
-		return NameSimilarity.nameSimilarityMetric(relationsValue(obj1),
-				relationsValue(obj2));
+	public static double relationsSimilarityMetric(EObject obj1, EObject obj2,
+			MetamodelFilter filter) throws FactoryException {
+		return NameSimilarity.nameSimilarityMetric(
+				relationsValue(obj1, filter), relationsValue(obj2, filter));
 	}
 
 	/**
@@ -133,29 +135,36 @@ public class StructureSimilarity {
 	 * This method returns a String representing the EObject attributes values
 	 * 
 	 * @param current
+	 * @param filter
 	 * @return a String representing the EObject attributes values
 	 * @throws FactoryException
 	 * @throws ENodeCastException
 	 */
-	public static String relationsValue(EObject current)
+	public static String relationsValue(EObject current, MetamodelFilter filter)
 			throws FactoryException {
 		EObject eclass = current.eClass();
-		String result = ""; //$NON-NLS-1$
+		StringBuffer result = new StringBuffer(); //$NON-NLS-1$
 		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass) eclass).getEAllAttributes();
+		if (eclass instanceof EClass) {
+			if (filter != null)
+				eclassAttributes = filter.getFilteredFeatures(current);
+			else
+				eclassAttributes = ((EClass) eclass).getEAllAttributes();
+
+		}
 		if (current.eContainer() != null)
-			result += NameSimilarity.findName(current.eContainer()) + "\n";//$NON-NLS-1$
+			result.append(NameSimilarity.findName(current.eContainer())).append("\n");//$NON-NLS-1$
 		eclassAttributes = current.eContents();
 		Iterator it = eclassAttributes.iterator();
-		while (it.hasNext()) {
+		int curIndex = 0; // to keep track and stop if we are too far
+		while (it.hasNext() && curIndex < 14) {
 			Object next = it.next();
 			if (next instanceof EObject) {
 				EObject obj = (EObject) next;
-				result += NameSimilarity.findName(obj) + "\n";//$NON-NLS-1$
-
+				result.append(NameSimilarity.findName(obj)).append("\n");//$NON-NLS-1$
 			}
+			curIndex+=1;
 		}
-		return result;
+		return result.toString();
 	}
 }
