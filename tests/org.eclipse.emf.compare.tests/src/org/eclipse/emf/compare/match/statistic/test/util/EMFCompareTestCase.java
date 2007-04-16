@@ -1,10 +1,13 @@
 package org.eclipse.emf.compare.match.statistic.test.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +15,11 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -28,6 +35,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * 
  */
 public class EMFCompareTestCase extends TestCase {
+	static final String PLUGIN_ID = ""; // TODO check that Id
+
+	static final String CLASS_FILE = "";
+
 	/**
 	 * Assert file contents are strictly equals
 	 * 
@@ -36,8 +47,8 @@ public class EMFCompareTestCase extends TestCase {
 	 */
 	public void assertFileContentsEqual(final File file1, final File file2) {
 		assertTrue("File contents are not equals for " + file1.getName()
-				+ " and " + file2.getName(), TestUtils.readFile(file1, false)
-				.equals(TestUtils.readFile(file2, false)));
+				+ " and " + file2.getName(), EMFCompareTestCase.readFile(file1,
+				false).equals(EMFCompareTestCase.readFile(file2, false)));
 	}
 
 	/**
@@ -62,7 +73,7 @@ public class EMFCompareTestCase extends TestCase {
 	 * @return a file bundled inside a plugin knowing it's path
 	 */
 	public File pluginFile(final String path) {
-		return new File(TestUtils.getPluginDirectory() + path);
+		return new File(getPluginDirectory() + path);
 	}
 
 	/**
@@ -164,7 +175,8 @@ public class EMFCompareTestCase extends TestCase {
 	}
 
 	/**
-	 * Save a model 
+	 * Save a model
+	 * 
 	 * @param root
 	 * @param path
 	 * @throws IOException
@@ -182,6 +194,136 @@ public class EMFCompareTestCase extends TestCase {
 				.getProperty("file.encoding"));
 		newModelResource.save(options);
 
+	}
+
+	/**
+	 * delete a file
+	 * 
+	 * @param file
+	 */
+	public static void delete(final File file) {
+		if (file.isDirectory()) {
+			final File[] children = file.listFiles();
+			for (int i = 0, maxi = children.length; i < maxi; i++) {
+				delete(children[i]);
+			}
+		}
+
+		if (file.exists()) {
+			file.delete();
+		}
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @param useSystemLineSeparator
+	 * @return the file content
+	 */
+	public static String readFile(final File file,
+			final boolean useSystemLineSeparator) {
+		final StringBuffer stringBuffer = new StringBuffer();
+		try {
+			final BufferedReader in = new BufferedReader(new FileReader(file));
+			try {
+				int size = 0;
+				final char[] buff = new char[512];
+				while ((size = in.read(buff)) >= 0) {
+					stringBuffer.append(buff, 0, size);
+				}
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
+		} catch (final IOException exception) {
+			throw new RuntimeException(exception);
+		}
+
+		final int length = stringBuffer.length();
+		if (length > 0) {
+			final String nl = useSystemLineSeparator ? System.getProperties()
+					.getProperty("line.separator") : "\n";
+			return stringBuffer.toString().replaceAll("\\r\\n", "\n")
+					.replaceAll("[\\n|\\r]", nl);
+		}
+		return stringBuffer.toString();
+	}
+
+	/**
+	 * 
+	 * @param pluginID
+	 * @return the plugin main directory
+	 */
+	public static String getPluginDirectory(final String pluginID) {
+		try {
+			if (Platform.isRunning()) {
+				final File file = new File(FileLocator.toFileURL(
+						Platform.getBundle(pluginID).getEntry("/")).getFile()); //$NON-NLS-1$
+				if (file.isDirectory()) {
+					return file.getAbsolutePath();
+				}
+			}
+		} catch (final Throwable t) {
+		}
+
+		final File parentDirectory = new File(getPluginDirectory());
+		final File[] plugins = parentDirectory.listFiles();
+		for (int i = 0, maxi = plugins.length; i < maxi; i++) {
+			if (plugins[i].isDirectory()) {
+				final String name = plugins[i].getName();
+				if (name.equals(pluginID) || name.startsWith(pluginID + "_")) { //$NON-NLS-1$
+					return plugins[i].getAbsolutePath();
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * @return the plugin to look for ressources in
+	 */
+	public static Plugin getPlugin() {
+		return EMFCompareTestPlugin.getDefault();
+	}
+
+	/**
+	 * 
+	 * @return the plugin directory
+	 */
+	public static String getPluginDirectory() {
+		try {
+			return new File(FileLocator.toFileURL(
+					getPlugin().getBundle().getEntry("/")).getFile())
+					.toString();
+		} catch (final Throwable t) {
+		}
+
+		final URL url = ClassLoader
+				.getSystemResource(EMFCompareTestCase.CLASS_FILE);
+		if (url != null) {
+			String path = url.getPath();
+			path = path
+					.substring(0, path.indexOf(EMFCompareTestCase.PLUGIN_ID));
+			if (path.startsWith("file:")) {
+				path = path.substring("file:".length());
+			}
+			final File parentDir = new File(path);
+			if (parentDir.isDirectory()) {
+				final File[] files = parentDir.listFiles();
+				for (int i = 0, maxi = files.length; i < maxi; i++) {
+					if (files[i].isDirectory()
+							&& files[i].getName().startsWith(
+									EMFCompareTestCase.PLUGIN_ID)) {
+						return files[i].getAbsolutePath();
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 }

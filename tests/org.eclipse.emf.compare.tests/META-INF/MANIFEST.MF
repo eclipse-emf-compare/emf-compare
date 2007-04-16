@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Plug-in for statistic match strategy
-Bundle-SymbolicName: org.eclipse.emf.compare.match.statistic.tests;singleton:=true
+Bundle-SymbolicName: org.eclipse.emf.compare.tests;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.emf.compare.match,
@@ -17,7 +17,13 @@ Require-Bundle: org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.ui,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ fr.obeo.acceleo.uml14
 Bundle-Activator: org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin
 Eclipse-LazyStart: true
 Bundle-Vendor: Eclipse.org
+Export-Package: org.eclipse.emf.compare.match.statistic.test,
+ org.eclipse.emf.compare.match.statistic.test.match.engines,
+ org.eclipse.emf.compare.match.statistic.test.suite,
+ org.eclipse.emf.compare.match.statistic.test.unit,
+ org.eclipse.emf.compare.match.statistic.test.util

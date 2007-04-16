@@ -2,7 +2,7 @@ package org.eclipse.emf.compare.match.statistic.test.unit;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.match.statistic.test.CreateMatchesAction;
+import org.eclipse.emf.compare.match.statistic.test.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.util.FactoryException;
 
 /**
@@ -11,7 +11,7 @@ import org.eclipse.emf.compare.util.FactoryException;
  * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
-public class TestNonRegressionModels extends CreateMatchesAction {
+public class TestNonRegressionModels extends EMFCompareTestCase {
 	/**
 	 * compare the expected models (in the expected directories) with the result
 	 * of the comparison services TODOCBR code that
