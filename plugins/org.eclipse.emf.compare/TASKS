@@ -1,9 +1,11 @@
 ___ TODO ___
+ - use StringBuffer
  - 3 Way compare
- - remove UML2 dependencie for icons
+ - remove UML2 dependencie for icons and use item providers for others
  - complete documentation and tutorials
  - using functionnal ID through Ecore ID
- - merge on move
+ - open  .diff files with compare editor
+ - merge on moveoperation
  - cleaning up API, 
  - supporting dependancies design for merging
  - weight annotations for metamodels
@@ -14,3 +16,7 @@ ___ DONE ___
 12/04/2007 - progress monitor and cancel support
 12/04/2007 - cleaning up UI (remove uneeded buttons, diagram tabs...)
 12/04/2007 - save diff action
+13/04/2007 - maplists should map with the best matching of the list (not the first)
+13/04/2007 - filter unused metamodel elements  (for instance many stuffs in UML are not really used in models..)
+16/04/2007 - handle the case where many elements still need to be mapped 
+ without reaching a n^n complexity => using a max window
