@@ -40,6 +40,15 @@ public interface DiffFactory extends EFactory {
 	DiffModel createDiffModel();
 
 	/**
+	 * Returns a new object of class '<em>Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Group</em>'.
+	 * @generated
+	 */
+	DiffGroup createDiffGroup();
+
+	/**
 	 * Returns a new object of class '<em>Attribute Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

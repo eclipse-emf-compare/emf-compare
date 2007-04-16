@@ -94,6 +94,10 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 			return createDiffElementAdapter();
 		}
 
+		public Object caseDiffGroup(DiffGroup object) {
+			return createDiffGroupAdapter();
+		}
+
 		public Object caseAttributeChange(AttributeChange object) {
 			return createAttributeChangeAdapter();
 		}
@@ -188,6 +192,20 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDiffElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.DiffGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.DiffGroup
+	 * @generated
+	 */
+	public Adapter createDiffGroupAdapter() {
 		return null;
 	}
 

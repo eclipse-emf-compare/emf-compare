@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.diff.AddReferenceValue;
 import org.eclipse.emf.compare.diff.AttributeChange;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffFactory;
+import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.DiffPackage;
 import org.eclipse.emf.compare.diff.ModelElementChange;
@@ -55,6 +56,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	private EClass diffElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass diffGroupEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -275,6 +283,24 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EReference getDiffElement_SubDiffElements() {
 		return (EReference) diffElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getDiffGroup() {
+		return diffGroupEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiffGroup_LeftParent() {
+		return (EReference) diffGroupEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -611,6 +637,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		diffElementEClass = createEClass(DIFF_ELEMENT);
 		createEReference(diffElementEClass, DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
 
+		diffGroupEClass = createEClass(DIFF_GROUP);
+		createEReference(diffGroupEClass, DIFF_GROUP__LEFT_PARENT);
+
 		attributeChangeEClass = createEClass(ATTRIBUTE_CHANGE);
 		createEReference(attributeChangeEClass, ATTRIBUTE_CHANGE__ATTRIBUTE);
 		createEReference(attributeChangeEClass, ATTRIBUTE_CHANGE__LEFT_ELEMENT);
@@ -696,6 +725,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				.getEPackage(EcorePackage.eNS_URI);
 
 		// Add supertypes to classes
+		diffGroupEClass.getESuperTypes().add(this.getDiffElement());
 		attributeChangeEClass.getESuperTypes().add(this.getDiffElement());
 		referenceChangeEClass.getESuperTypes().add(this.getDiffElement());
 		modelElementChangeEClass.getESuperTypes().add(this.getDiffElement());
@@ -739,6 +769,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
+
+		initEClass(diffGroupEClass, DiffGroup.class, "DiffGroup", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiffGroup_LeftParent(), ecorePackage.getEObject(),
+				null, "leftParent", null, 0, 1, DiffGroup.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(attributeChangeEClass, AttributeChange.class,
 				"AttributeChange", !IS_ABSTRACT, !IS_INTERFACE,

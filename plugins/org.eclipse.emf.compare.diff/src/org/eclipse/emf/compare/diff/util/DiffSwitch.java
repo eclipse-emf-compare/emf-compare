@@ -117,6 +117,15 @@ public class DiffSwitch {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case DiffPackage.DIFF_GROUP: {
+			DiffGroup diffGroup = (DiffGroup) theEObject;
+			Object result = caseDiffGroup(diffGroup);
+			if (result == null)
+				result = caseDiffElement(diffGroup);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case DiffPackage.ATTRIBUTE_CHANGE: {
 			AttributeChange attributeChange = (AttributeChange) theEObject;
 			Object result = caseAttributeChange(attributeChange);
@@ -288,6 +297,21 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	public Object caseDiffElement(DiffElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Group</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Group</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseDiffGroup(DiffGroup object) {
 		return null;
 	}
 

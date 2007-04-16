@@ -17,6 +17,9 @@
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>
     </genClasses>
+    <genClasses ecoreClass="diff.ecore#//DiffGroup">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffGroup/leftParent"/>
+    </genClasses>
     <genClasses ecoreClass="diff.ecore#//AttributeChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/attribute"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/leftElement"/>

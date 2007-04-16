@@ -78,6 +78,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 		switch (eClass.getClassifierID()) {
 		case DiffPackage.DIFF_MODEL:
 			return createDiffModel();
+		case DiffPackage.DIFF_GROUP:
+			return createDiffGroup();
 		case DiffPackage.ATTRIBUTE_CHANGE:
 			return createAttributeChange();
 		case DiffPackage.REFERENCE_CHANGE:
@@ -118,6 +120,16 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public DiffModel createDiffModel() {
 		DiffModelImpl diffModel = new DiffModelImpl();
 		return diffModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DiffGroup createDiffGroup() {
+		DiffGroupImpl diffGroup = new DiffGroupImpl();
+		return diffGroup;
 	}
 
 	/**

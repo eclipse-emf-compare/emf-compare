@@ -139,6 +139,43 @@ public interface DiffPackage extends EPackage {
 	int DIFF_ELEMENT_FEATURE_COUNT = 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.impl.DiffGroupImpl <em>Group</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.impl.DiffGroupImpl
+	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getDiffGroup()
+	 * @generated
+	 */
+	int DIFF_GROUP = 2;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP__LEFT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Group</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -146,7 +183,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getAttributeChange()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE = 2;
+	int ATTRIBUTE_CHANGE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -201,7 +238,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getReferenceChange()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE = 3;
+	int REFERENCE_CHANGE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -256,7 +293,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getModelElementChange()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE = 4;
+	int MODEL_ELEMENT_CHANGE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -284,7 +321,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getAddModelElement()
 	 * @generated
 	 */
-	int ADD_MODEL_ELEMENT = 5;
+	int ADD_MODEL_ELEMENT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -330,7 +367,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getRemoveModelElement()
 	 * @generated
 	 */
-	int REMOVE_MODEL_ELEMENT = 6;
+	int REMOVE_MODEL_ELEMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -376,7 +413,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getUpdateModelElement()
 	 * @generated
 	 */
-	int UPDATE_MODEL_ELEMENT = 7;
+	int UPDATE_MODEL_ELEMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -422,7 +459,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getMoveModelElement()
 	 * @generated
 	 */
-	int MOVE_MODEL_ELEMENT = 8;
+	int MOVE_MODEL_ELEMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -486,7 +523,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getAddAttribute()
 	 * @generated
 	 */
-	int ADD_ATTRIBUTE = 9;
+	int ADD_ATTRIBUTE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -541,7 +578,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getRemoveAttribute()
 	 * @generated
 	 */
-	int REMOVE_ATTRIBUTE = 10;
+	int REMOVE_ATTRIBUTE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -596,7 +633,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getUpdateAttribute()
 	 * @generated
 	 */
-	int UPDATE_ATTRIBUTE = 11;
+	int UPDATE_ATTRIBUTE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -651,7 +688,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getAddReferenceValue()
 	 * @generated
 	 */
-	int ADD_REFERENCE_VALUE = 12;
+	int ADD_REFERENCE_VALUE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -724,7 +761,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getRemoveReferenceValue()
 	 * @generated
 	 */
-	int REMOVE_REFERENCE_VALUE = 13;
+	int REMOVE_REFERENCE_VALUE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -797,7 +834,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getUpdateReference()
 	 * @generated
 	 */
-	int UPDATE_REFERENCE = 14;
+	int UPDATE_REFERENCE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -907,6 +944,27 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDiffElement_SubDiffElements();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.DiffGroup <em>Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Group</em>'.
+	 * @see org.eclipse.emf.compare.diff.DiffGroup
+	 * @generated
+	 */
+	EClass getDiffGroup();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.DiffGroup#getLeftParent <em>Left Parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Parent</em>'.
+	 * @see org.eclipse.emf.compare.diff.DiffGroup#getLeftParent()
+	 * @see #getDiffGroup()
+	 * @generated
+	 */
+	EReference getDiffGroup_LeftParent();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.AttributeChange <em>Attribute Change</em>}'.
@@ -1311,6 +1369,25 @@ public interface DiffPackage extends EPackage {
 		 */
 		EReference DIFF_ELEMENT__SUB_DIFF_ELEMENTS = eINSTANCE
 				.getDiffElement_SubDiffElements();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.DiffGroupImpl <em>Group</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.impl.DiffGroupImpl
+		 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getDiffGroup()
+		 * @generated
+		 */
+		EClass DIFF_GROUP = eINSTANCE.getDiffGroup();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Parent</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF_GROUP__LEFT_PARENT = eINSTANCE
+				.getDiffGroup_LeftParent();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
