@@ -141,15 +141,15 @@ public class NameSimilarity {
 		TreeIterator it = current.eAllContents();
 		while (it.hasNext()) {
 			Object next = it.next();
-			double similarity = nameSimilarityMetric(
-					contentValue((EObject) next,null), contentValue(search,null));
+			double similarity = nameSimilarityMetric(contentValue(
+					(EObject) next, null), contentValue(search, null));
 			if (next instanceof EObject
 					&& ((EObject) next).eClass().getName().equals(
 							search.eClass().getName()) && similarity > max
 					&& similarity > threshold) {
 
-				max = nameSimilarityMetric(contentValue((EObject) next,null),
-						contentValue(search,null));
+				max = nameSimilarityMetric(contentValue((EObject) next, null),
+						contentValue(search, null));
 				resultObject = (EObject) next;
 			}
 		}
@@ -176,13 +176,13 @@ public class NameSimilarity {
 		Iterator it = data.iterator();
 		while (it.hasNext()) {
 			Object next = it.next();
-			double similarity = nameSimilarityMetric(
-					contentValue((EObject) next,null), contentValue(search,null));
+			double similarity = nameSimilarityMetric(contentValue(
+					(EObject) next, null), contentValue(search, null));
 			if (next instanceof EObject && similarity > max
 					&& similarity > threshold) {
 
-				max = nameSimilarityMetric(contentValue((EObject) next,null),
-						contentValue(search,null));
+				max = nameSimilarityMetric(contentValue((EObject) next, null),
+						contentValue(search, null));
 				resultObject = (EObject) next;
 			}
 		}
@@ -213,12 +213,12 @@ public class NameSimilarity {
 				Object next = it.next();
 				if (next instanceof EObject) {
 					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
+					StringBuffer attributeName = new StringBuffer(EFactory.eGetAsString(obj, "name"));//$NON-NLS-1$
 					// get the feature name and the feature value
-					String value = EFactory
-							.eGetAsString(current, attributeName);
+					StringBuffer value = new StringBuffer(EFactory
+							.eGetAsString(current, attributeName.toString()));
 					if (value != null && value.length() < 30)
-						result.add(attributeName + " : " + value);//$NON-NLS-1$
+						result.add(attributeName.append(" : ").append(value));//$NON-NLS-1$
 				}
 			}
 
@@ -236,11 +236,11 @@ public class NameSimilarity {
 	public static String contentValueWithName(EObject current)
 			throws FactoryException {
 		Collection values = contentValueListWithName(current);
-		String result = "";//$NON-NLS-1$
+		StringBuffer result = new StringBuffer();
 		Iterator it = values.iterator();
 		while (it.hasNext())
-			result += (String) it.next();
-		return result;
+			result.append((StringBuffer) it.next());
+		return result.toString();
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class NameSimilarity {
 	public static String contentValue(EObject current, MetamodelFilter filter)
 			throws FactoryException {
 		EObject eclass = current.eClass();
-		String result = "";//$NON-NLS-1$
+		StringBuffer result = new StringBuffer();//$NON-NLS-1$
 		List eclassAttributes = new LinkedList();
 		if (filter != null) {
 			if (eclass instanceof EClass) {
@@ -280,13 +280,14 @@ public class NameSimilarity {
 					String value = EFactory
 							.eGetAsString(current, attributeName);
 					if (value != null && value.length() < 40)
-						result += EFactory.eGetAsString(current, attributeName)
-								+ " ";//$NON-NLS-1$
+						result.append(
+								EFactory.eGetAsString(current, attributeName))
+								.append(" ");//$NON-NLS-1$
 				}
 			}
 
 		}
-		return result;
+		return result.toString();
 	}
 
 	/**

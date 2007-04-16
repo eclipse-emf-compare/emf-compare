@@ -84,7 +84,7 @@ public class StructureSimilarity {
 			eclassAttributes = ((EClass) eclass).getEAllAttributes();
 		// first, find the eclass structural feature most similar with name
 		if (eclassAttributes.size() > 0) {
-			result.add("type:" + current.eClass().getName());//$NON-NLS-1$
+			result.add(new StringBuffer("type:").append(current.eClass().getName()));//$NON-NLS-1$
 			Iterator it = eclassAttributes.iterator();
 			while (it.hasNext()) { // for each metamodel feature
 				Object next = it.next();
@@ -92,8 +92,9 @@ public class StructureSimilarity {
 					EObject obj = (EObject) next;
 					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
 					// get the feature name and the feature value
-					result.add("attr:" + obj.eClass().getName() + ":"
-							+ attributeName);
+					result.add(new StringBuffer("attr:").append(
+							obj.eClass().getName()).append(":").append(
+							attributeName));
 				}
 			}
 			// get children's name
@@ -106,8 +107,9 @@ public class StructureSimilarity {
 					EObject obj = (EObject) next;
 					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
 					// get the feature name and the feature value
-					result.add("ref:" + obj.eClass().getName() + ":"
-							+ attributeName);
+					result.add(new StringBuffer("ref:").append(
+							obj.eClass().getName()).append(":").append(
+							attributeName));
 				}
 			}
 		}
@@ -124,11 +126,11 @@ public class StructureSimilarity {
 	 */
 	public static String typeValue(EObject current) throws FactoryException {
 		Collection values = typeValueList(current);
-		String result = ""; //$NON-NLS-1$
+		StringBuffer result = new StringBuffer(); //$NON-NLS-1$
 		Iterator it = values.iterator();
 		while (it.hasNext())
-			result += (String) it.next();
-		return result;
+			result.append((StringBuffer) it.next());
+		return result.toString();
 	}
 
 	/**
@@ -153,7 +155,8 @@ public class StructureSimilarity {
 
 		}
 		if (current.eContainer() != null)
-			result.append(NameSimilarity.findName(current.eContainer())).append("\n");//$NON-NLS-1$
+			result.append(NameSimilarity.findName(current.eContainer()))
+					.append("\n");//$NON-NLS-1$
 		eclassAttributes = current.eContents();
 		Iterator it = eclassAttributes.iterator();
 		int curIndex = 0; // to keep track and stop if we are too far
@@ -163,7 +166,7 @@ public class StructureSimilarity {
 				EObject obj = (EObject) next;
 				result.append(NameSimilarity.findName(obj)).append("\n");//$NON-NLS-1$
 			}
-			curIndex+=1;
+			curIndex += 1;
 		}
 		return result.toString();
 	}
