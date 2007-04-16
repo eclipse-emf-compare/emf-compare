@@ -405,7 +405,6 @@ public class DifferencesServices implements MatchEngine {
 				// now try to map not yet mapped elements...
 				monitor.subTask("Matching remaining elements");
 				// magic number to avoid too big complexity
-				if (still1.size() + still2.size() < 300) {
 					Collection mappings = mapLists(still1, still2, getDefaultSearchWindow(),monitor);
 					Iterator it = mappings.iterator();
 					while (it.hasNext()) {
@@ -418,8 +417,6 @@ public class DifferencesServices implements MatchEngine {
 
 					// now the other elements won't be mapped, keep them in the
 					// model
-					if (stillToFindFromModel1.size()
-							+ stillToFindFromModel2.size() < 200) {
 						it = stillToFindFromModel1.iterator();
 						while (it.hasNext()) {
 							EObject element = (EObject) it.next();
@@ -438,8 +435,6 @@ public class DifferencesServices implements MatchEngine {
 							redirectedAdd(root, "unMatchedElements", unMap);
 
 						}
-					}
-				}
 				stillToFindFromModel1 = new ArrayList();
 				stillToFindFromModel2 = new ArrayList();
 
@@ -539,6 +534,8 @@ public class DifferencesServices implements MatchEngine {
 			it2 = list2.iterator();
 			int index = curIndex < 0 ? 0 : curIndex;		
 			int end = curIndex + window > list2.size() ? list2.size() : curIndex  + window;
+			if (index >  end)
+				index = end;
 			EObject obj2 = findMostSimilar(obj1, list2.subList(index,end));
 			if (notFoundList1.contains(obj1)
 					&& notFoundList2.contains(obj2)
