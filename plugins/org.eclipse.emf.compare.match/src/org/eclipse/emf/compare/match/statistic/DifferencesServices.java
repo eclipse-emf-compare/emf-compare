@@ -101,10 +101,10 @@ public class DifferencesServices implements MatchEngine {
 
 	private String RELATION_SIMILARITY = "r"; //$NON-NLS-1$
 
-	private double getSimilarityFromCache(EObject obj1, EObject obj2,
+	private Double getSimilarityFromCache(EObject obj1, EObject obj2,
 			String similarityKind) {
 		return ((Double) metricsCache.get(pairHashCode(obj1, obj2,
-				similarityKind))).doubleValue();
+				similarityKind)));
 	}
 
 	private void setSimilarityInCache(EObject obj1, EObject obj2,
