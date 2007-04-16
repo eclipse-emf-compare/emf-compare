@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +50,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -58,7 +60,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -94,7 +95,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	protected boolean merge;
 
 	protected IFile leftModelFile;
-	
+
 	protected DiffModel diff;
 
 	protected Object rightModelFile;
@@ -149,18 +150,33 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 
 	protected ICompareInputChangeListener inputListener;
 
-	private EObject load(final InputStream in, final ResourceSet resourceSet) {
+	// private EObject load(final InputStream in, final ResourceSet resourceSet)
+	// {
+	//
+	// final Resource resource = resourceSet.createResource(URI
+	// .createURI("left"));
+	// // XMIResourceImpl resource = new XMIResourceImpl();
+	// try {
+	// resource.load(in, Collections.EMPTY_MAP);
+	// } catch (final IOException e) {
+	// EMFComparePlugin.getDefault().log(e, false);
+	// }
+	//
+	// final EObject result = (EObject) ((resource.getContents().size() > 0) ?
+	// resource
+	// .getContents().get(0)
+	// : null);
+	// return result;
+	// }
 
-		final Resource resource = resourceSet.createResource(URI
-				.createURI("left"));
-		// XMIResourceImpl resource = new XMIResourceImpl();
-		try {
-			resource.load(in, Collections.EMPTY_MAP);
-		} catch (final IOException e) {
-			EMFComparePlugin.getDefault().log(e, false);
-		}
-
-		final EObject result = (EObject) ((resource.getContents().size() > 0) ? resource
+	public EObject load(final IFile file, final ResourceSet resourceSet) {
+		EObject result = null;
+		final URI modelURI = URI.createURI(file.getFullPath().toString());
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+						new XMIResourceFactoryImpl());
+		final Resource modelResource = resourceSet.getResource(modelURI, true);
+		result = (EObject) ((modelResource.getContents().size() > 0) ? modelResource
 				.getContents().get(0)
 				: null);
 		return result;
@@ -183,10 +199,10 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		extensionToFactoryMap.put(UMLResource.FILE_EXTENSION,
 				UMLResource.Factory.INSTANCE);
 		EObject leftModel;
-		try {
-			leftModel = load(this.leftModelFile.getContents(), resourceSet);
+		
+			leftModel = load(this.leftModelFile, resourceSet);
 			final EObject rightModel = load(((IFile) this.rightModelFile)
-					.getContents(), resourceSet);
+					, resourceSet);
 			final MatchModel match = new MatchService().doMatch(leftModel,
 					rightModel, monitor);
 			diff = new DiffService().doDiff(match);
@@ -195,14 +211,23 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			input.setLeftStorage(this.leftModelFile);
 			input.setRightStorage(this.rightModelFile);
 			return checkInputHasDiffs() ? input : null;
-		} catch (final CoreException e) {
-			EMFComparePlugin.getDefault().log(e, false);
-		}
-		return null;
 
 	}
 
+	private void save(final EObject root, final String path) throws IOException {
+		final URI modelURI = URI.createURI(path);
+		final ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+						new XMIResourceFactoryImpl());
+		final Resource newModelResource = resourceSet.createResource(modelURI);
+		newModelResource.getContents().add(root);
+		final Map options = new HashMap();
+		options.put(XMLResource.OPTION_ENCODING, System
+				.getProperty("file.encoding"));
+		newModelResource.save(options);
 
+	}
 
 	protected void prepareEngine(final IProgressMonitor monitor)
 			throws InterruptedException, InvocationTargetException {
@@ -257,14 +282,11 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
 					public void run() {
-						MessageDialog
-								.openError(
-										PlatformUI.getWorkbench()
-												.getActiveWorkbenchWindow()
-												.getShell(),
-										"Process cancelled",
+						EMFComparePlugin
+								.getDefault()
+								.log(
 										ModelCompareEditorInput.this.prepareInputInterruptedException
-												.getMessage());
+												.getMessage(), false);
 					}
 				});
 			}
@@ -392,7 +414,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		fComposite.setWeights(new int[] { 30, 70 });
 
 		this.umlContentViewer.setInput(this.fInput); // TODOCBR Content
-														// provider check
+		// provider check
 
 		final ToolBarManager manager = CompareViewerPane
 				.getToolBarManager(this.umlDiffViewer.getTree().getParent());
@@ -405,16 +427,19 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			final Action a = new Action() {
 				public void run() {
 					final SaveDeltaWizard wizard = new SaveDeltaWizard();
-					IStructuredSelection selection = new StructuredSelection(leftModelFile);
-					wizard.init(PlatformUI.getWorkbench(),selection, ModelCompareEditorInput.this);
-					final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getShell(), wizard);
+					IStructuredSelection selection = new StructuredSelection(
+							leftModelFile);
+					wizard.init(PlatformUI.getWorkbench(), selection,
+							ModelCompareEditorInput.this);
+					final WizardDialog dialog = new WizardDialog(PlatformUI
+							.getWorkbench().getActiveWorkbenchWindow()
+							.getShell(), wizard);
 					dialog.open();
 				}
 			};
 			a.setImageDescriptor(ImageUtils.SAVE_DIFF.getImageDescriptor());
 			a.setToolTipText("Save diff model...");
-//			a.setChecked(false);
+			// a.setChecked(false);
 			this.noDiffFilterItem = new ActionContributionItem(a);
 			manager.appendToGroup("filter", this.noDiffFilterItem); //$NON-NLS-1$
 
@@ -423,8 +448,8 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			 * final Action b = new Action() { public void run() {
 			 * ModelCompareEditorInput.this.umlDiffViewer.setPseudoConflictFilterEnabled(!this
 			 * .isChecked());
-			 * ModelCompareEditorInput.this.umlContentViewer.setShowPseudoConflicts(this.isChecked());
-			 *  } }; b.setImageDescriptor(ImageUtils.SHOW_PSEUDO_CONFLICTS
+			 * ModelCompareEditorInput.this.umlContentViewer.setShowPseudoConflicts(this.isChecked()); } };
+			 * b.setImageDescriptor(ImageUtils.SHOW_PSEUDO_CONFLICTS
 			 * .getImageDescriptor()); b.setToolTipText("Show
 			 * pseudo-conflicts"); b.setChecked(false);
 			 * this.pseudoConflictFilterItem = new ActionContributionItem(b);
