@@ -19,6 +19,7 @@
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//DiffGroup">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffGroup/leftParent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffGroup/subchanges"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//AttributeChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AttributeChange/attribute"/>

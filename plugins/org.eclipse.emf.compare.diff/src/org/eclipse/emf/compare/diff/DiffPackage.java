@@ -167,13 +167,22 @@ public interface DiffPackage extends EPackage {
 	int DIFF_GROUP__LEFT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Subchanges</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP__SUBCHANGES = DIFF_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Group</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_GROUP_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 1;
+	int DIFF_GROUP_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
@@ -967,6 +976,17 @@ public interface DiffPackage extends EPackage {
 	EReference getDiffGroup_LeftParent();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.DiffGroup#getSubchanges <em>Subchanges</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Subchanges</em>'.
+	 * @see org.eclipse.emf.compare.diff.DiffGroup#getSubchanges()
+	 * @see #getDiffGroup()
+	 * @generated
+	 */
+	EAttribute getDiffGroup_Subchanges();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.AttributeChange <em>Attribute Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1388,6 +1408,14 @@ public interface DiffPackage extends EPackage {
 		 */
 		EReference DIFF_GROUP__LEFT_PARENT = eINSTANCE
 				.getDiffGroup_LeftParent();
+
+		/**
+		 * The meta object literal for the '<em><b>Subchanges</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF_GROUP__SUBCHANGES = eINSTANCE.getDiffGroup_Subchanges();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.

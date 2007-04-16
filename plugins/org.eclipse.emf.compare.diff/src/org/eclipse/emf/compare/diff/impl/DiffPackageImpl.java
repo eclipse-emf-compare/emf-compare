@@ -308,6 +308,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDiffGroup_Subchanges() {
+		return (EAttribute) diffGroupEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getAttributeChange() {
 		return attributeChangeEClass;
 	}
@@ -639,6 +648,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		diffGroupEClass = createEClass(DIFF_GROUP);
 		createEReference(diffGroupEClass, DIFF_GROUP__LEFT_PARENT);
+		createEAttribute(diffGroupEClass, DIFF_GROUP__SUBCHANGES);
 
 		attributeChangeEClass = createEClass(ATTRIBUTE_CHANGE);
 		createEReference(attributeChangeEClass, ATTRIBUTE_CHANGE__ATTRIBUTE);
@@ -776,6 +786,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				null, "leftParent", null, 0, 1, DiffGroup.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiffGroup_Subchanges(), ecorePackage.getEInt(),
+				"subchanges", null, 0, 1, DiffGroup.class, IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				IS_DERIVED, IS_ORDERED);
 
 		initEClass(attributeChangeEClass, AttributeChange.class,
 				"AttributeChange", !IS_ABSTRACT, !IS_INTERFACE,
