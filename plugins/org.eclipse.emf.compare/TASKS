@@ -1,6 +1,6 @@
 ___ TODO ___
- - use StringBuffer
  - 3 Way compare
+ - hierarchy in diff model
  - remove UML2 dependencie for icons and use item providers for others
  - complete documentation and tutorials
  - using functionnal ID through Ecore ID
@@ -20,3 +20,4 @@ ___ DONE ___
 13/04/2007 - filter unused metamodel elements  (for instance many stuffs in UML are not really used in models..)
 16/04/2007 - handle the case where many elements still need to be mapped 
  without reaching a n^n complexity => using a max window
+16/04/2007 - use StringBuffer

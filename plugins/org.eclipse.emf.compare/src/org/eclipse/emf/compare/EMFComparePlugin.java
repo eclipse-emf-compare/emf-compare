@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: EMFComparePlugin.java,v 1.2 2007/04/04 06:51:46 cbrun Exp $
+ * $Id: EMFComparePlugin.java,v 1.3 2007/04/16 14:58:48 cbrun Exp $
  */
 package org.eclipse.emf.compare;
 
@@ -74,6 +74,7 @@ public class EMFComparePlugin extends Plugin {
 	 */
 	public void log(Exception e,boolean blocker)
 	{
+		e.printStackTrace();
 		if (e instanceof CoreException) {
 			IStatus status = ((CoreException) e).getStatus();
 			log(new Status(status.getSeverity(), PLUGIN_ID, status.getCode(), status.getMessage(), status.getException()));
