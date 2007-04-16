@@ -119,8 +119,10 @@ public class MoveModelElementItemProvider extends
 	public String getText(Object object) {
 		MoveModelElement moveOp = (MoveModelElement) object;
 		try {
-			return getString("_UI_MoveModelElement_type",
-					new Object[] { NameSimilarity.findName(moveOp.getLeftElement()), NameSimilarity.findName(moveOp.getLeftParent()), NameSimilarity.findName(moveOp.getRightParent())});
+			return getString("_UI_MoveModelElement_type", new Object[] {
+					NameSimilarity.findName(moveOp.getLeftElement()),
+					NameSimilarity.findName(moveOp.getLeftParent()),
+					NameSimilarity.findName(moveOp.getRightParent()) });
 		} catch (FactoryException e) {
 			return getString("_UI_MoveModelElement_type");
 		}

@@ -119,6 +119,10 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements
 
 		newChildDescriptors.add(createChildParameter(
 				DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				DiffFactory.eINSTANCE.createDiffGroup()));
+
+		newChildDescriptors.add(createChildParameter(
+				DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				DiffFactory.eINSTANCE.createAttributeChange()));
 
 		newChildDescriptors.add(createChildParameter(

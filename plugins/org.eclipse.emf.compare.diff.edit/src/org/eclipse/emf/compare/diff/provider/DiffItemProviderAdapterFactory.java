@@ -101,6 +101,28 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.DiffGroup} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DiffGroupItemProvider diffGroupItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.DiffGroup}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createDiffGroupAdapter() {
+		if (diffGroupItemProvider == null) {
+			diffGroupItemProvider = new DiffGroupItemProvider(this);
+		}
+
+		return diffGroupItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.AttributeChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -493,6 +515,8 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	public void dispose() {
 		if (diffModelItemProvider != null)
 			diffModelItemProvider.dispose();
+		if (diffGroupItemProvider != null)
+			diffGroupItemProvider.dispose();
 		if (attributeChangeItemProvider != null)
 			attributeChangeItemProvider.dispose();
 		if (referenceChangeItemProvider != null)
