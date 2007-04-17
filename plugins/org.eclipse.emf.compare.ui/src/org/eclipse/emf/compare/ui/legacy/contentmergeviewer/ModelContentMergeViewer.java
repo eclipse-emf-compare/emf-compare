@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.AttributeChange;
 import org.eclipse.emf.compare.diff.DiffElement;
+import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.diff.UpdateModelElement;
 import org.eclipse.emf.compare.match.Match2Elements;
@@ -1345,7 +1346,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				}
 			});
 
-			// TODO add horizontal synchronization for diagram tabs
 		}
 
 		/**
@@ -1925,6 +1925,20 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					return ((UpdateModelElement) diff).getLeftElement();
 				case DiffConstants.RIGHT:
 					return ((UpdateModelElement) diff).getRightElement();
+				case DiffConstants.ANCESTOR:
+					// elementIsNull = delta.getAncestorElt() == null;
+					// break;
+					// TODOCBR handle 3way diff
+				default:
+					throw new IllegalStateException("Invalid side value");
+				}
+			}
+			if (diff instanceof DiffGroup) {
+				switch (this.side) {
+				case DiffConstants.LEFT:
+					return ((DiffGroup) diff).getLeftParent();
+				case DiffConstants.RIGHT:
+					break;
 				case DiffConstants.ANCESTOR:
 					// elementIsNull = delta.getAncestorElt() == null;
 					// break;
