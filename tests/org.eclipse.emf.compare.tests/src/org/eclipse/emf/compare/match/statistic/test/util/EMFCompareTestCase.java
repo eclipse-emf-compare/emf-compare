@@ -8,7 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -324,6 +326,27 @@ public class EMFCompareTestCase extends TestCase {
 		}
 
 		return null;
+	}
+
+	Date start = null;
+
+	/**
+	 * Starts the current timer
+	 * 
+	 */
+	public void startTimer() {
+		start = Calendar.getInstance().getTime();
+
+	}
+
+	/**
+	 * 
+	 * @return stop the timer and return the number of ms elapsed
+	 */
+	public long endTimer() {
+		final Date end = Calendar.getInstance().getTime();
+		return end.getTime() - start.getTime();
+
 	}
 
 }
