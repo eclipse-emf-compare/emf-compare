@@ -1,6 +1,7 @@
 package org.eclipse.emf.compare.diff.generic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,10 +11,10 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.AddReferenceValue;
+import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.DiffModel;
-import org.eclipse.emf.compare.diff.ModelElementChange;
 import org.eclipse.emf.compare.diff.MoveModelElement;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.diff.RemoveReferenceValue;
@@ -107,7 +108,6 @@ public class DiffMaker implements DiffEngine {
 
 		// browsing the match model
 		doDiffDelegate(root, (Match2Elements) match.getMatchedElements().get(0));
-
 		// iterate over the unmached elements end determine if they has been
 		// added or removed.
 		Iterator unMatched = match.getUnMatchedElements().iterator();
@@ -140,26 +140,92 @@ public class DiffMaker implements DiffEngine {
 			}
 
 		}
-		result.getOwnedElements().add(root);
+		if (root.getSubDiffElements().size() == 0)
+			result.getOwnedElements().add(root);
+		else
+			result.getOwnedElements().add(root.getSubDiffElements().get(0));
 		return result;// FIXME Do something
+	}
+
+	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
+		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
+		current.setLeftParent(match.getLeftElement());
+		try {
+			checkAttributesUpdates(current, match);
+			checkReferencesUpdates(current, match);
+			checkForMove(current, match);
+		} catch (FactoryException e) {
+			EMFComparePlugin.getDefault().log(e, false);
+		}
+		// we need to build this list to avoid concurrent modifications
+		Collection shouldAddToList = new ArrayList();
+		// we really have changes
+		if (current.getSubDiffElements().size() > 0) {
+			Iterator it2 = current.getSubDiffElements().iterator();
+			while (it2.hasNext()) {
+				Object eObj = it2.next();
+				if (!(eObj instanceof DiffGroup)) {
+					shouldAddToList.add(eObj);
+				}
+			}
+			// root.getSubDiffElements().add(current);
+			Iterator opIt = shouldAddToList.iterator();
+			while (opIt.hasNext()) {
+				addInContainerPackage(root, (DiffElement) opIt.next(), current
+						.getLeftParent());
+			}
+		} else {
+			current = root;
+		}
+		// taking care of our childs
+		Iterator it = match.getSubMatchElements().iterator();
+		while (it.hasNext()) {
+			doDiffDelegate(root, (Match2Elements) it.next());
+		}
+
 	}
 
 	/**
 	 * Look for an already created diff group in order to add the operation, if
 	 * none exists, create one in the right place
 	 */
-	private void addInContainerPackage(DiffGroup root,
-			ModelElementChange operation, EObject targetParent) {
+	private void addInContainerPackage(DiffGroup root, DiffElement operation,
+			EObject targetParent) {
+		if (targetParent == null) {
+			root.getSubDiffElements().add(operation);
+			return;
+		}
 		DiffGroup targetGroup = findExistingGroup(root, targetParent);
 		if (targetGroup == null) {
 			// we have to create the group
-			targetGroup = DiffFactory.eINSTANCE.createDiffGroup();
-			root.getSubDiffElements().add(targetGroup);
+			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(
+					operation);
 			// TODOCBR : reconstruct the whole hiearchy starting from the root
 			// or branch if a group already exists
+			// root.getSubDiffElements().add(targetGroup);
+		} else {
+			targetGroup.getSubDiffElements().add(operation);
 		}
-		targetGroup.getSubDiffElements().add(operation);
 
+	}
+
+	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
+		// si j'ai un père, je relance buildGroup sur lui et je m'ajoute dans
+		// mon père, sinon
+		DiffGroup curGroup = DiffFactory.eINSTANCE.createDiffGroup();
+		curGroup.setLeftParent(targetParent);
+		DiffGroup targetGroup = findExistingGroup(root, targetParent);
+		if (targetGroup != null)
+			curGroup = targetGroup;
+		if (targetParent.eContainer() == null) {
+			root.getSubDiffElements().add(curGroup);
+			return curGroup;
+		} else {
+			buildHierarchyGroup(targetParent.eContainer(), root)
+					.getSubDiffElements().add(curGroup);
+
+		}
+		return curGroup;
 	}
 
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
@@ -174,30 +240,6 @@ public class DiffMaker implements DiffEngine {
 		}
 
 		return null;
-	}
-
-	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
-		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
-		current.setLeftParent(match.getLeftElement());
-		try {
-			checkAttributesUpdates(current, match);
-			checkReferencesUpdates(current, match);
-			checkForMove(current, match);
-		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, false);
-		}
-		// we really have changes
-		if (current.getSubDiffElements().size() > 0) {
-			root.getSubDiffElements().add(current);
-		} else {
-			current = root;
-		}
-		// taking care of our childs
-		Iterator it = match.getSubMatchElements().iterator();
-		while (it.hasNext()) {
-			doDiffDelegate(current, (Match2Elements) it.next());
-		}
-
 	}
 
 	private void checkForMove(DiffGroup root, Match2Elements matchElement) {
