@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DiffGroupItemProvider.java,v 1.2 2007/04/16 15:29:26 cbrun Exp $
+ * $Id: DiffGroupItemProvider.java,v 1.3 2007/04/17 06:05:58 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
@@ -121,7 +121,7 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 			try {
 				return getString("_UI_DiffGroup_type", new Object[] {
 						group.getSubchanges(),
-						group.getLeftParent().eClass().getName(),
+						group.getLeftParent().eClass().getName()+" ",
 						NameSimilarity.findName(group.getLeftParent()) });
 			} catch (FactoryException e) {
 				return getString("_UI_DiffGroup_type", new Object[] {
