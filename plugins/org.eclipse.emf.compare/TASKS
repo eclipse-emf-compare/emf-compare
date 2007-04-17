@@ -1,6 +1,5 @@
 ___ TODO ___
  - 3 Way compare
- - hierarchy in diff model
  - remove UML2 dependencie for icons and use item providers for others
  - dynamic icons for diff model using the element icons
  - complete documentation and tutorials
@@ -22,3 +21,4 @@ ___ DONE ___
 16/04/2007 - handle the case where many elements still need to be mapped 
  without reaching a n^n complexity => using a max window
 16/04/2007 - use StringBuffer
+17/04/2007 - hierarchy in diff model
