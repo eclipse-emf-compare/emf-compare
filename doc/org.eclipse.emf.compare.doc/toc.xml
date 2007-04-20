@@ -5,9 +5,7 @@
    <topic label="Overview">
       <anchor id="concepts"/>
    </topic>  
-   <topic label="Reference">
-      <anchor id="reference"/>
-   </topic>
+   <topic label="References" href="references/javadoc/index.html"/>
    <topic label="Tutorials">
       <anchor id="samples"/>
    </topic>

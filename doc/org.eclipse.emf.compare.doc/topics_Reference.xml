@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+  </topic>
+</toc>
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+<toc label="Reference">
+  <topic label="API Reference" href="references/javadoc/overview-summary.html">
+    <topic label="diff_extension.impl" href="references/javadoc/diff_extension/impl/package-summary.html" />
+    <topic label="diff_extension" href="references/javadoc/diff_extension/package-summary.html" />
+    <topic label="diff_extension.util" href="references/javadoc/diff_extension/util/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.api" href="references/javadoc/org/eclipse/emf/compare/diff/api/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.generic.merge.impl" href="references/javadoc/org/eclipse/emf/compare/diff/generic/merge/impl/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.generic" href="references/javadoc/org/eclipse/emf/compare/diff/generic/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.impl" href="references/javadoc/org/eclipse/emf/compare/diff/impl/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff" href="references/javadoc/org/eclipse/emf/compare/diff/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.provider" href="references/javadoc/org/eclipse/emf/compare/diff/provider/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.service" href="references/javadoc/org/eclipse/emf/compare/diff/service/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.diff.util" href="references/javadoc/org/eclipse/emf/compare/diff/util/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.api" href="references/javadoc/org/eclipse/emf/compare/match/api/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.impl" href="references/javadoc/org/eclipse/emf/compare/match/impl/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match" href="references/javadoc/org/eclipse/emf/compare/match/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.service" href="references/javadoc/org/eclipse/emf/compare/match/service/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic" href="references/javadoc/org/eclipse/emf/compare/match/statistic/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.similarity" href="references/javadoc/org/eclipse/emf/compare/match/statistic/similarity/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.test.match.engines" href="references/javadoc/org/eclipse/emf/compare/match/statistic/test/match/engines/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.test" href="references/javadoc/org/eclipse/emf/compare/match/statistic/test/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.test.suite" href="references/javadoc/org/eclipse/emf/compare/match/statistic/test/suite/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.test.unit" href="references/javadoc/org/eclipse/emf/compare/match/statistic/test/unit/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.statistic.test.util" href="references/javadoc/org/eclipse/emf/compare/match/statistic/test/util/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.match.util" href="references/javadoc/org/eclipse/emf/compare/match/util/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.merge.api" href="references/javadoc/org/eclipse/emf/compare/merge/api/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.merge.service" href="references/javadoc/org/eclipse/emf/compare/merge/service/package-summary.html" />
+    <topic label="org.eclipse.emf.compare" href="references/javadoc/org/eclipse/emf/compare/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.actions.team" href="references/javadoc/org/eclipse/emf/compare/ui/actions/team/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.actions" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/actions/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.contentmergeviewer" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/contentmergeviewer/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.contentmergeviewer.properties" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/contentmergeviewer/properties/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.contentmergeviewer.tree" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/contentmergeviewer/tree/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.dialog" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/dialog/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.editor" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/editor/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.image" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/image/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.org.eclipse.compare.contentmergeviewer" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/org/eclipse/compare/contentmergeviewer/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.org.eclipse.compare" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/org/eclipse/compare/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.structuremergeviewer" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/structuremergeviewer/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.legacy.wizard" href="references/javadoc/org/eclipse/emf/compare/ui/legacy/wizard/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui" href="references/javadoc/org/eclipse/emf/compare/ui/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.ui.team.editor" href="references/javadoc/org/eclipse/emf/compare/ui/team/editor/package-summary.html" />
+    <topic label="org.eclipse.emf.compare.util" href="references/javadoc/org/eclipse/emf/compare/util/package-summary.html" />
+  </topic>
+</toc>

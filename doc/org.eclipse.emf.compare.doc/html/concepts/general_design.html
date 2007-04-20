@@ -9,5 +9,20 @@
 <body>
 <h1>General Design</h1>
 General design ideas behind EMF Compare
+<h3>Introduction</h3>
+	<p>	
+	EMF Compare brings model comparison to the EMF framework, this tool provides generic support for any kind of metamodel in order to compare and merge models.
+The objectives of this component are to provide a stable and efficient generic implementation of model comparison and to provide an extensible framework for specific needs.
+	</p>
+	<p>
+	The comparison process is divided in 2 phases : <em>matching</em> and <em>differencing</em>. The <em>matching</em> phase browses the model version figuring out which element comes from which other one, then the differencing process browses the matching result and create the corresponding delta. This delta may itself be serialized as a model.
+	</p>
+	<div align="center">
+	  	<img src="../pics/global.png"/>
+		<p align="center"><em>Global architecture</em></p>
+	</div>
+	<p>
+	The first release of EMF Compare is tentatively scheduled for the beginning of June, 2007. You may stay tuned to what's going on listening to this <a href="http://cedric.brun.free.fr/wordpress/?feed=rss2">RSS feed</a>.
+	</p>
 </body>
 </html>
