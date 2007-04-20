@@ -220,7 +220,7 @@ litigation.
    </license>
 
    <plugin
-         id="org.eclipse.emf.compare.match.statistic.tests"
+         id="org.eclipse.emf.compare.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
