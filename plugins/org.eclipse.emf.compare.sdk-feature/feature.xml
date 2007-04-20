@@ -253,22 +253,7 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.emf.compare.diff.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.compare.match"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-
-   <plugin
-         id="org.eclipse.emf.compare.match.statistic.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -283,6 +268,13 @@ litigation.
 
    <plugin
          id="org.eclipse.emf.compare.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.compare.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
