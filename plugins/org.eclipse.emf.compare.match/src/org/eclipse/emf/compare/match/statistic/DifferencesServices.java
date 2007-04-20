@@ -535,6 +535,8 @@ public class DifferencesServices implements MatchEngine {
 					: curIndex + window;
 			if (index > end)
 				index = end;
+			if (!it2.hasNext())
+				break;
 			EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
 			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2)
 					&& isSimilar(obj1, obj2)) {
