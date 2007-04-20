@@ -11,6 +11,7 @@ ___ TODO ___
  - weight annotations for metamodels
  - suppress unused code
  - cleanup GUI 
+ - export diff as...
  
 ___ DONE ___
 12/04/2007 - progress monitor and cancel support
