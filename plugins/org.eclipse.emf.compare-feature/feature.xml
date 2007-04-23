@@ -222,8 +222,8 @@ litigation.
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.core.resources"/>
    </requires>
 
    <plugin
@@ -246,8 +246,6 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-
 
    <plugin
          id="org.eclipse.emf.compare.match"
