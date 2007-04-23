@@ -94,7 +94,6 @@ public class EngineDescriptor implements Comparable {
 	 */
 	public MatchEngine getEngineInstance() {
 		if (engine == null)
-			;
 		{
 			try {
 				engine = (MatchEngine) element

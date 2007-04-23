@@ -66,7 +66,6 @@ public class MatchService {
 		}
 		List set = (List) engines.get(desc.getFileExtension());
 		set.add(desc);
-
 	}
 
 	private EngineDescriptor getBestDescriptor(String extension) {
