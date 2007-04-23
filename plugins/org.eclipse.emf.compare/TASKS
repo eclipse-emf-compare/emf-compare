@@ -1,17 +1,19 @@
 ___ TODO ___
- - 3 Way compare
  - dynamic icons for diff model using the element icons
- - complete documentation and tutorials
  - using functionnal ID through Ecore ID
  - better browsing when using XMI_ID
- - open  .diff files with compare editor
  - merge on moveoperation
+ - complete documentation and tutorials
+      - coding a match engine
+      - extending diff metamodel
+ - 3 Way compare
+ - open  .diff files with compare editor
  - cleaning up API, Extensible Factor system for generic engine
  - supporting dependencies design for merging
  - weight annotations for metamodels
  - suppress unused code
  - cleanup GUI 
- - export diff as...
+ - export diff as... extension point
  
 ___ DONE ___
 23/04/2007 - remove UML2 dependencie for icons and use item providers for others
