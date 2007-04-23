@@ -35,25 +35,25 @@ public interface MatchPackage extends EPackage {
 	 * The package name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	String eNAME = "match";
+	String eNAME = "match"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.0";
+	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	String eNS_PREFIX = "match";
+	String eNS_PREFIX = "match"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.
