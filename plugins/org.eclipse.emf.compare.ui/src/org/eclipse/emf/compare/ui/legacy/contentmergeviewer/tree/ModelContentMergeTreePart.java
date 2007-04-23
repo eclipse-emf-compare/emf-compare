@@ -19,8 +19,9 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.ModelElementChange;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
+import org.eclipse.emf.compare.ui.legacy.AdapterUtils;
 import org.eclipse.emf.compare.ui.legacy.DiffConstants;
-import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -33,9 +34,6 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
-import org.eclipse.uml2.uml.edit.providers.UMLReflectiveItemProviderAdapterFactory;
-import org.eclipse.uml2.uml.edit.providers.UMLResourceItemProviderAdapterFactory;
 
 /**
  * 
@@ -52,12 +50,11 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		setUseHashlookup(true);
 		this.side = side;
 		final List<AdapterFactoryImpl> factories = new ArrayList<AdapterFactoryImpl>();
-		factories.add(new UMLResourceItemProviderAdapterFactory());
-		factories.add(new UMLItemProviderAdapterFactory());
-		factories.add(new EcoreItemProviderAdapterFactory());
-		factories.add(new UMLReflectiveItemProviderAdapterFactory());
-		factories.add(new ReflectiveItemProviderAdapterFactory());
-
+//		factories.add(new UMLResourceItemProviderAdapterFactory());
+//		factories.add(new UMLItemProviderAdapterFactory());
+//		factories.add(new EcoreItemProviderAdapterFactory());
+//		factories.add(new UMLReflectiveItemProviderAdapterFactory());
+		factories.add(new ReflectiveItemProviderAdapterFactory());		
 		// factories.add(new UMLResourceItemProviderAdapterFactory());
 		// factories.add(new UMLItemProviderAdapterFactory());
 		// factories.add(new UMLReflectiveItemProviderAdapterFactory());
@@ -66,10 +63,12 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		// factories.add(new ReflectiveItemProviderAdapterFactory());
 		// factories.add(new ResourceItemProviderAdapterFactory());
 		// //testend
-		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
+		adapterFactory = new ComposedAdapterFactory(
 				factories);
 		setLabelProvider(new DeltaLabelProvider(adapterFactory));
 	}
+	
+	ComposedAdapterFactory adapterFactory;
 
 	private class DeltaLabelProvider extends AdapterFactoryLabelProvider {
 		/**
@@ -299,5 +298,17 @@ public class ModelContentMergeTreePart extends TreeViewer {
 
 		}
 		super.createTreeItem(parent, element, index);
+	}
+
+	public void setReflectiveInput(EObject eobj) {
+		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+		AdapterFactory best = new AdapterUtils().findAdapterFactory(eobj);
+		if (best != null)
+			factories.add(best);
+		factories.add(new ReflectiveItemProviderAdapterFactory());	
+		adapterFactory = new ComposedAdapterFactory(
+				factories);
+		setLabelProvider(new DeltaLabelProvider(adapterFactory));		
+		setInput(eobj.eResource());
 	}
 }

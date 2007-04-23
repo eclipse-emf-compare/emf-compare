@@ -61,8 +61,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.uml2.uml.UMLPackage;
-import org.eclipse.uml2.uml.resource.UMLResource;
 
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.MessageFormat;
@@ -94,12 +92,12 @@ public class ModelCompareEditorHistoryInput extends ModelCompareEditorInput {
 		prepareEngine(monitor);
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		ModelCompareInput input = null;
-		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI,
-				UMLPackage.eINSTANCE);
-		final Map extensionToFactoryMap = resourceSet.getResourceFactoryRegistry()
-				.getExtensionToFactoryMap();
-		extensionToFactoryMap.put(UMLResource.FILE_EXTENSION,
-				UMLResource.Factory.INSTANCE);
+//		resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI,
+//				UMLPackage.eINSTANCE);
+//		final Map extensionToFactoryMap = resourceSet.getResourceFactoryRegistry()
+//				.getExtensionToFactoryMap();
+//		extensionToFactoryMap.put(UMLResource.FILE_EXTENSION,
+//				UMLResource.Factory.INSTANCE);
 		EObject leftModel;
 		try {
 			leftModel = load(this.leftModelFile.getContents(), resourceSet);

@@ -40,6 +40,7 @@ public final class EMFAdapterFactoryProvider {
 		factories.add(new ResourceItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 
+
 		// ... add other provider adapter factories for your model as needed
 		// if you don't know what to add, look at the creation of the adapter
 		// factory

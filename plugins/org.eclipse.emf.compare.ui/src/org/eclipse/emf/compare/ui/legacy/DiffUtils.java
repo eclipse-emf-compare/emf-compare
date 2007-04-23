@@ -24,19 +24,16 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.IResourceVariant;
-import org.eclipse.uml2.uml.edit.providers.UMLItemProviderAdapterFactory;
-import org.eclipse.uml2.uml.edit.providers.UMLReflectiveItemProviderAdapterFactory;
-import org.eclipse.uml2.uml.edit.providers.UMLResourceItemProviderAdapterFactory;
 
 public class DiffUtils {
 
 	private static AdapterFactoryLabelProvider labelProvider;
 	static {
 		final List<AdapterFactoryImpl> factories = new ArrayList<AdapterFactoryImpl>();
-		factories.add(new UMLResourceItemProviderAdapterFactory());
-		factories.add(new UMLItemProviderAdapterFactory());
+//		factories.add(new UMLResourceItemProviderAdapterFactory());
+//		factories.add(new UMLItemProviderAdapterFactory());
 		factories.add(new EcoreItemProviderAdapterFactory());
-		factories.add(new UMLReflectiveItemProviderAdapterFactory());
+//		factories.add(new UMLReflectiveItemProviderAdapterFactory());
 		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(
 				factories);
 		labelProvider = new AdapterFactoryLabelProvider(adapterFactory);

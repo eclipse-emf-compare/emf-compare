@@ -1354,7 +1354,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		public void setInput(final Object input) {
 			switch (this.selectedTab) {
 			case TREE_TAB:
-				this.tree.setInput(((EObject) input).eResource());
+				this.tree.setReflectiveInput(((EObject) input));
 				break;
 			case PROPERTIES_TAB:
 				this.properties.setInput(input);
