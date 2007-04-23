@@ -1,25 +1,26 @@
 ___ TODO ___
  - 3 Way compare
- - remove UML2 dependencie for icons and use item providers for others
  - dynamic icons for diff model using the element icons
  - complete documentation and tutorials
  - using functionnal ID through Ecore ID
+ - better browsing when using XMI_ID
  - open  .diff files with compare editor
  - merge on moveoperation
- - cleaning up API, 
- - supporting dependancies design for merging
+ - cleaning up API, Extensible Factor system for generic engine
+ - supporting dependencies design for merging
  - weight annotations for metamodels
  - suppress unused code
  - cleanup GUI 
  - export diff as...
  
 ___ DONE ___
-12/04/2007 - progress monitor and cancel support
-12/04/2007 - cleaning up UI (remove uneeded buttons, diagram tabs...)
-12/04/2007 - save diff action
-13/04/2007 - maplists should map with the best matching of the list (not the first)
-13/04/2007 - filter unused metamodel elements  (for instance many stuffs in UML are not really used in models..)
+23/04/2007 - remove UML2 dependencie for icons and use item providers for others
+17/04/2007 - hierarchy in diff model
 16/04/2007 - handle the case where many elements still need to be mapped 
  without reaching a n^n complexity => using a max window
 16/04/2007 - use StringBuffer
-17/04/2007 - hierarchy in diff model
+13/04/2007 - maplists should map with the best matching of the list (not the first)
+13/04/2007 - filter unused metamodel elements  (for instance many stuffs in UML are not really used in models..)
+12/04/2007 - progress monitor and cancel support
+12/04/2007 - cleaning up UI (remove uneeded buttons, diagram tabs...)
+12/04/2007 - save diff action
