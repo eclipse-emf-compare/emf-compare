@@ -1,5 +1,4 @@
 ___ TODO ___
- - dynamic icons for diff model using the element icons
  - using functionnal ID through Ecore ID
  - better browsing when using XMI_ID
  - merge on moveoperation
@@ -16,6 +15,7 @@ ___ TODO ___
  - export diff as... extension point
  
 ___ DONE ___
+10/05/2007 - (LAURENT) dynamic icons for diff model using the element icons
 23/04/2007 - remove UML2 dependencie for icons and use item providers for others
 17/04/2007 - hierarchy in diff model
 16/04/2007 - handle the case where many elements still need to be mapped 
