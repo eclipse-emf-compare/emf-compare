@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.emf.compare.sdk_feature"
-      label="EMF Compare sdk"
+      id="org.eclipse.emf.compare.sdk"
+      label="EMF Compare SDK"
       version="1.0.0.qualifier"
       provider-name="Eclipse.org">
 
@@ -224,11 +224,11 @@ litigation.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.compare.doc.feature"
+         id="org.eclipse.emf.compare.doc"
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.compare.examples.feature"
+         id="org.eclipse.emf.compare.examples"
          version="0.0.0"/>
 
    <plugin
