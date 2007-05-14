@@ -17,8 +17,7 @@ Require-Bundle: org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.ui,
  org.eclipse.emf.common,
  org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi,
- fr.obeo.acceleo.uml14
+ org.eclipse.emf.ecore.xmi
 Bundle-Activator: org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin
 Eclipse-LazyStart: true
 Bundle-Vendor: Eclipse.org
