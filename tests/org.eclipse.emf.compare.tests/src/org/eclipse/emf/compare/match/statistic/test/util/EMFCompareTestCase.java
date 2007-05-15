@@ -37,9 +37,9 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * 
  */
 public class EMFCompareTestCase extends TestCase {
-	static final String PLUGIN_ID = ""; // TODO check that Id
+	static final String PLUGIN_ID = ""; // TODO check that Id //$NON-NLS-1$
 
-	static final String CLASS_FILE = "";
+	static final String CLASS_FILE = ""; //$NON-NLS-1$
 
 	/**
 	 * Assert file contents are strictly equals
