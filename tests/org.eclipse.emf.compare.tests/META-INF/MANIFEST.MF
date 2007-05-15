@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Plug-in for statistic match strategy
 Bundle-SymbolicName: org.eclipse.emf.compare.tests;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.emf.compare.match,
  org.eclipse.core.runtime,
