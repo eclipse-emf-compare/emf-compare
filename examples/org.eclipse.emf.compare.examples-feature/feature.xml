@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.examples"
       label="Examples of the EMF Compare use"
-      version="1.0.0"
+      version="0.7.0"
       provider-name="Eclipse.org">
 
    <description>
@@ -220,7 +220,7 @@ litigation.
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="1.0.0.200701051744"/>
+      <import feature="org.eclipse.emf.compare" version="0.7.0.200701051744"/>
    </requires>
 
    <plugin
