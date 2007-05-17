@@ -1,28 +1,29 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test Plug-in for statistic match strategy
+Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.emf.compare.tests;singleton:=true
 Bundle-Version: 0.7.0
-Bundle-Localization: plugin
-Require-Bundle: org.eclipse.emf.compare.match,
- org.eclipse.core.runtime,
- org.eclipse.core.filebuffers,
- org.eclipse.jface.text,
- org.eclipse.ui,
- org.junit,
- org.eclipse.emf.compare.diff,
- org.eclipse.compare,
- org.eclipse.core.resources,
- org.eclipse.emf.compare,
- org.eclipse.emf.compare.ui,
- org.eclipse.emf.common,
- org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.xmi
-Bundle-Activator: org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin
-Eclipse-LazyStart: true
 Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.match.statistic.test,
  org.eclipse.emf.compare.match.statistic.test.match.engines,
  org.eclipse.emf.compare.match.statistic.test.suite,
  org.eclipse.emf.compare.match.statistic.test.unit,
  org.eclipse.emf.compare.match.statistic.test.util
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
+ org.junit;bundle-version="[3.8.1,4.0.0)",
+ org.eclipse.emf.ecore;bundle-version="[2.2.0,3.0.0)",
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.common,
+ org.eclipse.emf.compare.match, 
+ org.eclipse.core.filebuffers,
+ org.eclipse.jface.text,
+ org.eclipse.ui,
+ org.eclipse.emf.compare.diff,
+ org.eclipse.compare,
+ org.eclipse.core.resources,
+ org.eclipse.emf.compare,
+ org.eclipse.emf.compare.ui,
+Bundle-Activator: org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
