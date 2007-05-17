@@ -219,6 +219,11 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/technology/emft/updates/"/>
+      <discovery label="%updateSiteName" url="http://download.eclipse.org/technology/emft/updates/"/>
+   </url>
+
    <includes
          id="org.eclipse.emf.compare"
          version="0.0.0"/>
@@ -228,14 +233,10 @@ litigation.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.emf.compare.examples"
+         id="org.eclipse.emf.compare.source"
          version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.emf.compare.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
+   <!-- <includes
+         id="org.eclipse.emf.compare.examples"
+         version="0.0.0"/> -->
 </feature>
