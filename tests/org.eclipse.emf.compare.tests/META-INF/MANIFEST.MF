@@ -1,15 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
-Bundle-SymbolicName: org.eclipse.emf.compare.tests;singleton:=true
+Bundle-SymbolicName: org.eclipse.emf.compare.tests
 Bundle-Version: 0.7.0
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compare.match.statistic.test,
- org.eclipse.emf.compare.match.statistic.test.match.engines,
- org.eclipse.emf.compare.match.statistic.test.suite,
- org.eclipse.emf.compare.match.statistic.test.unit,
- org.eclipse.emf.compare.match.statistic.test.util
+Export-Package: org.eclipse.emf.compare.tests
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
  org.junit;bundle-version="[3.8.1,4.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.2.0,3.0.0)",
