@@ -226,6 +226,7 @@ litigation.
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.test" version="3.1.0" match="compatible"/>
       <import plugin="org.junit" version="3.8.1" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
       <import plugin="org.eclipse.emf.compare.match"/>
