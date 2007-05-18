@@ -1,9 +1,9 @@
-package org.eclipse.emf.compare.match.statistic.test.unit;
+package org.eclipse.emf.compare.tests.unit;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.DiffModel;
-import org.eclipse.emf.compare.match.statistic.test.util.EMFCompareTestCase;
+import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.ui.legacy.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 

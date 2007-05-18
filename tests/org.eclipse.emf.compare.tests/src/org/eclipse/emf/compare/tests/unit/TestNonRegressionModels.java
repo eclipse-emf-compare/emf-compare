@@ -1,8 +1,8 @@
-package org.eclipse.emf.compare.match.statistic.test.unit;
+package org.eclipse.emf.compare.tests.unit;
 
 import java.io.IOException;
 
-import org.eclipse.emf.compare.match.statistic.test.util.EMFCompareTestCase;
+import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.util.FactoryException;
 
 /**

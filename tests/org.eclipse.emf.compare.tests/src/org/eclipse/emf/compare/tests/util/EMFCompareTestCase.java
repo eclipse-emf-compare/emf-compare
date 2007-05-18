@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.match.statistic.test.util;
+package org.eclipse.emf.compare.tests.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.match.statistic.test.EMFCompareTestPlugin;
+import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;

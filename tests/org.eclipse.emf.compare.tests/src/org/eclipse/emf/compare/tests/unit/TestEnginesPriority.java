@@ -1,8 +1,8 @@
-package org.eclipse.emf.compare.match.statistic.test.unit;
+package org.eclipse.emf.compare.tests.unit;
 
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.match.statistic.test.util.EMFCompareTestCase;
+import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 
 /**
  * Test the engine contribution priority handling

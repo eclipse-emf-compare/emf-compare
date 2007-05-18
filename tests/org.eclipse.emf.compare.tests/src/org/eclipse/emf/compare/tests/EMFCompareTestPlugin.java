@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.match.statistic.test;
+package org.eclipse.emf.compare.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

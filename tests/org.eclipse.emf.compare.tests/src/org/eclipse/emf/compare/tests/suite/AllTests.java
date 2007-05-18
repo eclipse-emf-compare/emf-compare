@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.match.statistic.test.suite;
+package org.eclipse.emf.compare.tests.suite;
 
 import java.util.Arrays;
 

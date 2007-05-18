@@ -26,7 +26,7 @@
     <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${emft-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
-      <property name="classname" value="org.eclipse.emf.compare.match.statistic.test.suite.AllTests"/>
+      <property name="classname" value="org.eclipse.emf.compare.tests.suite.AllTests"/>
     </ant>
   </target>
 

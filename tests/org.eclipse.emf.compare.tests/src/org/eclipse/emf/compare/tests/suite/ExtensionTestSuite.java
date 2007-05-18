@@ -1,9 +1,9 @@
-package org.eclipse.emf.compare.match.statistic.test.suite;
+package org.eclipse.emf.compare.tests.suite;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.emf.compare.match.statistic.test.unit.TestEnginesPriority;
+import org.eclipse.emf.compare.tests.unit.TestEnginesPriority;
 
 /**
  * Test suite for extensions contributions

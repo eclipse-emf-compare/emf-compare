@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.match.statistic.test.match.engines;
+package org.eclipse.emf.compare.tests.match.engines;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.match.MatchModel;
@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
-public class GenericHighestEngine implements MatchEngine {
+public class AEngine implements MatchEngine {
 
 	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot,IProgressMonitor monitor) {
 		return null;

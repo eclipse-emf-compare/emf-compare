@@ -1,4 +1,4 @@
-package org.eclipse.emf.compare.match.statistic.test.util;
+package org.eclipse.emf.compare.tests.util;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
