@@ -226,8 +226,6 @@ litigation.
 
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.test" version="3.1.0" match="compatible"/>
-      <import plugin="org.junit" version="3.8.1" match="compatible"/>
       <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
       <import plugin="org.eclipse.emf.compare.match"/>
       <import plugin="org.eclipse.emf.compare.diff"/>
@@ -246,13 +244,13 @@ litigation.
          id="org.eclipse.test"
          download-size="0"
          install-size="0"
-         version="3.1.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.ant.optional.junit"
          download-size="0"
          install-size="0"
-         version="2.1.0"
+         version="0.0.0"
          fragment="true"/>
 
 </feature>
