@@ -20,13 +20,10 @@ import org.eclipse.compare.CompareViewerSwitchingPane;
 import org.eclipse.compare.ICompareNavigator;
 import org.eclipse.compare.IPropertyChangeNotifier;
 import org.eclipse.compare.Splitter;
+import org.eclipse.compare.internal.ChangePropertyAction;
 import org.eclipse.compare.internal.CompareEditor;
-import org.eclipse.compare.internal.CompareNavigator;
 import org.eclipse.compare.internal.ComparePreferencePage;
 import org.eclipse.compare.internal.CompareUIPlugin;
-import org.eclipse.compare.internal.ISavable;
-import org.eclipse.compare.internal.IgnoreWhiteSpaceAction;
-import org.eclipse.compare.internal.ShowPseudoConflicts;
 import org.eclipse.compare.internal.Utilities;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
@@ -36,6 +33,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.compare.ui.legacy.org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -950,9 +948,22 @@ public abstract class CompareEditorInput extends
 			final IProgressMonitor pm) throws CoreException {
 		if (pane != null) {
 			final Viewer v = pane.getViewer();
-			if (v instanceof ISavable) {
-				((ISavable) v).save(pm);
+			if (v instanceof ContentMergeViewer) {
+				((ContentMergeViewer) v).save(pm);
 			}
 		}
+	}
+}
+
+class IgnoreWhiteSpaceAction extends ChangePropertyAction {
+
+	public IgnoreWhiteSpaceAction(ResourceBundle bundle, CompareConfiguration cc) {
+		super(bundle, cc, "action.IgnoreWhiteSpace.", CompareConfiguration.IGNORE_WHITESPACE); //$NON-NLS-1$
+	}
+}
+class ShowPseudoConflicts extends ChangePropertyAction {
+
+	public ShowPseudoConflicts(ResourceBundle bundle, CompareConfiguration cc) {
+		super(bundle, cc, "action.ShowPseudoConflicts.", CompareConfiguration.SHOW_PSEUDO_CONFLICTS); //$NON-NLS-1$
 	}
 }

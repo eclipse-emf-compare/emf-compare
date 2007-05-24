@@ -27,6 +27,8 @@ import org.eclipse.compare.internal.BufferedCanvas;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -177,7 +179,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/**
 	 * @param parent
 	 */
-	public ModelContentMergeViewer(final Composite parent, final CompareConfiguration config) {
+	public ModelContentMergeViewer(final Composite parent,
+			final CompareConfiguration config) {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 
 		this.fIsMotif = "motif".equals(SWT.getPlatform()); //$NON-NLS-1$
@@ -225,7 +228,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		this.leftPart = new ModelContentMergeViewerPart(composite,
 				DiffConstants.LEFT);
 
-		this.leftPart.addAction(MergeSourceViewer.SAVE_ID, this.fLeftSaveAction);
+		this.leftPart
+				.addAction(MergeSourceViewer.SAVE_ID, this.fLeftSaveAction);
 		// pane.setContent(leftPart.tabFolder);
 		this.ancestorPart = new ModelContentMergeViewerPart(composite,
 				DiffConstants.ANCESTOR);
@@ -234,42 +238,50 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				DiffConstants.RIGHT);
 		// pane3.setContent(rightPart.tabFolder);
 
-		this.leftPart.hsynchViewport(this.rightPart, this.ancestorPart); // manage the
+		this.leftPart.hsynchViewport(this.rightPart, this.ancestorPart); // manage
+																			// the
 		// horizontal bar
 		this.rightPart.hsynchViewport(this.leftPart, this.ancestorPart);
 		this.ancestorPart.hsynchViewport(this.leftPart, this.rightPart);
 
-		this.leftPart.addCompareEditorPartListener(new ICompareEditorPartListener() {
+		this.leftPart
+				.addCompareEditorPartListener(new ICompareEditorPartListener() {
 
-			public void selectedTabChanged(final int newIndex) {
-				ModelContentMergeViewer.this.selectedTab = newIndex;
-				ModelContentMergeViewer.this.rightPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
-				ModelContentMergeViewer.this.ancestorPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
-				updateCenter();
+					public void selectedTabChanged(final int newIndex) {
+						ModelContentMergeViewer.this.selectedTab = newIndex;
+						ModelContentMergeViewer.this.rightPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						ModelContentMergeViewer.this.ancestorPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						updateCenter();
 
-			}
+					}
 
-			public void selectionChanged(final SelectionChangedEvent event) {
-				fireSelectionChanged(event);
-			}
+					public void selectionChanged(
+							final SelectionChangedEvent event) {
+						fireSelectionChanged(event);
+					}
 
-			public void updateCenter() {
-				ModelContentMergeViewer.this.updateCenter();
-			}
+					public void updateCenter() {
+						ModelContentMergeViewer.this.updateCenter();
+					}
 
-		});
+				});
 		this.rightPart
 				.addCompareEditorPartListener(new ICompareEditorPartListener() {
 
 					public void selectedTabChanged(final int newIndex) {
 						ModelContentMergeViewer.this.selectedTab = newIndex;
-						ModelContentMergeViewer.this.leftPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
-						ModelContentMergeViewer.this.ancestorPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						ModelContentMergeViewer.this.leftPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						ModelContentMergeViewer.this.ancestorPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
 						updateCenter();
 
 					}
 
-					public void selectionChanged(final SelectionChangedEvent event) {
+					public void selectionChanged(
+							final SelectionChangedEvent event) {
 						fireSelectionChanged(event);
 
 					}
@@ -285,12 +297,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 					public void selectedTabChanged(final int newIndex) {
 						ModelContentMergeViewer.this.selectedTab = newIndex;
-						ModelContentMergeViewer.this.rightPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
-						ModelContentMergeViewer.this.leftPart.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						ModelContentMergeViewer.this.rightPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
+						ModelContentMergeViewer.this.leftPart
+								.setSelectedTab(ModelContentMergeViewer.this.selectedTab);
 						updateCenter();
 					}
 
-					public void selectionChanged(final SelectionChangedEvent event) {
+					public void selectionChanged(
+							final SelectionChangedEvent event) {
 						fireSelectionChanged(event);
 
 					}
@@ -338,7 +353,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *      int, int, int)
 	 */
 	@Override
-	protected void handleResizeAncestor(final int x, final int y, final int width, final int height) {
+	protected void handleResizeAncestor(final int x, final int y,
+			final int width, final int height) {
 		this.ancestorPart.setBounds(x, y, width, height);
 
 	}
@@ -348,10 +364,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *      int, int, int, int, int)
 	 */
 	@Override
-	protected void handleResizeLeftRight(final int x, final int y, final int leftWidth,
-			final int centerWidth, final int rightWidth, final int height) {
+	protected void handleResizeLeftRight(final int x, final int y,
+			final int leftWidth, final int centerWidth, final int rightWidth,
+			final int height) {
 		this.leftPart.setBounds(x, y, leftWidth, height);
-		this.rightPart.setBounds(x + leftWidth + centerWidth, y, rightWidth, height);
+		this.rightPart.setBounds(x + leftWidth + centerWidth, y, rightWidth,
+				height);
 	}
 
 	/**
@@ -359,7 +377,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *      java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	protected void updateContent(final Object ancestor, final Object left, final Object right) {
+	protected void updateContent(final Object ancestor, final Object left,
+			final Object right) {
 		if (getInput() == null) {
 			return;
 		}
@@ -408,7 +427,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+		public void inputChanged(final Viewer viewer, final Object oldInput,
+				final Object newInput) {
 			if (newInput == null) {
 				return;
 			}
@@ -445,7 +465,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					return new Object[0];
 				}
 				final List<Object> elements = new ArrayList<Object>();
-				for (final Object attObject : input.eClass().getEAllAttributes()) {
+				for (final Object attObject : input.eClass()
+						.getEAllAttributes()) {
 					final EAttribute att = (EAttribute) attObject;
 					final List row = new ArrayList();
 					row.add(att);
@@ -608,7 +629,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 		 *      java.lang.Object, java.lang.Object)
 		 */
-		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
+		public void inputChanged(final Viewer viewer, final Object oldInput,
+				final Object newInput) {
 			this.root = null;
 			((TreeViewer) viewer).getTree().clearAll(true);
 
@@ -655,8 +677,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				g.fillRectangle(w - 1, 0, 1, size.y);
 			}
 
-			final List<Object> lVisibleElts = this.leftPart.getVisibleElements();
-			final List<Object> rVisibleElts = this.rightPart.getVisibleElements();
+			final List<Object> lVisibleElts = this.leftPart
+					.getVisibleElements();
+			final List<Object> rVisibleElts = this.rightPart
+					.getVisibleElements();
 
 			TreeItem lTreePrevious = null;
 			TreeItem rTreePrevious = null;
@@ -683,10 +707,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						continue;
 					}
 
-					final TreeItem leftItem = (TreeItem) this.leftPart.find(match
-							.getLeftElement());
-					final TreeItem rightItem = (TreeItem) this.rightPart.find(match
-							.getRightElement());
+					final TreeItem leftItem = (TreeItem) this.leftPart
+							.find(match.getLeftElement());
+					final TreeItem rightItem = (TreeItem) this.rightPart
+							.find(match.getRightElement());
 					if ((!lVisibleElts.contains(leftItem))
 							&& (!rVisibleElts.contains(rightItem))) {
 						continue;
@@ -795,8 +819,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final int w2 = 3;
 					final int yshift = 4; // due to encapsulation in TabFolder
 
-					final Color fillColor = getColor(display, getFillColor(match));
-					final Color strokeColor = getColor(display, getStrokeColor(match));
+					final Color fillColor = getColor(display,
+							getFillColor(match));
+					final Color strokeColor = getColor(display,
+							getStrokeColor(match));
 
 					g.setBackground(fillColor);
 
@@ -811,8 +837,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					g.drawRoundRectangle(w - w2, ry - 1 + yshift, w2, rh, 10,
 							10); // right
 
-					final int[] points = getCenterCurvePoints(w2, ly + yshift + lh
-							/ 2, w - w2, ry + yshift + rh / 2);
+					final int[] points = getCenterCurvePoints(w2, ly + yshift
+							+ lh / 2, w - w2, ry + yshift + rh / 2);
 					for (int i = 1; i < points.length; i++) {
 						g.setLineStyle(SWT.LINE_DASH);
 						g
@@ -953,8 +979,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		return heightFactor;
 	}
 
-	private int[] getCenterCurvePoints(final int startx, final int starty, final int endx,
-			final int endy) {
+	private int[] getCenterCurvePoints(final int startx, final int starty,
+			final int endx, final int endy) {
 		if (this.fBasicCenterCurve == null) {
 			buildBaseCenterCurve(endx - startx);
 		}
@@ -1151,7 +1177,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			return null;
 		}
 
-		public ModelContentMergeViewerPart(final Composite composite, final int side) {
+		public ModelContentMergeViewerPart(final Composite composite,
+				final int side) {
 			this.side = side;
 			this.fActions = new HashMap<String, Action>();
 			createContents(composite);
@@ -1180,7 +1207,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				this.tree.getTree().setBounds(this.tabFolder.getClientArea());
 				break;
 			case PROPERTIES_TAB:
-				this.properties.getTable().setBounds(this.tabFolder.getClientArea());
+				this.properties.getTable().setBounds(
+						this.tabFolder.getClientArea());
 				break;
 			}
 		}
@@ -1311,8 +1339,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						sb3.setSelection(newPosition < 0 ? 0 : newPosition);
 					}
 					if ("carbon".equals(SWT.getPlatform())
-							&& (ModelContentMergeViewer.this.fComposite != null) && !ModelContentMergeViewer.this.fComposite.isDisposed()) {
-						ModelContentMergeViewer.this.fComposite.getDisplay().update();
+							&& (ModelContentMergeViewer.this.fComposite != null)
+							&& !ModelContentMergeViewer.this.fComposite
+									.isDisposed()) {
+						ModelContentMergeViewer.this.fComposite.getDisplay()
+								.update();
 					}
 				}
 			});
@@ -1340,8 +1371,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						sb3.setSelection(newPosition < 0 ? 0 : newPosition);
 					}
 					if ("carbon".equals(SWT.getPlatform())
-							&& (ModelContentMergeViewer.this.fComposite != null) && !ModelContentMergeViewer.this.fComposite.isDisposed()) {
-						ModelContentMergeViewer.this.fComposite.getDisplay().update();
+							&& (ModelContentMergeViewer.this.fComposite != null)
+							&& !ModelContentMergeViewer.this.fComposite
+									.isDisposed()) {
+						ModelContentMergeViewer.this.fComposite.getDisplay()
+								.update();
 					}
 				}
 			});
@@ -1372,7 +1406,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 * @param l
 		 * @return
 		 */
-		public Rectangle computeTrim(final int i, final int j, final int k, final int l) {
+		public Rectangle computeTrim(final int i, final int j, final int k,
+				final int l) {
 			return this.tabFolder.computeTrim(i, j, k, l);
 		}
 
@@ -1382,7 +1417,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 * @param leftWidth
 		 * @param height
 		 */
-		public void setBounds(final int x, final int y, final int leftWidth, final int height) {
+		public void setBounds(final int x, final int y, final int leftWidth,
+				final int height) {
 			this.tabFolder.setBounds(x, y, leftWidth, height);
 			resizeBounds();
 		}
@@ -1436,9 +1472,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final CTabItem treeTab = new CTabItem(this.tabFolder, SWT.NONE);
 			treeTab.setText("Tree");
 
-			final CTabItem propertiesTab = new CTabItem(this.tabFolder, SWT.NONE);
+			final CTabItem propertiesTab = new CTabItem(this.tabFolder,
+					SWT.NONE);
 			propertiesTab.setText("Properties");
-
 
 			Composite panel = new Composite(this.tabFolder, SWT.NONE);
 			panel.setLayout(new GridLayout());
@@ -1462,7 +1498,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					} else {
 						if (e.item.equals(propertiesTab)) {
 							ModelContentMergeViewerPart.this.selectedTab = PROPERTIES_TAB;
-						} 
+						}
 					}
 					fireSelectedtabChanged();
 				}
@@ -1473,7 +1509,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					} else {
 						if (e.item.equals(propertiesTab)) {
 							ModelContentMergeViewerPart.this.selectedTab = PROPERTIES_TAB;
-						} 
+						}
 					}
 					fireSelectedtabChanged();
 				}
@@ -1622,7 +1658,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 			final int w = canvas.getSize().x;
 			if (this.properties.getInput() instanceof Match2Elements) {
-				final Match2Elements delta = ((Match2Elements) this.properties.getInput());
+				final Match2Elements delta = ((Match2Elements) this.properties
+						.getInput());
 				if ((delta.getSubMatchElements().isEmpty())) {
 					return;
 				}
@@ -1771,11 +1808,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					} else {
 						switch (this.side) {
 						case DiffConstants.LEFT:
-							item = (TreeItem) this.tree.find(match.getLeftElement());
+							item = (TreeItem) this.tree.find(match
+									.getLeftElement());
 							break;
 						case DiffConstants.RIGHT:
-							item = (TreeItem) this.tree
-									.find(match.getRightElement());
+							item = (TreeItem) this.tree.find(match
+									.getRightElement());
 							break;
 						case DiffConstants.ANCESTOR:
 							// elementIsNull = delta.getAncestorElt() == null;
@@ -1985,7 +2023,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		private Object findMatchFromDiff(final EObject element) {
 			// TODOCBR handle cache
-			final MatchModel match = ((ModelCompareInput) getInput()).getDelta();
+			final MatchModel match = ((ModelCompareInput) getInput())
+					.getDelta();
 			final TreeIterator it = match.eAllContents();
 			while (it.hasNext()) {
 				final Object obj = it.next();
@@ -2036,7 +2075,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return
 	 */
 	private RGB getFillColor(final Match2Elements diff) {
-		final boolean selected = (this.currentDiff != null) && this.currentDiff.equals(diff);
+		final boolean selected = (this.currentDiff != null)
+				&& this.currentDiff.equals(diff);
 
 		final RGB selected_fill = getBackground(null);
 		return this.INCOMING_FILL;
@@ -2066,7 +2106,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return
 	 */
 	private RGB getStrokeColor(final Match2Elements diff) {
-		final boolean selected = (this.currentDiff != null) && this.currentMatch.equals(diff);
+		final boolean selected = (this.currentDiff != null)
+				&& this.currentMatch.equals(diff);
 
 		// if (diff.getKind() >= DiffConstants.RESOLVED)
 		// return RESOLVED;
@@ -2138,7 +2179,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void mergeLeftToRight() {
 		if (this.currentDiff != null) {
-			final AbstractMerger merger = this.mergeFactory.createMerger(this.currentDiff);
+			final AbstractMerger merger = this.mergeFactory
+					.createMerger(this.currentDiff);
 			if (merger.canUndoInTarget()) {
 				merger.undoInTarget();
 				setRightDirty(true);
@@ -2149,11 +2191,20 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void mergeRightToLeft() {
 		if (this.currentDiff != null) {
-			final AbstractMerger merger = this.mergeFactory.createMerger(this.currentDiff);
+			final AbstractMerger merger = this.mergeFactory
+					.createMerger(this.currentDiff);
 			if (merger.canApplyInOrigin()) {
 				merger.applyInOrigin();
 				setLeftDirty(true);
 			}
+		}
+	}
+
+	public void flush(IProgressMonitor monitor)  {
+		try {
+			save(monitor);
+		} catch (CoreException e) {
+			EMFComparePlugin.getDefault().log(e, false);
 		}
 	}
 

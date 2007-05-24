@@ -23,7 +23,6 @@ import org.eclipse.compare.contentmergeviewer.TextMergeViewer;
 import org.eclipse.compare.internal.ChangePropertyAction;
 import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.compare.internal.ComparePreferencePage;
-import org.eclipse.compare.internal.ISavable;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.MergeViewerContentProvider;
 import org.eclipse.compare.internal.Utilities;
@@ -93,7 +92,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
  * @see TextMergeViewer
  */
 public abstract class ContentMergeViewer extends ContentViewer implements
-		IPropertyChangeNotifier, ISavable {
+IPropertyChangeNotifier {
 
 	class SaveAction extends MergeViewerAction {
 
@@ -917,9 +916,12 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 				Utilities.initAction(this.fCopyLeftToRightAction,
 						getResourceBundle(), "action.CopyLeftToRight."); //$NON-NLS-1$
 				tbm.appendToGroup("merge", this.fCopyLeftToRightAction); //$NON-NLS-1$
+				/*
 				Utilities.registerAction(this.fKeyBindingService,
 						this.fCopyLeftToRightAction,
 						"org.eclipse.compare.copyAllLeftToRight"); //$NON-NLS-1$
+						Removed to build against Eclipse 3.3
+						*/
 
 			}
 
@@ -937,9 +939,13 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 				Utilities.initAction(this.fCopyRightToLeftAction,
 						getResourceBundle(), "action.CopyRightToLeft."); //$NON-NLS-1$
 				tbm.appendToGroup("merge", this.fCopyRightToLeftAction); //$NON-NLS-1$
-				Utilities.registerAction(this.fKeyBindingService,
+				/*
+				  
+				 Utilities.registerAction(this.fKeyBindingService,
 						this.fCopyRightToLeftAction,
 						"org.eclipse.compare.copyAllRightToLeft"); //$NON-NLS-1$
+						Removed to build against Eclipse 3.3
+						*/
 
 			}
 
