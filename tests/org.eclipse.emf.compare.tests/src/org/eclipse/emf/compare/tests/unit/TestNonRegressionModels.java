@@ -8,7 +8,7 @@ import org.eclipse.emf.compare.util.FactoryException;
 /**
  * Test the results models are still the same as expected
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class TestNonRegressionModels extends EMFCompareTestCase {

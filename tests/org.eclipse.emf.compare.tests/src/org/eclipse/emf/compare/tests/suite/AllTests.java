@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IPlatformRunnable;
 /**
  * Launch all the JUnit tests for EMF compare
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class AllTests extends TestCase implements IPlatformRunnable {

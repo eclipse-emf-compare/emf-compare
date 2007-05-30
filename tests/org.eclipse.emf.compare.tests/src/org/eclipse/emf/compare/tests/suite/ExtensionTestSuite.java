@@ -8,7 +8,7 @@ import org.eclipse.emf.compare.tests.unit.TestEnginesPriority;
 /**
  * Test suite for extensions contributions
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class ExtensionTestSuite {

@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 /**
  * TestCase with usefull utility methods
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class EMFCompareTestCase extends TestCase {

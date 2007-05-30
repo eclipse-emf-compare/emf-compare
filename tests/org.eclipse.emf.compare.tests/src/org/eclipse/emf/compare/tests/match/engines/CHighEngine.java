@@ -7,7 +7,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * a dummy match engine
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class CHighEngine implements MatchEngine {

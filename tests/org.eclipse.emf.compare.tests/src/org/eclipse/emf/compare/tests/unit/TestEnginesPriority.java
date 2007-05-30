@@ -7,7 +7,7 @@ import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 /**
  * Test the engine contribution priority handling
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class TestEnginesPriority extends EMFCompareTestCase {

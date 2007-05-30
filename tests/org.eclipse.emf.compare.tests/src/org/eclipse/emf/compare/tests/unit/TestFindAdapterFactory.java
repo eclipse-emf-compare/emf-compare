@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Test the finding of the EMF adapterFactory
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class TestFindAdapterFactory extends EMFCompareTestCase {
