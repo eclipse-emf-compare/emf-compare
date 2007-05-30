@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Generic emf label provider
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class EMFLabelProvider extends AdapterFactoryLabelProvider {

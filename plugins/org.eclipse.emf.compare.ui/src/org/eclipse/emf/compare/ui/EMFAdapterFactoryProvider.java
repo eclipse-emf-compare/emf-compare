@@ -21,7 +21,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 
 /**
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public final class EMFAdapterFactoryProvider {
