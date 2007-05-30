@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Usefull methods for EMF adapter factories
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class AdapterUtils {
