@@ -80,8 +80,7 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public EList getLeftAddedTarget() {
 		if (leftAddedTarget == null) {
-			leftAddedTarget = new EObjectResolvingEList(EObject.class, this,
-					DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET);
+			leftAddedTarget = new EObjectResolvingEList(EObject.class, this, DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET);
 		}
 		return leftAddedTarget;
 	}
@@ -93,8 +92,7 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public EList getRightAddedTarget() {
 		if (rightAddedTarget == null) {
-			rightAddedTarget = new EObjectResolvingEList(EObject.class, this,
-					DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET);
+			rightAddedTarget = new EObjectResolvingEList(EObject.class, this, DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET);
 		}
 		return rightAddedTarget;
 	}
@@ -106,10 +104,10 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-			return getLeftAddedTarget();
-		case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
-			return getRightAddedTarget();
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				return getLeftAddedTarget();
+			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
+				return getRightAddedTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -121,14 +119,14 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-			getLeftAddedTarget().clear();
-			getLeftAddedTarget().addAll((Collection) newValue);
-			return;
-		case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
-			getRightAddedTarget().clear();
-			getRightAddedTarget().addAll((Collection) newValue);
-			return;
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				getLeftAddedTarget().clear();
+				getLeftAddedTarget().addAll((Collection)newValue);
+				return;
+			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
+				getRightAddedTarget().clear();
+				getRightAddedTarget().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -140,12 +138,12 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-			getLeftAddedTarget().clear();
-			return;
-		case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
-			getRightAddedTarget().clear();
-			return;
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				getLeftAddedTarget().clear();
+				return;
+			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
+				getRightAddedTarget().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -157,10 +155,10 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-			return leftAddedTarget != null && !leftAddedTarget.isEmpty();
-		case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
-			return rightAddedTarget != null && !rightAddedTarget.isEmpty();
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				return leftAddedTarget != null && !leftAddedTarget.isEmpty();
+			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
+				return rightAddedTarget != null && !rightAddedTarget.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

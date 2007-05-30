@@ -72,8 +72,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 */
 	public EList getSubDiffElements() {
 		if (subDiffElements == null) {
-			subDiffElements = new EObjectContainmentEList(DiffElement.class,
-					this, DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
+			subDiffElements = new EObjectContainmentEList(DiffElement.class, this, DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
 		}
 		return subDiffElements;
 	}
@@ -83,12 +82,10 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return ((InternalEList) getSubDiffElements()).basicRemove(otherEnd,
-					msgs);
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return ((InternalEList)getSubDiffElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -100,8 +97,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return getSubDiffElements();
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return getSubDiffElements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,10 +110,10 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			getSubDiffElements().clear();
-			getSubDiffElements().addAll((Collection) newValue);
-			return;
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				getSubDiffElements().clear();
+				getSubDiffElements().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -128,9 +125,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			getSubDiffElements().clear();
-			return;
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				getSubDiffElements().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -142,8 +139,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return subDiffElements != null && !subDiffElements.isEmpty();
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return subDiffElements != null && !subDiffElements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

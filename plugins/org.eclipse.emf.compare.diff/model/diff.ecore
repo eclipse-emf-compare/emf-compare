@@ -61,4 +61,11 @@
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateReference" eSuperTypes="#//ReferenceChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelInputSnapshot">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="#//DiffModel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass ../../../plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
+        containment="true"/>
+  </eClassifiers>
 </ecore:EPackage>

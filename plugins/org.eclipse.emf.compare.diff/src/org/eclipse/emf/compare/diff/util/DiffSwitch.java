@@ -87,10 +87,13 @@ public class DiffSwitch {
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		} else {
+		}
+		else {
 			List eSuperTypes = theEClass.getESuperTypes();
-			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(
-					(EClass) eSuperTypes.get(0), theEObject);
+			return
+				eSuperTypes.isEmpty() ?
+					defaultCase(theEObject) :
+					doSwitch((EClass)eSuperTypes.get(0), theEObject);
 		}
 	}
 
@@ -103,170 +106,134 @@ public class DiffSwitch {
 	 */
 	protected Object doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case DiffPackage.DIFF_MODEL: {
-			DiffModel diffModel = (DiffModel) theEObject;
-			Object result = caseDiffModel(diffModel);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.DIFF_ELEMENT: {
-			DiffElement diffElement = (DiffElement) theEObject;
-			Object result = caseDiffElement(diffElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.DIFF_GROUP: {
-			DiffGroup diffGroup = (DiffGroup) theEObject;
-			Object result = caseDiffGroup(diffGroup);
-			if (result == null)
-				result = caseDiffElement(diffGroup);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.ATTRIBUTE_CHANGE: {
-			AttributeChange attributeChange = (AttributeChange) theEObject;
-			Object result = caseAttributeChange(attributeChange);
-			if (result == null)
-				result = caseDiffElement(attributeChange);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.REFERENCE_CHANGE: {
-			ReferenceChange referenceChange = (ReferenceChange) theEObject;
-			Object result = caseReferenceChange(referenceChange);
-			if (result == null)
-				result = caseDiffElement(referenceChange);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.MODEL_ELEMENT_CHANGE: {
-			ModelElementChange modelElementChange = (ModelElementChange) theEObject;
-			Object result = caseModelElementChange(modelElementChange);
-			if (result == null)
-				result = caseDiffElement(modelElementChange);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.ADD_MODEL_ELEMENT: {
-			AddModelElement addModelElement = (AddModelElement) theEObject;
-			Object result = caseAddModelElement(addModelElement);
-			if (result == null)
-				result = caseModelElementChange(addModelElement);
-			if (result == null)
-				result = caseDiffElement(addModelElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.REMOVE_MODEL_ELEMENT: {
-			RemoveModelElement removeModelElement = (RemoveModelElement) theEObject;
-			Object result = caseRemoveModelElement(removeModelElement);
-			if (result == null)
-				result = caseModelElementChange(removeModelElement);
-			if (result == null)
-				result = caseDiffElement(removeModelElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.UPDATE_MODEL_ELEMENT: {
-			UpdateModelElement updateModelElement = (UpdateModelElement) theEObject;
-			Object result = caseUpdateModelElement(updateModelElement);
-			if (result == null)
-				result = caseModelElementChange(updateModelElement);
-			if (result == null)
-				result = caseDiffElement(updateModelElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.MOVE_MODEL_ELEMENT: {
-			MoveModelElement moveModelElement = (MoveModelElement) theEObject;
-			Object result = caseMoveModelElement(moveModelElement);
-			if (result == null)
-				result = caseUpdateModelElement(moveModelElement);
-			if (result == null)
-				result = caseModelElementChange(moveModelElement);
-			if (result == null)
-				result = caseDiffElement(moveModelElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.ADD_ATTRIBUTE: {
-			AddAttribute addAttribute = (AddAttribute) theEObject;
-			Object result = caseAddAttribute(addAttribute);
-			if (result == null)
-				result = caseAttributeChange(addAttribute);
-			if (result == null)
-				result = caseDiffElement(addAttribute);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.REMOVE_ATTRIBUTE: {
-			RemoveAttribute removeAttribute = (RemoveAttribute) theEObject;
-			Object result = caseRemoveAttribute(removeAttribute);
-			if (result == null)
-				result = caseAttributeChange(removeAttribute);
-			if (result == null)
-				result = caseDiffElement(removeAttribute);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.UPDATE_ATTRIBUTE: {
-			UpdateAttribute updateAttribute = (UpdateAttribute) theEObject;
-			Object result = caseUpdateAttribute(updateAttribute);
-			if (result == null)
-				result = caseAttributeChange(updateAttribute);
-			if (result == null)
-				result = caseDiffElement(updateAttribute);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.ADD_REFERENCE_VALUE: {
-			AddReferenceValue addReferenceValue = (AddReferenceValue) theEObject;
-			Object result = caseAddReferenceValue(addReferenceValue);
-			if (result == null)
-				result = caseReferenceChange(addReferenceValue);
-			if (result == null)
-				result = caseDiffElement(addReferenceValue);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.REMOVE_REFERENCE_VALUE: {
-			RemoveReferenceValue removeReferenceValue = (RemoveReferenceValue) theEObject;
-			Object result = caseRemoveReferenceValue(removeReferenceValue);
-			if (result == null)
-				result = caseReferenceChange(removeReferenceValue);
-			if (result == null)
-				result = caseDiffElement(removeReferenceValue);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case DiffPackage.UPDATE_REFERENCE: {
-			UpdateReference updateReference = (UpdateReference) theEObject;
-			Object result = caseUpdateReference(updateReference);
-			if (result == null)
-				result = caseReferenceChange(updateReference);
-			if (result == null)
-				result = caseDiffElement(updateReference);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		default:
-			return defaultCase(theEObject);
+			case DiffPackage.DIFF_MODEL: {
+				DiffModel diffModel = (DiffModel)theEObject;
+				Object result = caseDiffModel(diffModel);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.DIFF_ELEMENT: {
+				DiffElement diffElement = (DiffElement)theEObject;
+				Object result = caseDiffElement(diffElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.DIFF_GROUP: {
+				DiffGroup diffGroup = (DiffGroup)theEObject;
+				Object result = caseDiffGroup(diffGroup);
+				if (result == null) result = caseDiffElement(diffGroup);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ATTRIBUTE_CHANGE: {
+				AttributeChange attributeChange = (AttributeChange)theEObject;
+				Object result = caseAttributeChange(attributeChange);
+				if (result == null) result = caseDiffElement(attributeChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REFERENCE_CHANGE: {
+				ReferenceChange referenceChange = (ReferenceChange)theEObject;
+				Object result = caseReferenceChange(referenceChange);
+				if (result == null) result = caseDiffElement(referenceChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.MODEL_ELEMENT_CHANGE: {
+				ModelElementChange modelElementChange = (ModelElementChange)theEObject;
+				Object result = caseModelElementChange(modelElementChange);
+				if (result == null) result = caseDiffElement(modelElementChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ADD_MODEL_ELEMENT: {
+				AddModelElement addModelElement = (AddModelElement)theEObject;
+				Object result = caseAddModelElement(addModelElement);
+				if (result == null) result = caseModelElementChange(addModelElement);
+				if (result == null) result = caseDiffElement(addModelElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOVE_MODEL_ELEMENT: {
+				RemoveModelElement removeModelElement = (RemoveModelElement)theEObject;
+				Object result = caseRemoveModelElement(removeModelElement);
+				if (result == null) result = caseModelElementChange(removeModelElement);
+				if (result == null) result = caseDiffElement(removeModelElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.UPDATE_MODEL_ELEMENT: {
+				UpdateModelElement updateModelElement = (UpdateModelElement)theEObject;
+				Object result = caseUpdateModelElement(updateModelElement);
+				if (result == null) result = caseModelElementChange(updateModelElement);
+				if (result == null) result = caseDiffElement(updateModelElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.MOVE_MODEL_ELEMENT: {
+				MoveModelElement moveModelElement = (MoveModelElement)theEObject;
+				Object result = caseMoveModelElement(moveModelElement);
+				if (result == null) result = caseUpdateModelElement(moveModelElement);
+				if (result == null) result = caseModelElementChange(moveModelElement);
+				if (result == null) result = caseDiffElement(moveModelElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ADD_ATTRIBUTE: {
+				AddAttribute addAttribute = (AddAttribute)theEObject;
+				Object result = caseAddAttribute(addAttribute);
+				if (result == null) result = caseAttributeChange(addAttribute);
+				if (result == null) result = caseDiffElement(addAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOVE_ATTRIBUTE: {
+				RemoveAttribute removeAttribute = (RemoveAttribute)theEObject;
+				Object result = caseRemoveAttribute(removeAttribute);
+				if (result == null) result = caseAttributeChange(removeAttribute);
+				if (result == null) result = caseDiffElement(removeAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.UPDATE_ATTRIBUTE: {
+				UpdateAttribute updateAttribute = (UpdateAttribute)theEObject;
+				Object result = caseUpdateAttribute(updateAttribute);
+				if (result == null) result = caseAttributeChange(updateAttribute);
+				if (result == null) result = caseDiffElement(updateAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ADD_REFERENCE_VALUE: {
+				AddReferenceValue addReferenceValue = (AddReferenceValue)theEObject;
+				Object result = caseAddReferenceValue(addReferenceValue);
+				if (result == null) result = caseReferenceChange(addReferenceValue);
+				if (result == null) result = caseDiffElement(addReferenceValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOVE_REFERENCE_VALUE: {
+				RemoveReferenceValue removeReferenceValue = (RemoveReferenceValue)theEObject;
+				Object result = caseRemoveReferenceValue(removeReferenceValue);
+				if (result == null) result = caseReferenceChange(removeReferenceValue);
+				if (result == null) result = caseDiffElement(removeReferenceValue);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.UPDATE_REFERENCE: {
+				UpdateReference updateReference = (UpdateReference)theEObject;
+				Object result = caseUpdateReference(updateReference);
+				if (result == null) result = caseReferenceChange(updateReference);
+				if (result == null) result = caseDiffElement(updateReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.MODEL_INPUT_SNAPSHOT: {
+				ModelInputSnapshot modelInputSnapshot = (ModelInputSnapshot)theEObject;
+				Object result = caseModelInputSnapshot(modelInputSnapshot);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			default: return defaultCase(theEObject);
 		}
 	}
 
@@ -507,6 +474,21 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	public Object caseUpdateReference(UpdateReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Model Input Snapshot</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Model Input Snapshot</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseModelInputSnapshot(ModelInputSnapshot object) {
 		return null;
 	}
 

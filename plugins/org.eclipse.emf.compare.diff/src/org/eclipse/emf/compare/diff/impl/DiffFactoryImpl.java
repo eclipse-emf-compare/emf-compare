@@ -48,12 +48,12 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 */
 	public static DiffFactory init() {
 		try {
-			DiffFactory theDiffFactory = (DiffFactory) EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/diff/1.0");
+			DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/1.0"); 
 			if (theDiffFactory != null) {
 				return theDiffFactory;
 			}
-		} catch (Exception exception) {
+		}
+		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new DiffFactoryImpl();
@@ -76,39 +76,24 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 */
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-		case DiffPackage.DIFF_MODEL:
-			return createDiffModel();
-		case DiffPackage.DIFF_GROUP:
-			return createDiffGroup();
-		case DiffPackage.ATTRIBUTE_CHANGE:
-			return createAttributeChange();
-		case DiffPackage.REFERENCE_CHANGE:
-			return createReferenceChange();
-		case DiffPackage.MODEL_ELEMENT_CHANGE:
-			return createModelElementChange();
-		case DiffPackage.ADD_MODEL_ELEMENT:
-			return createAddModelElement();
-		case DiffPackage.REMOVE_MODEL_ELEMENT:
-			return createRemoveModelElement();
-		case DiffPackage.UPDATE_MODEL_ELEMENT:
-			return createUpdateModelElement();
-		case DiffPackage.MOVE_MODEL_ELEMENT:
-			return createMoveModelElement();
-		case DiffPackage.ADD_ATTRIBUTE:
-			return createAddAttribute();
-		case DiffPackage.REMOVE_ATTRIBUTE:
-			return createRemoveAttribute();
-		case DiffPackage.UPDATE_ATTRIBUTE:
-			return createUpdateAttribute();
-		case DiffPackage.ADD_REFERENCE_VALUE:
-			return createAddReferenceValue();
-		case DiffPackage.REMOVE_REFERENCE_VALUE:
-			return createRemoveReferenceValue();
-		case DiffPackage.UPDATE_REFERENCE:
-			return createUpdateReference();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-					+ "' is not a valid classifier");
+			case DiffPackage.DIFF_MODEL: return createDiffModel();
+			case DiffPackage.DIFF_GROUP: return createDiffGroup();
+			case DiffPackage.ATTRIBUTE_CHANGE: return createAttributeChange();
+			case DiffPackage.REFERENCE_CHANGE: return createReferenceChange();
+			case DiffPackage.MODEL_ELEMENT_CHANGE: return createModelElementChange();
+			case DiffPackage.ADD_MODEL_ELEMENT: return createAddModelElement();
+			case DiffPackage.REMOVE_MODEL_ELEMENT: return createRemoveModelElement();
+			case DiffPackage.UPDATE_MODEL_ELEMENT: return createUpdateModelElement();
+			case DiffPackage.MOVE_MODEL_ELEMENT: return createMoveModelElement();
+			case DiffPackage.ADD_ATTRIBUTE: return createAddAttribute();
+			case DiffPackage.REMOVE_ATTRIBUTE: return createRemoveAttribute();
+			case DiffPackage.UPDATE_ATTRIBUTE: return createUpdateAttribute();
+			case DiffPackage.ADD_REFERENCE_VALUE: return createAddReferenceValue();
+			case DiffPackage.REMOVE_REFERENCE_VALUE: return createRemoveReferenceValue();
+			case DiffPackage.UPDATE_REFERENCE: return createUpdateReference();
+			case DiffPackage.MODEL_INPUT_SNAPSHOT: return createModelInputSnapshot();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -267,8 +252,18 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ModelInputSnapshot createModelInputSnapshot() {
+		ModelInputSnapshotImpl modelInputSnapshot = new ModelInputSnapshotImpl();
+		return modelInputSnapshot;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public DiffPackage getDiffPackage() {
-		return (DiffPackage) getEPackage();
+		return (DiffPackage)getEPackage();
 	}
 
 	/**

@@ -27,8 +27,7 @@ public interface DiffFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DiffFactory eINSTANCE = org.eclipse.emf.compare.diff.impl.DiffFactoryImpl
-			.init();
+	DiffFactory eINSTANCE = org.eclipse.emf.compare.diff.impl.DiffFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Model</em>'.
@@ -164,6 +163,15 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	UpdateReference createUpdateReference();
+
+	/**
+	 * Returns a new object of class '<em>Model Input Snapshot</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Model Input Snapshot</em>'.
+	 * @generated
+	 */
+	ModelInputSnapshot createModelInputSnapshot();
 
 	/**
 	 * Returns the package supported by this factory.

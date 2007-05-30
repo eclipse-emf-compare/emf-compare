@@ -61,8 +61,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DiffPackage eINSTANCE = org.eclipse.emf.compare.diff.impl.DiffPackageImpl
-			.init();
+	DiffPackage eINSTANCE = org.eclipse.emf.compare.diff.impl.DiffPackageImpl.init();
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.impl.DiffModelImpl <em>Model</em>}' class.
@@ -891,6 +890,53 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_REFERENCE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.impl.ModelInputSnapshotImpl
+	 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getModelInputSnapshot()
+	 * @generated
+	 */
+	int MODEL_INPUT_SNAPSHOT = 16;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_INPUT_SNAPSHOT__DATE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Diff</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_INPUT_SNAPSHOT__DIFF = 1;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_INPUT_SNAPSHOT__MATCH = 2;
+
+	/**
+	 * The number of structural features of the '<em>Model Input Snapshot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_INPUT_SNAPSHOT_FEATURE_COUNT = 3;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.DiffModel <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1315,6 +1361,49 @@ public interface DiffPackage extends EPackage {
 	EClass getUpdateReference();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.ModelInputSnapshot <em>Model Input Snapshot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Model Input Snapshot</em>'.
+	 * @see org.eclipse.emf.compare.diff.ModelInputSnapshot
+	 * @generated
+	 */
+	EClass getModelInputSnapshot();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.ModelInputSnapshot#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see org.eclipse.emf.compare.diff.ModelInputSnapshot#getDate()
+	 * @see #getModelInputSnapshot()
+	 * @generated
+	 */
+	EAttribute getModelInputSnapshot_Date();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.ModelInputSnapshot#getDiff <em>Diff</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Diff</em>'.
+	 * @see org.eclipse.emf.compare.diff.ModelInputSnapshot#getDiff()
+	 * @see #getModelInputSnapshot()
+	 * @generated
+	 */
+	EReference getModelInputSnapshot_Diff();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.ModelInputSnapshot#getMatch <em>Match</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Match</em>'.
+	 * @see org.eclipse.emf.compare.diff.ModelInputSnapshot#getMatch()
+	 * @see #getModelInputSnapshot()
+	 * @generated
+	 */
+	EReference getModelInputSnapshot_Match();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1335,7 +1424,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	interface Literals {
+	interface Literals  {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.DiffModelImpl <em>Model</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -1360,8 +1449,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIFF_MODEL__OWNED_ELEMENTS = eINSTANCE
-				.getDiffModel_OwnedElements();
+		EReference DIFF_MODEL__OWNED_ELEMENTS = eINSTANCE.getDiffModel_OwnedElements();
 
 		/**
 		 * The meta object literal for the '<em><b>Left</b></em>' attribute feature.
@@ -1387,8 +1475,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIFF_ELEMENT__SUB_DIFF_ELEMENTS = eINSTANCE
-				.getDiffElement_SubDiffElements();
+		EReference DIFF_ELEMENT__SUB_DIFF_ELEMENTS = eINSTANCE.getDiffElement_SubDiffElements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.DiffGroupImpl <em>Group</em>}' class.
@@ -1406,8 +1493,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIFF_GROUP__LEFT_PARENT = eINSTANCE
-				.getDiffGroup_LeftParent();
+		EReference DIFF_GROUP__LEFT_PARENT = eINSTANCE.getDiffGroup_LeftParent();
 
 		/**
 		 * The meta object literal for the '<em><b>Subchanges</b></em>' attribute feature.
@@ -1433,8 +1519,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ATTRIBUTE_CHANGE__ATTRIBUTE = eINSTANCE
-				.getAttributeChange_Attribute();
+		EReference ATTRIBUTE_CHANGE__ATTRIBUTE = eINSTANCE.getAttributeChange_Attribute();
 
 		/**
 		 * The meta object literal for the '<em><b>Left Element</b></em>' reference feature.
@@ -1442,8 +1527,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ATTRIBUTE_CHANGE__LEFT_ELEMENT = eINSTANCE
-				.getAttributeChange_LeftElement();
+		EReference ATTRIBUTE_CHANGE__LEFT_ELEMENT = eINSTANCE.getAttributeChange_LeftElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Element</b></em>' reference feature.
@@ -1451,8 +1535,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ATTRIBUTE_CHANGE__RIGHT_ELEMENT = eINSTANCE
-				.getAttributeChange_RightElement();
+		EReference ATTRIBUTE_CHANGE__RIGHT_ELEMENT = eINSTANCE.getAttributeChange_RightElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
@@ -1470,8 +1553,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE__REFERENCE = eINSTANCE
-				.getReferenceChange_Reference();
+		EReference REFERENCE_CHANGE__REFERENCE = eINSTANCE.getReferenceChange_Reference();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Element</b></em>' reference feature.
@@ -1479,8 +1561,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE__RIGHT_ELEMENT = eINSTANCE
-				.getReferenceChange_RightElement();
+		EReference REFERENCE_CHANGE__RIGHT_ELEMENT = eINSTANCE.getReferenceChange_RightElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Left Element</b></em>' reference feature.
@@ -1488,8 +1569,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE__LEFT_ELEMENT = eINSTANCE
-				.getReferenceChange_LeftElement();
+		EReference REFERENCE_CHANGE__LEFT_ELEMENT = eINSTANCE.getReferenceChange_LeftElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -1517,8 +1597,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ADD_MODEL_ELEMENT__LEFT_PARENT = eINSTANCE
-				.getAddModelElement_LeftParent();
+		EReference ADD_MODEL_ELEMENT__LEFT_PARENT = eINSTANCE.getAddModelElement_LeftParent();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Element</b></em>' reference feature.
@@ -1526,8 +1605,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ADD_MODEL_ELEMENT__RIGHT_ELEMENT = eINSTANCE
-				.getAddModelElement_RightElement();
+		EReference ADD_MODEL_ELEMENT__RIGHT_ELEMENT = eINSTANCE.getAddModelElement_RightElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.RemoveModelElementImpl <em>Remove Model Element</em>}' class.
@@ -1545,8 +1623,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REMOVE_MODEL_ELEMENT__RIGHT_PARENT = eINSTANCE
-				.getRemoveModelElement_RightParent();
+		EReference REMOVE_MODEL_ELEMENT__RIGHT_PARENT = eINSTANCE.getRemoveModelElement_RightParent();
 
 		/**
 		 * The meta object literal for the '<em><b>Left Element</b></em>' reference feature.
@@ -1554,8 +1631,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REMOVE_MODEL_ELEMENT__LEFT_ELEMENT = eINSTANCE
-				.getRemoveModelElement_LeftElement();
+		EReference REMOVE_MODEL_ELEMENT__LEFT_ELEMENT = eINSTANCE.getRemoveModelElement_LeftElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.UpdateModelElementImpl <em>Update Model Element</em>}' class.
@@ -1573,8 +1649,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT = eINSTANCE
-				.getUpdateModelElement_RightElement();
+		EReference UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT = eINSTANCE.getUpdateModelElement_RightElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Left Element</b></em>' reference feature.
@@ -1582,8 +1657,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference UPDATE_MODEL_ELEMENT__LEFT_ELEMENT = eINSTANCE
-				.getUpdateModelElement_LeftElement();
+		EReference UPDATE_MODEL_ELEMENT__LEFT_ELEMENT = eINSTANCE.getUpdateModelElement_LeftElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.
@@ -1601,8 +1675,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MOVE_MODEL_ELEMENT__LEFT_PARENT = eINSTANCE
-				.getMoveModelElement_LeftParent();
+		EReference MOVE_MODEL_ELEMENT__LEFT_PARENT = eINSTANCE.getMoveModelElement_LeftParent();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Parent</b></em>' reference feature.
@@ -1610,8 +1683,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MOVE_MODEL_ELEMENT__RIGHT_PARENT = eINSTANCE
-				.getMoveModelElement_RightParent();
+		EReference MOVE_MODEL_ELEMENT__RIGHT_PARENT = eINSTANCE.getMoveModelElement_RightParent();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
@@ -1659,8 +1731,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = eINSTANCE
-				.getAddReferenceValue_LeftAddedTarget();
+		EReference ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = eINSTANCE.getAddReferenceValue_LeftAddedTarget();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference list feature.
@@ -1668,8 +1739,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = eINSTANCE
-				.getAddReferenceValue_RightAddedTarget();
+		EReference ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = eINSTANCE.getAddReferenceValue_RightAddedTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.RemoveReferenceValueImpl <em>Remove Reference Value</em>}' class.
@@ -1687,8 +1757,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = eINSTANCE
-				.getRemoveReferenceValue_LeftRemovedTarget();
+		EReference REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = eINSTANCE.getRemoveReferenceValue_LeftRemovedTarget();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference list feature.
@@ -1696,8 +1765,7 @@ public interface DiffPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = eINSTANCE
-				.getRemoveReferenceValue_RightRemovedTarget();
+		EReference REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = eINSTANCE.getRemoveReferenceValue_RightRemovedTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.UpdateReferenceImpl <em>Update Reference</em>}' class.
@@ -1708,6 +1776,40 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UPDATE_REFERENCE = eINSTANCE.getUpdateReference();
+
+			/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.impl.ModelInputSnapshotImpl
+		 * @see org.eclipse.emf.compare.diff.impl.DiffPackageImpl#getModelInputSnapshot()
+		 * @generated
+		 */
+		EClass MODEL_INPUT_SNAPSHOT = eINSTANCE.getModelInputSnapshot();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MODEL_INPUT_SNAPSHOT__DATE = eINSTANCE.getModelInputSnapshot_Date();
+
+		/**
+		 * The meta object literal for the '<em><b>Diff</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_INPUT_SNAPSHOT__DIFF = eINSTANCE.getModelInputSnapshot_Diff();
+
+		/**
+		 * The meta object literal for the '<em><b>Match</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODEL_INPUT_SNAPSHOT__MATCH = eINSTANCE.getModelInputSnapshot_Match();
 
 	}
 

@@ -82,13 +82,11 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public EObject getLeftParent() {
 		if (leftParent != null && leftParent.eIsProxy()) {
-			InternalEObject oldLeftParent = (InternalEObject) leftParent;
+			InternalEObject oldLeftParent = (InternalEObject)leftParent;
 			leftParent = eResolveProxy(oldLeftParent);
 			if (leftParent != oldLeftParent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT,
-							oldLeftParent, leftParent));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
 			}
 		}
 		return leftParent;
@@ -112,9 +110,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 		EObject oldLeftParent = leftParent;
 		leftParent = newLeftParent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT, oldLeftParent,
-					leftParent));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
 	}
 
 	/**
@@ -124,13 +120,11 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public EObject getRightParent() {
 		if (rightParent != null && rightParent.eIsProxy()) {
-			InternalEObject oldRightParent = (InternalEObject) rightParent;
+			InternalEObject oldRightParent = (InternalEObject)rightParent;
 			rightParent = eResolveProxy(oldRightParent);
 			if (rightParent != oldRightParent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT,
-							oldRightParent, rightParent));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
 			}
 		}
 		return rightParent;
@@ -154,9 +148,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 		EObject oldRightParent = rightParent;
 		rightParent = newRightParent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT,
-					oldRightParent, rightParent));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
 	}
 
 	/**
@@ -166,14 +158,12 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
-			if (resolve)
-				return getLeftParent();
-			return basicGetLeftParent();
-		case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
-			if (resolve)
-				return getRightParent();
-			return basicGetRightParent();
+			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
+				if (resolve) return getLeftParent();
+				return basicGetLeftParent();
+			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
+				if (resolve) return getRightParent();
+				return basicGetRightParent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -185,12 +175,12 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
-			setLeftParent((EObject) newValue);
-			return;
-		case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
-			setRightParent((EObject) newValue);
-			return;
+			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
+				setLeftParent((EObject)newValue);
+				return;
+			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
+				setRightParent((EObject)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -202,12 +192,12 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
-			setLeftParent((EObject) null);
-			return;
-		case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
-			setRightParent((EObject) null);
-			return;
+			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
+				setLeftParent((EObject)null);
+				return;
+			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
+				setRightParent((EObject)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -219,10 +209,10 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
-			return leftParent != null;
-		case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
-			return rightParent != null;
+			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_PARENT:
+				return leftParent != null;
+			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_PARENT:
+				return rightParent != null;
 		}
 		return super.eIsSet(featureID);
 	}

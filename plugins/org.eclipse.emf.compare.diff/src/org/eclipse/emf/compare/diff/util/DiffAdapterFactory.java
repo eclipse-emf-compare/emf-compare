@@ -74,7 +74,7 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 			return true;
 		}
 		if (object instanceof EObject) {
-			return ((EObject) object).eClass().getEPackage() == modelPackage;
+			return ((EObject)object).eClass().getEPackage() == modelPackage;
 		}
 		return false;
 	}
@@ -85,75 +85,63 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected DiffSwitch modelSwitch = new DiffSwitch() {
-		public Object caseDiffModel(DiffModel object) {
-			return createDiffModelAdapter();
-		}
-
-		public Object caseDiffElement(DiffElement object) {
-			return createDiffElementAdapter();
-		}
-
-		public Object caseDiffGroup(DiffGroup object) {
-			return createDiffGroupAdapter();
-		}
-
-		public Object caseAttributeChange(AttributeChange object) {
-			return createAttributeChangeAdapter();
-		}
-
-		public Object caseReferenceChange(ReferenceChange object) {
-			return createReferenceChangeAdapter();
-		}
-
-		public Object caseModelElementChange(ModelElementChange object) {
-			return createModelElementChangeAdapter();
-		}
-
-		public Object caseAddModelElement(AddModelElement object) {
-			return createAddModelElementAdapter();
-		}
-
-		public Object caseRemoveModelElement(RemoveModelElement object) {
-			return createRemoveModelElementAdapter();
-		}
-
-		public Object caseUpdateModelElement(UpdateModelElement object) {
-			return createUpdateModelElementAdapter();
-		}
-
-		public Object caseMoveModelElement(MoveModelElement object) {
-			return createMoveModelElementAdapter();
-		}
-
-		public Object caseAddAttribute(AddAttribute object) {
-			return createAddAttributeAdapter();
-		}
-
-		public Object caseRemoveAttribute(RemoveAttribute object) {
-			return createRemoveAttributeAdapter();
-		}
-
-		public Object caseUpdateAttribute(UpdateAttribute object) {
-			return createUpdateAttributeAdapter();
-		}
-
-		public Object caseAddReferenceValue(AddReferenceValue object) {
-			return createAddReferenceValueAdapter();
-		}
-
-		public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
-			return createRemoveReferenceValueAdapter();
-		}
-
-		public Object caseUpdateReference(UpdateReference object) {
-			return createUpdateReferenceAdapter();
-		}
-
-		public Object defaultCase(EObject object) {
-			return createEObjectAdapter();
-		}
-	};
+	protected DiffSwitch modelSwitch =
+		new DiffSwitch() {
+			public Object caseDiffModel(DiffModel object) {
+				return createDiffModelAdapter();
+			}
+			public Object caseDiffElement(DiffElement object) {
+				return createDiffElementAdapter();
+			}
+			public Object caseDiffGroup(DiffGroup object) {
+				return createDiffGroupAdapter();
+			}
+			public Object caseAttributeChange(AttributeChange object) {
+				return createAttributeChangeAdapter();
+			}
+			public Object caseReferenceChange(ReferenceChange object) {
+				return createReferenceChangeAdapter();
+			}
+			public Object caseModelElementChange(ModelElementChange object) {
+				return createModelElementChangeAdapter();
+			}
+			public Object caseAddModelElement(AddModelElement object) {
+				return createAddModelElementAdapter();
+			}
+			public Object caseRemoveModelElement(RemoveModelElement object) {
+				return createRemoveModelElementAdapter();
+			}
+			public Object caseUpdateModelElement(UpdateModelElement object) {
+				return createUpdateModelElementAdapter();
+			}
+			public Object caseMoveModelElement(MoveModelElement object) {
+				return createMoveModelElementAdapter();
+			}
+			public Object caseAddAttribute(AddAttribute object) {
+				return createAddAttributeAdapter();
+			}
+			public Object caseRemoveAttribute(RemoveAttribute object) {
+				return createRemoveAttributeAdapter();
+			}
+			public Object caseUpdateAttribute(UpdateAttribute object) {
+				return createUpdateAttributeAdapter();
+			}
+			public Object caseAddReferenceValue(AddReferenceValue object) {
+				return createAddReferenceValueAdapter();
+			}
+			public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
+				return createRemoveReferenceValueAdapter();
+			}
+			public Object caseUpdateReference(UpdateReference object) {
+				return createUpdateReferenceAdapter();
+			}
+			public Object caseModelInputSnapshot(ModelInputSnapshot object) {
+				return createModelInputSnapshotAdapter();
+			}
+			public Object defaultCase(EObject object) {
+				return createEObjectAdapter();
+			}
+		};
 
 	/**
 	 * Creates an adapter for the <code>target</code>.
@@ -164,8 +152,9 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAdapter(Notifier target) {
-		return (Adapter) modelSwitch.doSwitch((EObject) target);
+		return (Adapter)modelSwitch.doSwitch((EObject)target);
 	}
+
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.DiffModel <em>Model</em>}'.
@@ -388,6 +377,20 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUpdateReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.ModelInputSnapshot <em>Model Input Snapshot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.ModelInputSnapshot
+	 * @generated
+	 */
+	public Adapter createModelInputSnapshotAdapter() {
 		return null;
 	}
 
