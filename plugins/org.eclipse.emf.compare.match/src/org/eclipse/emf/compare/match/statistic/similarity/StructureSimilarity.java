@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Utilities for structure comparison
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class StructureSimilarity {

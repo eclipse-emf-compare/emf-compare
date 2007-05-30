@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Service facade for matching models
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class MatchService {

@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.match.api.MatchEngine;
  * Contribution representation one may give throught the "match engine"
  * extension point.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class EngineDescriptor implements Comparable {
