@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.legacy.editor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
@@ -32,6 +29,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffModel;
+import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.Match2Elements;
@@ -50,7 +48,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -77,6 +74,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.core.variants.IResourceVariant;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -95,12 +93,27 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	protected IFile leftModelFile;
 
 	protected DiffModel diff;
+	
+	protected MatchModel match;
 
 	protected Object rightModelFile;
 
 	protected Object ancestorModelFile;
 
 	protected Object fInput;
+	
+	protected boolean saveable = true;
+	
+	public ModelCompareEditorInput(IFileEditorInput file) {
+		this(new CompareConfiguration());
+		EObject eobj = load(file.getFile(), new ResourceSetImpl());
+		if (eobj instanceof ModelInputSnapshot) {
+			this.diff = ((ModelInputSnapshot)eobj).getDiff();
+			this.match = ((ModelInputSnapshot)eobj).getMatch();
+			this.fInput = new ModelCompareInput(match, diff);
+		}
+		setSaveable(false);
+	}
 
 	protected ModelCompareEditorInput(final CompareConfiguration cc) {
 		super(cc);
@@ -201,7 +214,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			leftModel = load(this.leftModelFile, resourceSet);
 			final EObject rightModel = load(((IFile) this.rightModelFile)
 					, resourceSet);
-			final MatchModel match = new MatchService().doMatch(leftModel,
+			match = new MatchService().doMatch(leftModel,
 					rightModel, monitor);
 			diff = new DiffService().doDiff(match);
 			final ModelCompareInput input = new ModelCompareInput(match, diff);
@@ -209,21 +222,6 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			input.setLeftStorage(this.leftModelFile);
 			input.setRightStorage(this.rightModelFile);
 			return checkInputHasDiffs() ? input : null;
-
-	}
-
-	private void save(final EObject root, final String path) throws IOException {
-		final URI modelURI = URI.createURI(path);
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
-		final Resource newModelResource = resourceSet.createResource(modelURI);
-		newModelResource.getContents().add(root);
-		final Map options = new HashMap();
-		options.put(XMLResource.OPTION_ENCODING, System
-				.getProperty("file.encoding"));
-		newModelResource.save(options);
 
 	}
 
@@ -421,25 +419,28 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 
 			// define groups
 			manager.add(new Separator("filter")); //$NON-NLS-1$
+			
 			// add actions
-			final Action a = new Action() {
-				public void run() {
-					final SaveDeltaWizard wizard = new SaveDeltaWizard();
-					IStructuredSelection selection = new StructuredSelection(
-							leftModelFile);
-					wizard.init(PlatformUI.getWorkbench(), selection,
-							ModelCompareEditorInput.this);
-					final WizardDialog dialog = new WizardDialog(PlatformUI
-							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), wizard);
-					dialog.open();
-				}
-			};
-			a.setImageDescriptor(ImageUtils.SAVE_DIFF.getImageDescriptor());
-			a.setToolTipText("Save diff model...");
-			// a.setChecked(false);
-			this.noDiffFilterItem = new ActionContributionItem(a);
-			manager.appendToGroup("filter", this.noDiffFilterItem); //$NON-NLS-1$
+			if (isSaveable()) {
+				final Action a = new Action() {
+					public void run() {
+						final SaveDeltaWizard wizard = new SaveDeltaWizard();
+						IStructuredSelection selection = new StructuredSelection(
+								leftModelFile);
+						wizard.init(PlatformUI.getWorkbench(), selection,
+								ModelCompareEditorInput.this);
+						final WizardDialog dialog = new WizardDialog(PlatformUI
+								.getWorkbench().getActiveWorkbenchWindow()
+								.getShell(), wizard);
+						dialog.open();
+					}
+				};
+				a.setImageDescriptor(ImageUtils.SAVE_DIFF.getImageDescriptor());
+				a.setToolTipText("Save diff model...");
+				// a.setChecked(false);
+				this.noDiffFilterItem = new ActionContributionItem(a);
+				manager.appendToGroup("filter", this.noDiffFilterItem); //$NON-NLS-1$
+			}
 
 			// add actions
 			/*
@@ -587,5 +588,17 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 
 	public DiffModel getDiff() {
 		return diff;
+	}
+	
+	public MatchModel getMatch() {
+		return match;
+	}
+
+	public boolean isSaveable() {
+		return saveable;
+	}
+
+	public void setSaveable(boolean saveable) {
+		this.saveable = saveable;
 	}
 }

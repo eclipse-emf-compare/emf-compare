@@ -527,6 +527,16 @@
          </description>
       </colorDefinition>
   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.emf.compare.ui.legacy.editor.ModelCompareEditor"
+            default="true"
+            extensions="emfdiff"
+            icon="icons/full/editorIcon.gif"
+            id="org.eclipse.emf.compare.ui.legacy.editor.ModelCompareEditor"
+            name="emfdiff model Editor"/>
+   </extension>
   
 
 </plugin>
