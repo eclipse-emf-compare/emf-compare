@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.diff.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,9 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -70,15 +67,19 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addAttributePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_attribute_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AttributeChange_attribute_feature",
-						"_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__ATTRIBUTE, true, false,
-				true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AttributeChange_attribute_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_attribute_feature", "_UI_AttributeChange_type"),
+				 DiffPackage.Literals.ATTRIBUTE_CHANGE__ATTRIBUTE,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -88,15 +89,19 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_leftElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_AttributeChange_leftElement_feature",
-						"_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__LEFT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AttributeChange_leftElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_leftElement_feature", "_UI_AttributeChange_type"),
+				 DiffPackage.Literals.ATTRIBUTE_CHANGE__LEFT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -106,15 +111,19 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_rightElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_AttributeChange_rightElement_feature",
-						"_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AttributeChange_rightElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_rightElement_feature", "_UI_AttributeChange_type"),
+				 DiffPackage.Literals.ATTRIBUTE_CHANGE__RIGHT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -124,20 +133,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, 
-				DiffPackage.eINSTANCE.getAttributeChange_Attribute(), 
-				adapterFactory.getClass());
-		
-		if (labelImage != null) {
-			List images = new ArrayList(2);
-			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/AttributeChange"));
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/AttributeChange");
-		}
-		
-		return labelImage;
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChange"));
 	}
 
 	/**

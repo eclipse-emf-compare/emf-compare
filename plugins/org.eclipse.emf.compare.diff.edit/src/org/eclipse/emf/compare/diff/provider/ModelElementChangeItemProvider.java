@@ -62,8 +62,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/ModelElementChange"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChange"));
 	}
 
 	/**

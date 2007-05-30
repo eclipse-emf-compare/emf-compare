@@ -62,8 +62,7 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/UpdateReference"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UpdateReference"));
 	}
 
 	/**

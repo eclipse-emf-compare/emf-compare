@@ -10,19 +10,15 @@
  */
 package org.eclipse.emf.compare.diff.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
 import org.eclipse.emf.compare.diff.UpdateAttribute;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -69,20 +65,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, 
-				DiffPackage.eINSTANCE.getAttributeChange_Attribute(), 
-				adapterFactory.getClass());
-		
-		if (labelImage != null) {
-			List images = new ArrayList(2);
-			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateAttribute"));
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateAttribute");
-		}
-		
-		return labelImage;
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UpdateAttribute"));
 	}
 
 	/**

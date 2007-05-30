@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.diff.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,11 +18,9 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.AddReferenceValue;
 import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -72,15 +69,19 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	protected void addLeftAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_leftAddedTarget_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_AddReferenceValue_leftAddedTarget_feature",
-						"_UI_AddReferenceValue_type"),
-				DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET,
-				true, false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AddReferenceValue_leftAddedTarget_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_leftAddedTarget_feature", "_UI_AddReferenceValue_type"),
+				 DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -90,15 +91,19 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	protected void addRightAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_rightAddedTarget_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_AddReferenceValue_rightAddedTarget_feature",
-						"_UI_AddReferenceValue_type"),
-				DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET,
-				true, false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AddReferenceValue_rightAddedTarget_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_rightAddedTarget_feature", "_UI_AddReferenceValue_type"),
+				 DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -108,20 +113,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, 
-				DiffPackage.eINSTANCE.getReferenceChange_LeftElement(), 
-				adapterFactory.getClass());
-		
-		if (labelImage != null) {
-			List images = new ArrayList(2);
-			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/AddReferenceValue"));
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/AddReferenceValue");
-		}
-		
-		return labelImage;
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AddReferenceValue"));
 	}
 
 	/**

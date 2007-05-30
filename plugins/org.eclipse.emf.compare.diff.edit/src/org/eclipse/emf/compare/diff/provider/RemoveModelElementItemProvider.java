@@ -73,15 +73,19 @@ public class RemoveModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addRightParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_RemoveModelElement_rightParent_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_RemoveModelElement_rightParent_feature",
-						"_UI_RemoveModelElement_type"),
-				DiffPackage.Literals.REMOVE_MODEL_ELEMENT__RIGHT_PARENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_RemoveModelElement_rightParent_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_RemoveModelElement_rightParent_feature", "_UI_RemoveModelElement_type"),
+				 DiffPackage.Literals.REMOVE_MODEL_ELEMENT__RIGHT_PARENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -91,15 +95,19 @@ public class RemoveModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_RemoveModelElement_leftElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_RemoveModelElement_leftElement_feature",
-						"_UI_RemoveModelElement_type"),
-				DiffPackage.Literals.REMOVE_MODEL_ELEMENT__LEFT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_RemoveModelElement_leftElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_RemoveModelElement_leftElement_feature", "_UI_RemoveModelElement_type"),
+				 DiffPackage.Literals.REMOVE_MODEL_ELEMENT__LEFT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**

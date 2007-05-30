@@ -67,15 +67,19 @@ public class UpdateModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_UpdateModelElement_rightElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_UpdateModelElement_rightElement_feature",
-						"_UI_UpdateModelElement_type"),
-				DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_UpdateModelElement_rightElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
+				 DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -85,15 +89,19 @@ public class UpdateModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_UpdateModelElement_leftElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_UpdateModelElement_leftElement_feature",
-						"_UI_UpdateModelElement_type"),
-				DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_UpdateModelElement_leftElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
+				 DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -103,8 +111,7 @@ public class UpdateModelElementItemProvider extends
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/UpdateModelElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UpdateModelElement"));
 	}
 
 	/**

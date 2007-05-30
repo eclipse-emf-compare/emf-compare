@@ -71,14 +71,19 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addRightPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_DiffModel_right_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_DiffModel_right_feature", "_UI_DiffModel_type"),
-				DiffPackage.Literals.DIFF_MODEL__RIGHT, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_DiffModel_right_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_right_feature", "_UI_DiffModel_type"),
+				 DiffPackage.Literals.DIFF_MODEL__RIGHT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
 	}
 
 	/**
@@ -88,14 +93,19 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addLeftPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_DiffModel_left_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_DiffModel_left_feature", "_UI_DiffModel_type"),
-				DiffPackage.Literals.DIFF_MODEL__LEFT, true, false, false,
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_DiffModel_left_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_left_feature", "_UI_DiffModel_type"),
+				 DiffPackage.Literals.DIFF_MODEL__LEFT,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
 	}
 
 	/**
@@ -109,8 +119,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures
-					.add(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS);
+			childrenFeatures.add(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS);
 		}
 		return childrenFeatures;
 	}
@@ -122,8 +131,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/DiffModel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiffModel"));
 	}
 
 	/**
@@ -133,9 +141,10 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	public String getText(Object object) {
-		String label = ((DiffModel) object).getRight();
-		return label == null || label.length() == 0 ? getString("_UI_DiffModel_type")
-				: getString("_UI_DiffModel_type") + " " + label;
+		String label = ((DiffModel)object).getRight();
+		return label == null || label.length() == 0 ?
+			getString("_UI_DiffModel_type") :
+			getString("_UI_DiffModel_type") + " " + label;
 	}
 
 	/**
@@ -149,15 +158,13 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DiffModel.class)) {
-		case DiffPackage.DIFF_MODEL__RIGHT:
-		case DiffPackage.DIFF_MODEL__LEFT:
-			fireNotifyChanged(new ViewerNotification(notification, notification
-					.getNotifier(), false, true));
-			return;
-		case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
-			fireNotifyChanged(new ViewerNotification(notification, notification
-					.getNotifier(), true, false));
-			return;
+			case DiffPackage.DIFF_MODEL__RIGHT:
+			case DiffPackage.DIFF_MODEL__LEFT:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				return;
+			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				return;
 		}
 		super.notifyChanged(notification);
 	}
@@ -169,65 +176,78 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createDiffGroup()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createDiffGroup()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAttributeChange()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createAttributeChange()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createReferenceChange()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createReferenceChange()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createModelElementChange()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createModelElementChange()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddModelElement()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createAddModelElement()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveModelElement()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createRemoveModelElement()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateModelElement()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createUpdateModelElement()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createMoveModelElement()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createMoveModelElement()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddAttribute()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createAddAttribute()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveAttribute()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createRemoveAttribute()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateAttribute()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createUpdateAttribute()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddReferenceValue()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createAddReferenceValue()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveReferenceValue()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createRemoveReferenceValue()));
 
-		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateReference()));
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				 DiffFactory.eINSTANCE.createUpdateReference()));
 	}
 
 	/**

@@ -72,15 +72,19 @@ public class AddModelElementItemProvider extends ModelElementChangeItemProvider
 	 * @generated
 	 */
 	protected void addLeftParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddModelElement_leftParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AddModelElement_leftParent_feature",
-						"_UI_AddModelElement_type"),
-				DiffPackage.Literals.ADD_MODEL_ELEMENT__LEFT_PARENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AddModelElement_leftParent_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AddModelElement_leftParent_feature", "_UI_AddModelElement_type"),
+				 DiffPackage.Literals.ADD_MODEL_ELEMENT__LEFT_PARENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**
@@ -90,15 +94,19 @@ public class AddModelElementItemProvider extends ModelElementChangeItemProvider
 	 * @generated
 	 */
 	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddModelElement_rightElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_AddModelElement_rightElement_feature",
-						"_UI_AddModelElement_type"),
-				DiffPackage.Literals.ADD_MODEL_ELEMENT__RIGHT_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_AddModelElement_rightElement_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_AddModelElement_rightElement_feature", "_UI_AddModelElement_type"),
+				 DiffPackage.Literals.ADD_MODEL_ELEMENT__RIGHT_ELEMENT,
+				 true,
+				 false,
+				 true,
+				 null,
+				 null,
+				 null));
 	}
 
 	/**

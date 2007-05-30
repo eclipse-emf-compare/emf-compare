@@ -75,7 +75,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 		supportedTypes.add(IStructuredItemContentProvider.class);
 		supportedTypes.add(ITreeItemContentProvider.class);
 		supportedTypes.add(IItemLabelProvider.class);
-		supportedTypes.add(IItemPropertySource.class);
+		supportedTypes.add(IItemPropertySource.class);		
 	}
 
 	/**
@@ -182,8 +182,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createModelElementChangeAdapter() {
 		if (modelElementChangeItemProvider == null) {
-			modelElementChangeItemProvider = new ModelElementChangeItemProvider(
-					this);
+			modelElementChangeItemProvider = new ModelElementChangeItemProvider(this);
 		}
 
 		return modelElementChangeItemProvider;
@@ -227,8 +226,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createRemoveModelElementAdapter() {
 		if (removeModelElementItemProvider == null) {
-			removeModelElementItemProvider = new RemoveModelElementItemProvider(
-					this);
+			removeModelElementItemProvider = new RemoveModelElementItemProvider(this);
 		}
 
 		return removeModelElementItemProvider;
@@ -250,8 +248,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createUpdateModelElementAdapter() {
 		if (updateModelElementItemProvider == null) {
-			updateModelElementItemProvider = new UpdateModelElementItemProvider(
-					this);
+			updateModelElementItemProvider = new UpdateModelElementItemProvider(this);
 		}
 
 		return updateModelElementItemProvider;
@@ -273,8 +270,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createMoveModelElementAdapter() {
 		if (moveModelElementItemProvider == null) {
-			moveModelElementItemProvider = new MoveModelElementItemProvider(
-					this);
+			moveModelElementItemProvider = new MoveModelElementItemProvider(this);
 		}
 
 		return moveModelElementItemProvider;
@@ -362,8 +358,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createAddReferenceValueAdapter() {
 		if (addReferenceValueItemProvider == null) {
-			addReferenceValueItemProvider = new AddReferenceValueItemProvider(
-					this);
+			addReferenceValueItemProvider = new AddReferenceValueItemProvider(this);
 		}
 
 		return addReferenceValueItemProvider;
@@ -385,8 +380,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 */
 	public Adapter createRemoveReferenceValueAdapter() {
 		if (removeReferenceValueItemProvider == null) {
-			removeReferenceValueItemProvider = new RemoveReferenceValueItemProvider(
-					this);
+			removeReferenceValueItemProvider = new RemoveReferenceValueItemProvider(this);
 		}
 
 		return removeReferenceValueItemProvider;
@@ -415,14 +409,35 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.ModelInputSnapshot} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ModelInputSnapshotItemProvider modelInputSnapshotItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.ModelInputSnapshot}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createModelInputSnapshotAdapter() {
+		if (modelInputSnapshotItemProvider == null) {
+			modelInputSnapshotItemProvider = new ModelInputSnapshotItemProvider(this);
+		}
+
+		return modelInputSnapshotItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory
-				.getRootAdapterFactory();
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
 	}
 
 	/**
@@ -463,8 +478,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
 			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class)
-					|| (((Class) type).isInstance(adapter))) {
+			if (!(type instanceof Class) || (((Class)type).isInstance(adapter))) {
 				return adapter;
 			}
 		}
@@ -513,36 +527,22 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 * @generated
 	 */
 	public void dispose() {
-		if (diffModelItemProvider != null)
-			diffModelItemProvider.dispose();
-		if (diffGroupItemProvider != null)
-			diffGroupItemProvider.dispose();
-		if (attributeChangeItemProvider != null)
-			attributeChangeItemProvider.dispose();
-		if (referenceChangeItemProvider != null)
-			referenceChangeItemProvider.dispose();
-		if (modelElementChangeItemProvider != null)
-			modelElementChangeItemProvider.dispose();
-		if (addModelElementItemProvider != null)
-			addModelElementItemProvider.dispose();
-		if (removeModelElementItemProvider != null)
-			removeModelElementItemProvider.dispose();
-		if (updateModelElementItemProvider != null)
-			updateModelElementItemProvider.dispose();
-		if (moveModelElementItemProvider != null)
-			moveModelElementItemProvider.dispose();
-		if (addAttributeItemProvider != null)
-			addAttributeItemProvider.dispose();
-		if (removeAttributeItemProvider != null)
-			removeAttributeItemProvider.dispose();
-		if (updateAttributeItemProvider != null)
-			updateAttributeItemProvider.dispose();
-		if (addReferenceValueItemProvider != null)
-			addReferenceValueItemProvider.dispose();
-		if (removeReferenceValueItemProvider != null)
-			removeReferenceValueItemProvider.dispose();
-		if (updateReferenceItemProvider != null)
-			updateReferenceItemProvider.dispose();
+		if (diffModelItemProvider != null) diffModelItemProvider.dispose();
+		if (diffGroupItemProvider != null) diffGroupItemProvider.dispose();
+		if (attributeChangeItemProvider != null) attributeChangeItemProvider.dispose();
+		if (referenceChangeItemProvider != null) referenceChangeItemProvider.dispose();
+		if (modelElementChangeItemProvider != null) modelElementChangeItemProvider.dispose();
+		if (addModelElementItemProvider != null) addModelElementItemProvider.dispose();
+		if (removeModelElementItemProvider != null) removeModelElementItemProvider.dispose();
+		if (updateModelElementItemProvider != null) updateModelElementItemProvider.dispose();
+		if (moveModelElementItemProvider != null) moveModelElementItemProvider.dispose();
+		if (addAttributeItemProvider != null) addAttributeItemProvider.dispose();
+		if (removeAttributeItemProvider != null) removeAttributeItemProvider.dispose();
+		if (updateAttributeItemProvider != null) updateAttributeItemProvider.dispose();
+		if (addReferenceValueItemProvider != null) addReferenceValueItemProvider.dispose();
+		if (removeReferenceValueItemProvider != null) removeReferenceValueItemProvider.dispose();
+		if (updateReferenceItemProvider != null) updateReferenceItemProvider.dispose();
+		if (modelInputSnapshotItemProvider != null) modelInputSnapshotItemProvider.dispose();
 	}
 
 }
