@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * This class determine the unused features in a metamodel using models
  * 
- * @author Cedric Brun  cedric.brun@obeo.fr 
+ * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
  * 
  */
 public class MetamodelFilter {
