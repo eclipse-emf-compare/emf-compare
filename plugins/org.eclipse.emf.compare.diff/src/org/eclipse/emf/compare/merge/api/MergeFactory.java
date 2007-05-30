@@ -15,7 +15,7 @@ import org.eclipse.emf.compare.diff.DiffElement;
 /**
  * A Merge factory handle the merge creation for DiffElements
  * 
- * @author Cedric Brun  cedric.brun@obeo.fr 
+ * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
  * 
  */
 public abstract class MergeFactory {

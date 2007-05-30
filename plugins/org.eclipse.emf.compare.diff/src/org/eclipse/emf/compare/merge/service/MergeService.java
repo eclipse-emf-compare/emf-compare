@@ -14,7 +14,7 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
 /**
  * Services for merging models
  * 
- * @author Cedric Brun  cedric.brun@obeo.fr 
+ * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
  * 
  */
 public class MergeService {
