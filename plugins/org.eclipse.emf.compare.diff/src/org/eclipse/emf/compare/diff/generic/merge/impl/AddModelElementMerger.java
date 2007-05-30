@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Merger for a diff element
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class AddModelElementMerger extends AbstractMerger {

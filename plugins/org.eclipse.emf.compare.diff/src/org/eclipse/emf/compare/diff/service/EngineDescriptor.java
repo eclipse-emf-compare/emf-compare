@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.diff.api.DiffEngine;
  * The engine descriptor represents an engine contribution trough the extension
  * point
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class EngineDescriptor implements Comparable {

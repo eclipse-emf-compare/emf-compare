@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Merger for a diff element
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class AddReferenceValueMerger extends AbstractMerger {

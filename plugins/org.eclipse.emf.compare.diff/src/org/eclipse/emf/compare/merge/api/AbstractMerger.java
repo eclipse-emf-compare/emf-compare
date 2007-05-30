@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Abstract class for every merger
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class AbstractMerger {

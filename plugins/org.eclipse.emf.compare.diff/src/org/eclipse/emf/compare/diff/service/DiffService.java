@@ -26,7 +26,7 @@ import org.eclipse.emf.compare.match.MatchModel;
 /**
  * TODOCBR doc
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class DiffService {

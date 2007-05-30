@@ -8,7 +8,7 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
 /**
  * Descriptor class for MergeFactory contribution
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun  cedric.brun@obeo.fr 
  * 
  */
 public class FactoryDescriptor implements Comparable {
