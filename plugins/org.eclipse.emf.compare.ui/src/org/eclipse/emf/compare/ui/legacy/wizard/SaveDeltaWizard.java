@@ -29,7 +29,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 /**
  * Wizard in order to save the diff model
  * 
- * @author Cedric Brun  cedric.brun@obeo.fr 
+ * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
  * 
  */
 public class SaveDeltaWizard extends BasicNewFileResourceWizard {
