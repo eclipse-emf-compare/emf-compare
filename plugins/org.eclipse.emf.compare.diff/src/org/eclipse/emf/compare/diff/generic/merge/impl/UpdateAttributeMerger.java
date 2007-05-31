@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Merger for a diff element
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
  * 
  */
 public class UpdateAttributeMerger extends AbstractMerger {
