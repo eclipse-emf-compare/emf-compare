@@ -12,7 +12,7 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
 /**
  * The merge factory build a merger from any kind of delta
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class DefaultMergeFactory extends MergeFactory {

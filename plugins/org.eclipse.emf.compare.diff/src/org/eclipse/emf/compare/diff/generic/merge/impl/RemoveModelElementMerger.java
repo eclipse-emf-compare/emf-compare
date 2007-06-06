@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Merger for a diff element
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class RemoveModelElementMerger extends AbstractMerger {

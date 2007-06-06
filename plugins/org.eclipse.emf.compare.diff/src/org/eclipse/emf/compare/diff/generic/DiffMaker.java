@@ -1,5 +1,6 @@
 package org.eclipse.emf.compare.diff.generic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.UnMatchElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -35,7 +37,7 @@ import org.eclipse.emf.ecore.resource.Resource;
  * This class is usefull when one want's to determine a diff from a matching
  * model
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class DiffMaker implements DiffEngine {
@@ -105,14 +107,13 @@ public class DiffMaker implements DiffEngine {
 
 		// creating the root modelchange
 		DiffGroup root = DiffFactory.eINSTANCE.createDiffGroup();
-
+		
 		// browsing the match model
 		doDiffDelegate(root, (Match2Elements) match.getMatchedElements().get(0));
 		// iterate over the unmached elements end determine if they has been
 		// added or removed.
 		Iterator unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
-
 			UnMatchElement unMatchElement = (UnMatchElement) unMatched.next();
 			if (unMatchElement.getElement().eResource() == leftModel) {
 				// add remove model element
@@ -140,6 +141,7 @@ public class DiffMaker implements DiffEngine {
 			}
 
 		}
+		
 		if (root.getSubDiffElements().size() == 0)
 			result.getOwnedElements().add(root);
 		else
@@ -180,7 +182,8 @@ public class DiffMaker implements DiffEngine {
 		// taking care of our childs
 		Iterator it = match.getSubMatchElements().iterator();
 		while (it.hasNext()) {
-			doDiffDelegate(root, (Match2Elements) it.next());
+			Match2Elements element = (Match2Elements)it.next();
+			doDiffDelegate(root, element);
 		}
 
 	}
@@ -310,33 +313,29 @@ public class DiffMaker implements DiffEngine {
 	 */
 	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping)
 			throws FactoryException {
-
-		EObject eclass = mapping.getLeftElement().eClass();
-
-		List eclassReferences = new LinkedList();
-
-		if (eclass instanceof EClass)
-			eclassReferences = ((EClass) eclass).getEAllReferences();
-
 		// for each reference, compare the targets
 		boolean break_process = false;
-		Iterator it = eclassReferences.iterator();
+		Iterator it = mapping.getLeftElement().eClass().getEAllReferences().iterator();
 		while (it.hasNext()) {
 			EReference next = (EReference) it.next();
 			String referenceName = next.getName();
 			if (!next.isContainment() && !next.isDerived()
 					&& !next.isTransient()) {
-				List oldReferences = EFactory.eGetAsList(mapping
+				List leftElementReferences = EFactory.eGetAsList(mapping
 						.getLeftElement(), referenceName);
-				List newReferences = EFactory.eGetAsList(mapping
+				List rightElementReferences = EFactory.eGetAsList(mapping
 						.getRightElement(), referenceName);
+				
+				List<EObject> oldReferences = new ArrayList<EObject>();
+				List<EObject> newReferences = new ArrayList<EObject>();
 				List mappedOldReferences = new ArrayList();
 				List mappedNewReferences = new ArrayList();
-
-				if (oldReferences == null)
-					oldReferences = new ArrayList();
-				if (newReferences == null)
-					newReferences = new ArrayList();
+				
+				if (leftElementReferences != null)
+					oldReferences.addAll(leftElementReferences);
+				if (rightElementReferences != null)
+					newReferences.addAll(rightElementReferences);
+				
 				// For each of the old reference
 				// if the linked element is not linked using the new references
 				// then a reference has been added
@@ -387,7 +386,7 @@ public class DiffMaker implements DiffEngine {
 					// Remove references
 					RemoveReferenceValue deloperation = DiffFactory.eINSTANCE
 							.createRemoveReferenceValue();
-					deloperation.setRightElement((mapping.getRightElement()));
+					deloperation.setRightElement(mapping.getRightElement());
 					deloperation.setLeftElement(mapping.getLeftElement());
 					deloperation.setReference(next);
 					oldRef = oldReferences.iterator();
@@ -415,3 +414,4 @@ public class DiffMaker implements DiffEngine {
 	}
 
 }
+

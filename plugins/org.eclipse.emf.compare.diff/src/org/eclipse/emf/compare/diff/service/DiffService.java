@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.diff.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,11 +23,12 @@ import org.eclipse.emf.compare.DiffPlugin;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.match.MatchModel;
+import org.eclipse.emf.compare.util.ModelUtils;
 
 /**
  * TODOCBR doc
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class DiffService {

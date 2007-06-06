@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DiffGroupImpl.java,v 1.3 2007/05/30 09:10:23 cbrun Exp $
+ * $Id: DiffGroupImpl.java,v 1.4 2007/06/06 07:40:51 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.impl;
 

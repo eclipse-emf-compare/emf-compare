@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ModelInputSnapshot.java,v 1.1 2007/05/30 09:10:23 cbrun Exp $
+ * $Id: ModelInputSnapshot.java,v 1.2 2007/06/06 07:40:51 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff;
 
