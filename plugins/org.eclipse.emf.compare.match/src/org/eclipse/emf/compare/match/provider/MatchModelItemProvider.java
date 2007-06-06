@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MatchModelItemProvider.java,v 1.1 2007/05/30 09:09:52 cbrun Exp $
+ * $Id: MatchModelItemProvider.java,v 1.2 2007/06/06 08:20:00 cbrun Exp $
  */
 package org.eclipse.emf.compare.match.provider;
 
@@ -11,15 +11,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.compare.match.MatchFactory;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.MatchPackage;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;

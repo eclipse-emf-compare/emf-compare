@@ -10,8 +10,6 @@
  */
 package org.eclipse.emf.compare.match.statistic.similarity;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

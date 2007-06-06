@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MatchItemProviderAdapterFactory.java,v 1.1 2007/05/30 09:09:52 cbrun Exp $
+ * $Id: MatchItemProviderAdapterFactory.java,v 1.2 2007/06/06 08:20:00 cbrun Exp $
  */
 package org.eclipse.emf.compare.match.provider;
 
@@ -12,9 +12,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.compare.match.util.MatchAdapterFactory;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
