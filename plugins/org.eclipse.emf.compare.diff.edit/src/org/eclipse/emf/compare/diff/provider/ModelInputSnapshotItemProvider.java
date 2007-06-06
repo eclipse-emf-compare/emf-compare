@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ModelInputSnapshotItemProvider.java,v 1.1 2007/05/30 09:10:04 cbrun Exp $
+ * $Id: ModelInputSnapshotItemProvider.java,v 1.2 2007/06/06 07:41:07 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
@@ -13,12 +13,17 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
+
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.DiffPackage;
 import org.eclipse.emf.compare.diff.ModelInputSnapshot;
+
 import org.eclipse.emf.compare.match.MatchFactory;
+
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
