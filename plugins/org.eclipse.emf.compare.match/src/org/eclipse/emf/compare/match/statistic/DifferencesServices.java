@@ -385,7 +385,7 @@ public class DifferencesServices implements MatchEngine {
 		// first navigate through both models at the same time and realize
 		// mappings..
 		try {
-			if (true && isSimilar(root1, root2)) {
+			if (true || isSimilar(root1, root2)) {
 				Match2Elements rootMapping = recursiveMappings(root1, root2,
 						monitor);
 

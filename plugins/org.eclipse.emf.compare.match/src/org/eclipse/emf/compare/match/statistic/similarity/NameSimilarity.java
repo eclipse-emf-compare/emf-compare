@@ -132,31 +132,32 @@ public class NameSimilarity {
 	 * @throws ENodeCastException
 	 * @throws FactoryException
 	 */
-	public static List find(EObject current, EObject search, double threshold)
-			throws FactoryException {
-		List result = new LinkedList();
-		EObject resultObject = null;
-		double max = 0;
-
-		TreeIterator it = current.eAllContents();
-		while (it.hasNext()) {
-			Object next = it.next();
-			double similarity = nameSimilarityMetric(contentValue(
-					(EObject) next, null), contentValue(search, null));
-			if (next instanceof EObject
-					&& ((EObject) next).eClass().getName().equals(
-							search.eClass().getName()) && similarity > max
-					&& similarity > threshold) {
-
-				max = nameSimilarityMetric(contentValue((EObject) next, null),
-						contentValue(search, null));
-				resultObject = (EObject) next;
-			}
-		}
-		if (resultObject != null)
-			result.add(resultObject);
-		return result;
-	}
+	// DEAD CODE
+//	public static List find(EObject current, EObject search, double threshold)
+//			throws FactoryException {
+//		List result = new LinkedList();
+//		EObject resultObject = null;
+//		double max = 0;
+//
+//		TreeIterator it = current.eAllContents();
+//		while (it.hasNext()) {
+//			Object next = it.next();
+//			double similarity = nameSimilarityMetric(contentValue(
+//					(EObject) next, null), contentValue(search, null));
+//			if (next instanceof EObject
+//					&& ((EObject) next).eClass().getName().equals(
+//							search.eClass().getName()) && similarity > max
+//					&& similarity > threshold) {
+//
+//				max = nameSimilarityMetric(contentValue((EObject) next, null),
+//						contentValue(search, null));
+//				resultObject = (EObject) next;
+//			}
+//		}
+//		if (resultObject != null)
+//			result.add(resultObject);
+//		return result;
+//	}
 
 	/**
 	 * Find the similar objects
@@ -167,29 +168,30 @@ public class NameSimilarity {
 	 * @return a list with the similar objects
 	 * @throws FactoryException
 	 */
-	public static List findInList(List data, EObject search, double threshold)
-			throws FactoryException {
-		List result = new LinkedList();
-		EObject resultObject = null;
-		double max = 0;
-
-		Iterator it = data.iterator();
-		while (it.hasNext()) {
-			Object next = it.next();
-			double similarity = nameSimilarityMetric(contentValue(
-					(EObject) next, null), contentValue(search, null));
-			if (next instanceof EObject && similarity > max
-					&& similarity > threshold) {
-
-				max = nameSimilarityMetric(contentValue((EObject) next, null),
-						contentValue(search, null));
-				resultObject = (EObject) next;
-			}
-		}
-		if (resultObject != null)
-			result.add(resultObject);
-		return result;
-	}
+	// DEAD CODE 
+//	public static List findInList(List data, EObject search, double threshold)
+//			throws FactoryException {
+//		List result = new LinkedList();
+//		EObject resultObject = null;
+//		double max = 0;
+//
+//		Iterator it = data.iterator();
+//		while (it.hasNext()) {
+//			Object next = it.next();
+//			double similarity = nameSimilarityMetric(contentValue(
+//					(EObject) next, null), contentValue(search, null));
+//			if (next instanceof EObject && similarity > max
+//					&& similarity > threshold) {
+//
+//				max = nameSimilarityMetric(contentValue((EObject) next, null),
+//						contentValue(search, null));
+//				resultObject = (EObject) next;
+//			}
+//		}
+//		if (resultObject != null)
+//			result.add(resultObject);
+//		return result;
+//	}
 
 	/**
 	 * Return a list of String representing the object content.
@@ -198,33 +200,34 @@ public class NameSimilarity {
 	 * @return a list of String representing the object content.
 	 * @throws FactoryException
 	 */
-	public static Collection contentValueListWithName(EObject current)
-			throws FactoryException {
-		EObject eclass = current.eClass();
-		Collection result = new ArrayList();
-		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass) eclass).getEAllAttributes();
-		// first, find the eclass structural feature most similar with name
-		if (eclassAttributes.size() > 0) {
-
-			Iterator it = eclassAttributes.iterator();
-			while (it.hasNext()) { // for each metamodel feature
-				Object next = it.next();
-				if (next instanceof EObject) {
-					EObject obj = (EObject) next;
-					StringBuffer attributeName = new StringBuffer(EFactory.eGetAsString(obj, "name"));//$NON-NLS-1$
-					// get the feature name and the feature value
-					StringBuffer value = new StringBuffer(EFactory
-							.eGetAsString(current, attributeName.toString()));
-					if (value != null && value.length() < 30)
-						result.add(attributeName.append(" : ").append(value));//$NON-NLS-1$
-				}
-			}
-
-		}
-		return result;
-	}
+	// DEAD CODE
+//	public static Collection contentValueListWithName(EObject current)
+//			throws FactoryException {
+//		EObject eclass = current.eClass();
+//		Collection result = new ArrayList();
+//		List eclassAttributes = new LinkedList();
+//		if (eclass instanceof EClass)
+//			eclassAttributes = ((EClass) eclass).getEAllAttributes();
+//		// first, find the eclass structural feature most similar with name
+//		if (eclassAttributes.size() > 0) {
+//
+//			Iterator it = eclassAttributes.iterator();
+//			while (it.hasNext()) { // for each metamodel feature
+//				Object next = it.next();
+//				if (next instanceof EObject) {
+//					EObject obj = (EObject) next;
+//					StringBuffer attributeName = new StringBuffer(EFactory.eGetAsString(obj, "name"));//$NON-NLS-1$
+//					// get the feature name and the feature value
+//					StringBuffer value = new StringBuffer(EFactory
+//							.eGetAsString(current, attributeName.toString()));
+//					if (value != null && value.length() < 30)
+//						result.add(attributeName.append(" : ").append(value));//$NON-NLS-1$
+//				}
+//			}
+//
+//		}
+//		return result;
+//	}
 
 	/**
 	 * Return a String representing the object value
@@ -233,15 +236,16 @@ public class NameSimilarity {
 	 * @return a String representing the object value
 	 * @throws FactoryException
 	 */
-	public static String contentValueWithName(EObject current)
-			throws FactoryException {
-		Collection values = contentValueListWithName(current);
-		StringBuffer result = new StringBuffer();
-		Iterator it = values.iterator();
-		while (it.hasNext())
-			result.append((StringBuffer) it.next());
-		return result.toString();
-	}
+	//DEAD CODE
+//	public static String contentValueWithName(EObject current)
+//			throws FactoryException {
+//		Collection values = contentValueListWithName(current);
+//		StringBuffer result = new StringBuffer();
+//		Iterator it = values.iterator();
+//		while (it.hasNext())
+//			result.append((StringBuffer) it.next());
+//		return result.toString();
+//	}
 
 	/**
 	 * Return a string representations of all the features value

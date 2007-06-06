@@ -50,6 +50,4 @@ public class MatchPlugin extends Plugin {
 	public static MatchPlugin getDefault() {
 		return plugin;
 	}
-
-
 }

@@ -7,13 +7,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.util.EFactory;
+import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * This class determine the unused features in a metamodel using models
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class MetamodelFilter {
@@ -89,13 +92,18 @@ public class MetamodelFilter {
 		while (featIt.hasNext()) {
 			EStructuralFeature feat = (EStructuralFeature) featIt.next();
 			if (!featuresToInformation.containsKey(feat))
-				featuresToInformation.put(feat, new FeatureInformation(feat));
-			if (eObj.eGet(feat) != null) {
-				((FeatureInformation) featuresToInformation.get(feat))
-						.processValue(eObj.eGet(feat).toString());
-			} else {
-				((FeatureInformation) featuresToInformation.get(feat))
-						.processValue("null"); //$NON-NLS-1$
+				featuresToInformation.put(feat,
+						new FeatureInformation(feat));
+			try {
+				if (EFactory.eGet(eObj, feat.getName()) != null) {
+					((FeatureInformation) featuresToInformation.get(feat))
+							.processValue(eObj.eGet(feat).toString());
+				} else {
+					((FeatureInformation) featuresToInformation.get(feat))
+							.processValue("null"); //$NON-NLS-1$
+				}
+			} catch (FactoryException e) {
+				EMFComparePlugin.getDefault().log(e.getMessage(), false);
 			}
 		}
 	}
