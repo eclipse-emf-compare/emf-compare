@@ -21,7 +21,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 /**
  * Generic emf content provider
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class EMFContentProvider extends AdapterFactoryContentProvider {

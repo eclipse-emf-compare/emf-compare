@@ -1,122 +1,116 @@
-/*******************************************************************************
- * Copyright (c) 2006, Intalio Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Intalio Corporation - initial API and implementation
- *******************************************************************************/
 package org.eclipse.emf.compare.ui.legacy.structuremergeviewer;
 
-import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.ui.legacy.ModelCompareInput;
+import java.io.IOException;
+
+import org.eclipse.compare.IStreamContentAccessor;
+import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.DiffModel;
+import org.eclipse.emf.compare.diff.generic.DiffMaker;
+import org.eclipse.emf.compare.match.MatchModel;
+import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
+ * Structure viewer used by the
+ * {@link org.eclipse.emf.compare.ui.legacy.editor.ModelCompareEditorInput model compare editor}. 
  * 
- * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
- * 
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
-
-	private static final String ROOT = "Differences";
-
-	private ModelCompareInput deltaInput;
+	private DiffModel diffInput;
 
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 */
 	public Object[] getChildren(final Object parentElement) {
-		if (parentElement.equals(ROOT)) {
-			return (this.deltaInput).getDiff().eContents()
-					.toArray();
-			// List<DiffElement> Match2Elementss = new ArrayList<DiffElement>();
-			// while (tree.hasNext())
-			// {
-			// Match2Elementss.add((DiffElement) tree.next());
-			// }
-			// return Match2Elementss.toArray();
+		Object[] children = null;
+		if (parentElement instanceof EObject) {
+			children = ((EObject)parentElement).eContents().toArray();
 		}
-		if (parentElement instanceof Match2Elements) {
-			// TODOCBR FIX getChildren
-			// return ((Match2Elements) parentElement).getDiffs().toArray();
-		}
-		if (parentElement instanceof DiffElement) {
-
-			// TODOCBR fix getParentElement
-			// return ((DiffElement) parentElement).getDiffs() != null ?
-			// ((DiffElement) parentElement).getDiffs().toArray() : null;
-		}
-		return null;
+		return children;
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
 	public Object getParent(final Object element) {
-		if (element.equals(ROOT)) {
-			return null;
+		Object parent = null;
+		if (element instanceof EObject) {
+			parent = ((EObject)element).eContainer();
 		}
-		if (element instanceof Match2Elements) {
-			return ROOT;
-		}
-		if (element instanceof DiffElement) {
-			return ((DiffElement) element).eContainer();
-		}
-		return null;
+		return parent;
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 	 */
 	public boolean hasChildren(final Object element) {
-		if (element.equals(ROOT)) {
-			return true;
+		boolean hasChildren = false;
+		if (element instanceof EObject) {
+			hasChildren = !((EObject)element).eContents().isEmpty();
 		}
-		if (element instanceof Match2Elements) {
-			return !((Match2Elements) element).eContents().isEmpty();
-		}
-		if (element instanceof DiffElement) {
-			return false;
-		}
-		// FIXMECBR
-		// return (((DiffElement) element).getDiffs() != null &&
-		// (!((DiffElement) element).getDiffs().isEmpty()));
-		return false;
+		return hasChildren;
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements(final Object inputElement) {
-		final String[] root = new String[1];
-		root[0] = ROOT;
-		return root;
+		Object[] elements = null;
+		if (inputElement instanceof DiffModel) {
+			elements = ((DiffModel)inputElement).getOwnedElements().toArray();
+		} else {
+			elements = diffInput.getOwnedElements().toArray();
+		}
+		return elements;
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		// Nothing to dispose here.
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
 	 *      java.lang.Object, java.lang.Object)
 	 */
-	public void inputChanged(final Viewer viewer, final Object oldInput,
-			final Object newInput) {
-		assert (newInput instanceof ModelCompareInput);
-		assert (oldInput instanceof ModelCompareInput);
+	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		((TreeViewer) viewer).getTree().clearAll(true);
-		this.deltaInput = (ModelCompareInput) newInput;
+		if (newInput instanceof ICompareInput) {
+			ITypedElement left = ((ICompareInput)newInput).getLeft();
+			ITypedElement right = ((ICompareInput)newInput).getRight();
+			
+			if (left instanceof IStreamContentAccessor
+					&& right instanceof IStreamContentAccessor) {
+				try {
+					final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
+					
+					final MatchModel match = new MatchService().doMatch(
+							leftModel, rightModel, new NullProgressMonitor());
+					final DiffModel diff = new DiffMaker().doDiff(match);
+					
+					diffInput = diff;
+				} catch (InterruptedException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				} catch (IOException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				} catch (CoreException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				}
+			}
+		} else if (newInput instanceof DiffModel) {
+			diffInput = (DiffModel)newInput;
+		}
 	}
-
 }

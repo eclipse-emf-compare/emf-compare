@@ -537,6 +537,20 @@
             id="org.eclipse.emf.compare.ui.legacy.editor.ModelCompareEditor"
             name="emfdiff model Editor"/>
    </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.legacy.contentmergeviewer.ModelContentMergeViewerCreator"
+            extensions="ecore,uml13,emfdiff"
+            id="org.eclipse.emf.compare.ui.legacy.contentmergeviewer.ModelContentMergeViewer"/>
+   </extension>
+   <extension
+         point="org.eclipse.compare.structureMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.legacy.structuremergeviewer.ModelStructureMergeViewerCreator"
+            extensions="ecore,uml13,emfdiff"
+            id="org.eclipse.emf.compare.ui.legacy.structuremergeviewer.ModelStructureMergeViewer"/>
+   </extension>
   
 
 </plugin>

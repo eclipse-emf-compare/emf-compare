@@ -25,5 +25,6 @@ Require-Bundle: org.eclipse.emf.ecore.editor,
  org.eclipse.emf.compare.match,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.emf.compare.match,
- org.eclipse.emf.compare.diff.edit
+ org.eclipse.emf.compare.diff.edit,
+ org.eclipse.team.ui
 Bundle-Vendor: Eclipse.org

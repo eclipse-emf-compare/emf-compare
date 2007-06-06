@@ -2,23 +2,15 @@ package org.eclipse.emf.compare.ui.legacy.wizard;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.legacy.editor.ModelCompareEditorInput;
 import org.eclipse.emf.compare.ui.util.PropertyLoader;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbench;
@@ -29,7 +21,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 /**
  * Wizard in order to save the diff model
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  * 
  */
 public class SaveDeltaWizard extends BasicNewFileResourceWizard {
@@ -48,7 +40,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 		        	modelInputSnapshot.setDiff(input.getDiff());
 		        	modelInputSnapshot.setMatch(input.getMatch());
 		        	modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-					save(modelInputSnapshot,file.getFullPath().toString());
+					ModelUtils.save(modelInputSnapshot, file.getFullPath().toString());
 				} catch (IOException e) {
 					EMFComparePlugin.getDefault().log(e,false);
 				}
@@ -59,21 +51,6 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 				.setErrorMessage(NLS.bind(PropertyLoader.WARN_FilenameExtension, PropertyLoader.UI_SaveDeltaWizard_FileExtension));
 		}
 		return result;
-	}
-	
-	private void save(final EObject root, final String path) throws IOException {
-		final URI modelURI = URI.createURI(path);
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
-				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
-		final Resource newModelResource = resourceSet.createResource(modelURI);
-		newModelResource.getContents().add(root);
-		final Map options = new HashMap();
-		options.put(XMLResource.OPTION_ENCODING, System
-				.getProperty("file.encoding"));
-		newModelResource.save(options);
-
 	}
 	
 	/*

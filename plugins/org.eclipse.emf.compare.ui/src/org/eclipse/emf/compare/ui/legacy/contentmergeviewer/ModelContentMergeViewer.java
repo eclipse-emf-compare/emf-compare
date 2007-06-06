@@ -22,35 +22,44 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.IStreamContentAccessor;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.internal.BufferedCanvas;
 import org.eclipse.compare.internal.MergeSourceViewer;
 import org.eclipse.compare.internal.MergeViewerAction;
 import org.eclipse.compare.internal.Utilities;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.AttributeChange;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffGroup;
+import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.diff.UpdateModelElement;
+import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchElement;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 import org.eclipse.emf.compare.merge.service.MergeService;
 import org.eclipse.emf.compare.ui.EMFContentProvider;
 import org.eclipse.emf.compare.ui.legacy.DiffConstants;
 import org.eclipse.emf.compare.ui.legacy.ModelCompareInput;
+import org.eclipse.emf.compare.ui.legacy.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.legacy.contentmergeviewer.properties.ModelContentMergePropertiesPart;
 import org.eclipse.emf.compare.ui.legacy.contentmergeviewer.tree.ModelContentMergeTreePart;
 import org.eclipse.emf.compare.ui.legacy.org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
@@ -58,9 +67,7 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -371,6 +378,41 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		this.rightPart.setBounds(x + leftWidth + centerWidth, y, rightWidth,
 				height);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setInput(Object input) {
+		Object typedInput = input;
+		
+		if (typedInput instanceof ICompareInput) {
+			ITypedElement left = ((ICompareInput)typedInput).getLeft();
+			ITypedElement right = ((ICompareInput)typedInput).getRight();
+			
+			if (left instanceof IStreamContentAccessor
+				&& right instanceof IStreamContentAccessor) {
+				try {
+					final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
+					
+					final MatchModel match = new MatchService().doMatch(
+							leftModel, rightModel, new NullProgressMonitor());
+					final DiffModel diff = new DiffMaker().doDiff(match);
+					
+					typedInput = new ModelCompareInput(match, diff);
+				} catch (InterruptedException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				} catch (IOException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				} catch (CoreException e) {
+					EMFComparePlugin.getDefault().log(e.getMessage(), true);
+				}
+			}
+		}
+		
+		super.setInput(typedInput);
+	}
 
 	/**
 	 * @see org.eclipse.emf.compare.ui.legacy.contentmergeviewer.ContentMergeViewer#updateContent(java.lang.Object,
@@ -382,6 +424,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (getInput() == null) {
 			return;
 		}
+		Object leftObject = left;
+		Object rightObject = right;
+		if (leftObject instanceof TypedElementWrapper)
+			leftObject = ((TypedElementWrapper)leftObject).getObject();
+		if (rightObject instanceof TypedElementWrapper)
+			rightObject = ((TypedElementWrapper)rightObject).getObject();
+			
 		// TODOCBR handle 3way diff
 		// isThreeWay = ((MatchElement) ((UMLCompareInput)
 		// getInput()).getDelta()).getAncestorElt() != null;
@@ -390,20 +439,20 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		// ancestorPart.setInput(((UMLCompareInput) getInput()).getDelta());
 		// }
 		if (left != null) {
-			this.leftPart.setInput(left);
+			this.leftPart.setInput(leftObject);
 		}
 		// leftPart
 		// .setInput(((Match2Elements) ((ModelCompareInput) getInput())
 		// .getDelta().getMatchedElements().get(0)));
 		if (right != null) {
-			this.rightPart.setInput(right);
+			this.rightPart.setInput(rightObject);
 		}
 		// rightPart
 		// .setInput(((Match2Elements) ((ModelCompareInput) getInput())
 		// .getDelta().getMatchedElements().get(0))
 		// );
-		this.currentMatch = ((MatchElement) ((ModelCompareInput) getInput())
-				.getDelta().getMatchedElements().get(0));
+		this.currentMatch = (MatchElement)((ModelCompareInput) getInput())
+				.getDelta().getMatchedElements().get(0);
 		updateCenter();
 	}
 
@@ -511,131 +560,131 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	}
 
-	/* package */class TreePartContentProvider implements ITreeContentProvider {
-		private int side;
-
-		private EMFContentProvider genericContentProvider;
-
-		public TreePartContentProvider(final int side) {
-			this.side = side;
-			this.genericContentProvider = new EMFContentProvider();
-		}
-
-		private static final String NULL_ROOT = "(null)";
-
-		private Match2Elements root;
-
-		/**
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-		 */
-		public Object[] getChildren(final Object parentElement) {
-			if (NULL_ROOT.equals(parentElement)) {
-				return null;
-			}
-			if (parentElement instanceof Match2Elements) {
-				if (((Match2Elements) parentElement).getSubMatchElements()
-						.isEmpty()) {
-					final Match2Elements delta = ((Match2Elements) parentElement);
-
-					switch (this.side) {
-					case DiffConstants.LEFT:
-						return delta.getLeftElement().eContents().toArray();
-					case DiffConstants.RIGHT:
-						return delta.getRightElement().eContents().toArray();
-						// case DiffConstants.ANCESTOR :
-						// return delta.getAncestorElt().eContents().toArray();
-						// TODOCBR handle 3way diff
-					default:
-						throw new IllegalStateException("Invalid side value");
-					}
-
-				}
-				return ((Match2Elements) parentElement).getSubMatchElements()
-						.toArray();
-			}
-			return null;
-		}
-
-		/**
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-		 */
-		public Object getParent(final Object element) {
-			if (NULL_ROOT.equals(element)) {
-				return null;
-			}
-			if (element instanceof Match2Elements) {
-				return ((Match2Elements) element).eContainer();
-			}
-			return null;
-		}
-
-		/**
-		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-		 */
-		public boolean hasChildren(final Object element) {
-			if (element instanceof Match2Elements) {
-				boolean hasChildren = false;
-				switch (this.side) {
-				case DiffConstants.LEFT:
-					hasChildren = !((Match2Elements) element).getLeftElement()
-							.eContents().isEmpty();
-					break;
-				case DiffConstants.RIGHT:
-					hasChildren = !((Match2Elements) element).getRightElement()
-							.eContents().isEmpty();
-					break;
-				case DiffConstants.ANCESTOR:
-					// hasChildren = !((Match2Elements)
-					// element).getAncestorElt().eContents().isEmpty();
-					// TODOCBR handle 3way diff
-					break;
-				default:
-					throw new IllegalStateException("Invalid side value");
-				}
-				if (NULL_ROOT.equals(element)) {
-					return false;
-				}
-				return (((Match2Elements) element).getSubMatchElements().size() > 0)
-						|| hasChildren;
-			}
-			return false;
-		}
-
-		/**
-		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-		 */
-		public Object[] getElements(final Object inputElement) {
-			if (inputElement == null) {
-				return null;
-			}
-			if ((this.root != null) && this.root.equals(inputElement)) {
-				return getChildren(inputElement);
-			}
-			this.root = (Match2Elements) inputElement;
-
-			final Object[] obj = new Object[1];
-			obj[0] = this.root;
-			return obj;
-		}
-
-		/**
-		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-		 */
-		public void dispose() {
-
-		}
-
-		/**
-		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-		 *      java.lang.Object, java.lang.Object)
-		 */
-		public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput) {
-			this.root = null;
-			((TreeViewer) viewer).getTree().clearAll(true);
-
-		}
-	}
+//	/* package */class TreePartContentProvider implements ITreeContentProvider {
+//		private int side;
+//
+//		private EMFContentProvider genericContentProvider;
+//
+//		public TreePartContentProvider(final int side) {
+//			this.side = side;
+//			this.genericContentProvider = new EMFContentProvider();
+//		}
+//
+//		private static final String NULL_ROOT = "(null)";
+//
+//		private Match2Elements root;
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+//		 */
+//		public Object[] getChildren(final Object parentElement) {
+//			if (NULL_ROOT.equals(parentElement)) {
+//				return null;
+//			}
+//			if (parentElement instanceof Match2Elements) {
+//				if (((Match2Elements) parentElement).getSubMatchElements()
+//						.isEmpty()) {
+//					final Match2Elements delta = ((Match2Elements) parentElement);
+//
+//					switch (this.side) {
+//					case DiffConstants.LEFT:
+//						return delta.getLeftElement().eContents().toArray();
+//					case DiffConstants.RIGHT:
+//						return delta.getRightElement().eContents().toArray();
+//						// case DiffConstants.ANCESTOR :
+//						// return delta.getAncestorElt().eContents().toArray();
+//						// TODOCBR handle 3way diff
+//					default:
+//						throw new IllegalStateException("Invalid side value");
+//					}
+//
+//				}
+//				return ((Match2Elements) parentElement).getSubMatchElements()
+//						.toArray();
+//			}
+//			return null;
+//		}
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+//		 */
+//		public Object getParent(final Object element) {
+//			if (NULL_ROOT.equals(element)) {
+//				return null;
+//			}
+//			if (element instanceof Match2Elements) {
+//				return ((Match2Elements) element).eContainer();
+//			}
+//			return null;
+//		}
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+//		 */
+//		public boolean hasChildren(final Object element) {
+//			if (element instanceof Match2Elements) {
+//				boolean hasChildren = false;
+//				switch (this.side) {
+//				case DiffConstants.LEFT:
+//					hasChildren = !((Match2Elements) element).getLeftElement()
+//							.eContents().isEmpty();
+//					break;
+//				case DiffConstants.RIGHT:
+//					hasChildren = !((Match2Elements) element).getRightElement()
+//							.eContents().isEmpty();
+//					break;
+//				case DiffConstants.ANCESTOR:
+//					// hasChildren = !((Match2Elements)
+//					// element).getAncestorElt().eContents().isEmpty();
+//					// TODOCBR handle 3way diff
+//					break;
+//				default:
+//					throw new IllegalStateException("Invalid side value");
+//				}
+//				if (NULL_ROOT.equals(element)) {
+//					return false;
+//				}
+//				return (((Match2Elements) element).getSubMatchElements().size() > 0)
+//						|| hasChildren;
+//			}
+//			return false;
+//		}
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+//		 */
+//		public Object[] getElements(final Object inputElement) {
+//			if (inputElement == null) {
+//				return null;
+//			}
+//			if ((this.root != null) && this.root.equals(inputElement)) {
+//				return getChildren(inputElement);
+//			}
+//			this.root = (Match2Elements) inputElement;
+//
+//			final Object[] obj = new Object[1];
+//			obj[0] = this.root;
+//			return obj;
+//		}
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+//		 */
+//		public void dispose() {
+//
+//		}
+//
+//		/**
+//		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+//		 *      java.lang.Object, java.lang.Object)
+//		 */
+//		public void inputChanged(final Viewer viewer, final Object oldInput,
+//				final Object newInput) {
+//			this.root = null;
+//			((TreeViewer) viewer).getTree().clearAll(true);
+//
+//		}
+//	}
 
 	/*
 	 * Creates the central Canvas. Called from ContentMergeViewer.
@@ -1388,7 +1437,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		public void setInput(final Object input) {
 			switch (this.selectedTab) {
 			case TREE_TAB:
-				this.tree.setReflectiveInput(((EObject) input));
+				this.tree.setReflectiveInput(((EObject)input));
 				break;
 			case PROPERTIES_TAB:
 				this.properties.setInput(input);
@@ -1396,7 +1445,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			default:
 				throw new IllegalStateException("Unknow tab selection index");
 			}
-
 		}
 
 		/**

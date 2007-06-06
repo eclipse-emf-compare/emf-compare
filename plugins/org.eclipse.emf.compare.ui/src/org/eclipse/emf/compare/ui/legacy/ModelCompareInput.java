@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.ReferenceChange;
 import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.MatchElement;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.swt.graphics.Image;
 
@@ -32,39 +31,6 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class ModelCompareInput implements ICompareInput {
-
-	private class TypedElementWrapper implements ITypedElement {
-		private Object object;
-
-		public Image getImage() {
-			return null;
-			// FIXMECBR
-			// return DiffUtils.computeEObjectImage(object);
-		}
-
-		public String getName() {
-			return "noname - FIXME";
-			// FIXMECBR
-			// return DiffUtils.computeEObjectName(object);
-		}
-
-		public String getType() {
-			if (this.object instanceof MatchElement) {
-				return DiffConstants.DELTA_TYPE;
-			}
-			if (this.object instanceof DiffElement) {
-				return DiffConstants.DIFF_TYPE;
-			}
-			return null;
-		}
-
-		public TypedElementWrapper(final Object object) {
-			super();
-			this.object = object;
-		}
-
-	}
-
 	private final List<ICompareInputChangeListener> listeners = new ArrayList<ICompareInputChangeListener>();
 
 	private Object leftStorage;

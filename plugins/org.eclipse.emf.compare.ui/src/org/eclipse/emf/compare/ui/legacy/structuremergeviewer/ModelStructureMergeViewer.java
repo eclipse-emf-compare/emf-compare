@@ -19,13 +19,12 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory;
 import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.MatchElement;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -40,53 +39,31 @@ import org.eclipse.ui.PlatformUI;
  * 
  */
 public class ModelStructureMergeViewer extends TreeViewer {
-
-	private final NoDiffFilter noDiffFilter = new NoDiffFilter();
-
-	private class NoDiffFilter extends ViewerFilter {
-
-		/**
-		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer,
-		 *      java.lang.Object, java.lang.Object)
-		 */
-		@Override
-		public boolean select(final Viewer viewer, final Object parentElement,
-				final Object element) {
-			if (element instanceof MatchElement) {
-				// return ((MatchElement) element).hasDiffs();
-				// FIXMECBR
-			}
-			return true;
-		}
-
+	/**
+	 * 
+	 * @param parent
+	 * @param config
+	 */
+	public ModelStructureMergeViewer(final Composite parent, final CompareConfiguration config) {
+		super(parent);
+		setLabelProvider(new DiffLabelProvider());
+		setUseHashlookup(true);
+		setContentProvider(new ModelStructureContentProvider());
 	}
 
-	private final PseudoConflictFilter pseudoConflictFilter = new PseudoConflictFilter();
-
-	private class PseudoConflictFilter extends ViewerFilter {
-
-		/**
-		 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer,
-		 *      java.lang.Object, java.lang.Object)
-		 */
-		@Override
-		public boolean select(final Viewer viewer, final Object parentElement,
-				final Object element) {
-			// if (element instanceof Delta)
-			// {
-			// return ((Delta) element).getKind() <=
-			// DiffConstants.PSEUDO_CONFLICT;
-			// FIXMECBR
-			// }
-			return true;
-		}
-
-	}
-
+	/**
+	 * Allows the instantiation of an adapterFactory for the project.
+	 */
 	private static final class ProjectAdapterFactoryProvider {
-
 		private static ComposedAdapterFactory adapterFactory;
 
+		/**
+		 * Creates the factory composed of this project's edit plugin provider
+		 * and the EMF's generic providers.
+		 * 
+		 * @return
+		 * 			The adapter factory for this project.
+		 */
 		public final static List<AdapterFactory> createFactoryList() {
 			final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
 			// this is my provider generated in the .Edit plugin for me. Replace
@@ -102,6 +79,11 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			return factories;
 		}
 
+		/**
+		 * Returns the created adapterFactory.
+		 * @return
+		 * 			The created adapterFactory.
+		 */
 		public final static ComposedAdapterFactory getAdapterFactory() {
 			if (adapterFactory == null) {
 				adapterFactory = new ComposedAdapterFactory(createFactoryList());
@@ -110,15 +92,20 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		}
 	}
 
+	/**
+	 * {@link LabelProvider} of this viewer.
+	 */
 	private class DiffLabelProvider extends AdapterFactoryLabelProvider {
-
+		/**
+		 * Default constructor.
+		 */
 		public DiffLabelProvider() {
 			super(ProjectAdapterFactoryProvider.getAdapterFactory());
 		}
 
 		/**
 		 * Returns the platform icon for a file. You can replace with your own
-		 * icon If not a IFile, then passes to the regular EMF.Edit providers
+		 * icon if not a IFile, then passes to the regular EMF.Edit providers
 		 */
 		public Image getImage(final Object object) {
 			if (object instanceof IFile) {
@@ -134,16 +121,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			}
 			return super.getText(object);
 		}
-	}
-
-	public ModelStructureMergeViewer(final Composite parent,
-			final CompareConfiguration config) {
-		super(parent);
-		setLabelProvider(new DiffLabelProvider());
-		setUseHashlookup(true);
-		addFilter(this.noDiffFilter);
-		addFilter(this.pseudoConflictFilter);
-
 	}
 
 	/**
@@ -215,22 +192,5 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		collapseToLevel(resultItem, 0);
 		getTree().setSelection(resultItem);
 		getTree().showSelection();
-
-	}
-
-	public void setPseudoConflictFilterEnabled(final boolean b) {
-		if (b) {
-			this.addFilter(this.pseudoConflictFilter);
-		} else {
-			this.removeFilter(this.pseudoConflictFilter);
-		}
-	}
-
-	public void setNoDiffFilterEnabled(final boolean b) {
-		if (b) {
-			this.addFilter(this.noDiffFilter);
-		} else {
-			this.removeFilter(this.noDiffFilter);
-		}
 	}
 }

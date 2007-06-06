@@ -14,10 +14,10 @@ import org.eclipse.ui.PartInitException;
  */
 public class ModelCompareEditor extends CompareEditor {
 	/**
-	 * Allows reflective instanciation via Class.newInstance().
+	 * Allows reflective instantiation via Class.newInstance().
 	 */
 	public ModelCompareEditor() {
-		// Default empty instanciation
+		// Default empty instantiation
 	}
 	
 	@Override
