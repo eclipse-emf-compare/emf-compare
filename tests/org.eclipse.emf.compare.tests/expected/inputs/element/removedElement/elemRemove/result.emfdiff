@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:43.921+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup">
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:RemoveModelElement">
+          <rightParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB"/>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbRemove"/>
+        </subDiffElements>
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB"/>
+      </subDiffElements>
+      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#/"/>
+    </ownedElements>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.9999998000000001">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbCreate"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/ejbCreate"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbPostCreate"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/ejbPostCreate"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbActivate"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/ejbActivate"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbPassivate"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/ejbPassivate"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/sc"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/sc"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/poLocalHome"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/poLocalHome"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/processManagerLocal"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB/processManagerLocal"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#//OPCAdminFacadeEJB"/>
+      </subMatchElements>
+      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#/"/>
+      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v2.ecore#/"/>
+    </matchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/removedElement/elemRemove/v1.ecore#//OPCAdminFacadeEJB/ejbRemove"/>
+    </unMatchedElements>
+  </match>
+</diff:ModelInputSnapshot>

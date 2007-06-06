@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:43.984+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup">
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:MoveModelElement">
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v2.ecore#//bis/OPCAdminFacadeEJB"/>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#//OPCAdminFacadeEJB"/>
+          <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#/"/>
+          <rightParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v2.ecore#//bis"/>
+        </subDiffElements>
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#//OPCAdminFacadeEJB"/>
+      </subDiffElements>
+      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#/"/>
+    </ownedElements>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="0.75">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.8499996000000001">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#//bis"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v2.ecore#//bis"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.7985185185185186">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#//OPCAdminFacadeEJB"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v2.ecore#//bis/OPCAdminFacadeEJB"/>
+      </subMatchElements>
+      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v1.ecore#/"/>
+      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/movedElement/v2.ecore#/"/>
+    </matchedElements>
+  </match>
+</diff:ModelInputSnapshot>

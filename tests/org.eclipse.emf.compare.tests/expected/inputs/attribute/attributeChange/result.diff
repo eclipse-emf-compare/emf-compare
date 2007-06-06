@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<diff:DiffModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0">
-  <ownedElements xsi:type="diff:UpdateAttribute">
-    <attribute href="http://www.eclipse.org/emf/2002/Ecore#//EClass/interface"/>
-    <leftElement href="/org.eclipse.emf.compare.tests/inputs/attribute/attributeChange/v1.ecore#//OPCAdminFacadeEJB"/>
-    <RightElement href="/org.eclipse.emf.compare.tests/inputs/attribute/attributeChange/v2.ecore#//OPCAdminFacadeEJB"/>
-  </ownedElements>
-</diff:DiffModel>

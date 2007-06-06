@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:44.234+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup">
+      <subDiffElements xsi:type="diff:AddModelElement">
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#/"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//Match3Element"/>
+      </subDiffElements>
+      <subDiffElements xsi:type="diff:AddModelElement">
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#/"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//UnMatchElement"/>
+      </subDiffElements>
+      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#/"/>
+    </ownedElements>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="0.9433962264150944">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel/leftModel"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel/leftModel"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel/rightModel"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel/rightModel"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel/originModel"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel/originModel"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel/matchedElements"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel/matchedElements"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel/unMatchedElements"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel/unMatchedElements"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchModel"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchModel"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchElement/similarity"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchElement/similarity"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchElement/subMatchElements"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchElement/subMatchElements"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//MatchElement"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//MatchElement"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//Match2Elements/leftElement"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//Match2Elements/leftElement"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//Match2Elements/rightElement"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//Match2Elements/rightElement"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#//Match2Elements"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//Match2Elements"/>
+      </subMatchElements>
+      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1-2.ecore#/"/>
+      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#/"/>
+    </matchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//Match3Element"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple/basic1.ecore#//UnMatchElement"/>
+    </unMatchedElements>
+  </match>
+</diff:ModelInputSnapshot>

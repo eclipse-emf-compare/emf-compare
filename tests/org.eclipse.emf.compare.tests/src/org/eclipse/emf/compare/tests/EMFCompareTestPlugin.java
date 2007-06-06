@@ -4,37 +4,34 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EMFCompareTestPlugin extends AbstractUIPlugin {
-
-	/**
-	 *  The plug-in ID
-	 */
+	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.tests"; //$NON-NLS-1$
 
 	// The shared instance
 	private static EMFCompareTestPlugin plugin;
 
 	/**
-	 * The constructor
+	 * Default constructor for the plugin.
 	 */
 	public EMFCompareTestPlugin() {
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * {@inheritDoc}
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * {@inheritDoc}
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(final BundleContext context) throws Exception {
@@ -43,7 +40,7 @@ public class EMFCompareTestPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the shared instance.
 	 * 
 	 * @return the shared instance
 	 */

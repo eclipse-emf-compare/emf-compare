@@ -10,39 +10,37 @@ import junit.textui.TestRunner;
 import org.eclipse.core.runtime.IPlatformRunnable;
 
 /**
- * Launch all the JUnit tests for EMF compare
+ * Launches all the JUnit tests for EMF compare.
  * 
- * @author Cedric Brun  <a href="mailto:cedric.brun@obeo.fr ">cedric.brun@obeo.fr</a> 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  * 
  */
 public class AllTests extends TestCase implements IPlatformRunnable {
 	/**
-	 * main method
+	 * Launches the test with the given arguments.
 	 * 
 	 * @param args
+	 * 			Arguments of the testCase.
 	 */
 	public static void main(String[] args) {
 		TestRunner.run(suite());
 	}
 
 	/**
+	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return the testsuite containing all the tests
+	 * @return
+	 * 			The testsuite containing all the tests
 	 */
 	public static Test suite() {
-		TestSuite suite = new TestSuite();
+		final TestSuite suite = new TestSuite();
 		suite.addTest(ExtensionTestSuite.suite());
 		return suite;
 	}
 
 	/**
-	 * initializer
-	 * 
+	 * {@inheritDoc}
 	 */
-	public AllTests() {
-		super(""); //$NON-NLS-1$
-	}
-
 	public Object run(Object args) throws Exception {
 		TestRunner.run(suite());
 		return Arrays

@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:56.406+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup"/>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="0.9952380952380954">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/figures/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/figures/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/figures/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/figures/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/figures"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/figures"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/nodes"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/nodes"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/connections"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/connections"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/compartments"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/compartments"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas/labels"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas/labels"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Canvas"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Canvas"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureGallery/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureGallery/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureGallery/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureGallery/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureGallery/figures"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureGallery/figures"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureGallery/implementationBundle"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureGallery/implementationBundle"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureGallery"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureGallery"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Identity/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Identity/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Identity/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Identity/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Identity/name"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Identity/name"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Identity"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Identity"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/find/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/find/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/find/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/find/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/find/facetClass"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/find/facetClass"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/find"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/find"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/figure"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/figure"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/facets/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/facets/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/facets/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/facets/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement/facets"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement/facets"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramElement"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramElement"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node/nodeFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node/nodeFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node/nodeFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node/nodeFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node/nodeFigure"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node/nodeFigure"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node/resizeConstraint"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node/resizeConstraint"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node/affixedParentSide"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node/affixedParentSide"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Node"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Node"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Connection/connectionFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Connection/connectionFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Connection/connectionFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Connection/connectionFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Connection/connectionFigure"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Connection/connectionFigure"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Connection"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Connection"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Compartment/collapsible"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Compartment/collapsible"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Compartment/needsTitle"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Compartment/needsTitle"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Compartment"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Compartment"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramLabel/elementIcon"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramLabel/elementIcon"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DiagramLabel"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DiagramLabel"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//VisualFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//VisualFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GeneralFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GeneralFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GeneralFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GeneralFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GeneralFacet/identifier"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GeneralFacet/identifier"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GeneralFacet/data"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GeneralFacet/data"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GeneralFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GeneralFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//AlignmentFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//AlignmentFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//AlignmentFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//AlignmentFacet/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//AlignmentFacet/alignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//AlignmentFacet/alignment"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//AlignmentFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//AlignmentFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GradientFacet/direction"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GradientFacet/direction"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GradientFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GradientFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabelOffsetFacet/x"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabelOffsetFacet/x"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabelOffsetFacet/y"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabelOffsetFacet/y"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabelOffsetFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabelOffsetFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DefaultSizeFacet/defaultSize"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DefaultSizeFacet/defaultSize"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DefaultSizeFacet"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DefaultSizeFacet"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureMarker/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureMarker/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureMarker/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureMarker/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureMarker/parent"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureMarker/parent"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureMarker"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureMarker"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureHandle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureHandle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureHandle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureHandle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureHandle/referencingElements"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureHandle/referencingElements"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureHandle"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureHandle"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/children"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/children"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/foregroundColor"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/foregroundColor"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/backgroundColor"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/backgroundColor"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/maximumSize"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/maximumSize"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/minimumSize"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/minimumSize"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/preferredSize"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/preferredSize"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/font"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/font"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/insets"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/insets"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/border"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/border"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/location"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/location"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure/size"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure/size"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Figure"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Figure"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef/figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef/figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef/figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef/figure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef/figure"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef/figure"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureRef"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureRef"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ConnectionFigure"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ConnectionFigure"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//DecorationFigure"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//DecorationFigure"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/outline"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/outline"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/fill"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/fill"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/lineWidth"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/lineWidth"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/lineKind"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/lineKind"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/xorFill"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/xorFill"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/xorOutline"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/xorOutline"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/resolvedChildren/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/resolvedChildren/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/resolvedChildren/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/resolvedChildren/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape/resolvedChildren"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape/resolvedChildren"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Shape"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Shape"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Label/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Label/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Label/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Label/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Label/text"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Label/text"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Label"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Label"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabeledContainer/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabeledContainer/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabeledContainer/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabeledContainer/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LabeledContainer"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LabeledContainer"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Rectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Rectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Rectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Rectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Rectangle"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Rectangle"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RoundedRectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RoundedRectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RoundedRectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RoundedRectangle/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RoundedRectangle/cornerWidth"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RoundedRectangle/cornerWidth"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RoundedRectangle/cornerHeight"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RoundedRectangle/cornerHeight"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RoundedRectangle"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RoundedRectangle"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Ellipse/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Ellipse/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Ellipse/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Ellipse/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Ellipse"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Ellipse"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polyline/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polyline/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polyline/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polyline/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polyline/template"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polyline/template"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polyline"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polyline"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Polygon"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Polygon"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ScalablePolygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ScalablePolygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ScalablePolygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ScalablePolygon/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ScalablePolygon"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ScalablePolygon"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineConnection/sourceDecoration"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineConnection/sourceDecoration"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineConnection/targetDecoration"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineConnection/targetDecoration"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineConnection"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineConnection"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolylineDecoration"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolylineDecoration"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolygonDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolygonDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolygonDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolygonDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//PolygonDecoration"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//PolygonDecoration"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomClass/qualifiedClassName"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomClass/qualifiedClassName"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomClass/bundleName"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomClass/bundleName"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomClass/attributes"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomClass/attributes"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomClass"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomClass"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomAttribute/name"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomAttribute/name"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomAttribute/value"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomAttribute/value"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomAttribute/directAccess"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomAttribute/directAccess"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomAttribute/multiStatementValue"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomAttribute/multiStatementValue"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomAttribute"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomAttribute"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureAccessor/accessor"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureAccessor/accessor"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureAccessor/typedFigure"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureAccessor/typedFigure"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FigureAccessor"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FigureAccessor"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomFigure/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomFigure/customChildren"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomFigure/customChildren"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomFigure"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomFigure"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomDecoration/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomDecoration"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomDecoration"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomConnection/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomConnection"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomConnection"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Color"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Color"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RGBColor/red"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RGBColor/red"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RGBColor/green"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RGBColor/green"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RGBColor/blue"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RGBColor/blue"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//RGBColor"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//RGBColor"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ConstantColor/value"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ConstantColor/value"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ConstantColor"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ConstantColor"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/white"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/white"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/black"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/black"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/lightGray"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/lightGray"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/gray"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/gray"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/darkGray"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/darkGray"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/red"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/red"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/orange"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/orange"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/yellow"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/yellow"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/green"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/green"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/lightGreen"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/lightGreen"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/darkGreen"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/darkGreen"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/cyan"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/cyan"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/lightBlue"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/lightBlue"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/blue"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/blue"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants/darkBlue"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants/darkBlue"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//ColorConstants"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//ColorConstants"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Font"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Font"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BasicFont/faceName"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BasicFont/faceName"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BasicFont/height"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BasicFont/height"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BasicFont/style"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BasicFont/style"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BasicFont"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BasicFont"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FontStyle/NORMAL"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FontStyle/NORMAL"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FontStyle/BOLD"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FontStyle/BOLD"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FontStyle/ITALIC"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FontStyle/ITALIC"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FontStyle"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FontStyle"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Point/x"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Point/x"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Point/y"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Point/y"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Point"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Point"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Dimension/dx"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Dimension/dx"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Dimension/dy"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Dimension/dy"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Dimension"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Dimension"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Insets/top"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Insets/top"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Insets/left"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Insets/left"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Insets/bottom"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Insets/bottom"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Insets/right"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Insets/right"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Insets"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Insets"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Border"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Border"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineBorder/color"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineBorder/color"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineBorder/width"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineBorder/width"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineBorder"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineBorder"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//MarginBorder/insets"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//MarginBorder/insets"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//MarginBorder"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//MarginBorder"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CompoundBorder/outer"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CompoundBorder/outer"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CompoundBorder/inner"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CompoundBorder/inner"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CompoundBorder"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CompoundBorder"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomBorder"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomBorder"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NONE"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NONE"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NORTH"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NORTH"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/SOUTH"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/SOUTH"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/WEST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/WEST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/EAST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/EAST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NORTH_EAST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NORTH_EAST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NORTH_WEST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NORTH_WEST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/SOUTH_EAST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/SOUTH_EAST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/SOUTH_WEST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/SOUTH_WEST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NORTH_SOUTH"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NORTH_SOUTH"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/EAST_WEST"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/EAST_WEST"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction/NSEW"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction/NSEW"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Direction"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Direction"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_SOLID"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_SOLID"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_DASH"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_DASH"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_DOT"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_DOT"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_DASHDOT"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_DASHDOT"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_DASHDOTDOT"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_DASHDOTDOT"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind/LINE_CUSTOM"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind/LINE_CUSTOM"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LineKind"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LineKind"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LayoutData/owner"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LayoutData/owner"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//LayoutData"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//LayoutData"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomLayoutData"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomLayoutData"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/grabExcessHorizontalSpace"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/grabExcessHorizontalSpace"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/grabExcessVerticalSpace"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/grabExcessVerticalSpace"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/verticalAlignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/verticalAlignment"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/horizontalAlignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/horizontalAlignment"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/verticalSpan"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/verticalSpan"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/horizontalSpan"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/horizontalSpan"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/horizontalIndent"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/horizontalIndent"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData/sizeHint"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData/sizeHint"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayoutData"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayoutData"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BorderLayoutData/alignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BorderLayoutData/alignment"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BorderLayoutData/vertical"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BorderLayoutData/vertical"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BorderLayoutData"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BorderLayoutData"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Alignment/BEGINNING"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Alignment/BEGINNING"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Alignment/CENTER"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Alignment/CENTER"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Alignment/END"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Alignment/END"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Alignment/FILL"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Alignment/FILL"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Alignment"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Alignment"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Layoutable/layoutData"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Layoutable/layoutData"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Layoutable/layout"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Layoutable/layout"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Layoutable"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Layoutable"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//Layout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//Layout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//CustomLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//CustomLayout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayout/numColumns"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayout/numColumns"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayout/equalWidth"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayout/equalWidth"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayout/margins"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayout/margins"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayout/spacing"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayout/spacing"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//GridLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//GridLayout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BorderLayout/spacing"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BorderLayout/spacing"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//BorderLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//BorderLayout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/vertical"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/vertical"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/matchMinorSize"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/matchMinorSize"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/forceSingleLine"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/forceSingleLine"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/majorAlignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/majorAlignment"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/minorAlignment"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/minorAlignment"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/majorSpacing"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/majorSpacing"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout/minorSpacing"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout/minorSpacing"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//FlowLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//FlowLayout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//XYLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//XYLayout"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//XYLayoutData/topLeft"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//XYLayoutData/topLeft"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//XYLayoutData/size"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//XYLayoutData/size"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//XYLayoutData"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//XYLayoutData"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#//StackLayout"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#//StackLayout"/>
+      </subMatchElements>
+      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph.ecore#/"/>
+      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/composite/order/gmfgraph_unordered.ecore#/"/>
+    </matchedElements>
+  </match>
+</diff:ModelInputSnapshot>

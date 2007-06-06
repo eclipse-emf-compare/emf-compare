@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:43.765+0200">
+  <diff>
+    <ownedElements xsi:type="diff:DiffGroup">
+      <subDiffElements xsi:type="diff:UpdateAttribute">
+        <attribute href="http://www.eclipse.org/emf/compare/diff/1.0#//ModelInputSnapshot/date"/>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#/"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#/"/>
+      </subDiffElements>
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:RemoveModelElement">
+          <rightParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@diff"/>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@diff/@ownedElements.0"/>
+        </subDiffElements>
+        <subDiffElements xsi:type="diff:AddModelElement">
+          <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@diff"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@diff/@ownedElements.0"/>
+        </subDiffElements>
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@diff"/>
+      </subDiffElements>
+      <subDiffElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:DiffGroup">
+          <subDiffElements xsi:type="diff:DiffGroup">
+            <subDiffElements xsi:type="diff:DiffGroup">
+              <subDiffElements xsi:type="diff:RemoveModelElement">
+                <rightParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+              </subDiffElements>
+              <subDiffElements xsi:type="diff:AddModelElement">
+                <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+              </subDiffElements>
+              <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+            </subDiffElements>
+            <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+          </subDiffElements>
+          <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0"/>
+        </subDiffElements>
+        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match"/>
+      </subDiffElements>
+      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#/"/>
+    </ownedElements>
+  </diff>
+  <match>
+    <matchedElements xsi:type="match:Match2Elements" similarity="0.9379310344827587">
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.5741935483870968">
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@diff"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@diff"/>
+      </subMatchElements>
+      <subMatchElements xsi:type="match:Match2Elements" similarity="0.9872340425531916">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <subMatchElements xsi:type="match:Match2Elements" similarity="0.9727272727272729">
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.0"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.0"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.1"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.1"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.3"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.3"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.4"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.4"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.5"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.5"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.6"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.6"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.7"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.7"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.8"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.8"/>
+              </subMatchElements>
+              <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.9"/>
+                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.9"/>
+              </subMatchElements>
+              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0"/>
+            </subMatchElements>
+            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0"/>
+          </subMatchElements>
+          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0"/>
+          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0"/>
+        </subMatchElements>
+        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match"/>
+        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match"/>
+      </subMatchElements>
+      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#/"/>
+      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#/"/>
+    </matchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@diff/@ownedElements.0"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v2.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@diff/@ownedElements.0"/>
+    </unMatchedElements>
+    <unMatchedElements>
+      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/emfdiff/v1.emfdiff#//@match/@matchedElements.0/@subMatchElements.0/@subMatchElements.0/@subMatchElements.2"/>
+    </unMatchedElements>
+  </match>
+</diff:ModelInputSnapshot>
