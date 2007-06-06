@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +196,7 @@ public final class ModelUtils {
 
 		if (directory.exists() && directory.isDirectory()) {
 			final File[] files = directory.listFiles();
+			Arrays.sort(files);
 			for (int i = 0; i < files.length; i++) {
 				final File aFile = files[i];
 
