@@ -2,11 +2,10 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DiffGroupItemProvider.java,v 1.6 2007/06/06 07:41:07 cbrun Exp $
+ * $Id: DiffGroupItemProvider.java,v 1.7 2007/06/06 08:20:25 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,17 +14,14 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
-import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
