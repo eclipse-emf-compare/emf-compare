@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.match.api,
  org.eclipse.emf.compare.match.impl,
+ org.eclipse.emf.compare.match.provider,
  org.eclipse.emf.compare.match.service,
  org.eclipse.emf.compare.match.statistic,
  org.eclipse.emf.compare.match.statistic.similarity,
