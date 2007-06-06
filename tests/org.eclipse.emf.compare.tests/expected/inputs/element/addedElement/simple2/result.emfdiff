@@ -1,85 +1,85 @@
-<?xml version="1.0" encoding="Cp1252"?>
-<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:44.125+0200">
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:10:04.645+0200">
   <diff>
     <ownedElements xsi:type="diff:DiffGroup">
       <subDiffElements xsi:type="diff:RemoveModelElement">
-        <rightParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#/"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModelBis"/>
+        <rightParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModelBis"/>
       </subDiffElements>
-      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#/"/>
+      <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#/"/>
     </ownedElements>
   </diff>
   <match>
     <matchedElements xsi:type="match:Match2Elements" similarity="0.9999998000000001">
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/leftModel"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/leftModel"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/leftModel"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/leftModel"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/rightModel"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/rightModel"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/rightModel"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/rightModel"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/originModel"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/originModel"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/originModel"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/originModel"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/matchedElements"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/matchedElements"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/matchedElements"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/matchedElements"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/unMatchedElements"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/unMatchedElements"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel/unMatchedElements"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel/unMatchedElements"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModel"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchModel"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement/similarity"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement/similarity"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement/similarity"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement/similarity"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement/subMatchElements"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement/subMatchElements"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement/subMatchElements"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement/subMatchElements"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchElement"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//MatchElement"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements/leftElement"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements/leftElement"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements/leftElement"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements/leftElement"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements/rightElement"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements/rightElement"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements/rightElement"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements/rightElement"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//Match2Elements"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//Match2Elements"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//Match3Element/originElement"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//Match3Element/originElement"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//Match3Element/originElement"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//Match3Element/originElement"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//Match3Element"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//Match3Element"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//Match3Element"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//Match3Element"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//UnMatchElement/element"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//UnMatchElement/element"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//UnMatchElement/element"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//UnMatchElement/element"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//UnMatchElement"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#//UnMatchElement"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//UnMatchElement"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#//UnMatchElement"/>
       </subMatchElements>
-      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#/"/>
-      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1.ecore#/"/>
+      <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#/"/>
+      <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1.ecore#/"/>
     </matchedElements>
     <unMatchedElements>
-      <element href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModelBis"/>
+      <element href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/element/addedElement/simple2/basic1-3.ecore#//MatchModelBis"/>
     </unMatchedElements>
   </match>
 </diff:ModelInputSnapshot>

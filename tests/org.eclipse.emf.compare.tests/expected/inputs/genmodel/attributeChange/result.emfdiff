@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="Cp1252"?>
-<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:57:43.625+0200">
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:10:03.440+0200">
   <diff>
     <ownedElements xsi:type="diff:DiffGroup">
       <subDiffElements xsi:type="diff:UpdateAttribute">
         <attribute href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/foreignModel"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
       </subDiffElements>
       <subDiffElements xsi:type="diff:UpdateAttribute">
         <attribute href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/modelName"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
       </subDiffElements>
       <subDiffElements xsi:type="diff:UpdateAttribute">
         <attribute href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editPluginClass"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
       </subDiffElements>
       <subDiffElements xsi:type="diff:UpdateAttribute">
         <attribute href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/editorPluginClass"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
       </subDiffElements>
       <subDiffElements xsi:type="diff:UpdateAttribute">
         <attribute href="http://www.eclipse.org/emf/2002/GenModel#//GenModel/testSuiteClass"/>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
       </subDiffElements>
-      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+      <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
     </ownedElements>
   </diff>
   <match>
@@ -35,53 +35,53 @@
       <subMatchElements xsi:type="match:Match2Elements" similarity="0.9555555555555557">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/PURCHASE_ORDER_EJB"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/PROCMGR_ORDER_EJB"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/sc"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/sc"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/sc"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/sc"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/poLocalHome"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/poLocalHome"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/poLocalHome"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/poLocalHome"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/processManagerLocal"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/processManagerLocal"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/processManagerLocal"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/processManagerLocal"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbCreate"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbCreate"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbCreate"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbCreate"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbPostCreate"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbPostCreate"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbPostCreate"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbPostCreate"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbRemove"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbRemove"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbRemove"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbRemove"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbActivate"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbActivate"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbActivate"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbActivate"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbPassivate"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbPassivate"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB/ejbPassivate"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB/ejbPassivate"/>
           </subMatchElements>
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src/OPCAdminFacadeEJB"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src/OPCAdminFacadeEJB"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#//src"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#//src"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#//src"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#//src"/>
       </subMatchElements>
-      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v1.genmodel#/"/>
-      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/genmodel/attributeChange/v2.genmodel#/"/>
+      <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v1.genmodel#/"/>
+      <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/genmodel/attributeChange/v2.genmodel#/"/>
     </matchedElements>
   </match>
 </diff:ModelInputSnapshot>

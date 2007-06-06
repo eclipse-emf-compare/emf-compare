@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -109,7 +110,7 @@ public final class FileUtils {
 				}
 			});
 		}
-		
+		Arrays.sort(directories);
 		return directories;
 	}
 }

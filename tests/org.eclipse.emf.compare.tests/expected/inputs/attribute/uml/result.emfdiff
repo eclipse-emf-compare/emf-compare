@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="Cp1252"?>
-<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-05T09:58:19.937+0200">
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:10:27.653+0200">
   <diff>
     <ownedElements xsi:type="diff:DiffGroup">
       <subDiffElements xsi:type="diff:DiffGroup">
@@ -7,566 +7,566 @@
           <subDiffElements xsi:type="diff:DiffGroup">
             <subDiffElements xsi:type="diff:UpdateAttribute">
               <attribute href="http://www.eclipse.org/uml2/2.0.0/UML#//NamedElement/name"/>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
             </subDiffElements>
-            <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+            <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
           </subDiffElements>
-          <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
+          <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
         </subDiffElements>
-        <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
+        <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
       </subDiffElements>
-      <leftParent href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
+      <leftParent href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
     </ownedElements>
   </diff>
   <match>
     <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSOwKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="0.991304347826087">
           <subMatchElements xsi:type="match:Match2Elements" similarity="0.9601092896174864">
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9800000000000001">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSQAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSQAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSQAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSQAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSPwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSPwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9666666666666668">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSQQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSQQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSQQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSQQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9666666666666668">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSQgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSQgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSQgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSQgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9666666666666668">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSQwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSQwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSQwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSQwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9666666666666668">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSRAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSRAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSRAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSRAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9666666666666668">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSRQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSRQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSRQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSRQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="0.9966666666666668">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSSAKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSSAKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSSAKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSSAKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSRwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSRwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSRwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSRwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSSQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSSQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSSQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSSQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSSgKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSSgKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSSgKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSSgKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSSwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSSwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSSwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSSwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSTAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSTAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSTAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSTAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSRgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSRgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSRgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSRgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSPgKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSTwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSTgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSUAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSUQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSUgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSVAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSVQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSUwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSTQKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSWAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSWAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSWAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSWAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSWQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSWQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSWQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSWQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSVwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSVwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSVwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSVwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSVgKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSPQKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSPAKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSWwKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSWgKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSYAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSYAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSYAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSYAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSXwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSXwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSXwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSXwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_pX9e4GNcEdqA9eCD16eJRQ"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_pX9e4GNcEdqA9eCD16eJRQ"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_pX9e4GNcEdqA9eCD16eJRQ"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_pX9e4GNcEdqA9eCD16eJRQ"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSYwKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSYwKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSYwKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSYwKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSYgKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSYgKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSYgKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSYgKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSYQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSYQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSYQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSYQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSZgKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSZgKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSZgKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSZgKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSZQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSZQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSZQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSZQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSZAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSZAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSZAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSZAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSaQKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSaQKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSaQKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSaQKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSaAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSaAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSaAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSaAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSZwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSZwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSZwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSZwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSbAKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSbAKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSbAKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSbAKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSawKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSawKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSawKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSawKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSagKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSagKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSagKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSagKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSbwKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSbwKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSbwKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSbwKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSbgKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSbgKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSbgKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSbgKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSbQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSbQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSbQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSbQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuScAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuScAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuScAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuScAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSdAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSdAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSdAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSdAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSXgKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSXgKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSXgKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSXgKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSdwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSdwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSdwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSdwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSdgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSdgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSdgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSdgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_xWDW0GNcEdqA9eCD16eJRQ"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_xWDW0GNcEdqA9eCD16eJRQ"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_xWDW0GNcEdqA9eCD16eJRQ"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_xWDW0GNcEdqA9eCD16eJRQ"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSegKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSegKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSegKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSegKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSeQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSeQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSeQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSeQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSeAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSeAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSeAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSeAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSfQKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSfQKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSfQKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSfQKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSfAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSfAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSfAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSfAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSewKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSewKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSewKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSewKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSgAKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSgAKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSgAKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSgAKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSfwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSfwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSfwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSfwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSfgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSfgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSfgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSfgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSgwKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSgwKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSgwKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSgwKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSggKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSggKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSggKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSggKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSgQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSgQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSgQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSgQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuShgKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuShgKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuShgKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuShgKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuShQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuShQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuShQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuShQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuShAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuShAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuShAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuShAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuShwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuShwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuShwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuShwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSiwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSiwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSiwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSiwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSdQKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSdQKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSdQKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSdQKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSjgKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSjgKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSjgKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSjgKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSjQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSjQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSjQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSjQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_7M3D4GNcEdqA9eCD16eJRQ"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_7M3D4GNcEdqA9eCD16eJRQ"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_7M3D4GNcEdqA9eCD16eJRQ"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_7M3D4GNcEdqA9eCD16eJRQ"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSkQKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSkQKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSkQKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSkQKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSkAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSkAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSkAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSkAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSjwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSjwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSjwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSjwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSlAKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSlAKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSlAKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSlAKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSkwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSkwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSkwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSkwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSkgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSkgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSkgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSkgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSlQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSlQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSlQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSlQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSlgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSlgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSlgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSlgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSmgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSmgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSmgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSmgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSmwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSmwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSmwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSmwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSjAKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSjAKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSjAKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSjAKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSnAKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSnAKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSnAKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSnAKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSXQKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSXQKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSXQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSXQKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSoAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSoAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSoAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSoAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSnwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSnwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSnwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSnwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#__pFXkGNcEdqA9eCD16eJRQ"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#__pFXkGNcEdqA9eCD16eJRQ"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#__pFXkGNcEdqA9eCD16eJRQ"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#__pFXkGNcEdqA9eCD16eJRQ"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSowKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSowKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSowKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSowKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSogKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSogKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSogKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSogKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSoQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSoQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSoQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSoQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSpgKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSpgKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSpgKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSpgKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSpQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSpQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSpQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSpQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSpAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSpAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSpAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSpAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSpwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSpwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSpwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSpwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSqwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSqwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSqwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSqwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSngKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSngKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSngKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSngKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fYAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fYAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fYAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fYAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSrQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSrQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSrQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSrQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_djk1YGNdEdqA9eCD16eJRQ"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_djk1YGNdEdqA9eCD16eJRQ"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_djk1YGNdEdqA9eCD16eJRQ"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_djk1YGNdEdqA9eCD16eJRQ"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fYwKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fYwKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fYwKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fYwKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fYgKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fYgKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fYgKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fYgKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fZAKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fZAKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fZAKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fZAKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fZQKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fZQKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fZQKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fZQKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fYQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fYQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fYQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fYQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6faAKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6faAKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6faAKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6faAKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fZwKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fZwKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fZwKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fZwKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fZgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fZgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fZgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fZgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
               <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
                 <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-                  <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fawKLEdq6wrOLNneL2Q"/>
-                  <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fawKLEdq6wrOLNneL2Q"/>
+                  <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fawKLEdq6wrOLNneL2Q"/>
+                  <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fawKLEdq6wrOLNneL2Q"/>
                 </subMatchElements>
-                <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fagKLEdq6wrOLNneL2Q"/>
-                <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fagKLEdq6wrOLNneL2Q"/>
+                <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fagKLEdq6wrOLNneL2Q"/>
+                <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fagKLEdq6wrOLNneL2Q"/>
               </subMatchElements>
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6faQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6faQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6faQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6faQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fbAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fbAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fbAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fbAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fbQKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fbQKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fbQKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fbQKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fbgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fbgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fbgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fbgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fcgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fcgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fcgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fcgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fcwKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fcwKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fcwKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fcwKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fdAKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fdAKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fdAKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fdAKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
             <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-              <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fdgKLEdq6wrOLNneL2Q"/>
-              <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fdgKLEdq6wrOLNneL2Q"/>
+              <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fdgKLEdq6wrOLNneL2Q"/>
+              <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fdgKLEdq6wrOLNneL2Q"/>
             </subMatchElements>
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSrAKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSrAKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSrAKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSrAKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
           <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-            <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6fdwKLEdq6wrOLNneL2Q"/>
-            <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6fdwKLEdq6wrOLNneL2Q"/>
+            <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6fdwKLEdq6wrOLNneL2Q"/>
+            <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6fdwKLEdq6wrOLNneL2Q"/>
           </subMatchElements>
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSnQKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSnQKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSnQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSnQKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6feAKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6feAKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6feAKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6feAKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0c6feQKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0c6feQKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0c6feQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0c6feQKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSXAKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSMwKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSMgKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSNgKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSNQKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
       <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
-          <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
+          <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
+          <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSOQKLEdq6wrOLNneL2Q"/>
         </subMatchElements>
-        <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
-        <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
+        <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
+        <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSOAKLEdq6wrOLNneL2Q"/>
       </subMatchElements>
-      <leftElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
-      <rightElement href="file:/D:/dev/workspaces/runtime-New_configuration/library/inputs/attribute/uml/mm2.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
+      <leftElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
+      <rightElement href="file:/home/cbrun/Spaces/EmfCompare/org.eclipse.emf.compare.tests/inputs/attribute/uml/mm2.uml#_0cuSMQKLEdq6wrOLNneL2Q"/>
     </matchedElements>
   </match>
 </diff:ModelInputSnapshot>
