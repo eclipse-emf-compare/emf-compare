@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ModelInputSnapshotImpl.java,v 1.2 2007/06/06 07:40:51 cbrun Exp $
+ * $Id: ModelInputSnapshotImpl.java,v 1.3 2007/06/06 08:19:52 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.impl;
 
@@ -10,16 +10,12 @@ import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.DiffPackage;
 import org.eclipse.emf.compare.diff.ModelInputSnapshot;
-
 import org.eclipse.emf.compare.match.MatchModel;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 

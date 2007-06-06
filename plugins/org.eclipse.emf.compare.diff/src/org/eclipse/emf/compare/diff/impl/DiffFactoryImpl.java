@@ -10,16 +10,17 @@
  */
 package org.eclipse.emf.compare.diff.impl;
 
-import org.eclipse.emf.compare.diff.*;
-
 import org.eclipse.emf.compare.diff.AddAttribute;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.AddReferenceValue;
 import org.eclipse.emf.compare.diff.AttributeChange;
 import org.eclipse.emf.compare.diff.DiffFactory;
+import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.DiffPackage;
 import org.eclipse.emf.compare.diff.ModelElementChange;
+import org.eclipse.emf.compare.diff.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.MoveModelElement;
 import org.eclipse.emf.compare.diff.ReferenceChange;
 import org.eclipse.emf.compare.diff.RemoveAttribute;
 import org.eclipse.emf.compare.diff.RemoveModelElement;

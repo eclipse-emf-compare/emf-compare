@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.diff;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.EReference;
 
 /**

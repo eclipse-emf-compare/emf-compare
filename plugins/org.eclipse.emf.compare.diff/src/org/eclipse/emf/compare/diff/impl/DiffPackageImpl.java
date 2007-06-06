@@ -30,13 +30,11 @@ import org.eclipse.emf.compare.diff.UpdateAttribute;
 import org.eclipse.emf.compare.diff.UpdateModelElement;
 import org.eclipse.emf.compare.diff.UpdateReference;
 import org.eclipse.emf.compare.match.MatchPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
