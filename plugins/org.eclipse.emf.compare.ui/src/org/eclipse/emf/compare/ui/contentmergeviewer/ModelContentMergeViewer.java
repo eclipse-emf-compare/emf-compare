@@ -100,6 +100,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private ModelContentMergeViewerPart rightPart;
 	private ModelContentMergeViewerPart ancestorPart;
 	
+	private AbstractBufferedCanvas canvas;
+	
 	private DiffElement currentDiff;
 	private int selectedTab = TREE_TAB;
 	
@@ -115,7 +117,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		configuration = config;
 		buildControl(parent);
-		getCenterSash().addPaintListener(new CenterPaintListener());
+		getCenterPart().addPaintListener(new CenterPaintListener());
 		
 		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -162,8 +164,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws the center Control.
 	 */
 	public void updateCenter() {
-		if (getCenterSash() != null)
-			getCenterSash().redraw();
+		getCenterPart().redraw();
 	}
 	
 	/**
@@ -172,7 +173,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return
 	 * 			The center {@link Sash}.
 	 */
-	public Control getCenterSash() {
+	public Canvas getCenterPart() {
 		Control centerSash = null;
 		/* DIRTY
 		 * At the time of writing, the superClass's "fCenter" field as well as
@@ -191,7 +192,29 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			// API has changed. shouldn't be here.
 			assert false;
 		}
-		return centerSash;
+		if (canvas == null)
+			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
+				public void doPaint(GC gc) {
+					// Draw lines on the left and right edges
+					gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+					gc.drawLine(0, 0, 0, getBounds().height);
+					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
+					
+					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
+						EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
+						EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
+						if (selectedTab == PROPERTIES_TAB) {
+							leftElement = diff;
+							rightElement = diff;
+						}
+						final Item leftItem = (Item)leftPart.find(leftElement);
+						final Item rightItem = (Item)rightPart.find(rightElement);
+						drawLine(gc, leftItem, rightItem, diff);
+					}
+				}
+			};
+			canvas.moveAbove(centerSash);
+		return canvas;
 	}
 	
 	/**
@@ -494,7 +517,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth, int height) {
-		getCenterSash().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
+		getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
 		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
 		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
 		update();
@@ -579,131 +602,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * of the center part of the viewer.
 	 */
 	private final class CenterPaintListener implements PaintListener {
-		private AbstractBufferedCanvas canvas;
-		private double[] baseCenterCurve;
-		
-		/**
-		 * Default constructor, instantiates the canvas on wich the drawing will be done.
-		 */
-		public CenterPaintListener() {
-			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
-				public void doPaint(GC gc) {
-					// Draw lines on the left and right edges
-					gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-					gc.drawLine(0, 0, 0, getBounds().height);
-					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
-					
-					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
-						EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
-						EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
-						if (selectedTab == PROPERTIES_TAB) {
-							leftElement = diff;
-							rightElement = diff;
-						}
-						final Item leftItem = (Item)leftPart.find(leftElement);
-						final Item rightItem = (Item)rightPart.find(rightElement);
-						drawLine(gc, leftItem, rightItem, diff);
-					}
-				}
-			};
-			canvas.moveAbove(getCenterSash());
-		}
-		
 		public void paintControl(PaintEvent event) {
-			final Rectangle centerBounds = getCenterSash().getBounds();
-			
-			if (!canvas.getBounds().equals(centerBounds))
-				canvas.setBounds(centerBounds);
 			canvas.repaint();
-		}
-		
-		private void drawLine(GC buffer, Item leftItem, Item rightItem, DiffElement diff) {
-			if (leftItem == null || rightItem == null)
-				return;
-			final Rectangle centerbounds = getCenterSash().getBounds();
-			Rectangle leftBounds = null;
-			Rectangle rightBounds = null;
-			if (selectedTab == TREE_TAB) {
-				leftBounds = ((TreeItem)leftItem).getBounds();
-				rightBounds = ((TreeItem)rightItem).getBounds();
-			} else if (selectedTab == PROPERTIES_TAB) {
-				leftBounds = ((TableItem)leftItem).getBounds();
-				rightBounds = ((TableItem)rightItem).getBounds();
-			} else {
-				throw new IllegalStateException("Invalid value for tab selection"); //$NON-NLS-1$
-			}
-			
-			// Defines the circling Color
-			final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-			RGB color = PreferenceConverter.getColor(comparePreferences, 
-					EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
-			if (diff instanceof AddModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, 
-						EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
-			} else if (diff instanceof RemoveModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, 
-						EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
-			}
-			
-			// Defines all variables needed for drawing the line.
-			final int treeTabBorder = 5;
-			final int leftX = 0;
-			final int rightX = centerbounds.width;
-			final int leftRectangleHeight = leftBounds.height - 1;
-			final int rightRectangleHeight = rightBounds.height - 1;
-			
-			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder;
-			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder;
-			if (selectedTab == TREE_TAB && 
-					(!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
-					|| diff instanceof AddModelElement)) {
-				leftY = leftBounds.y + leftRectangleHeight + treeTabBorder;
-			}
-			if (selectedTab == TREE_TAB &&
-					(!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))
-					|| diff instanceof RemoveModelElement)) {
-				rightY = rightBounds.y + rightRectangleHeight + treeTabBorder;
-			}
-			
-			int lineWidth = 1;
-			if (selectedTab == PROPERTIES_TAB || leftPart.getSelectedElements().contains(leftItem) 
-					|| rightPart.getSelectedElements().contains(rightItem)) {
-				lineWidth = 2;
-			}
-			
-			// Performs the actual drawing
-			buffer.setForeground(new Color(getCenterSash().getDisplay(), color));
-			buffer.setLineWidth(lineWidth);
-			buffer.setLineStyle(SWT.LINE_SOLID);
-			final int[] points = getCenterCurvePoints(leftX, leftY, rightX, rightY);
-			for (int i = 1; i < points.length; i++) {
-				buffer.drawLine(
-						leftX + i - 1, points[i - 1], 
-						leftX + i, points[i]);
-			}
-		}
-		
-		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
-			if (baseCenterCurve == null) {
-				buildBaseCenterCurve(endx - startx);
-			}
-			double height = endy - starty;
-			height = height / 2;
-			final int width = endx - startx;
-			final int[] points = new int[width];
-			for (int i = 0; i < width; i++) {
-				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
-			}
-			return points;
-		}
-
-		private void buildBaseCenterCurve(final int w) {
-			final double width = w;
-			baseCenterCurve = new double[CENTER_WIDTH];
-			for (int i = 0; i < CENTER_WIDTH; i++) {
-				final double r = i / width;
-				baseCenterCurve[i] = Math.cos(Math.PI * r);
-			}
 		}
 	}
 
@@ -714,6 +614,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	private abstract class AbstractBufferedCanvas extends Canvas {
 		private Image buffer;
+		private double[] baseCenterCurve;
 		
 		/**
 		 * Default constructor, instantiates the canvas given its parent.
@@ -777,6 +678,95 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 
 			dest.drawImage(buffer, 0, 0);
+		}
+		
+		protected void drawLine(GC buffer, Item leftItem, Item rightItem, DiffElement diff) {
+			if (leftItem == null || rightItem == null)
+				return;
+			final Rectangle centerbounds = getCenterPart().getBounds();
+			Rectangle leftBounds = null;
+			Rectangle rightBounds = null;
+			if (selectedTab == TREE_TAB) {
+				leftBounds = ((TreeItem)leftItem).getBounds();
+				rightBounds = ((TreeItem)rightItem).getBounds();
+			} else if (selectedTab == PROPERTIES_TAB) {
+				leftBounds = ((TableItem)leftItem).getBounds();
+				rightBounds = ((TableItem)rightItem).getBounds();
+			} else {
+				throw new IllegalStateException("Invalid value for tab selection"); //$NON-NLS-1$
+			}
+			
+			// Defines the circling Color
+			final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
+			RGB color = PreferenceConverter.getColor(comparePreferences, 
+					EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
+			if (diff instanceof AddModelElement) {
+				color = PreferenceConverter.getColor(comparePreferences, 
+						EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+			} else if (diff instanceof RemoveModelElement) {
+				color = PreferenceConverter.getColor(comparePreferences, 
+						EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+			}
+			
+			// Defines all variables needed for drawing the line.
+			final int treeTabBorder = 5;
+			final int leftX = 0;
+			final int rightX = centerbounds.width;
+			final int leftRectangleHeight = leftBounds.height - 1;
+			final int rightRectangleHeight = rightBounds.height - 1;
+			
+			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder;
+			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder;
+			if (selectedTab == TREE_TAB && 
+					(!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
+					|| diff instanceof AddModelElement)) {
+				leftY = leftBounds.y + leftRectangleHeight + treeTabBorder;
+			}
+			if (selectedTab == TREE_TAB &&
+					(!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))
+					|| diff instanceof RemoveModelElement)) {
+				rightY = rightBounds.y + rightRectangleHeight + treeTabBorder;
+			}
+			
+			int lineWidth = 1;
+			if (selectedTab == PROPERTIES_TAB || leftPart.getSelectedElements().contains(leftItem) 
+					|| rightPart.getSelectedElements().contains(rightItem)) {
+				lineWidth = 2;
+			}
+			
+			// Performs the actual drawing
+			buffer.setForeground(new Color(getCenterPart().getDisplay(), color));
+			buffer.setLineWidth(lineWidth);
+			buffer.setLineStyle(SWT.LINE_SOLID);
+			final int[] points = getCenterCurvePoints(leftX, leftY, rightX, rightY);
+			for (int i = 1; i < points.length; i++) {
+				buffer.drawLine(
+						leftX + i - 1, points[i - 1], 
+						leftX + i, points[i]);
+			}
+		}
+		
+		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
+			if (baseCenterCurve == null) {
+				buildBaseCenterCurve(endx - startx);
+			}
+			double height = endy - starty;
+			height = height / 2;
+			final int width = endx - startx;
+			final int[] points = new int[width];
+			for (int i = 0; i < width; i++) {
+				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
+			}
+			return points;
+		}
+
+		private void buildBaseCenterCurve(final int w) {
+			final double width = w;
+			baseCenterCurve = new double[CENTER_WIDTH];
+			for (int i = 0; i < CENTER_WIDTH; i++) {
+				final double r = i / width;
+				baseCenterCurve[i] = Math.cos(Math.PI * r);
+			}
 		}
 		
 		/**
