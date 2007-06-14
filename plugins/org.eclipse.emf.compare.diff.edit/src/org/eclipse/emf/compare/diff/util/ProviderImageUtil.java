@@ -12,7 +12,7 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
 /**
  * Allows to retrieve a label image adapted to one of its content's features.
  * 
- * @author Laurent Goubet <laurent.goubet@obeo.fr>
+ * @author Cedric Brun <cedric.brun@obeo.fr>
  */
 public final class ProviderImageUtil {
 	private ProviderImageUtil() {
