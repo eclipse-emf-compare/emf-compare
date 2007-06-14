@@ -1,6 +1,7 @@
 package org.eclipse.emf.compare.diff.util;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -14,9 +15,6 @@ import org.eclipse.emf.edit.provider.IItemLabelProvider;
  * @author Laurent Goubet <laurent.goubet@obeo.fr>
  */
 public final class ProviderImageUtil {
-	/** Keeps a reference to an {@link org.eclipse.emf.compare.diff.util.AdapterUtils AdapterUtils}. */
-	private static final AdapterUtils adapterUtils = new AdapterUtils();
-	
 	private ProviderImageUtil() {
 		// Hides constructor
 	}
@@ -42,7 +40,7 @@ public final class ProviderImageUtil {
 
 		AdapterFactory featureAdapterFactory = null;
 		if (featureValue != null && (featureValue instanceof EObject))
-			featureAdapterFactory = adapterUtils.findAdapterFactory((EObject)featureValue);
+			featureAdapterFactory = AdapterUtils.findAdapterFactory((EObject)featureValue);
 
 		return featureAdapterFactory;
 	}
