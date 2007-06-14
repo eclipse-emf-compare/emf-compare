@@ -147,7 +147,7 @@ public class ModelContentMergeViewerPart {
 		tabFolder.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(final SelectionEvent e) {
 				if (e.item.equals(treeTab)) {
-					ModelContentMergeViewerPart.this.selectedTab = ModelContentMergeViewer.TREE_TAB;
+					ModelContentMergeViewerPart.this.selectedTab = ModelContentMergeViewer.TREE_TAB;					
 				} else {
 					if (e.item.equals(propertiesTab)) {
 						ModelContentMergeViewerPart.this.selectedTab = ModelContentMergeViewer.PROPERTIES_TAB;
@@ -493,17 +493,20 @@ public class ModelContentMergeViewerPart {
 		
 		treePart.getTree().addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				final TreeItem selected = tree.getSelectedElements().get(0);
-				final DiffModel diffElements = ((ModelCompareInput)parentViewer.getInput()).getDiff();
-				for (final TreeIterator iterator = diffElements.eAllContents(); iterator.hasNext(); ) {
-					final DiffElement diff = (DiffElement)iterator.next();
-					if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
-						if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)))
-							parentViewer.setTreeSelection(diff);
-					} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
-						if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)))
-							parentViewer.setTreeSelection(diff);
-					} 
+				if (tree.getSelectedElements().size() > 0)
+				{
+					final TreeItem selected = tree.getSelectedElements().get(0);
+					final DiffModel diffElements = ((ModelCompareInput)parentViewer.getInput()).getDiff();
+					for (final TreeIterator iterator = diffElements.eAllContents(); iterator.hasNext(); ) {
+						final DiffElement diff = (DiffElement)iterator.next();
+						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
+							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)))
+								parentViewer.setTreeSelection(diff);
+						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
+							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)))
+								parentViewer.setTreeSelection(diff);
+						} 
+					}
 				}
 			}
 		});
