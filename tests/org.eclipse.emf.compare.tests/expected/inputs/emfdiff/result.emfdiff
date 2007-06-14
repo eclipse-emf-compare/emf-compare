@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:20:08.696+0200">
+<diff:ModelInputSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.0" xmlns:match="http://www.eclipse.org/emf/compare/match/1.0" date="2007-06-06T11:10:04.232+0200">
   <diff>
     <ownedElements xsi:type="diff:DiffGroup">
       <subDiffElements xsi:type="diff:UpdateAttribute">

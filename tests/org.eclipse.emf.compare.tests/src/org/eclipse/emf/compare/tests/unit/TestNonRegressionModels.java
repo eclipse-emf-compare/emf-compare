@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit;
 
 import java.io.File;
@@ -101,10 +111,10 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 				final String currentMatch = ModelUtils.serialize(inputMatch);
 				final String currentDiff = ModelUtils.serialize(inputDiff);
 				final String expectedMatch = ModelUtils
-						.serialize(((ModelInputSnapshot) expectedSnapshot
+						.serialize(((ModelInputSnapshot)expectedSnapshot
 								.get(0)).getMatch());
 				final String expectedDiff = ModelUtils
-						.serialize(((ModelInputSnapshot) expectedSnapshot
+						.serialize(((ModelInputSnapshot)expectedSnapshot
 								.get(0)).getDiff());
 
 				assertEquals(testedDir + ", match doesn't match",
@@ -135,6 +145,7 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	}
 
 	/**
+	 * Get the directory to use for model inputs.
 	 * 
 	 * @return the input directory
 	 */
@@ -145,7 +156,8 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	/**
 	 * Set the directory to use for model inputs.
 	 * 
-	 * @param inputDir the input directory
+	 * @param inputDir
+	 * 			New input directory.
 	 */
 	public void setInputDirectory(String inputDir) {
 		inputDirectory = inputDir;

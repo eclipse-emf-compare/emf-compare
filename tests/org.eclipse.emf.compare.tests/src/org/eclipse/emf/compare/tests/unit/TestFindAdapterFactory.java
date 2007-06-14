@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit;
 
 import java.io.IOException;
@@ -8,7 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
-import org.eclipse.emf.compare.ui.legacy.AdapterUtils;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 
@@ -26,8 +36,7 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 */
 	public void testFindAdapterFactory() throws AssertionFailedError {
 		final String uri = "http://www.eclipse.org/emf/compare/diff/1.0"; //$NON-NLS-1$
-		final AdapterUtils util = new AdapterUtils();
-		final AdapterFactory factory = util.findAdapterFactory(uri);
+		final AdapterFactory factory = AdapterUtils.findAdapterFactory(uri);
 		assertNotNull(factory);
 	}
 	
@@ -41,8 +50,7 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 */
 	public void testFindAdapterFactoryFromFile() throws AssertionFailedError, IOException {
 		final EObject model = ModelUtils.load(pluginFile("/data/result.diff")); //$NON-NLS-1$
-		final AdapterUtils util = new AdapterUtils();		
-		final AdapterFactory factory = util.findAdapterFactory(model);
+		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
 		assertNotNull(factory);
 	}
 	
@@ -55,8 +63,7 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 */
 	public void testFindAdapterFactoryFromEObject() throws AssertionFailedError {
 		final DiffModel model = DiffFactory.eINSTANCE.createDiffModel();
-		final AdapterUtils util = new AdapterUtils();		
-		final AdapterFactory factory = util.findAdapterFactory(model);
+		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
 		assertNotNull(factory);
 	}
 }
