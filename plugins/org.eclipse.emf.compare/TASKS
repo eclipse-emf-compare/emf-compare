@@ -6,15 +6,15 @@ ___ TODO ___
       - coding a match engine
       - extending diff metamodel
  - 3 Way compare
- - open .diff files with compare editor
  - cleaning up API, Extensible Factor system for generic engine
  - supporting dependencies design for merging
  - weight annotations for metamodels
  - suppress unused code
- - cleanup GUI 
  - export diff as... extension point
  
 ___ DONE ___
+14/06/2007 - cleanup GUI 
+07/06/2007 - open .diff files with compare editor
 10/05/2007 - (LAURENT) dynamic icons for diff model using the element icons
 23/04/2007 - remove UML2 dependencie for icons and use item providers for others
 17/04/2007 - hierarchy in diff model
