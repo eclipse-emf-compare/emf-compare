@@ -96,6 +96,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	
 	private CompareConfiguration configuration;
 	
+	private RGB highlightColor;
+	private RGB changedColor;
+	private RGB addedColor;
+	private RGB removedColor;
+	
 	private ModelContentMergeViewerPart leftPart;
 	private ModelContentMergeViewerPart rightPart;
 	private ModelContentMergeViewerPart ancestorPart;
@@ -117,7 +122,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		configuration = config;
 		buildControl(parent);
-		getCenterPart().addPaintListener(new CenterPaintListener());
+		updateColors();
 		
 		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -131,6 +136,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						leftPart.navigateToDiff(currentDiff);
 						rightPart.navigateToDiff(currentDiff);
 					}
+				}
+			}
+		});
+		
+		EMFCompareUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {	
+				if (event.getProperty().endsWith("color")) { //$NON-NLS-1$
+					updateColors();
 				}
 			}
 		});
@@ -215,6 +228,46 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			};
 			canvas.moveAbove(centerSash);
 		return canvas;
+	}
+	
+	/**
+	 * Returns the highlighting color.
+	 * 
+	 * @return
+	 * 			The highlighting color.
+	 */
+	public RGB getHighlightColor() {
+		return highlightColor;
+	}
+	
+	/**
+	 * Returns the changed element color.
+	 * 
+	 * @return
+	 * 			The changed element color.
+	 */
+	public RGB getChangedColor() {
+		return changedColor;
+	}
+	
+	/**
+	 * Returns the added element color.
+	 * 
+	 * @return
+	 * 			The added element color.
+	 */
+	public RGB getAddedColor() {
+		return addedColor;
+	}
+	
+	/**
+	 * Returns the removed element color.
+	 * 
+	 * @return
+	 * 			The removed element color.
+	 */
+	public RGB getRemovedColor() {
+		return removedColor;
 	}
 	
 	/**
@@ -448,6 +501,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 	
 	/**
+	 * Updates the value of the colors as they are changed on the
+	 * preference page.
+	 */
+	protected void updateColors() {
+		final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
+		highlightColor = PreferenceConverter.getColor(comparePreferences, 
+				EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR);
+		changedColor = PreferenceConverter.getColor(comparePreferences, 
+				EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
+		addedColor = PreferenceConverter.getColor(comparePreferences, 
+				EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+		removedColor = PreferenceConverter.getColor(comparePreferences, 
+				EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see ContentMergeViewer#updateToolItems()
@@ -598,16 +667,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * This implementation of {@link PaintListener} allows for the accurate drawing
-	 * of the center part of the viewer.
-	 */
-	private final class CenterPaintListener implements PaintListener {
-		public void paintControl(PaintEvent event) {
-			canvas.repaint();
-		}
-	}
-
-	/**
 	 * We want to avoid flickering as much as possible for our draw operations on the
 	 * center part, yet we can't use double buffering to draw on it. We will then draw on
 	 * a {@link Canvas} moved above that center part. 
@@ -680,7 +739,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			dest.drawImage(buffer, 0, 0);
 		}
 		
-		protected void drawLine(GC buffer, Item leftItem, Item rightItem, DiffElement diff) {
+		protected void drawLine(GC gc, Item leftItem, Item rightItem, DiffElement diff) {
 			if (leftItem == null || rightItem == null)
 				return;
 			final Rectangle centerbounds = getCenterPart().getBounds();
@@ -697,15 +756,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 			
 			// Defines the circling Color
-			final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-			RGB color = PreferenceConverter.getColor(comparePreferences, 
-					EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
+			RGB color = changedColor;
 			if (diff instanceof AddModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, 
-						EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+				color = addedColor;
 			} else if (diff instanceof RemoveModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, 
-						EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+				color = removedColor;
 			}
 			
 			// Defines all variables needed for drawing the line.
@@ -735,12 +790,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 			
 			// Performs the actual drawing
-			buffer.setForeground(new Color(getCenterPart().getDisplay(), color));
-			buffer.setLineWidth(lineWidth);
-			buffer.setLineStyle(SWT.LINE_SOLID);
+			gc.setForeground(new Color(getCenterPart().getDisplay(), color));
+			gc.setLineWidth(lineWidth);
+			gc.setLineStyle(SWT.LINE_SOLID);
 			final int[] points = getCenterCurvePoints(leftX, leftY, rightX, rightY);
 			for (int i = 1; i < points.length; i++) {
-				buffer.drawLine(
+				gc.drawLine(
 						leftX + i - 1, points[i - 1], 
 						leftX + i, points[i]);
 			}

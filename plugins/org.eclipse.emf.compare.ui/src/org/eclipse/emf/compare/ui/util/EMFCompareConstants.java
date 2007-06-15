@@ -46,7 +46,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = "&Highlight : "; //$NON-NLS-1$
 	
 	/** Default color (light yellow) for changes background. */
-	RGB PREFERENCES_DEFAULT_HIGHLIGHT_COLOR = new RGB(255, 245, 224);
+	RGB PREFERENCES_DEFAULT_HIGHLIGHT_COLOR = new RGB(255, 255, 224);
 	
 	/** Preferences key for the circling color of a changed element. */
 	String PREFERENCES_KEY_CHANGED_COLOR = "changed.color"; //$NON-NLS-1$

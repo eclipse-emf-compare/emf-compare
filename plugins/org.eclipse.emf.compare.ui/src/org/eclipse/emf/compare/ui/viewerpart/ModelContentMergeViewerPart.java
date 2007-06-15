@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.UnMatchElement;
-import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
@@ -35,8 +34,6 @@ import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -493,8 +490,7 @@ public class ModelContentMergeViewerPart {
 		
 		treePart.getTree().addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (tree.getSelectedElements().size() > 0)
-				{
+				if (tree.getSelectedElements().size() > 0) {
 					final TreeItem selected = tree.getSelectedElements().get(0);
 					final DiffModel diffElements = ((ModelCompareInput)parentViewer.getInput()).getDiff();
 					for (final TreeIterator iterator = diffElements.eAllContents(); iterator.hasNext(); ) {
@@ -571,16 +567,14 @@ public class ModelContentMergeViewerPart {
 		private void drawRectangle(PaintEvent event, TreeItem treeItem, DiffElement diff) {
 			final Rectangle treeBounds = tree.getTree().getBounds();
 			final Rectangle treeItemBounds = treeItem.getBounds();
-			final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-			RGB color = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
-			treeItem.setBackground(new Color(treeItem.getDisplay(), 
-					PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
+			RGB color = parentViewer.getChangedColor();
+			treeItem.setBackground(new Color(treeItem.getDisplay(), parentViewer.getHighlightColor()));
 			
 			// Defines the circling Color
 			if (diff instanceof AddModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+				color = parentViewer.getAddedColor();
 			} else if (diff instanceof RemoveModelElement) {
-				color = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+				color = parentViewer.getRemovedColor();
 			}
 			
 			/*
@@ -662,13 +656,12 @@ public class ModelContentMergeViewerPart {
 		private void drawLine(PaintEvent event, TableItem tableItem) {
 			final Rectangle tableBounds = properties.getTable().getBounds();
 			final Rectangle tableItemBounds = tableItem.getBounds();
-			final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
 			tableItem.setBackground(new Color(tableItem.getDisplay(), 
-					PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
+					parentViewer.getHighlightColor()));
 			
 			event.gc.setLineWidth(2);
 			event.gc.setForeground(new Color(tableItem.getDisplay(), 
-					PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR)));
+					parentViewer.getChangedColor()));
 			event.gc.drawLine(
 					getTotalColumnsWidth(), tableItemBounds.y + tableItemBounds.height / 2, 
 					tableBounds.width, tableItemBounds.y + tableItemBounds.height / 2);
