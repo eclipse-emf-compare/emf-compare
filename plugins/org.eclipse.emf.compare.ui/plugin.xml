@@ -31,17 +31,6 @@
             name="emfdiff editor"/>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
-            id="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
-            name="EMFCompare"/>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesInitializer"/>
-   </extension>
-   <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             id="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
