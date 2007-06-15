@@ -77,7 +77,8 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public Widget findVisibleTreeItemFor(EObject object) {
 		Widget result = find(object);
-		if (result == null || !getVisibleElements().contains(result))
+		if ((result == null || !getVisibleElements().contains(result))
+				&& object.eContainer() != null)
 			result = findVisibleTreeItemFor(object.eContainer());
 		return result;
 	}

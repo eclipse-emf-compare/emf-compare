@@ -300,8 +300,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (selectedTab == TREE_TAB) {
 			final List<TreeItem> leftSelection = new LinkedList<TreeItem>();
 			final List<TreeItem> rightSelection = new LinkedList<TreeItem>();
-			leftSelection.add((TreeItem)leftPart.find(EMFCompareEObjectUtils.getLeftElement(diff)));
-			rightSelection.add((TreeItem)rightPart.find(EMFCompareEObjectUtils.getRightElement(diff)));
+			final TreeItem leftItem = (TreeItem)leftPart.find(EMFCompareEObjectUtils.getLeftElement(diff));
+			final TreeItem rightItem = (TreeItem)rightPart.find(EMFCompareEObjectUtils.getRightElement(diff));
+			leftItem.setBackground(new Color(leftItem.getDisplay(), getHighlightColor()));
+			rightItem.setBackground(new Color(rightItem.getDisplay(), getHighlightColor()));
+			leftSelection.add(leftItem);
+			rightSelection.add(rightItem);
 			leftPart.setSelectedElements(leftSelection);
 			rightPart.setSelectedElements(rightSelection);
 			update();
@@ -329,8 +333,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				if (left instanceof IStreamContentAccessor
 					&& right instanceof IStreamContentAccessor) {
 					try {
-						final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
-						final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
+						/*
+						 * Models order is arbitrary, but we will invert the right and
+						 * the left for CVS/SVN comparison.
+						 */
+						final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+						final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
 						
 						final MatchModel match = new MatchService().doMatch(
 								leftModel, rightModel, new NullProgressMonitor());

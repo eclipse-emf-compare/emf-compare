@@ -118,8 +118,12 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			if (left instanceof IStreamContentAccessor
 					&& right instanceof IStreamContentAccessor) {
 				try {
-					final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
-					final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
+					/*
+					 * Models order is arbitrary, but we will invert the right and
+					 * the left for CVS/SVN comparison.
+					 */
+					final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
 					
 					final MatchModel match = new MatchService().doMatch(
 							leftModel, rightModel, new NullProgressMonitor());

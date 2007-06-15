@@ -568,7 +568,6 @@ public class ModelContentMergeViewerPart {
 			final Rectangle treeBounds = tree.getTree().getBounds();
 			final Rectangle treeItemBounds = treeItem.getBounds();
 			RGB color = parentViewer.getChangedColor();
-			treeItem.setBackground(new Color(treeItem.getDisplay(), parentViewer.getHighlightColor()));
 			
 			// Defines the circling Color
 			if (diff instanceof AddModelElement) {
