@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,116 +30,124 @@ import org.eclipse.emf.ecore.impl.EcorePackageImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
- * This is a factory for an ecore metamodel. There is a factory by package. Each
- * factory is used to create instances of classifiers.
+ * This is a factory for an ecore metamodel. There is a factory by package. Each factory is used to create
+ * instances of classifiers.
  * 
- * @author www.obeo.fr
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EFactory {
+	/** Ecore factory. */
+	public static final EcoreFactory ECORE = EcorePackageImpl.init().getEcoreFactory();
 
-	/**
-	 * Ecore factory
-	 */
-	protected Object factoryImpl = null;
+	/** This {@link EFactory}'s shared isntance. */
+	protected Object factoryImpl;
 
-	/**
-	 * The identifier of the factory.
-	 */
-	protected String id = "";
+	/** Identifier of the factory. */
+	protected String id = new String();
 
-	/**
-	 * The class loader.
-	 */
+	/** The class loader for this {@link EcoreFactory}. */
 	protected ClassLoader loader;
 
 	/**
-	 * @return the identifier of the factory
+	 * Creates an {@link EFactory} from an {@link EPackage}.
+	 * 
+	 * @param factoryId
+	 *            Identifier for the newly created {@link EFactory}.
+	 * @param ePackage
+	 *            The {@link EPackage} to create the factory for.
+	 * @param classLoader
+	 *            {@link ClassLoader} for this {@link EFactory}.
+	 */
+	public EFactory(String factoryId, EPackage ePackage, ClassLoader classLoader) {
+		factoryImpl = ePackage.getEFactoryInstance();
+		id = factoryId;
+		loader = classLoader;
+	}
+
+	/**
+	 * Instantiates an {@link EFactory} given the shortName of the factory to wrap.
+	 * <p>
+	 * The following creates an instance of the factory java.resources.ResourcesFactory :
+	 * 
+	 * <pre>
+	 * new EFactory(&quot;java.resources&quot;, &quot;Resources&quot;, new ClassLoader());
+	 * </pre>
+	 * 
+	 * @param factoryId
+	 *            Identifier for the newly created {@link EFactory}.
+	 * @param factoryShortName
+	 *            is the factory short name
+	 * @param classLoader
+	 *            {@link ClassLoader} for this {@link EFactory}.
+	 * @throws FactoryException
+	 *             Thrown if the initialization fails somehow.
+	 */
+	public EFactory(String factoryId, String factoryShortName, ClassLoader classLoader)
+			throws FactoryException {
+		loader = classLoader;
+		init(factoryId, factoryShortName, loader);
+	}
+
+	/**
+	 * Returns the Identifier of this factory.
+	 * 
+	 * @return The Identifier of this factory.
 	 */
 	protected String getId() {
 		return id;
 	}
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param factoryId
-	 *            is the identifier of the factory
-	 * @param ePackage
-	 *            is the package
-	 * @param loader
-	 *            is the class loader
-	 * @throws FactoryException
-	 */
-	public EFactory(String factoryId, EPackage ePackage, ClassLoader loader) {
-		factoryImpl = ePackage.getEFactoryInstance();
-		id = factoryId;
-		this.loader = loader;
-	}
-
-	/**
-	 * Constructor.
-	 * <p>
-	 * Sample : new Factory("java.resources","Resources") creates an instance of
-	 * the factory java.resources.ResourcesFactory
-	 * 
-	 * @param factoryId
-	 *            is the identifier of the factory
-	 * @param factoryShortName
-	 *            is the factory short name
-	 * @param loader
-	 *            is the class loader
-	 * @throws FactoryException
-	 */
-	public EFactory(String factoryId, String factoryShortName,
-			ClassLoader loader) throws FactoryException {
-		this.loader = loader;
-		init(factoryId, factoryShortName, loader); // throws FactoryException
-													// when error
-	}
-
-	private void init(String factoryId, String factoryShortName,
-			ClassLoader loader) throws FactoryException {
-		if (factoryId != null && factoryShortName != null
-				&& factoryId.length() > 0 && factoryShortName.length() > 0) {
+	private void init(String factoryId, String factoryShortName, ClassLoader classLoader)
+			throws FactoryException {
+		if (factoryId != null && factoryShortName != null && factoryId.length() > 0
+				&& factoryShortName.length() > 0) {
+			final String factoryError = "Factory error : "; //$NON-NLS-1$
 			// Class name
-			String rPackageImplClassName = factoryId + "." + factoryShortName
-					+ "Package";
+			final String rPackageImplClassName = factoryId + "." + factoryShortName + "Package"; //$NON-NLS-1$ //$NON-NLS-2$
 			// Class loader
 			try {
 				// Class
-				Class rPackageImplClass = Class.forName(rPackageImplClassName,
-						true, loader);
+				final Class rPackageImplClass = Class.forName(rPackageImplClassName, true, classLoader);
 				// Method
-				Field rPackageImplField = rPackageImplClass
-						.getField("eINSTANCE");
-				Method rPackageImplGetRessourcesFactoryMethod = rPackageImplClass
-						.getMethod("get" + factoryShortName + "Factory",
-								new Class[] {});
+				final Field rPackageImplField = rPackageImplClass.getField("eINSTANCE"); //$NON-NLS-1$
+				final Method rPackageImplGetRessourcesFactoryMethod = rPackageImplClass.getMethod("get" //$NON-NLS-1$
+						+ factoryShortName + "Factory", new Class[] {}); //$NON-NLS-1$
 				// Instances
-				Object packageImpl = rPackageImplField.get(null);
-				factoryImpl = rPackageImplGetRessourcesFactoryMethod.invoke(
-						packageImpl, new Object[] {});
+				final Object packageImpl = rPackageImplField.get(null);
+				factoryImpl = rPackageImplGetRessourcesFactoryMethod.invoke(packageImpl, new Object[] {});
 				id = factoryId;
-			} catch (Exception e) {
-				throw new FactoryException("Factory error : " + e.getMessage());
+			} catch (ClassNotFoundException e) {
+				throw new FactoryException(factoryError + e.getMessage());
+			} catch (NoSuchFieldException e) {
+				throw new FactoryException(factoryError + e.getMessage());
+			} catch (NoSuchMethodException e) {
+				throw new FactoryException(factoryError + e.getMessage());
+			} catch (IllegalAccessException e) {
+				throw new FactoryException(factoryError + e.getMessage());
+			} catch (InvocationTargetException e) {
+				throw new FactoryException(factoryError + e.getMessage());
 			}
 		} else {
-			throw new FactoryException("Factory not found : " + factoryId
-					+ ".impl." + factoryShortName + "FactoryImpl");
+			throw new FactoryException("Factory not found : " + factoryId + ".impl." + factoryShortName //$NON-NLS-1$ //$NON-NLS-2$
+					+ "FactoryImpl"); //$NON-NLS-1$
 		}
 	}
 
-	private static Object eCall(Object object, String name, Object arg)
-			throws FactoryException {
+	private static Object eCall(Object object, String name, Object arg) throws FactoryException {
 		try {
-			Method method = object.getClass().getMethod(
-					name,
-					(arg != null) ? new Class[] { arg.getClass() }
-							: new Class[] {});
-			return method.invoke(object, (arg != null) ? new Object[] { arg }
-					: new Object[] {});
-		} catch (Exception e) {
+			Class[] methodParams = new Class[0];
+			Object[] invocationParams = new Object[0];
+			if (arg != null) {
+				methodParams = new Class[] {arg.getClass()};
+				invocationParams = new Object[] {arg};
+			}
+			final Method method = object.getClass().getMethod(name, methodParams);
+			return method.invoke(object, invocationParams);
+		} catch (NoSuchMethodException e) {
+			throw new FactoryException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new FactoryException(e.getMessage());
+		} catch (InvocationTargetException e) {
 			throw new FactoryException(e.getMessage());
 		}
 	}
@@ -147,25 +156,29 @@ public class EFactory {
 	 * Sets the value of the given feature of the object to the new value.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object on which we want to set the feature value.
 	 * @param name
-	 *            is the feature name of the value to set
+	 *            The name of the feature to set.
 	 * @param arg
-	 *            is the new value
+	 *            New value to affect to the feature.
 	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
 	 */
-	public static void eSet(EObject object, String name, Object arg)
-			throws FactoryException {
-		EStructuralFeature feature = eStructuralFeature(object, name);
-		if (feature != null && feature.getEType() instanceof EEnum
-				&& arg instanceof String) {
+	public static void eSet(EObject object, String name, Object arg) throws FactoryException {
+		final EStructuralFeature feature = eStructuralFeature(object, name);
+		if (feature != null && feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
-				Class c = Class.forName(ETools.getEClassifierPath(feature
-						.getEType()));
-				Method m = c.getMethod("get", new Class[] { String.class }); //$NON-NLS-1$
-				arg = m.invoke(c, new Object[] { arg });
-				object.eSet(feature, arg);
-			} catch (Exception e) {
+				final Class c = Class.forName(ETools.getEClassifierPath(feature.getEType()));
+				final Method m = c.getMethod("get", new Class[] {String.class}); //$NON-NLS-1$
+				final Object value = m.invoke(c, new Object[] {arg});
+				object.eSet(feature, value);
+			} catch (ClassNotFoundException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (NoSuchMethodException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (IllegalAccessException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (InvocationTargetException e) {
 				EMFComparePlugin.getDefault().log(e, false);
 			}
 		} else {
@@ -177,27 +190,32 @@ public class EFactory {
 	 * Sets the value of the given feature of the object to the new value.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object on which we want to set the feature value.
 	 * @param name
-	 *            is the feature name of the value to set
+	 *            The name of the feature to set.
 	 * @param arg
-	 *            is the new value
-	 * @param loader
-	 *            is the specific classloader use to set the value
+	 *            New value to affect to the feature.
+	 * @param classLoader
+	 *            Specific {@link ClassLoader} used to set the value.
 	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
 	 */
-	public static void eSet(EObject object, String name, Object arg,
-			ClassLoader loader) throws FactoryException {
-		EStructuralFeature feature = eStructuralFeature(object, name);
-		if (feature != null && feature.getEType() instanceof EEnum
-				&& arg instanceof String) {
+	public static void eSet(EObject object, String name, Object arg, ClassLoader classLoader)
+			throws FactoryException {
+		final EStructuralFeature feature = eStructuralFeature(object, name);
+		if (feature != null && feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
-				Class c = loader.loadClass(ETools.getEClassifierPath(feature
-						.getEType()));
-				Method m = c.getMethod("get", new Class[] { String.class }); //$NON-NLS-1$
-				arg = m.invoke(c, new Object[] { arg });
-				object.eSet(feature, arg);
-			} catch (Exception e) {
+				final Class c = classLoader.loadClass(ETools.getEClassifierPath(feature.getEType()));
+				final Method m = c.getMethod("get", new Class[] {String.class}); //$NON-NLS-1$
+				final Object value = m.invoke(c, new Object[] {arg});
+				object.eSet(feature, value);
+			} catch (ClassNotFoundException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (NoSuchMethodException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (IllegalAccessException e) {
+				EMFComparePlugin.getDefault().log(e, false);
+			} catch (InvocationTargetException e) {
 				EMFComparePlugin.getDefault().log(e, false);
 			}
 		} else {
@@ -206,23 +224,24 @@ public class EFactory {
 	}
 
 	/**
-	 * Adds the new value of the given feature of the object. If the structural
-	 * feature isn't a list, it behaves like eSet.
+	 * Adds the new value of the given feature of the object. If the structural feature isn't a list, it
+	 * behaves like eSet.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object on which we want to add to the feature values list.
 	 * @param name
-	 *            is the feature name of the new value
+	 *            The name of the feature to add to.
 	 * @param arg
-	 *            is the new value
+	 *            New value to add to the feature values.
 	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
 	 */
-	public static void eAdd(EObject object, String name, Object arg)
-			throws FactoryException {
-		Object list = object.eGet(eStructuralFeature(object, name));
+	@SuppressWarnings("unchecked")
+	public static void eAdd(EObject object, String name, Object arg) throws FactoryException {
+		final Object list = object.eGet(eStructuralFeature(object, name));
 		if (list != null && list instanceof List) {
 			if (arg != null) {
-				((List) list).add(arg);
+				((List)list).add(arg);
 			}
 		} else {
 			eSet(object, name, arg);
@@ -230,23 +249,23 @@ public class EFactory {
 	}
 
 	/**
-	 * Removes the value of the given feature of the object. If the structural
-	 * feature isn't a list, it behaves like eSet(object,name,null).
+	 * Removes the value of the given feature of the object. If the structural feature isn't a list, it
+	 * behaves like eSet(object, name, null).
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object on which we want to remove from the feature values list.
 	 * @param name
-	 *            is the feature name of the value
+	 *            The name of the feature to remove from.
 	 * @param arg
-	 *            is the value to remove, null is allowed
+	 *            Value to remove from the feature values, can be <code>null</code>.
 	 * @throws FactoryException
+	 *             Thrown if the removal fails.
 	 */
-	public static void eRemove(EObject object, String name, Object arg)
-			throws FactoryException {
-		Object list = object.eGet(eStructuralFeature(object, name));
+	public static void eRemove(EObject object, String name, Object arg) throws FactoryException {
+		final Object list = object.eGet(eStructuralFeature(object, name));
 		if (list != null && list instanceof List) {
 			if (arg != null) {
-				((List) list).remove(arg);
+				((List)list).remove(arg);
 			}
 		} else {
 			eSet(object, name, null);
@@ -257,20 +276,19 @@ public class EFactory {
 	 * Gets the value of the given feature of the object.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name, or a method defined on EObject like
-	 *            'eClass', 'eResource', 'eContainer', 'eContainingFeature',
-	 *            'eContainmentFeature', 'eContents', 'eAllContents',
+	 *            The feature name, or a method defined on {@link EObject} like 'eClass', 'eResource',
+	 *            'eContainer', 'eContainingFeature', 'eContainmentFeature', 'eContents', 'eAllContents',
 	 *            'eCrossReferences'
-	 * @return the value of the given feature of the object
+	 * @return Value of the given feature of the object
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
-	public static Object eGet(EObject object, String name)
-			throws FactoryException {
-		Object result;
+	public static Object eGet(EObject object, String name) throws FactoryException {
+		Object result = null;
 		try {
-			EStructuralFeature feature = eStructuralFeature(object, name);
+			final EStructuralFeature feature = eStructuralFeature(object, name);
 			result = object.eGet(feature);
 		} catch (FactoryException eGet) {
 			try {
@@ -278,55 +296,45 @@ public class EFactory {
 			} catch (FactoryException eCall) {
 				throw eGet;
 			}
-
 		} catch (NullPointerException eCall) {
-			return null;
+			// Fails silently
 		}
 		if (result != null && result instanceof Enumerator) {
-			return ((Enumerator) result).getName();
+			result = ((Enumerator)result).getName();
 		} else if (result != null && result instanceof EDataTypeUniqueEList) {
-			List list = new ArrayList();
-			Iterator enums = ((EDataTypeUniqueEList) result).iterator();
+			final List<Object> list = new ArrayList<Object>();
+			final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
 			while (enums.hasNext()) {
-				Object next = enums.next();
+				final Object next = enums.next();
 				if (next instanceof Enumerator) {
-					list.add(((Enumerator) next).getName());
+					list.add(((Enumerator)next).getName());
 				} else {
 					list.add(next);
 				}
 			}
-			return list;
-		} else {
-			return result;
+			result = list;
 		}
+		return result;
 	}
-
-	/**
-	 * Ecore factory.
-	 */
-	public static EcoreFactory ECORE = EcorePackageImpl.init()
-			.getEcoreFactory();
 
 	/**
 	 * Gets the structural feature of the given feature name of the object.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature from.
 	 * @param name
-	 *            is the feature name
-	 * @return the structural feature
+	 *            Name of the feature to retrieve.
+	 * @return The structural feature <code>name</code> of <code>object</code>.
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
-	public static EStructuralFeature eStructuralFeature(EObject object,
-			String name) throws FactoryException {
-		EStructuralFeature structuralFeature = object.eClass()
-				.getEStructuralFeature(name);
+	public static EStructuralFeature eStructuralFeature(EObject object, String name) throws FactoryException {
+		final EStructuralFeature structuralFeature = object.eClass().getEStructuralFeature(name);
 		if (structuralFeature != null) {
 			return structuralFeature;
 		} else {
-			throw new FactoryException("The link '" + name
-					+ "' doesn't exist in the class '"
-					+ object.eClass().getName() + "'");
+			throw new FactoryException("The link '" + name + "' doesn't exist in the class '" //$NON-NLS-1$ //$NON-NLS-2$
+					+ object.eClass().getName() + "'"); //$NON-NLS-1$
 		}
 	}
 
@@ -340,11 +348,10 @@ public class EFactory {
 	 * @return the value or null if it isn't an EObject
 	 * @throws FactoryException
 	 */
-	public static EObject eGetAsEObject(EObject object, String name)
-			throws FactoryException {
+	public static EObject eGetAsEObject(EObject object, String name) throws FactoryException {
 		Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof EObject)
-			return (EObject) eGet;
+			return (EObject)eGet;
 		else
 			return null;
 	}
@@ -359,8 +366,7 @@ public class EFactory {
 	 * @return the value or null if it isn't a String
 	 * @throws FactoryException
 	 */
-	public static String eGetAsString(EObject object, String name)
-			throws FactoryException {
+	public static String eGetAsString(EObject object, String name) throws FactoryException {
 		Object eGet = eGet(object, name);
 		if (eGet != null)
 			return eGet.toString();
@@ -378,11 +384,10 @@ public class EFactory {
 	 * @return the value or null if it isn't a Boolean
 	 * @throws FactoryException
 	 */
-	public static Boolean eGetAsBoolean(EObject object, String name)
-			throws FactoryException {
+	public static Boolean eGetAsBoolean(EObject object, String name) throws FactoryException {
 		Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Boolean)
-			return (Boolean) eGet;
+			return (Boolean)eGet;
 		else
 			return null;
 	}
@@ -397,11 +402,10 @@ public class EFactory {
 	 * @return the value or null if it isn't an Integer
 	 * @throws FactoryException
 	 */
-	public static Integer eGetAsInteger(EObject object, String name)
-			throws FactoryException {
+	public static Integer eGetAsInteger(EObject object, String name) throws FactoryException {
 		Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Integer)
-			return (Integer) eGet;
+			return (Integer)eGet;
 		else
 			return null;
 	}
@@ -413,16 +417,14 @@ public class EFactory {
 	 *            is the object
 	 * @param name
 	 *            is the feature name
-	 * @return the value, or a new List with a single element if it isn't a
-	 *         List, or null if it doesn't exist
+	 * @return the value, or a new List with a single element if it isn't a List, or null if it doesn't exist
 	 * @throws FactoryException
 	 */
-	public static List eGetAsList(EObject object, String name)
-			throws FactoryException {
+	public static List eGetAsList(EObject object, String name) throws FactoryException {
 		Object eGet = eGet(object, name);
 		if (eGet != null) {
 			if (eGet instanceof List) {
-				return (List) eGet;
+				return (List)eGet;
 			} else {
 				List list = new BasicEList(1);
 				list.add(eGet);
@@ -438,11 +440,9 @@ public class EFactory {
 	 * <p>
 	 * Samples :
 	 * <p>
-	 * An instance of java.resources.Folder return true if name equals "Folder"
-	 * or "resources.Folder".
+	 * An instance of java.resources.Folder return true if name equals "Folder" or "resources.Folder".
 	 * <p>
-	 * An instance of java.resources.Folder return true if name equals "File"
-	 * and Folder inherits File.
+	 * An instance of java.resources.Folder return true if name equals "File" and Folder inherits File.
 	 * 
 	 * @param object
 	 *            is the object
@@ -467,7 +467,7 @@ public class EFactory {
 			} else {
 				Iterator superTypes = eClass.getESuperTypes().iterator();
 				while (superTypes.hasNext()) {
-					EClass eSuperClass = (EClass) superTypes.next();
+					EClass eSuperClass = (EClass)superTypes.next();
 					if (eInstanceOf(eSuperClass, name))
 						return true;
 				}
@@ -501,15 +501,14 @@ public class EFactory {
 	 *            is the object
 	 * @param name
 	 *            is the feature name
-	 * @return if the feature is a list, return feature.size() > 0 else return
-	 *         feature != null
+	 * @return if the feature is a list, return feature.size() > 0 else return feature != null
 	 */
 	public static boolean eExist(EObject object, String name) {
 		try {
 			Object eGet = eGet(object, name);
 			if (eGet != null) {
 				if (eGet instanceof List) {
-					return ((List) eGet).size() > 0;
+					return ((List)eGet).size() > 0;
 				} else {
 					return true;
 				}
@@ -536,7 +535,7 @@ public class EFactory {
 		try {
 			Object eGet = eGet(object, name);
 			if (eGet != null && eGet instanceof List) {
-				return ((List) eGet).contains(arg);
+				return ((List)eGet).contains(arg);
 			} else {
 				return (eGet == arg);
 			}

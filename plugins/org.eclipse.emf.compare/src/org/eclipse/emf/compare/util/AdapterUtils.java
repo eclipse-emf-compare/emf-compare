@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.util;
 
 import java.util.HashMap;
@@ -11,28 +21,31 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Usefull methods for EMF adapter factories
+ * Useful methods for EMF adapter factories handling.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class AdapterUtils {
 	private static final String ADAPTER_FACTORY_EXTENSION_POINT = "org.eclipse.emf.edit.itemProviderAdapterFactories"; //$NON-NLS-1$
-	
+
 	private static Map<String, AdapterFactoryDescriptor> factories = new HashMap<String, AdapterFactoryDescriptor>();
-	
+
 	static {
 		parseExtensionMetadata();
 	}
-	
+
 	private AdapterUtils() {
 		// prevents instantiation.
 	}
 
 	/**
-	 * Return the nsURI adapter factory if existing
+	 * Returns the factory described by the fiven <code>nsURI</code>, <code>null</code> if it cannot be
+	 * found.
 	 * 
 	 * @param nsURI
-	 * @return the nsURI adapter factory if existing, null otherwise
+	 *            <code>nsURI</code> of the desired {@link AdapterFactory}.
+	 * @return The factory described by the fiven <code>nsURI</code>, <code>null</code> if it cannot be
+	 *         found.
 	 */
 	public static AdapterFactory findAdapterFactory(String nsURI) {
 		AdapterFactory adapterFactory = null;
@@ -42,25 +55,25 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Return the adapter factory for this eobject
+	 * Returnq the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
 	 * 
 	 * @param eObj
-	 * @return specific adapter factory or null
+	 *            {@link EObject} we seek the {@link AdapterFactory} for.
+	 * @return Specific {@link AdapterFactory} adapted to the {@link EObject}, <code>null</code> if it
+	 *         cannot be found.
 	 */
 	public static AdapterFactory findAdapterFactory(EObject eObj) {
-		String uri = eObj.eClass().getEPackage().getNsURI();
+		final String uri = eObj.eClass().getEPackage().getNsURI();
 		return findAdapterFactory(uri);
 	}
 
 	private static void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint(ADAPTER_FACTORY_EXTENSION_POINT)
-				.getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				ADAPTER_FACTORY_EXTENSION_POINT).getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] configElements = extensions[i]
-					.getConfigurationElements();
+			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
-				AdapterFactoryDescriptor desc = parseAdapterFactory(configElements[j]);
+				final AdapterFactoryDescriptor desc = parseAdapterFactory(configElements[j]);
 				factories.put(desc.getNsURI(), desc);
 			}
 		}
@@ -68,22 +81,30 @@ public final class AdapterUtils {
 	}
 
 	private static AdapterFactoryDescriptor parseAdapterFactory(IConfigurationElement configElements) {
-		AdapterFactoryDescriptor desc = new AdapterFactoryDescriptor(configElements);
-		return desc;
+		return new AdapterFactoryDescriptor(configElements);
 	}
 }
 
+/**
+ * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code>
+ * and the {@link IConfigurationElement} it's been created from.
+ * 
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ */
 final class AdapterFactoryDescriptor {
-	String nsURI;
+	private String nsURI;
 
-	String className;
+	private String className;
+	
+	private AdapterFactory factory;
 
-	protected IConfigurationElement element;
+	private IConfigurationElement element;
 
 	/**
-	 * Constructs a new adapter factory descriptor from an IConfigurationElement
+	 * Constructs a new descriptor from an IConfigurationElement.
 	 * 
 	 * @param configElements
+	 *            Configuration of the {@link AdapterFactory}.
 	 */
 	public AdapterFactoryDescriptor(IConfigurationElement configElements) {
 		element = configElements;
@@ -92,27 +113,27 @@ final class AdapterFactoryDescriptor {
 	}
 
 	/**
+	 * Returns the {@link AdapterFactory} class name.
 	 * 
-	 * @return the adapter class name
+	 * @return The {@link AdapterFactory} class name.
 	 */
 	public String getClassName() {
 		return className;
 	}
 
 	/**
+	 * Returns the {@link AdapterFactory} <code>nsURI</code>.
 	 * 
-	 * 
-	 * @return The adapter nsURI
+	 * @return The {@link AdapterFactory} <code>nsURI</code>.
 	 */
 	public String getNsURI() {
 		return nsURI;
 	}
 
-	AdapterFactory factory;
-
 	/**
+	 * Returns the enclosed {@link AdapterFactory}'s instance.
 	 * 
-	 * @return the corresponding adapter factory instance
+	 * @return The corresponding {@link AdapterFactory} instance.
 	 */
 	public AdapterFactory getAdapterInstance() {
 		if (factory == null) {
