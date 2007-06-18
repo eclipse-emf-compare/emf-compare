@@ -25,8 +25,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * Content provider used by {@link ModelContentMergePropertiesPart ModelContentMergePropertiesParts}
- * displaying {@link Match2Elements}.
+ * Content provider used by {@link ModelContentMergePropertiesPart}s displaying 
+ * {@link Match2Elements}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */

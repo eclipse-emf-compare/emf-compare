@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.ui.contentmergeviewer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -59,6 +58,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -72,9 +72,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -187,24 +185,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * 			The center {@link Sash}.
 	 */
 	public Canvas getCenterPart() {
-		Control centerSash = null;
-		/* DIRTY
-		 * At the time of writing, the superClass's "fCenter" field as well as
-		 * its "getCenter()" accessor are of package visibility. We'll iterate
-		 * through all children of the superclass parent Composite and return
-		 * the first instance of org.eclipse.swt.widgets.Sash as the Center
-		 * Control is the only one.
-		 */
-		if (getControl() instanceof Composite) {
-			for (Control child : ((Composite)getControl()).getChildren()) {
-				if (child instanceof Sash) {
-					centerSash = child;
-				}
-			}
-		} else {
-			// API has changed. shouldn't be here.
-			assert false;
-		}
 		if (canvas == null)
 			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
 				public void doPaint(GC gc) {
@@ -226,7 +206,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					}
 				}
 			};
-			canvas.moveAbove(centerSash);
+			canvas.moveAbove(null);
 		return canvas;
 	}
 	
@@ -291,24 +271,36 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 	
 	/**
-	 * Sets the parts' tree selection.
+	 * Sets the parts' tree selection given the {@link DiffElement} to select and the
+	 * identifier of the side which triggered the selection change.
 	 * 
 	 * @param diff
 	 * 			{@link DiffElement} backing the current selection.
+	 * @param sourceSide
+	 * 			{@link EMFCompareConstants#LEFT} if the selection change has been 
+	 * 			triggered on the left side, {@link EMFCompareConstants#RIGHT} otherwise. 
 	 */
-	public void setTreeSelection(DiffElement diff) {
+	public void setTreeSelection(DiffElement diff, int sourceSide) {
 		if (selectedTab == TREE_TAB) {
-			final List<TreeItem> leftSelection = new LinkedList<TreeItem>();
-			final List<TreeItem> rightSelection = new LinkedList<TreeItem>();
+			// Finds the TreeItems to select
 			final TreeItem leftItem = (TreeItem)leftPart.find(EMFCompareEObjectUtils.getLeftElement(diff));
 			final TreeItem rightItem = (TreeItem)rightPart.find(EMFCompareEObjectUtils.getRightElement(diff));
+			
+			// Sets the TreeItems background to the highlighted color
 			leftItem.setBackground(new Color(leftItem.getDisplay(), getHighlightColor()));
 			rightItem.setBackground(new Color(rightItem.getDisplay(), getHighlightColor()));
-			leftSelection.add(leftItem);
-			rightSelection.add(rightItem);
-			leftPart.setSelectedElements(leftSelection);
-			rightPart.setSelectedElements(rightSelection);
-			update();
+			
+			// We expand the tree item in the cases of Add or Remove elements.
+			if (diff instanceof AddModelElement && sourceSide == EMFCompareConstants.RIGHT) {
+				leftItem.setExpanded(true);
+			} else if (diff instanceof RemoveModelElement && sourceSide == EMFCompareConstants.LEFT) {
+				rightItem.setExpanded(true);
+			}
+			
+			// Sets the trees selection and updates the viewer
+			leftPart.setSelection(new StructuredSelection(leftItem.getData()));
+			rightPart.setSelection(new StructuredSelection(rightItem.getData()));
+			updateCenter();
 		}
 	}
 	
@@ -366,7 +358,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void copy(boolean leftToRight) {
 		((ModelCompareInput)getInput()).copy(leftToRight);
-
 		setRightDirty(leftToRight);
 		setLeftDirty(!leftToRight);
 	}
@@ -537,7 +528,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 * accessors for it. We could alter MergeViewerContentProvider "isRightEditable" 
 		 * to enable these actions yet it is an internal class and reimplementing an 
 		 * IMergeViewerContentProvider seems useless for such a trivial task.
-		 * We will then iterate through the TollBarManager's contributor and enable 
+		 * We will then iterate through the ToolBarManager's contributor and enable 
 		 * the two which labels are defined by the keys "action.CopyLeftToRight.label" 
 		 * and "action.CopyRightToLeft.label".
 		 */

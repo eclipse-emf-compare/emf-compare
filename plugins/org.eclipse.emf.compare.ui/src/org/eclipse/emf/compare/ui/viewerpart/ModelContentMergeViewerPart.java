@@ -18,7 +18,6 @@ import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.AttributeChange;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffGroup;
-import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchModel;
@@ -65,7 +64,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergeViewerPart {
-	private static final String INVALID_TAB = "Invalid tab index"; //$NON-NLS-1$
+	protected static final String INVALID_TAB = "Invalid tab index"; //$NON-NLS-1$
 	private final List<ICompareEditorPartListener> editorPartListeners = new ArrayList<ICompareEditorPartListener>();
 	private int selectedTab;
 	private CTabFolder tabFolder;
@@ -96,21 +95,6 @@ public class ModelContentMergeViewerPart {
 		selectedTab = ModelContentMergeViewer.TREE_TAB;
 		partSide = side;
 		createContents(composite);
-		
-		addCompareEditorPartListener(new ICompareEditorPartListener() {
-			public void selectedTabChanged(final int newIndex) {
-				// Prevents resizing behavior from the part
-				resizeBounds();
-			}
-
-			public void selectionChanged(final SelectionChangedEvent event) {
-				// We don't need to implement this
-			}
-
-			public void updateCenter() {
-				// We don't need to implement this
-			}
-		});
 	}
 	
 	/**
@@ -320,13 +304,13 @@ public class ModelContentMergeViewerPart {
 	}
 	
 	/**
-	 * Sets the tree's selection given the list of elements to set selected.
+	 * Sets the tree's selection.
 	 * 
 	 * @param selection
 	 * 			New selection for the tree.
 	 */
-	public void setSelectedElements(List<TreeItem> selection) {
-		tree.setSelectedElements(selection);
+	public void setSelection(StructuredSelection selection) {
+		tree.setSelection(selection, true);
 	}
 	
 	/**
@@ -355,9 +339,9 @@ public class ModelContentMergeViewerPart {
 		final EObject target = findElementFromDiff(diff);
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			tree.showItem(target);
-			properties.setInput(findMatchFromDiff(target));
+			properties.setInput(findMatchFromElement(target));
 		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			properties.setInput(findMatchFromDiff(target));
+			properties.setInput(findMatchFromElement(target));
 			properties.showItem(diff);
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
@@ -427,7 +411,7 @@ public class ModelContentMergeViewerPart {
 		return element;
 	}
 	
-	private Object findMatchFromDiff(EObject element) {
+	private Object findMatchFromElement(EObject element) {
 		Object theElement = null;
 		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
 		
@@ -492,17 +476,19 @@ public class ModelContentMergeViewerPart {
 			public void widgetSelected(SelectionEvent e) {
 				if (tree.getSelectedElements().size() > 0) {
 					final TreeItem selected = tree.getSelectedElements().get(0);
-					final DiffModel diffElements = ((ModelCompareInput)parentViewer.getInput()).getDiff();
-					for (final TreeIterator iterator = diffElements.eAllContents(); iterator.hasNext(); ) {
-						final DiffElement diff = (DiffElement)iterator.next();
+					for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)))
-								parentViewer.setTreeSelection(diff);
+							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))) {
+								parentViewer.setTreeSelection(diff, partSide);
+							}
 						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)))
-								parentViewer.setTreeSelection(diff);
+							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))) {
+								parentViewer.setTreeSelection(diff, partSide);
+							}
 						} 
 					}
+					if (selected.getData() instanceof EObject)
+						properties.setInput(findMatchFromElement((EObject)selected.getData()));
 				}
 			}
 		});
@@ -541,9 +527,9 @@ public class ModelContentMergeViewerPart {
 	
 	private void resizeBounds() {
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			tree.getTree().setBounds(this.tabFolder.getClientArea());
+			tree.getTree().setBounds(tabFolder.getClientArea());
 		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			properties.getTable().setBounds(this.tabFolder.getClientArea());
+			properties.getTable().setBounds(tabFolder.getClientArea());
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
 		}
@@ -555,6 +541,9 @@ public class ModelContentMergeViewerPart {
 	 */
 	private class TreePaintListener implements PaintListener {
 		public void paintControl(PaintEvent event) {
+			// This will avoid strange random resize behavior on linux OS
+			if (tree.getTree().getBounds() != tabFolder.getClientArea())
+				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (partSide == EMFCompareConstants.LEFT) {
 					drawRectangle(event, (TreeItem)find(EMFCompareEObjectUtils.getLeftElement(diff)), diff);
@@ -644,6 +633,9 @@ public class ModelContentMergeViewerPart {
 	 */
 	private class PropertyPaintListener implements PaintListener {
 		public void paintControl(PaintEvent event) {
+			// This will avoid strange random resize behavior on linux
+			if (properties.getTable().getBounds() != tabFolder.getClientArea())
+				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (diff instanceof AttributeChange && find(diff) != null
 						&& partSide == EMFCompareConstants.LEFT) {

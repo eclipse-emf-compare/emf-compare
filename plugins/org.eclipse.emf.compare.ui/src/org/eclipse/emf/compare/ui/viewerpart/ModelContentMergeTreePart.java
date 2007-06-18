@@ -94,26 +94,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			if (item instanceof TreeItem) {
 				super.showItem((TreeItem)item);
 			}
-			setSelection(new StructuredSelection(item));
-			if (find(item) == null) {
-				expandAll();
-			}
-			if (find(item) instanceof TreeItem) {
-				final TreeItem result = (TreeItem)find(item);
-	
-				boolean selected = false;
-				for (TreeItem selectedItem : getTree().getSelection()) {
-					if (selectedItem.equals(result)) {
-						selected = true;
-					}
-				}
-				if (!selected) {
-					collapseToLevel(result, 0);
-		
-					getTree().setSelection(result);
-					getTree().showSelection();
-				}
-			}
+			setSelection(new StructuredSelection(item), true);
 		}
 	}
 	
@@ -162,20 +143,6 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	}
 	
 	/**
-	 * Sets the tree's selection given the list of elements to set selected.
-	 * 
-	 * @param selection
-	 * 			New selection for the tree.
-	 */
-	public void setSelectedElements(List<TreeItem> selection) {
-		final TreeItem[] selectionArray = new TreeItem[selection.size()];
-		for (int i = 0; i < selection.size(); i++) {
-			selectionArray[i] = selection.get(i);
-		}
-		getTree().setSelection(selectionArray);
-	}
-	
-	/**
 	 * Modifies the input of this viewer. Sets a new label provider adapted to
 	 * the given {@link EObject}.
 	 * 
@@ -189,6 +156,23 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			adapterFactory.addAdapterFactory(best);
 		setLabelProvider(new TreeLabelProvider(adapterFactory));
 		setInput(eObject.eResource());
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see StructuredViewer#setSelectionToWidget(List, boolean)
+	 */
+	@Override
+	protected void setSelectionToWidget(List l, boolean reveal) {
+		// Will expand the treeItem to one level below the current if needed
+		for (Object data : l) {
+			final Widget widget = find(data);
+			if (widget != null && widget instanceof TreeItem 
+					&& ((TreeItem)widget).getExpanded() && getChildren(widget).length > 0) {
+				expandToLevel(data, 1);
+			}
+		}
 	}
 	
 	/**
