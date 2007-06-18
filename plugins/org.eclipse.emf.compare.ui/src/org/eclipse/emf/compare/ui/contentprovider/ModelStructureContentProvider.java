@@ -12,8 +12,10 @@ package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
 
+import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -38,8 +40,21 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
+	private CompareConfiguration configuration;
+
 	private ModelInputSnapshot snapshot;
+
 	private DiffModel diffInput;
+
+	/**
+	 * Instantiates a content provider given the {@link CompareConfiguration} to use.
+	 * 
+	 * @param compareConfiguration
+	 *            {@link CompareConfiguration} used for this comparison.
+	 */
+	public ModelStructureContentProvider(CompareConfiguration compareConfiguration) {
+		configuration = compareConfiguration;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -114,31 +129,41 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		if (newInput instanceof ICompareInput) {
 			final ITypedElement left = ((ICompareInput)newInput).getLeft();
 			final ITypedElement right = ((ICompareInput)newInput).getRight();
-			
-			if (left instanceof IStreamContentAccessor
-					&& right instanceof IStreamContentAccessor) {
+
+			EObject leftModel = null;
+			EObject rightModel = null;
+			try {
+				if (left instanceof ResourceNode) {
+					leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath());
+				} else if (left instanceof IStreamContentAccessor) {
+					leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					configuration.setLeftEditable(false);
+				}
+				if (right instanceof ResourceNode) {
+					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath());
+				} else if (right instanceof IStreamContentAccessor) {
+					rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
+							.getName());
+					configuration.setRightEditable(false);
+				}
+			} catch (IOException e) {
+				EMFComparePlugin.getDefault().log(e.getMessage(), true);
+			} catch (CoreException e) {
+				EMFComparePlugin.getDefault().log(e.getMessage(), true);
+			}
+
+			if (leftModel != null && rightModel != null) {
 				try {
-					/*
-					 * Models order is arbitrary, but we will invert the right and
-					 * the left for CVS/SVN comparison.
-					 */
-					final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
-					final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName());
-					
-					final MatchModel match = new MatchService().doMatch(
-							leftModel, rightModel, new NullProgressMonitor());
+					final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
+							new NullProgressMonitor());
 					final DiffModel diff = new DiffMaker().doDiff(match);
-					
+
 					snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-					snapshot.setMatch(match);
 					snapshot.setDiff(diff);
-					
+					snapshot.setMatch(match);
+
 					diffInput = diff;
 				} catch (InterruptedException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), true);
-				} catch (IOException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), true);
-				} catch (CoreException e) {
 					EMFComparePlugin.getDefault().log(e.getMessage(), true);
 				}
 			}
@@ -147,12 +172,11 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			diffInput = snapshot.getDiff();
 		}
 	}
-	
+
 	/**
-	 * Returns this content provider's input snapshot.
+	 * Returns this content provider's input.
 	 * 
-	 * @return
-	 * 			This content provider's input snapshot	.
+	 * @return This content provider's input.
 	 */
 	public ModelInputSnapshot getSnapshot() {
 		return snapshot;

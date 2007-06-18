@@ -57,7 +57,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		inputSnapshot = snapshot;
 		
 		inputListener = new ICompareInputChangeListener() {
-			public void compareInputChanged(final ICompareInput source) {
+			public void compareInputChanged(ICompareInput source) {
 				structureMergeViewer.setInput(source);
 				contentMergeViewer.setInput(source);
 			}

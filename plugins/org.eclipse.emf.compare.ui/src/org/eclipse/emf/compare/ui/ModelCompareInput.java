@@ -33,75 +33,70 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Input to be used for a 2 or 3-way comparison in a 
+ * Input to be used for a 2 or 3-way comparison in a
  * {@link org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer ModelContentMergeViewer}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareInput implements ICompareInput {
 	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
-	
+
 	private DiffModel diff;
+
 	private MatchModel match;
-	
+
 	/**
-	 * Creates a CompareInput given a 
+	 * Creates a CompareInput given a
 	 * {@link org.eclipse.emf.compare.diff.ModelInputSnapshot Model input snapshot}.
 	 * 
 	 * @param snapshot
-	 * 			Snapshot Containing the diff and match of the comparison.
+	 *            Snapshot Containing the diff and match of the comparison.
 	 */
 	public ModelCompareInput(ModelInputSnapshot snapshot) {
 		this(snapshot.getMatch(), snapshot.getDiff());
 	}
-	
+
 	/**
-	 * Creates a CompareInput given the resulting 
-	 * {@link org.eclipse.emf.compare.match.MatchModel match} and 
-	 * {@link org.eclipse.emf.compare.diff.DiffModel diff} of the 
-	 * comparison.
+	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.MatchModel match} and
+	 * {@link org.eclipse.emf.compare.diff.DiffModel diff} of the comparison.
 	 * 
 	 * @param matchModel
-	 * 			{@link org.eclipse.emf.compare.match.MatchModel match} 
-	 * 			of the comparison.
+	 *            {@link org.eclipse.emf.compare.match.MatchModel match} of the comparison.
 	 * @param diffModel
-	 * 			{@link org.eclipse.emf.compare.diff.DiffModel diff} of
-	 * 			the comparison.
+	 *            {@link org.eclipse.emf.compare.diff.DiffModel diff} of the comparison.
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel) {
 		match = matchModel;
 		diff = diffModel;
 	}
-	
+
 	/**
 	 * Returns this ModelCompareInput's DiffModel.
 	 * 
-	 * @return
-	 * 			This ModelCompareInput's DiffModel.
+	 * @return This ModelCompareInput's DiffModel.
 	 */
 	public DiffModel getDiff() {
 		return diff;
 	}
-	
+
 	/**
 	 * Returns this ModelCompareInput's MatchModel.
 	 * 
-	 * @return
-	 * 			This ModelCompareInput's MatchModel.
+	 * @return This ModelCompareInput's MatchModel.
 	 */
 	public MatchModel getMatch() {
 		return match;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see ICompareInput#addCompareInputChangeListener(ICompareInputChangeListener) 
+	 * @see ICompareInput#addCompareInputChangeListener(ICompareInputChangeListener)
 	 */
 	public void addCompareInputChangeListener(ICompareInputChangeListener listener) {
 		inputChangeListeners.add(listener);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -128,13 +123,12 @@ public class ModelCompareInput implements ICompareInput {
 		}
 		fireCompareInputChanged();
 	}
-	
+
 	/**
-	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't 
-	 * take {@link DiffGroup}s into account.
+	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take
+	 * {@link DiffGroup}s into account.
 	 * 
-	 * @return
-	 * 			The {@link DiffElement} of the input {@link DiffModel} as a list.
+	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
 	public List<DiffElement> getDiffAsList() {
 		final List<DiffElement> diffs = new LinkedList<DiffElement>();
@@ -163,15 +157,15 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public Image getImage() {
 		Image image = null;
-		
+
 		if (getMatch() != null)
 			image = EMFCompareEObjectUtils.computeObjectImage(getMatch());
 		else if (getDiff() != null)
 			image = EMFCompareEObjectUtils.computeObjectImage(getDiff());
-		
+
 		return image;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -179,12 +173,12 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public String getName() {
 		String name = null;
-		
+
 		if (getMatch() != null)
 			name = EMFCompareEObjectUtils.computeObjectName(getMatch());
 		else if (getDiff() != null)
 			name = EMFCompareEObjectUtils.computeObjectName(getDiff());
-		
+
 		return name;
 	}
 
@@ -204,10 +198,11 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public ITypedElement getLeft() {
 		ITypedElement element = null;
-		
+
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getLeftElement());
-			
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
+					.getLeftElement());
+
 		return element;
 	}
 
@@ -218,40 +213,38 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public ITypedElement getRight() {
 		ITypedElement element = null;
-		
+
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getRightElement());
-			
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
+					.getRightElement());
+
 		return element;
 	}
-	
+
 	/**
-	 * Fetches the {@link DiffElement diff} associated to the given 
-	 * {@link Match2Elements match}.
+	 * Fetches the {@link DiffElement diff} associated to the given {@link Match2Elements match}.
 	 * 
 	 * @param aMatch
-	 * 			Match element for which we seek the diff.
-	 * @return
-	 * 			the {@link DiffElement diff} associated to the given 
-	 * 			{@link Match2Elements match}.
+	 *            Match element for which we seek the diff.
+	 * @return the {@link DiffElement diff} associated to the given {@link Match2Elements match}.
 	 */
 	public DiffElement findDiffFromMatch(Match2Elements aMatch) {
 		DiffElement result = null;
 		final EObject leftMatch = aMatch.getLeftElement();
 		final EObject rightMatch = aMatch.getRightElement();
-		
+
 		for (final DiffElement target : getDiffAsList()) {
 			final EObject leftDiff = EMFCompareEObjectUtils.getLeftElement(target);
 			final EObject rightDiff = EMFCompareEObjectUtils.getRightElement(target);
-			
-			if ((leftDiff != null && leftDiff.equals(leftMatch)) 
+
+			if ((leftDiff != null && leftDiff.equals(leftMatch))
 					|| (rightDiff != null && rightDiff.equals(rightMatch))) {
 				result = target;
 			}
 		}
 		return result;
 	}
-	
+
 	protected void fireCompareInputChanged() {
 		for (ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);

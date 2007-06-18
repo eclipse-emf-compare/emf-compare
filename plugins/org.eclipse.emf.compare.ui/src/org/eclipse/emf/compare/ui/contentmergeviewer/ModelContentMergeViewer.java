@@ -16,24 +16,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.CompareViewerPane;
-import org.eclipse.compare.IStreamContentAccessor;
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
-import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 import org.eclipse.emf.compare.merge.service.MergeService;
@@ -42,15 +32,13 @@ import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
+import org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewerpart.ModelContentMergeViewerPart;
-import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -130,6 +118,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		configuration = config;
 		buildControl(parent);
 		updateColors();
+		setContentProvider(new ModelContentMergeContentProvider(config));
 
 		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -305,6 +294,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			// Sets the trees selection and updates the viewer
 			leftPart.setSelection(new StructuredSelection(leftItem.getData()));
 			rightPart.setSelection(new StructuredSelection(rightItem.getData()));
+			currentDiff = diff;
 			updateCenter();
 		}
 	}
@@ -321,39 +311,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		} else if (input instanceof ModelInputSnapshot) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
-		} else {
-			Object typedInput = input;
-
-			if (typedInput instanceof ICompareInput) {
-				final ITypedElement left = ((ICompareInput)typedInput).getLeft();
-				final ITypedElement right = ((ICompareInput)typedInput).getRight();
-
-				if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-					try {
-						/*
-						 * Models order is arbitrary, but we will invert the right and the left for CVS/SVN
-						 * comparison.
-						 */
-						final EObject rightModel = ModelUtils.load(((IStreamContentAccessor)left)
-								.getContents(), left.getName());
-						final EObject leftModel = ModelUtils.load(((IStreamContentAccessor)right)
-								.getContents(), right.getName());
-
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
-								new NullProgressMonitor());
-						final DiffModel diff = new DiffMaker().doDiff(match);
-
-						typedInput = new ModelCompareInput(match, diff);
-					} catch (InterruptedException e) {
-						EMFComparePlugin.getDefault().log(e.getMessage(), true);
-					} catch (IOException e) {
-						EMFComparePlugin.getDefault().log(e.getMessage(), true);
-					} catch (CoreException e) {
-						EMFComparePlugin.getDefault().log(e.getMessage(), true);
-					}
-				}
-			}
-			super.setInput(typedInput);
 		}
 	}
 
@@ -370,33 +327,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	protected void copyDiffLeftToRight() {
-		DiffElement diff = null;		
-		if (leftPart.getSelectedElements() != null && leftPart.getSelectedElements().size() > 0) {
-			for (final DiffElement aDiff : ((ModelCompareInput)getInput()).getDiffAsList()) {
-				if (leftPart.getSelectedElements().get(0).getData().equals(
-						EMFCompareEObjectUtils.getLeftElement(aDiff))) {
-					diff = aDiff;
-					break;
-				}
-			}
-			if (diff != null)
-				copy(diff, true);
-		}
+		if (currentDiff != null)
+			copy(currentDiff, true);
+		currentDiff = null;
 	}
 
 	protected void copyDiffRightToLeft() {
-		DiffElement diff = null;
-		if (rightPart.getSelectedElements() != null && rightPart.getSelectedElements().size() > 0) {
-		for (final DiffElement aDiff : ((ModelCompareInput)getInput()).getDiffAsList()) {
-			if (rightPart.getSelectedElements().get(0).getData().equals(
-					EMFCompareEObjectUtils.getRightElement(aDiff))) {
-				diff = aDiff;
-				break;
-			}
-		}
-		if (diff != null)
-			copy(diff, false);
-		}
+		if (currentDiff != null)
+			copy(currentDiff, false);
+		currentDiff = null;
 	}
 
 	protected void copy(DiffElement diff, boolean leftToRight) {
@@ -535,36 +474,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see ContentMergeViewer#updateToolItems()
-	 */
-	@Override
-	protected void updateToolItems() {
-		/*
-		 * DIRTY We can override "updateToolItems", yet we have no access to the superclass's
-		 * "fCopyLeftToRightAction" and "fCopyRightToLeftAction" nor do we have accessors for it. We could
-		 * alter MergeViewerContentProvider "isRightEditable" to enable these actions yet it is an internal
-		 * class and reimplementing an IMergeViewerContentProvider seems useless for such a trivial task. We
-		 * will then iterate through the ToolBarManager's contributor and enable the two which labels are
-		 * defined by the keys "action.CopyLeftToRight.label" and "action.CopyRightToLeft.label".
-		 */
-		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-		for (IContributionItem toolBarItem : tbm.getItems()) {
-			if (toolBarItem instanceof ActionContributionItem) {
-				final IAction action = ((ActionContributionItem)toolBarItem).getAction();
-				if (action.getText().equals(
-						ResourceBundle.getBundle(BUNDLE_NAME).getString("action.CopyLeftToRight.label"))) { //$NON-NLS-1$
-					action.setEnabled(getCompareConfiguration().isRightEditable());
-				} else if (action.getText().equals(
-						ResourceBundle.getBundle(BUNDLE_NAME).getString("action.CopyRightToLeft.label"))) { //$NON-NLS-1$
-					action.setEnabled(getCompareConfiguration().isLeftEditable());
-				}
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see ContentMergeViewer#getContents(boolean)
 	 */
 	@Override
@@ -574,15 +483,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
 				.getLeftContent(getInput())).getObject();
 		if (!left)
-			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider()).getRightContent(getInput())).getObject();
-
+			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
+					.getRightContent(getInput())).getObject();
+		
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
 			root.eResource().save(stream, null);
 			contents = stream.toByteArray();
-		} catch (final IOException e) {
+		} catch (IOException e) {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
+		
 		return contents;
 	}
 
@@ -789,15 +700,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final int leftRectangleHeight = leftBounds.height - 1;
 			final int rightRectangleHeight = rightBounds.height - 1;
 
-			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder;
-			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder;
+			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
+			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder + rightPart.getHeaderHeight();
 			if (selectedTab == TREE_TAB
 					&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
-				leftY = leftBounds.y + leftRectangleHeight + treeTabBorder;
+				leftY = leftBounds.y + leftRectangleHeight + treeTabBorder + leftPart.getHeaderHeight();
 			}
 			if (selectedTab == TREE_TAB
 					&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
-				rightY = rightBounds.y + rightRectangleHeight + treeTabBorder;
+				rightY = rightBounds.y + rightRectangleHeight + treeTabBorder + rightPart.getHeaderHeight();
 			}
 
 			int lineWidth = 1;
@@ -830,7 +741,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			return points;
 		}
 
-		private void buildBaseCenterCurve(final int w) {
+		private void buildBaseCenterCurve(int w) {
 			final double width = w;
 			baseCenterCurve = new double[CENTER_WIDTH];
 			for (int i = 0; i < CENTER_WIDTH; i++) {

@@ -102,14 +102,14 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 	
 	protected void fireOpen(OpenEvent event) {
-		// cancels open events that could be fired.
+		// DIRTY cancels open events that could be fired to avoid "NullViewer" opening.
 	}
 	
 	private void initialize(CompareConfiguration compareConfiguration) {
 		configuration = compareConfiguration;
 		setLabelProvider(new ModelStructureLabelProvider());
 		setUseHashlookup(true);
-		setContentProvider(new ModelStructureContentProvider());
+		setContentProvider(new ModelStructureContentProvider(compareConfiguration));
 		
 		final Control tree = getControl();
 		tree.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
