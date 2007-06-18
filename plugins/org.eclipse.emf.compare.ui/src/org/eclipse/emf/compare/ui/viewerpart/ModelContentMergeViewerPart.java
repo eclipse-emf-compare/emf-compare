@@ -156,13 +156,15 @@ public class ModelContentMergeViewerPart {
 	 */
 	public Widget find(EObject element) {
 		Widget widget = null;
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			widget = tree.findVisibleTreeItemFor(element);
-		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			if (element instanceof DiffElement)
-				widget = properties.find((DiffElement)element);
-		} else {
-			throw new IllegalStateException(INVALID_TAB);
+		if (element != null) {
+			if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
+				widget = tree.findVisibleTreeItemFor(element);
+			} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
+				if (element instanceof DiffElement)
+					widget = properties.find((DiffElement)element);
+			} else {
+				throw new IllegalStateException(INVALID_TAB);
+			}
 		}
 		return widget;
 	}
@@ -336,7 +338,18 @@ public class ModelContentMergeViewerPart {
 	 * 			Item to scroll to.
 	 */
 	public void navigateToDiff(DiffElement diff) {
-		final EObject target = findElementFromDiff(diff);
+		EObject target = null;
+		if (partSide == EMFCompareConstants.LEFT) {
+			target = EMFCompareEObjectUtils.getLeftElement(diff);
+			final TreeItem treeItem = (TreeItem)find(target);
+			if (diff instanceof AddModelElement && treeItem != null)
+				treeItem.setExpanded(true);
+		} else if (partSide == EMFCompareConstants.RIGHT) {
+			target = EMFCompareEObjectUtils.getRightElement(diff);
+			final TreeItem treeItem = (TreeItem)find(target);
+			if (diff instanceof RemoveModelElement && treeItem != null)
+				treeItem.setExpanded(true);
+		}
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			tree.showItem(target);
 			properties.setInput(findMatchFromElement(target));
@@ -397,18 +410,6 @@ public class ModelContentMergeViewerPart {
 		for (ICompareEditorPartListener listener : editorPartListeners) {
 			listener.updateCenter();
 		}
-	}
-	
-	private EObject findElementFromDiff(DiffElement diff) {
-		EObject element = null;
-		
-		if (partSide == EMFCompareConstants.LEFT) {
-			element = EMFCompareEObjectUtils.getLeftElement(diff);
-		} else if (partSide == EMFCompareConstants.RIGHT) {
-			element = EMFCompareEObjectUtils.getRightElement(diff);
-		}
-		
-		return element;
 	}
 	
 	private Object findMatchFromElement(EObject element) {

@@ -173,6 +173,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 				expandToLevel(data, 1);
 			}
 		}
+		super.setSelectionToWidget(l, reveal);
 	}
 	
 	/**
