@@ -370,7 +370,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	protected void copyDiffLeftToRight() {
-		DiffElement diff = null;
+		DiffElement diff = null;		
 		if (leftPart.getSelectedElements() != null && leftPart.getSelectedElements().size() > 0) {
 			for (final DiffElement aDiff : ((ModelCompareInput)getInput()).getDiffAsList()) {
 				if (leftPart.getSelectedElements().get(0).getData().equals(
@@ -386,6 +386,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	protected void copyDiffRightToLeft() {
 		DiffElement diff = null;
+		if (rightPart.getSelectedElements() != null && rightPart.getSelectedElements().size() > 0) {
 		for (final DiffElement aDiff : ((ModelCompareInput)getInput()).getDiffAsList()) {
 			if (rightPart.getSelectedElements().get(0).getData().equals(
 					EMFCompareEObjectUtils.getRightElement(aDiff))) {
@@ -395,6 +396,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		if (diff != null)
 			copy(diff, false);
+		}
 	}
 
 	protected void copy(DiffElement diff, boolean leftToRight) {
@@ -569,10 +571,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected byte[] getContents(boolean left) {
 		byte[] contents = null;
 
-		EObject root = (EObject)((IMergeViewerContentProvider)getContentProvider())
-				.getLeftContent(getInput());
+		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
+				.getLeftContent(getInput())).getObject();
 		if (!left)
-			root = (EObject)((IMergeViewerContentProvider)getContentProvider()).getRightContent(getInput());
+			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider()).getRightContent(getInput())).getObject();
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
