@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
+import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -29,6 +31,18 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	public EMFCompareUIPlugin() {
 		super();
 		plugin = this;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 */
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		EMFComparePlugin.getDefault().getPluginPreferences().setValue(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW, 
+				getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
 	}
 	
 	/**

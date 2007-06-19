@@ -152,13 +152,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Handles disposal of this part.
-	 */
-	public void dispose() {
-		editorPartListeners.clear();
-	}
-
-	/**
 	 * Returns the {@link Widget} representing the given element or <code>null</code> if it cannot be found.
 	 * 
 	 * @param element
@@ -181,21 +174,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Returns the bounds of the visible widget, the tree for the tree tab, the table for the properties tab.
-	 * 
-	 * @return The bounds of the visible widget.
-	 */
-	public Rectangle getWidgetBounds() {
-		Rectangle bounds = null;
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			bounds = tree.getTree().getBounds();
-		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			bounds = properties.getTable().getBounds();
-		}
-		return bounds;
-	}
-
-	/**
 	 * Returns the height of the tab control's header.
 	 * 
 	 * @return The height of the tab control's header.
@@ -210,21 +188,6 @@ public class ModelContentMergeViewerPart {
 			throw new IllegalStateException(INVALID_TAB);
 		}
 		return headerHeight;
-	}
-
-	/**
-	 * Returns a list of the selected tab's visible Elements.
-	 * 
-	 * @return The selected tab's visible Elements.
-	 */
-	public List<TreeItem> getVisibleElements() {
-		List<TreeItem> visibleElements = null;
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			visibleElements = tree.getVisibleElements();
-		} else if (selectedTab != ModelContentMergeViewer.PROPERTIES_TAB) {
-			throw new IllegalStateException(INVALID_TAB);
-		}
-		return visibleElements;
 	}
 
 	/**
@@ -320,17 +283,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Sets the background color of this viewer part.
-	 * 
-	 * @param color
-	 *            {@link Color} to switch the background to.
-	 */
-	public void setBackground(Color color) {
-		tree.getTree().setBackground(color);
-		properties.getTable().setBackground(color);
-	}
-
-	/**
 	 * Changes the current tab.
 	 * 
 	 * @param index
@@ -383,16 +335,6 @@ public class ModelContentMergeViewerPart {
 	 */
 	public void addCompareEditorPartListener(ICompareEditorPartListener listener) {
 		editorPartListeners.add(listener);
-	}
-
-	/**
-	 * Unregisters the given listener. If the identical listener is not registered the method has no effect.
-	 * 
-	 * @param listener
-	 *            The listener to unregister.
-	 */
-	public void removePartListener(ICompareEditorPartListener listener) {
-		editorPartListeners.remove(listener);
 	}
 
 	protected void fireSelectedtabChanged() {

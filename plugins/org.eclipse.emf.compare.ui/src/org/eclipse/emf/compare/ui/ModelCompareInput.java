@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffGroup;
 import org.eclipse.emf.compare.diff.DiffModel;
-import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
@@ -44,17 +43,6 @@ public class ModelCompareInput implements ICompareInput {
 	private DiffModel diff;
 
 	private MatchModel match;
-
-	/**
-	 * Creates a CompareInput given a
-	 * {@link org.eclipse.emf.compare.diff.ModelInputSnapshot Model input snapshot}.
-	 * 
-	 * @param snapshot
-	 *            Snapshot Containing the diff and match of the comparison.
-	 */
-	public ModelCompareInput(ModelInputSnapshot snapshot) {
-		this(snapshot.getMatch(), snapshot.getDiff());
-	}
 
 	/**
 	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.MatchModel match} and

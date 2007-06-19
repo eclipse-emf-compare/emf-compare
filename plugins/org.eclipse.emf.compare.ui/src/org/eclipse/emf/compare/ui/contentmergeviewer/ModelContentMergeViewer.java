@@ -24,7 +24,6 @@ import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
-import org.eclipse.emf.compare.match.Match2Elements;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 import org.eclipse.emf.compare.merge.service.MergeService;
@@ -149,18 +148,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 		};
 		EMFCompareUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
-	}
-
-	/**
-	 * Return <code>true</code> if this viewer should be showing the given match.
-	 * 
-	 * @param match
-	 *            Match element to be checked.
-	 * @return <code>True</code> if this viewer should show this match, <code>False</code> otherwise.
-	 */
-	public boolean shouldShow(Match2Elements match) {
-		final DiffElement diff = ((ModelCompareInput)getInput()).findDiffFromMatch(match);
-		return diff != null;
 	}
 
 	/**
@@ -316,25 +303,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	public RGB getRemovedColor() {
 		return removedColor;
-	}
-
-	/**
-	 * Sets the value of the currently selected tab.
-	 * 
-	 * @param newIndex
-	 *            Newly selected tab.
-	 */
-	public void setSelectedTab(int newIndex) {
-		selectedTab = newIndex;
-	}
-
-	/**
-	 * Gets the value of the currently selected tab.
-	 * 
-	 * @return Index of the currently selected tab.
-	 */
-	public int getSelectedTab() {
-		return selectedTab;
 	}
 
 	/**
@@ -697,17 +665,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					removePaintListener(paintListener);
 				}
 			});
-		}
-
-		/**
-		 * Repaints the canvas.
-		 */
-		public void repaint() {
-			if (!isDisposed()) {
-				final GC gc = new GC(this);
-				doubleBufferedPaint(gc);
-				gc.dispose();
-			}
 		}
 
 		private void doubleBufferedPaint(GC dest) {

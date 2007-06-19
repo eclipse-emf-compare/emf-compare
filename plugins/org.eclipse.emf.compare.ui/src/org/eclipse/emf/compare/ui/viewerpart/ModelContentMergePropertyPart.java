@@ -129,19 +129,6 @@ public class ModelContentMergePropertyPart extends TableViewer {
 	}
 	
 	/**
-	 * Ensures that the given attribute is visible in the table.
-	 * 
-	 * @param attribute
-	 * 			{@link EAttribute} to make visible.
-	 */
-	public void showItem(EAttribute attribute) {
-		final TableItem elementItem = find(attribute);
-		if (elementItem != null) {
-			getTable().setSelection(elementItem);
-		}
-	}
-	
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.jface.viewers.StructuredViewer#associate(Object, Item)

@@ -29,6 +29,9 @@ public interface EMFCompareConstants {
 
 	/** Three-way change constant (value 3) indicating the ancestor. */
 	int ANCESTOR = 3;
+	
+	/** Full path of the preferences help icon. */
+	String ICONS_PREFERENCES_HELP = "icons/full/prefshelp.gif"; //$NON-NLS-1$
 
 	/**
 	 * Key of the property change event associated with a change in the content merge viewer trees' selection.
@@ -42,6 +45,15 @@ public interface EMFCompareConstants {
 
 	/** Key of the property change event associated with an input change. */
 	String PROPERTY_INPUT_CHANGED = "model.input.changed"; //$NON-NLS-1$
+	
+	/** Preferences key for the siblings search window. */
+	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$
+	
+	/** Preferences description for the siblings search window. */
+	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = "&Search window : "; //$NON-NLS-1$
+	
+	/** Default value for the siblings search window. */
+	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
 
 	/** Preferences key for the highlight color. */
 	String PREFERENCES_KEY_HIGHLIGHT_COLOR = "highlight.color"; //$NON-NLS-1$
