@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.AddModelElement;
 import org.eclipse.emf.compare.diff.DiffElement;
@@ -93,6 +94,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	private RGB removedColor;
 
+	private IPropertyChangeListener structureSelectionListener;
+
+	private IPropertyChangeListener preferenceListener;
+
 	private ModelContentMergeViewerPart leftPart;
 
 	private ModelContentMergeViewerPart rightPart;
@@ -120,7 +125,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		updateColors();
 		setContentProvider(new ModelContentMergeContentProvider(config));
 
-		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
+		structureSelectionListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION)) {
 					Object selected = null;
@@ -134,16 +139,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					}
 				}
 			}
-		});
+		};
+		configuration.addPropertyChangeListener(structureSelectionListener);
 
-		EMFCompareUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(
-				new IPropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent event) {
-						if (event.getProperty().endsWith("color")) { //$NON-NLS-1$
-							updateColors();
-						}
-					}
-				});
+		preferenceListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().endsWith("color")) { //$NON-NLS-1$
+					updateColors();
+				}
+			}
+		};
+		EMFCompareUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceListener);
 	}
 
 	/**
@@ -190,20 +196,82 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
 
 					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
-						EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
-						EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
-						if (selectedTab == PROPERTIES_TAB) {
-							leftElement = diff;
-							rightElement = diff;
-						}
-						final Item leftItem = (Item)leftPart.find(leftElement);
-						final Item rightItem = (Item)rightPart.find(rightElement);
-						drawLine(gc, leftItem, rightItem, diff);
+						drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
 					}
 				}
 			};
 		canvas.moveAbove(null);
 		return canvas;
+	}
+
+	/**
+	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	public Item getLeftItem(DiffElement diff) {
+		EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
+		EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
+		if (selectedTab == PROPERTIES_TAB) {
+			leftElement = diff;
+			rightElement = diff;
+		}
+		Item leftItem = (Item)leftPart.find(leftElement);
+		final Item rightItem = (Item)rightPart.find(rightElement);
+
+		if (selectedTab == TREE_TAB
+				&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
+			if (rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) 
+					&& rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
+				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
+						rightItem.getData());
+				if (rightIndex > 0) {
+					final EList leftList = ((EObject)leftItem.getData()).eContents();
+					leftItem = (TreeItem)leftPart.find((EObject)leftList.get(Math.min(rightIndex - 1,
+							leftList.size() - 1)));
+				}
+			}
+		}
+
+		return leftItem;
+	}
+
+	/**
+	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the right element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the right item for.
+	 * @return The item representing the right element of the given {@link DiffElement}.
+	 */
+	public Item getRightItem(DiffElement diff) {
+		EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
+		EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
+		if (selectedTab == PROPERTIES_TAB) {
+			leftElement = diff;
+			rightElement = diff;
+		}
+		final Item leftItem = (Item)leftPart.find(leftElement);
+		Item rightItem = (Item)rightPart.find(rightElement);
+
+		if (selectedTab == TREE_TAB
+				&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
+			if (leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) 
+					&& leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
+				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
+						leftItem.getData());
+				if (leftIndex > 0) {
+					final EList rightList = ((EObject)rightItem.getData()).eContents();
+					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(Math.min(leftIndex - 1, rightList
+							.size() - 1)));
+				}
+			}
+		}
+
+		return rightItem;
 	}
 
 	/**
@@ -485,7 +553,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (!left)
 			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
 					.getRightContent(getInput())).getObject();
-		
+
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
 			root.eResource().save(stream, null);
@@ -493,8 +561,25 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		} catch (IOException e) {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
-		
+
 		return contents;
+	}
+
+	/**
+	 * Performs some additional cleanup at the viewer's disposal.
+	 * 
+	 * @see ContentMergeViewer#handleDispose(DisposeEvent)
+	 */
+	protected void handleDispose(DisposeEvent event) {
+		super.handleDispose(event);
+		configuration.removePropertyChangeListener(structureSelectionListener);
+		structureSelectionListener = null;
+		EMFCompareUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
+		preferenceListener = null;
+		leftPart = null;
+		rightPart = null;
+		ancestorPart = null;
+		canvas = null;
 	}
 
 	/**
@@ -613,11 +698,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		public AbstractBufferedCanvas(Composite parent) {
 			super(parent, SWT.NO_BACKGROUND | SWT.NO_MERGE_PAINTS | SWT.NO_REDRAW_RESIZE);
 
-			addPaintListener(new PaintListener() {
+			final PaintListener paintListener = new PaintListener() {
 				public void paintControl(PaintEvent event) {
 					doubleBufferedPaint(event.gc);
 				}
-			});
+			};
+			addPaintListener(paintListener);
 
 			addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
@@ -625,6 +711,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						buffer.dispose();
 						buffer = null;
 					}
+					removePaintListener(paintListener);
 				}
 			});
 		}
@@ -701,14 +788,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final int rightRectangleHeight = rightBounds.height - 1;
 
 			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
-			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder + rightPart.getHeaderHeight();
+			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder
+					+ rightPart.getHeaderHeight();
 			if (selectedTab == TREE_TAB
 					&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
-				leftY = leftBounds.y + leftRectangleHeight + treeTabBorder + leftPart.getHeaderHeight();
+				leftY += leftRectangleHeight / 2;
 			}
 			if (selectedTab == TREE_TAB
 					&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
-				rightY = rightBounds.y + rightRectangleHeight + treeTabBorder + rightPart.getHeaderHeight();
+				rightY += rightRectangleHeight / 2;
 			}
 
 			int lineWidth = 1;

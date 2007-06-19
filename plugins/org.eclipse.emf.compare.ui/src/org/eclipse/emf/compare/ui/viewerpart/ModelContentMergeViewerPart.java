@@ -153,6 +153,13 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
+	 * Handles disposal of this part.
+	 */
+	public void dispose() {
+		editorPartListeners.clear();
+	}
+
+	/**
 	 * Returns the {@link Widget} representing the given element or <code>null</code> if it cannot be found.
 	 * 
 	 * @param element
@@ -173,7 +180,22 @@ public class ModelContentMergeViewerPart {
 		}
 		return widget;
 	}
-	
+
+	/**
+	 * Returns the bounds of the visible widget, the tree for the tree tab, the table for the properties tab.
+	 * 
+	 * @return The bounds of the visible widget.
+	 */
+	public Rectangle getWidgetBounds() {
+		Rectangle bounds = null;
+		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
+			bounds = tree.getTree().getBounds();
+		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
+			bounds = properties.getTable().getBounds();
+		}
+		return bounds;
+	}
+
 	/**
 	 * Returns the height of the tab control's header.
 	 * 
@@ -221,6 +243,21 @@ public class ModelContentMergeViewerPart {
 			throw new IllegalStateException(INVALID_TAB);
 		}
 		return selectedElements;
+	}
+
+	/**
+	 * Returns the width of the columns shown on the properties tab.
+	 * 
+	 * @return The width of the columns shown on the properties tab.
+	 */
+	public int getTotalColumnsWidth() {
+		int width = 0;
+		if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
+			for (final TableColumn col : properties.getTable().getColumns()) {
+				width += col.getWidth();
+			}
+		}
+		return width;
 	}
 
 	/**
@@ -458,13 +495,13 @@ public class ModelContentMergeViewerPart {
 			public void treeCollapsed(TreeEvent e) {
 				((TreeItem)e.item).setExpanded(false);
 				e.doit = false;
-				fireUpdateCenter();
+				parentViewer.update();
 			}
 
 			public void treeExpanded(TreeEvent e) {
 				((TreeItem)e.item).setExpanded(true);
 				e.doit = false;
-				fireUpdateCenter();
+				parentViewer.update();
 			}
 		});
 
@@ -547,9 +584,9 @@ public class ModelContentMergeViewerPart {
 				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (partSide == EMFCompareConstants.LEFT) {
-					drawRectangle(event, (TreeItem)find(EMFCompareEObjectUtils.getLeftElement(diff)), diff);
+					drawRectangle(event, (TreeItem)parentViewer.getLeftItem(diff), diff);
 				} else if (partSide == EMFCompareConstants.RIGHT) {
-					drawRectangle(event, (TreeItem)find(EMFCompareEObjectUtils.getRightElement(diff)), diff);
+					drawRectangle(event, (TreeItem)parentViewer.getRightItem(diff), diff);
 				}
 			}
 		}
@@ -580,6 +617,7 @@ public class ModelContentMergeViewerPart {
 			final int rectangleArcHeight = 5;
 
 			int lineWidth = 1;
+			// if the item is selected, we set a bigger line width
 			if (getSelectedElements().contains(treeItem)) {
 				lineWidth = 2;
 			}
@@ -628,7 +666,7 @@ public class ModelContentMergeViewerPart {
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (diff instanceof AttributeChange && find(diff) != null
 						&& partSide == EMFCompareConstants.LEFT) {
-					drawLine(event, (TableItem)find(diff));
+					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
 				}
 			}
 		}
@@ -637,20 +675,12 @@ public class ModelContentMergeViewerPart {
 			final Rectangle tableBounds = properties.getTable().getBounds();
 			final Rectangle tableItemBounds = tableItem.getBounds();
 			tableItem.setBackground(new Color(tableItem.getDisplay(), parentViewer.getHighlightColor()));
-			
+
 			final int lineY = tableItemBounds.y + tableItemBounds.height / 2;
 
 			event.gc.setLineWidth(2);
 			event.gc.setForeground(new Color(tableItem.getDisplay(), parentViewer.getChangedColor()));
 			event.gc.drawLine(getTotalColumnsWidth(), lineY, tableBounds.width, lineY);
-		}
-
-		private int getTotalColumnsWidth() {
-			int width = 0;
-			for (final TableColumn col : properties.getTable().getColumns()) {
-				width += col.getWidth();
-			}
-			return width;
 		}
 	}
 }
