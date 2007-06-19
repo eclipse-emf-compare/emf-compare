@@ -38,6 +38,8 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 public class EFactory {
 	/** Ecore factory. */
 	public static final EcoreFactory ECORE = EcorePackageImpl.init().getEcoreFactory();
+	
+	private static final String GETTER_PREFIX = "get"; //$NON-NLS-1$
 
 	/** This {@link EFactory}'s shared isntance. */
 	protected Object factoryImpl;
@@ -110,7 +112,7 @@ public class EFactory {
 				final Class rPackageImplClass = Class.forName(rPackageImplClassName, true, classLoader);
 				// Method
 				final Field rPackageImplField = rPackageImplClass.getField("eINSTANCE"); //$NON-NLS-1$
-				final Method rPackageImplGetRessourcesFactoryMethod = rPackageImplClass.getMethod("get" //$NON-NLS-1$
+				final Method rPackageImplGetRessourcesFactoryMethod = rPackageImplClass.getMethod(GETTER_PREFIX
 						+ factoryShortName + "Factory", new Class[] {}); //$NON-NLS-1$
 				// Instances
 				final Object packageImpl = rPackageImplField.get(null);
@@ -169,7 +171,7 @@ public class EFactory {
 		if (feature != null && feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
 				final Class c = Class.forName(ETools.getEClassifierPath(feature.getEType()));
-				final Method m = c.getMethod("get", new Class[] {String.class}); //$NON-NLS-1$
+				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
 			} catch (ClassNotFoundException e) {
@@ -206,7 +208,7 @@ public class EFactory {
 		if (feature != null && feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
 				final Class c = classLoader.loadClass(ETools.getEClassifierPath(feature.getEType()));
-				final Method m = c.getMethod("get", new Class[] {String.class}); //$NON-NLS-1$
+				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
 			} catch (ClassNotFoundException e) {
@@ -339,17 +341,18 @@ public class EFactory {
 	}
 
 	/**
-	 * Gets the value of the given feature of the object, as an EObject.
+	 * Gets the value of the given feature of the object as an EObject.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name
-	 * @return the value or null if it isn't an EObject
+	 *            Name of the feature to get the value for.
+	 * @return Value of the feature, <code>null</code> if this value isn't an {@link EObject}.
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
 	public static EObject eGetAsEObject(EObject object, String name) throws FactoryException {
-		Object eGet = eGet(object, name);
+		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof EObject)
 			return (EObject)eGet;
 		else
@@ -357,17 +360,18 @@ public class EFactory {
 	}
 
 	/**
-	 * Gets the value of the given feature of the object, as a String.
+	 * Gets the value of the given feature of the object as a String.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name
-	 * @return the value or null if it isn't a String
+	 *            Name of the feature to get the value for.
+	 * @return Value of the feature, <code>null</code> if this value isn't a {@link String}.
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
 	public static String eGetAsString(EObject object, String name) throws FactoryException {
-		Object eGet = eGet(object, name);
+		final Object eGet = eGet(object, name);
 		if (eGet != null)
 			return eGet.toString();
 		else
@@ -375,17 +379,18 @@ public class EFactory {
 	}
 
 	/**
-	 * Gets the value of the given feature of the object, as a Boolean.
+	 * Gets the value of the given feature of the object as a Boolean.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name
-	 * @return the value or null if it isn't a Boolean
+	 *            Name of the feature to get the value for.
+	 * @return Value of the feature, <code>null</code> if this value isn't a {@link Boolean}.
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
 	public static Boolean eGetAsBoolean(EObject object, String name) throws FactoryException {
-		Object eGet = eGet(object, name);
+		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Boolean)
 			return (Boolean)eGet;
 		else
@@ -393,17 +398,18 @@ public class EFactory {
 	}
 
 	/**
-	 * Gets the value of the given feature of the object, as an Integer.
+	 * Gets the value of the given feature of the object as an Integer.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name
-	 * @return the value or null if it isn't an Integer
+	 *            Name of the feature to get the value for.
+	 * @return Value of the feature, <code>null</code> if this value isn't an {@link Integer}.
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
 	public static Integer eGetAsInteger(EObject object, String name) throws FactoryException {
-		Object eGet = eGet(object, name);
+		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Integer)
 			return (Integer)eGet;
 		else
@@ -411,79 +417,96 @@ public class EFactory {
 	}
 
 	/**
-	 * Gets the value of the given feature of the object, as a List.
+	 * Gets the value of the given feature of the object as a List.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to retrieve the feature value from.
 	 * @param name
-	 *            is the feature name
-	 * @return the value, or a new List with a single element if it isn't a List, or null if it doesn't exist
+	 *            Name of the feature to get the value for.
+	 * @return
+	 *            <ul>
+	 *            If the feature is :
+	 *            <li><b>a list :</b> value of the feature</li>
+	 *            <li><b>a single valued feature :</b> new list containing the value as its single element</li>
+	 *            <li><b>not a feature :</b> <code>null</code></li>
+	 *            </ul>
 	 * @throws FactoryException
+	 *             Thrown if the retrieval fails.
 	 */
+	@SuppressWarnings("unchecked")
 	public static List eGetAsList(EObject object, String name) throws FactoryException {
-		Object eGet = eGet(object, name);
+		List list = null;
+		final Object eGet = eGet(object, name);
 		if (eGet != null) {
 			if (eGet instanceof List) {
-				return (List)eGet;
+				list = (List)eGet;
 			} else {
-				List list = new BasicEList(1);
+				list = new BasicEList(1);
 				list.add(eGet);
-				return list;
 			}
-		} else {
-			return null;
 		}
+		return list;
 	}
 
 	/**
-	 * Indicates if the object is instance of the class whose name is given.
+	 * Indicates if the object is an instance of the given class.
 	 * <p>
-	 * Samples :
+	 * 
+	 * <pre>
+	 * eInstanceOf(object, name);
+	 * </pre>
+	 * 
+	 * <ul>
+	 * returns
+	 * <li><code>True</code> if name equals "Folder" or "resources.Folder" and object is an instance of
+	 * java.resources.Folder.</li>
+	 * <li><code>True</code> if name equals "File" and object inherits from "File".
+	 * </ul>
 	 * <p>
-	 * An instance of java.resources.Folder return true if name equals "Folder" or "resources.Folder".
-	 * <p>
-	 * An instance of java.resources.Folder return true if name equals "File" and Folder inherits File.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object we need to test the inheritance.
 	 * @param name
-	 *            is the class name
-	 * @return true if the object is instance of the class whose name is given
+	 *            Name of the {@link Class} <code>object</code> needs to inherit from.
+	 * @return <code>True</code> if the object is an instance of the class whose name is given.
 	 */
 	public static boolean eInstanceOf(EObject object, String name) {
 		if (object == null)
-			return (name == null);
+			return name == null;
 		return eInstanceOf(object.eClass(), name);
 	}
 
 	private static boolean eInstanceOf(EClass eClass, String name) {
-		if (name.indexOf(".") == -1 && name.equals(eClass.getName())) {
-			return true;
+		boolean isInstance = false;
+		final String separator = "."; //$NON-NLS-1$
+		if (name.indexOf(separator) == -1 && name.equals(eClass.getName())) {
+			isInstance = true;
 		} else {
-			String instanceClassName = "." + eClass.getInstanceClassName();
-			String endsWith = "." + name;
+			final String instanceClassName = separator + eClass.getInstanceClassName();
+			final String endsWith = separator + name;
 			if (instanceClassName.endsWith(endsWith)) {
-				return true;
+				isInstance = true;
 			} else {
-				Iterator superTypes = eClass.getESuperTypes().iterator();
-				while (superTypes.hasNext()) {
-					EClass eSuperClass = (EClass)superTypes.next();
+				final Iterator superTypes = eClass.getESuperTypes().iterator();
+				while (superTypes.hasNext() && !isInstance) {
+					final EClass eSuperClass = (EClass)superTypes.next();
 					if (eInstanceOf(eSuperClass, name))
-						return true;
+						isInstance = true;
 				}
-				return false;
 			}
 		}
+		return isInstance;
 	}
 
 	/**
 	 * Indicates if the feature name given is valid for the object.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            The object where we need a feature called <code>name</code>.
 	 * @param name
-	 *            is the feature name
-	 * @return true if the feature is defined, false if not
+	 *            Name of the feature we seek in <code>object</code>.
+	 * @return <code>True</code> if the feature is defined in <code>object</code>, <code>False</code>
+	 *         otherwise.
 	 */
 	public static boolean eValid(EObject object, String name) {
 		try {
@@ -498,50 +521,57 @@ public class EFactory {
 	 * Indicates if the object has a value for the feature name.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to test.
 	 * @param name
-	 *            is the feature name
-	 * @return if the feature is a list, return feature.size() > 0 else return feature != null
+	 *            Name of the feature needing a value.
+	 * @return
+	 *            <ul>
+	 *            <li>featureValue.size() > 0 if the feature is a liste.</li>
+	 *            <li>featureValue != null otherwise.</li>
+	 *            </ul>
 	 */
 	public static boolean eExist(EObject object, String name) {
+		boolean exists = false;
 		try {
-			Object eGet = eGet(object, name);
+			final Object eGet = eGet(object, name);
 			if (eGet != null) {
 				if (eGet instanceof List) {
-					return ((List)eGet).size() > 0;
+					exists = ((List)eGet).size() > 0;
 				} else {
-					return true;
+					exists = true;
 				}
-			} else {
-				return false;
 			}
 		} catch (FactoryException e) {
-			return false;
+			// fails silently, will return false.
 		}
+		return exists;
 	}
 
 	/**
 	 * Indicates if the object contains the given value for the feature name.
 	 * 
 	 * @param object
-	 *            is the object
+	 *            Object to test.
 	 * @param name
-	 *            is the feature name
+	 *            Name of the feature to test the value of.
 	 * @param arg
-	 *            is the value to find, null is allowed
-	 * @return true if the object contains the given value for the feature name
+	 *            Value to seek in the feature value(s), <code>null</code> allowed.
+	 * @return <code>True</code> if the object contains the given value for the feature name,
+	 *         <code>False</code> otherwise.
 	 */
 	public static boolean eExist(EObject object, String name, Object arg) {
+		boolean exists = false;
 		try {
-			Object eGet = eGet(object, name);
+			final Object eGet = eGet(object, name);
 			if (eGet != null && eGet instanceof List) {
-				return ((List)eGet).contains(arg);
+				exists = ((List)eGet).contains(arg);
 			} else {
-				return (eGet == arg);
+				exists = eGet.equals(arg);
 			}
 		} catch (FactoryException e) {
-			return false;
+			// fails silently, will return false.
 		}
+		return exists;
 	}
 
 }

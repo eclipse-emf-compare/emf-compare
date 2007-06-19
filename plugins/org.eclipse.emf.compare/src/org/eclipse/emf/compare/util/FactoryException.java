@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,22 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.util;
 
-
 /**
- * Factory Exception.
- * @author www.obeo.fr
- *
+ * Factory Exception, indicates that an error occured during an {@link EFactory} operation.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class FactoryException extends Exception {
-
 	private static final long serialVersionUID = 1;
 
 	/**
-	 * Constructor.
-	 * @param message is the message
+	 * Instantiates a {@link FactoryException} given its error message.
+	 * 
+	 * @param message
+	 *            Message associated to the exception.
 	 */
-	public FactoryException(String message){
+	public FactoryException(String message) {
 		super(message);
 	}
-
 }

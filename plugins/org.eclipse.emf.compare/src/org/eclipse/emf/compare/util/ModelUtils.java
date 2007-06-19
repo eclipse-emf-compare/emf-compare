@@ -23,7 +23,10 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -196,7 +199,14 @@ public final class ModelUtils {
 		final Map<String, String> options = new HashMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
 		model.save(options);
-		model.setModified(true);
+		try {
+			String resourceURI = model.getURI().toString();
+			if (resourceURI.toString().contains(":")) //$NON-NLS-1$
+				resourceURI = resourceURI.substring(resourceURI.indexOf(":") + 1); //$NON-NLS-1$
+			ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(new Path(resourceURI)).refreshLocal(0, new NullProgressMonitor());
+		} catch (CoreException e) {
+			// fails silently, thrown when we cannot refresh the files.
+		}
 	}
 
 	/**
