@@ -89,12 +89,12 @@ public class ModelContentMergeViewerPart {
 	 *            Parent {@link Composite} for this part.
 	 * @param side
 	 *            Comparison side of this part. Must be one of
-	 *            {@link EMFCompareConstants#LEFT EMFCompareConstants.LEFT},
-	 *            {@link EMFCompareConstants#RIGHT EMFCompareConstants.RIGHT} or
+	 *            {@link EMFCompareConstants#LEFT EMFCompareConstants.RIGHT},
+	 *            {@link EMFCompareConstants#RIGHT EMFCompareConstants.LEFT} or
 	 *            {@link EMFCompareConstants#ANCESTOR EMFCompareConstants.ANCESTOR}.
 	 */
 	public ModelContentMergeViewerPart(ModelContentMergeViewer viewer, Composite composite, int side) {
-		if (side != EMFCompareConstants.LEFT && side != EMFCompareConstants.RIGHT
+		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
 				&& side != EMFCompareConstants.ANCESTOR)
 			throw new IllegalArgumentException("PartSide cannot be " + side); //$NON-NLS-1$
 
@@ -377,12 +377,12 @@ public class ModelContentMergeViewerPart {
 	 */
 	public void navigateToDiff(DiffElement diff) {
 		EObject target = null;
-		if (partSide == EMFCompareConstants.LEFT) {
+		if (partSide == EMFCompareConstants.RIGHT) {
 			target = EMFCompareEObjectUtils.getLeftElement(diff);
 			final TreeItem treeItem = (TreeItem)find(target);
 			if (diff instanceof AddModelElement && treeItem != null)
 				treeItem.setExpanded(true);
-		} else if (partSide == EMFCompareConstants.RIGHT) {
+		} else if (partSide == EMFCompareConstants.LEFT) {
 			target = EMFCompareEObjectUtils.getRightElement(diff);
 			final TreeItem treeItem = (TreeItem)find(target);
 			if (diff instanceof RemoveModelElement && treeItem != null)
@@ -516,11 +516,11 @@ public class ModelContentMergeViewerPart {
 				if (tree.getSelectedElements().size() > 0) {
 					final TreeItem selected = tree.getSelectedElements().get(0);
 					for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
+						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
 							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))) {
 								parentViewer.setTreeSelection(diff, partSide);
 							}
-						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
+						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
 							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))) {
 								parentViewer.setTreeSelection(diff, partSide);
 							}
@@ -583,9 +583,9 @@ public class ModelContentMergeViewerPart {
 			if (tree.getTree().getBounds() != tabFolder.getClientArea())
 				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (partSide == EMFCompareConstants.LEFT) {
+				if (partSide == EMFCompareConstants.RIGHT) {
 					drawRectangle(event, (TreeItem)parentViewer.getLeftItem(diff), diff);
-				} else if (partSide == EMFCompareConstants.RIGHT) {
+				} else if (partSide == EMFCompareConstants.LEFT) {
 					drawRectangle(event, (TreeItem)parentViewer.getRightItem(diff), diff);
 				}
 			}
@@ -625,7 +625,7 @@ public class ModelContentMergeViewerPart {
 			// Performs the actual drawing
 			event.gc.setLineWidth(lineWidth);
 			event.gc.setForeground(new Color(treeItem.getDisplay(), color));
-			if (partSide == EMFCompareConstants.LEFT) {
+			if (partSide == EMFCompareConstants.RIGHT) {
 				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
 						|| diff instanceof AddModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
@@ -639,7 +639,7 @@ public class ModelContentMergeViewerPart {
 					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight / 2,
 							treeBounds.width, rectangleY + rectangleHeight / 2);
 				}
-			} else if (partSide == EMFCompareConstants.RIGHT) {
+			} else if (partSide == EMFCompareConstants.LEFT) {
 				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))
 						|| diff instanceof RemoveModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
@@ -665,7 +665,7 @@ public class ModelContentMergeViewerPart {
 		public void paintControl(PaintEvent event) {
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (diff instanceof AttributeChange && find(diff) != null
-						&& partSide == EMFCompareConstants.LEFT) {
+						&& partSide == EMFCompareConstants.RIGHT) {
 					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
 				}
 			}

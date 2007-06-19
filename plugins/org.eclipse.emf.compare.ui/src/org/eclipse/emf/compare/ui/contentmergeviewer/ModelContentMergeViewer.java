@@ -352,10 +352,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 			// We expand the tree item in the cases of Add or Remove elements.
 			if (diff instanceof AddModelElement
-					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.RIGHT)) {
+					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.LEFT)) {
 				leftItem.setExpanded(true);
 			} else if (diff instanceof RemoveModelElement
-					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.LEFT)) {
+					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.RIGHT)) {
 				rightItem.setExpanded(true);
 			}
 
@@ -428,8 +428,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void createControls(Composite composite) {
-		leftPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.LEFT);
-		rightPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.RIGHT);
+		leftPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.RIGHT);
+		rightPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.LEFT);
 		ancestorPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.ANCESTOR);
 
 		final EditorPartListener partListener = new EditorPartListener(leftPart, rightPart, ancestorPart);

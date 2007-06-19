@@ -105,7 +105,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftLabel(java.lang.Object)
 	 */
 	public String getLeftLabel(Object element) {
-		return configuration.getLeftLabel(element);
+		return configuration.getRightLabel(element);
 	}
 	
 	/**
@@ -162,7 +162,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightLabel(java.lang.Object)
 	 */
 	public String getRightLabel(Object element) {
-		return configuration.getRightLabel(element);
+		return configuration.getLeftLabel(element);
 	}
 	
 	/**

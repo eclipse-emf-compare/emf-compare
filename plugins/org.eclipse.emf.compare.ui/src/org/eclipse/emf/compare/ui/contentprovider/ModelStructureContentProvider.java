@@ -154,7 +154,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 
 			if (leftModel != null && rightModel != null) {
 				try {
-					final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
+					final MatchModel match = new MatchService().doMatch(rightModel, leftModel,
 							new NullProgressMonitor());
 					final DiffModel diff = new DiffMaker().doDiff(match);
 
