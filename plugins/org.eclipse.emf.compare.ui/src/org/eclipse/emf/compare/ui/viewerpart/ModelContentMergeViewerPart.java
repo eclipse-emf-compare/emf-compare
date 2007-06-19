@@ -30,7 +30,6 @@ import org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -344,32 +343,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Sets the tree's selection.
-	 * 
-	 * @param selection
-	 *            New selection for the tree.
-	 */
-	public void setSelection(StructuredSelection selection) {
-		tree.setSelection(selection, true);
-	}
-
-	/**
-	 * Shows the given item on the tree tab or its properties on the property tab.
-	 * 
-	 * @param match
-	 *            Item to scroll to.
-	 */
-	public void navigateToMatch(Match2Elements match) {
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			tree.showItem(match);
-		} else if (selectedTab != ModelContentMergeViewer.PROPERTIES_TAB) {
-			throw new IllegalStateException(INVALID_TAB);
-		}
-		properties.setInput(match);
-		parentViewer.updateCenter();
-	}
-
-	/**
 	 * Shows the given item on the tree tab or its properties on the property tab.
 	 * 
 	 * @param diff
@@ -397,17 +370,8 @@ public class ModelContentMergeViewerPart {
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
 		}
+		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION, diff);
 		parentViewer.updateCenter();
-	}
-
-	/**
-	 * Shows the given attribute on the property tab.
-	 * 
-	 * @param attribute
-	 *            Attribute to scroll to.
-	 */
-	public void navigateToProperty(EAttribute attribute) {
-		properties.showItem(attribute);
 	}
 
 	/**
@@ -518,11 +482,11 @@ public class ModelContentMergeViewerPart {
 					for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
 							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))) {
-								parentViewer.setTreeSelection(diff, partSide);
+								parentViewer.setSelection(diff);
 							}
 						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
 							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))) {
-								parentViewer.setTreeSelection(diff, partSide);
+								parentViewer.setSelection(diff);
 							}
 						}
 					}

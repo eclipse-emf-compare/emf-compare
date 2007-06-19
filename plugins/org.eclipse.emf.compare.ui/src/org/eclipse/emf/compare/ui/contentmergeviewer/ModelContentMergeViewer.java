@@ -47,7 +47,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -179,6 +178,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	public void updateCenter() {
 		getCenterPart().redraw();
+	}
+	
+	/**
+	 * Returns the compare configuration of this viewer.
+	 * 
+	 * @return The compare configuration of this viewer.
+	 */
+	public CompareConfiguration getConfiguration() {
+		return configuration;
 	}
 
 	/**
@@ -335,36 +343,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * 
 	 * @param diff
 	 *            {@link DiffElement} backing the current selection.
-	 * @param sourceSide
-	 *            {@link EMFCompareConstants#LEFT} if the selection change has been triggered by the left
-	 *            side, {@link EMFCompareConstants#RIGHT} if triggered by the right side, <code>-1</code> if
-	 *            triggered by a structure selection changed.
 	 */
-	public void setTreeSelection(DiffElement diff, int sourceSide) {
-		if (selectedTab == TREE_TAB) {
-			// Finds the TreeItems to select
-			final TreeItem leftItem = (TreeItem)leftPart.find(EMFCompareEObjectUtils.getLeftElement(diff));
-			final TreeItem rightItem = (TreeItem)rightPart.find(EMFCompareEObjectUtils.getRightElement(diff));
-
-			// Sets the TreeItems background to the highlighted color
-			leftItem.setBackground(new Color(leftItem.getDisplay(), getHighlightColor()));
-			rightItem.setBackground(new Color(rightItem.getDisplay(), getHighlightColor()));
-
-			// We expand the tree item in the cases of Add or Remove elements.
-			if (diff instanceof AddModelElement
-					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.LEFT)) {
-				leftItem.setExpanded(true);
-			} else if (diff instanceof RemoveModelElement
-					&& (sourceSide == -1 || sourceSide == EMFCompareConstants.RIGHT)) {
-				rightItem.setExpanded(true);
-			}
-
-			// Sets the trees selection and updates the viewer
-			leftPart.setSelection(new StructuredSelection(leftItem.getData()));
-			rightPart.setSelection(new StructuredSelection(rightItem.getData()));
-			currentDiff = diff;
-			updateCenter();
-		}
+	public void setSelection(DiffElement diff) {
+		currentDiff = diff;
+		leftPart.navigateToDiff(currentDiff);
+		rightPart.navigateToDiff(currentDiff);
 	}
 
 	/**
