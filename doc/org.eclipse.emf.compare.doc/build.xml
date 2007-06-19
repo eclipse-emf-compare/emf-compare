@@ -84,8 +84,25 @@
 	</target>
 
 	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: org.eclipse.emf.compare.doc.">
-		<available property="@dot" file="${build.result.folder}/@dot"/>
-		<antcall target="@dot"/>
+		<!-- Execute a shell script that will create an ant javadoc script and then run it for us -->
+		<exec executable="sh">
+			<arg value="build/antJavadoc.sh"/>
+			<arg value="${eclipse.home}/../eclipse"/>
+		</exec>
+		
+		<antcall target="build.index"/>
+		
+		<!-- Zip up all of the documentation artifacts - references(including javadoc), images, tutorials, etc. -->
+		<zip destfile="doc.zip" compress="true">
+			<!-- Add new folders for documentation zip here. -->
+			<zipfileset dir="references" prefix="references" excludes="**/impl,**/impl/**"/>
+			<zipfileset dir="images" prefix="images"/>
+<!--			<zipfileset dir="tutorials" prefix="tutorials"/>-->
+		</zip>
+	</target>
+
+	<target name="build.index" depends="init" description="Builds search index for the plug-in" if="eclipse.running">
+		<help.buildHelpIndex manifest="plugin.xml" destination="."/>
 	</target>
 
 	<target name="build.sources" depends="init">
