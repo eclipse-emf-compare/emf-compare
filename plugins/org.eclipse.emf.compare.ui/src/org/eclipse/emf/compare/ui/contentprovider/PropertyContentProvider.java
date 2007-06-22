@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewerpart.ModelContentMergePropertyPart;
 import org.eclipse.emf.ecore.EAttribute;
