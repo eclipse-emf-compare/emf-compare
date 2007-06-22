@@ -14,4 +14,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="poLocalHome"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="processManagerLocal"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="titi"/>
+  <eClassifiers xsi:type="ecore:EClass"/>
 </ecore:EPackage>

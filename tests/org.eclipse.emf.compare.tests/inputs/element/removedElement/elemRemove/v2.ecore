@@ -7,6 +7,7 @@
     <eOperations name="ejbPostCreate"/>
     <eOperations name="ejbActivate"/>
     <eOperations name="ejbPassivate"/>
+    <eOperations name="ejbRemove"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="PURCHASE_ORDER_EJB"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="PROCMGR_ORDER_EJB"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sc"/>
