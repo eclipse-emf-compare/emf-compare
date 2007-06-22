@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.ui.editor;
 import java.io.IOException;
 
 import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
