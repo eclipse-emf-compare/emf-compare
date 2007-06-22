@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -25,15 +25,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.UpdateModelElement} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class UpdateModelElementItemProvider extends
-		ModelElementChangeItemProvider implements IEditingDomainItemProvider,
-		IStructuredItemContentProvider, ITreeItemContentProvider,
-		IItemLabelProvider, IItemPropertySource {
+public class UpdateModelElementItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -67,19 +64,15 @@ public class UpdateModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_UpdateModelElement_rightElement_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
-				 DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_UpdateModelElement_rightElement_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
+						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
+						null, null));
 	}
 
 	/**
@@ -89,19 +82,14 @@ public class UpdateModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_UpdateModelElement_leftElement_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
-				 DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(), getResourceLocator(),
+						getString("_UI_UpdateModelElement_leftElement_feature"), getString(
+								"_UI_PropertyDescriptor_description",
+								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
+						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
+						null, null));
 	}
 
 	/**
@@ -143,8 +131,7 @@ public class UpdateModelElementItemProvider extends
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

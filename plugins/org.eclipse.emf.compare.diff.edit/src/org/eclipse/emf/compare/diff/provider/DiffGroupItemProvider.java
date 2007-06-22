@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffGroup;
-import org.eclipse.emf.compare.diff.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -30,14 +30,12 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.DiffGroup} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffGroup} object.
  * <!-- begin-user-doc
  * --> <!-- end-user-doc -->
  * @generated
  */
-public class DiffGroupItemProvider extends DiffElementItemProvider implements
-		IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class DiffGroupItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -71,19 +69,12 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 	 * @generated
 	 */
 	protected void addLeftParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DiffGroup_leftParent_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_DiffGroup_leftParent_feature", "_UI_DiffGroup_type"),
-				 DiffPackage.Literals.DIFF_GROUP__LEFT_PARENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DiffGroup_leftParent_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_DiffGroup_leftParent_feature",
+						"_UI_DiffGroup_type"), DiffPackage.Literals.DIFF_GROUP__LEFT_PARENT, true, false,
+				true, null, null, null));
 	}
 
 	/**
@@ -93,19 +84,12 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 	 * @generated
 	 */
 	protected void addSubchangesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_DiffGroup_subchanges_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_DiffGroup_subchanges_feature", "_UI_DiffGroup_type"),
-				 DiffPackage.Literals.DIFF_GROUP__SUBCHANGES,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DiffGroup_subchanges_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_DiffGroup_subchanges_feature",
+						"_UI_DiffGroup_type"), DiffPackage.Literals.DIFF_GROUP__SUBCHANGES, true, false,
+				false, ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -124,21 +108,18 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		DiffGroup group = (DiffGroup) object;
+		DiffGroup group = (DiffGroup)object;
 		if (group.getLeftParent() != null) {
 			try {
-				return getString("_UI_DiffGroup_type", new Object[] {
-						group.getSubchanges(),
-						group.getLeftParent().eClass().getName()+" ",
-						NameSimilarity.findName(group.getLeftParent()) });
+				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(),
+						group.getLeftParent().eClass().getName() + " ",
+						NameSimilarity.findName(group.getLeftParent())});
 			} catch (FactoryException e) {
-				return getString("_UI_DiffGroup_type", new Object[] {
-						group.getSubchanges(),
-						group.getLeftParent().eClass().getName(), " model" });
+				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(),
+						group.getLeftParent().eClass().getName(), " model"});
 			}
 		} else {
-			return getString("_UI_DiffGroup_type", new Object[] {
-					group.getSubchanges(), "", " model" });
+			return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "", " model"});
 		}
 	}
 
@@ -154,7 +135,8 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 
 		switch (notification.getFeatureID(DiffGroup.class)) {
 			case DiffPackage.DIFF_GROUP__SUBCHANGES:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
+						true));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -167,8 +149,7 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements
 	 * --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

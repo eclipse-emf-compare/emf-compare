@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -27,14 +27,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.AddAttribute} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddAttribute} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class AddAttributeItemProvider extends AttributeChangeItemProvider
-		implements IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class AddAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -66,10 +64,9 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider
 	 * @generated NOT
 	 */
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, 
-				DiffPackage.eINSTANCE.getAttributeChange_Attribute(), 
-				adapterFactory.getClass());
-		
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
 		if (labelImage != null) {
 			List images = new ArrayList(2);
 			images.add(labelImage);
@@ -78,7 +75,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider
 		} else {
 			labelImage = getResourceLocator().getImage("full/obj16/AddAttribute");
 		}
-		
+
 		return labelImage;
 	}
 
@@ -111,8 +108,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

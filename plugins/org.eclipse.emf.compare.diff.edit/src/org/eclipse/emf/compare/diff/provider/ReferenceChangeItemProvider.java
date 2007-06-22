@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -25,14 +25,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.ReferenceChange} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ReferenceChangeItemProvider extends DiffElementItemProvider
-		implements IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ReferenceChangeItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -67,19 +65,12 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addReferencePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ReferenceChange_reference_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature", "_UI_ReferenceChange_type"),
-				 DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_reference_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE, true,
+				false, true, null, null, null));
 	}
 
 	/**
@@ -89,19 +80,12 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ReferenceChange_rightElement_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature", "_UI_ReferenceChange_type"),
-				 DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_rightElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -111,19 +95,12 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider
 	 * @generated
 	 */
 	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ReferenceChange_leftElement_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature", "_UI_ReferenceChange_type"),
-				 DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_leftElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -165,8 +142,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

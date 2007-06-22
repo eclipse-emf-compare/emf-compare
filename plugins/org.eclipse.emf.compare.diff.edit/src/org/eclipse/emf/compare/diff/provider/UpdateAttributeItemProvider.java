@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -26,14 +26,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.UpdateAttribute} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class UpdateAttributeItemProvider extends AttributeChangeItemProvider
-		implements IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class UpdateAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -75,11 +73,11 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		UpdateAttribute addOp = (UpdateAttribute) object;
+		UpdateAttribute addOp = (UpdateAttribute)object;
 		try {
 			return getString("_UI_UpdateAttribute_type", new Object[] {
 					NameSimilarity.findName(addOp.getAttribute()),
-					NameSimilarity.findName(addOp.getLeftElement()) });
+					NameSimilarity.findName(addOp.getLeftElement())});
 		} catch (FactoryException e) {
 			return getString("_UI_UpdateAttribute_type");
 		}
@@ -105,8 +103,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

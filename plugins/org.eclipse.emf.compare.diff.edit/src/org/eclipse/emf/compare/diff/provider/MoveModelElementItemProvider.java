@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.MoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -28,15 +28,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.MoveModelElement} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class MoveModelElementItemProvider extends
-		UpdateModelElementItemProvider implements IEditingDomainItemProvider,
-		IStructuredItemContentProvider, ITreeItemContentProvider,
-		IItemLabelProvider, IItemPropertySource {
+public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -70,19 +67,12 @@ public class MoveModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addLeftParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_MoveModelElement_leftParent_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftParent_feature", "_UI_MoveModelElement_type"),
-				 DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_PARENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MoveModelElement_leftParent_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftParent_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_PARENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -92,19 +82,12 @@ public class MoveModelElementItemProvider extends
 	 * @generated
 	 */
 	protected void addRightParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_MoveModelElement_rightParent_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightParent_feature", "_UI_MoveModelElement_type"),
-				 DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_PARENT,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MoveModelElement_rightParent_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightParent_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_PARENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -124,12 +107,12 @@ public class MoveModelElementItemProvider extends
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		MoveModelElement moveOp = (MoveModelElement) object;
+		MoveModelElement moveOp = (MoveModelElement)object;
 		try {
 			return getString("_UI_MoveModelElement_type", new Object[] {
 					NameSimilarity.findName(moveOp.getLeftElement()),
 					NameSimilarity.findName(moveOp.getLeftParent()),
-					NameSimilarity.findName(moveOp.getRightParent()) });
+					NameSimilarity.findName(moveOp.getRightParent())});
 		} catch (FactoryException e) {
 			return getString("_UI_MoveModelElement_type");
 		}
@@ -154,8 +137,7 @@ public class MoveModelElementItemProvider extends
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

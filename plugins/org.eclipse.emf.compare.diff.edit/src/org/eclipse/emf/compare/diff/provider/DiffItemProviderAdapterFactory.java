@@ -16,7 +16,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.diff.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -38,8 +38,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
-		implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -75,11 +74,11 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 		supportedTypes.add(IStructuredItemContentProvider.class);
 		supportedTypes.add(ITreeItemContentProvider.class);
 		supportedTypes.add(IItemLabelProvider.class);
-		supportedTypes.add(IItemPropertySource.class);		
+		supportedTypes.add(IItemPropertySource.class);
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.DiffModel} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.DiffModel} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -87,7 +86,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected DiffModelItemProvider diffModelItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.DiffModel}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffModel}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -101,7 +100,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.DiffGroup} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.DiffGroup} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -109,7 +108,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected DiffGroupItemProvider diffGroupItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.DiffGroup}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffGroup}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -123,7 +122,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.AttributeChange} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AttributeChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -131,7 +130,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected AttributeChangeItemProvider attributeChangeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.AttributeChange}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AttributeChange}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -145,7 +144,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.ReferenceChange} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -153,7 +152,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected ReferenceChangeItemProvider referenceChangeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.ReferenceChange}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -167,7 +166,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.ModelElementChange} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -175,7 +174,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected ModelElementChangeItemProvider modelElementChangeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.ModelElementChange}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChange}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -189,7 +188,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.AddModelElement} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -197,7 +196,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected AddModelElementItemProvider addModelElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.AddModelElement}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -211,7 +210,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.RemoveModelElement} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveModelElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -219,7 +218,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected RemoveModelElementItemProvider removeModelElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.RemoveModelElement}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveModelElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -233,7 +232,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.UpdateModelElement} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -241,7 +240,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected UpdateModelElementItemProvider updateModelElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.UpdateModelElement}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -255,7 +254,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.MoveModelElement} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -263,7 +262,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected MoveModelElementItemProvider moveModelElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.MoveModelElement}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -277,7 +276,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.AddAttribute} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -285,7 +284,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected AddAttributeItemProvider addAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.AddAttribute}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -299,7 +298,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.RemoveAttribute} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -307,7 +306,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected RemoveAttributeItemProvider removeAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.RemoveAttribute}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -321,7 +320,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.UpdateAttribute} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -329,7 +328,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected UpdateAttributeItemProvider updateAttributeItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.UpdateAttribute}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -343,7 +342,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.AddReferenceValue} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -351,7 +350,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected AddReferenceValueItemProvider addReferenceValueItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.AddReferenceValue}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -365,7 +364,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.RemoveReferenceValue} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -373,7 +372,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected RemoveReferenceValueItemProvider removeReferenceValueItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.RemoveReferenceValue}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -387,7 +386,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.UpdateReference} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.UpdateReference} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -395,7 +394,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected UpdateReferenceItemProvider updateReferenceItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.UpdateReference}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateReference}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -409,7 +408,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.ModelInputSnapshot} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -417,7 +416,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	protected ModelInputSnapshotItemProvider modelInputSnapshotItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.ModelInputSnapshot}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -446,8 +445,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setParentAdapterFactory(
-			ComposedAdapterFactory parentAdapterFactory) {
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}
 
@@ -527,22 +525,38 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory
 	 * @generated
 	 */
 	public void dispose() {
-		if (diffModelItemProvider != null) diffModelItemProvider.dispose();
-		if (diffGroupItemProvider != null) diffGroupItemProvider.dispose();
-		if (attributeChangeItemProvider != null) attributeChangeItemProvider.dispose();
-		if (referenceChangeItemProvider != null) referenceChangeItemProvider.dispose();
-		if (modelElementChangeItemProvider != null) modelElementChangeItemProvider.dispose();
-		if (addModelElementItemProvider != null) addModelElementItemProvider.dispose();
-		if (removeModelElementItemProvider != null) removeModelElementItemProvider.dispose();
-		if (updateModelElementItemProvider != null) updateModelElementItemProvider.dispose();
-		if (moveModelElementItemProvider != null) moveModelElementItemProvider.dispose();
-		if (addAttributeItemProvider != null) addAttributeItemProvider.dispose();
-		if (removeAttributeItemProvider != null) removeAttributeItemProvider.dispose();
-		if (updateAttributeItemProvider != null) updateAttributeItemProvider.dispose();
-		if (addReferenceValueItemProvider != null) addReferenceValueItemProvider.dispose();
-		if (removeReferenceValueItemProvider != null) removeReferenceValueItemProvider.dispose();
-		if (updateReferenceItemProvider != null) updateReferenceItemProvider.dispose();
-		if (modelInputSnapshotItemProvider != null) modelInputSnapshotItemProvider.dispose();
+		if (diffModelItemProvider != null)
+			diffModelItemProvider.dispose();
+		if (diffGroupItemProvider != null)
+			diffGroupItemProvider.dispose();
+		if (attributeChangeItemProvider != null)
+			attributeChangeItemProvider.dispose();
+		if (referenceChangeItemProvider != null)
+			referenceChangeItemProvider.dispose();
+		if (modelElementChangeItemProvider != null)
+			modelElementChangeItemProvider.dispose();
+		if (addModelElementItemProvider != null)
+			addModelElementItemProvider.dispose();
+		if (removeModelElementItemProvider != null)
+			removeModelElementItemProvider.dispose();
+		if (updateModelElementItemProvider != null)
+			updateModelElementItemProvider.dispose();
+		if (moveModelElementItemProvider != null)
+			moveModelElementItemProvider.dispose();
+		if (addAttributeItemProvider != null)
+			addAttributeItemProvider.dispose();
+		if (removeAttributeItemProvider != null)
+			removeAttributeItemProvider.dispose();
+		if (updateAttributeItemProvider != null)
+			updateAttributeItemProvider.dispose();
+		if (addReferenceValueItemProvider != null)
+			addReferenceValueItemProvider.dispose();
+		if (removeReferenceValueItemProvider != null)
+			removeReferenceValueItemProvider.dispose();
+		if (updateReferenceItemProvider != null)
+			updateReferenceItemProvider.dispose();
+		if (modelInputSnapshotItemProvider != null)
+			modelInputSnapshotItemProvider.dispose();
 	}
 
 }

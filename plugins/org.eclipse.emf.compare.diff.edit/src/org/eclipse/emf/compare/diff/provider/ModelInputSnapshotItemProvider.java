@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffFactory;
-import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.MatchFactory;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -34,19 +33,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.ModelInputSnapshot} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class ModelInputSnapshotItemProvider
-	extends ItemProviderAdapter
-	implements	
-		IEditingDomainItemProvider,	
-		IStructuredItemContentProvider,	
-		ITreeItemContentProvider,	
-		IItemLabelProvider,	
-		IItemPropertySource {
+public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -79,19 +71,12 @@ public class ModelInputSnapshotItemProvider
 	 * @generated
 	 */
 	protected void addDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_ModelInputSnapshot_date_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature", "_UI_ModelInputSnapshot_type"),
-				 DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE,
-				 true,
-				 false,
-				 false,
-				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ModelInputSnapshot_date_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature",
+						"_UI_ModelInputSnapshot_type"), DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE,
+				true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -142,9 +127,8 @@ public class ModelInputSnapshotItemProvider
 	public String getText(Object object) {
 		Date labelValue = ((ModelInputSnapshot)object).getDate();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ?
-			getString("_UI_ModelInputSnapshot_type") :
-			getString("_UI_ModelInputSnapshot_type") + " " + label;
+		return label == null || label.length() == 0 ? getString("_UI_ModelInputSnapshot_type")
+				: getString("_UI_ModelInputSnapshot_type") + " " + label;
 	}
 
 	/**
@@ -159,11 +143,13 @@ public class ModelInputSnapshotItemProvider
 
 		switch (notification.getFeatureID(ModelInputSnapshot.class)) {
 			case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
+						true));
 				return;
 			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
 			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
+						false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -179,15 +165,11 @@ public class ModelInputSnapshotItemProvider
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add
-			(createChildParameter
-				(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DIFF,
-				 DiffFactory.eINSTANCE.createDiffModel()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DIFF,
+				DiffFactory.eINSTANCE.createDiffModel()));
 
-		newChildDescriptors.add
-			(createChildParameter
-				(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__MATCH,
-				 MatchFactory.eINSTANCE.createMatchModel()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__MATCH,
+				MatchFactory.eINSTANCE.createMatchModel()));
 	}
 
 	/**

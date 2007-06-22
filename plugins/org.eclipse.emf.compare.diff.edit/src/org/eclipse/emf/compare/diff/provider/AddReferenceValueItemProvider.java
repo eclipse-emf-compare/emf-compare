@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.AddReferenceValue;
-import org.eclipse.emf.compare.diff.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -28,14 +28,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.AddReferenceValue} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
-		implements IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -69,19 +67,13 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	protected void addLeftAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AddReferenceValue_leftAddedTarget_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_leftAddedTarget_feature", "_UI_AddReferenceValue_type"),
-				 DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddReferenceValue_leftAddedTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_AddReferenceValue_leftAddedTarget_feature", "_UI_AddReferenceValue_type"),
+				DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, true, false, true, null, null,
+				null));
 	}
 
 	/**
@@ -91,19 +83,13 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated
 	 */
 	protected void addRightAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_AddReferenceValue_rightAddedTarget_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_rightAddedTarget_feature", "_UI_AddReferenceValue_type"),
-				 DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddReferenceValue_rightAddedTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_AddReferenceValue_rightAddedTarget_feature", "_UI_AddReferenceValue_type"),
+				DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, true, false, true, null, null,
+				null));
 	}
 
 	/**
@@ -123,11 +109,10 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		AddReferenceValue addOp = (AddReferenceValue) object;
+		AddReferenceValue addOp = (AddReferenceValue)object;
 		try {
-			return getString("_UI_AddReferenceValue_type",
-					new Object[] { NameSimilarity.findName(addOp
-							.getLeftElement()) });
+			return getString("_UI_AddReferenceValue_type", new Object[] {NameSimilarity.findName(addOp
+					.getLeftElement())});
 		} catch (FactoryException e) {
 			return getString("_UI_AddReferenceValue_type");
 		}
@@ -152,8 +137,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

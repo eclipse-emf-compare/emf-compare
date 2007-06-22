@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.DiffPackage;
-import org.eclipse.emf.compare.diff.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -28,15 +28,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.RemoveReferenceValue} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class RemoveReferenceValueItemProvider extends
-		ReferenceChangeItemProvider implements IEditingDomainItemProvider,
-		IStructuredItemContentProvider, ITreeItemContentProvider,
-		IItemLabelProvider, IItemPropertySource {
+public class RemoveReferenceValueItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -70,19 +67,15 @@ public class RemoveReferenceValueItemProvider extends
 	 * @generated
 	 */
 	protected void addLeftRemovedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RemoveReferenceValue_leftRemovedTarget_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RemoveReferenceValue_leftRemovedTarget_feature", "_UI_RemoveReferenceValue_type"),
-				 DiffPackage.Literals.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(), getResourceLocator(),
+						getString("_UI_RemoveReferenceValue_leftRemovedTarget_feature"), getString(
+								"_UI_PropertyDescriptor_description",
+								"_UI_RemoveReferenceValue_leftRemovedTarget_feature",
+								"_UI_RemoveReferenceValue_type"),
+						DiffPackage.Literals.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET, true, false, true,
+						null, null, null));
 	}
 
 	/**
@@ -92,19 +85,14 @@ public class RemoveReferenceValueItemProvider extends
 	 * @generated
 	 */
 	protected void addRightRemovedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add
-			(createItemPropertyDescriptor
-				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-				 getResourceLocator(),
-				 getString("_UI_RemoveReferenceValue_rightRemovedTarget_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_RemoveReferenceValue_rightRemovedTarget_feature", "_UI_RemoveReferenceValue_type"),
-				 DiffPackage.Literals.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET,
-				 true,
-				 false,
-				 true,
-				 null,
-				 null,
-				 null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_RemoveReferenceValue_rightRemovedTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_RemoveReferenceValue_rightRemovedTarget_feature",
+						"_UI_RemoveReferenceValue_type"),
+				DiffPackage.Literals.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET, true, false, true, null,
+				null, null));
 	}
 
 	/**
@@ -124,11 +112,10 @@ public class RemoveReferenceValueItemProvider extends
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		RemoveReferenceValue addOp = (RemoveReferenceValue) object;
+		RemoveReferenceValue addOp = (RemoveReferenceValue)object;
 		try {
-			return getString("_UI_RemoveReferenceValue_type",
-					new Object[] { NameSimilarity.findName(addOp
-							.getLeftElement()) });
+			return getString("_UI_RemoveReferenceValue_type", new Object[] {NameSimilarity.findName(addOp
+					.getLeftElement())});
 		} catch (FactoryException e) {
 			return getString("_UI_RemoveReferenceValue_type");
 		}
@@ -153,8 +140,7 @@ public class RemoveReferenceValueItemProvider extends
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 
