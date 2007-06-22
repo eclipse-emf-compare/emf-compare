@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.provider;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: Match3ElementItemProvider.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,8 +12,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.match.Match3Element;
-import org.eclipse.emf.compare.match.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -26,14 +22,12 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.Match3Element} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-public class Match3ElementItemProvider extends MatchElementItemProvider
-		implements IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class Match3ElementItemProvider extends MatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -66,15 +60,12 @@ public class Match3ElementItemProvider extends MatchElementItemProvider
 	 * @generated
 	 */
 	protected void addOriginElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match3Element_originElement_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Match3Element_originElement_feature",
-						"_UI_Match3Element_type"),
-				MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_Match3Element_originElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_Match3Element_originElement_feature",
+						"_UI_Match3Element_type"), MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -84,8 +75,7 @@ public class Match3ElementItemProvider extends MatchElementItemProvider
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/Match3Element"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match3Element"));
 	}
 
 	/**
@@ -95,9 +85,8 @@ public class Match3ElementItemProvider extends MatchElementItemProvider
 	 * @generated
 	 */
 	public String getText(Object object) {
-		Match3Element match3Element = (Match3Element) object;
-		return getString("_UI_Match3Element_type") + " "
-				+ match3Element.getSimilarity();
+		Match3Element match3Element = (Match3Element)object;
+		return getString("_UI_Match3Element_type") + " " + match3Element.getSimilarity();
 	}
 
 	/**
@@ -119,8 +108,7 @@ public class Match3ElementItemProvider extends MatchElementItemProvider
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors,
-			Object object) {
+	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

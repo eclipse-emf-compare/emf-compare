@@ -21,12 +21,12 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.MatchFactory;
-import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.match.UnMatchElement;
 import org.eclipse.emf.compare.match.api.MatchEngine;
-import org.eclipse.emf.compare.match.impl.MatchFactoryImpl;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.impl.MatchFactoryImpl;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;

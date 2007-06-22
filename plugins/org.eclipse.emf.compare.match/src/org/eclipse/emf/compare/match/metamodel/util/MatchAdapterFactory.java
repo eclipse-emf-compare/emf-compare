@@ -1,24 +1,20 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.util;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: MatchAdapterFactory.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.Match3Element;
-import org.eclipse.emf.compare.match.MatchElement;
-import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.match.MatchPackage;
-import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -26,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see org.eclipse.emf.compare.match.MatchPackage
+ * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
 public class MatchAdapterFactory extends AdapterFactoryImpl {
@@ -63,7 +59,7 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 			return true;
 		}
 		if (object instanceof EObject) {
-			return ((EObject) object).eClass().getEPackage() == modelPackage;
+			return ((EObject)object).eClass().getEPackage() == modelPackage;
 		}
 		return false;
 	}
@@ -109,17 +105,17 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAdapter(Notifier target) {
-		return (Adapter) modelSwitch.doSwitch((EObject) target);
+		return (Adapter)modelSwitch.doSwitch((EObject)target);
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.MatchModel <em>Model</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.MatchModel
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
 	 * @generated
 	 */
 	public Adapter createMatchModelAdapter() {
@@ -127,13 +123,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.MatchElement <em>Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.MatchElement
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
 	 * @generated
 	 */
 	public Adapter createMatchElementAdapter() {
@@ -141,13 +137,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.Match2Elements <em>Match2 Elements</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.Match2Elements <em>Match2 Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.Match2Elements
+	 * @see org.eclipse.emf.compare.match.metamodel.Match2Elements
 	 * @generated
 	 */
 	public Adapter createMatch2ElementsAdapter() {
@@ -155,13 +151,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.Match3Element <em>Match3 Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.Match3Element <em>Match3 Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.Match3Element
+	 * @see org.eclipse.emf.compare.match.metamodel.Match3Element
 	 * @generated
 	 */
 	public Adapter createMatch3ElementAdapter() {
@@ -169,13 +165,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.UnMatchElement <em>Un Match Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.UnMatchElement <em>Un Match Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.UnMatchElement
+	 * @see org.eclipse.emf.compare.match.metamodel.UnMatchElement
 	 * @generated
 	 */
 	public Adapter createUnMatchElementAdapter() {

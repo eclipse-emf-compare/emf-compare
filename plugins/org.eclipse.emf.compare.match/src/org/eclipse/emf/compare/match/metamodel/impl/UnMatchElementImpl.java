@@ -1,18 +1,14 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: UnMatchElementImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.match.MatchPackage;
-import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -26,7 +22,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
  * </ul>
  * </p>
  *
@@ -68,13 +64,12 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 */
 	public EObject getElement() {
 		if (element != null && element.eIsProxy()) {
-			InternalEObject oldElement = (InternalEObject) element;
+			InternalEObject oldElement = (InternalEObject)element;
 			element = eResolveProxy(oldElement);
 			if (element != oldElement) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement,
-							element));
+							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
 			}
 		}
 		return element;
@@ -98,8 +93,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 		EObject oldElement = element;
 		element = newElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT,
+					oldElement, element));
 	}
 
 	/**
@@ -109,10 +104,10 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
-			if (resolve)
-				return getElement();
-			return basicGetElement();
+			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
+				if (resolve)
+					return getElement();
+				return basicGetElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -124,9 +119,9 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
-			setElement((EObject) newValue);
-			return;
+			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
+				setElement((EObject)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -138,9 +133,9 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
-			setElement((EObject) null);
-			return;
+			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
+				setElement((EObject)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -152,8 +147,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
-			return element != null;
+			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
+				return element != null;
 		}
 		return super.eIsSet(featureID);
 	}

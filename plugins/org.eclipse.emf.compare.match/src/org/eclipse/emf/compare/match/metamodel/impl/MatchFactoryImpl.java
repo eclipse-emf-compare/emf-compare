@@ -1,21 +1,17 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: MatchFactoryImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.impl;
 
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.Match3Element;
-import org.eclipse.emf.compare.match.MatchFactory;
-import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.match.MatchPackage;
-import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -37,7 +33,7 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 */
 	public static MatchFactory init() {
 		try {
-			MatchFactory theMatchFactory = (MatchFactory) EPackage.Registry.INSTANCE
+			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
 					.getEFactory("http://www.eclipse.org/emf/compare/match/1.0");
 			if (theMatchFactory != null) {
 				return theMatchFactory;
@@ -65,17 +61,17 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 */
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-		case MatchPackage.MATCH_MODEL:
-			return createMatchModel();
-		case MatchPackage.MATCH2_ELEMENTS:
-			return createMatch2Elements();
-		case MatchPackage.MATCH3_ELEMENT:
-			return createMatch3Element();
-		case MatchPackage.UN_MATCH_ELEMENT:
-			return createUnMatchElement();
-		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-					+ "' is not a valid classifier");
+			case MatchPackage.MATCH_MODEL:
+				return createMatchModel();
+			case MatchPackage.MATCH2_ELEMENTS:
+				return createMatch2Elements();
+			case MatchPackage.MATCH3_ELEMENT:
+				return createMatch3Element();
+			case MatchPackage.UN_MATCH_ELEMENT:
+				return createUnMatchElement();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName()
+						+ "' is not a valid classifier");
 		}
 	}
 
@@ -125,7 +121,7 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * @generated
 	 */
 	public MatchPackage getMatchPackage() {
-		return (MatchPackage) getEPackage();
+		return (MatchPackage)getEPackage();
 	}
 
 	/**

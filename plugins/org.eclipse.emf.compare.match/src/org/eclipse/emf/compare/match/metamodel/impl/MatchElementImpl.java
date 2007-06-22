@@ -1,22 +1,18 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: MatchElementImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.impl;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.match.MatchElement;
-import org.eclipse.emf.compare.match.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -31,15 +27,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.impl.MatchElementImpl#getSimilarity <em>Similarity</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.impl.MatchElementImpl#getSubMatchElements <em>Sub Match Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSimilarity <em>Similarity</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSubMatchElements <em>Sub Match Elements</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public abstract class MatchElementImpl extends EObjectImpl implements
-		MatchElement {
+public abstract class MatchElementImpl extends EObjectImpl implements MatchElement {
 	/**
 	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -106,9 +101,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 		double oldSimilarity = similarity;
 		similarity = newSimilarity;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH_ELEMENT__SIMILARITY, oldSimilarity,
-					similarity));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY,
+					oldSimilarity, similarity));
 	}
 
 	/**
@@ -118,8 +112,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 */
 	public EList getSubMatchElements() {
 		if (subMatchElements == null) {
-			subMatchElements = new EObjectContainmentEList(MatchElement.class,
-					this, MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
+			subMatchElements = new EObjectContainmentEList(MatchElement.class, this,
+					MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
 		}
 		return subMatchElements;
 	}
@@ -129,12 +123,10 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-			return ((InternalEList) getSubMatchElements()).basicRemove(
-					otherEnd, msgs);
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				return ((InternalEList)getSubMatchElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -146,10 +138,10 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-			return new Double(getSimilarity());
-		case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-			return getSubMatchElements();
+			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
+				return new Double(getSimilarity());
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				return getSubMatchElements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -161,13 +153,13 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-			setSimilarity(((Double) newValue).doubleValue());
-			return;
-		case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-			getSubMatchElements().clear();
-			getSubMatchElements().addAll((Collection) newValue);
-			return;
+			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
+				setSimilarity(((Double)newValue).doubleValue());
+				return;
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				getSubMatchElements().clear();
+				getSubMatchElements().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -179,12 +171,12 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-			setSimilarity(SIMILARITY_EDEFAULT);
-			return;
-		case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-			getSubMatchElements().clear();
-			return;
+			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
+				setSimilarity(SIMILARITY_EDEFAULT);
+				return;
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				getSubMatchElements().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -196,10 +188,10 @@ public abstract class MatchElementImpl extends EObjectImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-			return similarity != SIMILARITY_EDEFAULT;
-		case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-			return subMatchElements != null && !subMatchElements.isEmpty();
+			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
+				return similarity != SIMILARITY_EDEFAULT;
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				return subMatchElements != null && !subMatchElements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

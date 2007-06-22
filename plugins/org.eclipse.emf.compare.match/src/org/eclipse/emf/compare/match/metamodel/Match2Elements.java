@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: Match2Elements.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -20,12 +16,12 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.Match2Elements#getLeftElement <em>Left Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.Match2Elements#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.Match2Elements#getLeftElement <em>Left Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.Match2Elements#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.emf.compare.match.MatchPackage#getMatch2Elements()
+ * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatch2Elements()
  * @model
  * @generated
  */
@@ -40,14 +36,14 @@ public interface Match2Elements extends MatchElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Left Element</em>' reference.
 	 * @see #setLeftElement(EObject)
-	 * @see org.eclipse.emf.compare.match.MatchPackage#getMatch2Elements_LeftElement()
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatch2Elements_LeftElement()
 	 * @model required="true" ordered="false"
 	 * @generated
 	 */
 	EObject getLeftElement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.Match2Elements#getLeftElement <em>Left Element</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.Match2Elements#getLeftElement <em>Left Element</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Left Element</em>' reference.
@@ -66,14 +62,14 @@ public interface Match2Elements extends MatchElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Right Element</em>' reference.
 	 * @see #setRightElement(EObject)
-	 * @see org.eclipse.emf.compare.match.MatchPackage#getMatch2Elements_RightElement()
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatch2Elements_RightElement()
 	 * @model required="true" ordered="false"
 	 * @generated
 	 */
 	EObject getRightElement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.Match2Elements#getRightElement <em>Right Element</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.Match2Elements#getRightElement <em>Right Element</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Right Element</em>' reference.

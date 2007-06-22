@@ -1,40 +1,37 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: Match3ElementImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.match.Match3Element;
-import org.eclipse.emf.compare.match.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match3 Element</b></em>'.
- * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a> <!-- end-user-doc -->
- *         <p>
- *         The following features are implemented:
- *         <ul>
- *         <li>{@link org.eclipse.emf.compare.match.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
- *         </ul>
- *         </p>
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Match3 Element</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * <ul>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ * </ul>
+ * </p>
+ *
  * @generated
  */
 public class Match3ElementImpl extends MatchElementImpl implements Match3Element {
 	/**
-	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see #getOriginElement()
 	 * @generated
 	 * @ordered
@@ -42,8 +39,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	protected EObject originElement = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected Match3ElementImpl() {
@@ -51,8 +48,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
@@ -60,8 +57,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject getOriginElement() {
@@ -78,8 +75,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -87,8 +84,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
@@ -100,8 +97,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
@@ -115,8 +112,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void eSet(int featureID, Object newValue) {
@@ -129,8 +126,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void eUnset(int featureID) {
@@ -143,8 +140,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public boolean eIsSet(int featureID) {
@@ -155,4 +152,4 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 		return super.eIsSet(featureID);
 	}
 
-} // Match3ElementImpl
+} //Match3ElementImpl

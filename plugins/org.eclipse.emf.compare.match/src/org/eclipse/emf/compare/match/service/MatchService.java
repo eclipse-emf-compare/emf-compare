@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.MatchPlugin;
-import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 
 /**

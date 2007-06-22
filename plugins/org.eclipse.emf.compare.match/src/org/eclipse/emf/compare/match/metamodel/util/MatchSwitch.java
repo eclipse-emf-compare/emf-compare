@@ -1,23 +1,19 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.util;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: MatchSwitch.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.util;
 
 import java.util.List;
 
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.Match3Element;
-import org.eclipse.emf.compare.match.MatchElement;
-import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.match.MatchPackage;
-import org.eclipse.emf.compare.match.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -31,7 +27,7 @@ import org.eclipse.emf.ecore.EObject;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see org.eclipse.emf.compare.match.MatchPackage
+ * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
 public class MatchSwitch {
@@ -78,8 +74,8 @@ public class MatchSwitch {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
 		} else {
 			List eSuperTypes = theEClass.getESuperTypes();
-			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(
-					(EClass) eSuperTypes.get(0), theEObject);
+			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0),
+					theEObject);
 		}
 	}
 
@@ -92,47 +88,47 @@ public class MatchSwitch {
 	 */
 	protected Object doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-		case MatchPackage.MATCH_MODEL: {
-			MatchModel matchModel = (MatchModel) theEObject;
-			Object result = caseMatchModel(matchModel);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MatchPackage.MATCH_ELEMENT: {
-			MatchElement matchElement = (MatchElement) theEObject;
-			Object result = caseMatchElement(matchElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MatchPackage.MATCH2_ELEMENTS: {
-			Match2Elements match2Elements = (Match2Elements) theEObject;
-			Object result = caseMatch2Elements(match2Elements);
-			if (result == null)
-				result = caseMatchElement(match2Elements);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MatchPackage.MATCH3_ELEMENT: {
-			Match3Element match3Element = (Match3Element) theEObject;
-			Object result = caseMatch3Element(match3Element);
-			if (result == null)
-				result = caseMatchElement(match3Element);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case MatchPackage.UN_MATCH_ELEMENT: {
-			UnMatchElement unMatchElement = (UnMatchElement) theEObject;
-			Object result = caseUnMatchElement(unMatchElement);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		default:
-			return defaultCase(theEObject);
+			case MatchPackage.MATCH_MODEL: {
+				MatchModel matchModel = (MatchModel)theEObject;
+				Object result = caseMatchModel(matchModel);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case MatchPackage.MATCH_ELEMENT: {
+				MatchElement matchElement = (MatchElement)theEObject;
+				Object result = caseMatchElement(matchElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case MatchPackage.MATCH2_ELEMENTS: {
+				Match2Elements match2Elements = (Match2Elements)theEObject;
+				Object result = caseMatch2Elements(match2Elements);
+				if (result == null)
+					result = caseMatchElement(match2Elements);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case MatchPackage.MATCH3_ELEMENT: {
+				Match3Element match3Element = (Match3Element)theEObject;
+				Object result = caseMatch3Element(match3Element);
+				if (result == null)
+					result = caseMatchElement(match3Element);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case MatchPackage.UN_MATCH_ELEMENT: {
+				UnMatchElement unMatchElement = (UnMatchElement)theEObject;
+				Object result = caseUnMatchElement(unMatchElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			default:
+				return defaultCase(theEObject);
 		}
 	}
 

@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.provider;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: MatchItemProviderAdapterFactory.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +12,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.match.util.MatchAdapterFactory;
+import org.eclipse.emf.compare.match.metamodel.util.MatchAdapterFactory;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -38,8 +34,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
-		implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
+public class MatchItemProviderAdapterFactory extends MatchAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This keeps track of the root adapter factory that delegates to this adapter factory.
 	 * <!-- begin-user-doc -->
@@ -79,7 +74,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.MatchModel} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.metamodel.MatchModel} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -87,7 +82,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	protected MatchModelItemProvider matchModelItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.MatchModel}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchModel}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -101,7 +96,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.Match2Elements} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.metamodel.Match2Elements} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -109,7 +104,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	protected Match2ElementsItemProvider match2ElementsItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.Match2Elements}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -123,7 +118,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.Match3Element} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.metamodel.Match3Element} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -131,7 +126,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	protected Match3ElementItemProvider match3ElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.Match3Element}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -145,7 +140,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.UnMatchElement} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -153,7 +148,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	protected UnMatchElementItemProvider unMatchElementItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.UnMatchElement}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -173,8 +168,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	 * @generated
 	 */
 	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory
-				.getRootAdapterFactory();
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
 	}
 
 	/**
@@ -183,8 +177,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setParentAdapterFactory(
-			ComposedAdapterFactory parentAdapterFactory) {
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}
 
@@ -215,8 +208,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory
 	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
 			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class)
-					|| (((Class) type).isInstance(adapter))) {
+			if (!(type instanceof Class) || (((Class)type).isInstance(adapter))) {
 				return adapter;
 			}
 		}

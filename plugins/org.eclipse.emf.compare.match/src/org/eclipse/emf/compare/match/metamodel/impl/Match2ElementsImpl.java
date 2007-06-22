@@ -1,18 +1,14 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match.impl;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: Match2ElementsImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.match.Match2Elements;
-import org.eclipse.emf.compare.match.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -25,15 +21,14 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.impl.Match2ElementsImpl#getLeftElement <em>Left Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.impl.Match2ElementsImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getLeftElement <em>Left Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class Match2ElementsImpl extends MatchElementImpl implements
-		Match2Elements {
+public class Match2ElementsImpl extends MatchElementImpl implements Match2Elements {
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -79,13 +74,12 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public EObject getLeftElement() {
 		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject) leftElement;
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT,
-							oldLeftElement, leftElement));
+							MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
@@ -109,9 +103,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement,
-					leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT,
+					oldLeftElement, leftElement));
 	}
 
 	/**
@@ -121,13 +114,12 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public EObject getRightElement() {
 		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject) rightElement;
+			InternalEObject oldRightElement = (InternalEObject)rightElement;
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT,
-							oldRightElement, rightElement));
+							MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -152,8 +144,7 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 		rightElement = newRightElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT,
-					oldRightElement, rightElement));
+					MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
 	}
 
 	/**
@@ -163,14 +154,14 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
-			if (resolve)
-				return getLeftElement();
-			return basicGetLeftElement();
-		case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
-			if (resolve)
-				return getRightElement();
-			return basicGetRightElement();
+			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
+				if (resolve)
+					return getLeftElement();
+				return basicGetLeftElement();
+			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
+				if (resolve)
+					return getRightElement();
+				return basicGetRightElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -182,12 +173,12 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
-			setLeftElement((EObject) newValue);
-			return;
-		case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
-			setRightElement((EObject) newValue);
-			return;
+			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
+				setLeftElement((EObject)newValue);
+				return;
+			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
+				setRightElement((EObject)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -199,12 +190,12 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
-			setLeftElement((EObject) null);
-			return;
-		case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
-			setRightElement((EObject) null);
-			return;
+			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
+				setLeftElement((EObject)null);
+				return;
+			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
+				setRightElement((EObject)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -216,10 +207,10 @@ public class Match2ElementsImpl extends MatchElementImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
-			return leftElement != null;
-		case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
-			return rightElement != null;
+			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
+				return leftElement != null;
+			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
+				return rightElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

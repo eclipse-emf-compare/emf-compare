@@ -1,14 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
-package org.eclipse.emf.compare.match;
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: Match3Element.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
+ */
+package org.eclipse.emf.compare.match.metamodel;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -20,11 +16,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.Match3Element#getOriginElement <em>Origin Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.Match3Element#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.emf.compare.match.MatchPackage#getMatch3Element()
+ * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatch3Element()
  * @model
  * @generated
  */
@@ -39,14 +35,14 @@ public interface Match3Element extends MatchElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Origin Element</em>' reference.
 	 * @see #setOriginElement(EObject)
-	 * @see org.eclipse.emf.compare.match.MatchPackage#getMatch3Element_OriginElement()
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatch3Element_OriginElement()
 	 * @model required="true" ordered="false"
 	 * @generated
 	 */
 	EObject getOriginElement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.Match3Element#getOriginElement <em>Origin Element</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.Match3Element#getOriginElement <em>Origin Element</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Origin Element</em>' reference.
