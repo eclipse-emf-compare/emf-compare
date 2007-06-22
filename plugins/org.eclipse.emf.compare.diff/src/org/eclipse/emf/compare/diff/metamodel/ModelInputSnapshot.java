@@ -2,13 +2,13 @@
  * <copyright>
  * </copyright>
  *
- * $Id: ModelInputSnapshot.java,v 1.1 2007/06/22 12:59:46 cbrun Exp $
+ * $Id: ModelInputSnapshot.java,v 1.2 2007/06/22 13:14:16 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel;
 
 import java.util.Date;
 
-import org.eclipse.emf.compare.match.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 
 /**

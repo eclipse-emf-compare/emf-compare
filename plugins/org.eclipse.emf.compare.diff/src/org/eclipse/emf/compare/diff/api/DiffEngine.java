@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.diff.api;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.match.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.util.FactoryException;
 
 /**

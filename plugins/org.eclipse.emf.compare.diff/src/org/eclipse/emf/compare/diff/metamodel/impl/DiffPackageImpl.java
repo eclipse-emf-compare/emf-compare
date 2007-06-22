@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: DiffPackageImpl.java,v 1.1 2007/06/22 12:59:47 cbrun Exp $
+ * $Id: DiffPackageImpl.java,v 1.2 2007/06/22 13:14:16 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.match.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;

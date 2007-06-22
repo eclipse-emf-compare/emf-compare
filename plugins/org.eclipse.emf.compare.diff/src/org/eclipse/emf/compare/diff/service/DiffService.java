@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.DiffPlugin;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.match.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 
 /**
  * TODOCBR comment.
