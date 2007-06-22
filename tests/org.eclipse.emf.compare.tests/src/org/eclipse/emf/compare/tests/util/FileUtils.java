@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,7 @@ public final class FileUtils {
 		if (convertNewLines) {
 			new FileBufferOperationRunner(textBufferMgr, null).execute(
 					new IPath[] { path }, new ConvertLineDelimitersOperation(
-							System.getProperty("line.separator")),
+							System.getProperty("line.separator")), //$NON-NLS-1$
 					new NullProgressMonitor());
 		}
 
@@ -115,8 +115,8 @@ public final class FileUtils {
 			directories = aDirectory.listFiles(new FileFilter() {
 				public boolean accept(File file) {
 					return file.isDirectory() 
-						&& !file.getName().startsWith(".")
-						&& !file.getName().equals("CVS");
+						&& !file.getName().startsWith(".") //$NON-NLS-1$
+						&& !file.getName().equals("CVS"); //$NON-NLS-1$
 				}
 			});
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,8 @@ import java.io.IOException;
 import junit.framework.AssertionFailedError;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.diff.DiffFactory;
-import org.eclipse.emf.compare.diff.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.ModelUtils;

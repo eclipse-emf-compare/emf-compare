@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,8 +53,8 @@ public class EMFCompareTestCase extends TestCase {
 	 * 			Second file of the comparison.
 	 */
 	public void assertFileContentsEqual(final File file1, final File file2) {
-		assertTrue("File contents are not equals for " + file1.getName()
-				+ " and " + file2.getName(), EMFCompareTestCase.readFile(file1,
+		assertTrue("File contents are not equals for " + file1.getName() //$NON-NLS-1$
+				+ " and " + file2.getName(), EMFCompareTestCase.readFile(file1, //$NON-NLS-1$
 				false).equals(EMFCompareTestCase.readFile(file2, false)));
 	}
 
@@ -69,6 +69,7 @@ public class EMFCompareTestCase extends TestCase {
 	 * 			Thrown if an I/O operation has failed or been interrupted during the
 	 * 			saving process.
 	 */
+	@SuppressWarnings("unchecked")
 	public void save(final EObject root, final File outputFile) throws IOException {
 		final FileOutputStream out = new FileOutputStream(outputFile);
 
@@ -173,12 +174,12 @@ public class EMFCompareTestCase extends TestCase {
 			throw new RuntimeException(exception);
 		}
 		
-		String nl = "\n";
+		String nl = "\n"; //$NON-NLS-1$
 		if (useSystemLineSeparator)
-			nl = System.getProperties().getProperty("line.separator");
+			nl = System.getProperties().getProperty("line.separator"); //$NON-NLS-1$
 		
-		return stringBuffer.toString().replaceAll("\\r\\n", "\n")
-				.replaceAll("[\\n|\\r]", nl);
+		return stringBuffer.toString().replaceAll("\\r\\n", "\n") //$NON-NLS-1$ //$NON-NLS-2$
+				.replaceAll("[\\n|\\r]", nl); //$NON-NLS-1$
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class EMFCompareTestCase extends TestCase {
 		String path = new String();
 		try {
 			return new File(FileLocator.toFileURL(
-					getPlugin().getBundle().getEntry("/")).getFile()).toString();
+					getPlugin().getBundle().getEntry("/")).getFile()).toString(); //$NON-NLS-1$
 		} catch (IOException e) {
 			// No operation, thrown if the plugin cannot be resolved.
 		}
@@ -247,8 +248,8 @@ public class EMFCompareTestCase extends TestCase {
 			String resourcePath = url.getPath();
 			resourcePath = resourcePath
 					.substring(0, resourcePath.indexOf(EMFCompareTestCase.PLUGIN_ID));
-			if (resourcePath.startsWith("file:")) {
-				resourcePath = resourcePath.substring("file:".length());
+			if (resourcePath.startsWith("file:")) { //$NON-NLS-1$
+				resourcePath = resourcePath.substring("file:".length()); //$NON-NLS-1$
 			}
 			final File parentDir = new File(resourcePath);
 			if (parentDir.isDirectory()) {

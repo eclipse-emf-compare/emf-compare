@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EObject;
  * A dummy match engine.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
- * 
  */
 public class GenericHighestEngine implements MatchEngine {
 	/**

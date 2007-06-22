@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, Obeo.
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.compare.diff.DiffModel;
-import org.eclipse.emf.compare.diff.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.generic.DiffMaker;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
@@ -38,7 +38,7 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	private String inputDirectory;
 
 	protected void setUp() throws Exception {
-		setInputDirectory("/inputs");
+		setInputDirectory("/inputs"); //$NON-NLS-1$
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 			}
 		}
 		final Date end = Calendar.getInstance().getTime();
-		System.out.println("non-regression models evaluated in "
-				+ (end.getTime() - start.getTime()) / 1000 + "s");
+		System.out.println("non-regression models evaluated in " //$NON-NLS-1$
+				+ (end.getTime() - start.getTime()) / 1000 + "s"); //$NON-NLS-1$
 	}
 
 	/**
@@ -91,11 +91,11 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 			}
 		} else {
 			final File expectedDir = new File(directory.getPath().replace(
-					File.separator + "inputs",
-					File.separator + "expected" + File.separator + "inputs"));
+					File.separator + "inputs", //$NON-NLS-1$
+					File.separator + "expected" + File.separator + "inputs")); //$NON-NLS-1$ //$NON-NLS-2$
 
 			final String testedDir = directory.getName().toUpperCase();
-			System.out.println(testedDir + "\n===============");
+			System.out.println(testedDir + "\n==============="); //$NON-NLS-1$
 			final List<EObject> inputModels = ModelUtils
 					.getModelsFrom(directory);
 			final List<EObject> expectedSnapshot = ModelUtils
@@ -117,10 +117,10 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 						.serialize(((ModelInputSnapshot)expectedSnapshot
 								.get(0)).getDiff());
 
-				assertEquals(testedDir + ", match doesn't match",
+				assertEquals(testedDir + ", match doesn't match", //$NON-NLS-1$
 						suppressPathReferences(currentMatch),
 						suppressPathReferences(expectedMatch));
-				assertEquals(testedDir + ", diff doesn't match",
+				assertEquals(testedDir + ", diff doesn't match", //$NON-NLS-1$
 						suppressPathReferences(currentDiff),
 						suppressPathReferences(expectedDiff));
 			}
@@ -136,10 +136,10 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 *            The file to parse.
 	 */
 	private String suppressPathReferences(String aFile) {
-		final String[] fragments = aFile.split("\n");
+		final String[] fragments = aFile.split("\n"); //$NON-NLS-1$
 		final StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < fragments.length; i++) {
-			buffer.append(fragments[i].replaceAll("href=\".*#", "href=\"#"));
+			buffer.append(fragments[i].replaceAll("href=\".*#", "href=\"#")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return buffer.toString();
 	}
