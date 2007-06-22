@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.merge.api;
 
-import org.eclipse.emf.compare.diff.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 
 /**
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.

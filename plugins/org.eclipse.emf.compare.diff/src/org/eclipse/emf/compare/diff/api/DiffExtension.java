@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.api;
 
-import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.diff.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 
 /**

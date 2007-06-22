@@ -6,12 +6,12 @@ Bundle-Version: 0.7.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compare.diff,
+Export-Package: org.eclipse.emf.compare.diff.metamodel,
  org.eclipse.emf.compare.diff.api,
  org.eclipse.emf.compare.diff.generic,
- org.eclipse.emf.compare.diff.impl,
+ org.eclipse.emf.compare.diff.metamodel.impl,
  org.eclipse.emf.compare.diff.service,
- org.eclipse.emf.compare.diff.util,
+ org.eclipse.emf.compare.diff.metamodel.util,
  org.eclipse.emf.compare.merge.api,
  org.eclipse.emf.compare.merge.service
 Require-Bundle: org.eclipse.core.runtime,

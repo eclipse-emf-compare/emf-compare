@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import org.eclipse.emf.compare.diff.AddModelElement;
-import org.eclipse.emf.compare.diff.AddReferenceValue;
-import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.diff.RemoveModelElement;
-import org.eclipse.emf.compare.diff.RemoveReferenceValue;
-import org.eclipse.emf.compare.diff.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 

@@ -15,10 +15,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.AddModelElement;
-import org.eclipse.emf.compare.diff.AddReferenceValue;
-import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.diff.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;

@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.DiffPlugin;
-import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.MatchModel;
 
 /**
