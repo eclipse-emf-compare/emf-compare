@@ -47,6 +47,34 @@ public final class ModelUtils {
 	}
 
 	/**
+	 * Loads a model from an {@link IPath}.
+	 * 
+	 * @param path
+	 *            {@link IPath} where the model lies.
+	 * @return The model loaded from the path.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	public static EObject load(IPath path) throws IOException {
+		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path));
+	}
+
+	/**
+	 * Loads a model from an {@link IPath} in a given {@link ResourceSet}.
+	 * 
+	 * @param path
+	 *            {@link IPath} where the model lies.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the path.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
+		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
+	}
+
+	/**
 	 * Loads a model from an {@link org.eclipse.core.resources.IFile IFile}.
 	 * 
 	 * @param file
@@ -60,16 +88,18 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads a model from an {@link IPath}.
+	 * Loads a model from an {@link org.eclipse.core.resources.IFile IFile} in a given {@link ResourceSet}.
 	 * 
-	 * @param path
-	 *            {@link IPath} where the model lies.
-	 * @return The model loaded from the path.
+	 * @param file
+	 *            {@link org.eclipse.core.resources.IFile IFile} containing the model to be loaded.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the file.
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	public static EObject load(IPath path) throws IOException {
-		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path));
+	public static EObject load(IFile file, ResourceSet resourceSet) throws IOException {
+		return load(URI.createFileURI(file.getLocation().toOSString()), resourceSet);
 	}
 
 	/**
@@ -86,6 +116,21 @@ public final class ModelUtils {
 	}
 
 	/**
+	 * Loads a model from a {@link java.io.File File} in a given {@link ResourceSet}.
+	 * 
+	 * @param file
+	 *            {@link java.io.File File} containing the model to be loaded.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the file.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	public static EObject load(File file, ResourceSet resourceSet) throws IOException {
+		return load(URI.createFileURI(file.getPath()), resourceSet);
+	}
+
+	/**
 	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI}.
 	 * 
 	 * @param modelURI
@@ -94,8 +139,23 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	@SuppressWarnings("unchecked")
 	public static EObject load(URI modelURI) throws IOException {
+		return load(modelURI, new ResourceSetImpl());
+	}
+
+	/**
+	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI} in a given {@link ResourceSet}.
+	 * 
+	 * @param modelURI
+	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the URI.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	@SuppressWarnings("unchecked")
+	public static EObject load(URI modelURI, ResourceSet resourceSet) throws IOException {
 		EObject result = null;
 
 		String fileExtension = modelURI.fileExtension();
@@ -103,7 +163,6 @@ public final class ModelUtils {
 			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
 		}
 
-		final ResourceSet resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
 		if (resourceFactory != null) {
@@ -120,20 +179,38 @@ public final class ModelUtils {
 			result = (EObject)modelResource.getContents().get(0);
 		return result;
 	}
-	
+
 	/**
 	 * Load a model from an {@link java.io.InputStream  InputStream}.
 	 * 
 	 * @param stream
-	 *            the inputstream to load from
+	 *            The inputstream to load from
 	 * @param fileName
-	 *            the original filename
-	 * @return the loaded model
+	 *            The original filename
+	 * @return The loaded model
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	public static EObject load(InputStream stream, String fileName) throws IOException {
+		return load(stream, fileName, new ResourceSetImpl());
+	}
+
+	/**
+	 * Load a model from an {@link java.io.InputStream  InputStream} in a given {@link ResourceSet}.
+	 * 
+	 * @param stream
+	 *            The inputstream to load from
+	 * @param fileName
+	 *            The original filename
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The loaded model
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
 	@SuppressWarnings("unchecked")
-	public static EObject load(InputStream stream, String fileName) throws IOException {
+	public static EObject load(InputStream stream, String fileName, ResourceSet resourceSet)
+			throws IOException {
 		EObject result = null;
 
 		String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1); //$NON-NLS-1$
@@ -141,7 +218,6 @@ public final class ModelUtils {
 			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
 		}
 
-		final ResourceSet resourceSet = new ResourceSetImpl();
 		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
 		if (resourceFactory != null) {
@@ -203,7 +279,8 @@ public final class ModelUtils {
 			String resourceURI = model.getURI().toString();
 			if (resourceURI.toString().contains(":")) //$NON-NLS-1$
 				resourceURI = resourceURI.substring(resourceURI.indexOf(":") + 1); //$NON-NLS-1$
-			ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(new Path(resourceURI)).refreshLocal(0, new NullProgressMonitor());
+			ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(new Path(resourceURI))
+					.refreshLocal(0, new NullProgressMonitor());
 		} catch (CoreException e) {
 			// fails silently, thrown when we cannot refresh the files.
 		}
