@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IStreamContentAccessor;
@@ -18,7 +19,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.DiffFactory;
 import org.eclipse.emf.compare.diff.DiffModel;
@@ -28,9 +29,11 @@ import org.eclipse.emf.compare.match.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Structure viewer used by the
@@ -41,6 +44,10 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
 	private CompareConfiguration configuration;
+
+	private EObject leftModel;
+
+	private EObject rightModel;
 
 	private ModelInputSnapshot snapshot;
 
@@ -130,42 +137,47 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			final ITypedElement left = ((ICompareInput)newInput).getLeft();
 			final ITypedElement right = ((ICompareInput)newInput).getRight();
 
-			EObject leftModel = null;
-			EObject rightModel = null;
 			try {
-				if (left instanceof ResourceNode) {
+				if (left instanceof ResourceNode &&
+						right instanceof ResourceNode) {
 					leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath());
-				} else if (left instanceof IStreamContentAccessor) {
-					leftModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath());
+				} else if (left instanceof IStreamContentAccessor &&
+						right instanceof IStreamContentAccessor) {
+					// this is the case of SVN/CVS comparison, we invert left and right.
+					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
+							.getName());
+					final String leftLabel = configuration.getRightLabel(rightModel);
+					configuration.setRightLabel(configuration.getLeftLabel(leftModel));
+					configuration.setLeftLabel(leftLabel);
 					configuration.setLeftEditable(false);
 				}
-				if (right instanceof ResourceNode) {
-					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath());
-				} else if (right instanceof IStreamContentAccessor) {
-					rightModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
-							.getName());
-					configuration.setRightEditable(false);
+				if (leftModel != null && rightModel != null) {
+					PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+							new IRunnableWithProgress() {
+								public void run(IProgressMonitor monitor) throws InvocationTargetException,
+										InterruptedException {
+									final MatchModel match = new MatchService().doMatch(leftModel,
+											rightModel, monitor);
+									final DiffModel diff = new DiffMaker().doDiff(match);
+									
+									snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+									snapshot.setDiff(diff);
+									snapshot.setMatch(match);
+								}
+							});
+
+					diffInput = snapshot.getDiff();
 				}
 			} catch (IOException e) {
 				EMFComparePlugin.getDefault().log(e.getMessage(), true);
 			} catch (CoreException e) {
 				EMFComparePlugin.getDefault().log(e.getMessage(), true);
-			}
-
-			if (leftModel != null && rightModel != null) {
-				try {
-					final MatchModel match = new MatchService().doMatch(rightModel, leftModel,
-							new NullProgressMonitor());
-					final DiffModel diff = new DiffMaker().doDiff(match);
-
-					snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-					snapshot.setDiff(diff);
-					snapshot.setMatch(match);
-
-					diffInput = diff;
-				} catch (InterruptedException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), true);
-				}
+			} catch (InterruptedException e) {
+				EMFComparePlugin.getDefault().log(e.getMessage(), true);
+			} catch (InvocationTargetException e) {
+				EMFComparePlugin.getDefault().log(e.getMessage(), true);
 			}
 		} else if (newInput instanceof ModelInputSnapshot) {
 			snapshot = (ModelInputSnapshot)newInput;
