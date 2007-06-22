@@ -3,6 +3,5 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diff_extension"
     nsURI="http://www.eclipse.org/emf/compare/sample/diff_extension/1.0" nsPrefix="diff_extension">
-  <eClassifiers xsi:type="ecore:EClass" name="RenameModelElement" eSuperTypes="../../../plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateAttribute"/>
-  <eClassifiers xsi:type="ecore:EClass" name="MoveModelElement" eSuperTypes="../../../plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Stereotype has changed" eSuperTypes="../../../plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement"/>
 </ecore:EPackage>

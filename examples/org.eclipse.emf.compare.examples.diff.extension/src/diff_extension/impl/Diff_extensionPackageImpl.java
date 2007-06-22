@@ -2,21 +2,19 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Diff_extensionPackageImpl.java,v 1.1 2007/04/03 06:37:08 cbrun Exp $
+ * $Id: Diff_extensionPackageImpl.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension.impl;
+
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import diff_extension.Diff_extensionFactory;
 import diff_extension.Diff_extensionPackage;
 import diff_extension.MoveModelElement;
 import diff_extension.RenameModelElement;
-
-import org.eclipse.emf.compare.diff.DiffPackage;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

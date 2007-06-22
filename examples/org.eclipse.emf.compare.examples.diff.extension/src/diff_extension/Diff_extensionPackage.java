@@ -2,12 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Diff_extensionPackage.java,v 1.1 2007/04/03 06:37:12 cbrun Exp $
+ * $Id: Diff_extensionPackage.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension;
 
-import org.eclipse.emf.compare.diff.DiffPackage;
-
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 

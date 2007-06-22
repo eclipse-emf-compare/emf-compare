@@ -2,24 +2,23 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Diff_extensionAdapterFactory.java,v 1.1 2007/04/03 06:36:51 cbrun Exp $
+ * $Id: Diff_extensionAdapterFactory.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension.util;
 
-import diff_extension.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
-import org.eclipse.emf.compare.diff.AttributeChange;
-import org.eclipse.emf.compare.diff.DiffElement;
-import org.eclipse.emf.compare.diff.ModelElementChange;
-import org.eclipse.emf.compare.diff.UpdateAttribute;
-import org.eclipse.emf.compare.diff.UpdateModelElement;
-
+import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.ecore.EObject;
+
+import diff_extension.Diff_extensionPackage;
+import diff_extension.MoveModelElement;
+import diff_extension.RenameModelElement;
 
 /**
  * <!-- begin-user-doc -->

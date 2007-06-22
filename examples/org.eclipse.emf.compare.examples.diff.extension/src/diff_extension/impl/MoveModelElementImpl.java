@@ -2,16 +2,15 @@
  * <copyright>
  * </copyright>
  *
- * $Id: MoveModelElementImpl.java,v 1.1 2007/04/03 06:37:00 cbrun Exp $
+ * $Id: MoveModelElementImpl.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension.impl;
 
+import org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl;
+import org.eclipse.emf.ecore.EClass;
+
 import diff_extension.Diff_extensionPackage;
 import diff_extension.MoveModelElement;
-
-import org.eclipse.emf.compare.diff.impl.UpdateModelElementImpl;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

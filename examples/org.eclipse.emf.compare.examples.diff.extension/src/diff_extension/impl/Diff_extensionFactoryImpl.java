@@ -2,19 +2,20 @@
  * <copyright>
  * </copyright>
  *
- * $Id: Diff_extensionFactoryImpl.java,v 1.1 2007/04/03 06:37:03 cbrun Exp $
+ * $Id: Diff_extensionFactoryImpl.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension.impl;
-
-import diff_extension.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import diff_extension.Diff_extensionFactory;
+import diff_extension.Diff_extensionPackage;
+import diff_extension.MoveModelElement;
+import diff_extension.RenameModelElement;
 
 /**
  * <!-- begin-user-doc -->

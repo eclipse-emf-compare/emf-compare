@@ -2,11 +2,11 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RenameModelElement.java,v 1.1 2007/04/03 06:37:12 cbrun Exp $
+ * $Id: RenameModelElement.java,v 1.2 2007/06/22 12:59:54 cbrun Exp $
  */
 package diff_extension;
 
-import org.eclipse.emf.compare.diff.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 
 /**
  * <!-- begin-user-doc -->
