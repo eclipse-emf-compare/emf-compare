@@ -1,5 +1,5 @@
-/*  
- * Copyright (c) 2006, Obeo.
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,58 +7,57 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- */
+ *******************************************************************************/
 package org.eclipse.emf.compare;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * Activator for EMF Compare's diff plugin.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DiffPlugin extends Plugin {
+	/** This plugin's ID. */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diff"; //$NON-NLS-1$
 
-	/**
-	 *  The plug-in ID
-	 */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diff";
-
-	// The shared instance
+	/** This plugin's shared instance. */
 	private static DiffPlugin plugin;
 
-	/**
-	 * The constructor
-	 */
+	/** Default Constructor. */
 	public DiffPlugin() {
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * @see AbstractUIPlugin#stop(BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the plugin's shared instance.
 	 * 
-	 * @return the shared instance
+	 * @return
+	 * 			The plugin's shared instance.
 	 */
 	public static DiffPlugin getDefault() {
 		return plugin;
 	}
-
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import java.util.Iterator;
@@ -5,71 +15,66 @@ import java.util.Iterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.RemoveReferenceValue;
-import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for a diff element
+ * Merger for an {@link RemoveReferenceValue}.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class RemoveReferenceValueMerger extends AbstractMerger {
+public class RemoveReferenceValueMerger extends DefaultMerger {
 	/**
-	 * Constructs a merger
+	 * Constructs a merger for an {@link RemoveReferenceValue} operation.
 	 * 
-	 * @param element :
-	 *            the corresponding delta
+	 * @param element
+	 *            The element for which we create the merger.
 	 */
 	public RemoveReferenceValueMerger(DiffElement element) {
 		super(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 */
+	@Override
 	public void applyInOrigin() {
-		RemoveReferenceValue diff = (RemoveReferenceValue) this.diff;
-		EObject element = diff.getLeftElement();
+		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
+		final EObject element = diff.getLeftElement();
 		// Iterator oldTarget = getReferencesOrigins().iterator();
-		Iterator oldTarget = diff.getLeftRemovedTarget().iterator();
+		final Iterator oldTarget = diff.getLeftRemovedTarget().iterator();
 		while (oldTarget.hasNext()) {
 			try {
-				EFactory.eRemove(element, ( diff.getReference())
-						.getName(), oldTarget.next());
+				EFactory.eRemove(element, (diff.getReference()).getName(), oldTarget.next());
 			} catch (FactoryException e) {
 				EMFComparePlugin.getDefault().log(e, true);
 			}
 		}
-
 		super.applyInOrigin();
-
 	}
 
-	public boolean canApplyInOrigin() {
-		return true;
-	}
-
-	public boolean canUndoInTarget() {
-		return true;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 */
+	@Override
 	public void undoInTarget() {
-		RemoveReferenceValue diff = (RemoveReferenceValue) this.diff;
-		EObject element = diff.getRightElement();
+		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
+		final EObject element = diff.getRightElement();
 		if (canUndoInTarget()) {
-			{
-				Iterator newTarget = diff.getRightRemovedTarget().iterator();
-				while (newTarget.hasNext()) {
-					try {
-						EFactory.eAdd(element, ( diff.getReference())
-								.getName(), newTarget.next());
-					} catch (FactoryException e) {
-						EMFComparePlugin.getDefault().log(e, true);
-					}
+			final Iterator newTarget = diff.getRightRemovedTarget().iterator();
+			while (newTarget.hasNext()) {
+				try {
+					EFactory.eAdd(element, (diff.getReference()).getName(), newTarget.next());
+				} catch (FactoryException e) {
+					EMFComparePlugin.getDefault().log(e, true);
 				}
 			}
 			super.undoInTarget();
 		}
 	}
-
 }

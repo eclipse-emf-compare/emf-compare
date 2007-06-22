@@ -1,67 +1,60 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.DiffElement;
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.diff.RemoveModelElement;
 import org.eclipse.emf.compare.diff.RemoveReferenceValue;
-import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for a diff element
+ * Merger for a {@link RemoveModelElement}.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class RemoveModelElementMerger extends AbstractMerger {
+public class RemoveModelElementMerger extends DefaultMerger {
 	/**
-	 * Constructs a merger
+	 * Constructs a merger for an {@link RemoveModelElement} operation.
 	 * 
-	 * @param element :
-	 *            the corresponding delta
+	 * @param element
+	 *            The element for which we create the merger.
 	 */
 	public RemoveModelElementMerger(DiffElement element) {
 		super(element);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 */
+	@Override
 	public void applyInOrigin() {
-		RemoveModelElement diff = (RemoveModelElement) this.diff;
-		EObject element = diff.getLeftElement();
-		EObject parent = element.eContainer();
+		final RemoveModelElement diff = (RemoveModelElement)this.diff;
+		final EObject element = diff.getLeftElement();
+		final EObject parent = element.eContainer();
 		EcoreUtil.remove(element);
 
 		// now removes all the dangling references
-		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
-				.getRootContainer(parent).eResource()) {
-			private static final long serialVersionUID = 616050158241084372L;
-
-			{
-				crossReference();
-			}
-
-			protected boolean crossReference(EObject eObject,
-					EReference eReference, EObject crossReferencedEObject) {
-				return crossReferencedEObject.eResource() == null;
-			}
-		}.entrySet().iterator(); i.hasNext();) {
-			Map.Entry entry = (Map.Entry) i.next();
-			for (Iterator j = ((List) entry.getValue()).iterator(); j.hasNext();) {
-				EcoreUtil.remove((EStructuralFeature.Setting) j.next(), entry
-						.getKey());
-			}
-		}
+		removeFromContainer(element);
 
 		try {
 			EcoreUtil.getRootContainer(parent).eResource().save(new HashMap());
@@ -69,24 +62,22 @@ public class RemoveModelElementMerger extends AbstractMerger {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
 		super.applyInOrigin();
-
 	}
 
-	public boolean canApplyInOrigin() {
-		return true;
-	}
-
-	public boolean canUndoInTarget() {
-		return true;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public void undoInTarget() {
-		RemoveModelElement diff = (RemoveModelElement) this.diff;
+		final RemoveModelElement diff = (RemoveModelElement)this.diff;
 		// we should copy the element to the Origin one.
-		EObject origin = diff.getRightParent();
-		EObject element = diff.getLeftElement();
-		EObject newOne = EcoreUtil.copy(element);
-		EReference ref = element.eContainmentFeature();
+		final EObject origin = diff.getRightParent();
+		final EObject element = diff.getLeftElement();
+		final EObject newOne = EcoreUtil.copy(element);
+		final EReference ref = element.eContainmentFeature();
 		try {
 			EFactory.eAdd(origin, ref.getName(), newOne);
 		} catch (FactoryException e) {
@@ -100,19 +91,18 @@ public class RemoveModelElementMerger extends AbstractMerger {
 		}
 		// we should now have a look for RemovedReferencesLinks needing elements
 		// to apply
-		DiffModel log = (DiffModel) diff.eContainer();
-		Iterator siblings = log.eAllContents();
+		final DiffModel log = (DiffModel)diff.eContainer();
+		final Iterator siblings = log.eAllContents();
 		while (siblings.hasNext()) {
-			DiffElement op = (DiffElement) siblings.next();
+			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof RemoveReferenceValue) {
-				RemoveReferenceValue link = (RemoveReferenceValue) op;
+				final RemoveReferenceValue link = (RemoveReferenceValue)op;
 				// now if I'm in the target References I should put my copy in
 				// the origin
 				if (link.getLeftRemovedTarget().contains(element)) {
 					link.getLeftRemovedTarget().add(newOne);
 					try {
-						EcoreUtil.getRootContainer(link).eResource().save(
-								new HashMap());
+						EcoreUtil.getRootContainer(link).eResource().save(new HashMap());
 					} catch (IOException e) {
 						EMFComparePlugin.getDefault().log(e, true);
 					}
@@ -123,5 +113,4 @@ public class RemoveModelElementMerger extends AbstractMerger {
 		}
 		super.undoInTarget();
 	}
-
 }

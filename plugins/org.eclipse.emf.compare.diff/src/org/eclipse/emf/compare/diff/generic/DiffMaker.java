@@ -1,5 +1,5 @@
-/*  
- * Copyright (c) 2006, Obeo.
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- */
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,34 +41,84 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
- * This class is usefull when one want's to determine a diff from a matching
- * model
+ * This class is useful when one wants to determine a diff from a matching model.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DiffMaker implements DiffEngine {
 	/**
-	 * This hasmap is usefull to find the Match from any EObject instance
+	 * This hashmap is useful to find the Match from any EObject instance.
 	 */
-	private HashMap EObjectToMatch = new HashMap();
+	private HashMap<EObject, Match2Elements> eObjectToMatch = new HashMap<EObject, Match2Elements>();
 
 	/**
-	 * Fill the EObjectToMatch hashmap to retrieve matchings from left or right
-	 * EObject
+	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 
+	 * @param match
+	 *            The matching model
+	 * @return The corresponding diff model
+	 * @throws FactoryException
+	 */
+	@SuppressWarnings("unchecked")
+	public DiffModel doDiff(MatchModel match) {
+		updateEObjectToMatch(match);
+		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
+		// we have to browse the model and create the corresponding operations
+		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
+		final Resource leftModel = matchRoot.getLeftElement().eResource();
+		final Resource rightModel = matchRoot.getRightElement().eResource();
+
+		// creating the root modelchange
+		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+
+		// browsing the match model
+		doDiffDelegate(diffRoot, matchRoot);
+		// iterate over the unmached elements end determine if they have been
+		// added or removed.
+		final Iterator unMatched = match.getUnMatchedElements().iterator();
+		while (unMatched.hasNext()) {
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
+			if (unMatchElement.getElement().eResource() == leftModel) {
+				// add remove model element
+				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+				operation.setLeftElement(unMatchElement.getElement());
+				operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
+			}
+			if (unMatchElement.getElement().eResource() == rightModel) {
+				// add remove model element
+				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
+				final EObject addedElement = unMatchElement.getElement();
+				operation.setRightElement(addedElement);
+				final EObject targetParent = getMatchedEObject(addedElement.eContainer());
+
+				operation.setLeftParent(targetParent);
+				addInContainerPackage(diffRoot, operation, targetParent);
+			}
+		}
+
+		if (diffRoot.getSubDiffElements().size() == 0)
+			result.getOwnedElements().add(diffRoot);
+		else
+			result.getOwnedElements().add(diffRoot.getSubDiffElements().get(0));
+		// FIXME call diff extensions.
+		return result;
+	}
+
+	/**
+	 * Fill the <code>eObjectToMatch</code> hashmap to retrieve matchings from left or right EObject.
 	 */
 	private void updateEObjectToMatch(MatchModel match) {
-		Iterator rootElemIt = match.getMatchedElements().iterator();
+		final Iterator rootElemIt = match.getMatchedElements().iterator();
 		while (rootElemIt.hasNext()) {
-			Match2Elements matchRoot = (Match2Elements) rootElemIt.next();
-			EObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);
-			EObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
-			TreeIterator matchElemIt = matchRoot.eAllContents();
+			final Match2Elements matchRoot = (Match2Elements)rootElemIt.next();
+			eObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);
+			eObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
+			final TreeIterator matchElemIt = matchRoot.eAllContents();
 			while (matchElemIt.hasNext()) {
-				Match2Elements matchElem = (Match2Elements) matchElemIt.next();
-				EObjectToMatch.put(matchElem.getLeftElement(), matchElem);
-				EObjectToMatch.put(matchElem.getRightElement(), matchElem);
+				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
+				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);
+				eObjectToMatch.put(matchElem.getRightElement(), matchElem);
 			}
 		}
 
@@ -79,82 +128,17 @@ public class DiffMaker implements DiffEngine {
 	 * Return the matched EObject from the one given.
 	 * 
 	 * @param from
-	 *            the original EObject
-	 * @return the matched EObject
+	 *            The original EObject.
+	 * @return The matched EObject.
 	 */
 	private EObject getMatchedEObject(EObject from) {
-		Match2Elements matchElem = (Match2Elements) EObjectToMatch.get(from);
-		if (matchElem == null)
-			return null;
-		if (from == matchElem.getLeftElement())
-			return matchElem.getRightElement();
-		return matchElem.getLeftElement();
-
-	}
-
-	// private Map leftEContainerToUnMatch = new HashMap();
-
-	/**
-	 * Return a diffmodel created using the match model. This implementation is
-	 * a generic and simple one.
-	 * 
-	 * @param match
-	 *            the matching model
-	 * @return the corresponding diff model
-	 * @throws FactoryException
-	 */
-	public DiffModel doDiff(MatchModel match) {
-		updateEObjectToMatch(match);
-		DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
-		// we have to visit browse the model and create the corresponding
-		// operations
-		Resource leftModel = ((Match2Elements) match.getMatchedElements()
-				.get(0)).getLeftElement().eResource();
-		Resource rightModel = ((Match2Elements) match.getMatchedElements().get(
-				0)).getRightElement().eResource();
-
-		// creating the root modelchange
-		DiffGroup root = DiffFactory.eINSTANCE.createDiffGroup();
-		
-		// browsing the match model
-		doDiffDelegate(root, (Match2Elements) match.getMatchedElements().get(0));
-		// iterate over the unmached elements end determine if they has been
-		// added or removed.
-		Iterator unMatched = match.getUnMatchedElements().iterator();
-		while (unMatched.hasNext()) {
-			UnMatchElement unMatchElement = (UnMatchElement) unMatched.next();
-			if (unMatchElement.getElement().eResource() == leftModel) {
-				// add remove model element
-				RemoveModelElement operation = DiffFactory.eINSTANCE
-						.createRemoveModelElement();
-				operation.setLeftElement(unMatchElement.getElement());
-				operation.setRightParent(getMatchedEObject(unMatchElement
-						.getElement().eContainer()));
-				addInContainerPackage(root, operation, unMatchElement
-						.getElement().eContainer());
-				// root.getSubDiffElements().add(operation);
-			}
-			if (unMatchElement.getElement().eResource() == rightModel) {
-				// add remove model element
-				AddModelElement operation = DiffFactory.eINSTANCE
-						.createAddModelElement();
-				operation.setRightElement(unMatchElement.getElement());
-				EObject addedElement = unMatchElement.getElement();
-				EObject parent = addedElement.eContainer();
-				EObject targetParent = getMatchedEObject(parent);
-
-				operation.setLeftParent(targetParent);
-				addInContainerPackage(root, operation, targetParent);
-				// root.getSubDiffElements().add(operation);
-			}
-
-		}
-		
-		if (root.getSubDiffElements().size() == 0)
-			result.getOwnedElements().add(root);
-		else
-			result.getOwnedElements().add(root.getSubDiffElements().get(0));
-		return result;// FIXME Do something
+		EObject matchedEObject = null;
+		final Match2Elements matchElem = (Match2Elements)eObjectToMatch.get(from);
+		if (matchElem != null && from.equals(matchElem.getLeftElement()))
+			matchedEObject = matchElem.getRightElement();
+		else if (matchElem != null)
+			matchedEObject = matchElem.getLeftElement();
+		return matchedEObject;
 	}
 
 	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
@@ -168,258 +152,220 @@ public class DiffMaker implements DiffEngine {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
 		// we need to build this list to avoid concurrent modifications
-		Collection shouldAddToList = new ArrayList();
+		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
 		// we really have changes
 		if (current.getSubDiffElements().size() > 0) {
-			Iterator it2 = current.getSubDiffElements().iterator();
+			final Iterator it2 = current.getSubDiffElements().iterator();
 			while (it2.hasNext()) {
-				Object eObj = it2.next();
+				final Object eObj = it2.next();
 				if (!(eObj instanceof DiffGroup)) {
-					shouldAddToList.add(eObj);
+					shouldAddToList.add((DiffElement)eObj);
 				}
 			}
-			// root.getSubDiffElements().add(current);
-			Iterator opIt = shouldAddToList.iterator();
-			while (opIt.hasNext()) {
-				addInContainerPackage(root, (DiffElement) opIt.next(), current
-						.getLeftParent());
+			for (DiffElement diff : shouldAddToList) {
+				addInContainerPackage(root, diff, current.getLeftParent());
 			}
 		} else {
 			current = root;
 		}
 		// taking care of our childs
-		Iterator it = match.getSubMatchElements().iterator();
+		final Iterator it = match.getSubMatchElements().iterator();
 		while (it.hasNext()) {
-			Match2Elements element = (Match2Elements)it.next();
+			final Match2Elements element = (Match2Elements)it.next();
 			doDiffDelegate(root, element);
 		}
 
 	}
 
 	/**
-	 * Look for an already created diff group in order to add the operation, if
-	 * none exists, create one in the right place
+	 * Looks for an already created diff group in order to add the operation, if none exists, create one where
+	 * the operation belongs to.
 	 */
-	private void addInContainerPackage(DiffGroup root, DiffElement operation,
-			EObject targetParent) {
+	@SuppressWarnings("unchecked")
+	private void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
 		if (targetParent == null) {
 			root.getSubDiffElements().add(operation);
 			return;
 		}
-		DiffGroup targetGroup = findExistingGroup(root, targetParent);
+		final DiffGroup targetGroup = findExistingGroup(root, targetParent);
 		if (targetGroup == null) {
 			// we have to create the group
-			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(
-					operation);
-			// TODOCBR : reconstruct the whole hiearchy starting from the root
-			// or branch if a group already exists
-			// root.getSubDiffElements().add(targetGroup);
+			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(operation);
 		} else {
 			targetGroup.getSubDiffElements().add(operation);
 		}
-
 	}
 
+	@SuppressWarnings("unchecked")
 	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
-		// si j'ai un père, je relance buildGroup sur lui et je m'ajoute dans
-		// mon père, sinon
+		// if targetElement has a parent, we call buildgroup on it, else we add the current group to the root
 		DiffGroup curGroup = DiffFactory.eINSTANCE.createDiffGroup();
 		curGroup.setLeftParent(targetParent);
-		DiffGroup targetGroup = findExistingGroup(root, targetParent);
+		final DiffGroup targetGroup = findExistingGroup(root, targetParent);
 		if (targetGroup != null)
 			curGroup = targetGroup;
 		if (targetParent.eContainer() == null) {
 			root.getSubDiffElements().add(curGroup);
 			return curGroup;
 		} else {
-			buildHierarchyGroup(targetParent.eContainer(), root)
-					.getSubDiffElements().add(curGroup);
-
+			buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
 		}
 		return curGroup;
 	}
 
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
-		TreeIterator it = root.eAllContents();
+		final TreeIterator it = root.eAllContents();
 		while (it.hasNext()) {
-			EObject obj = (EObject) it.next();
-			if (obj instanceof DiffGroup)
-				if (((DiffGroup) obj).getLeftParent() == targetParent) {
-					return (DiffGroup) obj;
+			final EObject obj = (EObject)it.next();
+			if (obj instanceof DiffGroup) {
+				if (((DiffGroup)obj).getLeftParent() == targetParent) {
+					return (DiffGroup)obj;
 				}
-
+			}
 		}
 
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void checkForMove(DiffGroup root, Match2Elements matchElement) {
-		// TODOCBR check for moves in diffMaker
 		if (matchElement.getLeftElement().eContainer() != null
-				&& matchElement.getRightElement().eContainer() != null)
-			if (getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement
-					.getRightElement().eContainer())
-			// if
-			// (!ETools.getURI(matchElement.getLeftElement()).equals(ETools.getURI(matchElement.getRightElement())))
-			{
-				MoveModelElement operation = DiffFactory.eINSTANCE
-						.createMoveModelElement();
-				operation.setRightElement(matchElement.getRightElement());
-				operation.setLeftElement(matchElement.getLeftElement());
-				operation.setLeftParent(matchElement.getLeftElement()
-						.eContainer());
-				operation.setRightParent(matchElement.getRightElement()
-						.eContainer());
-				root.getSubDiffElements().add(operation);
-
-			}
+				&& matchElement.getRightElement().eContainer() != null
+				&& getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement
+						.getRightElement().eContainer()) {
+			final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
+			operation.setRightElement(matchElement.getRightElement());
+			operation.setLeftElement(matchElement.getLeftElement());
+			operation.setLeftParent(matchElement.getLeftElement().eContainer());
+			operation.setRightParent(matchElement.getRightElement().eContainer());
+			root.getSubDiffElements().add(operation);
+		}
 	}
 
-	/**
-	 * Check wether the attributes values have changed or not
-	 * 
-	 * @param root
-	 * @param mapping
-	 * @throws FactoryException
-	 */
-	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping)
-			throws FactoryException {
-
-		EObject eclass = mapping.getLeftElement().eClass();
+	@SuppressWarnings("unchecked")
+	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
+		final EObject eClass = mapping.getLeftElement().eClass();
 
 		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass) eclass).getEAllAttributes();
+		if (eClass instanceof EClass)
+			eclassAttributes = ((EClass)eClass).getEAllAttributes();
 		// for each feature, compare the value
-		Iterator it = eclassAttributes.iterator();
+		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
-			EAttribute next = (EAttribute) it.next();
+			final EAttribute next = (EAttribute)it.next();
 			if (!next.isDerived()) {
-				String attributeName = next.getName();
-				if (EFactory.eGet(mapping.getLeftElement(), attributeName) != null)
-					if (!EFactory.eGet(mapping.getLeftElement(), attributeName)
-							.equals(
-									EFactory.eGet(mapping.getRightElement(),
-											attributeName))) {
-						UpdateAttribute operation = DiffFactory.eINSTANCE
-								.createUpdateAttribute();
-						operation.setRightElement(mapping.getRightElement());
-						operation.setLeftElement(mapping.getLeftElement());
-						operation.setAttribute(next);
-						root.getSubDiffElements().add(operation);
-					}
+				final String attributeName = next.getName();
+				if (EFactory.eGet(mapping.getLeftElement(), attributeName) != null
+						&& !EFactory.eGet(mapping.getLeftElement(), attributeName).equals(
+								EFactory.eGet(mapping.getRightElement(), attributeName))) {
+					final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setAttribute(next);
+					root.getSubDiffElements().add(operation);
+				}
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
+		// for each reference, compare the targets
+		final Iterator it = mapping.getLeftElement().eClass().getEAllReferences().iterator();
+		while (it.hasNext()) {
+			final EReference next = (EReference)it.next();
+			final String referenceName = next.getName();
+			if (!next.isContainment() && !next.isDerived() && !next.isTransient()) {
+				final List leftElementReferences = EFactory.eGetAsList(mapping.getLeftElement(),
+						referenceName);
+				final List rightElementReferences = EFactory.eGetAsList(mapping.getRightElement(),
+						referenceName);
+
+				final List<EObject> deletedReferences = new ArrayList<EObject>();
+				final List<EObject> addedReferences = new ArrayList<EObject>();
+				if (leftElementReferences != null)
+					deletedReferences.addAll(leftElementReferences);
+				if (rightElementReferences != null)
+					addedReferences.addAll(rightElementReferences);
+				
+				final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
+				final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
+
+				// "Added" references are the references from the left element that can't be mapped
+				addedReferences.removeAll(matchedOldReferences);
+				// "deleted" references are the references from the right element that can't be mapped
+				deletedReferences.removeAll(matchedNewReferences);
+				
+				// Double check for objects defined in a different model and thus not matched
+				// We'll use a new list to keep track of theses elements !avoid concurrent modification!
+				final List<EObject> remoteMatchedElements = new ArrayList<EObject>();
+				for (EObject deleted : deletedReferences) {
+					if (addedReferences.contains(deleted)) {
+						remoteMatchedElements.add(deleted);
+					}
+				}
+				addedReferences.removeAll(remoteMatchedElements);
+				deletedReferences.removeAll(remoteMatchedElements);
+				
+				//TODO changedReference
+				if (addedReferences.size() > 0) {
+					root.getSubDiffElements().add(createNewReferencesOperation(mapping, next, addedReferences));
+				}
+				if (deletedReferences.size() > 0) {
+					root.getSubDiffElements().add(createRemovedReferencesOperation(mapping, next, deletedReferences));
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private AddReferenceValue createNewReferencesOperation(Match2Elements mapping, EReference newReference, List<EObject> addedReferences) {
+		final AddReferenceValue operation = DiffFactory.eINSTANCE.createAddReferenceValue();
+		operation.setLeftElement(mapping.getLeftElement());
+		operation.setRightElement(mapping.getRightElement());
+		operation.setReference(newReference);
+		for (final Iterator addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator.hasNext(); ) {
+			final Object eobj = addedReferenceIterator.next();
+			operation.getRightAddedTarget().add(eobj);
+			if (getMatchedEObject((EObject)eobj) != null)
+				operation.getLeftAddedTarget().add(getMatchedEObject((EObject)eobj));
+		}
+		return operation;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private RemoveReferenceValue createRemovedReferencesOperation(Match2Elements mapping, EReference removedReference, List<EObject> deletedReferences) {
+		final RemoveReferenceValue deloperation = DiffFactory.eINSTANCE
+		.createRemoveReferenceValue();
+		deloperation.setRightElement(mapping.getRightElement());
+		deloperation.setLeftElement(mapping.getLeftElement());
+		deloperation.setReference(removedReference);
+		for (final Iterator deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator.hasNext(); ) {
+			final Object eobj = deletedReferenceIterator.next();
+			deloperation.getLeftRemovedTarget().add(eobj);
+			if ((getMatchedEObject((EObject)eobj)) != null)
+				deloperation.getRightRemovedTarget().add(getMatchedEObject((EObject)eobj));
+		}
+		return deloperation;
 	}
 
 	/**
-	 * Check wether the references values have changed or not
+	 * Returns the list of references from the given list that can be matched.
 	 * 
-	 * @param root
-	 * @param mapping
-	 * @throws FactoryException
+	 * @param references
+	 * 			{@link List} of the references to match.
+	 * @return The list of references from the given list that can be matched.
 	 */
-	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping)
-			throws FactoryException {
-		// for each reference, compare the targets
-		boolean break_process = false;
-		Iterator it = mapping.getLeftElement().eClass().getEAllReferences().iterator();
-		while (it.hasNext()) {
-			EReference next = (EReference) it.next();
-			String referenceName = next.getName();
-			if (!next.isContainment() && !next.isDerived()
-					&& !next.isTransient()) {
-				List leftElementReferences = EFactory.eGetAsList(mapping
-						.getLeftElement(), referenceName);
-				List rightElementReferences = EFactory.eGetAsList(mapping
-						.getRightElement(), referenceName);
-				
-				List<EObject> oldReferences = new ArrayList<EObject>();
-				List<EObject> newReferences = new ArrayList<EObject>();
-				List mappedOldReferences = new ArrayList();
-				List mappedNewReferences = new ArrayList();
-				
-				if (leftElementReferences != null)
-					oldReferences.addAll(leftElementReferences);
-				if (rightElementReferences != null)
-					newReferences.addAll(rightElementReferences);
-				
-				// For each of the old reference
-				// if the linked element is not linked using the new references
-				// then a reference has been added
-				Iterator oldRef = oldReferences.iterator();
-				while (oldRef.hasNext()) {
-					Object curRef = oldRef.next();
-					if (curRef != null) {
-						EObject curMapping = getMatchedEObject((EObject) curRef);
-						if (curMapping == null) {
-							break_process = true;
-						}
-						mappedOldReferences.add(curMapping);
-					}
-				}
-				Iterator newRef = newReferences.iterator();
-				while (newRef.hasNext()) {
-					Object curRef = newRef.next();
-					if (curRef != null) {
-						EObject curMapping = getMatchedEObject((EObject) curRef);
-						if (curMapping == null) {
-							break_process = true;
-						}
-						mappedNewReferences.add(curMapping);
-					}
-				}
-				// new References is now added references
-				newReferences.removeAll(mappedOldReferences);
-				// old References is now removed references
-				oldReferences.removeAll(mappedNewReferences);
-				if (newReferences.size() + oldReferences.size() != 0) {
-					AddReferenceValue operation = DiffFactory.eINSTANCE
-							.createAddReferenceValue();
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightElement(mapping.getRightElement());
-					operation.setReference(next);
-					newRef = newReferences.iterator();
-					while (newRef.hasNext()) {
-						Object eobj = newRef.next();
-						operation.getRightAddedTarget().add((eobj));
-						if ((getMatchedEObject((EObject) eobj)) != null)
-							operation.getLeftAddedTarget().add(
-									(getMatchedEObject((EObject) eobj)));
-						// EFactory.eAdd(operation, "referencesOrigins",
-						// );
-					}
-					if (newReferences.size() > 0 && !break_process)
-						root.getSubDiffElements().add(operation);
-					// Remove references
-					RemoveReferenceValue deloperation = DiffFactory.eINSTANCE
-							.createRemoveReferenceValue();
-					deloperation.setRightElement(mapping.getRightElement());
-					deloperation.setLeftElement(mapping.getLeftElement());
-					deloperation.setReference(next);
-					oldRef = oldReferences.iterator();
-					while (oldRef.hasNext()) {
-						Object eobj = oldRef.next();
-						// TODOCBR check that and fix
-						if ((getMatchedEObject((EObject) eobj)) != null) {
-							deloperation.getLeftRemovedTarget().add((eobj));
-							deloperation.getRightRemovedTarget().add(
-									getMatchedEObject((EObject) eobj));
-						}
-						// EFactory.eAdd(deloperation, "referencesTargets",
-						// ((Match2Elements)
-						// getMatchedEObject((EObject)eobj)).getRightElement());
-						// EFactory.eAdd(deloperation, "referencesOrigins",
-						// eobj);
-					}
-					if (oldReferences.size() > 0 && !break_process)
-						root.getSubDiffElements().add(deloperation);
-
-				}
+	private List<EObject> getMatchedReferences(List<EObject> references) {
+		final List<EObject> matchedReferences = new ArrayList<EObject>();
+		for (final Iterator refIterator = references.iterator(); refIterator.hasNext(); ) {
+			final Object currentReference = refIterator.next();
+			if (currentReference != null) {
+				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
+				if (currentMapped != null)
+					matchedReferences.add(currentMapped);
 			}
 		}
-
+		return matchedReferences;
 	}
-
 }
-

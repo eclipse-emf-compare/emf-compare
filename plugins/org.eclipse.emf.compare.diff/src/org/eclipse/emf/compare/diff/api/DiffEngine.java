@@ -1,5 +1,5 @@
-/*  
- * Copyright (c) 2006, Obeo.
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,19 +7,17 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- */
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.api;
 
 import org.eclipse.emf.compare.diff.DiffModel;
 import org.eclipse.emf.compare.match.MatchModel;
-import org.eclipse.emf.compare.util.FactoryException;
 
 /**
  * A Diff engine has the responsability to provide a diff (or delta) model from
- * a matching model
+ * a matching model.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public interface DiffEngine {
 	/**
@@ -31,5 +29,5 @@ public interface DiffEngine {
 	 * @return the corresponding diff model
 	 * @throws FactoryException
 	 */
-	public DiffModel doDiff(MatchModel match);
+	DiffModel doDiff(MatchModel match);
 }

@@ -1,5 +1,5 @@
-/*  
- * Copyright (c) 2006, Obeo.
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- */
+ *******************************************************************************/
 package org.eclipse.emf.compare.merge.api;
 
 import java.util.Iterator;
@@ -21,110 +21,75 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Abstract class for every merger
+ * Abstract class for every merger implementation.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class AbstractMerger {
-	protected DiffElement diff = null;
+public abstract class AbstractMerger {
+	protected DiffElement diff;
 
 	/**
-	 * Create a merger from a delta
+	 * Create a merger from a given {@link DiffElement}.
 	 * 
 	 * @param element
+	 *            the {@link DiffElement} we need a merger for.
 	 */
 	public AbstractMerger(DiffElement element) {
 		diff = element;
 	}
 
 	/**
-	 * Undo the difference in the target (right) model
-	 * 
+	 * Cancels the modification in the target (right) model.
 	 */
-	public void undoInTarget() {
-		removeFromContainer(diff);
-
-	}
+	public abstract void undoInTarget();
 
 	/**
-	 * Apply the difference in the original (left) model
-	 * 
+	 * Applies the modification in the original (left) model.
 	 */
-	public void applyInOrigin() {
-		removeFromContainer(diff);
-	}
+	public abstract void applyInOrigin();
 
 	/**
-	 * Return true if one can apply the difference in the original model
+	 * Returns <code>True</code> if the merger is allowed to apply changes in the origin (left) model.
 	 * 
-	 * @return true if the merger is able to apply in origin
+	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model,
+	 *         <code>False</code> otherwise.
 	 */
-	public boolean canApplyInOrigin() {
-		return true;
-	}
+	public abstract boolean canApplyInOrigin();
 
 	/**
-	 * Return true if one can undo the difference in the target model
+	 * Returns <code>True</code> if the merger is allowed to undo changes in the target (right) model.
 	 * 
-	 * @return true if the merger is able to undo in target
+	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model,
+	 *         <code>False</code> otherwise.
 	 */
-	public boolean canUndoInTarget() {
-		return true;
-	}
-
-	/**
-	 * Set the element to merge
-	 */
-	public void setDiffElement(DiffElement elem) {
-		diff = elem;
-	}
+	public abstract boolean canUndoInTarget();
 
 	protected void removeFromContainer(EObject obj) {
-
-		EObject parent = obj.eContainer();
+		final EObject parent = obj.eContainer();
 		EcoreUtil.remove(obj);
 
 		// now removes all the dangling references
-		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
-				.getRootContainer(parent).eResource()) {
-			private static final long serialVersionUID = -6324609614260707598L;
-
-			{
-				crossReference();
-			}
-
-			protected boolean crossReference(EObject eObject,
-					EReference eReference, EObject crossReferencedEObject) {
-				return crossReferencedEObject.eResource() == null;
-			}
-		}.entrySet().iterator(); i.hasNext();) {
-			Map.Entry entry = (Map.Entry) i.next();
-			for (Iterator j = ((List) entry.getValue()).iterator(); j.hasNext();) {
-				EcoreUtil.remove((EStructuralFeature.Setting) j.next(), entry
-						.getKey());
-			}
-		}
+		removeDanglingReferences(parent);
 	}
 
 	protected void removeDanglingReferences(EObject deletedObject) {
-		for (Iterator i = new EcoreUtil.CrossReferencer(EcoreUtil
-				.getRootContainer(deletedObject).eResource()) {
-			private static final long serialVersionUID = 769922667795187353L;
-
+		EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(EcoreUtil.getRootContainer(deletedObject).eResource()) {
+			private static final long serialVersionUID = 616050158241084372L;
+			
 			{
 				crossReference();
 			}
 
-			protected boolean crossReference(EObject eObject,
-					EReference eReference, EObject crossReferencedEObject) {
+			@Override
+			protected boolean crossReference(EObject eObject, EReference eReference,
+					EObject crossReferencedEObject) {
 				return crossReferencedEObject.eResource() == null;
 			}
-		}.entrySet().iterator(); i.hasNext();) {
-			Map.Entry entry = (Map.Entry) i.next();
-			for (Iterator j = ((List) entry.getValue()).iterator(); j.hasNext();) {
-				EcoreUtil.remove((EStructuralFeature.Setting) j.next(), entry
-						.getKey());
+		};
+		for (final Iterator i = referencer.entrySet().iterator(); i.hasNext(); ) {
+			final Map.Entry entry = (Map.Entry)i.next();
+			for (final Iterator j = ((List)entry.getValue()).iterator(); j.hasNext(); ) {
+				EcoreUtil.remove((EStructuralFeature.Setting)j.next(), entry.getKey());
 			}
 		}
 	}

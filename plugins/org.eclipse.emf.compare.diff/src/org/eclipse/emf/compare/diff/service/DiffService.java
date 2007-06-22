@@ -1,5 +1,5 @@
-/*  
- * Copyright (c) 2006, Obeo.
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- */
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,19 +23,20 @@ import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.match.MatchModel;
 
 /**
- * TODOCBR doc
+ * TODOCBR comment.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DiffService {
+	private static final String TAG_ENGINE = "engine"; //$NON-NLS-1$
+
 	// The shared instance
 	private static DiffService service;
 
-	private Collection engines = new ArrayList();
+	private List<EngineDescriptor> engines = new ArrayList<EngineDescriptor>();
 
 	/**
-	 * The constructor
+	 * Default constructor.
 	 */
 	public DiffService() {
 		service = this;
@@ -44,18 +44,15 @@ public class DiffService {
 	}
 
 	private void parseExtensionMetadata() {
-		IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint(DiffPlugin.PLUGIN_ID, "engine")
-				.getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				DiffPlugin.PLUGIN_ID, "engine").getExtensions(); //$NON-NLS-1$
 		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] configElements = extensions[i]
-					.getConfigurationElements();
+			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
-				EngineDescriptor desc = parseEngine(configElements[j]);
+				final EngineDescriptor desc = parseEngine(configElements[j]);
 				storeEngineDescriptor(desc);
 			}
 		}
-
 	}
 
 	private void storeEngineDescriptor(EngineDescriptor desc) {
@@ -63,28 +60,27 @@ public class DiffService {
 	}
 
 	private EngineDescriptor getBestDescriptor() {
-		return getHighestDescriptor((List) (engines));
+		return getHighestDescriptor(engines);
 	}
 
-	private EngineDescriptor getHighestDescriptor(List set) {
+	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
-			return (EngineDescriptor) set.get(0);
+			return (EngineDescriptor)set.get(0);
 		return null;
 	}
-
-	private static final String TAG_ENGINE = "engine";
 
 	private EngineDescriptor parseEngine(IConfigurationElement configElements) {
 		if (!configElements.getName().equals(TAG_ENGINE))
 			return null;
-		EngineDescriptor desc = new EngineDescriptor(configElements);
+		final EngineDescriptor desc = new EngineDescriptor(configElements);
 		return desc;
 	}
 
 	/**
+	 * Returns the singleton instance.
 	 * 
-	 * @return the singleton instance
+	 * @return The singleton instance.
 	 */
 	public static DiffService getInstance() {
 		if (service == null)
@@ -93,28 +89,29 @@ public class DiffService {
 	}
 
 	/**
-	 * Build diff model from a match model
+	 * Builds a {@link DiffModel} from a {@link MatchModel}.
 	 * 
 	 * @param match
-	 * @return the corresponding diff model
+	 *            The {@link MatchModel} from which the diff will be created.
+	 * @return The corresponding {@link DiffModel}.
 	 */
 	public DiffModel doDiff(MatchModel match) {
 		DiffModel result = null;
-		EngineDescriptor desc = getBestDescriptor();
-		DiffEngine currentEngine = desc.getEngineInstance();
+		final EngineDescriptor desc = getBestDescriptor();
+		final DiffEngine currentEngine = desc.getEngineInstance();
 		result = currentEngine.doDiff(match);
 		return result;
 	}
 
 	/**
-	 * Return the best diff engine from a file extension
+	 * Returns the best {@link DiffEngine} from a file extension.
 	 * 
 	 * @param extension
-	 * @return the best diff engine
+	 *            The extension of the file we need a {@link DiffEngine} for.
+	 * @return The best {@link DiffEngine} for the given file extension.
 	 */
 	public DiffEngine getBestDiffEngine(String extension) {
-		EngineDescriptor desc = getBestDescriptor();
+		final EngineDescriptor desc = getBestDescriptor();
 		return desc.getEngineInstance();
 	}
-
 }
