@@ -303,7 +303,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @return an int meaning the number of siblings elements I will look in
 	 */
 	private int getDefaultSearchWindow() {
-		return 100;
+		return EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window"); //$NON-NLS-1$
 	}
 
 	/**
