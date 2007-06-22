@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.compare.diff.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorLauncher;
