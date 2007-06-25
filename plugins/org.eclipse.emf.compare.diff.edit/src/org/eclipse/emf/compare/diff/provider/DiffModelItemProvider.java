@@ -203,6 +203,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateReference()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue()));
 	}
 
 	/**

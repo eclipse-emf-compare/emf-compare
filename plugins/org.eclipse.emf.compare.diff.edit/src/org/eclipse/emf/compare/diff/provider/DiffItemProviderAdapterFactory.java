@@ -408,6 +408,28 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UpdateUniqueReferenceValueItemProvider updateUniqueReferenceValueItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Adapter createUpdateUniqueReferenceValueAdapter() {
+		if (updateUniqueReferenceValueItemProvider == null) {
+			updateUniqueReferenceValueItemProvider = new UpdateUniqueReferenceValueItemProvider(this);
+		}
+
+		return updateUniqueReferenceValueItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -555,6 +577,8 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			removeReferenceValueItemProvider.dispose();
 		if (updateReferenceItemProvider != null)
 			updateReferenceItemProvider.dispose();
+		if (updateUniqueReferenceValueItemProvider != null)
+			updateUniqueReferenceValueItemProvider.dispose();
 		if (modelInputSnapshotItemProvider != null)
 			modelInputSnapshotItemProvider.dispose();
 	}
