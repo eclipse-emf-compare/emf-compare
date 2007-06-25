@@ -238,47 +238,48 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
 		boolean similar = false;
-
-		// Defines all thresholds as constants.
+		
 		final double relationsThreshold = 0.9d;
 		final double nameThreshold = 0.2d;
-		final double triWayThreshold = 0.8d;
 		final double softContentThreshold = 0.59d;
-		final double strongContentTheshold = 0.9d;
-
-		// Selects the content and general Threshold to consider
+		final double strongContentThreshold = 0.9d;
+		final double softTriWayThreshold = 0.8d;
+		final double strongTriWayThreshold = 0.9d;
+		
 		double contentThreshold = softContentThreshold;
+		double triWayThreshold = softTriWayThreshold;
 		double generalThreshold = THRESHOLD;
 		if (currentStrategy == STRONG_STRATEGY) {
-			contentThreshold = strongContentTheshold;
+			contentThreshold = strongContentThreshold;
+			triWayThreshold = strongTriWayThreshold;
 			generalThreshold = STRONGER_THRESHOLD;
 		}
-
+		
 		if (haveSameXmiId(obj1, obj2)) {
 			similar = true;
 		} else {
 			final double nameSimilarity = nameSimilarity(obj1, obj2);
 			final boolean hasSameUri = hasSameUri(obj1, obj2);
+
 			if (nameSimilarity == 1 && hasSameUri) {
 				similar = true;
 			} else {
 				final double contentSimilarity = contentSimilarity(obj1, obj2);
 				final double relationsSimilarity = relationsSimilarity(obj1, obj2);
-
-				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold) {
+	
+				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold && nameSimilarity > nameThreshold) {
 					similar = true;
 				} else if (relationsSimilarity == 1 && hasSameUri) {
 					similar = true;
-				} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold
-						&& nameSimilarity > nameThreshold) {
+				} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
 					similar = true;
-				} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
-						&& relationsSimilarity > triWayThreshold) {
+				} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold && relationsSimilarity > triWayThreshold) {
 					similar = true;
-				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
-						&& typeSimilarity(obj1, obj2) > generalThreshold) {
+				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold && typeSimilarity(obj1, obj2) > generalThreshold) {
 					similar = true;
 				}
+	
+				return false;
 			}
 		}
 		return similar;
