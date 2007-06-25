@@ -65,7 +65,7 @@ public class MergeService {
 	private FactoryDescriptor getHighestDescriptor(List<FactoryDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
-			return (FactoryDescriptor)set.get(0);
+			return set.get(0);
 		return null;
 	}
 

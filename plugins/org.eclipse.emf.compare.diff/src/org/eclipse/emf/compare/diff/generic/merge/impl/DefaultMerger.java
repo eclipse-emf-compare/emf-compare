@@ -34,6 +34,7 @@ public class DefaultMerger extends AbstractMerger {
 	 *
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
 	 */
+	@Override
 	public void undoInTarget() {
 		removeFromContainer(diff);
 	}
@@ -43,6 +44,7 @@ public class DefaultMerger extends AbstractMerger {
 	 *
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
 	 */
+	@Override
 	public void applyInOrigin() {
 		removeFromContainer(diff);
 	}
@@ -52,6 +54,7 @@ public class DefaultMerger extends AbstractMerger {
 	 *
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#canApplyInOrigin()
 	 */
+	@Override
 	public boolean canApplyInOrigin() {
 		return true;
 	}
@@ -61,6 +64,7 @@ public class DefaultMerger extends AbstractMerger {
 	 *
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#canUndoInTarget()
 	 */
+	@Override
 	public boolean canUndoInTarget() {
 		return true;
 	}

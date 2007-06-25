@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.merge.service;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.api.DiffExtension;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
+import org.eclipse.emf.compare.util.EngineConstants;
 
 /**
  * Descriptor class for {@link MergeFactory} contribution.
@@ -88,15 +88,15 @@ public class FactoryDescriptor implements Comparable {
 	private int getPriorityValue(String value) {
 		if (value == null)
 			throw new IllegalArgumentException("Priority cannot be null."); //$NON-NLS-1$
-		int priorityValue = DiffExtension.PRIORITY_NORMAL;
+		int priorityValue = EngineConstants.PRIORITY_NORMAL;
 		if (value.equals("lowest")) { //$NON-NLS-1$
-			priorityValue = DiffExtension.PRIORITY_LOWEST;
+			priorityValue = EngineConstants.PRIORITY_LOWEST;
 		} else if (value.equals("low")) { //$NON-NLS-1$
-			priorityValue = DiffExtension.PRIORITY_LOW;
+			priorityValue = EngineConstants.PRIORITY_LOW;
 		} else if (value.equals("high")) { //$NON-NLS-1$
-			priorityValue = DiffExtension.PRIORITY_HIGH;
+			priorityValue = EngineConstants.PRIORITY_HIGH;
 		} else if (value.equals("highest")) { //$NON-NLS-1$
-			priorityValue = DiffExtension.PRIORITY_HIGHEST;
+			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;
 	}
@@ -116,9 +116,7 @@ public class FactoryDescriptor implements Comparable {
 		if (priority != null)
 			priorityHash = priority.hashCode();
 		
-		int result = 1;
-		result = ((prime + classNameHash) + priorityHash) * prime;
-		return result;
+		return (prime + classNameHash) * prime + priorityHash;
 	}
 
 	/**

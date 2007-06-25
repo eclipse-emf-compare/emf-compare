@@ -66,7 +66,7 @@ public class DiffService {
 	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
-			return (EngineDescriptor)set.get(0);
+			return set.get(0);
 		return null;
 	}
 
@@ -104,7 +104,7 @@ public class DiffService {
 	}
 
 	/**
-	 * Returns the best {@link DiffEngine} from a file extension.
+	 * Returns the best {@link DiffEngine} for a file extension.
 	 * 
 	 * @param extension
 	 *            The extension of the file we need a {@link DiffEngine} for.

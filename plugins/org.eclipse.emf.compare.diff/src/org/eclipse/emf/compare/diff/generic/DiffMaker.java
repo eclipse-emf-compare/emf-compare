@@ -133,7 +133,7 @@ public class DiffMaker implements DiffEngine {
 	 */
 	private EObject getMatchedEObject(EObject from) {
 		EObject matchedEObject = null;
-		final Match2Elements matchElem = (Match2Elements)eObjectToMatch.get(from);
+		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null && from.equals(matchElem.getLeftElement()))
 			matchedEObject = matchElem.getRightElement();
 		else if (matchElem != null)
@@ -207,9 +207,8 @@ public class DiffMaker implements DiffEngine {
 		if (targetParent.eContainer() == null) {
 			root.getSubDiffElements().add(curGroup);
 			return curGroup;
-		} else {
-			buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
 		}
+		buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
 		return curGroup;
 	}
 
