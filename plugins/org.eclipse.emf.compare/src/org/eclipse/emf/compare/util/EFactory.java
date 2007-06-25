@@ -332,12 +332,10 @@ public class EFactory {
 	 */
 	public static EStructuralFeature eStructuralFeature(EObject object, String name) throws FactoryException {
 		final EStructuralFeature structuralFeature = object.eClass().getEStructuralFeature(name);
-		if (structuralFeature != null) {
+		if (structuralFeature != null)
 			return structuralFeature;
-		} else {
-			throw new FactoryException("The link '" + name + "' doesn't exist in the class '" //$NON-NLS-1$ //$NON-NLS-2$
-					+ object.eClass().getName() + "'"); //$NON-NLS-1$
-		}
+		throw new FactoryException("The link '" + name + "' doesn't exist in the class '" //$NON-NLS-1$ //$NON-NLS-2$
+				+ object.eClass().getName() + "'"); //$NON-NLS-1$
 	}
 
 	/**
@@ -355,8 +353,7 @@ public class EFactory {
 		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof EObject)
 			return (EObject)eGet;
-		else
-			return null;
+		return null;
 	}
 
 	/**
@@ -374,8 +371,7 @@ public class EFactory {
 		final Object eGet = eGet(object, name);
 		if (eGet != null)
 			return eGet.toString();
-		else
-			return null;
+		return null;
 	}
 
 	/**
@@ -393,8 +389,7 @@ public class EFactory {
 		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Boolean)
 			return (Boolean)eGet;
-		else
-			return null;
+		return null;
 	}
 
 	/**
@@ -412,8 +407,7 @@ public class EFactory {
 		final Object eGet = eGet(object, name);
 		if (eGet != null && eGet instanceof Integer)
 			return (Integer)eGet;
-		else
-			return null;
+		return null;
 	}
 
 	/**
@@ -565,7 +559,7 @@ public class EFactory {
 			final Object eGet = eGet(object, name);
 			if (eGet != null && eGet instanceof List) {
 				exists = ((List)eGet).contains(arg);
-			} else {
+			} else if (eGet != null) {
 				exists = eGet.equals(arg);
 			}
 		} catch (FactoryException e) {

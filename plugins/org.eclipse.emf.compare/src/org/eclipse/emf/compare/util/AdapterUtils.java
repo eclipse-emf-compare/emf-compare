@@ -50,7 +50,7 @@ public final class AdapterUtils {
 	public static AdapterFactory findAdapterFactory(String nsURI) {
 		AdapterFactory adapterFactory = null;
 		if (factories.containsKey(nsURI))
-			adapterFactory = ((AdapterFactoryDescriptor)factories.get(nsURI)).getAdapterInstance();
+			adapterFactory = factories.get(nsURI).getAdapterInstance();
 		return adapterFactory;
 	}
 

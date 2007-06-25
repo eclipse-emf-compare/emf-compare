@@ -40,6 +40,7 @@ public class EMFComparePlugin extends Plugin {
 	 * 
 	 * @see Plugin#start(BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
@@ -49,6 +50,7 @@ public class EMFComparePlugin extends Plugin {
 	 * 
 	 * @see Plugin#stop(BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

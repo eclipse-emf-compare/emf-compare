@@ -52,30 +52,26 @@ public final class ETools {
 	 */
 	public static String getURI(EObject eObject) {
 		EObject object = eObject;
-		if (object.eResource() != null) {
+		if (object.eResource() != null)
 			return object.eResource().getURIFragment(object);
-		} else {
-			// inspired from EMF sources
-			final StringBuffer result = new StringBuffer("//"); //$NON-NLS-1$
-			final List<String> uriFragmentPath = new ArrayList<String>();
-			for (EObject container = object.eContainer(); container != null; container = object.eContainer()) {
-				uriFragmentPath.add(((InternalEObject)container).eURIFragmentSegment(object
-						.eContainmentFeature(), object));
-				object = container;
-			}
-			final int size = uriFragmentPath.size();
-			if (size > 0) {
-				for (int i = size - 1;; --i) {
-					result.append((String)uriFragmentPath.get(i));
-					if (i == 0) {
-						break;
-					} else {
-						result.append('/');
-					}
-				}
-			}
-			return result.toString();
+		// inspired from EMF sources
+		final StringBuffer result = new StringBuffer("//"); //$NON-NLS-1$
+		final List<String> uriFragmentPath = new ArrayList<String>();
+		for (EObject container = object.eContainer(); container != null; container = object.eContainer()) {
+			uriFragmentPath.add(((InternalEObject)container).eURIFragmentSegment(object
+					.eContainmentFeature(), object));
+			object = container;
 		}
+		final int size = uriFragmentPath.size();
+		if (size > 0) {
+			for (int i = size - 1;; --i) {
+				result.append(uriFragmentPath.get(i));
+				if (i == 0)
+					break;
+				result.append('/');
+			}
+		}
+		return result.toString();
 	}
 
 	/**
@@ -216,11 +212,9 @@ public final class ETools {
 	 * @return The feature resolved with the given name.
 	 */
 	public static EStructuralFeature getEStructuralFeature(EClassifier currentEClassifier, String name) {
-		if (currentEClassifier != null && currentEClassifier instanceof EClass) {
+		if (currentEClassifier != null && currentEClassifier instanceof EClass)
 			return getEStructuralFeature((EClass)currentEClassifier, name);
-		} else {
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -234,11 +228,9 @@ public final class ETools {
 	 */
 	public static EStructuralFeature getEStructuralFeature(EClass currentEClass, String featureName) {
 		final String name = featureName.trim();
-		if (currentEClass != null) {
+		if (currentEClass != null)
 			return currentEClass.getEStructuralFeature(name);
-		} else {
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -402,11 +394,9 @@ public final class ETools {
 	 *         <code>False</code> otherwise.
 	 */
 	public static boolean ofType(EClassifier classifier, String type) {
-		if (classifier instanceof EClass) {
+		if (classifier instanceof EClass)
 			return ofType((EClass)classifier, type);
-		} else {
-			return ofClass(classifier, type);
-		}
+		return ofClass(classifier, type);
 	}
 
 	/**
