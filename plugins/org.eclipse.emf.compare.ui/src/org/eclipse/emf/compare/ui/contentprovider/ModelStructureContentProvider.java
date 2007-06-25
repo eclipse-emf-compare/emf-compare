@@ -29,6 +29,8 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -138,16 +140,18 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			final ITypedElement right = ((ICompareInput)newInput).getRight();
 
 			try {
-				if (left instanceof ResourceNode &&
-						right instanceof ResourceNode) {
-					leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath());
-					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath());
-				} else if (left instanceof IStreamContentAccessor &&
-						right instanceof IStreamContentAccessor) {
+				final ResourceSet modelResourceSet = new ResourceSetImpl();
+				if (left instanceof ResourceNode && right instanceof ResourceNode) {
+					leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+							modelResourceSet);
+					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+							modelResourceSet);
+				} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
 					// this is the case of SVN/CVS comparison, we invert left and right.
-					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName());
+					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
+							left.getName(), modelResourceSet);
 					leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
-							.getName());
+							.getName(), modelResourceSet);
 					final String leftLabel = configuration.getRightLabel(rightModel);
 					configuration.setRightLabel(configuration.getLeftLabel(leftModel));
 					configuration.setLeftLabel(leftLabel);
@@ -161,7 +165,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 									final MatchModel match = new MatchService().doMatch(leftModel,
 											rightModel, monitor);
 									final DiffModel diff = new DiffMaker().doDiff(match);
-									
+
 									snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 									snapshot.setDiff(diff);
 									snapshot.setMatch(match);

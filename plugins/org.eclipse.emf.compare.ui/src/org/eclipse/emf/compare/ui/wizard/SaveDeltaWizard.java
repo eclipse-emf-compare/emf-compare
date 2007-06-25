@@ -18,8 +18,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
-import org.eclipse.emf.compare.ui.ModelCompareInput;
-import org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;

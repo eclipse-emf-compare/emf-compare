@@ -19,7 +19,6 @@ import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -57,21 +56,22 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		partSide = side;
 		
 		setLabelProvider(new PropertyLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
-		final GC gc = new GC(parent);
-		gc.setFont(parent.getFont());
-		final FontMetrics fontMetrics = gc.getFontMetrics();
-		gc.dispose();
 
 		setUseHashlookup(true);
 		getTable().setLinesVisible(true);
 		getTable().setHeaderVisible(true);
+		
+		final GC gc = new GC(getTable());
+		gc.setFont(getTable().getFont());
+		final FontMetrics metrics = gc.getFontMetrics();
+		gc.dispose();
 
 		final TableColumn nameColumn = new TableColumn(getTable(), SWT.LEFT);
 		nameColumn.setText("Attribute Name"); //$NON-NLS-1$
-		nameColumn.setWidth(Dialog.convertWidthInCharsToPixels(fontMetrics, nameColumn.getText().length() + 1));
+		nameColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, nameColumn.getText().length() * 3));
 		final TableColumn weightsColumn = new TableColumn(getTable(), SWT.RIGHT);
 		weightsColumn.setText("Value"); //$NON-NLS-1$
-		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(fontMetrics, weightsColumn.getText().length() + 1));
+		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, weightsColumn.getText().length() * 3));
 		
 		getTable().addPaintListener(new PropertyTablePaintListener());
 	}

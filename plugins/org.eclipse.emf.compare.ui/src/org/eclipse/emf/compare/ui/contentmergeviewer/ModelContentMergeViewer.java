@@ -60,7 +60,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Sash;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -178,9 +177,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Returns the center {@link Sash} appearing between the vewer parts.
+	 * Returns the center {@link Canvas} appearing between the vewer parts.
 	 * 
-	 * @return The center {@link Sash}.
+	 * @return The center {@link Canvas}.
 	 */
 	public Canvas getCenterPart() {
 		if (canvas == null)
