@@ -21,8 +21,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -72,8 +70,6 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		final TableColumn weightsColumn = new TableColumn(getTable(), SWT.RIGHT);
 		weightsColumn.setText("Value"); //$NON-NLS-1$
 		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, weightsColumn.getText().length() * 3));
-		
-		getTable().addPaintListener(new PropertyTablePaintListener());
 	}
 	
 	/**
@@ -207,16 +203,6 @@ public class ModelContentMergePropertyPart extends TableViewer {
 
 			}
 			return image;
-		}
-	}
-	
-	/**
-	 * This implementation of {@link PaintListener} handles the drawing of
-	 * blocks around properties.
-	 */
-	private class PropertyTablePaintListener implements PaintListener {
-		public void paintControl(PaintEvent event) {
-			//TODO LGT handle property painting
 		}
 	}
 }

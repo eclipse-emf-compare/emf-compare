@@ -106,7 +106,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 	
 	protected void fireOpen(OpenEvent event) {
-		// DIRTY cancels open events that could be fired to avoid "NullViewer" opening.
+		// DIRTY 
+		// cancels open events that could be fired to avoid "NullViewer" opening.
 	}
 	
 	private void initialize(CompareConfiguration compareConfiguration) {
