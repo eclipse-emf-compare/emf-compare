@@ -37,20 +37,20 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  */
 public class EMFCompareTestCase extends TestCase {
 	/** The plug-in ID. */
-	public static final String PLUGIN_ID = ""; // TODO check that Id //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.tests.EMFCompareTestPlugin"; //$NON-NLS-1$
 
 	/** Class file for the tests. */
 	public static final String CLASS_FILE = ""; //$NON-NLS-1$
-	
+
 	protected Date start;
 
 	/**
 	 * Assert file contents are strictly equals.
 	 * 
 	 * @param file1
-	 * 			First file of the comparison.
+	 *            First file of the comparison.
 	 * @param file2
-	 * 			Second file of the comparison.
+	 *            Second file of the comparison.
 	 */
 	public void assertFileContentsEqual(final File file1, final File file2) {
 		assertTrue("File contents are not equals for " + file1.getName() //$NON-NLS-1$
@@ -62,12 +62,11 @@ public class EMFCompareTestCase extends TestCase {
 	 * Save a model in a file.
 	 * 
 	 * @param root
-	 * 			Root of the objects to be serialized in a file.
+	 *            Root of the objects to be serialized in a file.
 	 * @param outputFile
-	 * 			File where the objects have to be saved.
+	 *            File where the objects have to be saved.
 	 * @throws IOException
-	 * 			Thrown if an I/O operation has failed or been interrupted during the
-	 * 			saving process.
+	 *             Thrown if an I/O operation has failed or been interrupted during the saving process.
 	 */
 	@SuppressWarnings("unchecked")
 	public void save(final EObject root, final File outputFile) throws IOException {
@@ -82,9 +81,8 @@ public class EMFCompareTestCase extends TestCase {
 	 * Returns a file bundled inside a plugin knowing its path.
 	 * 
 	 * @param path
-	 * 			Full path of the file resolvable from the plug-in's root.
-	 * @return
-	 * 			A file bundled inside a plugin.
+	 *            Full path of the file resolvable from the plug-in's root.
+	 * @return A file bundled inside a plugin.
 	 */
 	public File pluginFile(final String path) {
 		return new File(getPluginDirectory() + path);
@@ -94,14 +92,13 @@ public class EMFCompareTestCase extends TestCase {
 	 * Compare the contents of the files of two directories given a filename suffix.
 	 * 
 	 * @param dir1
-	 * 			First directory of the comparison.
+	 *            First directory of the comparison.
 	 * @param dir2
-	 * 			Second directory of the comparison.
+	 *            Second directory of the comparison.
 	 * @param fileNameSuffixExpected
-	 * 			Suffix of the files to be compared.
+	 *            Suffix of the files to be compared.
 	 */
-	public void compareDirs(final File dir1, final File dir2,
-			final String fileNameSuffixExpected) {
+	public void compareDirs(final File dir1, final File dir2, final String fileNameSuffixExpected) {
 		if (!dir1.isDirectory() || !dir2.isDirectory()) {
 			throw new RuntimeException("dir1 and dir2 are not folders! "); //$NON-NLS-1$
 		}
@@ -115,11 +112,10 @@ public class EMFCompareTestCase extends TestCase {
 		for (int i = 0; i < dir1.listFiles().length; i++) {
 			final File file1 = dir1.listFiles()[i];
 			if (files2.containsKey(file1.getName() + fileNameSuffixExpected)) {
-				assertFileContentsEqual(file1, (File)files2.get(file1
-						.getName() + fileNameSuffixExpected));
+				assertFileContentsEqual(file1, files2.get(file1.getName() + fileNameSuffixExpected));
 			} else {
-				throw new RuntimeException(file1.getName()
-						+ fileNameSuffixExpected + " is missing for comparison"); //$NON-NLS-1$
+				throw new RuntimeException(file1.getName() + fileNameSuffixExpected
+						+ " is missing for comparison"); //$NON-NLS-1$
 			}
 		}
 	}
@@ -128,7 +124,7 @@ public class EMFCompareTestCase extends TestCase {
 	 * Deletes a given file.
 	 * 
 	 * @param file
-	 * 			{@link java.io.File File} to be deleted.
+	 *            {@link java.io.File File} to be deleted.
 	 */
 	public static void delete(final File file) {
 		if (file.isDirectory()) {
@@ -147,12 +143,11 @@ public class EMFCompareTestCase extends TestCase {
 	 * Reads a given file and serializes it as a {@link java.lang.String String}.
 	 * 
 	 * @param file
-	 * 			File to read.
+	 *            File to read.
 	 * @param useSystemLineSeparator
-	 * 			<code>True</code> if the serialized String should use the System's line
-	 * 			separator, <code>false</code> otherwise.
-	 * @return
-	 * 			The file contents as a String.
+	 *            <code>True</code> if the serialized String should use the System's line separator,
+	 *            <code>false</code> otherwise.
+	 * @return The file contents as a String.
 	 */
 	public static String readFile(final File file, final boolean useSystemLineSeparator) {
 		final StringBuffer stringBuffer = new StringBuffer();
@@ -166,18 +161,16 @@ public class EMFCompareTestCase extends TestCase {
 					stringBuffer.append(buff, 0, size);
 				}
 			} finally {
-				if (in != null) {
-					in.close();
-				}
+				in.close();
 			}
 		} catch (final IOException exception) {
 			throw new RuntimeException(exception);
 		}
-		
+
 		String nl = "\n"; //$NON-NLS-1$
 		if (useSystemLineSeparator)
 			nl = System.getProperties().getProperty("line.separator"); //$NON-NLS-1$
-		
+
 		return stringBuffer.toString().replaceAll("\\r\\n", "\n") //$NON-NLS-1$ //$NON-NLS-2$
 				.replaceAll("[\\n|\\r]", nl); //$NON-NLS-1$
 	}
@@ -186,16 +179,15 @@ public class EMFCompareTestCase extends TestCase {
 	 * Returns the given plugin's root directory.
 	 * 
 	 * @param pluginID
-	 * 			ID of the plugin.
-	 * @return
-	 * 			The plugin's root directory.
+	 *            ID of the plugin.
+	 * @return The plugin's root directory.
 	 */
 	public static String getPluginDirectory(final String pluginID) {
 		String path = new String();
 		try {
 			if (Platform.isRunning()) {
-				final File file = new File(FileLocator.toFileURL(
-						Platform.getBundle(pluginID).getEntry("/")).getFile()); //$NON-NLS-1$
+				final File file = new File(FileLocator
+						.toFileURL(Platform.getBundle(pluginID).getEntry("/")).getFile()); //$NON-NLS-1$
 				if (file.isDirectory())
 					return file.getAbsolutePath();
 			}
@@ -220,8 +212,7 @@ public class EMFCompareTestCase extends TestCase {
 	/**
 	 * Returns the plugin's shared instance.
 	 * 
-	 * @return
-	 * 			The plugin's shared instance.
+	 * @return The plugin's shared instance.
 	 */
 	public static Plugin getPlugin() {
 		return EMFCompareTestPlugin.getDefault();
@@ -230,24 +221,20 @@ public class EMFCompareTestCase extends TestCase {
 	/**
 	 * Returns this plugin's root directory.
 	 * 
-	 * @return
-	 * 			The plugin directory.
+	 * @return The plugin directory.
 	 */
 	public static String getPluginDirectory() {
 		String path = new String();
 		try {
-			return new File(FileLocator.toFileURL(
-					getPlugin().getBundle().getEntry("/")).getFile()).toString(); //$NON-NLS-1$
+			return new File(FileLocator.toFileURL(getPlugin().getBundle().getEntry("/")).getFile()).toString(); //$NON-NLS-1$
 		} catch (IOException e) {
 			// No operation, thrown if the plugin cannot be resolved.
 		}
 
-		final URL url = ClassLoader
-				.getSystemResource(EMFCompareTestCase.CLASS_FILE);
+		final URL url = ClassLoader.getSystemResource(EMFCompareTestCase.CLASS_FILE);
 		if (url != null) {
 			String resourcePath = url.getPath();
-			resourcePath = resourcePath
-					.substring(0, resourcePath.indexOf(EMFCompareTestCase.PLUGIN_ID));
+			resourcePath = resourcePath.substring(0, resourcePath.indexOf(EMFCompareTestCase.PLUGIN_ID));
 			if (resourcePath.startsWith("file:")) { //$NON-NLS-1$
 				resourcePath = resourcePath.substring("file:".length()); //$NON-NLS-1$
 			}
@@ -255,8 +242,7 @@ public class EMFCompareTestCase extends TestCase {
 			if (parentDir.isDirectory()) {
 				final File[] files = parentDir.listFiles();
 				for (int i = 0; i < files.length; i++) {
-					if (files[i].isDirectory() &&
-							files[i].getName().startsWith(EMFCompareTestCase.PLUGIN_ID)) {
+					if (files[i].isDirectory() && files[i].getName().startsWith(EMFCompareTestCase.PLUGIN_ID)) {
 						path = files[i].getAbsolutePath();
 						break;
 					}
@@ -268,8 +254,8 @@ public class EMFCompareTestCase extends TestCase {
 	}
 
 	/**
-	 * Starts the current timer. Allows counting the number of milliseconds ellapsed
-	 * in the process of retrieving the adapter factory.
+	 * Starts the current timer. Allows counting the number of milliseconds ellapsed in the process of
+	 * retrieving the adapter factory.
 	 */
 	public void startTimer() {
 		start = Calendar.getInstance().getTime();
@@ -278,8 +264,7 @@ public class EMFCompareTestCase extends TestCase {
 	/**
 	 * Stops the timer and return the number of milliseconds elapsed.
 	 * 
-	 * @return
-	 * 			The number of milliseconds elapsed.
+	 * @return The number of milliseconds elapsed.
 	 */
 	public long endTimer() {
 		final Date end = Calendar.getInstance().getTime();

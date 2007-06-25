@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.tests.util.FileUtils;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 
@@ -37,6 +36,7 @@ import org.eclipse.emf.ecore.EObject;
 public class TestNonRegressionModels extends EMFCompareTestCase {
 	private String inputDirectory;
 
+	@Override
 	protected void setUp() throws Exception {
 		setInputDirectory("/inputs"); //$NON-NLS-1$
 	}
@@ -45,15 +45,12 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 * Compare the expected models (in the expected directories) with the result
 	 * of the comparison services.
 	 * 
-	 * @throws FactoryException
-	 *             Thrown if a needed feature doesn't exist in its expected
-	 *             class.
 	 * @throws IOException
 	 *             Thrown if an I/O operation has failed or been interrupted.
 	 * @throws InterruptedException
 	 *             If one of the threads is interrupted.
 	 */
-	public void testNonRegressionModels() throws FactoryException, IOException,
+	public void testNonRegressionModels() throws IOException,
 			InterruptedException {
 		final File inputDir = new File(FileLocator.toFileURL(
 				getPlugin().getBundle().getEntry(getInputDirectory()))
