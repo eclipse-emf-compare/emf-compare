@@ -8,7 +8,6 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
@@ -36,48 +35,72 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /**
- * These services are usefull when one want to compare models more precisely using the method modelDiff. Known
- * bugs and limitation: 1- modeldiff only works if the two roots given are similar
+ * These services are useful when one wants to compare models more precisely using the method modelDiff. Two
+ * distinct strategy can be considered for the matching :
+ * <ul>
+ * <li>{@link #STRONG_STRATEGY Strong} will only consider Add, Remove or Change operations.</li>
+ * <li>{@link #SOFT_STRATEGY Soft} will consider Add, Remove, Change, Move and Rename operations.</li>
+ * </ul>
+ * <p>
+ * Known bugs and limitations :
+ * <ul>
+ * <li>Model diff only works if the two roots given are similar.</li>
+ * </ul>
  * 
- * @author www.obeo.fr
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DifferencesServices implements MatchEngine {
-	private static double THRESHOLD = 0.96;
+	/** Strong strategy considers only ADD, REMOVE or CHANGE operations. */
+	public static final int STRONG_STRATEGY = 0;
 
-	private static double STRONGER_THRESHOLD = 0.96;
+	/** Soft strategy considers ADD, REMOVE, CHANGE, MOVE and RENAME operations. */
+	public static final int SOFT_STRATEGY = 1;
 
-	/**
-	 * Strong strategy considers only ADD, REMOVE or CHANGE operations
-	 */
-	public static int STRONG_STRATEGY = 0;
+	private static final double THRESHOLD = 0.96d;
 
-	/**
-	 * Soft strategy considers ADD, REMOVE, CHANGE, MOVE and RENAME operations.
-	 */
-	public static int SOFT_STRATEGY = 1;
+	private static final double STRONGER_THRESHOLD = 0.96d;
+
+	private static final String NAME_SIMILARITY = "n"; //$NON-NLS-1$
+
+	private static final String TYPE_SIMILARITY = "t"; //$NON-NLS-1$
+
+	private static final String VALUE_SIMILARITY = "v"; //$NON-NLS-1$
+
+	private static final String RELATION_SIMILARITY = "r"; //$NON-NLS-1$
+
+	protected MetamodelFilter filter;
 
 	private int currentStrategy = STRONG_STRATEGY;
 
-	/**
-	 * This map is used to cache the comparison results Pair(Element1, Element2) => [ nameSimilarity,
-	 * valueSimilarity, relationSimilarity, TypeSimilarity]
-	 */
-	private Map metricsCache = new WeakHashMap();
+	// this list is used in order to keep track of all the mappings it allows a better comparison for the 2nd
+	// pass
+	private List<Match2Elements> mappingList = new LinkedList<Match2Elements>();
+
+	private List<EObject> stillToFindFromModel1 = new ArrayList<EObject>();
+
+	private List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
 
 	/**
-	 * If you put true here youl'll be able to have a look at the mapping created between EObjects (usefull
-	 * for debug purpose)
+	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
+	 * valueSimilarity, relationSimilarity, TypeSimilarity].
+	 */
+	private Map<String, Double> metricsCache = new WeakHashMap<String, Double>();
+
+	/**
+	 * Setting this to <code>True</code> will enable you to have a look at the mapping created between
+	 * EObjects (useful for debug purpose).
 	 */
 	private boolean saveMapping = true;
 
 	private MatchFactory matchFactory = new MatchFactoryImpl();
 
 	/**
-	 * Set a different kind of strategy. default is SOFT_STRATEGY.
+	 * Set a different kind of strategy, must be one of {@link #STRONG_STRATEGY} or {@link #SOFT_STRATEGY}.
+	 * Default is SOFT_STRATEGY.
 	 * 
 	 * @param strategyId
+	 *            Matching strategy to consider for the matching.
 	 */
-
 	public void setStrategy(int strategyId) {
 		currentStrategy = strategyId;
 	}
@@ -87,110 +110,113 @@ public class DifferencesServices implements MatchEngine {
 		return similarityKind + obj1.hashCode() + obj2.hashCode();
 	}
 
-	private String NAME_SIMILARITY = "n"; //$NON-NLS-1$
-
-	private String TYPE_SIMILARITY = "t"; //$NON-NLS-1$
-
-	private String VALUE_SIMILARITY = "v"; //$NON-NLS-1$
-
-	private String RELATION_SIMILARITY = "r"; //$NON-NLS-1$
-
 	private Double getSimilarityFromCache(EObject obj1, EObject obj2, String similarityKind) {
-		return ((Double)metricsCache.get(pairHashCode(obj1, obj2, similarityKind)));
+		return metricsCache.get(pairHashCode(obj1, obj2, similarityKind));
 	}
 
 	private void setSimilarityInCache(EObject obj1, EObject obj2, String similarityKind, double similarity) {
 		metricsCache.put(pairHashCode(obj1, obj2, similarityKind), new Double(similarity));
-
 	}
 
 	/* End of cache management */
-	private double nameSimilarity(EObject obj1, EObject obj2) throws FactoryException {
+	private double nameSimilarity(EObject obj1, EObject obj2) {
+		double similarity = 0d;
 		try {
-			Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+			final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
 			if (value != null) {
-				return value;
+				similarity = value;
 			} else {
-				double similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
+				similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
 						NameSimilarity.findName(obj2));
 				setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
-				return similarity;
 			}
-		} catch (Exception e) {
-			return 0.0;
+		} catch (FactoryException e) {
+			// fails silently, will return 0d
 		}
+		return similarity;
 	}
 
 	private double typeSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		Double value = getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
+		double similarity = 0d;
+		final Double value = getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
 		if (value != null) {
-			return value;
+			similarity = value;
 		} else {
-			double similarity = StructureSimilarity.typeSimilarityMetric(obj1, obj2);
+			similarity = StructureSimilarity.typeSimilarityMetric(obj1, obj2);
 			setSimilarityInCache(obj1, obj2, TYPE_SIMILARITY, similarity);
-			return similarity;
 		}
-
+		return similarity;
 	}
 
 	private double relationsSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		Double value = getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
+		double similarity = 0d;
+		final Double value = getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
 		if (value != null) {
-			return value;
+			similarity = value;
 		} else {
-			double similarity = StructureSimilarity.relationsSimilarityMetric(obj1, obj2, filter);
+			similarity = StructureSimilarity.relationsSimilarityMetric(obj1, obj2, filter);
 			setSimilarityInCache(obj1, obj2, RELATION_SIMILARITY, similarity);
-			return similarity;
 		}
-
+		return similarity;
 	}
 
 	private double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		double similarity = 0d;
+		final Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
 		if (value != null) {
-			return value;
+			similarity = value;
 		} else {
-			double similarity = NameSimilarity.nameSimilarityMetric(
-					NameSimilarity.contentValue(obj1, filter), NameSimilarity.contentValue(obj2, filter));
+			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
+					NameSimilarity.contentValue(obj2, filter));
 			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
-			return similarity;
 		}
+		return similarity;
 	}
 
 	/**
+	 * Returns an absolute comparaison metric between the two given {@link EObject}s.
+	 * 
 	 * @param obj1
+	 *            The first {@link EObject} to compare.
 	 * @param obj2
-	 * @return an absolute comparison metric
+	 *            Second of the {@link EObject}s to compare.
+	 * @return An absolute comparison metric
 	 * @throws FactoryException
+	 *             Thrown if we cannot compute the content similarity.
 	 */
-	public double absoluteMetric(EObject obj1, EObject obj2)
-
-	throws FactoryException {
-		double nameSimilarity = nameSimilarity(obj1, obj2);
-		double relationsSimilarity = relationsSimilarity(obj1, obj2);
-		double sameUri = 0;
+	public double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
+		final double nameSimilarity = nameSimilarity(obj1, obj2);
+		final double relationsSimilarity = relationsSimilarity(obj1, obj2);
+		double sameUri = 0d;
 		if (hasSameUri(obj1, obj2))
 			sameUri = 1;
-		double positionSimilarity = (0.5 * relationsSimilarity + 0.5 * sameUri);
-		double contentSimilarity = contentSimilarity(obj1, obj2);
-		// double typeSimilarity = typeSimilarity(obj1, obj2); // type
-		// similarity is really time expensive
-		return contentSimilarity * 0.4 + nameSimilarity * 0.2 + positionSimilarity * 0.4;
+		final double positionSimilarity = relationsSimilarity / 2d + sameUri / 2d;
+		final double contentSimilarity = contentSimilarity(obj1, obj2);
+		// Computing type similarity really is time expensive
+		// double typeSimilarity = typeSimilarity(obj1, obj2);
+
+		final double contentWeight = 0.4d;
+		final double nameWeight = 0.2d;
+		final double positionWeight = 0.4d;
+
+		return contentSimilarity * contentWeight + nameSimilarity * nameWeight + positionSimilarity
+				* positionWeight;
 	}
 
 	/**
-	 * Return true if both elements have the same serialization ID, false otherwise
+	 * Returns <code>True</code> if both elements have the same serialization ID.
 	 * 
 	 * @param left
-	 *            left model element
+	 *            Element from the left model to compare.
 	 * @param right
-	 *            right model element
-	 * @return true if both elements have the same serialization ID
+	 *            Element from the right model.
+	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
+	 *         otherwise.
 	 */
 	private boolean haveSameXmiId(EObject left, EObject right) {
 		if (left.eResource() instanceof XMLResource && right.eResource() instanceof XMLResource) {
-			String leftId = ((XMLResource)left.eResource()).getID(left);
-			String rightId = ((XMLResource)right.eResource()).getID(right);
+			final String leftId = ((XMLResource)left.eResource()).getID(left);
+			final String rightId = ((XMLResource)right.eResource()).getID(right);
 			if (leftId != null && rightId != null && !leftId.equals("") //$NON-NLS-1$
 					&& !rightId.equals("")) //$NON-NLS-1$
 				return leftId.equals(rightId);
@@ -199,95 +225,80 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * Return true if the 2 objects are considered as similars
+	 * Returns <code>True</code> if the 2 given {@link EObject}s are considered similar.
 	 * 
 	 * @param obj1
+	 *            The first {@link EObject} to compare.
 	 * @param obj2
-	 * @return true if both elements have the same serialization ID
+	 *            Second of the {@link EObject}s to compare.
+	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
+	 *         otherwise.
 	 * @throws FactoryException
-	 * @throws ENodeCastException
+	 *             Thrown if we cannot compute one of the needed similarity.
 	 */
 	private boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-		if (haveSameXmiId(obj1, obj2))
-			return true;
-		if (currentStrategy == SOFT_STRATEGY) {
-			// SOFT STRATEGY
-			double nameSimilarity = nameSimilarity(obj1, obj2);
+		boolean similar = false;
 
-			boolean hasSameUri = hasSameUri(obj1, obj2);
+		// Defines all thresholds as constants.
+		final double relationsThreshold = 0.9d;
+		final double nameThreshold = 0.2d;
+		final double triWayThreshold = 0.8d;
+		final double softContentThreshold = 0.59d;
+		final double strongContentTheshold = 0.9d;
 
-			if (nameSimilarity == 1 && hasSameUri)
-				return true;
-
-			double contentSimilarity = contentSimilarity(obj1, obj2);
-
-			double relationsSimilarity = relationsSimilarity(obj1, obj2);
-
-			if (nameSimilarity > THRESHOLD && relationsSimilarity > 0.9)
-				return true;
-
-			if (relationsSimilarity == 1 && hasSameUri)
-				return true;
-
-			if (relationsSimilarity > THRESHOLD && contentSimilarity > 0.59)
-				return true;
-
-			if (contentSimilarity > 0.8 && nameSimilarity > 0.8 && relationsSimilarity > 0.8)
-				return true;
-
-			double typeSimilarity = typeSimilarity(obj1, obj2);
-			if (contentSimilarity > THRESHOLD && nameSimilarity > THRESHOLD && typeSimilarity > THRESHOLD) {
-				return true;
-			}
-
-			return false;
-		} else {// STRONG STRATEGY
-			double nameSimilarity = nameSimilarity(obj1, obj2);
-			boolean hasSameUri = hasSameUri(obj1, obj2);
-
-			if (nameSimilarity == 1 && hasSameUri)
-				return true;
-
-			double contentSimilarity = contentSimilarity(obj1, obj2);
-
-			double relationsSimilarity = relationsSimilarity(obj1, obj2);
-
-			if (nameSimilarity > STRONGER_THRESHOLD && relationsSimilarity > 0.9)
-				return true;
-			/*
-			 * Seems quite stupid if (relationsSimilarity == 1 && hasSameUri) return true;
-			 */
-
-			if (relationsSimilarity > STRONGER_THRESHOLD && contentSimilarity > 0.9 && nameSimilarity > 0.2)
-				return true;
-
-			if (contentSimilarity > 0.9 && nameSimilarity > 0.9 && relationsSimilarity > 0.9)
-				return true;
-
-			double typeSimilarity = typeSimilarity(obj1, obj2);
-			if (contentSimilarity > STRONGER_THRESHOLD && nameSimilarity > STRONGER_THRESHOLD
-					&& typeSimilarity > STRONGER_THRESHOLD) {
-				return true;
-			}
-			return false;
+		// Selects the content and general Threshold to consider
+		double contentThreshold = softContentThreshold;
+		double generalThreshold = THRESHOLD;
+		if (currentStrategy == STRONG_STRATEGY) {
+			contentThreshold = strongContentTheshold;
+			generalThreshold = STRONGER_THRESHOLD;
 		}
+
+		if (haveSameXmiId(obj1, obj2)) {
+			similar = true;
+		} else {
+			final double nameSimilarity = nameSimilarity(obj1, obj2);
+			final boolean hasSameUri = hasSameUri(obj1, obj2);
+			if (nameSimilarity == 1 && hasSameUri) {
+				similar = true;
+			} else {
+				final double contentSimilarity = contentSimilarity(obj1, obj2);
+				final double relationsSimilarity = relationsSimilarity(obj1, obj2);
+
+				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold) {
+					similar = true;
+				} else if (relationsSimilarity == 1 && hasSameUri) {
+					similar = true;
+				} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold
+						&& nameSimilarity > nameThreshold) {
+					similar = true;
+				} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
+						&& relationsSimilarity > triWayThreshold) {
+					similar = true;
+				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
+						&& typeSimilarity(obj1, obj2) > generalThreshold) {
+					similar = true;
+				}
+			}
+		}
+		return similar;
 	}
 
 	private boolean hasSameUri(EObject obj1, EObject obj2) {
 		return ETools.getURI(obj1).equals(ETools.getURI(obj2));
 	}
 
-	private Collection stillToFindFromModel1 = new ArrayList();
-
-	private Collection stillToFindFromModel2 = new ArrayList();
-
 	/**
 	 * This method is an indirection for adding Mappings in the current MappingGroup.
 	 * 
 	 * @param object
+	 *            {@link EObject} to add a feature value to.
 	 * @param name
+	 *            Name of the feature to consider.
 	 * @param value
+	 *            Value to add to the feature <code>name</code> of <code>object</code>.
 	 * @throws FactoryException
+	 *             Thrown if the value's affectation fails.
 	 */
 	private void redirectedAdd(EObject object, String name, Object value) throws FactoryException {
 		if (saveMapping)
@@ -295,159 +306,169 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * a Filter
-	 */
-	protected MetamodelFilter filter;
-
-	/**
-	 * @return an int meaning the number of siblings elements I will look in
+	 * Returns THe search window corresponding to the number of siblings to consider while matching. Reducing
+	 * this number (on the preferences page) considerably improve performances while reducing precision.
+	 * 
+	 * @return An <code>int</code> representing the number of siblings to consider for matching.
 	 */
 	private int getDefaultSearchWindow() {
 		return EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Return a mapping model between the two other models.. Basically the difference is calculated this way : -
-	 * both models are browsed and compared, Mappings are created when two nodes are considered as similar -
-	 * Nodes wich has not been mapped are compared in order to map them - The mapping tree is browsed in order
-	 * to determine the modification log - the modification log (an EMF model) is returned Known bugs and
-	 * limitation: 1°- modeldiff only works if the two roots given are similar
+	 * Returns a mapping model between the two other models. Basically the difference is computed this way :
+	 * <ul>
+	 * <li>Both models are browsed and compared, Mappings are created when two nodes are considered as
+	 * similar</li>
+	 * <li>Nodes which haven't been mapped are compared with each other in order to map them.</li>
+	 * <li>The mapping tree is browsed in order to determine the modification log.</li>
+	 * <li>The modification log (an EMF model) is then returned.</li>
+	 * </ul>
+	 * Known bugs and limitations :
+	 * <ul>
+	 * <li>Model diff only works if the two roots given are similar</li>
+	 * </ul>
 	 * 
 	 * @param root1
-	 *            the first root element
+	 *            Left model of the comparison.
 	 * @param root2
-	 *            the second root element
-	 * @return a mapping model between the two other models..
+	 *            Right model of the comparison.
+	 * @param monitor
+	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 * @return Mapping model of the two given models.
 	 * @throws InterruptedException
-	 * @throws FactoryException
-	 * @throws ENodeCastException
+	 *             Thrown if the matching process is interrupted somehow.
+	 * @see MatchEngine#modelMatch(EObject, EObject, IProgressMonitor)
 	 */
 	public MatchModel modelMatch(EObject root1, EObject root2, IProgressMonitor monitor)
 			throws InterruptedException {
-		// ModificationLog diffResult;
-		MatchModel root = matchFactory.createMatchModel();
-		int size = 1;
-		Iterator sizeit = root1.eAllContents();
-		while (sizeit.hasNext()) {
-			sizeit.next();
-			size++;
-		}
+		final MatchModel root = matchFactory.createMatchModel();
+		
+		launchMonitor(monitor, root1);
+		
 		// filtering unused features
 		filter = new MetamodelFilter();
 		filter.analyseModel(root1);
 		filter.analyseModel(root2);
 		// end of filtering
 
-		monitor.beginTask("Comparing model", size);
-		monitor.subTask("Browsing model");
-
-		// Match2Elements associations = matchFactory.createMatch2Elements();
-		// EFactory.eAdd(root, "matchedElements", associations);
-
-		// first navigate through both models at the same time and realize
-		// mappings..
+		// first navigate through both models at the same time and realize mappings..
 		try {
-			if (true || isSimilar(root1, root2)) {
-				Match2Elements rootMapping = recursiveMappings(root1, root2, monitor);
+			/*
+			 * TODO uncomment this if/else and fix the "else". If the roots aren't similar, we need to find the
+			 * matching root and do something with the elements we haven't matched.
+			 */
+			// if (isSimilar(root1, root2)) {
+			final Match2Elements rootMapping = recursiveMappings(root1, root2, monitor);
 
-				redirectedAdd(root, "matchedElements", rootMapping);
-				// Keep current lists in a corner and init the objects list we
-				// still
-				// have to map
-				List still1 = new ArrayList();
-				List still2 = new ArrayList();
-				still1.addAll(stillToFindFromModel1);
-				still2.addAll(stillToFindFromModel2);
-				stillToFindFromModel1 = new ArrayList();
-				stillToFindFromModel2 = new ArrayList();
-				// now try to map not yet mapped elements...
-				monitor.subTask("Matching remaining elements");
-				// magic number to avoid too big complexity
-				Collection mappings = mapLists(still1, still2, getDefaultSearchWindow(), monitor);
-				Iterator it = mappings.iterator();
-				while (it.hasNext()) {
-					Match2Elements map = (Match2Elements)it.next();
-					redirectedAdd(rootMapping, "subMatchElements", map);
-					// if it has not been mapped while browsing the trees at
-					// the
-					// same time it probably is a moved element
-				}
-
-				// now the other elements won't be mapped, keep them in the
-				// model
-				it = stillToFindFromModel1.iterator();
-				while (it.hasNext()) {
-					EObject element = (EObject)it.next();
-					UnMatchElement unMap = matchFactory.createUnMatchElement();
-					unMap.setElement(element);
-					redirectedAdd(root, "unMatchedElements", unMap);
-
-				}
-				it = stillToFindFromModel2.iterator();
-				while (it.hasNext()) {
-					EObject element = (EObject)it.next();
-					UnMatchElement unMap = matchFactory.createUnMatchElement();
-					unMap.setElement(element);
-					redirectedAdd(root, "unMatchedElements", unMap);
-
-				}
-				stillToFindFromModel1 = new ArrayList();
-				stillToFindFromModel2 = new ArrayList();
-
-			} else {
-				// FIX here for known bug and limitation number 1
+			redirectedAdd(root, "matchedElements", rootMapping); //$NON-NLS-1$
+			// Keep current lists in a corner and init the objects list we still have to map
+			final List<EObject> still1 = new ArrayList<EObject>();
+			final List<EObject> still2 = new ArrayList<EObject>();
+			still1.addAll(stillToFindFromModel1);
+			still2.addAll(stillToFindFromModel2);
+			stillToFindFromModel1.clear();
+			stillToFindFromModel2.clear();
+			// now try to map not yet mapped elements...
+			monitor.subTask("Matching remaining elements"); //$NON-NLS-1$
+			// magic number to avoid too big complexity
+			final Collection mappings = mapLists(still1, still2, getDefaultSearchWindow(), monitor);
+			Iterator it = mappings.iterator();
+			while (it.hasNext()) {
+				final Match2Elements map = (Match2Elements)it.next();
+				redirectedAdd(rootMapping, "subMatchElements", map); //$NON-NLS-1$
+				// if it has not been mapped while browsing the trees at the same time it probably is a moved
+				// element
 			}
+
+			// now the other elements won't be mapped, keep them in the model
+			it = stillToFindFromModel1.iterator();
+			while (it.hasNext()) {
+				final EObject element = (EObject)it.next();
+				final UnMatchElement unMap = matchFactory.createUnMatchElement();
+				unMap.setElement(element);
+				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
+			}
+			it = stillToFindFromModel2.iterator();
+			while (it.hasNext()) {
+				final EObject element = (EObject)it.next();
+				final UnMatchElement unMap = matchFactory.createUnMatchElement();
+				unMap.setElement(element);
+				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
+			}
+			stillToFindFromModel1.clear();
+			stillToFindFromModel2.clear();
+			// } else {
+			/*
+			 * TODO remove the true from this else's matching if and fix the limitation (see javadoc for this
+			 * method/class).
+			 */
+			// }
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
 		return root;
 	}
+	
+	private void launchMonitor(IProgressMonitor monitor, EObject root) {
+		int size = 1;
+		final Iterator sizeit = root.eAllContents();
+		while (sizeit.hasNext()) {
+			sizeit.next();
+			size++;
+		}
 
-	// this list is used in order to keep track of all the mappings
-	// it allows a better comparaison for the 2nd pass
-	private Collection MappingList = new LinkedList();
+		monitor.beginTask("Comparing model", size); //$NON-NLS-1$
+		monitor.subTask("Browsing model"); //$NON-NLS-1$
+	}
 
 	/**
-	 * we considers here current1 and current2 are similar ! this method create the mapping for the objects
-	 * current1 and current2. Then it create submappings for current1 and current2 contents
+	 * We consider here <code>current1</code> and <code>current2</code> are similar. This method creates
+	 * the mapping for the objects <code>current1</code> and <code>current2</code>, Then submappings for
+	 * these two elements' contents.
 	 * 
 	 * @param current1
+	 *            First element of the two elements mapping.
 	 * @param current2
-	 * @return the mapping for current1 and current2
+	 *            Second of the two elements mapping.
+	 * @param monitor
+	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 * @return The mapping for <code>current1</code> and <code>current2</code> and their content.
 	 * @throws FactoryException
+	 *             Thrown when the metrics cannot be computed for <code>current1</code> and
+	 *             <code>current2</code>.
 	 * @throws InterruptedException
-	 * @throws ENodeCastException
+	 *             Thrown if the matching process is interrupted somehow.
 	 */
+	@SuppressWarnings("unchecked")
 	private Match2Elements recursiveMappings(EObject current1, EObject current2, IProgressMonitor monitor)
 			throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;
 		mapping = matchFactory.createMatch2Elements();
 		mapping.setLeftElement(current1);
 		mapping.setRightElement(current2);
-		MappingList.add(mapping);
+		mappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
-		Collection mapList = mapLists(current1.eContents(), current2.eContents(), getDefaultSearchWindow(),
-				monitor);
-		// // in maplist we get other mappings
-		Iterator it = mapList.iterator();
+		final Collection mapList = mapLists(current1.eContents(), current2.eContents(),
+				getDefaultSearchWindow(), monitor);
+		// We can map other elements with mapLists; we iterate through them.
+		final Iterator it = mapList.iterator();
 		while (it.hasNext()) {
-			Match2Elements subMapping = (Match2Elements)it.next();
-			// here we now source and target are similars, then we should launch
-			// recursive mappings onto these objects
-			EFactory.eAdd(mapping, "subMatchElements", recursiveMappings(subMapping.getLeftElement(),
+			final Match2Elements subMapping = (Match2Elements)it.next();
+			// As we know source and target are similars, we call recursive mappings onto these objects
+			EFactory.eAdd(mapping, "subMatchElements", recursiveMappings(subMapping.getLeftElement(), //$NON-NLS-1$
 					subMapping.getRightElement(), monitor));
 		}
 		return mapping;
-
 	}
 
 	private EObject findMostSimilar(EObject eObj, List list) throws FactoryException {
-		double max = 0;
+		double max = 0d;
 		EObject resultObject = null;
-		Iterator it = list.iterator();
+		final Iterator it = list.iterator();
 		while (it.hasNext()) {
-			EObject next = (EObject)it.next();
-			double similarity = absoluteMetric(eObj, next);
+			final EObject next = (EObject)it.next();
+			final double similarity = absoluteMetric(eObj, next);
 			if (similarity > max) {
 				max = similarity;
 				resultObject = next;
@@ -457,47 +478,46 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * Return a list containing mappings of the nodes of both lists
+	 * Returns a list containing mappings of the nodes of both given {@link List}s.
 	 * 
 	 * @param list1
+	 *            First of the lists from which we need to map the elements
 	 * @param list2
-	 * @return a list containing mappings of the nodes of both lists
+	 *            Second list to map the elements from.
+	 * @param window
+	 *            Number of siblings to consider for the matching.
+	 * @param monitor
+	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 * @return A {@link List} containing mappings of the nodes of both given {@link List}s.
 	 * @throws FactoryException
+	 *             Thrown if the metrics cannot be computed.
 	 * @throws InterruptedException
-	 * @throws ENodeCastException
+	 *             Thrown if the matching process is interrupted somehow.
 	 */
-	private Collection mapLists(List list1, List list2, int window, IProgressMonitor monitor)
+	private List<Match2Elements> mapLists(List<EObject> list1, List<EObject> list2, int window, IProgressMonitor monitor)
 			throws FactoryException, InterruptedException {
-		Collection result = new ArrayList();
-		// System.err.println("mapping to lists: " + list1.size() +","+
-		// list2.size() + " first elem : " + list1.get(0) );
+		final List<Match2Elements> result = new ArrayList<Match2Elements>();
 		int curIndex = 0 - window / 2;
-		Collection notFoundList1 = new ArrayList();
-		Collection notFoundList2 = new ArrayList();
-		// first init the not found list with all contents (we have found
-		// nothing yet)
+		final List<EObject> notFoundList1 = new ArrayList<EObject>();
+		final List<EObject> notFoundList2 = new ArrayList<EObject>();
+		// first init the not found list with all contents (we have found nothing yet)
 		notFoundList1.addAll(list1);
 		notFoundList2.addAll(list2);
 
-		Iterator it1 = list1.iterator();
-		Iterator it2 = null;
+		final Iterator it1 = list1.iterator();
 		// then iterate over the 2 lists and compare the elements
-		while (it1.hasNext()) {
-			EObject obj1 = (EObject)it1.next();
-			it2 = list2.iterator();
-			int index = curIndex < 0 ? 0 : curIndex;
-			int end = curIndex + window > list2.size() ? list2.size() : curIndex + window;
-			if (index > end)
-				index = end;
-			if (!it2.hasNext())
-				break;
-			EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
-			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) {
-				Match2Elements mapping = matchFactory.createMatch2Elements();
-				double metric = 1.0;
-				if (saveMapping) {
+		while (it1.hasNext() && list2.size() > 0) {
+			final EObject obj1 = (EObject)it1.next();
+			final int end = Math.min(curIndex + window, list2.size());
+			final int index = Math.min(Math.max(curIndex, 0), end);
+			
+			final EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
+			if (isSimilar(obj1, obj2)) {
+				final Match2Elements mapping = matchFactory.createMatch2Elements();
+				double metric = 1d;
+				if (saveMapping)
 					metric = absoluteMetric(obj1, obj2);
-				}
+				
 				mapping.setLeftElement(obj1);
 				mapping.setRightElement(obj2);
 				mapping.setSimilarity(metric);
@@ -516,60 +536,4 @@ public class DifferencesServices implements MatchEngine {
 		stillToFindFromModel1.addAll(notFoundList1);
 		return result;
 	}
-
-	/**
-	 * Return a list containing mappings of the nodes of both lists
-	 * 
-	 * @param list1
-	 * @param list2
-	 * @return a list containing mappings of the nodes of both lists
-	 * @throws FactoryException
-	 * @throws InterruptedException
-	 * @throws ENodeCastException
-	 */
-	/*
-	 * private Collection mapListsSure(Collection list1, Collection list2, IProgressMonitor monitor) throws
-	 * FactoryException, InterruptedException { Collection result = new ArrayList(); Collection notFoundList1 =
-	 * new ArrayList(); Collection notFoundList2 = new ArrayList(); // first init the not found list with all
-	 * contents (we have found // nothing yet) notFoundList1.addAll(list1); notFoundList2.addAll(list2);
-	 * Iterator it1 = list1.iterator(); Iterator it2 = null; // then iterate over the 2 lists and compare the
-	 * elements while (it1.hasNext()) { EObject obj1 = (EObject) it1.next(); it2 = list2.iterator(); EObject
-	 * obj2 = findMostSimilar(obj1, list2); if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) &&
-	 * isSimilar(obj1, obj2)) { Match2Elements mapping = matchFactory .createMatch2Elements(); double metric =
-	 * 1.0; if (saveMapping) { metric = absoluteMetric(obj1, obj2); } mapping.setLeftElement(obj1);
-	 * mapping.setRightElement(obj2); EObjectToMapping.put(obj1, mapping); EObjectToMapping.put(obj2,
-	 * mapping); mapping.setSimilarity(metric); result.add(mapping); notFoundList2.remove(obj2);
-	 * notFoundList1.remove(obj1); } monitor.worked(1); if (monitor.isCanceled()) throw new
-	 * InterruptedException(); } // now putting the not found elements aside for later
-	 * stillToFindFromModel2.addAll(notFoundList2); stillToFindFromModel1.addAll(notFoundList1); return
-	 * result; }
-	 */
-
-	/**
-	 * Return a list containing mappings of the nodes of both lists
-	 * 
-	 * @param list1
-	 * @param list2
-	 * @return a list containing mappings of the nodes of both lists
-	 * @throws FactoryException
-	 * @throws InterruptedException
-	 * @throws ENodeCastException
-	 */
-	/*
-	 * private Collection mapListsQuick(Collection list1, Collection list2, IProgressMonitor monitor) throws
-	 * FactoryException, InterruptedException { Collection result = new ArrayList(); Collection notFoundList1 =
-	 * new ArrayList(); Collection notFoundList2 = new ArrayList(); // first init the not found list with all
-	 * contents (we have found // nothing yet) notFoundList1.addAll(list1); notFoundList2.addAll(list2);
-	 * Iterator it1 = list1.iterator(); Iterator it2 = null; // then iterate over the 2 lists and compare the
-	 * elements while (it1.hasNext()) { EObject obj1 = (EObject) it1.next(); it2 = list2.iterator(); EObject
-	 * obj2 = findMostSimilar(obj1, list2); if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) &&
-	 * isSimilar(obj1, obj2)) { Match2Elements mapping = matchFactory.createMatch2Elements(); double metric =
-	 * 1.0; if (saveMapping) { metric = absoluteMetric(obj1, obj2); } mapping.setLeftElement(obj1);
-	 * mapping.setRightElement(obj2); EObjectToMapping.put(obj1, mapping); EObjectToMapping.put(obj2,
-	 * mapping); mapping.setSimilarity(metric); result.add(mapping); notFoundList2.remove(obj2);
-	 * notFoundList1.remove(obj1); } monitor.worked(1); if (monitor.isCanceled()) throw new
-	 * InterruptedException(); } stillToFindFromModel2.addAll(notFoundList2);
-	 * stillToFindFromModel1.addAll(notFoundList1); return result; }
-	 */
-
 }

@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: MatchFactoryImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
@@ -34,7 +38,7 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	public static MatchFactory init() {
 		try {
 			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/match/1.0");
+					.getEFactory("http://www.eclipse.org/emf/compare/match/1.0"); //$NON-NLS-1$
 			if (theMatchFactory != null) {
 				return theMatchFactory;
 			}
@@ -70,8 +74,8 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 			case MatchPackage.UN_MATCH_ELEMENT:
 				return createUnMatchElement();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName()
-						+ "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() //$NON-NLS-1$
+						+ "' is not a valid classifier"); //$NON-NLS-1$
 		}
 	}
 
@@ -121,15 +125,17 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * @generated
 	 */
 	public MatchPackage getMatchPackage() {
+		getPackage();
 		return (MatchPackage)getEPackage();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @deprecated
+	 * @deprecated should use {@link #getEPackage()} instead.
 	 * @generated
 	 */
+	@Deprecated
 	public static MatchPackage getPackage() {
 		return MatchPackage.eINSTANCE;
 	}

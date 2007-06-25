@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: MatchElementItemProvider.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.Collection;
@@ -63,12 +67,13 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addSimilarityPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchElement_similarity_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature",
-						"_UI_MatchElement_type"), MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true,
+				getString("_UI_MatchElement_similarity_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MatchElement_type"), MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true, //$NON-NLS-1$
 				false, false, ItemPropertyDescriptor.REAL_VALUE_IMAGE, null, null));
 	}
 
@@ -80,6 +85,7 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
@@ -96,7 +102,7 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 */
 	public String getText(Object object) {
 		MatchElement matchElement = (MatchElement)object;
-		return getString("_UI_MatchElement_type") + " " + matchElement.getSimilarity();
+		return getString("_UI_MatchElement_type") + " " + matchElement.getSimilarity(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -129,6 +135,7 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 

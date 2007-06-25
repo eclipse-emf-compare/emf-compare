@@ -21,99 +21,104 @@ import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
- * This class provides services to work on strings and to compare EObjects
+ * This class provides services to work on strings and to compare EObjects.
  * 
- * @author www.obeo.fr
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class NameSimilarity {
+public final class NameSimilarity {
+	private static final int MAX_FEATURE_VALUE_LENGTH = 40;
+
+	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
+
+	private NameSimilarity() {
+		// prevents instantiation
+	}
 
 	/**
-	 * This method returns a list of strings called "pairs", for example
+	 * This method returns a {@link List} of {@link String}s called "pairs". For example,
 	 * 
-	 * pairs("MyString")
+	 * <pre>
+	 * pairs(&quot;MyString&quot;)
+	 * </pre>
 	 * 
-	 * returns
+	 * returns ["MY","YS","ST","TR","RI","IN","NG"]
 	 * 
-	 * ["MY","YS","ST","TR","RI","IN","NG"]
-	 * 
-	 * @param source :
-	 *            the string to process
-	 * @return a list of string corresponding to the possibles pairs of the
-	 *         source one
+	 * @param source
+	 *            The {@link String} to process.
+	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
-	public static List pairs(String source) {
-		List result = new LinkedList();
+	public static List<String> pairs(String source) {
+		final List<String> result = new LinkedList<String>();
 		if (source != null) {
-			for (int i = 0; i < source.length() - 1; i = i + 1)
+			for (int i = 0; i < source.length() - 1; i++)
 				result.add(source.toUpperCase().substring(i, i + 2));
 			if (source.length() % 2 == 1 && source.length() > 1)
-				result.add(source.toUpperCase().substring(source.length() - 2,
-						source.length() - 1));
+				result.add(source.toUpperCase().substring(source.length() - 2, source.length() - 1));
 		}
 		return result;
 	}
 
 	/**
-	 * Return a metric result about name similarity. It compares 2 strings and
-	 * return a double comprised between 0 and 1. The more it is, the more the
-	 * strings are equals
+	 * Return a metric result about name similarity. It compares 2 strings and return a double comprised
+	 * between 0 and 1. The greater this metric, the more equal the strings are.
 	 * 
+	 * @param str1
+	 *            First of the two {@link String}s to compare.
+	 * @param str2
+	 *            Second of the two {@link String}s to compare.
+	 * @return A metric result about name similarity (0 &lt;= value &lt;= 1).
 	 */
 	public static double nameSimilarityMetric(String str1, String str2) {
+		double result = 0d;
+		final double almostEquals = 0.999999d;
+		if (str1 != null && str2 != null) {
+			if (str1.equals(str2)) {
+				result = 1d;
+			} else if (str1.length() != 1 && str2.length() != 1) {
+				final String string1 = str1.toLowerCase();
+				final String string2 = str2.toLowerCase();
 
-		double result = 0;
-		if (str1 == null || str2 == null)
-			return 0;
-		if (str1.length() == 1 || str2.length() == 1) {
-			if (str1.equals(str2))
-				return 1.0;
-			return 0;
+				final List<String> pairs1 = pairs(string1);
+				final List<String> pairs2 = pairs(string2);
+
+				final double union = pairs1.size() + pairs2.size();
+				pairs1.retainAll(pairs2);
+				final int inter = pairs1.size();
+
+				result = inter * 2d / union;
+				if (result > 1)
+					result = 1;
+				if (result == 1.0 && !string1.equals(string2))
+					result = almostEquals;
+			}
 		}
-		str1 = str1.toLowerCase();
-		str2 = str2.toLowerCase();
-
-		List pairs1 = pairs(str1);
-		List pairs2 = pairs(str2);
-
-		double union = pairs1.size() + pairs2.size();
-
-		if (union == 0)
-			return 0;
-
-		pairs1.retainAll(pairs2);
-
-		int inter = pairs1.size();
-		result = (inter * 2.0) / union;
-		if (result > 1)
-			result = 1;
-		if (result == 1.0 && !str1.equals(str2))
-			return 0.999999;
 		return result;
 	}
 
 	/**
-	 * This service allow to find the best EObject corresponding to the name.
+	 * This service allow to find the best {@link EObject} corresponding to the given name.
 	 * 
 	 * @param current
-	 *            current node
-	 * @param str
-	 *            the string used to find the element
-	 * @throws ENodeCastException
+	 *            Current node.
+	 * @param name
+	 *            {@link String} used to find the element.
+	 * @return The {@link EObject} child of <code>current</code> which name is the nearest from
+	 *         <code>name</code>.
 	 */
-	public EObject find(EObject current, String str) {
+	public static EObject find(EObject current, String name) {
 		EObject result = current;
-		double max = 0;
+		double max = 0d;
 
-		TreeIterator it = current.eAllContents();
+		final TreeIterator it = current.eAllContents();
 		while (it.hasNext()) {
-			Object next = it.next();
-			if (next instanceof EObject
-					&& nameSimilarityMetric(next.toString(), str) > max) {
-				max = nameSimilarityMetric(next.toString(), str);
-				result = (EObject) next;
+			final Object next = it.next();
+			final double nameSimilarity = nameSimilarityMetric(next.toString(), name);
+			if (next instanceof EObject && nameSimilarity > max) {
+				max = nameSimilarity;
+				result = (EObject)next;
 			}
 		}
 
@@ -121,170 +126,42 @@ public class NameSimilarity {
 	}
 
 	/**
-	 * This service allow to find the best EObject corresponding to the name.
+	 * Returns a string representation of all the features' values for a given {@link EObject}.
 	 * 
 	 * @param current
-	 *            current node
-	 * @param str
-	 *            the string used to find the element
-	 * @throws ENodeCastException
-	 * @throws FactoryException
-	 */
-	// DEAD CODE
-//	public static List find(EObject current, EObject search, double threshold)
-//			throws FactoryException {
-//		List result = new LinkedList();
-//		EObject resultObject = null;
-//		double max = 0;
-//
-//		TreeIterator it = current.eAllContents();
-//		while (it.hasNext()) {
-//			Object next = it.next();
-//			double similarity = nameSimilarityMetric(contentValue(
-//					(EObject) next, null), contentValue(search, null));
-//			if (next instanceof EObject
-//					&& ((EObject) next).eClass().getName().equals(
-//							search.eClass().getName()) && similarity > max
-//					&& similarity > threshold) {
-//
-//				max = nameSimilarityMetric(contentValue((EObject) next, null),
-//						contentValue(search, null));
-//				resultObject = (EObject) next;
-//			}
-//		}
-//		if (resultObject != null)
-//			result.add(resultObject);
-//		return result;
-//	}
-
-	/**
-	 * Find the similar objects
-	 * 
-	 * @param data
-	 * @param search
-	 * @param threshold
-	 * @return a list with the similar objects
-	 * @throws FactoryException
-	 */
-	// DEAD CODE 
-//	public static List findInList(List data, EObject search, double threshold)
-//			throws FactoryException {
-//		List result = new LinkedList();
-//		EObject resultObject = null;
-//		double max = 0;
-//
-//		Iterator it = data.iterator();
-//		while (it.hasNext()) {
-//			Object next = it.next();
-//			double similarity = nameSimilarityMetric(contentValue(
-//					(EObject) next, null), contentValue(search, null));
-//			if (next instanceof EObject && similarity > max
-//					&& similarity > threshold) {
-//
-//				max = nameSimilarityMetric(contentValue((EObject) next, null),
-//						contentValue(search, null));
-//				resultObject = (EObject) next;
-//			}
-//		}
-//		if (resultObject != null)
-//			result.add(resultObject);
-//		return result;
-//	}
-
-	/**
-	 * Return a list of String representing the object content.
-	 * 
-	 * @param current
-	 * @return a list of String representing the object content.
-	 * @throws FactoryException
-	 */
-	// DEAD CODE
-//	public static Collection contentValueListWithName(EObject current)
-//			throws FactoryException {
-//		EObject eclass = current.eClass();
-//		Collection result = new ArrayList();
-//		List eclassAttributes = new LinkedList();
-//		if (eclass instanceof EClass)
-//			eclassAttributes = ((EClass) eclass).getEAllAttributes();
-//		// first, find the eclass structural feature most similar with name
-//		if (eclassAttributes.size() > 0) {
-//
-//			Iterator it = eclassAttributes.iterator();
-//			while (it.hasNext()) { // for each metamodel feature
-//				Object next = it.next();
-//				if (next instanceof EObject) {
-//					EObject obj = (EObject) next;
-//					StringBuffer attributeName = new StringBuffer(EFactory.eGetAsString(obj, "name"));//$NON-NLS-1$
-//					// get the feature name and the feature value
-//					StringBuffer value = new StringBuffer(EFactory
-//							.eGetAsString(current, attributeName.toString()));
-//					if (value != null && value.length() < 30)
-//						result.add(attributeName.append(" : ").append(value));//$NON-NLS-1$
-//				}
-//			}
-//
-//		}
-//		return result;
-//	}
-
-	/**
-	 * Return a String representing the object value
-	 * 
-	 * @param current
-	 * @return a String representing the object value
-	 * @throws FactoryException
-	 */
-	//DEAD CODE
-//	public static String contentValueWithName(EObject current)
-//			throws FactoryException {
-//		Collection values = contentValueListWithName(current);
-//		StringBuffer result = new StringBuffer();
-//		Iterator it = values.iterator();
-//		while (it.hasNext())
-//			result.append((StringBuffer) it.next());
-//		return result.toString();
-//	}
-
-	/**
-	 * Return a string representations of all the features value
-	 * 
-	 * @param current
+	 *            Object for which we need {@link String} representation.
 	 * @param filter
-	 * @return a string representations of all the features value
+	 *            Allows filtering of pertinent features.
+	 * @return A string representation of all the features' values for a given {@link EObject}.
 	 * @throws FactoryException
+	 *             Thrown if one of the operation on {@link EObject} fails.
 	 */
-	public static String contentValue(EObject current, MetamodelFilter filter)
-			throws FactoryException {
-		EObject eclass = current.eClass();
-		StringBuffer result = new StringBuffer();//$NON-NLS-1$
-		List eclassAttributes = new LinkedList();
+	@SuppressWarnings("unchecked")
+	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
+		final EObject eclass = current.eClass();
+		final StringBuffer result = new StringBuffer();
+		List<EStructuralFeature> eclassAttributes = new LinkedList<EStructuralFeature>();
 		if (filter != null) {
 			if (eclass instanceof EClass) {
 				eclassAttributes = filter.getFilteredFeatures(current);
-				// result += ((EClass)eclass).getName();
 			}
 		} else {
 			if (eclass instanceof EClass) {
-				eclassAttributes = ((EClass) eclass).getEAllAttributes();
-				// result += ((EClass)eclass).getName();
+				eclassAttributes = ((EClass)eclass).getEAllAttributes();
 			}
 		}
-		// first, find the eclass structural feature most similar with name
-		if (eclassAttributes.size() > 0) {
 
-			Iterator it = eclassAttributes.iterator();
-			while (it.hasNext()) { // for each metamodel feature
-				Object next = it.next();
+		if (eclassAttributes.size() > 0) {
+			final Iterator it = eclassAttributes.iterator();
+			while (it.hasNext()) {
+				final Object next = it.next();
 				if (next instanceof EObject) {
-					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name");//$NON-NLS-1$
+					final EObject obj = (EObject)next;
+					final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
 					// get the feature name and the feature value
-					String value = EFactory
-							.eGetAsString(current, attributeName);
-					if (value != null && value.length() < 40)
-						result.append(
-								EFactory.eGetAsString(current, attributeName))
-								.append(" ");//$NON-NLS-1$
+					final String value = EFactory.eGetAsString(current, attributeName);
+					if (value != null && value.length() < MAX_FEATURE_VALUE_LENGTH)
+						result.append(EFactory.eGetAsString(current, attributeName)).append(" "); //$NON-NLS-1$
 				}
 			}
 
@@ -293,107 +170,69 @@ public class NameSimilarity {
 	}
 
 	/**
-	 * find the property most similar to a name one on any object
+	 * Finds the property which is the best candidate to be the name of an {@link EObject}.
 	 * 
 	 * @param current
-	 * @return the property most similar to a name one on any object
-	 * @throws ENodeCastException
+	 *            {@link EObject} we seek the name for.
+	 * @return The best candidate to be the name of the given object.
 	 * @throws FactoryException
+	 *             Thrown if an operation on <code>current</code> fails.
 	 */
 	public static String findName(EObject current) throws FactoryException {
-
-		if (current == null)
-			return "";//$NON-NLS-1$
-
-		EAttribute nameFeature = findNameFeature(current);
-		if (nameFeature != null) {
-			String bestFeatureName = nameFeature.getName();
-			// now we should return the feature value
-			String result = EFactory.eGetAsString(current, bestFeatureName);
-			if (result != null && !result.equals("")) //$NON-NLS-1$
-				return result;
-			else
-				return current.eClass().getName(); // TODOCBR, if the element
-			// as an
-			// attribute, pick one, else use the
-			// Class name
-		} else {// eClass has no features, just keep the toString...
-			return current.eClass().getName();
+		String name = ""; //$NON-NLS-1$
+		if (current != null) {
+			final EAttribute nameFeature = findNameFeature(current);
+			if (nameFeature != null) {
+				final String bestFeatureName = nameFeature.getName();
+				name = EFactory.eGetAsString(current, bestFeatureName);
+				if (name == null || !name.equals("")) { //$NON-NLS-1$
+					// TODOCBR, if the element as an attribute, pick one, else use the Class name
+					name = current.eClass().getName();
+				}
+			} else {
+				name = current.eClass().getName();
+			}
 		}
-
+		return name;
 	}
 
 	/**
-	 * Return the feature which seems to be the name
+	 * Returns the feature which seems to be the name of the given {@link EObject}.
 	 * 
 	 * @param current
-	 * @return the feature which seems to be the name
+	 *            {@link EObject} we seek the name feature of.
+	 * @return The feature which seems to be the name of the given {@link EObject}.
 	 * @throws FactoryException
+	 *             Thrown if an operation on <code>current</code> fails.
 	 */
-	public static EAttribute findNameFeature(EObject current)
-			throws FactoryException {
-
-		EObject eclass = current.eClass();
+	public static EAttribute findNameFeature(EObject current) throws FactoryException {
+		final EObject eclass = current.eClass();
 
 		List eclassAttributes = new LinkedList();
 		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass) eclass).getEAllAttributes();
+			eclassAttributes = ((EClass)eclass).getEAllAttributes();
 		EAttribute bestFeature = null;
 		if (eclassAttributes.size() > 0) {
-			bestFeature = (EAttribute) eclassAttributes.get(0);
+			bestFeature = (EAttribute)eclassAttributes.get(0);
 		}
 		// first, find the eclass structural feature most similar with name
 		if (eclassAttributes.size() > 0) {
 			double max = 0;
-			Iterator it = eclassAttributes.iterator();
+			final Iterator it = eclassAttributes.iterator();
 			while (it.hasNext()) { // for each metamodel feature
-				Object next = it.next();
+				final Object next = it.next();
 				if (next instanceof EObject) {
-					EObject obj = (EObject) next;
-					String attributeName = EFactory.eGetAsString(obj, "name"); //$NON-NLS-1$
-					// if the attributeName is more similar with "name" than
-					// the other one
-					if (nameSimilarityMetric(attributeName, "name") > max) {//$NON-NLS-1$
-						max = nameSimilarityMetric(attributeName, "name");//$NON-NLS-1$
-						bestFeature = (EAttribute) obj;
+					final EObject obj = (EObject)next;
+					final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
+					// if the attributeName is more similar with "name" than the other one
+					if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
+						max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);
+						bestFeature = (EAttribute)obj;
 					}
-
 				}
 			}
 		}
 		// now we should return the feature value
 		return bestFeature;
-
 	}
-
-	private static double lastScore = 100;
-
-	private static String lastSearch = ""; //$NON-NLS-1$
-
-	/**
-	 * 
-	 * @param current
-	 * @param str
-	 * @return the most similar object not yet found
-	 */
-	public EObject findIncremental(EObject current, String str) {
-		if (!str.equals(lastSearch))
-			lastScore = 100;
-		EObject result = current;
-		double max = 0;
-		TreeIterator it = current.eAllContents();
-		while (it.hasNext()) {
-			Object next = it.next();
-			if (next instanceof EObject
-					&& nameSimilarityMetric(next.toString(), str) > max
-					&& nameSimilarityMetric(next.toString(), str) < lastScore) {
-				max = nameSimilarityMetric(next.toString(), str);
-				result = (EObject) next;
-			}
-		}
-		lastSearch = str;
-		lastScore = max;
-		return result;
-	}
-
 }

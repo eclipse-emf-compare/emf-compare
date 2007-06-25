@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: MatchElementImpl.java,v 1.1 2007/06/22 15:07:38 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.impl;
 
 import java.util.Collection;
@@ -151,6 +155,7 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
@@ -206,7 +211,7 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (similarity: ");
+		result.append(" (similarity: "); //$NON-NLS-1$
 		result.append(similarity);
 		result.append(')');
 		return result.toString();

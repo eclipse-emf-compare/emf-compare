@@ -19,36 +19,35 @@ import org.osgi.framework.BundleContext;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MatchPlugin extends Plugin {
-
-	/**
-	 * The plugin ID
-	 */
+	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.match"; //$NON-NLS-1$
 
 	// The shared instance
 	private static MatchPlugin plugin;
 
 	/**
-	 * The constructor.
+	 * Default constructor.
 	 */
 	public MatchPlugin() {
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

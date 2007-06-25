@@ -26,19 +26,22 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Service facade for matching models
+ * Service facade for matching models.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MatchService {
 	// The shared instance
 	private static MatchService service;
 
-	private Map engines = new HashMap();
+	private static final String TAG_ENGINE = "engine"; //$NON-NLS-1$
+
+	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
+
+	private Map<String, ArrayList<EngineDescriptor>> engines = new HashMap<String, ArrayList<EngineDescriptor>>();
 
 	/**
-	 * The constructor
+	 * Default constructor.
 	 */
 	public MatchService() {
 		service = this;
@@ -46,14 +49,13 @@ public class MatchService {
 	}
 
 	private void parseExtensionMetadata() {
-		IExtension[] extensions = Platform.getExtensionRegistry()
-				.getExtensionPoint(MatchPlugin.PLUGIN_ID, "engine")
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				MatchPlugin.PLUGIN_ID, "engine") //$NON-NLS-1$
 				.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
-			IConfigurationElement[] configElements = extensions[i]
-					.getConfigurationElements();
+			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
-				EngineDescriptor desc = parseEngine(configElements[j]);
+				final EngineDescriptor desc = parseEngine(configElements[j]);
 				storeEngineDescriptor(desc);
 			}
 		}
@@ -62,43 +64,40 @@ public class MatchService {
 
 	private void storeEngineDescriptor(EngineDescriptor desc) {
 		if (!engines.containsKey(desc.getFileExtension())) {
-			engines.put(desc.getFileExtension(), new ArrayList());
+			engines.put(desc.getFileExtension(), new ArrayList<EngineDescriptor>());
 		}
-		List set = (List) engines.get(desc.getFileExtension());
+		final List<EngineDescriptor> set = engines.get(desc.getFileExtension());
 		set.add(desc);
 	}
 
 	private EngineDescriptor getBestDescriptor(String extension) {
-
+		EngineDescriptor descriptor = null;
 		if (engines.containsKey(extension)) {
-			return getHighestDescriptor((List) (engines.get(extension)));
+			descriptor = getHighestDescriptor(engines.get(extension));
+		} else if (engines.containsKey(ALL_EXTENSIONS)) {
+			descriptor = getHighestDescriptor(engines.get(ALL_EXTENSIONS));
 		}
-		if (engines.containsKey(ALL_EXTENSIONS)) {
-			return getHighestDescriptor((List) (engines.get(ALL_EXTENSIONS)));
-		}
-		return null;
+		return descriptor;
 	}
 
-	private EngineDescriptor getHighestDescriptor(List set) {
+	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
-			return (EngineDescriptor) set.get(0);
+			return set.get(0);
 		return null;
 	}
-
-	private static final String TAG_ENGINE = "engine";
 
 	private EngineDescriptor parseEngine(IConfigurationElement configElements) {
 		if (!configElements.getName().equals(TAG_ENGINE))
 			return null;
-		EngineDescriptor desc = new EngineDescriptor(configElements);
+		final EngineDescriptor desc = new EngineDescriptor(configElements);
 		return desc;
 	}
 
 	/**
-	 * Return the singleton instance
+	 * Returns the singleton instance.
 	 * 
-	 * @return the singleton instance
+	 * @return The singleton instance.
 	 */
 	public static MatchService getInstance() {
 		if (service == null)
@@ -107,58 +106,58 @@ public class MatchService {
 	}
 
 	/**
-	 * Match two models and return the coresponding matching model
+	 * Matches two models and returns the corresponding matching model.
 	 * 
-	 * @param leftRoot :
-	 *            left model
-	 * @param rightRoot :
-	 *            right model
+	 * @param leftRoot
+	 *            Left model of the comparison.
+	 * @param rightRoot
+	 *            Right model of the comparison.
 	 * @param monitor
-	 * @return matching model
+	 *            Progress monitor to display for long operations.
+	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot,
-			IProgressMonitor monitor) throws InterruptedException {
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
+			throws InterruptedException {
 		MatchModel result = null;
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		EngineDescriptor desc = getBestDescriptor(extension);
-		MatchEngine currentEngine = desc.getEngineInstance();
+		final EngineDescriptor desc = getBestDescriptor(extension);
+		final MatchEngine currentEngine = desc.getEngineInstance();
 		result = currentEngine.modelMatch(leftRoot, rightRoot, monitor);
 		return result;
 	}
 
 	/**
+	 * Matches three models and returns the corresponding matching model.
 	 * 
-	 * @param leftRoot :
-	 *            left model
-	 * @param rightRoot :
-	 *            right model
-	 * @param ancestor :
-	 *            common ancestor model
-	 * @return the match model
+	 * @param leftRoot
+	 *            Left model of this comparison.
+	 * @param rightRoot
+	 *            Right model of this comparison.
+	 * @param ancestor
+	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
+	 * @return Matching model result of the comparison.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot,
-			EObject ancestor) {
-		MatchModel result = null;
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor) {
+		final MatchModel result = null;
 		// TODOCBR code 3 Way match
 		return result;
 	}
 
 	/**
-	 * Return the best match engine from a file extension
+	 * Returns the best {@link MatchEngine} for a file given its extension.
 	 * 
-	 * @param extension :
-	 *            file extension
-	 * @return best match engine
+	 * @param extension
+	 *            The extension of the file we need a {@link MatchEngine} for.
+	 * @return The best {@link MatchEngine} for the given file extension.
 	 */
 	public MatchEngine getBestMatchEngine(String extension) {
-		EngineDescriptor desc = getBestDescriptor(extension);
+		final EngineDescriptor desc = getBestDescriptor(extension);
 		return desc.getEngineInstance();
 	}
-
-	private static final String ALL_EXTENSIONS = "*";
 }

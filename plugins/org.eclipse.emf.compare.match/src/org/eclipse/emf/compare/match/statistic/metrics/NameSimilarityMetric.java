@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class NameSimilarityMetric implements SimilarityMetric {
-
 	/**
 	 * Create a name similarity metric.
 	 */
@@ -29,7 +28,11 @@ public class NameSimilarityMetric implements SimilarityMetric {
 		super();
 	}
 
-	/* non-javadoc */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.match.statistic.metrics.SimilarityMetric#computeSimilarity(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+	 */
 	public double computeSimilarity(EObject left, EObject right) {
 		try {
 			return NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(left), NameSimilarity
@@ -37,8 +40,6 @@ public class NameSimilarityMetric implements SimilarityMetric {
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
-		return 0.5;
-
+		return 1 / 2;
 	}
-
 }

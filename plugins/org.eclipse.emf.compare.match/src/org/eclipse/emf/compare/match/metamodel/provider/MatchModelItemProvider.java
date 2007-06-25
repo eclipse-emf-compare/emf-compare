@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: MatchModelItemProvider.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.Collection;
@@ -66,12 +70,13 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addLeftModelPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_leftModel_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature",
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false,
+				getString("_UI_MatchModel_leftModel_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, //$NON-NLS-1$
 				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -81,12 +86,13 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addRightModelPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_rightModel_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature",
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false,
+				getString("_UI_MatchModel_rightModel_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, //$NON-NLS-1$
 				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -96,12 +102,13 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addOriginModelPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_originModel_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature",
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false,
+				getString("_UI_MatchModel_originModel_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, //$NON-NLS-1$
 				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -113,6 +120,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
@@ -141,7 +149,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/MatchModel"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/MatchModel")); //$NON-NLS-1$
 	}
 
 	/**
@@ -152,8 +160,8 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 */
 	public String getText(Object object) {
 		String label = ((MatchModel)object).getLeftModel();
-		return label == null || label.length() == 0 ? getString("_UI_MatchModel_type")
-				: getString("_UI_MatchModel_type") + " " + label;
+		return label == null || label.length() == 0 ? getString("_UI_MatchModel_type") //$NON-NLS-1$
+				: getString("_UI_MatchModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -189,6 +197,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 

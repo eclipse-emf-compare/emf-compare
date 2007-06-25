@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: MatchPackage.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -33,7 +37,7 @@ public interface MatchPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNAME = "match";
+	String eNAME = "match"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
@@ -41,7 +45,7 @@ public interface MatchPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.0";
+	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -49,7 +53,7 @@ public interface MatchPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "match";
+	String eNS_PREFIX = "match"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.

@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: Match2ElementsItemProvider.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.Collection;
@@ -60,12 +64,13 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match2Elements_leftElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_Match2Elements_leftElement_feature",
-						"_UI_Match2Elements_type"), MatchPackage.Literals.MATCH2_ELEMENTS__LEFT_ELEMENT,
+				getString("_UI_Match2Elements_leftElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_Match2Elements_leftElement_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_Match2Elements_type"), MatchPackage.Literals.MATCH2_ELEMENTS__LEFT_ELEMENT, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -75,12 +80,13 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addRightElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match2Elements_rightElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_Match2Elements_rightElement_feature",
-						"_UI_Match2Elements_type"), MatchPackage.Literals.MATCH2_ELEMENTS__RIGHT_ELEMENT,
+				getString("_UI_Match2Elements_rightElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_Match2Elements_rightElement_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_Match2Elements_type"), MatchPackage.Literals.MATCH2_ELEMENTS__RIGHT_ELEMENT, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -91,7 +97,7 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match2Elements"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match2Elements")); //$NON-NLS-1$
 	}
 
 	/**
@@ -102,7 +108,7 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 */
 	public String getText(Object object) {
 		Match2Elements match2Elements = (Match2Elements)object;
-		return getString("_UI_Match2Elements_type") + " " + match2Elements.getSimilarity();
+		return getString("_UI_Match2Elements_type") + " " + match2Elements.getSimilarity(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -137,5 +143,4 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	public ResourceLocator getResourceLocator() {
 		return MatchEditPlugin.INSTANCE;
 	}
-
 }

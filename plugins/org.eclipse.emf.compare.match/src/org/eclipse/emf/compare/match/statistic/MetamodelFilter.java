@@ -20,39 +20,42 @@ import java.util.Map;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
- * This class determine the unused features in a metamodel using models
+ * This class determines the unused features in a metamodel using models.
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MetamodelFilter {
-	
-	
-	private Map eClassToFeaturesList = null;
+	protected Map<EStructuralFeature, FeatureInformation> featuresToInformation = new HashMap<EStructuralFeature, FeatureInformation>();
+
+	protected List<FeatureInformation> unusedFeatures;
+
+	private Map<EClass, List<EStructuralFeature>> eClassToFeaturesList;
+
 	/**
-	 * Return a list of the pertinent features for this eObject
+	 * Returns a list of the pertinent features for this {@link EObject}.
 	 * 
 	 * @param eObj
-	 * @return a list of the pertinent features for this eObject
+	 *            {@link EObject} from which we seek the features.
+	 * @return A list of the pertinent features for this {@link EObject}.
 	 */
-	public List getFilteredFeatures(EObject eObj) {
+	public List<EStructuralFeature> getFilteredFeatures(EObject eObj) {
 		// cache the filtered features for a type
 		if (eClassToFeaturesList == null)
-			eClassToFeaturesList = new HashMap();
+			eClassToFeaturesList = new HashMap<EClass, List<EStructuralFeature>>();
 		if (eClassToFeaturesList.containsKey(eObj.eClass()))
-			return (List)eClassToFeaturesList.get(eObj.eClass());
-		// end of memoize cache
-		
-		List result = new ArrayList();
-		Collection unused = getUnusedFeatures();
-		Iterator it = eObj.eClass().getEAllStructuralFeatures().iterator();
-		while (it.hasNext())
-		{
-			EStructuralFeature feat = (EStructuralFeature)it.next();
+			return eClassToFeaturesList.get(eObj.eClass());
+		// end of memorize cache
+
+		final List<EStructuralFeature> result = new ArrayList<EStructuralFeature>();
+		final Collection unused = getUnusedFeatures();
+		final Iterator it = eObj.eClass().getEAllStructuralFeatures().iterator();
+		while (it.hasNext()) {
+			final EStructuralFeature feat = (EStructuralFeature)it.next();
 			if (!unused.contains(feat))
 				result.add(feat);
 		}
@@ -66,51 +69,44 @@ public class MetamodelFilter {
 		return unusedFeatures;
 	}
 
-	protected Map featuresToInformation = new HashMap();
-
-	protected Collection unusedFeatures = null;
-
 	/**
-	 * Analyse a model and change the stats using this model
+	 * Analyses a model and changes the stats using this model.
 	 * 
 	 * @param root
+	 *            Model to analyze.
 	 */
 	public void analyseModel(EObject root) {
 		processEObject(root);
-		Iterator it = root.eAllContents();
+		final Iterator it = root.eAllContents();
 		while (it.hasNext()) {
-			EObject eObj = (EObject) it.next();
+			final EObject eObj = (EObject)it.next();
 			processEObject(eObj);
 		}
 		unusedFeatures = null;
 		eClassToFeaturesList = null;
 	}
 
-
 	private void buildUnusedFeatures() {
-		unusedFeatures = new ArrayList();
-		Iterator it = featuresToInformation.keySet().iterator();
+		unusedFeatures = new ArrayList<FeatureInformation>();
+		final Iterator<EStructuralFeature> it = featuresToInformation.keySet().iterator();
 		while (it.hasNext()) {
-			EStructuralFeature feat = (EStructuralFeature) it.next();
-			if (((FeatureInformation) featuresToInformation.get(feat)).hasUniqueValue)
+			final EStructuralFeature feat = it.next();
+			if (featuresToInformation.get(feat).hasUniqueValue())
 				unusedFeatures.add(featuresToInformation.get(feat));
 		}
 	}
 
 	private void processEObject(EObject eObj) {
-		Iterator featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
+		final Iterator featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (featIt.hasNext()) {
-			EStructuralFeature feat = (EStructuralFeature) featIt.next();
+			final EStructuralFeature feat = (EStructuralFeature)featIt.next();
 			if (!featuresToInformation.containsKey(feat))
-				featuresToInformation.put(feat,
-						new FeatureInformation(feat));
+				featuresToInformation.put(feat, new FeatureInformation(feat));
 			try {
 				if (EFactory.eGet(eObj, feat.getName()) != null) {
-					((FeatureInformation) featuresToInformation.get(feat))
-							.processValue(eObj.eGet(feat).toString());
+					featuresToInformation.get(feat).processValue(eObj.eGet(feat).toString());
 				} else {
-					((FeatureInformation) featuresToInformation.get(feat))
-							.processValue("null"); //$NON-NLS-1$
+					featuresToInformation.get(feat).processValue("null"); //$NON-NLS-1$
 				}
 			} catch (FactoryException e) {
 				EMFComparePlugin.getDefault().log(e.getMessage(), false);
@@ -119,70 +115,78 @@ public class MetamodelFilter {
 	}
 }
 
+/**
+ * Describes a feature.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ */
 class FeatureInformation {
+	private EStructuralFeature feature;
 
-	EStructuralFeature feature;
+	private int timesUsed;
 
-	int timesUsed = 0;
+	private boolean hasUniqueValue = true;
 
-	boolean hasUniqueValue = true;
-
-	String uniqueValue = null;
+	private String uniqueValue;
 
 	/**
-	 * Create a featureInformation from a feature
+	 * Creates a {@link FeatureInformation} from a feature.
 	 * 
 	 * @param feat
+	 *            The {@link EStructuralFeature feature} we want described.
 	 */
 	public FeatureInformation(EStructuralFeature feat) {
-		this.feature = feat;
+		feature = feat;
 	}
 
 	/**
-	 * Add this value in the calculus model
+	 * Adds this value in the calculus model.
 	 * 
 	 * @param value
+	 *            The value to add.
 	 */
 	public void processValue(String value) {
 		timesUsed += 1;
-		if (uniqueValue != null) {
-			if (!uniqueValue.equals(value))
-				hasUniqueValue = false;
-		} else {
+		if (uniqueValue != null && !uniqueValue.equals(value)) {
+			hasUniqueValue = false;
+		} else if (uniqueValue == null) {
 			uniqueValue = value;
 		}
 	}
 
 	/**
+	 * Returns the feature described by this {@link FeatureInformation}.
 	 * 
-	 * @return the feature
+	 * @return The feature described by this {@link FeatureInformation}.
 	 */
 	public EStructuralFeature getFeature() {
 		return feature;
 	}
 
 	/**
+	 * Indicates that this features always has the same value.
 	 * 
-	 * @return true if this feature always has the same value
+	 * @return <code>True</code> if this feature always has the same value, <code>False</code> otherwise.
 	 */
 	public boolean hasUniqueValue() {
 		return hasUniqueValue;
 	}
 
 	/**
+	 * Returns the number of time this feature has been used.
 	 * 
-	 * @return the number of time this feature has been used
+	 * @return The number of time this feature has been used.
 	 */
 	public int getTimesUsed() {
 		return timesUsed;
 	}
 
 	/**
+	 * Returns the feature unique value.
 	 * 
-	 * @return the feature unique value
+	 * @return The feature unique value.
 	 */
 	public String getUniqueValue() {
 		return uniqueValue;
 	}
-
 }

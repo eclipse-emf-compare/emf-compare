@@ -15,23 +15,25 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * A Match Engine is responsible for returning a match model from a set of
- * models. The resulting match model is then used to create a diff between the two models
+ * A Match Engine is responsible for returning a match model from a set of models. The resulting match model
+ * is then used to create a diff between the two models
  * 
- * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public interface MatchEngine {
-
 	/**
-	 * This method returns a 2 models match. 
+	 * This method returns a 2 models match.
 	 * 
-	 * @param leftRoot left model
-	 * @param rightRoot right model
-	 * @param monitor 
-	 * @return the corresponding match
-	 * @throws InterruptedException 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param monitor
+	 * 			{@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 * @return The corresponding {@link MatchModel}.
+	 * @throws InterruptedException
+	 * 			Thrown if the comparison is interrupted somehow.
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor) throws InterruptedException;
-
+	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
+			throws InterruptedException;
 }

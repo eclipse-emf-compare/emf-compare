@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: UnMatchElementItemProvider.java,v 1.1 2007/06/22 15:07:39 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.provider;
 
 import java.util.Collection;
@@ -59,12 +63,13 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	protected void addElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_UnMatchElement_element_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_UnMatchElement_element_feature",
-						"_UI_UnMatchElement_type"), MatchPackage.Literals.UN_MATCH_ELEMENT__ELEMENT, true,
+				getString("_UI_UnMatchElement_element_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_UnMatchElement_element_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_UnMatchElement_type"), MatchPackage.Literals.UN_MATCH_ELEMENT__ELEMENT, true, //$NON-NLS-1$
 				false, true, null, null, null));
 	}
 
@@ -75,7 +80,7 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	 * @generated
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnMatchElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnMatchElement")); //$NON-NLS-1$
 	}
 
 	/**
@@ -85,7 +90,7 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	 * @generated
 	 */
 	public String getText(Object object) {
-		return getString("_UI_UnMatchElement_type");
+		return getString("_UI_UnMatchElement_type"); //$NON-NLS-1$
 	}
 
 	/**
