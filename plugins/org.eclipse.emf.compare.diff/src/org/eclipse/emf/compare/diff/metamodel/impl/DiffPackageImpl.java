@@ -29,6 +29,8 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -155,6 +157,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	private EClass updateReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass updateUniqueReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -550,7 +559,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	public EReference getAddReferenceValue_LeftAddedTarget() {
-		return (EReference)addReferenceValueEClass.getEStructuralFeatures().get(0);
+		return (EReference)addReferenceValueEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -559,7 +568,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	public EReference getAddReferenceValue_RightAddedTarget() {
-		return (EReference)addReferenceValueEClass.getEStructuralFeatures().get(1);
+		return (EReference)addReferenceValueEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -596,6 +605,33 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EClass getUpdateReference() {
 		return updateReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUpdateUniqueReferenceValue() {
+		return updateUniqueReferenceValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUpdateUniqueReferenceValue_LeftTarget() {
+		return (EReference)updateUniqueReferenceValueEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUpdateUniqueReferenceValue_RightTarget() {
+		return (EReference)updateUniqueReferenceValueEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -710,14 +746,18 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		updateAttributeEClass = createEClass(UPDATE_ATTRIBUTE);
 
 		addReferenceValueEClass = createEClass(ADD_REFERENCE_VALUE);
-		createEReference(addReferenceValueEClass, ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET);
 		createEReference(addReferenceValueEClass, ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET);
+		createEReference(addReferenceValueEClass, ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET);
 
 		removeReferenceValueEClass = createEClass(REMOVE_REFERENCE_VALUE);
 		createEReference(removeReferenceValueEClass, REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET);
 		createEReference(removeReferenceValueEClass, REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET);
 
 		updateReferenceEClass = createEClass(UPDATE_REFERENCE);
+
+		updateUniqueReferenceValueEClass = createEClass(UPDATE_UNIQUE_REFERENCE_VALUE);
+		createEReference(updateUniqueReferenceValueEClass, UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET);
+		createEReference(updateUniqueReferenceValueEClass, UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET);
 
 		modelInputSnapshotEClass = createEClass(MODEL_INPUT_SNAPSHOT);
 		createEAttribute(modelInputSnapshotEClass, MODEL_INPUT_SNAPSHOT__DATE);
@@ -770,6 +810,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		addReferenceValueEClass.getESuperTypes().add(this.getReferenceChange());
 		removeReferenceValueEClass.getESuperTypes().add(this.getReferenceChange());
 		updateReferenceEClass.getESuperTypes().add(this.getReferenceChange());
+		updateUniqueReferenceValueEClass.getESuperTypes().add(this.getUpdateReference());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(diffModelEClass, DiffModel.class, "DiffModel", !IS_ABSTRACT, !IS_INTERFACE,
@@ -873,12 +914,12 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(addReferenceValueEClass, AddReferenceValue.class, "AddReferenceValue", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAddReferenceValue_LeftAddedTarget(), ecorePackage.getEObject(), null,
-				"leftAddedTarget", null, 0, -1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
 		initEReference(getAddReferenceValue_RightAddedTarget(), ecorePackage.getEObject(), null,
 				"rightAddedTarget", null, 0, -1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEReference(getAddReferenceValue_LeftAddedTarget(), ecorePackage.getEObject(), null,
+				"leftAddedTarget", null, 0, -1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 
@@ -895,6 +936,17 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(updateReferenceEClass, UpdateReference.class, "UpdateReference", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(updateUniqueReferenceValueEClass, UpdateUniqueReferenceValue.class,
+				"UpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUpdateUniqueReferenceValue_LeftTarget(), ecorePackage.getEObject(), null,
+				"leftTarget", null, 0, -1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEReference(getUpdateUniqueReferenceValue_RightTarget(), ecorePackage.getEObject(), null,
+				"rightTarget", null, 0, -1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(modelInputSnapshotEClass, ModelInputSnapshot.class, "ModelInputSnapshot", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

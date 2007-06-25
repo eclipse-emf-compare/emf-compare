@@ -735,22 +735,22 @@ public interface DiffPackage extends EPackage {
 	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Right Added Target</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Left Added Target</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Add Reference Value</em>' class.
@@ -890,6 +890,79 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_REFERENCE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
+	 * @generated
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE = 16;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = UPDATE_REFERENCE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__REFERENCE = UPDATE_REFERENCE__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_ELEMENT = UPDATE_REFERENCE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_ELEMENT = UPDATE_REFERENCE__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET = UPDATE_REFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET = UPDATE_REFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Update Unique Reference Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE_FEATURE_COUNT = UPDATE_REFERENCE_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -897,7 +970,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
 	 * @generated
 	 */
-	int MODEL_INPUT_SNAPSHOT = 16;
+	int MODEL_INPUT_SNAPSHOT = 17;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute.
@@ -1360,6 +1433,38 @@ public interface DiffPackage extends EPackage {
 	EClass getUpdateReference();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue <em>Update Unique Reference Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Update Unique Reference Value</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue
+	 * @generated
+	 */
+	EClass getUpdateUniqueReferenceValue();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget()
+	 * @see #getUpdateUniqueReferenceValue()
+	 * @generated
+	 */
+	EReference getUpdateUniqueReferenceValue_LeftTarget();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget()
+	 * @see #getUpdateUniqueReferenceValue()
+	 * @generated
+	 */
+	EReference getUpdateUniqueReferenceValue_RightTarget();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot <em>Model Input Snapshot</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1778,6 +1883,34 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UPDATE_REFERENCE = eINSTANCE.getUpdateReference();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
+		 * @generated
+		 */
+		EClass UPDATE_UNIQUE_REFERENCE_VALUE = eINSTANCE.getUpdateUniqueReferenceValue();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET = eINSTANCE
+				.getUpdateUniqueReferenceValue_LeftTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET = eINSTANCE
+				.getUpdateUniqueReferenceValue_RightTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.

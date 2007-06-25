@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.diff.metamodel.*;
+
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
@@ -107,6 +109,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 				return createRemoveReferenceValue();
 			case DiffPackage.UPDATE_REFERENCE:
 				return createUpdateReference();
+			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE:
+				return createUpdateUniqueReferenceValue();
 			case DiffPackage.MODEL_INPUT_SNAPSHOT:
 				return createModelInputSnapshot();
 			default:
@@ -263,6 +267,16 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public UpdateReference createUpdateReference() {
 		UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
 		return updateReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UpdateUniqueReferenceValue createUpdateUniqueReferenceValue() {
+		UpdateUniqueReferenceValueImpl updateUniqueReferenceValue = new UpdateUniqueReferenceValueImpl();
+		return updateUniqueReferenceValue;
 	}
 
 	/**

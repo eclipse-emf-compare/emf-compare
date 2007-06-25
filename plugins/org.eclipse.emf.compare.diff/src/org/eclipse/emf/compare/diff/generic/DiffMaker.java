@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
@@ -286,15 +287,15 @@ public class DiffMaker implements DiffEngine {
 					deletedReferences.addAll(leftElementReferences);
 				if (rightElementReferences != null)
 					addedReferences.addAll(rightElementReferences);
-				
+
 				final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
 				final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
-
+				
 				// "Added" references are the references from the left element that can't be mapped
 				addedReferences.removeAll(matchedOldReferences);
 				// "deleted" references are the references from the right element that can't be mapped
 				deletedReferences.removeAll(matchedNewReferences);
-				
+
 				// Double check for objects defined in a different model and thus not matched
 				// We'll use a new list to keep track of theses elements !avoid concurrent modification!
 				final List<EObject> remoteMatchedElements = new ArrayList<EObject>();
@@ -305,45 +306,77 @@ public class DiffMaker implements DiffEngine {
 				}
 				addedReferences.removeAll(remoteMatchedElements);
 				deletedReferences.removeAll(remoteMatchedElements);
-				
-				//TODO changedReference
-				if (addedReferences.size() > 0) {
-					root.getSubDiffElements().add(createNewReferencesOperation(mapping, next, addedReferences));
-				}
-				if (deletedReferences.size() > 0) {
-					root.getSubDiffElements().add(createRemovedReferencesOperation(mapping, next, deletedReferences));
+
+				if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
+					root.getSubDiffElements().add(
+							createUpdatedReferencesOperation(mapping, next, addedReferences,
+									deletedReferences));
+				} else {
+					if (addedReferences.size() > 0) {
+						root.getSubDiffElements().add(
+								createNewReferencesOperation(mapping, next, addedReferences));
+					}
+					if (deletedReferences.size() > 0) {
+						root.getSubDiffElements().add(
+								createRemovedReferencesOperation(mapping, next, deletedReferences));
+					}
 				}
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private AddReferenceValue createNewReferencesOperation(Match2Elements mapping, EReference newReference, List<EObject> addedReferences) {
+	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(Match2Elements mapping,
+			EReference newReference, List<EObject> deletedReferences, List<EObject> addedReferences) {
+		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
+		operation.setLeftElement(mapping.getLeftElement());
+		operation.setRightElement(mapping.getRightElement());
+		operation.setReference(newReference);
+		
+		EObject leftTarget = getMatchedEObject(addedReferences.get(0));
+		EObject rightTarget = getMatchedEObject(deletedReferences.get(0));
+		// checks if target are defined remotely
+		if (leftTarget == null)
+			leftTarget = addedReferences.get(0);
+		if (rightTarget == null)
+			rightTarget = deletedReferences.get(0);
+		
+		operation.getLeftTarget().add(leftTarget);
+		operation.getRightTarget().add(rightTarget);
+		
+		return operation;
+	}
+
+	@SuppressWarnings("unchecked")
+	private AddReferenceValue createNewReferencesOperation(Match2Elements mapping, EReference newReference,
+			List<EObject> addedReferences) {
 		final AddReferenceValue operation = DiffFactory.eINSTANCE.createAddReferenceValue();
 		operation.setLeftElement(mapping.getLeftElement());
 		operation.setRightElement(mapping.getRightElement());
 		operation.setReference(newReference);
-		for (final Iterator addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator.hasNext(); ) {
-			final Object eobj = addedReferenceIterator.next();
+		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator
+				.hasNext(); ) {
+			final EObject eobj = addedReferenceIterator.next();
 			operation.getRightAddedTarget().add(eobj);
-			if (getMatchedEObject((EObject)eobj) != null)
-				operation.getLeftAddedTarget().add(getMatchedEObject((EObject)eobj));
+			if (getMatchedEObject(eobj) != null)
+				operation.getLeftAddedTarget().add(getMatchedEObject(eobj));
 		}
 		return operation;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private RemoveReferenceValue createRemovedReferencesOperation(Match2Elements mapping, EReference removedReference, List<EObject> deletedReferences) {
-		final RemoveReferenceValue deloperation = DiffFactory.eINSTANCE
-		.createRemoveReferenceValue();
+	private RemoveReferenceValue createRemovedReferencesOperation(Match2Elements mapping,
+			EReference removedReference, List<EObject> deletedReferences) {
+		final RemoveReferenceValue deloperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
 		deloperation.setRightElement(mapping.getRightElement());
 		deloperation.setLeftElement(mapping.getLeftElement());
 		deloperation.setReference(removedReference);
-		for (final Iterator deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator.hasNext(); ) {
-			final Object eobj = deletedReferenceIterator.next();
+		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator
+				.hasNext(); ) {
+			final EObject eobj = deletedReferenceIterator.next();
 			deloperation.getLeftRemovedTarget().add(eobj);
-			if ((getMatchedEObject((EObject)eobj)) != null)
-				deloperation.getRightRemovedTarget().add(getMatchedEObject((EObject)eobj));
+			if ((getMatchedEObject(eobj)) != null)
+				deloperation.getRightRemovedTarget().add(getMatchedEObject(eobj));
 		}
 		return deloperation;
 	}
@@ -352,7 +385,7 @@ public class DiffMaker implements DiffEngine {
 	 * Returns the list of references from the given list that can be matched.
 	 * 
 	 * @param references
-	 * 			{@link List} of the references to match.
+	 *            {@link List} of the references to match.
 	 * @return The list of references from the given list that can be matched.
 	 */
 	private List<EObject> getMatchedReferences(List<EObject> references) {

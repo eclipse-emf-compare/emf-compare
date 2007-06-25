@@ -165,6 +165,15 @@ public interface DiffFactory extends EFactory {
 	UpdateReference createUpdateReference();
 
 	/**
+	 * Returns a new object of class '<em>Update Unique Reference Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Update Unique Reference Value</em>'.
+	 * @generated
+	 */
+	UpdateUniqueReferenceValue createUpdateUniqueReferenceValue();
+
+	/**
 	 * Returns a new object of class '<em>Model Input Snapshot</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

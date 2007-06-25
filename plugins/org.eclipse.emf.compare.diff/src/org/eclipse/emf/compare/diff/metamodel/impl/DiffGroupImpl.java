@@ -132,7 +132,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 					oldLeftParent, leftParent));
 	}
 
-
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -152,7 +151,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 		}
 		return result;
 	}
-
 
 	/**
 	 * <!-- begin-user-doc -->

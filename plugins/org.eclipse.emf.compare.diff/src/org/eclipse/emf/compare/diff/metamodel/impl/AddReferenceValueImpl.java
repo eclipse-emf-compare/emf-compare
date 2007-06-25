@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getRightAddedTarget <em>Right Added Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,10 +105,10 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-				return getLeftAddedTarget();
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
 				return getRightAddedTarget();
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				return getLeftAddedTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -120,13 +120,13 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-				getLeftAddedTarget().clear();
-				getLeftAddedTarget().addAll((Collection)newValue);
-				return;
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
 				getRightAddedTarget().clear();
 				getRightAddedTarget().addAll((Collection)newValue);
+				return;
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				getLeftAddedTarget().clear();
+				getLeftAddedTarget().addAll((Collection)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -139,11 +139,11 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-				getLeftAddedTarget().clear();
-				return;
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
 				getRightAddedTarget().clear();
+				return;
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				getLeftAddedTarget().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -156,10 +156,10 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
-				return leftAddedTarget != null && !leftAddedTarget.isEmpty();
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
 				return rightAddedTarget != null && !rightAddedTarget.isEmpty();
+			case DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET:
+				return leftAddedTarget != null && !leftAddedTarget.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -14,52 +14,52 @@ import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Add Reference Value</b></em>'.
+ * A representation of the model object '<em><b>Update Unique Reference Value</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget <em>Right Added Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget <em>Left Added Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAddReferenceValue()
+ * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateUniqueReferenceValue()
  * @model
  * @generated
  */
-public interface AddReferenceValue extends ReferenceChange {
+public interface UpdateUniqueReferenceValue extends UpdateReference {
 	/**
-	 * Returns the value of the '<em><b>Left Added Target</b></em>' reference list.
+	 * Returns the value of the '<em><b>Left Target</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Added Target</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Left Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Added Target</em>' reference list.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAddReferenceValue_LeftAddedTarget()
+	 * @return the value of the '<em>Left Target</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateUniqueReferenceValue_LeftTarget()
 	 * @model type="org.eclipse.emf.ecore.EObject"
 	 * @generated
 	 */
-	EList getLeftAddedTarget();
+	EList getLeftTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Added Target</b></em>' reference list.
+	 * Returns the value of the '<em><b>Right Target</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right Added Target</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Right Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Added Target</em>' reference list.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAddReferenceValue_RightAddedTarget()
+	 * @return the value of the '<em>Right Target</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateUniqueReferenceValue_RightTarget()
 	 * @model type="org.eclipse.emf.ecore.EObject"
 	 * @generated
 	 */
-	EList getRightAddedTarget();
+	EList getRightTarget();
 
-} // AddReferenceValue
+} // UpdateUniqueReferenceValue

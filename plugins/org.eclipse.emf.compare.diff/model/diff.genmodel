@@ -51,14 +51,18 @@
     <genClasses ecoreClass="diff.ecore#//RemoveAttribute"/>
     <genClasses ecoreClass="diff.ecore#//UpdateAttribute"/>
     <genClasses ecoreClass="diff.ecore#//AddReferenceValue">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddReferenceValue/leftAddedTarget"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddReferenceValue/rightAddedTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AddReferenceValue/leftAddedTarget"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//RemoveReferenceValue">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveReferenceValue/leftRemovedTarget"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//RemoveReferenceValue/rightRemovedTarget"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//UpdateReference"/>
+    <genClasses ecoreClass="diff.ecore#//UpdateUniqueReferenceValue">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateUniqueReferenceValue/leftTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateUniqueReferenceValue/rightTarget"/>
+    </genClasses>
     <genClasses ecoreClass="diff.ecore#//ModelInputSnapshot">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//ModelInputSnapshot/date"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ModelInputSnapshot/diff"/>

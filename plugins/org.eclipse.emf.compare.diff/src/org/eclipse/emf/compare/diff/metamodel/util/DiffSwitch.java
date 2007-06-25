@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.diff.metamodel.util;
 
 import java.util.List;
 
+import org.eclipse.emf.compare.diff.metamodel.*;
+
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
@@ -266,6 +268,19 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE: {
+				UpdateUniqueReferenceValue updateUniqueReferenceValue = (UpdateUniqueReferenceValue)theEObject;
+				Object result = caseUpdateUniqueReferenceValue(updateUniqueReferenceValue);
+				if (result == null)
+					result = caseUpdateReference(updateUniqueReferenceValue);
+				if (result == null)
+					result = caseReferenceChange(updateUniqueReferenceValue);
+				if (result == null)
+					result = caseDiffElement(updateUniqueReferenceValue);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.MODEL_INPUT_SNAPSHOT: {
 				ModelInputSnapshot modelInputSnapshot = (ModelInputSnapshot)theEObject;
 				Object result = caseModelInputSnapshot(modelInputSnapshot);
@@ -515,6 +530,21 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	public Object caseUpdateReference(UpdateReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Update Unique Reference Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Update Unique Reference Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
 		return null;
 	}
 
