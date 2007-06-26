@@ -185,7 +185,7 @@ public final class NameSimilarity {
 			if (nameFeature != null) {
 				final String bestFeatureName = nameFeature.getName();
 				name = EFactory.eGetAsString(current, bestFeatureName);
-				if (name == null || !name.equals("")) { //$NON-NLS-1$
+				if (name == null || name.equals("")) { //$NON-NLS-1$
 					// TODOCBR, if the element as an attribute, pick one, else use the Class name
 					name = current.eClass().getName();
 				}

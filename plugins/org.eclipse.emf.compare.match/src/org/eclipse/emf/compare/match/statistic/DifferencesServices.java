@@ -278,8 +278,6 @@ public class DifferencesServices implements MatchEngine {
 				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold && typeSimilarity(obj1, obj2) > generalThreshold) {
 					similar = true;
 				}
-	
-				return false;
 			}
 		}
 		return similar;
