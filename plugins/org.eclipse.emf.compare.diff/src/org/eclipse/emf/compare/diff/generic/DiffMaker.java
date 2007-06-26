@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * This class is useful when one wants to determine a diff from a matching model.
@@ -290,7 +291,7 @@ public class DiffMaker implements DiffEngine {
 
 				final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
 				final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
-				
+
 				// "Added" references are the references from the left element that can't be mapped
 				addedReferences.removeAll(matchedOldReferences);
 				// "deleted" references are the references from the right element that can't be mapped
@@ -307,15 +308,28 @@ public class DiffMaker implements DiffEngine {
 				addedReferences.removeAll(remoteMatchedElements);
 				deletedReferences.removeAll(remoteMatchedElements);
 
+				// REFERENCES UPDATES
 				if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
-					root.getSubDiffElements().add(
-							createUpdatedReferencesOperation(mapping, next, addedReferences,
-									deletedReferences));
+					/*
+					 * If neither the left nor the right target are proxies, or if their target URIs are
+					 * distinct, this is a reference update. Otherwise, we are here because we haven't been
+					 * able to resolve the proxy.
+					 */
+					if (!addedReferences.get(0).eIsProxy()
+							|| !deletedReferences.get(0).eIsProxy()
+							|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
+									EcoreUtil.getURI(deletedReferences.get(0)))) {
+						root.getSubDiffElements().add(
+								createUpdatedReferencesOperation(mapping, next, addedReferences,
+										deletedReferences));
+					}
 				} else {
+					// REFERENCES ADD
 					if (addedReferences.size() > 0) {
 						root.getSubDiffElements().add(
 								createNewReferencesOperation(mapping, next, addedReferences));
 					}
+					// REFERENCES DEL
 					if (deletedReferences.size() > 0) {
 						root.getSubDiffElements().add(
 								createRemovedReferencesOperation(mapping, next, deletedReferences));
@@ -332,7 +346,7 @@ public class DiffMaker implements DiffEngine {
 		operation.setLeftElement(mapping.getLeftElement());
 		operation.setRightElement(mapping.getRightElement());
 		operation.setReference(newReference);
-		
+
 		EObject leftTarget = getMatchedEObject(addedReferences.get(0));
 		EObject rightTarget = getMatchedEObject(deletedReferences.get(0));
 		// checks if target are defined remotely
@@ -340,10 +354,10 @@ public class DiffMaker implements DiffEngine {
 			leftTarget = addedReferences.get(0);
 		if (rightTarget == null)
 			rightTarget = deletedReferences.get(0);
-		
+
 		operation.getLeftTarget().add(leftTarget);
 		operation.getRightTarget().add(rightTarget);
-		
+
 		return operation;
 	}
 
