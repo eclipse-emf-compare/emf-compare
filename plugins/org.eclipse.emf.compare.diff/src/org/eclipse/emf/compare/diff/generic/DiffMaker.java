@@ -98,11 +98,8 @@ public class DiffMaker implements DiffEngine {
 				addInContainerPackage(diffRoot, operation, targetParent);
 			}
 		}
-
-		if (diffRoot.getSubDiffElements().size() == 0)
-			result.getOwnedElements().add(diffRoot);
-		else
-			result.getOwnedElements().add(diffRoot.getSubDiffElements().get(0));
+		
+		result.getOwnedElements().add(diffRoot);
 		// FIXME call diff extensions.
 		return result;
 	}
