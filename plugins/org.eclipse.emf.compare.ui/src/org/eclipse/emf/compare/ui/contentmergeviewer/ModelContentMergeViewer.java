@@ -223,11 +223,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					&& rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
 				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
 						rightItem.getData());
-				if (rightIndex > 0) {
-					final EList leftList = ((EObject)leftItem.getData()).eContents();
-					leftItem = (TreeItem)leftPart.find((EObject)leftList.get(Math.min(rightIndex - 1,
-							leftList.size() - 1)));
-				}
+				final EList leftList = ((EObject)leftItem.getData()).eContents();
+				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
+				if (leftIndex > 0)
+					leftItem = (TreeItem)leftPart.find((EObject)leftList.get(leftIndex));
 			}
 		} else if (selectedTab == TREE_TAB && leftItem == null) {
 			leftItem = leftPart.getTreeRoot();
@@ -265,11 +264,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					&& leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
 				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
 						leftItem.getData());
-				if (leftIndex > 0) {
-					final EList rightList = ((EObject)rightItem.getData()).eContents();
-					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(Math.min(leftIndex - 1, rightList
-							.size() - 1)));
-				}
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
+				final EList rightList = ((EObject)rightItem.getData()).eContents();
+				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
+				if (rightIndex > 0)
+					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(rightIndex));
 			}
 		} else if (selectedTab == TREE_TAB && rightItem == null) {
 			rightItem = rightPart.getTreeRoot();
