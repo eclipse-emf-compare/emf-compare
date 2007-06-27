@@ -46,6 +46,9 @@ public interface EMFCompareConstants {
 	/** Key of the property change event associated with an input change. */
 	String PROPERTY_INPUT_CHANGED = "model.input.changed"; //$NON-NLS-1$
 	
+	/** Key for the property change event associated with the comparison time. */
+	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$
+	
 	/** Preferences key for the siblings search window. */
 	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$
 	

@@ -217,9 +217,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		Item leftItem = (Item)leftPart.find(leftElement);
 		final Item rightItem = (Item)rightPart.find(rightElement);
 
-		if (selectedTab == TREE_TAB
-				&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
-			if (rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) 
+		if (selectedTab == TREE_TAB && leftItem != null
+				&& (!leftItem.getData().equals(leftElement) || diff instanceof AddModelElement)) {
+			if (rightItem != null && rightItem.getData().equals(rightElement) 
 					&& rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
 				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
 						rightItem.getData());
@@ -229,6 +229,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 							leftList.size() - 1)));
 				}
 			}
+		} else if (selectedTab == TREE_TAB && leftItem == null) {
+			leftItem = leftPart.getTreeRoot();
 		}
 
 		return leftItem;
@@ -251,10 +253,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		final Item leftItem = (Item)leftPart.find(leftElement);
 		Item rightItem = (Item)rightPart.find(rightElement);
+		
+		if (rightItem == null) {
+			rightItem = (Item)rightPart.getTreeRoot();
+			rightElement = (EObject)rightItem.getData();
+		}
 
-		if (selectedTab == TREE_TAB
-				&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
-			if (leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) 
+		if (selectedTab == TREE_TAB && rightItem != null
+				&& (!rightItem.getData().equals(rightElement) || diff instanceof RemoveModelElement)) {
+			if (leftItem != null && leftItem.getData().equals(leftElement) 
 					&& leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
 				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
 						leftItem.getData());
@@ -264,6 +271,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 							.size() - 1)));
 				}
 			}
+		} else if (selectedTab == TREE_TAB && rightItem == null) {
+			rightItem = rightPart.getTreeRoot();
 		}
 
 		return rightItem;

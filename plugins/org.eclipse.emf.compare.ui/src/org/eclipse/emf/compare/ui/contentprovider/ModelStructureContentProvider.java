@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IStreamContentAccessor;
@@ -27,6 +29,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -158,6 +161,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					configuration.setLeftEditable(false);
 				}
 				if (leftModel != null && rightModel != null) {
+					final Date start = Calendar.getInstance().getTime();
 					PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
 							new IRunnableWithProgress() {
 								public void run(IProgressMonitor monitor) throws InvocationTargetException,
@@ -171,6 +175,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 									snapshot.setMatch(match);
 								}
 							});
+					final Date end = Calendar.getInstance().getTime();
+					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime() - start.getTime());
 
 					diffInput = snapshot.getDiff();
 				}

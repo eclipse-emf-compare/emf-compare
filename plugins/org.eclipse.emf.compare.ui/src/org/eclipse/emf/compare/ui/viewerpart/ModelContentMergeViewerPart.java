@@ -223,6 +223,17 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
+	 * Returns the first root of the tree.
+	 * 
+	 * @return The first root of the tree.
+	 */
+	public TreeItem getTreeRoot() {
+		if (tree.getVisibleElements().size() > 0)
+			return tree.getVisibleElements().get(0);
+		return null;
+	}
+
+	/**
 	 * Redraws this viewer part.
 	 */
 	public void layout() {
