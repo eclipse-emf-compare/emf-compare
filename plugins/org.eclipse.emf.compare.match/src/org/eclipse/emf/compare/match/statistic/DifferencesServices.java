@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
@@ -32,6 +31,7 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ETools;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 
 /**
@@ -40,11 +40,6 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
  * <ul>
  * <li>{@link #STRONG_STRATEGY Strong} will only consider Add, Remove or Change operations.</li>
  * <li>{@link #SOFT_STRATEGY Soft} will consider Add, Remove, Change, Move and Rename operations.</li>
- * </ul>
- * <p>
- * Known bugs and limitations :
- * <ul>
- * <li>Model diff only works if the two roots given are similar.</li>
  * </ul>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
@@ -56,9 +51,15 @@ public class DifferencesServices implements MatchEngine {
 	/** Soft strategy considers ADD, REMOVE, CHANGE, MOVE and RENAME operations. */
 	public static final int SOFT_STRATEGY = 1;
 
+	private static final int MIN_ATTRIBUTES_COUNT = 5;
+
 	private static final double THRESHOLD = 0.96d;
 
 	private static final double STRONGER_THRESHOLD = 0.96d;
+
+	private static final String SUBMATCH_ELEMENT_NAME = "subMatchElements"; //$NON-NLS-1$
+
+	private static final String UNMATCH_ELEMENT_NAME = "unMatchedElements"; //$NON-NLS-1$
 
 	private static final String NAME_SIMILARITY = "n"; //$NON-NLS-1$
 
@@ -238,14 +239,15 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
 		boolean similar = false;
-		
+
+		final double fewerAttributesNameThreshold = 0.8d;
 		final double relationsThreshold = 0.9d;
 		final double nameThreshold = 0.2d;
 		final double softContentThreshold = 0.59d;
 		final double strongContentThreshold = 0.9d;
 		final double softTriWayThreshold = 0.8d;
 		final double strongTriWayThreshold = 0.9d;
-		
+
 		double contentThreshold = softContentThreshold;
 		double triWayThreshold = softTriWayThreshold;
 		double generalThreshold = THRESHOLD;
@@ -254,7 +256,7 @@ public class DifferencesServices implements MatchEngine {
 			triWayThreshold = strongTriWayThreshold;
 			generalThreshold = STRONGER_THRESHOLD;
 		}
-		
+
 		if (haveSameXmiId(obj1, obj2)) {
 			similar = true;
 		} else {
@@ -263,19 +265,28 @@ public class DifferencesServices implements MatchEngine {
 
 			if (nameSimilarity == 1 && hasSameUri) {
 				similar = true;
+				// softer test if we don't have enough attributes to compare the objects
+			} else if (nameSimilarity > fewerAttributesNameThreshold 
+					&& nonNullFeaturesCount(obj1) <= MIN_ATTRIBUTES_COUNT
+					&& nonNullFeaturesCount(obj2) <= MIN_ATTRIBUTES_COUNT
+					&& typeSimilarity(obj1, obj2) > generalThreshold) {
+				similar = true;
 			} else {
 				final double contentSimilarity = contentSimilarity(obj1, obj2);
 				final double relationsSimilarity = relationsSimilarity(obj1, obj2);
-	
-				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold && nameSimilarity > nameThreshold) {
+
+				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
+						&& nameSimilarity > nameThreshold) {
 					similar = true;
 				} else if (relationsSimilarity == 1 && hasSameUri) {
 					similar = true;
 				} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
 					similar = true;
-				} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold && relationsSimilarity > triWayThreshold) {
+				} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
+						&& relationsSimilarity > triWayThreshold) {
 					similar = true;
-				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold && typeSimilarity(obj1, obj2) > generalThreshold) {
+				} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
+						&& typeSimilarity(obj1, obj2) > generalThreshold) {
 					similar = true;
 				}
 			}
@@ -323,10 +334,6 @@ public class DifferencesServices implements MatchEngine {
 	 * <li>The mapping tree is browsed in order to determine the modification log.</li>
 	 * <li>The modification log (an EMF model) is then returned.</li>
 	 * </ul>
-	 * Known bugs and limitations :
-	 * <ul>
-	 * <li>Model diff only works if the two roots given are similar</li>
-	 * </ul>
 	 * 
 	 * @param root1
 	 *            Left model of the comparison.
@@ -343,9 +350,9 @@ public class DifferencesServices implements MatchEngine {
 	public MatchModel modelMatch(EObject root1, EObject root2, IProgressMonitor monitor)
 			throws InterruptedException {
 		final MatchModel root = matchFactory.createMatchModel();
-		
+
 		launchMonitor(monitor, root1);
-		
+
 		// filtering unused features
 		filter = new MetamodelFilter();
 		filter.analyseModel(root1);
@@ -354,66 +361,59 @@ public class DifferencesServices implements MatchEngine {
 
 		// first navigate through both models at the same time and realize mappings..
 		try {
-			/*
-			 * TODO uncomment this if/else and fix the "else". If the roots aren't similar, we need to find the
-			 * matching root and do something with the elements we haven't matched.
-			 */
-			// if (isSimilar(root1, root2)) {
-			final Match2Elements rootMapping = recursiveMappings(root1, root2, monitor);
-
-			redirectedAdd(root, "matchedElements", rootMapping); //$NON-NLS-1$
-			// Keep current lists in a corner and init the objects list we still have to map
-			final List<EObject> still1 = new ArrayList<EObject>(stillToFindFromModel1);
-			final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
+			monitor.subTask("matching roots"); //$NON-NLS-1$
+			final List<Match2Elements> matchedRoots = mapLists(root1.eResource().getContents(), root2
+					.eResource().getContents(), getDefaultSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
-			// now try to map not yet mapped elements...
-			monitor.subTask("Matching remaining elements"); //$NON-NLS-1$
-			// magic number to avoid too big complexity
-			final List<Match2Elements> mappings = mapLists(still1, still2, getDefaultSearchWindow(), monitor);
-			
-			// If the resources have more than one root element, we match through them
-			final List<EObject> resource1Content = root1.eResource().getContents();
-			final List<EObject> resource2Content = root2.eResource().getContents();
-			mappings.addAll(mapAdditionalRoots(resource1Content, resource2Content, monitor));
-			
-			final Iterator<Match2Elements> it = mappings.iterator();
-			while (it.hasNext()) {
-				final Match2Elements map = it.next();
-				redirectedAdd(rootMapping, "subMatchElements", map); //$NON-NLS-1$
-				// if it has not been mapped while browsing the trees at the same time it probably is a moved
-				// element
-			}
+			final List<EObject> unMatchedLeftRoots = new ArrayList(root1.eResource().getContents());
+			final List<EObject> unMatchedRightRoots = new ArrayList(root2.eResource().getContents());
 
-			// now the other elements won't be mapped, keep them in the model
-			final Iterator<EObject> it1 = stillToFindFromModel1.iterator();
-			while (it1.hasNext()) {
-				final EObject element = it1.next();
-				final UnMatchElement unMap = matchFactory.createUnMatchElement();
-				unMap.setElement(element);
-				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
+			Match2Elements matchModelRoot = matchFactory.createMatch2Elements();
+			// We haven't found any similar roots, we then consider the firsts to be similar
+			if (matchedRoots.size() == 0) {
+				final Match2Elements rootMapping = matchFactory.createMatch2Elements();
+				rootMapping.setLeftElement(root1);
+				rootMapping.setRightElement(findMostSimilar(root1, unMatchedRightRoots));
+				matchedRoots.add(rootMapping);
 			}
-			final Iterator<EObject> it2 = stillToFindFromModel2.iterator();
-			while (it2.hasNext()) {
-				final EObject element = it2.next();
-				final UnMatchElement unMap = matchFactory.createUnMatchElement();
-				unMap.setElement(element);
-				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
+			for (Match2Elements matchedRoot : matchedRoots) {
+				monitor.subTask("Processing matched roots' contents"); //$NON-NLS-1$
+				final Match2Elements rootMapping = recursiveMappings(matchedRoot.getLeftElement(),
+						matchedRoot.getRightElement(), monitor);
+				// this is the first passage
+				if (matchModelRoot.getLeftElement() == null) {
+					matchModelRoot = rootMapping;
+					redirectedAdd(root, "matchedElements", matchModelRoot); //$NON-NLS-1$
+				} else {
+					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
+				}
+
+				// Keep current lists in a corner and init the objects list we still have to map
+				final List<EObject> still1 = new ArrayList<EObject>(stillToFindFromModel1);
+				final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
+				stillToFindFromModel1.clear();
+				stillToFindFromModel2.clear();
+				
+				createSubMatchElements(rootMapping, still1, still2, monitor);
+				// now the other elements won't be mapped, keep them in the model
+				createUnMatchElements(root, stillToFindFromModel1);
+				createUnMatchElements(root, stillToFindFromModel2);
+
+				unMatchedLeftRoots.remove(matchedRoot.getLeftElement());
+				unMatchedRightRoots.remove(matchedRoot.getRightElement());
 			}
-			stillToFindFromModel1.clear();
-			stillToFindFromModel2.clear();
-			// } else {
-			/*
-			 * TODO remove the true from this else's matching if and fix the limitation (see javadoc for this
-			 * method/class).
-			 */
-			// }
+			// We'll iterate through the unMatchedRoots all contents
+			monitor.subTask("processing unmatched roots"); //$NON-NLS-1$
+			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
+			createUnMatchElements(root, stillToFindFromModel1);
+			createUnMatchElements(root, stillToFindFromModel2);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, false);
 		}
 		return root;
 	}
-	
+
 	private void launchMonitor(IProgressMonitor monitor, EObject root) {
 		int size = 1;
 		final Iterator sizeit = root.eAllContents();
@@ -460,7 +460,7 @@ public class DifferencesServices implements MatchEngine {
 		while (it.hasNext()) {
 			final Match2Elements subMapping = it.next();
 			// As we know source and target are similars, we call recursive mappings onto these objects
-			EFactory.eAdd(mapping, "subMatchElements", recursiveMappings(subMapping.getLeftElement(), //$NON-NLS-1$
+			EFactory.eAdd(mapping, SUBMATCH_ELEMENT_NAME, recursiveMappings(subMapping.getLeftElement(),
 					subMapping.getRightElement(), monitor));
 		}
 		return mapping;
@@ -498,8 +498,8 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
-	private List<Match2Elements> mapLists(List<EObject> list1, List<EObject> list2, int window, IProgressMonitor monitor)
-			throws FactoryException, InterruptedException {
+	private List<Match2Elements> mapLists(List<EObject> list1, List<EObject> list2, int window,
+			IProgressMonitor monitor) throws FactoryException, InterruptedException {
 		final List<Match2Elements> result = new ArrayList<Match2Elements>();
 		int curIndex = 0 - window / 2;
 		final List<EObject> notFoundList1 = new ArrayList<EObject>();
@@ -514,14 +514,14 @@ public class DifferencesServices implements MatchEngine {
 			final EObject obj1 = (EObject)it1.next();
 			final int end = Math.min(curIndex + window, list2.size());
 			final int index = Math.min(Math.max(curIndex, 0), end);
-			
+
 			final EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
-			if (isSimilar(obj1, obj2)) {
+			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) {
 				final Match2Elements mapping = matchFactory.createMatch2Elements();
 				double metric = 1d;
 				if (saveMapping)
 					metric = absoluteMetric(obj1, obj2);
-				
+
 				mapping.setLeftElement(obj1);
 				mapping.setRightElement(obj2);
 				mapping.setSimilarity(metric);
@@ -541,31 +541,36 @@ public class DifferencesServices implements MatchEngine {
 		return result;
 	}
 	
-	private List<Match2Elements> mapAdditionalRoots(List<EObject> resource1Content, List<EObject> resource2Content, IProgressMonitor monitor) 
-		throws FactoryException, InterruptedException {
-		if (resource1Content.size() > 1 && resource2Content.size() > 1) {
-			monitor.subTask("Matching additional roots"); //$NON-NLS-1$
-			final List<EObject> resource1AllContents = new LinkedList<EObject>();
-			final List<EObject> resource2AllContents = new LinkedList<EObject>();
-			final Iterator<EObject> res1It = resource1Content.subList(1, resource1Content.size()).iterator();
-			while (res1It.hasNext()) {
-				final EObject eobj = res1It.next();
-				resource1AllContents.add(eobj);
-				for (final TreeIterator tree = eobj.eAllContents(); tree.hasNext(); ) {
-					final EObject next = (EObject)tree.next();
-					resource1AllContents.add(next);
-				}
-			}
-			for (EObject eobj : resource2Content.subList(1, resource2Content.size())) {
-				resource2AllContents.add(eobj);
-				for (final TreeIterator tree = eobj.eAllContents(); tree.hasNext(); ) {
-					final EObject next = (EObject)tree.next();
-					resource2AllContents.add(next);
-				}
-			}
-				
-			return mapLists(resource1AllContents, resource2AllContents,	getDefaultSearchWindow(), monitor);
+	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2, IProgressMonitor monitor) throws FactoryException, InterruptedException {
+		final List<Match2Elements> mappings = mapLists(list1, list2, getDefaultSearchWindow(),
+				monitor);
+
+		final Iterator<Match2Elements> it = mappings.iterator();
+		while (it.hasNext()) {
+			final Match2Elements map = it.next();
+			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, map);
 		}
-		return new LinkedList<Match2Elements>();
+	}
+
+	private void createUnMatchElements(MatchModel root, List<EObject> unMatchedElements)
+			throws FactoryException {
+		for (EObject element : unMatchedElements) {
+			final UnMatchElement unMap = matchFactory.createUnMatchElement();
+			unMap.setElement(element);
+			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
+		}
+		unMatchedElements.clear();
+	}
+
+	@SuppressWarnings("unchecked")
+	private int nonNullFeaturesCount(EObject eobj) {
+		int nonNullFeatures = 0;
+		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
+		while (features.hasNext()) {
+			final EStructuralFeature feature = features.next();
+			if (eobj.eGet(feature) != null && !eobj.eGet(feature).toString().equals("")) //$NON-NLS-1$
+				nonNullFeatures++;
+		}
+		return nonNullFeatures;
 	}
 }
