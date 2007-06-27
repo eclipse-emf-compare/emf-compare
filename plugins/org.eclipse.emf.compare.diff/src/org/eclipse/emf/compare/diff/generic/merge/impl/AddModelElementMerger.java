@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -56,10 +54,7 @@ public class AddModelElementMerger extends DefaultMerger {
 		final EReference ref = element.eContainmentFeature();
 		try {
 			EFactory.eAdd(origin, ref.getName(), newOne);
-			EcoreUtil.getRootContainer(origin).eResource().save(new HashMap());
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
-		} catch (IOException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needed this object
@@ -73,11 +68,6 @@ public class AddModelElementMerger extends DefaultMerger {
 				// the origin
 				if (link.getRightAddedTarget().contains(element)) {
 					link.getRightAddedTarget().add(newOne);
-					try {
-						EcoreUtil.getRootContainer(link).eResource().save(new HashMap());
-					} catch (IOException e) {
-						EMFComparePlugin.getDefault().log(e, true);
-					}
 				}
 			}
 		}

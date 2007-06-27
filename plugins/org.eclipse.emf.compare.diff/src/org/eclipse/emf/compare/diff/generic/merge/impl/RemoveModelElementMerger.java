@@ -10,13 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
@@ -50,17 +47,11 @@ public class RemoveModelElementMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final RemoveModelElement diff = (RemoveModelElement)this.diff;
 		final EObject element = diff.getLeftElement();
-		final EObject parent = element.eContainer();
 		EcoreUtil.remove(element);
 
 		// now removes all the dangling references
 		removeFromContainer(element);
 
-		try {
-			EcoreUtil.getRootContainer(parent).eResource().save(new HashMap());
-		} catch (IOException e) {
-			EMFComparePlugin.getDefault().log(e, true);
-		}
 		super.applyInOrigin();
 	}
 
@@ -83,32 +74,17 @@ public class RemoveModelElementMerger extends DefaultMerger {
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
-
-		try {
-			EcoreUtil.getRootContainer(origin).eResource().save(new HashMap());
-		} catch (IOException e) {
-			EMFComparePlugin.getDefault().log(e, true);
-		}
-		// we should now have a look for RemovedReferencesLinks needing elements
-		// to apply
-		final DiffModel log = (DiffModel)diff.eContainer();
+		// we should now have a look for RemovedReferencesLinks needing elements to apply
+		final EObject log = diff.eContainer();
 		final Iterator siblings = log.eAllContents();
 		while (siblings.hasNext()) {
-			final DiffElement op = (DiffElement)siblings.next();
+			final Object op = siblings.next();
 			if (op instanceof RemoveReferenceValue) {
 				final RemoveReferenceValue link = (RemoveReferenceValue)op;
-				// now if I'm in the target References I should put my copy in
-				// the origin
+				// now if I'm in the target References I should put my copy in the origin
 				if (link.getLeftRemovedTarget().contains(element)) {
 					link.getLeftRemovedTarget().add(newOne);
-					try {
-						EcoreUtil.getRootContainer(link).eResource().save(new HashMap());
-					} catch (IOException e) {
-						EMFComparePlugin.getDefault().log(e, true);
-					}
-
 				}
-
 			}
 		}
 		super.undoInTarget();
