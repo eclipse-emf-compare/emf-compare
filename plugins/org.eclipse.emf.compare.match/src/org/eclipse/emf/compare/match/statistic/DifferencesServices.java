@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
@@ -339,6 +339,7 @@ public class DifferencesServices implements MatchEngine {
 	 *             Thrown if the matching process is interrupted somehow.
 	 * @see MatchEngine#modelMatch(EObject, EObject, IProgressMonitor)
 	 */
+	@SuppressWarnings("unchecked")
 	public MatchModel modelMatch(EObject root1, EObject root2, IProgressMonitor monitor)
 			throws InterruptedException {
 		final MatchModel root = matchFactory.createMatchModel();
@@ -362,35 +363,39 @@ public class DifferencesServices implements MatchEngine {
 
 			redirectedAdd(root, "matchedElements", rootMapping); //$NON-NLS-1$
 			// Keep current lists in a corner and init the objects list we still have to map
-			final List<EObject> still1 = new ArrayList<EObject>();
-			final List<EObject> still2 = new ArrayList<EObject>();
-			still1.addAll(stillToFindFromModel1);
-			still2.addAll(stillToFindFromModel2);
+			final List<EObject> still1 = new ArrayList<EObject>(stillToFindFromModel1);
+			final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			// now try to map not yet mapped elements...
 			monitor.subTask("Matching remaining elements"); //$NON-NLS-1$
 			// magic number to avoid too big complexity
-			final Collection mappings = mapLists(still1, still2, getDefaultSearchWindow(), monitor);
-			Iterator it = mappings.iterator();
+			final List<Match2Elements> mappings = mapLists(still1, still2, getDefaultSearchWindow(), monitor);
+			
+			// If the resources have more than one root element, we match through them
+			final List<EObject> resource1Content = root1.eResource().getContents();
+			final List<EObject> resource2Content = root2.eResource().getContents();
+			mappings.addAll(mapAdditionalRoots(resource1Content, resource2Content, monitor));
+			
+			final Iterator<Match2Elements> it = mappings.iterator();
 			while (it.hasNext()) {
-				final Match2Elements map = (Match2Elements)it.next();
+				final Match2Elements map = it.next();
 				redirectedAdd(rootMapping, "subMatchElements", map); //$NON-NLS-1$
 				// if it has not been mapped while browsing the trees at the same time it probably is a moved
 				// element
 			}
 
 			// now the other elements won't be mapped, keep them in the model
-			it = stillToFindFromModel1.iterator();
-			while (it.hasNext()) {
-				final EObject element = (EObject)it.next();
+			final Iterator<EObject> it1 = stillToFindFromModel1.iterator();
+			while (it1.hasNext()) {
+				final EObject element = it1.next();
 				final UnMatchElement unMap = matchFactory.createUnMatchElement();
 				unMap.setElement(element);
 				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
 			}
-			it = stillToFindFromModel2.iterator();
-			while (it.hasNext()) {
-				final EObject element = (EObject)it.next();
+			final Iterator<EObject> it2 = stillToFindFromModel2.iterator();
+			while (it2.hasNext()) {
+				final EObject element = it2.next();
 				final UnMatchElement unMap = matchFactory.createUnMatchElement();
 				unMap.setElement(element);
 				redirectedAdd(root, "unMatchedElements", unMap); //$NON-NLS-1$
@@ -448,12 +453,12 @@ public class DifferencesServices implements MatchEngine {
 		mapping.setRightElement(current2);
 		mappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
-		final Collection mapList = mapLists(current1.eContents(), current2.eContents(),
+		final List<Match2Elements> mapList = mapLists(current1.eContents(), current2.eContents(),
 				getDefaultSearchWindow(), monitor);
 		// We can map other elements with mapLists; we iterate through them.
-		final Iterator it = mapList.iterator();
+		final Iterator<Match2Elements> it = mapList.iterator();
 		while (it.hasNext()) {
-			final Match2Elements subMapping = (Match2Elements)it.next();
+			final Match2Elements subMapping = it.next();
 			// As we know source and target are similars, we call recursive mappings onto these objects
 			EFactory.eAdd(mapping, "subMatchElements", recursiveMappings(subMapping.getLeftElement(), //$NON-NLS-1$
 					subMapping.getRightElement(), monitor));
@@ -534,5 +539,33 @@ public class DifferencesServices implements MatchEngine {
 		stillToFindFromModel2.addAll(notFoundList2);
 		stillToFindFromModel1.addAll(notFoundList1);
 		return result;
+	}
+	
+	private List<Match2Elements> mapAdditionalRoots(List<EObject> resource1Content, List<EObject> resource2Content, IProgressMonitor monitor) 
+		throws FactoryException, InterruptedException {
+		if (resource1Content.size() > 1 && resource2Content.size() > 1) {
+			monitor.subTask("Matching additional roots"); //$NON-NLS-1$
+			final List<EObject> resource1AllContents = new LinkedList<EObject>();
+			final List<EObject> resource2AllContents = new LinkedList<EObject>();
+			final Iterator<EObject> res1It = resource1Content.subList(1, resource1Content.size()).iterator();
+			while (res1It.hasNext()) {
+				final EObject eobj = res1It.next();
+				resource1AllContents.add(eobj);
+				for (final TreeIterator tree = eobj.eAllContents(); tree.hasNext(); ) {
+					final EObject next = (EObject)tree.next();
+					resource1AllContents.add(next);
+				}
+			}
+			for (EObject eobj : resource2Content.subList(1, resource2Content.size())) {
+				resource2AllContents.add(eobj);
+				for (final TreeIterator tree = eobj.eAllContents(); tree.hasNext(); ) {
+					final EObject next = (EObject)tree.next();
+					resource2AllContents.add(next);
+				}
+			}
+				
+			return mapLists(resource1AllContents, resource2AllContents,	getDefaultSearchWindow(), monitor);
+		}
+		return new LinkedList<Match2Elements>();
 	}
 }
