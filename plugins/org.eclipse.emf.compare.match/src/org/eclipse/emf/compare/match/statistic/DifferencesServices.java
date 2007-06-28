@@ -196,8 +196,8 @@ public class DifferencesServices implements MatchEngine {
 		// Computing type similarity really is time expensive
 		// double typeSimilarity = typeSimilarity(obj1, obj2);
 
-		final double contentWeight = 0.4d;
-		final double nameWeight = 0.2d;
+		final double contentWeight = 0.5d;
+		final double nameWeight = 0.4d;
 		final double positionWeight = 0.4d;
 
 		return contentSimilarity * contentWeight + nameSimilarity * nameWeight + positionSimilarity
@@ -275,10 +275,12 @@ public class DifferencesServices implements MatchEngine {
 				final double contentSimilarity = contentSimilarity(obj1, obj2);
 				final double relationsSimilarity = relationsSimilarity(obj1, obj2);
 
-				if (nameSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
-						&& nameSimilarity > nameThreshold) {
+				if (relationsSimilarity == 1 && hasSameUri && nameSimilarity > nameThreshold) {
 					similar = true;
-				} else if (relationsSimilarity == 1 && hasSameUri) {
+				} else if (contentSimilarity == 1 && relationsSimilarity == 1) {
+					similar = true;
+				} else if (contentSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
+						&& nameSimilarity > nameThreshold) {
 					similar = true;
 				} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
 					similar = true;
@@ -516,6 +518,12 @@ public class DifferencesServices implements MatchEngine {
 			final int index = Math.min(Math.max(curIndex, 0), end);
 
 			final EObject obj2 = findMostSimilar(obj1, list2.subList(index, end));
+			// checks if the most similar to obj2 is obj1
+			final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
+			if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
+				continue;
+			}
+			
 			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) {
 				final Match2Elements mapping = matchFactory.createMatch2Elements();
 				double metric = 1d;

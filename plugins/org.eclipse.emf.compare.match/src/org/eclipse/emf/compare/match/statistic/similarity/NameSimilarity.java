@@ -150,7 +150,7 @@ public final class NameSimilarity {
 				eclassAttributes = ((EClass)eclass).getEAllAttributes();
 			}
 		}
-
+		eclassAttributes.remove(findNameFeature(current));
 		if (eclassAttributes.size() > 0) {
 			final Iterator it = eclassAttributes.iterator();
 			while (it.hasNext()) {
