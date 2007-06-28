@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 
 /**
@@ -19,16 +18,6 @@ import org.eclipse.emf.compare.merge.api.AbstractMerger;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DefaultMerger extends AbstractMerger {
-	/**
-	 * Create a merger from a given {@link DiffElement}.
-	 * 
-	 * @param element
-	 *            The {@link DiffElement} we need a merger for.
-	 */
-	public DefaultMerger(DiffElement element) {
-		super(element);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

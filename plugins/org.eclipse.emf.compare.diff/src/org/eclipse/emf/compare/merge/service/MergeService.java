@@ -88,17 +88,6 @@ public class MergeService {
 	}
 
 	/**
-	 * Returns the best {@link MergeFactory} found.
-	 * 
-	 * @return The best {@link MergeFactory} found.
-	 */
-	public MergeFactory getBestFactory() {
-		final FactoryDescriptor desc = getBestDescriptor();
-		final MergeFactory currentEngine = desc.getEngineInstance();
-		return currentEngine;
-	}
-
-	/**
 	 * Returns the best {@link MergeFactory} from a file extension.
 	 * 
 	 * @param extension

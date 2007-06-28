@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
@@ -28,16 +27,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class RemoveModelElementMerger extends DefaultMerger {
-	/**
-	 * Constructs a merger for an {@link RemoveModelElement} operation.
-	 * 
-	 * @param element
-	 *            The element for which we create the merger.
-	 */
-	public RemoveModelElementMerger(DiffElement element) {
-		super(element);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *

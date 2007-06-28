@@ -29,12 +29,12 @@ public abstract class AbstractMerger {
 	protected DiffElement diff;
 
 	/**
-	 * Create a merger from a given {@link DiffElement}.
+	 * Sets the {@link DiffElement} to be merged.
 	 * 
 	 * @param element
-	 *            the {@link DiffElement} we need a merger for.
+	 *            The {@link DiffElement} to be merged.
 	 */
-	public AbstractMerger(DiffElement element) {
+	public void setElement(DiffElement element) {
 		diff = element;
 	}
 
@@ -73,9 +73,10 @@ public abstract class AbstractMerger {
 	}
 
 	protected void removeDanglingReferences(EObject deletedObject) {
-		EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(EcoreUtil.getRootContainer(deletedObject).eResource()) {
+		EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(EcoreUtil.getRootContainer(
+				deletedObject).eResource()) {
 			private static final long serialVersionUID = 616050158241084372L;
-			
+
 			{
 				crossReference();
 			}

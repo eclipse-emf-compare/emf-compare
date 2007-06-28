@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
@@ -24,16 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class UpdateAttributeMerger extends DefaultMerger {
-	/**
-	 * Constructs a merger for an {@link UpdateAttribute} operation.
-	 * 
-	 * @param element
-	 *            The element for which we create the merger.
-	 */
-	public UpdateAttributeMerger(DiffElement element) {
-		super(element);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 

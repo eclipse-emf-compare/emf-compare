@@ -16,7 +16,6 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -29,16 +28,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class AddModelElementMerger extends DefaultMerger {
-	/**
-	 * Constructs a merger for an {@link AddModelElement} operation.
-	 * 
-	 * @param element
-	 *            The element for which we create the merger.
-	 */
-	public AddModelElementMerger(DiffElement element) {
-		super(element);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -58,14 +47,13 @@ public class AddModelElementMerger extends DefaultMerger {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needed this object
-		final DiffModel log = (DiffModel)diff.eContainer();
+		final EObject log = diff.eContainer();
 		final Iterator siblings = log.eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof AddReferenceValue) {
 				final AddReferenceValue link = (AddReferenceValue)op;
-				// now if I'm in the target References I should put my copy in
-				// the origin
+				// now if I'm in the target References I should put my copy in the origin
 				if (link.getRightAddedTarget().contains(element)) {
 					link.getRightAddedTarget().add(newOne);
 				}

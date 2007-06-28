@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -25,16 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class AddReferenceValueMerger extends DefaultMerger {
-	/**
-	 * Constructs a merger for an {@link AddReferenceValue} operation.
-	 * 
-	 * @param element
-	 *            The element for which we create the merger.
-	 */
-	public AddReferenceValueMerger(DiffElement element) {
-		super(element);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *
