@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
-import org.eclipse.emf.compare.merge.service.MergeService;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -101,8 +100,7 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public void copy(boolean leftToRight) {
 		for (final DiffElement aDiff : getDiffAsList()) {
-			final MergeFactory mergeFactory = new MergeService().getBestFactory();
-			final AbstractMerger merger = mergeFactory.createMerger(aDiff);
+			final AbstractMerger merger = MergeFactory.createMerger(aDiff);
 			if (leftToRight && merger.canUndoInTarget()) {
 				merger.undoInTarget();
 			} else if (!leftToRight && merger.canApplyInOrigin()) {

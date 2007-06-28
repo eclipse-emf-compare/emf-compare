@@ -26,7 +26,6 @@ import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
-import org.eclipse.emf.compare.merge.service.MergeService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
@@ -366,9 +365,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	protected void copy(DiffElement diff, boolean leftToRight) {
-		final MergeFactory mergeFactory = new MergeService().getBestFactory();
 		if (diff != null) {
-			final AbstractMerger merger = mergeFactory.createMerger(diff);
+			final AbstractMerger merger = MergeFactory.createMerger(diff);
 			if (leftToRight && merger.canUndoInTarget()) {
 				merger.undoInTarget();
 				setRightDirty(true);

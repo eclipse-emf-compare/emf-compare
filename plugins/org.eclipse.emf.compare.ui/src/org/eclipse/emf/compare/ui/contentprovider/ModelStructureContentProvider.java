@@ -177,6 +177,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 							});
 					final Date end = Calendar.getInstance().getTime();
 					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime() - start.getTime());
+					System.out.println(end.getTime() - start.getTime());
 
 					diffInput = snapshot.getDiff();
 				}
