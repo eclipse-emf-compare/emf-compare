@@ -23,10 +23,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -256,34 +253,6 @@ public final class ModelUtils {
 		final Map<String, String> options = new HashMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
 		newModelResource.save(options);
-	}
-
-	/**
-	 * Overrides the content of a model given the root of the objects it contains.
-	 * 
-	 * @param root
-	 *            Root of the objects to save as a the model.
-	 * @param model
-	 *            Model to override.
-	 * @throws IOException
-	 *             Thrown if an I/O operation has failed or been interrupted during the saving process.
-	 */
-	@SuppressWarnings("unchecked")
-	public static void save(EObject root, Resource model) throws IOException {
-		model.getContents().clear();
-		model.getContents().add(root);
-		final Map<String, String> options = new HashMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
-		model.save(options);
-		try {
-			String resourceURI = model.getURI().toString();
-			if (resourceURI.toString().contains(":")) //$NON-NLS-1$
-				resourceURI = resourceURI.substring(resourceURI.indexOf(":") + 1); //$NON-NLS-1$
-			ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(new Path(resourceURI))
-					.refreshLocal(0, new NullProgressMonitor());
-		} catch (CoreException e) {
-			// fails silently, thrown when we cannot refresh the files.
-		}
 	}
 
 	/**
