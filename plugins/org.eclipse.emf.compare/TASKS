@@ -1,7 +1,6 @@
 ___ TODO ___
  - using functionnal ID through Ecore ID
  - better browsing when using XMI_ID
- - merge on moveoperation
  - complete documentation and tutorials
       - coding a match engine
       - extending diff metamodel
@@ -13,6 +12,7 @@ ___ TODO ___
  - export diff as... extension point
  
 ___ DONE ___
+28/06/2007 - merge on moveoperation
 14/06/2007 - cleanup GUI 
 07/06/2007 - open .diff files with compare editor
 10/05/2007 - (LAURENT) dynamic icons for diff model using the element icons
