@@ -111,6 +111,24 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
+	 * Copies a single {@link DiffElement} in the given direction.
+	 * 
+	 * @param element
+	 *            {@link DiffElement Element} to copy.
+	 * @param leftToRight
+	 *            Direction of the copy.
+	 */
+	public void copy(DiffElement element, boolean leftToRight) {
+		final AbstractMerger merger = MergeFactory.createMerger(element);
+		if (leftToRight && merger.canUndoInTarget()) {
+			merger.undoInTarget();
+		} else if (!leftToRight && merger.canApplyInOrigin()) {
+			merger.applyInOrigin();
+		}
+		fireCompareInputChanged();
+	}
+
+	/**
 	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take
 	 * {@link DiffGroup}s into account.
 	 * 

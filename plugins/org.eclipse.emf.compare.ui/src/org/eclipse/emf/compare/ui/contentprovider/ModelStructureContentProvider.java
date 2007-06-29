@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -177,7 +178,9 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 							});
 					final Date end = Calendar.getInstance().getTime();
 					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime() - start.getTime());
-					System.out.println(end.getTime() - start.getTime());
+					System.out.println(EMFCompareEObjectUtils.computeObjectName(leftModel) + 
+							" and " + EMFCompareEObjectUtils.computeObjectName(rightModel) + //$NON-NLS-1$
+							" compared in : " + (end.getTime() - start.getTime()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 
 					diffInput = snapshot.getDiff();
 				}

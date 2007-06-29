@@ -11,13 +11,13 @@
 package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
-import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -148,7 +148,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (input.getLeft() instanceof TypedElementWrapper) {
 				final TypedElementWrapper left = (TypedElementWrapper)input.getLeft();
 				try {
-					ModelUtils.save(left.getObject(), left.getObject().eResource());
+					left.getObject().eResource().save(new HashMap());
 				} catch (IOException e) {
 					EMFComparePlugin.getDefault().log(e.getMessage(), false);
 				}
@@ -205,7 +205,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (input.getRight() instanceof TypedElementWrapper) {
 				final TypedElementWrapper right = (TypedElementWrapper)input.getRight();
 				try {
-					ModelUtils.save(right.getObject(), right.getObject().eResource());
+					right.getObject().eResource().save(new HashMap());
 				} catch (IOException e) {
 					EMFComparePlugin.getDefault().log(e.getMessage(), false);
 				}

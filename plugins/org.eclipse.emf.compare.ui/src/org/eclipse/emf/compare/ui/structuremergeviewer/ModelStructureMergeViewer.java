@@ -100,7 +100,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		super.inputChanged(input, oldInput);
 		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
 			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_INPUT_CHANGED, 
+			configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED, 
 					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 		}
 	}
@@ -134,6 +134,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 						setSelection(new StructuredSelection(item.getData()), true);
 						expandToLevel(item.getData(), 0);
 					}
+				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED)) {
+					setInput(event.getNewValue());
 				}
 			}
 		});

@@ -22,10 +22,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.merge.api.AbstractMerger;
-import org.eclipse.emf.compare.merge.api.MergeFactory;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
@@ -106,6 +105,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private DiffElement currentDiff;
 
 	private int selectedTab = TREE_TAB;
+	
+	private boolean leftDirty;
+	
+	private boolean rightDirty;
 
 	/**
 	 * Creates a new model content merge viewer and intializes it.
@@ -330,9 +333,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	public void setInput(Object input) {
-		if (configuration.getProperty(EMFCompareConstants.PROPERTY_INPUT_CHANGED) != null) {
+		if (configuration.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED) != null) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
-					.getProperty(EMFCompareConstants.PROPERTY_INPUT_CHANGED);
+					.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
 		} else if (input instanceof ModelInputSnapshot) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
@@ -348,8 +351,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void copy(boolean leftToRight) {
 		((ModelCompareInput)getInput()).copy(leftToRight);
-		setRightDirty(leftToRight);
-		setLeftDirty(!leftToRight);
+		final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
+		snap.setDiff(((ModelCompareInput)getInput()).getDiff());
+		snap.setMatch(((ModelCompareInput)getInput()).getMatch());
+		configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+		leftDirty = leftDirty || leftToRight;
+		rightDirty = rightDirty || !leftToRight;
+		setRightDirty(leftDirty);
+		setLeftDirty(rightDirty);
 	}
 
 	protected void copyDiffLeftToRight() {
@@ -366,14 +375,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	protected void copy(DiffElement diff, boolean leftToRight) {
 		if (diff != null) {
-			final AbstractMerger merger = MergeFactory.createMerger(diff);
-			if (leftToRight && merger.canUndoInTarget()) {
-				merger.undoInTarget();
-				setRightDirty(true);
-			} else if (!leftToRight && merger.canApplyInOrigin()) {
-				merger.applyInOrigin();
-				setLeftDirty(true);
-			}
+			((ModelCompareInput)getInput()).copy(diff, leftToRight);
+			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
+			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
+			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			leftDirty = leftDirty || (leftToRight && configuration.isLeftEditable());
+			rightDirty = rightDirty || (!leftToRight && configuration.isRightEditable());
+			setRightDirty(leftDirty);
+			setLeftDirty(rightDirty);
 			update();
 		}
 	}

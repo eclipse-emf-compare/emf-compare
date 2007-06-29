@@ -43,8 +43,15 @@ public interface EMFCompareConstants {
 	 */
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 
-	/** Key of the property change event associated with an input change. */
-	String PROPERTY_INPUT_CHANGED = "model.input.changed"; //$NON-NLS-1$
+	/** 
+	 * Key of the property change event associated with an input change in the structure viewer.
+	 */
+	String PROPERTY_STRUCTURE_INPUT_CHANGED = "structure.input.changed"; //$NON-NLS-1$
+	
+	/** 
+	 * Key of the property change event associated with an input change in the content viewer.
+	 */
+	String PROPERTY_CONTENT_INPUT_CHANGED = "content.input.changed"; //$NON-NLS-1$
 	
 	/** Key for the property change event associated with the comparison time. */
 	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$
