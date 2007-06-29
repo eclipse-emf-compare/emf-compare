@@ -54,39 +54,39 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftParentPropertyDescriptor(object);
-			addRightParentPropertyDescriptor(object);
+			addLeftTargetPropertyDescriptor(object);
+			addRightTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Parent feature.
+	 * This adds a property descriptor for the Left Target feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLeftParentPropertyDescriptor(Object object) {
+	protected void addLeftTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_leftParent_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftParent_feature",
-						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_PARENT,
+				getString("_UI_MoveModelElement_leftTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftTarget_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_TARGET,
 				true, false, true, null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Parent feature.
+	 * This adds a property descriptor for the Right Target feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addRightParentPropertyDescriptor(Object object) {
+	protected void addRightTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_rightParent_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightParent_feature",
-						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_PARENT,
+				getString("_UI_MoveModelElement_rightTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightTarget_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_TARGET,
 				true, false, true, null, null, null));
 	}
 
@@ -111,8 +111,8 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		try {
 			return getString("_UI_MoveModelElement_type", new Object[] {
 					NameSimilarity.findName(moveOp.getLeftElement()),
-					NameSimilarity.findName(moveOp.getLeftParent()),
-					NameSimilarity.findName(moveOp.getRightParent())});
+					NameSimilarity.findName(moveOp.getLeftTarget()),
+					NameSimilarity.findName(moveOp.getRightTarget())});
 		} catch (FactoryException e) {
 			return getString("_UI_MoveModelElement_type");
 		}
