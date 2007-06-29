@@ -41,21 +41,24 @@ public class AddModelElementMerger extends DefaultMerger {
 		final EObject element = diff.getRightElement();
 		final EObject newOne = EcoreUtil.copy(element);
 		final EReference ref = element.eContainmentFeature();
-		try {
-			EFactory.eAdd(origin, ref.getName(), newOne);
-		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+		if (ref != null) {
+			try {
+				EFactory.eAdd(origin, ref.getName(), newOne);
+			} catch (FactoryException e) {
+				EMFComparePlugin.getDefault().log(e, true);
+			}
+		} else {
+			findLeftResource().getContents().add(newOne);
 		}
-		// we should now have a look for AddReferencesLinks needed this object
-		final EObject log = diff.eContainer();
-		final Iterator siblings = log.eAllContents();
+		// we should now have a look for AddReferencesLinks needing this object
+		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof AddReferenceValue) {
 				final AddReferenceValue link = (AddReferenceValue)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getRightAddedTarget().contains(element)) {
-					link.getRightAddedTarget().add(newOne);
+					link.getLeftAddedTarget().add(newOne);
 				}
 			}
 		}
@@ -69,7 +72,6 @@ public class AddModelElementMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		// getElement is the target element
 		final AddModelElement diff = (AddModelElement)this.diff;
 		final EObject element = diff.getRightElement();
 		final EObject parent = diff.getRightElement().eContainer();

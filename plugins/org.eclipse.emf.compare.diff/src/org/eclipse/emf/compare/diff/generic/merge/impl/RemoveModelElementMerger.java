@@ -36,11 +36,10 @@ public class RemoveModelElementMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final RemoveModelElement diff = (RemoveModelElement)this.diff;
 		final EObject element = diff.getLeftElement();
+		final EObject parent = diff.getLeftElement().eContainer();
 		EcoreUtil.remove(element);
-
 		// now removes all the dangling references
-		removeFromContainer(element);
-
+		removeDanglingReferences(parent);
 		super.applyInOrigin();
 	}
 
@@ -58,21 +57,24 @@ public class RemoveModelElementMerger extends DefaultMerger {
 		final EObject element = diff.getLeftElement();
 		final EObject newOne = EcoreUtil.copy(element);
 		final EReference ref = element.eContainmentFeature();
-		try {
-			EFactory.eAdd(origin, ref.getName(), newOne);
-		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+		if (ref != null) {
+			try {
+				EFactory.eAdd(origin, ref.getName(), newOne);
+			} catch (FactoryException e) {
+				EMFComparePlugin.getDefault().log(e, true);
+			}
+		} else {
+			findRightResource().getContents().add(newOne);
 		}
 		// we should now have a look for RemovedReferencesLinks needing elements to apply
-		final EObject log = diff.eContainer();
-		final Iterator siblings = log.eAllContents();
+		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final Object op = siblings.next();
 			if (op instanceof RemoveReferenceValue) {
 				final RemoveReferenceValue link = (RemoveReferenceValue)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getLeftRemovedTarget().contains(element)) {
-					link.getLeftRemovedTarget().add(newOne);
+					link.getRightRemovedTarget().add(newOne);
 				}
 			}
 		}

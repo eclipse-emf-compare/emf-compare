@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftParent <em>Left Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightParent <em>Right Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
  *
@@ -31,55 +31,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface MoveModelElement extends UpdateModelElement {
 	/**
-	 * Returns the value of the '<em><b>Left Parent</b></em>' reference.
+	 * Returns the value of the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Parent</em>' reference isn't clear,
+	 * If the meaning of the '<em>Left Target</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Parent</em>' reference.
-	 * @see #setLeftParent(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getMoveModelElement_LeftParent()
+	 * @return the value of the '<em>Left Target</em>' reference.
+	 * @see #setLeftTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getMoveModelElement_LeftTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getLeftParent();
+	EObject getLeftTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftParent <em>Left Parent</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftTarget <em>Left Target</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Parent</em>' reference.
-	 * @see #getLeftParent()
+	 * @param value the new value of the '<em>Left Target</em>' reference.
+	 * @see #getLeftTarget()
 	 * @generated
 	 */
-	void setLeftParent(EObject value);
+	void setLeftTarget(EObject value);
 
 	/**
-	 * Returns the value of the '<em><b>Right Parent</b></em>' reference.
+	 * Returns the value of the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right Parent</em>' reference isn't clear,
+	 * If the meaning of the '<em>Right Target</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Parent</em>' reference.
-	 * @see #setRightParent(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getMoveModelElement_RightParent()
+	 * @return the value of the '<em>Right Target</em>' reference.
+	 * @see #setRightTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getMoveModelElement_RightTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getRightParent();
+	EObject getRightTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightParent <em>Right Parent</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightTarget <em>Right Target</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Parent</em>' reference.
-	 * @see #getRightParent()
+	 * @param value the new value of the '<em>Right Target</em>' reference.
+	 * @see #getRightTarget()
 	 * @generated
 	 */
-	void setRightParent(EObject value);
+	void setRightTarget(EObject value);
 
 } // MoveModelElement

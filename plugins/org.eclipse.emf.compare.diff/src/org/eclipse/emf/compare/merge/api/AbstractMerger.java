@@ -15,9 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -70,28 +76,84 @@ public abstract class AbstractMerger {
 
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
+
+		// if diff was in a diffGroup and it was the last one, we also remove the diffgroup
+		cleanDiffGroup(parent);
 	}
 
 	protected void removeDanglingReferences(EObject deletedObject) {
-		EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(EcoreUtil.getRootContainer(
-				deletedObject).eResource()) {
-			private static final long serialVersionUID = 616050158241084372L;
+		EObject root = EcoreUtil.getRootContainer(deletedObject);
+		if (root instanceof ModelInputSnapshot)
+			root = ((ModelInputSnapshot)root).getDiff();
+		if (root != null) {
+			EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
+				private static final long serialVersionUID = 616050158241084372L;
 
-			{
-				crossReference();
-			}
+				{
+					crossReference();
+				}
 
-			@Override
-			protected boolean crossReference(EObject eObject, EReference eReference,
-					EObject crossReferencedEObject) {
-				return crossReferencedEObject.eResource() == null;
-			}
-		};
-		for (final Iterator i = referencer.entrySet().iterator(); i.hasNext(); ) {
-			final Map.Entry entry = (Map.Entry)i.next();
-			for (final Iterator j = ((List)entry.getValue()).iterator(); j.hasNext(); ) {
-				EcoreUtil.remove((EStructuralFeature.Setting)j.next(), entry.getKey());
+				@Override
+				protected boolean crossReference(EObject eObject, EReference eReference,
+						EObject crossReferencedEObject) {
+					return crossReferencedEObject.eResource() == null;
+				}
+			};
+			for (final Iterator i = referencer.entrySet().iterator(); i.hasNext(); ) {
+				final Map.Entry entry = (Map.Entry)i.next();
+				for (final Iterator j = ((List)entry.getValue()).iterator(); j.hasNext(); ) {
+					EcoreUtil.remove((EStructuralFeature.Setting)j.next(), entry.getKey());
+				}
 			}
 		}
+	}
+
+	protected void cleanDiffGroup(EObject diffGroup) {
+		if (diffGroup != null && diffGroup instanceof DiffGroup
+				&& ((DiffGroup)diffGroup).getSubchanges() == 0) {
+			final EObject parent = diffGroup.eContainer();
+			if (parent != null && parent instanceof DiffGroup) {
+				EcoreUtil.remove(diffGroup);
+				cleanDiffGroup(parent);
+			}
+		}
+	}
+
+	protected DiffModel getDiffModel() {
+		return ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff();
+	}
+
+	/**
+	 * Returns the left resource.
+	 * 
+	 * @return The left resource.
+	 */
+	protected Resource findLeftResource() {
+		Resource leftResource = null;
+		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+			final Match2Elements element = (Match2Elements)matchIterator.next();
+			if (element.getLeftElement() != null) {
+				leftResource = element.getLeftElement().eResource();
+			}
+		}
+		return leftResource;
+	}
+
+	/**
+	 * Returns the right resource.
+	 * 
+	 * @return The right resource.
+	 */
+	protected Resource findRightResource() {
+		Resource rightResource = null;
+		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+			final Match2Elements element = (Match2Elements)matchIterator.next();
+			if (element.getRightElement() != null) {
+				rightResource = element.getRightElement().eResource();
+			}
+		}
+		return rightResource;
 	}
 }

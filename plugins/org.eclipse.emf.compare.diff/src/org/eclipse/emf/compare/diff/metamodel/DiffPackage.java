@@ -497,22 +497,22 @@ public interface DiffPackage extends EPackage {
 	int MOVE_MODEL_ELEMENT__LEFT_ELEMENT = UPDATE_MODEL_ELEMENT__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MOVE_MODEL_ELEMENT__LEFT_PARENT = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 0;
+	int MOVE_MODEL_ELEMENT__LEFT_TARGET = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MOVE_MODEL_ELEMENT__RIGHT_PARENT = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 1;
+	int MOVE_MODEL_ELEMENT__RIGHT_TARGET = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Move Model Element</em>' class.
@@ -1307,26 +1307,26 @@ public interface DiffPackage extends EPackage {
 	EClass getMoveModelElement();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftParent <em>Left Parent</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftTarget <em>Left Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Parent</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftParent()
+	 * @return the meta object for the reference '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getLeftTarget()
 	 * @see #getMoveModelElement()
 	 * @generated
 	 */
-	EReference getMoveModelElement_LeftParent();
+	EReference getMoveModelElement_LeftTarget();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightParent <em>Right Parent</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightTarget <em>Right Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Parent</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightParent()
+	 * @return the meta object for the reference '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.MoveModelElement#getRightTarget()
 	 * @see #getMoveModelElement()
 	 * @generated
 	 */
-	EReference getMoveModelElement_RightParent();
+	EReference getMoveModelElement_RightTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AddAttribute <em>Add Attribute</em>}'.
@@ -1774,20 +1774,20 @@ public interface DiffPackage extends EPackage {
 		EClass MOVE_MODEL_ELEMENT = eINSTANCE.getMoveModelElement();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Parent</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MOVE_MODEL_ELEMENT__LEFT_PARENT = eINSTANCE.getMoveModelElement_LeftParent();
+		EReference MOVE_MODEL_ELEMENT__LEFT_TARGET = eINSTANCE.getMoveModelElement_LeftTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Parent</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference MOVE_MODEL_ELEMENT__RIGHT_PARENT = eINSTANCE.getMoveModelElement_RightParent();
+		EReference MOVE_MODEL_ELEMENT__RIGHT_TARGET = eINSTANCE.getMoveModelElement_RightTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.

@@ -16,12 +16,14 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AddModelElementMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AddReferenceValueMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.DefaultMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.MoveModelElementMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveModelElementMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveReferenceValueMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateAttributeMerger;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
@@ -41,6 +43,7 @@ public final class MergeFactory {
 	static {
 		MERGER_TYPES.put(AddModelElement.class, AddModelElementMerger.class);
 		MERGER_TYPES.put(RemoveModelElement.class, RemoveModelElementMerger.class);
+		MERGER_TYPES.put(MoveModelElement.class, MoveModelElementMerger.class);
 		MERGER_TYPES.put(AddReferenceValue.class, AddReferenceValueMerger.class);
 		MERGER_TYPES.put(RemoveReferenceValue.class, RemoveReferenceValueMerger.class);
 		MERGER_TYPES.put(UpdateAttribute.class, UpdateAttributeMerger.class);

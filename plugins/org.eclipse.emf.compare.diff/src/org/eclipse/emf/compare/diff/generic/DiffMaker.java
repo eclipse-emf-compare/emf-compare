@@ -234,8 +234,8 @@ public class DiffMaker implements DiffEngine {
 			final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 			operation.setRightElement(matchElement.getRightElement());
 			operation.setLeftElement(matchElement.getLeftElement());
-			operation.setLeftParent(matchElement.getLeftElement().eContainer());
-			operation.setRightParent(matchElement.getRightElement().eContainer());
+			operation.setRightTarget(getMatchedEObject(matchElement.getLeftElement().eContainer()));
+			operation.setLeftTarget(getMatchedEObject(matchElement.getRightElement().eContainer()));
 			root.getSubDiffElements().add(operation);
 		}
 	}

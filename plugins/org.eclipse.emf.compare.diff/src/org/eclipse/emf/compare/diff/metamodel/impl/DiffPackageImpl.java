@@ -504,7 +504,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMoveModelElement_LeftParent() {
+	public EReference getMoveModelElement_LeftTarget() {
 		return (EReference)moveModelElementEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -513,7 +513,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getMoveModelElement_RightParent() {
+	public EReference getMoveModelElement_RightTarget() {
 		return (EReference)moveModelElementEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -736,8 +736,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(updateModelElementEClass, UPDATE_MODEL_ELEMENT__LEFT_ELEMENT);
 
 		moveModelElementEClass = createEClass(MOVE_MODEL_ELEMENT);
-		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__LEFT_PARENT);
-		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__RIGHT_PARENT);
+		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__LEFT_TARGET);
+		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__RIGHT_TARGET);
 
 		addAttributeEClass = createEClass(ADD_ATTRIBUTE);
 
@@ -896,10 +896,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(moveModelElementEClass, MoveModelElement.class, "MoveModelElement", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMoveModelElement_LeftParent(), ecorePackage.getEObject(), null, "leftParent", null,
+		initEReference(getMoveModelElement_LeftTarget(), ecorePackage.getEObject(), null, "leftTarget", null,
 				0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMoveModelElement_RightParent(), ecorePackage.getEObject(), null, "rightParent",
+		initEReference(getMoveModelElement_RightTarget(), ecorePackage.getEObject(), null, "rightTarget",
 				null, 0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
 				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
