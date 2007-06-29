@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.match.statistic.similarity;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
@@ -32,6 +33,8 @@ public final class NameSimilarity {
 	private static final int MAX_FEATURE_VALUE_LENGTH = 40;
 
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
+	
+	private static final WeakHashMap<EClass, EAttribute> nameFeature = new WeakHashMap<EClass, EAttribute>();
 
 	private NameSimilarity() {
 		// prevents instantiation
@@ -206,30 +209,32 @@ public final class NameSimilarity {
 	 *             Thrown if an operation on <code>current</code> fails.
 	 */
 	public static EAttribute findNameFeature(EObject current) throws FactoryException {
-		final EObject eclass = current.eClass();
+		final EClass eclass = current.eClass();
+		EAttribute bestFeature = nameFeature.get(eclass);
 
-		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass)eclass).getEAllAttributes();
-		EAttribute bestFeature = null;
-		if (eclassAttributes.size() > 0) {
-			bestFeature = (EAttribute)eclassAttributes.get(0);
-		}
-		// first, find the eclass structural feature most similar with name
-		if (eclassAttributes.size() > 0) {
-			double max = 0;
-			final Iterator it = eclassAttributes.iterator();
-			while (it.hasNext()) { // for each metamodel feature
-				final Object next = it.next();
-				if (next instanceof EObject) {
-					final EObject obj = (EObject)next;
-					final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
-					// if the attributeName is more similar with "name" than the other one
-					if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
-						max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);
-						bestFeature = (EAttribute)obj;
+		if (bestFeature == null) {
+			List eclassAttributes = new LinkedList();
+			eclassAttributes = eclass.getEAllAttributes();
+			if (eclassAttributes.size() > 0) {
+				bestFeature = (EAttribute)eclassAttributes.get(0);
+			}
+			// first, find the eclass structural feature most similar with name
+			if (eclassAttributes.size() > 0) {
+				double max = 0;
+				final Iterator it = eclassAttributes.iterator();
+				while (it.hasNext()) { // for each metamodel feature
+					final Object next = it.next();
+					if (next instanceof EObject) {
+						final EObject obj = (EObject)next;
+						final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
+						// if the attributeName is more similar with "name" than the other one
+						if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
+							max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);
+							bestFeature = (EAttribute)obj;
+						}
 					}
 				}
+				nameFeature.put(eclass, bestFeature);
 			}
 		}
 		// now we should return the feature value

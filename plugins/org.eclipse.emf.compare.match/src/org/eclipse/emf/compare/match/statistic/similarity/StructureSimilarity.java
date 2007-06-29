@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
@@ -28,8 +29,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class StructureSimilarity {
-	private static final int MAX_OBJECT_RELATIONS = 14;
-	
 	private StructureSimilarity() {
 		// prevents instantiation
 	}
@@ -154,27 +153,33 @@ public final class StructureSimilarity {
 	public static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
-		List<EStructuralFeature> eclassAttributes = new LinkedList<EStructuralFeature>();
+		List<EStructuralFeature> eObjectFeatures = new LinkedList<EStructuralFeature>();
 		if (eclass instanceof EClass) {
 			if (filter != null)
-				eclassAttributes = filter.getFilteredFeatures(current);
+				eObjectFeatures = filter.getFilteredFeatures(current);
 			else
-				eclassAttributes = ((EClass)eclass).getEAllAttributes();
+				eObjectFeatures = ((EClass)eclass).getEAllReferences();
+		}
+		for (EStructuralFeature feature : eObjectFeatures) {
+			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
+				Object value = current.eGet(feature);
+				if (value instanceof List) {
+					for (final Iterator valueIterator = ((List)value).iterator(); valueIterator.hasNext(); ) {
+						Object next = valueIterator.next();
+						if (next instanceof EObject) {
+							String objName = NameSimilarity.findName((EObject)next);
+							result.append(objName);
+						}
+					}
+				} else if (value instanceof EObject) {
+					String objName = NameSimilarity.findName((EObject)value);
+					result.append(objName);
+				}
+			}
 		}
 		if (current.eContainer() != null)
 			result.append(NameSimilarity.findName(current.eContainer())).append("\n"); //$NON-NLS-1$
 		
-		final List objectContents = current.eContents();
-		final Iterator it = objectContents.iterator();
-		int curIndex = 0; // to keep track and stop if we are too far
-		while (it.hasNext() && curIndex < MAX_OBJECT_RELATIONS) {
-			final Object next = it.next();
-			if (next instanceof EObject) {
-				final EObject obj = (EObject)next;
-				result.append(NameSimilarity.findName(obj)).append("\n"); //$NON-NLS-1$
-			}
-			curIndex += 1;
-		}
 		return result.toString();
 	}
 }
