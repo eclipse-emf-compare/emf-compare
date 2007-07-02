@@ -11,17 +11,17 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for an {@link AddReferenceValue}.
+ * Merger for an {@link UpdateUniqueReferenceValue} operation.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class AddReferenceValueMerger extends DefaultMerger {
+public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
@@ -29,11 +29,11 @@ public class AddReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final AddReferenceValue diff = (AddReferenceValue)this.diff;
+		final UpdateUniqueReferenceValue diff = (UpdateUniqueReferenceValue)this.diff;
 		final EObject element = diff.getLeftElement();
-		final EObject leftTarget = diff.getLeftAddedTarget();
+		final EObject leftTarget = diff.getLeftTarget();
 		try {
-			EFactory.eAdd(element, diff.getReference().getName(), leftTarget);
+			EFactory.eSet(element, diff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
@@ -47,11 +47,11 @@ public class AddReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AddReferenceValue diff = (AddReferenceValue)this.diff;
+		final UpdateUniqueReferenceValue diff = (UpdateUniqueReferenceValue)this.diff;
 		final EObject element = diff.getRightElement();
-		final EObject rightTarget = diff.getRightAddedTarget();
+		final EObject rightTarget = diff.getRightTarget();
 		try {
-			EFactory.eRemove(element, diff.getReference().getName(), rightTarget);
+			EFactory.eSet(element, diff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}

@@ -531,8 +531,26 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getAddAttribute_RightTarget() {
+		return (EReference)addAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getRemoveAttribute() {
 		return removeAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRemoveAttribute_LeftTarget() {
+		return (EReference)removeAttributeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -740,8 +758,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__RIGHT_TARGET);
 
 		addAttributeEClass = createEClass(ADD_ATTRIBUTE);
+		createEReference(addAttributeEClass, ADD_ATTRIBUTE__RIGHT_TARGET);
 
 		removeAttributeEClass = createEClass(REMOVE_ATTRIBUTE);
+		createEReference(removeAttributeEClass, REMOVE_ATTRIBUTE__LEFT_TARGET);
 
 		updateAttributeEClass = createEClass(UPDATE_ATTRIBUTE);
 
@@ -905,9 +925,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(addAttributeEClass, AddAttribute.class, "AddAttribute", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAddAttribute_RightTarget(), ecorePackage.getEObject(), null, "rightTarget", null,
+				0, 1, AddAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(removeAttributeEClass, RemoveAttribute.class, "RemoveAttribute", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRemoveAttribute_LeftTarget(), ecorePackage.getEObject(), null, "leftTarget", null,
+				0, 1, RemoveAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(updateAttributeEClass, UpdateAttribute.class, "UpdateAttribute", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -915,22 +941,22 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		initEClass(addReferenceValueEClass, AddReferenceValue.class, "AddReferenceValue", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAddReferenceValue_RightAddedTarget(), ecorePackage.getEObject(), null,
-				"rightAddedTarget", null, 0, -1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"rightAddedTarget", null, 0, 1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEReference(getAddReferenceValue_LeftAddedTarget(), ecorePackage.getEObject(), null,
-				"leftAddedTarget", null, 0, -1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"leftAddedTarget", null, 0, 1, AddReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 
 		initEClass(removeReferenceValueEClass, RemoveReferenceValue.class, "RemoveReferenceValue",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRemoveReferenceValue_LeftRemovedTarget(), ecorePackage.getEObject(), null,
-				"leftRemovedTarget", null, 0, -1, RemoveReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"leftRemovedTarget", null, 0, 1, RemoveReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEReference(getRemoveReferenceValue_RightRemovedTarget(), ecorePackage.getEObject(), null,
-				"rightRemovedTarget", null, 0, -1, RemoveReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"rightRemovedTarget", null, 0, 1, RemoveReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 
@@ -940,11 +966,11 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		initEClass(updateUniqueReferenceValueEClass, UpdateUniqueReferenceValue.class,
 				"UpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getUpdateUniqueReferenceValue_LeftTarget(), ecorePackage.getEObject(), null,
-				"leftTarget", null, 0, -1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"leftTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 		initEReference(getUpdateUniqueReferenceValue_RightTarget(), ecorePackage.getEObject(), null,
-				"rightTarget", null, 0, -1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"rightTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
 

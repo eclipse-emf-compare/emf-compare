@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,35 +31,55 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface AddReferenceValue extends ReferenceChange {
 	/**
-	 * Returns the value of the '<em><b>Left Added Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Returns the value of the '<em><b>Left Added Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Added Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Added Target</em>' reference list.
+	 * @return the value of the '<em>Left Added Target</em>' reference.
+	 * @see #setLeftAddedTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAddReferenceValue_LeftAddedTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getLeftAddedTarget();
+	EObject getLeftAddedTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Added Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget <em>Left Added Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Added Target</em>' reference.
+	 * @see #getLeftAddedTarget()
+	 * @generated
+	 */
+	void setLeftAddedTarget(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Right Added Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Added Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Added Target</em>' reference list.
+	 * @return the value of the '<em>Right Added Target</em>' reference.
+	 * @see #setRightAddedTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAddReferenceValue_RightAddedTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getRightAddedTarget();
+	EObject getRightAddedTarget();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget <em>Right Added Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Added Target</em>' reference.
+	 * @see #getRightAddedTarget()
+	 * @generated
+	 */
+	void setRightAddedTarget(EObject value);
 
 } // AddReferenceValue

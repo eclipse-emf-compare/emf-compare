@@ -57,8 +57,8 @@ public class AddModelElementMerger extends DefaultMerger {
 			if (op instanceof AddReferenceValue) {
 				final AddReferenceValue link = (AddReferenceValue)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getRightAddedTarget().contains(element)) {
-					link.getLeftAddedTarget().add(newOne);
+				if (link.getRightAddedTarget().equals(element)) {
+					link.setLeftAddedTarget(newOne);
 				}
 			}
 		}

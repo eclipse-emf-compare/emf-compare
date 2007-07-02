@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import java.util.Iterator;
-
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
@@ -34,13 +32,11 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
 		final EObject element = diff.getLeftElement();
 		// Iterator oldTarget = getReferencesOrigins().iterator();
-		final Iterator oldTarget = diff.getLeftRemovedTarget().iterator();
-		while (oldTarget.hasNext()) {
-			try {
-				EFactory.eRemove(element, (diff.getReference()).getName(), oldTarget.next());
-			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e, true);
-			}
+		final EObject leftTarget = diff.getLeftRemovedTarget();
+		try {
+			EFactory.eRemove(element, diff.getReference().getName(), leftTarget);
+		} catch (FactoryException e) {
+			EMFComparePlugin.getDefault().log(e, true);
 		}
 		super.applyInOrigin();
 	}
@@ -54,16 +50,12 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 	public void undoInTarget() {
 		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
 		final EObject element = diff.getRightElement();
-		if (canUndoInTarget()) {
-			final Iterator newTarget = diff.getRightRemovedTarget().iterator();
-			while (newTarget.hasNext()) {
-				try {
-					EFactory.eAdd(element, (diff.getReference()).getName(), newTarget.next());
-				} catch (FactoryException e) {
-					EMFComparePlugin.getDefault().log(e, true);
-				}
-			}
-			super.undoInTarget();
+		final EObject rightTarget = diff.getRightRemovedTarget();
+		try {
+			EFactory.eAdd(element, diff.getReference().getName(), rightTarget);
+		} catch (FactoryException e) {
+			EMFComparePlugin.getDefault().log(e, true);
 		}
+		super.undoInTarget();
 	}
 }

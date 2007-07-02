@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,35 +31,55 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface UpdateUniqueReferenceValue extends UpdateReference {
 	/**
-	 * Returns the value of the '<em><b>Left Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Returns the value of the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Target</em>' reference list.
+	 * @return the value of the '<em>Left Target</em>' reference.
+	 * @see #setLeftTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateUniqueReferenceValue_LeftTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getLeftTarget();
+	EObject getLeftTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Target</em>' reference.
+	 * @see #getLeftTarget()
+	 * @generated
+	 */
+	void setLeftTarget(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Target</em>' reference list.
+	 * @return the value of the '<em>Right Target</em>' reference.
+	 * @see #setRightTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateUniqueReferenceValue_RightTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getRightTarget();
+	EObject getRightTarget();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget <em>Right Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Target</em>' reference.
+	 * @see #getRightTarget()
+	 * @generated
+	 */
+	void setRightTarget(EObject value);
 
 } // UpdateUniqueReferenceValue

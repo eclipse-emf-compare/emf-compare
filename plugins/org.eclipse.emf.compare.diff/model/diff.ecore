@@ -45,27 +45,25 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AddAttribute" eSuperTypes="#//AttributeChange"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoveAttribute" eSuperTypes="#//AttributeChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AddAttribute" eSuperTypes="#//AttributeChange">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveAttribute" eSuperTypes="#//AttributeChange">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateAttribute" eSuperTypes="#//AttributeChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="AddReferenceValue" eSuperTypes="#//ReferenceChange">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightAddedTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftAddedTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightAddedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftAddedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RemoveReferenceValue" eSuperTypes="#//ReferenceChange">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftRemovedTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightRemovedTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftRemovedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightRemovedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateReference" eSuperTypes="#//ReferenceChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateUniqueReferenceValue" eSuperTypes="#//UpdateReference">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" upperBound="-1"
-        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelInputSnapshot">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>

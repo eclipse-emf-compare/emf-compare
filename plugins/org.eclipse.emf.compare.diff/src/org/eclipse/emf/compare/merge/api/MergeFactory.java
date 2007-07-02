@@ -13,20 +13,26 @@ package org.eclipse.emf.compare.merge.api;
 import java.util.HashMap;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.generic.merge.impl.AddAttributeMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AddModelElementMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AddReferenceValueMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.DefaultMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.MoveModelElementMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveAttributeMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveModelElementMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveReferenceValueMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateAttributeMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateUniqueReferenceValueMerger;
+import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 
 /**
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.
@@ -34,8 +40,7 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class MergeFactory {
-	private static final HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = 
-		new HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
+	private static final HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
 
 	/**
 	 * Associates basic {@link DiffElement}s with basic merger implementations.
@@ -46,6 +51,9 @@ public final class MergeFactory {
 		MERGER_TYPES.put(MoveModelElement.class, MoveModelElementMerger.class);
 		MERGER_TYPES.put(AddReferenceValue.class, AddReferenceValueMerger.class);
 		MERGER_TYPES.put(RemoveReferenceValue.class, RemoveReferenceValueMerger.class);
+		MERGER_TYPES.put(UpdateUniqueReferenceValue.class, UpdateUniqueReferenceValueMerger.class);
+		MERGER_TYPES.put(AddAttribute.class, AddAttributeMerger.class);
+		MERGER_TYPES.put(RemoveAttribute.class, RemoveAttributeMerger.class);
 		MERGER_TYPES.put(UpdateAttribute.class, UpdateAttributeMerger.class);
 	}
 
@@ -67,6 +75,16 @@ public final class MergeFactory {
 	public static void addMergerType(Class<? extends DiffElement> diffClass,
 			Class<? extends AbstractMerger> mergerClass) {
 		MERGER_TYPES.put(diffClass, mergerClass);
+	}
+
+	/**
+	 * Unregisters the merger for the given {@link DiffElement} class.
+	 * 
+	 * @param diffClass
+	 *            {@link Class} we want to unregister the merger for.
+	 */
+	public static void removeMergerType(Class<? extends DiffElement> diffClass) {
+		MERGER_TYPES.remove(diffClass);
 	}
 
 	/**
@@ -93,7 +111,7 @@ public final class MergeFactory {
 
 		return elementMerger;
 	}
-	
+
 	private static Class<? extends AbstractMerger> getBestMerger(DiffElement element) {
 		Class<? extends AbstractMerger> mergerClass = DefaultMerger.class;
 		// If we know the merger for this class, we return it

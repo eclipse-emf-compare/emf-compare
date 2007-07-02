@@ -570,13 +570,22 @@ public interface DiffPackage extends EPackage {
 	int ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Add Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
@@ -625,13 +634,22 @@ public interface DiffPackage extends EPackage {
 	int REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Remove Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
@@ -735,7 +753,7 @@ public interface DiffPackage extends EPackage {
 	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -744,7 +762,7 @@ public interface DiffPackage extends EPackage {
 	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -808,7 +826,7 @@ public interface DiffPackage extends EPackage {
 	int REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -817,7 +835,7 @@ public interface DiffPackage extends EPackage {
 	int REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -936,7 +954,7 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_ELEMENT = UPDATE_REFERENCE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -945,7 +963,7 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET = UPDATE_REFERENCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' reference list.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1339,6 +1357,17 @@ public interface DiffPackage extends EPackage {
 	EClass getAddAttribute();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddAttribute#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AddAttribute#getRightTarget()
+	 * @see #getAddAttribute()
+	 * @generated
+	 */
+	EReference getAddAttribute_RightTarget();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute <em>Remove Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1347,6 +1376,17 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getRemoveAttribute();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveAttribute#getLeftTarget()
+	 * @see #getRemoveAttribute()
+	 * @generated
+	 */
+	EReference getRemoveAttribute_LeftTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute <em>Update Attribute</em>}'.
@@ -1369,10 +1409,10 @@ public interface DiffPackage extends EPackage {
 	EClass getAddReferenceValue();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget <em>Left Added Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget <em>Left Added Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Left Added Target</em>'.
+	 * @return the meta object for the reference '<em>Left Added Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget()
 	 * @see #getAddReferenceValue()
 	 * @generated
@@ -1380,10 +1420,10 @@ public interface DiffPackage extends EPackage {
 	EReference getAddReferenceValue_LeftAddedTarget();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget <em>Right Added Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget <em>Right Added Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Right Added Target</em>'.
+	 * @return the meta object for the reference '<em>Right Added Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget()
 	 * @see #getAddReferenceValue()
 	 * @generated
@@ -1401,10 +1441,10 @@ public interface DiffPackage extends EPackage {
 	EClass getRemoveReferenceValue();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget <em>Left Removed Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget <em>Left Removed Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Left Removed Target</em>'.
+	 * @return the meta object for the reference '<em>Left Removed Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget()
 	 * @see #getRemoveReferenceValue()
 	 * @generated
@@ -1412,10 +1452,10 @@ public interface DiffPackage extends EPackage {
 	EReference getRemoveReferenceValue_LeftRemovedTarget();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget <em>Right Removed Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget <em>Right Removed Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Right Removed Target</em>'.
+	 * @return the meta object for the reference '<em>Right Removed Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget()
 	 * @see #getRemoveReferenceValue()
 	 * @generated
@@ -1443,10 +1483,10 @@ public interface DiffPackage extends EPackage {
 	EClass getUpdateUniqueReferenceValue();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget <em>Left Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget <em>Left Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Left Target</em>'.
+	 * @return the meta object for the reference '<em>Left Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getLeftTarget()
 	 * @see #getUpdateUniqueReferenceValue()
 	 * @generated
@@ -1454,10 +1494,10 @@ public interface DiffPackage extends EPackage {
 	EReference getUpdateUniqueReferenceValue_LeftTarget();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget <em>Right Target</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget <em>Right Target</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Right Target</em>'.
+	 * @return the meta object for the reference '<em>Right Target</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue#getRightTarget()
 	 * @see #getUpdateUniqueReferenceValue()
 	 * @generated
@@ -1800,6 +1840,14 @@ public interface DiffPackage extends EPackage {
 		EClass ADD_ATTRIBUTE = eINSTANCE.getAddAttribute();
 
 		/**
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ADD_ATTRIBUTE__RIGHT_TARGET = eINSTANCE.getAddAttribute_RightTarget();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1808,6 +1856,14 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass REMOVE_ATTRIBUTE = eINSTANCE.getRemoveAttribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REMOVE_ATTRIBUTE__LEFT_TARGET = eINSTANCE.getRemoveAttribute_LeftTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
@@ -1830,7 +1886,7 @@ public interface DiffPackage extends EPackage {
 		EClass ADD_REFERENCE_VALUE = eINSTANCE.getAddReferenceValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Added Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Left Added Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1838,7 +1894,7 @@ public interface DiffPackage extends EPackage {
 		EReference ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = eINSTANCE.getAddReferenceValue_LeftAddedTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1857,7 +1913,7 @@ public interface DiffPackage extends EPackage {
 		EClass REMOVE_REFERENCE_VALUE = eINSTANCE.getRemoveReferenceValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Removed Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Left Removed Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1866,7 +1922,7 @@ public interface DiffPackage extends EPackage {
 				.getRemoveReferenceValue_LeftRemovedTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1895,7 +1951,7 @@ public interface DiffPackage extends EPackage {
 		EClass UPDATE_UNIQUE_REFERENCE_VALUE = eINSTANCE.getUpdateUniqueReferenceValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -1904,7 +1960,7 @@ public interface DiffPackage extends EPackage {
 				.getUpdateUniqueReferenceValue_LeftTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Target</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

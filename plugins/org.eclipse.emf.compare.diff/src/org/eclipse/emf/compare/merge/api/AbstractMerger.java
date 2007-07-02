@@ -76,7 +76,7 @@ public abstract class AbstractMerger {
 
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
-
+		
 		// if diff was in a diffGroup and it was the last one, we also remove the diffgroup
 		cleanDiffGroup(parent);
 	}
@@ -88,11 +88,11 @@ public abstract class AbstractMerger {
 		if (root != null) {
 			EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
 				private static final long serialVersionUID = 616050158241084372L;
-
+	
 				{
 					crossReference();
 				}
-
+	
 				@Override
 				protected boolean crossReference(EObject eObject, EReference eReference,
 						EObject crossReferencedEObject) {
@@ -107,10 +107,9 @@ public abstract class AbstractMerger {
 			}
 		}
 	}
-
+	
 	protected void cleanDiffGroup(EObject diffGroup) {
-		if (diffGroup != null && diffGroup instanceof DiffGroup
-				&& ((DiffGroup)diffGroup).getSubchanges() == 0) {
+		if (diffGroup != null && diffGroup instanceof DiffGroup && ((DiffGroup)diffGroup).getSubchanges() == 0) {
 			final EObject parent = diffGroup.eContainer();
 			if (parent != null && parent instanceof DiffGroup) {
 				EcoreUtil.remove(diffGroup);
@@ -118,7 +117,7 @@ public abstract class AbstractMerger {
 			}
 		}
 	}
-
+	
 	protected DiffModel getDiffModel() {
 		return ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff();
 	}
@@ -139,7 +138,7 @@ public abstract class AbstractMerger {
 		}
 		return leftResource;
 	}
-
+	
 	/**
 	 * Returns the right resource.
 	 * 

@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -35,24 +34,24 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  */
 public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements RemoveReferenceValue {
 	/**
-	 * The cached value of the '{@link #getLeftRemovedTarget() <em>Left Removed Target</em>}' reference list.
+	 * The cached value of the '{@link #getLeftRemovedTarget() <em>Left Removed Target</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getLeftRemovedTarget()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList leftRemovedTarget = null;
+	protected EObject leftRemovedTarget = null;
 
 	/**
-	 * The cached value of the '{@link #getRightRemovedTarget() <em>Right Removed Target</em>}' reference list.
+	 * The cached value of the '{@link #getRightRemovedTarget() <em>Right Removed Target</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getRightRemovedTarget()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList rightRemovedTarget = null;
+	protected EObject rightRemovedTarget = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -77,10 +76,16 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getLeftRemovedTarget() {
-		if (leftRemovedTarget == null) {
-			leftRemovedTarget = new EObjectResolvingEList(EObject.class, this,
-					DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET);
+	public EObject getLeftRemovedTarget() {
+		if (leftRemovedTarget != null && leftRemovedTarget.eIsProxy()) {
+			InternalEObject oldLeftRemovedTarget = (InternalEObject)leftRemovedTarget;
+			leftRemovedTarget = eResolveProxy(oldLeftRemovedTarget);
+			if (leftRemovedTarget != oldLeftRemovedTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET, oldLeftRemovedTarget,
+							leftRemovedTarget));
+			}
 		}
 		return leftRemovedTarget;
 	}
@@ -90,12 +95,64 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList getRightRemovedTarget() {
-		if (rightRemovedTarget == null) {
-			rightRemovedTarget = new EObjectResolvingEList(EObject.class, this,
-					DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET);
+	public EObject basicGetLeftRemovedTarget() {
+		return leftRemovedTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLeftRemovedTarget(EObject newLeftRemovedTarget) {
+		EObject oldLeftRemovedTarget = leftRemovedTarget;
+		leftRemovedTarget = newLeftRemovedTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET, oldLeftRemovedTarget,
+					leftRemovedTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject getRightRemovedTarget() {
+		if (rightRemovedTarget != null && rightRemovedTarget.eIsProxy()) {
+			InternalEObject oldRightRemovedTarget = (InternalEObject)rightRemovedTarget;
+			rightRemovedTarget = eResolveProxy(oldRightRemovedTarget);
+			if (rightRemovedTarget != oldRightRemovedTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET, oldRightRemovedTarget,
+							rightRemovedTarget));
+			}
 		}
 		return rightRemovedTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject basicGetRightRemovedTarget() {
+		return rightRemovedTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRightRemovedTarget(EObject newRightRemovedTarget) {
+		EObject oldRightRemovedTarget = rightRemovedTarget;
+		rightRemovedTarget = newRightRemovedTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET, oldRightRemovedTarget,
+					rightRemovedTarget));
 	}
 
 	/**
@@ -106,9 +163,13 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET:
-				return getLeftRemovedTarget();
+				if (resolve)
+					return getLeftRemovedTarget();
+				return basicGetLeftRemovedTarget();
 			case DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET:
-				return getRightRemovedTarget();
+				if (resolve)
+					return getRightRemovedTarget();
+				return basicGetRightRemovedTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -121,12 +182,10 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET:
-				getLeftRemovedTarget().clear();
-				getLeftRemovedTarget().addAll((Collection)newValue);
+				setLeftRemovedTarget((EObject)newValue);
 				return;
 			case DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET:
-				getRightRemovedTarget().clear();
-				getRightRemovedTarget().addAll((Collection)newValue);
+				setRightRemovedTarget((EObject)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -140,10 +199,10 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET:
-				getLeftRemovedTarget().clear();
+				setLeftRemovedTarget((EObject)null);
 				return;
 			case DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET:
-				getRightRemovedTarget().clear();
+				setRightRemovedTarget((EObject)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -157,9 +216,9 @@ public class RemoveReferenceValueImpl extends ReferenceChangeImpl implements Rem
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET:
-				return leftRemovedTarget != null && !leftRemovedTarget.isEmpty();
+				return leftRemovedTarget != null;
 			case DiffPackage.REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET:
-				return rightRemovedTarget != null && !rightRemovedTarget.isEmpty();
+				return rightRemovedTarget != null;
 		}
 		return super.eIsSet(featureID);
 	}

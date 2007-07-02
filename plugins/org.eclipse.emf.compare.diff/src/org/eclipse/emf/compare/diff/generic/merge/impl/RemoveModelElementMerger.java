@@ -73,8 +73,8 @@ public class RemoveModelElementMerger extends DefaultMerger {
 			if (op instanceof RemoveReferenceValue) {
 				final RemoveReferenceValue link = (RemoveReferenceValue)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getLeftRemovedTarget().contains(element)) {
-					link.getRightRemovedTarget().add(newOne);
+				if (link.getLeftRemovedTarget().equals(element)) {
+					link.setRightRemovedTarget(newOne);
 				}
 			}
 		}

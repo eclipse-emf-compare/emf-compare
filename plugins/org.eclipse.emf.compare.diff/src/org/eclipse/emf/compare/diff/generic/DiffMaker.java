@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
+import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
@@ -253,9 +255,32 @@ public class DiffMaker implements DiffEngine {
 			final EAttribute next = (EAttribute)it.next();
 			if (!next.isDerived()) {
 				final String attributeName = next.getName();
-				if (EFactory.eGet(mapping.getLeftElement(), attributeName) != null
-						&& !EFactory.eGet(mapping.getLeftElement(), attributeName).equals(
-								EFactory.eGet(mapping.getRightElement(), attributeName))) {
+				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
+				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
+				
+				if (leftValue != null && !leftValue.equals(rightValue) && next.isMany()) {
+					// If an object in the left list isn't contained in the right, it is a remove operation
+					for (Object aValue : (List)leftValue) {
+						if (!((List)rightValue).contains(aValue)) {
+							final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
+							operation.setAttribute(next);
+							operation.setRightElement(mapping.getRightElement());
+							operation.setLeftElement(mapping.getLeftElement());
+							operation.setLeftTarget((EObject)aValue);
+							root.getSubDiffElements().add(operation);
+						}
+					}
+					for (Object aValue : (List)rightValue) {
+						if (!((List)leftValue).contains(aValue)) {
+							final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
+							operation.setAttribute(next);
+							operation.setRightElement(mapping.getRightElement());
+							operation.setLeftElement(mapping.getLeftElement());
+							operation.setRightTarget((EObject)aValue);
+							root.getSubDiffElements().add(operation);
+						}
+					}
+				} else if (leftValue != null && !leftValue.equals(rightValue)) {
 					final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
@@ -323,13 +348,11 @@ public class DiffMaker implements DiffEngine {
 				} else {
 					// REFERENCES ADD
 					if (addedReferences.size() > 0) {
-						root.getSubDiffElements().add(
-								createNewReferencesOperation(mapping, next, addedReferences));
+						createNewReferencesOperation(root, mapping, next, addedReferences);
 					}
 					// REFERENCES DEL
 					if (deletedReferences.size() > 0) {
-						root.getSubDiffElements().add(
-								createRemovedReferencesOperation(mapping, next, deletedReferences));
+						createRemovedReferencesOperation(root, mapping, next, deletedReferences);
 					}
 				}
 			}
@@ -352,44 +375,42 @@ public class DiffMaker implements DiffEngine {
 		if (rightTarget == null)
 			rightTarget = deletedReferences.get(0);
 
-		operation.getLeftTarget().add(leftTarget);
-		operation.getRightTarget().add(rightTarget);
+		operation.setLeftTarget(leftTarget);
+		operation.setRightTarget(rightTarget);
 
 		return operation;
 	}
 
 	@SuppressWarnings("unchecked")
-	private AddReferenceValue createNewReferencesOperation(Match2Elements mapping, EReference newReference,
+	private void createNewReferencesOperation(DiffGroup root, Match2Elements mapping, EReference newReference,
 			List<EObject> addedReferences) {
-		final AddReferenceValue operation = DiffFactory.eINSTANCE.createAddReferenceValue();
-		operation.setLeftElement(mapping.getLeftElement());
-		operation.setRightElement(mapping.getRightElement());
-		operation.setReference(newReference);
-		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator
-				.hasNext(); ) {
+		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator.hasNext(); ) {
 			final EObject eobj = addedReferenceIterator.next();
-			operation.getRightAddedTarget().add(eobj);
-			if (getMatchedEObject(eobj) != null)
-				operation.getLeftAddedTarget().add(getMatchedEObject(eobj));
+			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
+			addOperation.setRightElement(mapping.getRightElement());
+			addOperation.setLeftElement(mapping.getLeftElement());
+			addOperation.setReference(newReference);
+			addOperation.setRightAddedTarget(eobj);
+			if ((getMatchedEObject(eobj)) != null)
+				addOperation.setLeftAddedTarget(getMatchedEObject(eobj));
+			root.getSubDiffElements().add(addOperation);
 		}
-		return operation;
 	}
 
 	@SuppressWarnings("unchecked")
-	private RemoveReferenceValue createRemovedReferencesOperation(Match2Elements mapping,
+	private void createRemovedReferencesOperation(DiffGroup root, Match2Elements mapping,
 			EReference removedReference, List<EObject> deletedReferences) {
-		final RemoveReferenceValue deloperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
-		deloperation.setRightElement(mapping.getRightElement());
-		deloperation.setLeftElement(mapping.getLeftElement());
-		deloperation.setReference(removedReference);
-		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator
-				.hasNext(); ) {
+		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator.hasNext(); ) {
 			final EObject eobj = deletedReferenceIterator.next();
-			deloperation.getLeftRemovedTarget().add(eobj);
+			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
+			delOperation.setRightElement(mapping.getRightElement());
+			delOperation.setLeftElement(mapping.getLeftElement());
+			delOperation.setReference(removedReference);
+			delOperation.setLeftRemovedTarget(eobj);
 			if ((getMatchedEObject(eobj)) != null)
-				deloperation.getRightRemovedTarget().add(getMatchedEObject(eobj));
+				delOperation.setRightRemovedTarget(getMatchedEObject(eobj));
+			root.getSubDiffElements().add(delOperation);
 		}
-		return deloperation;
 	}
 
 	/**

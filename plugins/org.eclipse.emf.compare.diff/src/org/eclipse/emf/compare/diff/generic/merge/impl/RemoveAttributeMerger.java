@@ -11,29 +11,33 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for an {@link AddReferenceValue}.
+ * Merger for an {@link RemoveAttribute} operation.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class AddReferenceValueMerger extends DefaultMerger {
+public class RemoveAttributeMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final AddReferenceValue diff = (AddReferenceValue)this.diff;
-		final EObject element = diff.getLeftElement();
-		final EObject leftTarget = diff.getLeftAddedTarget();
+		final RemoveAttribute diff = (RemoveAttribute)this.diff;
+		final EObject origin = diff.getLeftElement();
+		final EObject element = diff.getLeftTarget();
+		final EAttribute attr = diff.getAttribute();
 		try {
-			EFactory.eAdd(element, diff.getReference().getName(), leftTarget);
+			EFactory.eRemove(origin, attr.getName(), element);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}
@@ -47,11 +51,13 @@ public class AddReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AddReferenceValue diff = (AddReferenceValue)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject rightTarget = diff.getRightAddedTarget();
+		final RemoveAttribute diff = (RemoveAttribute)this.diff;
+		final EObject target = diff.getRightElement();
+		final EObject element = diff.getLeftTarget();
+		final EObject newOne = EcoreUtil.copy(element);
+		final EAttribute attr = diff.getAttribute();
 		try {
-			EFactory.eRemove(element, diff.getReference().getName(), rightTarget);
+			EFactory.eAdd(target, attr.getName(), newOne);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
 		}

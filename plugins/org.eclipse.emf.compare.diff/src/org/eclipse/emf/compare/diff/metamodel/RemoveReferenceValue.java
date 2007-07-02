@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel;
 
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,35 +31,55 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface RemoveReferenceValue extends ReferenceChange {
 	/**
-	 * Returns the value of the '<em><b>Left Removed Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Returns the value of the '<em><b>Left Removed Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Removed Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Removed Target</em>' reference list.
+	 * @return the value of the '<em>Left Removed Target</em>' reference.
+	 * @see #setLeftRemovedTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoveReferenceValue_LeftRemovedTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getLeftRemovedTarget();
+	EObject getLeftRemovedTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Removed Target</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget <em>Left Removed Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Removed Target</em>' reference.
+	 * @see #getLeftRemovedTarget()
+	 * @generated
+	 */
+	void setLeftRemovedTarget(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Right Removed Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Removed Target</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Removed Target</em>' reference list.
+	 * @return the value of the '<em>Right Removed Target</em>' reference.
+	 * @see #setRightRemovedTarget(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoveReferenceValue_RightRemovedTarget()
-	 * @model type="org.eclipse.emf.ecore.EObject"
+	 * @model
 	 * @generated
 	 */
-	EList getRightRemovedTarget();
+	EObject getRightRemovedTarget();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget <em>Right Removed Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Removed Target</em>' reference.
+	 * @see #getRightRemovedTarget()
+	 * @generated
+	 */
+	void setRightRemovedTarget(EObject value);
 
 } // RemoveReferenceValue
