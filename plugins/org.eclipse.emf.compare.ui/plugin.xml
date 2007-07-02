@@ -23,7 +23,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            default="false"
+            default="true"
             extensions="emfdiff"
             icon="icons/full/editorIcon.gif"
             id="org.eclipse.emf.compare.ui.editor"
