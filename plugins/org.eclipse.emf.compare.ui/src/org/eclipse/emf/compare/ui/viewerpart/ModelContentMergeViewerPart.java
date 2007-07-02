@@ -34,7 +34,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -51,6 +50,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
@@ -199,9 +199,7 @@ public class ModelContentMergeViewerPart {
 		List<TreeItem> selectedElements = null;
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			selectedElements = tree.getSelectedElements();
-		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			System.out.println(((StructuredSelection)properties.getSelection()).getFirstElement());
-		} else {
+		} else if (selectedTab != ModelContentMergeViewer.PROPERTIES_TAB) {
 			throw new IllegalStateException(INVALID_TAB);
 		}
 		return selectedElements;
@@ -231,6 +229,20 @@ public class ModelContentMergeViewerPart {
 		if (tree.getVisibleElements().size() > 0)
 			return tree.getVisibleElements().get(0);
 		return null;
+	}
+
+	/**
+	 * Checks wether a given {@link Item} is visible.
+	 * 
+	 * @param item
+	 *            Item to check.
+	 * @return <code>True</code> if the item is visible, <code>False</code> otherwise.
+	 */
+	public boolean isVisible(Item item) {
+		if (item instanceof TreeItem)
+			return tree.getTree().getClientArea().contains(((TreeItem)item).getBounds().x, ((TreeItem)item).getBounds().y);
+		else
+			return true;
 	}
 
 	/**

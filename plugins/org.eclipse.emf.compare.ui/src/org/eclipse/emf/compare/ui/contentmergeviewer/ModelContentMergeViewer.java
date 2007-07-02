@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.emf.common.util.EList;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
@@ -80,6 +82,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Width to affect to the center area. */
 	public static final int CENTER_WIDTH = 34;
 
+	/**
+	 * Threshold for a change in the drawing comportment. If the number of {@link DiffElement}s is &lt; to
+	 * this threshold, we will draw each of the center lines. Otherwise we'll only draw the lines for the
+	 * visible elements as well as the line for the currently selected diff.
+	 */
+	public static final int MAX_DIFF_THRESHOLD = 30;
+
 	private CompareConfiguration configuration;
 
 	private RGB highlightColor;
@@ -106,8 +115,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	private int selectedTab = TREE_TAB;
 	
-	private boolean leftDirty;
+	private Action copyDiffRightToLeft;
 	
+	private Action copyDiffLeftToRight;
+
+	private boolean leftDirty;
+
 	private boolean rightDirty;
 
 	/**
@@ -124,6 +137,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		buildControl(parent);
 		updateColors();
 		setContentProvider(new ModelContentMergeContentProvider(config));
+		
+		// disables diff copy from either side
+		switchCopyState(false);
 
 		structureSelectionListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -132,10 +148,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					if (event.getNewValue() instanceof IStructuredSelection) {
 						selected = ((IStructuredSelection)event.getNewValue()).getFirstElement();
 					}
-					if (selected instanceof DiffElement) {
-						currentDiff = (DiffElement)selected;
-						leftPart.navigateToDiff(currentDiff);
-						rightPart.navigateToDiff(currentDiff);
+					if (selected instanceof DiffElement && !(selected instanceof DiffGroup && ((DiffGroup)selected).getSubDiffElements().size() == 0)) {
+						setSelection((DiffElement)selected);
 					}
 				}
 			}
@@ -160,6 +174,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		rightPart.layout();
 		leftPart.layout();
 		updateCenter();
+		updateToolItems();
 	}
 
 	/**
@@ -168,7 +183,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public void updateCenter() {
 		getCenterPart().redraw();
 	}
-	
+
 	/**
 	 * Returns the compare configuration of this viewer.
 	 * 
@@ -221,8 +236,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		if (selectedTab == TREE_TAB && leftItem != null
 				&& (!leftItem.getData().equals(leftElement) || diff instanceof AddModelElement)) {
-			if (rightItem != null && rightItem.getData().equals(rightElement) 
-					&& rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
+			if (rightItem != null && rightItem.getData().equals(rightElement)
+					&& rightItem.getData() instanceof EObject
+					&& ((EObject)rightItem.getData()).eContainer() != null) {
 				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
 						rightItem.getData());
 				final EList leftList = ((EObject)leftItem.getData()).eContents();
@@ -254,7 +270,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		final Item leftItem = (Item)leftPart.find(leftElement);
 		Item rightItem = (Item)rightPart.find(rightElement);
-		
+
 		if (rightItem == null) {
 			rightItem = (Item)rightPart.getTreeRoot();
 			rightElement = (EObject)rightItem.getData();
@@ -262,8 +278,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		if (selectedTab == TREE_TAB && rightItem != null
 				&& (!rightItem.getData().equals(rightElement) || diff instanceof RemoveModelElement)) {
-			if (leftItem != null && leftItem.getData().equals(leftElement) 
-					&& leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
+			if (leftItem != null && leftItem.getData().equals(leftElement)
+					&& leftItem.getData() instanceof EObject
+					&& ((EObject)leftItem.getData()).eContainer() != null) {
 				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
 						leftItem.getData());
 				// Ensures we cannot trigger ArrayOutOfBounds exeptions
@@ -326,6 +343,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		currentDiff = diff;
 		leftPart.navigateToDiff(currentDiff);
 		rightPart.navigateToDiff(currentDiff);
+		switchCopyState(true);
 	}
 
 	/**
@@ -365,12 +383,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (currentDiff != null)
 			copy(currentDiff, true);
 		currentDiff = null;
+		switchCopyState(false);
 	}
 
 	protected void copyDiffRightToLeft() {
 		if (currentDiff != null)
 			copy(currentDiff, false);
 		currentDiff = null;
+		switchCopyState(false);
 	}
 
 	protected void copy(DiffElement diff, boolean leftToRight) {
@@ -414,7 +434,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected void createToolItems(ToolBarManager tbm) {
 		// COPY DIFF LEFT TO RIGHT
 		if (getCompareConfiguration().isRightEditable()) {
-			final Action copyDiffLeftToRight = new AbstractCompareAction(ResourceBundle
+			copyDiffLeftToRight = new AbstractCompareAction(ResourceBundle
 					.getBundle(BUNDLE_NAME), "action.CopyDiffLeftToRight.") { //$NON-NLS-1$
 				public void run() {
 					copyDiffLeftToRight();
@@ -427,7 +447,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		// COPY DIFF RIGHT TO LEFT
 		if (getCompareConfiguration().isLeftEditable()) {
-			final Action copyDiffRightToLeft = new AbstractCompareAction(ResourceBundle
+			copyDiffRightToLeft = new AbstractCompareAction(ResourceBundle
 					.getBundle(BUNDLE_NAME), "action.CopyDiffRightToLeft.") { //$NON-NLS-1$
 				public void run() {
 					copyDiffRightToLeft();
@@ -459,6 +479,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		previousDiffContribution.setVisible(true);
 		tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
 	}
+	
+	protected boolean diffThresholdOverstepped() {
+		return ((ModelCompareInput)getInput()).getDiffAsList().size() > MAX_DIFF_THRESHOLD;
+	}
 
 	protected void navigate(boolean down) {
 		final List<DiffElement> diffs = ((ModelCompareInput)getInput()).getDiffAsList();
@@ -473,18 +497,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					if (diffs.size() > i + 1) {
 						next = diffs.get(i + 1);
 					}
-					currentDiff = next;
-					leftPart.navigateToDiff(currentDiff);
-					rightPart.navigateToDiff(currentDiff);
+					setSelection(next);
 					break;
 				} else if (diffs.get(i).equals(theDiff) && !down) {
 					DiffElement previous = diffs.get(diffs.size() - 1);
 					if (i > 0) {
 						previous = diffs.get(i - 1);
 					}
-					currentDiff = previous;
-					leftPart.navigateToDiff(currentDiff);
-					rightPart.navigateToDiff(currentDiff);
+					setSelection(previous);
 					break;
 				}
 			}
@@ -504,6 +524,19 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
 		removedColor = PreferenceConverter.getColor(comparePreferences,
 				EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateToolItems()
+	 */
+	@Override
+	protected void updateToolItems() {
+		super.updateToolItems();
+		copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
+		copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
+		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 
 	/**
@@ -571,6 +604,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
 		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
 		update();
+	}
+	
+	protected void switchCopyState(boolean enabled) {
+		boolean leftIsRemote = false;
+		if (configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE) != null)
+			leftIsRemote = Boolean.parseBoolean(configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE).toString());
+		configuration.setLeftEditable(!leftIsRemote && enabled);
+		configuration.setRightEditable(enabled);
+		updateToolItems();
 	}
 
 	/**
@@ -715,59 +757,63 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		protected void drawLine(GC gc, Item leftItem, Item rightItem, DiffElement diff) {
 			if (leftItem == null || rightItem == null)
 				return;
-			final Rectangle centerbounds = getCenterPart().getBounds();
-			Rectangle leftBounds = null;
-			Rectangle rightBounds = null;
-			if (selectedTab == TREE_TAB) {
-				leftBounds = ((TreeItem)leftItem).getBounds();
-				rightBounds = ((TreeItem)rightItem).getBounds();
-			} else if (selectedTab == PROPERTIES_TAB) {
-				leftBounds = ((TableItem)leftItem).getBounds();
-				rightBounds = ((TableItem)rightItem).getBounds();
-			} else {
-				throw new IllegalStateException("Invalid value for tab selection"); //$NON-NLS-1$
-			}
-
-			// Defines the circling Color
-			RGB color = changedColor;
-			if (diff instanceof AddModelElement) {
-				color = addedColor;
-			} else if (diff instanceof RemoveModelElement) {
-				color = removedColor;
-			}
-
-			// Defines all variables needed for drawing the line.
-			final int treeTabBorder = 5;
-			final int leftX = 0;
-			final int rightX = centerbounds.width;
-			final int leftRectangleHeight = leftBounds.height - 1;
-			final int rightRectangleHeight = rightBounds.height - 1;
-
-			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
-			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder
-					+ rightPart.getHeaderHeight();
-			if (selectedTab == TREE_TAB
-					&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
-				leftY += leftRectangleHeight / 2;
-			}
-			if (selectedTab == TREE_TAB
-					&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
-				rightY += rightRectangleHeight / 2;
-			}
-
-			int lineWidth = 1;
-			if (selectedTab == PROPERTIES_TAB || leftPart.getSelectedElements().contains(leftItem)
-					|| rightPart.getSelectedElements().contains(rightItem)) {
-				lineWidth = 2;
-			}
-
-			// Performs the actual drawing
-			gc.setForeground(new Color(getCenterPart().getDisplay(), color));
-			gc.setLineWidth(lineWidth);
-			gc.setLineStyle(SWT.LINE_SOLID);
-			final int[] points = getCenterCurvePoints(leftX, leftY, rightX, rightY);
-			for (int i = 1; i < points.length; i++) {
-				gc.drawLine(leftX + i - 1, points[i - 1], leftX + i, points[i]);
+			
+			if (!diffThresholdOverstepped() || diff.equals(currentDiff)
+					|| leftPart.isVisible(leftItem) || rightPart.isVisible(rightItem)) {
+				final Rectangle centerbounds = getCenterPart().getBounds();
+				Rectangle leftBounds = null;
+				Rectangle rightBounds = null;
+				if (selectedTab == TREE_TAB) {
+					leftBounds = ((TreeItem)leftItem).getBounds();
+					rightBounds = ((TreeItem)rightItem).getBounds();
+				} else if (selectedTab == PROPERTIES_TAB) {
+					leftBounds = ((TableItem)leftItem).getBounds();
+					rightBounds = ((TableItem)rightItem).getBounds();
+				} else {
+					throw new IllegalStateException("Invalid value for tab selection"); //$NON-NLS-1$
+				}
+	
+				// Defines the circling Color
+				RGB color = changedColor;
+				if (diff instanceof AddModelElement) {
+					color = addedColor;
+				} else if (diff instanceof RemoveModelElement) {
+					color = removedColor;
+				}
+	
+				// Defines all variables needed for drawing the line.
+				final int treeTabBorder = 5;
+				final int leftX = 0;
+				final int rightX = centerbounds.width;
+				final int leftRectangleHeight = leftBounds.height - 1;
+				final int rightRectangleHeight = rightBounds.height - 1;
+	
+				int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
+				int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder
+						+ rightPart.getHeaderHeight();
+				if (selectedTab == TREE_TAB
+						&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
+					leftY += leftRectangleHeight / 2;
+				}
+				if (selectedTab == TREE_TAB
+						&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
+					rightY += rightRectangleHeight / 2;
+				}
+	
+				int lineWidth = 1;
+				if (selectedTab == PROPERTIES_TAB || leftPart.getSelectedElements().contains(leftItem)
+						|| rightPart.getSelectedElements().contains(rightItem)) {
+					lineWidth = 2;
+				}
+	
+				// Performs the actual drawing
+				gc.setForeground(new Color(getCenterPart().getDisplay(), color));
+				gc.setLineWidth(lineWidth);
+				gc.setLineStyle(SWT.LINE_SOLID);
+				final int[] points = getCenterCurvePoints(leftX, leftY, rightX, rightY);
+				for (int i = 1; i < points.length; i++) {
+					gc.drawLine(leftX + i - 1, points[i - 1], leftX + i, points[i]);
+				}
 			}
 		}
 

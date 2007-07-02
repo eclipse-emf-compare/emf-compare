@@ -34,27 +34,30 @@ public interface EMFCompareConstants {
 	String ICONS_PREFERENCES_HELP = "icons/full/prefshelp.gif"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property change event associated with a change in the content merge viewer trees' selection.
+	 * Key of the property associated with a change in the content merge viewer trees' selection.
 	 */
 	String PROPERTY_CONTENT_SELECTION = "content.selection.changed"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property change event associated with a double click in the structure merge viewer.
+	 * Key of the property associated with a double click in the structure merge viewer.
 	 */
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 
 	/** 
-	 * Key of the property change event associated with an input change in the structure viewer.
+	 * Key of the property associated with an input change in the structure viewer.
 	 */
 	String PROPERTY_STRUCTURE_INPUT_CHANGED = "structure.input.changed"; //$NON-NLS-1$
 	
 	/** 
-	 * Key of the property change event associated with an input change in the content viewer.
+	 * Key of the property associated with an input change in the content viewer.
 	 */
 	String PROPERTY_CONTENT_INPUT_CHANGED = "content.input.changed"; //$NON-NLS-1$
 	
-	/** Key for the property change event associated with the comparison time. */
+	/** Key for the property associated with the comparison time. */
 	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$
+	
+	/** Key for the property indicating whether the left model is remote. */
+	String PROPERTY_LEFT_IS_REMOTE = "comparison.left.remote"; //$NON-NLS-1$
 	
 	/** Preferences key for the siblings search window. */
 	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$

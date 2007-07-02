@@ -100,30 +100,31 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public void copy(boolean leftToRight) {
 		for (final DiffElement aDiff : getDiffAsList()) {
-			final AbstractMerger merger = MergeFactory.createMerger(aDiff);
-			if (leftToRight && merger.canUndoInTarget()) {
-				merger.undoInTarget();
-			} else if (!leftToRight && merger.canApplyInOrigin()) {
-				merger.applyInOrigin();
-			}
+			doCopy(aDiff, leftToRight);
 		}
 		fireCompareInputChanged();
 	}
 
 	/**
-	 * Copies a single {@link DiffElement} in the given direction.
+	 * Copies a single {@link DiffElement} or a {@link DiffGroup} in the given direction.
 	 * 
 	 * @param element
 	 *            {@link DiffElement Element} to copy.
 	 * @param leftToRight
 	 *            Direction of the copy.
 	 */
+	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
-		final AbstractMerger merger = MergeFactory.createMerger(element);
-		if (leftToRight && merger.canUndoInTarget()) {
-			merger.undoInTarget();
-		} else if (!leftToRight && merger.canApplyInOrigin()) {
-			merger.applyInOrigin();
+		if (element instanceof DiffGroup) {
+			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element).getSubDiffElements());
+			for (DiffElement subDiff : subDiffList) {
+				if (subDiff instanceof DiffGroup)
+					copy(subDiff, leftToRight);
+				else
+					doCopy(subDiff, leftToRight);
+			}
+		} else {
+			doCopy(element, leftToRight);
 		}
 		fireCompareInputChanged();
 	}
@@ -247,6 +248,15 @@ public class ModelCompareInput implements ICompareInput {
 			}
 		}
 		return result;
+	}
+	
+	protected void doCopy(DiffElement element, boolean leftToRight) {
+		final AbstractMerger merger = MergeFactory.createMerger(element);
+		if (leftToRight && merger.canUndoInTarget()) {
+			merger.undoInTarget();
+		} else if (!leftToRight && merger.canApplyInOrigin()) {
+			merger.applyInOrigin();
+		}
 	}
 
 	protected void fireCompareInputChanged() {

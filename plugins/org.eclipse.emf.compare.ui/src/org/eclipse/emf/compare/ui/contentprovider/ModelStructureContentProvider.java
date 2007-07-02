@@ -159,7 +159,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					final String leftLabel = configuration.getRightLabel(rightModel);
 					configuration.setRightLabel(configuration.getLeftLabel(leftModel));
 					configuration.setLeftLabel(leftLabel);
-					configuration.setLeftEditable(false);
+					configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
 				}
 				if (leftModel != null && rightModel != null) {
 					final Date start = Calendar.getInstance().getTime();
