@@ -117,7 +117,11 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		if (inputElement instanceof DiffModel) {
 			elements = ((DiffModel)inputElement).getOwnedElements().toArray();
 		} else {
-			elements = diffInput.getOwnedElements().toArray();
+			try {
+				elements = diffInput.getOwnedElements().toArray();
+			} catch (NullPointerException e) {
+				throw new EMFCompareException("Error while loading resources, input was null.");
+			}
 		}
 		return elements;
 	}
@@ -176,12 +180,14 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 								}
 							});
 					final Date end = Calendar.getInstance().getTime();
-					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime() - start.getTime());
-					
+					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
+							- start.getTime());
+
 					// prints comparison time
-//					System.out.println(EMFCompareEObjectUtils.computeObjectName(leftModel) + 
-//							" and " + EMFCompareEObjectUtils.computeObjectName(rightModel) + //$NON-NLS-1$
-//							" compared in : " + (end.getTime() - start.getTime()) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+					// System.out.println(EMFCompareEObjectUtils.computeObjectName(leftModel) +
+					// " and " + EMFCompareEObjectUtils.computeObjectName(rightModel) + //$NON-NLS-1$
+					// " compared in : " + (end.getTime() - start.getTime()) + "ms"); //$NON-NLS-1$
+					// //$NON-NLS-2$
 
 					diffInput = snapshot.getDiff();
 				}
