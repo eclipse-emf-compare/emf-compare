@@ -15,11 +15,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -108,10 +108,18 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		return getString("_UI_UpdateUniqueReferenceValue_type");
+		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
+		try {
+			return getString("_UI_UpdateUniqueReferenceValue_type", new Object[] {
+					updateRef.getReference().getName(),
+					NameSimilarity.findName(updateRef.getLeftTarget()),
+					NameSimilarity.findName(updateRef.getRightTarget())});
+		} catch (FactoryException e) {
+			return getString("_UI_UpdateUniqueReferenceValue_type");
+		}
 	}
 
 	/**
