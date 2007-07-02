@@ -16,6 +16,12 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.FactoryException;
+
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -49,8 +55,24 @@ public class RemoveAttributeItemProvider extends AttributeChangeItemProvider imp
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addLeftTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Left Target feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLeftTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_RemoveAttribute_leftTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_RemoveAttribute_leftTarget_feature",
+						"_UI_RemoveAttribute_type"), DiffPackage.Literals.REMOVE_ATTRIBUTE__LEFT_TARGET,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -67,10 +89,18 @@ public class RemoveAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		return getString("_UI_RemoveAttribute_type");
+		final RemoveAttribute removeOp = (RemoveAttribute)object;
+		try {
+			return getString("_UI_RemoveAttribute_type", new Object[] {
+					NameSimilarity.findName(removeOp.getLeftTarget()),
+					NameSimilarity.findName(removeOp.getAttribute()),
+					NameSimilarity.findName(removeOp.getLeftElement())});
+		} catch (FactoryException e) {
+			return getString("_UI_RemoveAttribute_type");
+		}
 	}
 
 	/**

@@ -17,8 +17,12 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -53,8 +57,24 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addRightTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Target feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addRightTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddAttribute_rightTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_AddAttribute_rightTarget_feature",
+						"_UI_AddAttribute_type"), DiffPackage.Literals.ADD_ATTRIBUTE__RIGHT_TARGET, true,
+				false, true, null, null, null));
 	}
 
 	/**
@@ -83,10 +103,18 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public String getText(Object object) {
-		return getString("_UI_AddAttribute_type");
+		final AddAttribute addOp = (AddAttribute)object;
+		try {
+			return getString("_UI_AddAttribute_type", new Object[] {
+					NameSimilarity.findName(addOp.getRightTarget()),
+					NameSimilarity.findName(addOp.getAttribute()),
+					NameSimilarity.findName(addOp.getRightElement())});
+		} catch (FactoryException e) {
+			return getString("_UI_AddAttribute_type");
+		}
 	}
 
 	/**
