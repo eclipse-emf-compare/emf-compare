@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * This class provides services to work on strings and to compare EObjects.
@@ -143,7 +142,7 @@ public final class NameSimilarity {
 	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
-		List<EStructuralFeature> eclassAttributes = new LinkedList<EStructuralFeature>();
+		List<EAttribute> eclassAttributes = new LinkedList<EAttribute>();
 		if (filter != null) {
 			if (eclass instanceof EClass) {
 				eclassAttributes = filter.getFilteredFeatures(current);

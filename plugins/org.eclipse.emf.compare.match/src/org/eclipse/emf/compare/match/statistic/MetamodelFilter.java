@@ -43,7 +43,7 @@ public class MetamodelFilter {
 	 *            {@link EObject} from which we seek the features.
 	 * @return A list of the pertinent features for this {@link EObject}.
 	 */
-	public List<EStructuralFeature> getFilteredFeatures(EObject eObj) {
+	public List getFilteredFeatures(EObject eObj) {
 		// cache the filtered features for a type
 		if (eClassToFeaturesList == null)
 			eClassToFeaturesList = new HashMap<EClass, List<EStructuralFeature>>();
