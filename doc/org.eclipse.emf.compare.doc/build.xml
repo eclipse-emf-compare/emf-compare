@@ -67,7 +67,7 @@
 			<arg value="${eclipse.home}/../eclipse"/>
 		</exec>
 		
-		<antcall target="build.index"/>
+		<!--<antcall target="build.index"/>-->
 		
 		<!-- Zip up all of the documentation artifacts - references(including javadoc), images, tutorials, etc. -->
 		<zip destfile="doc.zip" compress="true">
