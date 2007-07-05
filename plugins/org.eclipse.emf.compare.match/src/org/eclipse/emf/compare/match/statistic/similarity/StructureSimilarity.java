@@ -162,17 +162,17 @@ public final class StructureSimilarity {
 		}
 		for (EStructuralFeature feature : eObjectFeatures) {
 			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
-				Object value = current.eGet(feature);
+				final Object value = current.eGet(feature);
 				if (value instanceof List) {
 					for (final Iterator valueIterator = ((List)value).iterator(); valueIterator.hasNext(); ) {
-						Object next = valueIterator.next();
+						final Object next = valueIterator.next();
 						if (next instanceof EObject) {
-							String objName = NameSimilarity.findName((EObject)next);
+							final String objName = NameSimilarity.findName((EObject)next);
 							result.append(objName);
 						}
 					}
 				} else if (value instanceof EObject) {
-					String objName = NameSimilarity.findName((EObject)value);
+					final String objName = NameSimilarity.findName((EObject)value);
 					result.append(objName);
 				}
 			}

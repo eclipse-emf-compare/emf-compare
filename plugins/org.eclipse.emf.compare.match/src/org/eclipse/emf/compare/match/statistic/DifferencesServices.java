@@ -556,7 +556,8 @@ public class DifferencesServices implements MatchEngine {
 		final Iterator<Match2Elements> it = mappings.iterator();
 		while (it.hasNext()) {
 			final Match2Elements map = it.next();
-			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, map);
+			final Match2Elements match = recursiveMappings(map.getLeftElement(), map.getRightElement(), monitor);
+			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, match);
 		}
 	}
 

@@ -33,7 +33,7 @@ public final class NameSimilarity {
 
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
 	
-	private static final WeakHashMap<EClass, EAttribute> nameFeature = new WeakHashMap<EClass, EAttribute>();
+	private static final WeakHashMap<EClass, EAttribute> nameFeatureCache = new WeakHashMap<EClass, EAttribute>();
 
 	private NameSimilarity() {
 		// prevents instantiation
@@ -209,7 +209,7 @@ public final class NameSimilarity {
 	 */
 	public static EAttribute findNameFeature(EObject current) throws FactoryException {
 		final EClass eclass = current.eClass();
-		EAttribute bestFeature = nameFeature.get(eclass);
+		EAttribute bestFeature = nameFeatureCache.get(eclass);
 
 		if (bestFeature == null) {
 			List eclassAttributes = new LinkedList();
@@ -233,7 +233,7 @@ public final class NameSimilarity {
 						}
 					}
 				}
-				nameFeature.put(eclass, bestFeature);
+				nameFeatureCache.put(eclass, bestFeature);
 			}
 		}
 		// now we should return the feature value
