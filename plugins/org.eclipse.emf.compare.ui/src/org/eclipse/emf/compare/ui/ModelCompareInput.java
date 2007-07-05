@@ -100,7 +100,9 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public void copy(boolean leftToRight) {
 		for (final DiffElement aDiff : getDiffAsList()) {
-			doCopy(aDiff, leftToRight);
+			// we might remove the diff from the list before merging it (eOpposite reference)
+			if (aDiff.eContainer() != null)
+				doCopy(aDiff, leftToRight);
 		}
 		fireCompareInputChanged();
 	}
@@ -116,7 +118,8 @@ public class ModelCompareInput implements ICompareInput {
 	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
 		if (element instanceof DiffGroup) {
-			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element).getSubDiffElements());
+			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element)
+					.getSubDiffElements());
 			for (DiffElement subDiff : subDiffList) {
 				if (subDiff instanceof DiffGroup)
 					copy(subDiff, leftToRight);
@@ -249,7 +252,7 @@ public class ModelCompareInput implements ICompareInput {
 		}
 		return result;
 	}
-	
+
 	protected void doCopy(DiffElement element, boolean leftToRight) {
 		final AbstractMerger merger = MergeFactory.createMerger(element);
 		if (leftToRight && merger.canUndoInTarget()) {
