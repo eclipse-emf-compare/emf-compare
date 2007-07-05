@@ -84,18 +84,13 @@
 	
 	<target name="build.sources" depends="init">
 	</target>
-
-	   <target name="gather.bin.parts" depends="init" if="destination.temp.folder">
-                <mkdir dir="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}"/>
-                <copy todir="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}"
-failonerror="true" overwrite="false">
-                        <fileset dir="${basedir}" includes="${filesToInclude}"/>
-                </copy>
-                <eclipse.versionReplacer
-                        path="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}"
-                        version="${pluginVersion}.${forceContextQualifier}"/>
-        </target>
-
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}"/>
+		<copy todir="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}" includes="${filesToInclude}"/>
+		</copy>
+		<eclipse.versionReplacer path="${destination.temp.folder}/${docPlugin}_${pluginVersion}.${forceContextQualifier}" version="${pluginVersion}.${forceContextQualifier}"/>
+	</target>
 	<target name="build.zips" depends="init">
 	</target>
 
