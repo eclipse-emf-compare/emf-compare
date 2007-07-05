@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
+import java.util.Iterator;
+
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
@@ -31,12 +34,24 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
 		final EObject element = diff.getLeftElement();
-		// Iterator oldTarget = getReferencesOrigins().iterator();
 		final EObject leftTarget = diff.getLeftRemovedTarget();
 		try {
 			EFactory.eRemove(element, diff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
+		}
+		// we should now have a look for AddReferencesLinks needing this object
+		final Iterator siblings = getDiffModel().eAllContents();
+		while (siblings.hasNext()) {
+			final DiffElement op = (DiffElement)siblings.next();
+			if (op instanceof RemoveReferenceValue) {
+				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+				// now if I'm in the target References I should put my copy in the origin
+				if (link.getReference().equals(diff.getReference().getEOpposite())
+						&& link.getLeftRemovedTarget().equals(element)) {
+					removeFromContainer(link);
+				}
+			}
 		}
 		super.applyInOrigin();
 	}
@@ -55,6 +70,19 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 			EFactory.eAdd(element, diff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.getDefault().log(e, true);
+		}
+		// we should now have a look for AddReferencesLinks needing this object
+		final Iterator siblings = getDiffModel().eAllContents();
+		while (siblings.hasNext()) {
+			final DiffElement op = (DiffElement)siblings.next();
+			if (op instanceof RemoveReferenceValue) {
+				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+				// now if I'm in the target References I should put my copy in the origin
+				if (link.getReference().equals(diff.getReference().getEOpposite())
+						&& link.getRightRemovedTarget().equals(element)) {
+					removeFromContainer(link);
+				}
+			}
 		}
 		super.undoInTarget();
 	}
