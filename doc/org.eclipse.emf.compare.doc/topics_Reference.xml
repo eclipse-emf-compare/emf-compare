@@ -19,7 +19,6 @@
     <topic label="org.eclipse.emf.compare.match.metamodel" href="references/javadoc/org/eclipse/emf/compare/match/metamodel/package-summary.html" />
     <topic label="org.eclipse.emf.compare.match.metamodel.provider" href="references/javadoc/org/eclipse/emf/compare/match/metamodel/provider/package-summary.html" />
     <topic label="org.eclipse.emf.compare.match.metamodel.util" href="references/javadoc/org/eclipse/emf/compare/match/metamodel/util/package-summary.html" />
-    <topic label="org.eclipse.emf.compare.match.provider" href="references/javadoc/org/eclipse/emf/compare/match/provider/package-summary.html" />
     <topic label="org.eclipse.emf.compare.match.service" href="references/javadoc/org/eclipse/emf/compare/match/service/package-summary.html" />
     <topic label="org.eclipse.emf.compare.match.statistic.metrics" href="references/javadoc/org/eclipse/emf/compare/match/statistic/metrics/package-summary.html" />
     <topic label="org.eclipse.emf.compare.match.statistic" href="references/javadoc/org/eclipse/emf/compare/match/statistic/package-summary.html" />
