@@ -50,6 +50,9 @@ public class DifferencesServices implements MatchEngine {
 
 	/** Soft strategy considers ADD, REMOVE, CHANGE, MOVE and RENAME operations. */
 	public static final int SOFT_STRATEGY = 1;
+	
+	/** Default value for the search window. Will be used if the GUI hasn't been loaded. */
+	private static final int DEFAULT_SEARCH_WINDOW = 100;
 
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
@@ -323,8 +326,11 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @return An <code>int</code> representing the number of siblings to consider for matching.
 	 */
-	private int getDefaultSearchWindow() {
-		return EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window"); //$NON-NLS-1$
+	private int getSearchWindow() {
+		int searchWindow = EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window"); //$NON-NLS-1$
+		if (searchWindow == 0)
+			searchWindow = DEFAULT_SEARCH_WINDOW;
+		return searchWindow;
 	}
 
 	/**
@@ -365,7 +371,7 @@ public class DifferencesServices implements MatchEngine {
 		try {
 			monitor.subTask("matching roots"); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(root1.eResource().getContents(), root2
-					.eResource().getContents(), getDefaultSearchWindow(), monitor);
+					.eResource().getContents(), getSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			final List<EObject> unMatchedLeftRoots = new ArrayList(root1.eResource().getContents());
@@ -456,7 +462,7 @@ public class DifferencesServices implements MatchEngine {
 		mappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
 		final List<Match2Elements> mapList = mapLists(current1.eContents(), current2.eContents(),
-				getDefaultSearchWindow(), monitor);
+				getSearchWindow(), monitor);
 		// We can map other elements with mapLists; we iterate through them.
 		final Iterator<Match2Elements> it = mapList.iterator();
 		while (it.hasNext()) {
@@ -550,7 +556,7 @@ public class DifferencesServices implements MatchEngine {
 	}
 	
 	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2, IProgressMonitor monitor) throws FactoryException, InterruptedException {
-		final List<Match2Elements> mappings = mapLists(list1, list2, getDefaultSearchWindow(),
+		final List<Match2Elements> mappings = mapLists(list1, list2, getSearchWindow(),
 				monitor);
 
 		final Iterator<Match2Elements> it = mappings.iterator();

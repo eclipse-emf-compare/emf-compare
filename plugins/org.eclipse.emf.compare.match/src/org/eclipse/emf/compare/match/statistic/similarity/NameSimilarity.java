@@ -33,7 +33,7 @@ public final class NameSimilarity {
 
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
 	
-	private static final WeakHashMap<EClass, EAttribute> nameFeatureCache = new WeakHashMap<EClass, EAttribute>();
+	private static final WeakHashMap<EClass, EAttribute> NAME_FEATURE_CACHE = new WeakHashMap<EClass, EAttribute>();
 
 	private NameSimilarity() {
 		// prevents instantiation
@@ -207,33 +207,29 @@ public final class NameSimilarity {
 	 * @throws FactoryException
 	 *             Thrown if an operation on <code>current</code> fails.
 	 */
+	@SuppressWarnings("unchecked")
 	public static EAttribute findNameFeature(EObject current) throws FactoryException {
 		final EClass eclass = current.eClass();
-		EAttribute bestFeature = nameFeatureCache.get(eclass);
+		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass);
 
 		if (bestFeature == null) {
-			List eclassAttributes = new LinkedList();
-			eclassAttributes = eclass.getEAllAttributes();
-			if (eclassAttributes.size() > 0) {
-				bestFeature = (EAttribute)eclassAttributes.get(0);
+			List<EAttribute> eClassAttributes = new LinkedList<EAttribute>();
+			eClassAttributes = eclass.getEAllAttributes();
+			if (eClassAttributes.size() > 0) {
+				bestFeature = eClassAttributes.get(0);
 			}
 			// first, find the eclass structural feature most similar with name
-			if (eclassAttributes.size() > 0) {
-				double max = 0;
-				final Iterator it = eclassAttributes.iterator();
-				while (it.hasNext()) { // for each metamodel feature
-					final Object next = it.next();
-					if (next instanceof EObject) {
-						final EObject obj = (EObject)next;
-						final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
-						// if the attributeName is more similar with "name" than the other one
-						if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
-							max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);
-							bestFeature = (EAttribute)obj;
-						}
+			if (eClassAttributes.size() > 0) {
+				double max = 0d;
+				for (EAttribute attribute : eClassAttributes) {
+					final String attributeName = EFactory.eGetAsString(attribute, EOBJECT_NAME_FEATURE);
+					// if the attributeName is more similar with "name" than the other one
+					if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
+						max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);
+						bestFeature = attribute;
 					}
 				}
-				nameFeatureCache.put(eclass, bestFeature);
+				NAME_FEATURE_CACHE.put(eclass, bestFeature);
 			}
 		}
 		// now we should return the feature value
