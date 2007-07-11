@@ -32,7 +32,7 @@ public final class NameSimilarity {
 	private static final int MAX_FEATURE_VALUE_LENGTH = 40;
 
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
-	
+
 	private static final WeakHashMap<EClass, EAttribute> NAME_FEATURE_CACHE = new WeakHashMap<EClass, EAttribute>();
 
 	private NameSimilarity() {
@@ -139,7 +139,7 @@ public final class NameSimilarity {
 	 *             Thrown if one of the operation on {@link EObject} fails.
 	 */
 	@SuppressWarnings("unchecked")
-	/*package*/ public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
+	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
 		List<EAttribute> eclassAttributes = new LinkedList<EAttribute>();
