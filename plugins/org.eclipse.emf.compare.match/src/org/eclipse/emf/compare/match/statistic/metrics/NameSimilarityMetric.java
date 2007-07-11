@@ -38,7 +38,7 @@ public class NameSimilarityMetric implements SimilarityMetric {
 			return NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(left), NameSimilarity
 					.findName(right));
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, false);
+			EMFComparePlugin.log(e, false);
 		}
 		return 1 / 2;
 	}

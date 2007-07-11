@@ -418,7 +418,7 @@ public class DifferencesServices implements MatchEngine {
 			createUnMatchElements(root, stillToFindFromModel1);
 			createUnMatchElements(root, stillToFindFromModel2);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, false);
+			EMFComparePlugin.log(e, false);
 		}
 		return root;
 	}
