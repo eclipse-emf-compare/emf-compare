@@ -12,7 +12,7 @@ Export-Package: org.eclipse.emf.compare.match.api,
  org.eclipse.emf.compare.match.metamodel.provider,
  org.eclipse.emf.compare.match.metamodel.util,
  org.eclipse.emf.compare.match.service,
- org.eclipse.emf.compare.match.statistic;x-friends:="org.eclipse.emf.compare.diff.edit",
+ org.eclipse.emf.compare.match.statistic,
  org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
