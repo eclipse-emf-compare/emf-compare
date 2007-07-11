@@ -35,7 +35,7 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 		try {
 			EFactory.eSet(element, diff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.applyInOrigin();
 	}
@@ -53,7 +53,7 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 		try {
 			EFactory.eSet(element, diff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();
 	}

@@ -38,7 +38,7 @@ public class AddReferenceValueMerger extends DefaultMerger {
 		try {
 			EFactory.eAdd(element, diff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator siblings = getDiffModel().eAllContents();
@@ -69,7 +69,7 @@ public class AddReferenceValueMerger extends DefaultMerger {
 		try {
 			EFactory.eRemove(element, diff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator siblings = getDiffModel().eAllContents();

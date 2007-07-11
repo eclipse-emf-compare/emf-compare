@@ -79,7 +79,7 @@ public class FactoryDescriptor implements Comparable {
 			try {
 				factory = (MergeFactory)element.createExecutableExtension("class"); //$NON-NLS-1$
 			} catch (CoreException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			}
 		}
 		return factory;

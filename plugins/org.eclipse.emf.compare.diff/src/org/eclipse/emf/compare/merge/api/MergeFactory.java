@@ -104,9 +104,9 @@ public final class MergeFactory {
 			elementMerger = mergerClass.newInstance();
 			elementMerger.setElement(element);
 		} catch (InstantiationException e) {
-			EMFComparePlugin.getDefault().log(e.getMessage(), false);
+			EMFComparePlugin.log(e.getMessage(), false);
 		} catch (IllegalAccessException e) {
-			EMFComparePlugin.getDefault().log(e.getMessage(), false);
+			EMFComparePlugin.log(e.getMessage(), false);
 		}
 
 		return elementMerger;

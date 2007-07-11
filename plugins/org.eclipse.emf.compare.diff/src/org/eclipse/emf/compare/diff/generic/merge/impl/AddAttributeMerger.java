@@ -40,7 +40,7 @@ public class AddAttributeMerger extends DefaultMerger {
 		try {
 			EFactory.eAdd(origin, attr.getName(), newOne);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.applyInOrigin();
 	}
@@ -59,7 +59,7 @@ public class AddAttributeMerger extends DefaultMerger {
 		try {
 			EFactory.eRemove(target, attr.getName(), element);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();
 	}

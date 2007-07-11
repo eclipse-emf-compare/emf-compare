@@ -45,7 +45,7 @@ public class AddModelElementMerger extends DefaultMerger {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
 			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e, true);
+				EMFComparePlugin.log(e, true);
 			}
 		} else {
 			findLeftResource().getContents().add(newOne);

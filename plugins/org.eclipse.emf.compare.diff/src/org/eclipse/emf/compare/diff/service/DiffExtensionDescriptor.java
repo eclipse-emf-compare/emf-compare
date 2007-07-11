@@ -79,7 +79,7 @@ public class DiffExtensionDescriptor implements Comparable {
 			try {
 				diffExtension = (DiffExtension)element.createExecutableExtension("diffExtensionClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			}
 		}
 		return diffExtension;
