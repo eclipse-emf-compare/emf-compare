@@ -150,7 +150,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 				try {
 					left.getObject().eResource().save(new HashMap());
 				} catch (IOException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), false);
+					EMFComparePlugin.log(e.getMessage(), false);
 				}
 			}
 		}
@@ -207,7 +207,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 				try {
 					right.getObject().eResource().save(new HashMap());
 				} catch (IOException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), false);
+					EMFComparePlugin.log(e.getMessage(), false);
 				}
 			}
 		}

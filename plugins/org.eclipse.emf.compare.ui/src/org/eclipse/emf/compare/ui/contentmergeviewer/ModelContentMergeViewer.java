@@ -559,7 +559,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			root.eResource().save(stream, null);
 			contents = stream.toByteArray();
 		} catch (IOException e) {
-			EMFComparePlugin.getDefault().log(e, false);
+			EMFComparePlugin.log(e, false);
 		}
 
 		return contents;
