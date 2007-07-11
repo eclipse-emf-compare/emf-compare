@@ -52,7 +52,7 @@ public final class NameSimilarity {
 	 *            The {@link String} to process.
 	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
-	public static List<String> pairs(String source) {
+	private static List<String> pairs(String source) {
 		final List<String> result = new LinkedList<String>();
 		if (source != null) {
 			for (int i = 0; i < source.length() - 1; i++)
@@ -139,7 +139,7 @@ public final class NameSimilarity {
 	 *             Thrown if one of the operation on {@link EObject} fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
+	/*package*/ public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
 		List<EAttribute> eclassAttributes = new LinkedList<EAttribute>();
