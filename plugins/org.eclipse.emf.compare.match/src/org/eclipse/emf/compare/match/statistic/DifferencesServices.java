@@ -328,7 +328,8 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private int getSearchWindow() {
 		int searchWindow = DEFAULT_SEARCH_WINDOW;
-		if (EMFComparePlugin.getDefault() != null)
+		if (EMFComparePlugin.getDefault() != null
+				&& EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
 			searchWindow = EMFComparePlugin.getDefault().getPluginPreferences().getInt(
 					"emfcompare.search.window"); //$NON-NLS-1$
 		return searchWindow;
