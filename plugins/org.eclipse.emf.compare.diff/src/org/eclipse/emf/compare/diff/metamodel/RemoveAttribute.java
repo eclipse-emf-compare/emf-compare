@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface RemoveAttribute extends AttributeChange {
 	/**
 	 * Returns the value of the '<em><b>Left Target</b></em>' reference.

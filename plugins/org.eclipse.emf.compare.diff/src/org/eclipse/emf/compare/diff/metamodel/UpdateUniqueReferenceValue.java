@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface UpdateUniqueReferenceValue extends UpdateReference {
 	/**
 	 * Returns the value of the '<em><b>Left Target</b></em>' reference.

@@ -19,24 +19,22 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Update Unique Reference Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Unique Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implements UpdateUniqueReferenceValue {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -44,9 +42,8 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	protected EObject leftTarget = null;
 
 	/**
-	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightTarget()
 	 * @generated
 	 * @ordered
@@ -54,8 +51,8 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	protected EObject rightTarget = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateUniqueReferenceValueImpl() {
@@ -63,17 +60,18 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.UPDATE_UNIQUE_REFERENCE_VALUE;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -82,16 +80,15 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
 			}
 		}
 		return leftTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -99,21 +96,20 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
 		EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
@@ -122,17 +118,15 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget,
-							rightTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
 			}
 		}
 		return rightTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -140,23 +134,23 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
 		EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
@@ -172,10 +166,11 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
@@ -189,10 +184,11 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
@@ -206,10 +202,11 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
@@ -220,4 +217,4 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 		return super.eIsSet(featureID);
 	}
 
-} //UpdateUniqueReferenceValueImpl
+} // UpdateUniqueReferenceValueImpl

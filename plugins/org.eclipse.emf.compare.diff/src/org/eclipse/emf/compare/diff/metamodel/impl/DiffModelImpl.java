@@ -26,25 +26,23 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRight <em>Right</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeft <em>Left</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRight <em>Right</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeft <em>Left</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	/**
-	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -52,9 +50,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String RIGHT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -62,9 +59,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected String right = RIGHT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getOwnedElements()
 	 * @generated
 	 * @ordered
@@ -72,9 +69,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected EList ownedElements = null;
 
 	/**
-	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -82,9 +78,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String LEFT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -92,8 +87,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected String left = LEFT_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiffModelImpl() {
@@ -101,17 +96,18 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.DIFF_MODEL;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRight() {
@@ -119,34 +115,32 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRight(String newRight) {
 		String oldRight = right;
 		right = newRight;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_MODEL__RIGHT, oldRight,
-					right));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_MODEL__RIGHT, oldRight, right));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getOwnedElements() {
 		if (ownedElements == null) {
-			ownedElements = new EObjectContainmentEList(DiffElement.class, this,
-					DiffPackage.DIFF_MODEL__OWNED_ELEMENTS);
+			ownedElements = new EObjectContainmentEList(DiffElement.class, this, DiffPackage.DIFF_MODEL__OWNED_ELEMENTS);
 		}
 		return ownedElements;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getLeft() {
@@ -154,8 +148,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeft(String newLeft) {
@@ -166,10 +160,11 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
@@ -179,10 +174,11 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.DIFF_MODEL__RIGHT:
@@ -196,10 +192,12 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.DIFF_MODEL__RIGHT:
@@ -217,10 +215,11 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.DIFF_MODEL__RIGHT:
@@ -237,10 +236,11 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.DIFF_MODEL__RIGHT:
@@ -254,10 +254,11 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy())
 			return super.toString();
@@ -271,4 +272,4 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 		return result.toString();
 	}
 
-} //DiffModelImpl
+} // DiffModelImpl

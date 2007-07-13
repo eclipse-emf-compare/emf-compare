@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare;
+package org.eclipse.emf.compare.diff;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;

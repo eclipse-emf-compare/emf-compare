@@ -20,5 +20,7 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface UpdateReference extends ReferenceChange {
+	// This class doesn't need any Overriding to be functionnal
 } // UpdateReference

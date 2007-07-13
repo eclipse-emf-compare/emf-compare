@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface AddAttribute extends AttributeChange {
 	/**
 	 * Returns the value of the '<em><b>Right Target</b></em>' reference.

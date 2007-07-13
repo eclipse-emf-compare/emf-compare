@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface UpdateModelElement extends ModelElementChange {
 	/**
 	 * Returns the value of the '<em><b>Right Element</b></em>' reference.

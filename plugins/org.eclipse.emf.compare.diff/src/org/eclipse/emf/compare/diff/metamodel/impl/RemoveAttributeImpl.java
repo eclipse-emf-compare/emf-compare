@@ -11,34 +11,29 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Remove Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Attribute</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAttribute {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -46,8 +41,8 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	protected EObject leftTarget = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoveAttributeImpl() {
@@ -55,17 +50,18 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOVE_ATTRIBUTE;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -74,16 +70,15 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET, oldLeftTarget, leftTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET, oldLeftTarget, leftTarget));
 			}
 		}
 		return leftTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -91,23 +86,23 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
 		EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET,
-					oldLeftTarget, leftTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET, oldLeftTarget, leftTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET:
@@ -119,10 +114,11 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET:
@@ -133,10 +129,11 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET:
@@ -147,10 +144,11 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.REMOVE_ATTRIBUTE__LEFT_TARGET:
@@ -159,4 +157,4 @@ public class RemoveAttributeImpl extends AttributeChangeImpl implements RemoveAt
 		return super.eIsSet(featureID);
 	}
 
-} //RemoveAttributeImpl
+} // RemoveAttributeImpl

@@ -13,26 +13,38 @@ package org.eclipse.emf.compare.diff.metamodel.util;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-import org.eclipse.emf.compare.diff.metamodel.*;
-
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute;
+import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
+import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -43,6 +55,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage
  * @generated
  */
+@SuppressWarnings("nls")
 public class DiffAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
@@ -72,6 +85,7 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */
+	@Override
 	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
@@ -89,78 +103,162 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	protected DiffSwitch modelSwitch = new DiffSwitch() {
+		@Override
 		public Object caseDiffModel(DiffModel object) {
 			return createDiffModelAdapter();
 		}
 
+		@Override
 		public Object caseDiffElement(DiffElement object) {
 			return createDiffElementAdapter();
 		}
 
+		@Override
 		public Object caseDiffGroup(DiffGroup object) {
 			return createDiffGroupAdapter();
 		}
 
+		@Override
 		public Object caseAttributeChange(AttributeChange object) {
 			return createAttributeChangeAdapter();
 		}
 
+		@Override
 		public Object caseReferenceChange(ReferenceChange object) {
 			return createReferenceChangeAdapter();
 		}
 
+		@Override
 		public Object caseModelElementChange(ModelElementChange object) {
 			return createModelElementChangeAdapter();
 		}
 
+		@Override
+		public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
+			return createModelElementChangeLeftTargetAdapter();
+		}
+
+		@Override
+		public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
+			return createModelElementChangeRightTargetAdapter();
+		}
+
+		@Override
 		public Object caseAddModelElement(AddModelElement object) {
 			return createAddModelElementAdapter();
 		}
 
+		@Override
 		public Object caseRemoveModelElement(RemoveModelElement object) {
 			return createRemoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseUpdateModelElement(UpdateModelElement object) {
 			return createUpdateModelElementAdapter();
 		}
 
+		@Override
 		public Object caseMoveModelElement(MoveModelElement object) {
 			return createMoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseAddAttribute(AddAttribute object) {
 			return createAddAttributeAdapter();
 		}
 
+		@Override
 		public Object caseRemoveAttribute(RemoveAttribute object) {
 			return createRemoveAttributeAdapter();
 		}
 
+		@Override
 		public Object caseUpdateAttribute(UpdateAttribute object) {
 			return createUpdateAttributeAdapter();
 		}
 
+		@Override
 		public Object caseAddReferenceValue(AddReferenceValue object) {
 			return createAddReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
 			return createRemoveReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseUpdateReference(UpdateReference object) {
 			return createUpdateReferenceAdapter();
 		}
 
+		@Override
 		public Object caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
 			return createUpdateUniqueReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseModelInputSnapshot(ModelInputSnapshot object) {
 			return createModelInputSnapshotAdapter();
 		}
 
+		@Override
+		public Object caseConflictingDiffElement(ConflictingDiffElement object) {
+			return createConflictingDiffElementAdapter();
+		}
+
+		@Override
+		public Object caseConflictingDiffGroup(ConflictingDiffGroup object) {
+			return createConflictingDiffGroupAdapter();
+		}
+
+		@Override
+		public Object caseRemoteAddModelElement(RemoteAddModelElement object) {
+			return createRemoteAddModelElementAdapter();
+		}
+
+		@Override
+		public Object caseRemoteRemoveModelElement(RemoteRemoveModelElement object) {
+			return createRemoteRemoveModelElementAdapter();
+		}
+
+		@Override
+		public Object caseRemoteMoveModelElement(RemoteMoveModelElement object) {
+			return createRemoteMoveModelElementAdapter();
+		}
+
+		@Override
+		public Object caseRemoteAddAttribute(RemoteAddAttribute object) {
+			return createRemoteAddAttributeAdapter();
+		}
+
+		@Override
+		public Object caseRemoteRemoveAttribute(RemoteRemoveAttribute object) {
+			return createRemoteRemoveAttributeAdapter();
+		}
+
+		@Override
+		public Object caseRemoteUpdateAttribute(RemoteUpdateAttribute object) {
+			return createRemoteUpdateAttributeAdapter();
+		}
+
+		@Override
+		public Object caseRemoteAddReferenceValue(RemoteAddReferenceValue object) {
+			return createRemoteAddReferenceValueAdapter();
+		}
+
+		@Override
+		public Object caseRemoteRemoveReferenceValue(RemoteRemoveReferenceValue object) {
+			return createRemoteRemoveReferenceValueAdapter();
+		}
+
+		@Override
+		public Object caseRemoteUpdateUniqueReferenceValue(RemoteUpdateUniqueReferenceValue object) {
+			return createRemoteUpdateUniqueReferenceValueAdapter();
+		}
+
+		@Override
 		public Object defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -174,6 +272,7 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @return the adapter for the <code>target</code>.
 	 * @generated
 	 */
+	@Override
 	public Adapter createAdapter(Notifier target) {
 		return (Adapter)modelSwitch.doSwitch((EObject)target);
 	}
@@ -259,6 +358,34 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createModelElementChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget <em>Model Element Change Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget
+	 * @generated
+	 */
+	public Adapter createModelElementChangeLeftTargetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget <em>Model Element Change Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget
+	 * @generated
+	 */
+	public Adapter createModelElementChangeRightTargetAdapter() {
 		return null;
 	}
 
@@ -427,6 +554,160 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createModelInputSnapshotAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement <em>Conflicting Diff Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement
+	 * @generated
+	 */
+	public Adapter createConflictingDiffElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup <em>Conflicting Diff Group</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup
+	 * @generated
+	 */
+	public Adapter createConflictingDiffGroupAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement <em>Remote Add Model Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement
+	 * @generated
+	 */
+	public Adapter createRemoteAddModelElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement <em>Remote Remove Model Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement
+	 * @generated
+	 */
+	public Adapter createRemoteRemoveModelElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement <em>Remote Move Model Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement
+	 * @generated
+	 */
+	public Adapter createRemoteMoveModelElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute <em>Remote Add Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute
+	 * @generated
+	 */
+	public Adapter createRemoteAddAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute <em>Remote Remove Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute
+	 * @generated
+	 */
+	public Adapter createRemoteRemoveAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute <em>Remote Update Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute
+	 * @generated
+	 */
+	public Adapter createRemoteUpdateAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue <em>Remote Add Reference Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue
+	 * @generated
+	 */
+	public Adapter createRemoteAddReferenceValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue <em>Remote Remove Reference Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue
+	 * @generated
+	 */
+	public Adapter createRemoteRemoveReferenceValueAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue <em>Remote Update Unique Reference Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue
+	 * @generated
+	 */
+	public Adapter createRemoteUpdateUniqueReferenceValueAdapter() {
 		return null;
 	}
 

@@ -13,8 +13,9 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -22,39 +23,22 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for a {@link RemoveModelElement}.
+ * Merger for an {@link AddModelElement}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class RemoveModelElementMerger extends DefaultMerger {
+public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
-	 */
-	@Override
-	public void applyInOrigin() {
-		final RemoveModelElement diff = (RemoveModelElement)this.diff;
-		final EObject element = diff.getLeftElement();
-		final EObject parent = diff.getLeftElement().eContainer();
-		EcoreUtil.remove(element);
-		// now removes all the dangling references
-		removeDanglingReferences(parent);
-		super.applyInOrigin();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void undoInTarget() {
-		final RemoveModelElement diff = (RemoveModelElement)this.diff;
-		// we should copy the element to the Origin one.
-		final EObject origin = diff.getRightParent();
-		final EObject element = diff.getLeftElement();
+	public void applyInOrigin() {
+		final AddModelElement diff = (AddModelElement)this.diff;
+		final EObject origin = diff.getLeftParent();
+		final EObject element = diff.getRightElement();
 		final EObject newOne = EcoreUtil.copy(element);
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {
@@ -64,20 +48,36 @@ public class RemoveModelElementMerger extends DefaultMerger {
 				EMFComparePlugin.log(e, true);
 			}
 		} else {
-			findRightResource().getContents().add(newOne);
+			findLeftResource().getContents().add(newOne);
 		}
-		// we should now have a look for RemovedReferencesLinks needing elements to apply
+		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
-			final Object op = siblings.next();
-			if (op instanceof RemoveReferenceValue) {
-				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+			final DiffElement op = (DiffElement)siblings.next();
+			if (op instanceof AddReferenceValue) {
+				final AddReferenceValue link = (AddReferenceValue)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getLeftRemovedTarget().equals(element)) {
-					link.setRightRemovedTarget(newOne);
+				if (link.getRightAddedTarget().equals(element)) {
+					link.setLeftAddedTarget(newOne);
 				}
 			}
 		}
+		super.applyInOrigin();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 */
+	@Override
+	public void undoInTarget() {
+		final AddModelElement diff = (AddModelElement)this.diff;
+		final EObject element = diff.getRightElement();
+		final EObject parent = diff.getRightElement().eContainer();
+		EcoreUtil.remove(element);
+		// now removes all the dangling references
+		removeDanglingReferences(parent);
 		super.undoInTarget();
 	}
 }

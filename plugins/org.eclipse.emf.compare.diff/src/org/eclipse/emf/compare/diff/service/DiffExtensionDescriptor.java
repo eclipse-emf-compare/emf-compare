@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff.service;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.Messages;
 import org.eclipse.emf.compare.diff.api.DiffExtension;
 import org.eclipse.emf.compare.util.EngineConstants;
 
@@ -22,12 +23,25 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DiffExtensionDescriptor implements Comparable {
-	protected String priority;
+	/**
+	 * Priority of this descriptor. Should be one of
+	 * <ul>
+	 * <li>{@link EngineConstants#PRIORITY_HIGHEST}</li>
+	 * <li>{@link EngineConstants#PRIORITY_HIGH}</li>
+	 * <li>{@link EngineConstants#PRIORITY_NORMAL}</li>
+	 * <li>{@link EngineConstants#PRIORITY_LOW}</li>
+	 * <li>{@link EngineConstants#PRIORITY_LOWEST}</li>
+	 * </ul>
+	 */
+	protected final String priority;
 
-	protected String diffextensionClassName;
+	/** Class name of this {@link DiffExtension}. */
+	protected final String diffextensionClassName;
 
-	protected IConfigurationElement element;
+	/** Configuration element of this descriptor. */
+	protected final IConfigurationElement element;
 
+	/** {@link DiffExtension} this descriptor describes. */
 	private DiffExtension diffExtension;
 
 	/**
@@ -42,13 +56,23 @@ public class DiffExtensionDescriptor implements Comparable {
 		diffextensionClassName = getAttribute("extensionClass", null); //$NON-NLS-1$
 	}
 
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the attribute hasn't been set, we'll
+	 * return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);
 		if (value != null)
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException("Missing " + name + " attribute"); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -87,7 +111,7 @@ public class DiffExtensionDescriptor implements Comparable {
 
 	private int getPriorityValue(String value) {
 		if (value == null)
-			throw new IllegalArgumentException("Priority cannot be null."); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
 		if (value.equals("lowest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;
@@ -103,7 +127,7 @@ public class DiffExtensionDescriptor implements Comparable {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -115,13 +139,13 @@ public class DiffExtensionDescriptor implements Comparable {
 		int priorityHash = 0;
 		if (priority != null)
 			priorityHash = priority.hashCode();
-		
+
 		return (prime + classNameHash) * prime + priorityHash;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(Object other) {
@@ -135,7 +159,7 @@ public class DiffExtensionDescriptor implements Comparable {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

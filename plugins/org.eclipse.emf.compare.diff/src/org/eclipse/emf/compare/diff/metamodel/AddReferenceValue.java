@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface AddReferenceValue extends ReferenceChange {
 	/**
 	 * Returns the value of the '<em><b>Left Added Target</b></em>' reference.

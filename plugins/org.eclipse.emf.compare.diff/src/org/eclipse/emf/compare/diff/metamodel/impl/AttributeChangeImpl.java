@@ -20,25 +20,23 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Change</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getAttribute <em>Attribute</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getLeftElement <em>Left Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getRightElement <em>Right Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getAttribute <em>Attribute</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class AttributeChangeImpl extends DiffElementImpl implements AttributeChange {
 	/**
-	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getAttribute()
 	 * @generated
 	 * @ordered
@@ -46,9 +44,8 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	protected EAttribute attribute = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftElement()
 	 * @generated
 	 * @ordered
@@ -56,9 +53,8 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	protected EObject leftElement = null;
 
 	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightElement()
 	 * @generated
 	 * @ordered
@@ -66,8 +62,8 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	protected EObject rightElement = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeImpl() {
@@ -75,17 +71,18 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.ATTRIBUTE_CHANGE;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getAttribute() {
@@ -94,16 +91,15 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 			attribute = (EAttribute)eResolveProxy(oldAttribute);
 			if (attribute != oldAttribute) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute, attribute));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute, attribute));
 			}
 		}
 		return attribute;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute basicGetAttribute() {
@@ -111,21 +107,20 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setAttribute(EAttribute newAttribute) {
 		EAttribute oldAttribute = attribute;
 		attribute = newAttribute;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE,
-					oldAttribute, attribute));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute, attribute));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -134,16 +129,15 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -151,21 +145,20 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT,
-					oldLeftElement, leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -174,16 +167,15 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -191,23 +183,23 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
@@ -227,10 +219,11 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
@@ -247,10 +240,11 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
@@ -267,10 +261,11 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
@@ -283,4 +278,4 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 		return super.eIsSet(featureID);
 	}
 
-} //AttributeChangeImpl
+} // AttributeChangeImpl

@@ -13,27 +13,34 @@ package org.eclipse.emf.compare.diff.generic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.Messages;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
@@ -49,31 +56,102 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
+// TODO test diff : multivalued attrib/ref becomes unique (vice-versa)
 public class DiffMaker implements DiffEngine {
-	/**
-	 * This hashmap is useful to find the Match from any EObject instance.
-	 */
+	/** Allows retrieval of the ancestor matched object. */
+	private static final int ANCESTOR_OBJECT = 0;
+
+	/** Allows retrieval of the left matched object. */
+	private static final int LEFT_OBJECT = 1;
+
+	/** Allows retrieval of the right matched object. */
+	private static final int RIGHT_OBJECT = 2;
+
+	/** This hashmap is useful to find the Match from any EObject instance. */
 	private HashMap<EObject, Match2Elements> eObjectToMatch = new HashMap<EObject, Match2Elements>();
 
 	/**
-	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
+	 * {@inheritDoc}
 	 * 
-	 * @param match
-	 *            The matching model
-	 * @return The corresponding diff model
-	 * @throws FactoryException
+	 * @see org.eclipse.emf.compare.diff.api.DiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel, boolean)
 	 */
 	@SuppressWarnings("unchecked")
-	public DiffModel doDiff(MatchModel match) {
-		updateEObjectToMatch(match);
+	public DiffModel doDiff(MatchModel match, boolean threeWay) {
+		updateEObjectToMatch(match, threeWay);
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
+
+		DiffGroup diffRoot = null;
+		if (threeWay)
+			diffRoot = doDiffThreeWay(match);
+		else
+			diffRoot = doDiffTwoWay(match);
+
+		result.getOwnedElements().add(diffRoot);
+		// FIXME call diff extensions.
+		return result;
+	}
+
+	/**
+	 * The diff computing for three way comparisons is handled here. We'll compute the diff model from the given match model.
+	 * 
+	 * @param match
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
+	 */
+	protected DiffGroup doDiffThreeWay(MatchModel match) {
+		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+
+		// we have to browse the model and create the corresponding operations
+		final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
+		final Resource leftModel = matchRoot.getLeftElement().eResource();
+
+		doDiffDelegate(diffRoot, matchRoot);
+
+		final Iterator unMatched = match.getUnMatchedElements().iterator();
+		while (unMatched.hasNext()) {
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
+			final boolean isRemoteUnMatch = unMatchElement instanceof RemoteUnMatchElement;
+
+			if (isRemoteUnMatch && unMatchElement.getElement().eResource() == leftModel) {
+				final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE.createRemoteAddModelElement();
+				addOperation.setLeftElement(unMatchElement.getElement());
+				addOperation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, addOperation, unMatchElement.getElement().eContainer());
+			} else if (isRemoteUnMatch) {
+				final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoteRemoveModelElement();
+				removeOperation.setRightElement(unMatchElement.getElement());
+				removeOperation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, removeOperation, removeOperation.getLeftParent());
+			} else if (unMatchElement.getElement().eResource() == leftModel) {
+				final RemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoveModelElement();
+				removeOperation.setLeftElement(unMatchElement.getElement());
+				removeOperation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, removeOperation, unMatchElement.getElement().eContainer());
+			} else {
+				final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
+				addOperation.setRightElement(unMatchElement.getElement());
+				addOperation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, addOperation, getMatchedEObject(unMatchElement.getElement().eContainer()));
+			}
+		}
+
+		return diffRoot;
+	}
+
+	/**
+	 * The diff computing for two way comparisons is handled here. We'll compute the diff model from the given match model.
+	 * 
+	 * @param match
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
+	 */
+	protected DiffGroup doDiffTwoWay(MatchModel match) {
+		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+
 		// we have to browse the model and create the corresponding operations
 		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
 		final Resource leftModel = matchRoot.getLeftElement().eResource();
 		final Resource rightModel = matchRoot.getRightElement().eResource();
-
-		// creating the root modelchange
-		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
 
 		// browsing the match model
 		doDiffDelegate(diffRoot, matchRoot);
@@ -83,65 +161,177 @@ public class DiffMaker implements DiffEngine {
 		while (unMatched.hasNext()) {
 			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
 			if (unMatchElement.getElement().eResource() == leftModel) {
-				// add remove model element
+				// add RemoveModelElement
 				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
 				operation.setLeftElement(unMatchElement.getElement());
 				operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
 				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
 			}
 			if (unMatchElement.getElement().eResource() == rightModel) {
-				// add remove model element
+				// add AddModelElement
 				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
 				final EObject addedElement = unMatchElement.getElement();
 				operation.setRightElement(addedElement);
 				final EObject targetParent = getMatchedEObject(addedElement.eContainer());
-
 				operation.setLeftParent(targetParent);
 				addInContainerPackage(diffRoot, operation, targetParent);
 			}
 		}
-		
-		result.getOwnedElements().add(diffRoot);
-		// FIXME call diff extensions.
-		return result;
+
+		return diffRoot;
 	}
 
 	/**
-	 * Fill the <code>eObjectToMatch</code> hashmap to retrieve matchings from left or right EObject.
+	 * Fill the <code>eObjectToMatch</code> hashmap to retrieve matchings from left, right or origin {@link EObject}.
+	 * 
+	 * @param match
+	 *            {@link MatchModel} to extract the {@link MatchElement}s from.
+	 * @param threeWay
+	 *            <code>True</code> if we need to retrieve the informations from the origin model too.
 	 */
-	private void updateEObjectToMatch(MatchModel match) {
+	private void updateEObjectToMatch(MatchModel match, boolean threeWay) {
 		final Iterator rootElemIt = match.getMatchedElements().iterator();
 		while (rootElemIt.hasNext()) {
 			final Match2Elements matchRoot = (Match2Elements)rootElemIt.next();
 			eObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);
 			eObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
+			if (threeWay)
+				eObjectToMatch.put(((Match3Element)matchRoot).getOriginElement(), matchRoot);
 			final TreeIterator matchElemIt = matchRoot.eAllContents();
 			while (matchElemIt.hasNext()) {
 				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
 				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);
 				eObjectToMatch.put(matchElem.getRightElement(), matchElem);
+				if (threeWay)
+					eObjectToMatch.put(((Match3Element)matchElem).getOriginElement(), matchElem);
 			}
 		}
 
 	}
 
 	/**
-	 * Return the matched EObject from the one given.
+	 * Return the specified matched {@link EObject} from the one given.
 	 * 
 	 * @param from
-	 *            The original EObject.
+	 *            The original {@link EObject}.
+	 * @param side
+	 *            side of the object we seek. Must be one of
+	 *            <ul>
+	 *            <li>{@link #ANCESTOR_OBJECT}</li>
+	 *            <li>{@link #LEFT_OBJECT}</li>
+	 *            <li>{@link #RIGHT_OBJECT}</li>
+	 *            </ul>.
 	 * @return The matched EObject.
+	 * @throws IllegalArgumentException
+	 *             Thrown if <code>side</code> is invalid.
+	 */
+	private EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
+			throw new IllegalArgumentException(Messages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
+		EObject matchedEObject = null;
+		final Match2Elements matchElem = eObjectToMatch.get(from);
+		if (matchElem != null) {
+			if (side == LEFT_OBJECT)
+				matchedEObject = matchElem.getLeftElement();
+			else if (side == RIGHT_OBJECT)
+				matchedEObject = matchElem.getRightElement();
+			else if (side == ANCESTOR_OBJECT && matchElem instanceof Match3Element)
+				matchedEObject = ((Match3Element)matchElem).getOriginElement();
+		}
+		return matchedEObject;
+	}
+
+	/**
+	 * Return the left or right matched EObject from the one given. More specifically, this will return the left matched element if the given
+	 * {@link EObject} is the right one, or the right matched element if the given {@link EObject} is either the left or the origin one.
+	 * 
+	 * @param from
+	 *            The original {@link EObject}.
+	 * @return The matched {@link EObject}.
 	 */
 	private EObject getMatchedEObject(EObject from) {
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
-		if (matchElem != null && from.equals(matchElem.getLeftElement()))
-			matchedEObject = matchElem.getRightElement();
-		else if (matchElem != null)
+		if (matchElem != null && from.equals(matchElem.getRightElement()))
 			matchedEObject = matchElem.getLeftElement();
+		else if (matchElem != null)
+			matchedEObject = matchElem.getRightElement();
 		return matchedEObject;
 	}
 
+	/**
+	 * Returns the list of references from the given list that can be matched on either right or left {@link EObject}s.
+	 * 
+	 * @param references
+	 *            {@link List} of the references to match.
+	 * @return The list of references from the given list that can be matched on either right or left {@link EObject}s.
+	 */
+	private List<EObject> getMatchedReferences(List<EObject> references) {
+		final List<EObject> matchedReferences = new ArrayList<EObject>();
+		for (final Iterator refIterator = references.iterator(); refIterator.hasNext(); ) {
+			final Object currentReference = refIterator.next();
+			if (currentReference != null) {
+				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
+				if (currentMapped != null)
+					matchedReferences.add(currentMapped);
+			}
+		}
+		return matchedReferences;
+	}
+
+	/**
+	 * This is the core of the diff computing for three way comparison. This will call for checks on attributes, references and model elements to
+	 * check for updates/changes.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
+	 * @param match
+	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
+	 */
+	private void doDiffDelegate(DiffGroup root, Match3Element match) {
+		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
+		current.setLeftParent(match.getLeftElement());
+		try {
+			checkAttributesUpdates(current, match);
+			checkReferencesUpdates(current, match);
+			checkForMove(current, match);
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		}
+		// we need to build this list to avoid concurrent modifications
+		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
+		// we really have changes
+		if (current.getSubDiffElements().size() > 0) {
+			final Iterator it2 = current.getSubDiffElements().iterator();
+			while (it2.hasNext()) {
+				final Object eObj = it2.next();
+				if (!(eObj instanceof DiffGroup)) {
+					shouldAddToList.add((DiffElement)eObj);
+				}
+			}
+			for (DiffElement diff : shouldAddToList) {
+				addInContainerPackage(root, diff, current.getLeftParent());
+			}
+		} else {
+			current = root;
+		}
+		// taking care of our childs
+		final Iterator it = match.getSubMatchElements().iterator();
+		while (it.hasNext()) {
+			final Match3Element element = (Match3Element)it.next();
+			doDiffDelegate(root, element);
+		}
+	}
+
+	/**
+	 * This is the core of the diff computing for two way comparison. This will call for checks on attributes, references and model elements to check
+	 * for updates/changes.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
+	 * @param match
+	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
+	 */
 	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
 		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
 		current.setLeftParent(match.getLeftElement());
@@ -175,12 +365,18 @@ public class DiffMaker implements DiffEngine {
 			final Match2Elements element = (Match2Elements)it.next();
 			doDiffDelegate(root, element);
 		}
-
 	}
 
 	/**
-	 * Looks for an already created diff group in order to add the operation, if none exists, create one where
-	 * the operation belongs to.
+	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none exists, create one where the operation belongs
+	 * to.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffModel}.
+	 * @param operation
+	 *            Operation to add to the {@link DiffModel}.
+	 * @param targetParent
+	 *            Parent {@link EObject} for the operation.
 	 */
 	@SuppressWarnings("unchecked")
 	private void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
@@ -197,6 +393,15 @@ public class DiffMaker implements DiffEngine {
 		}
 	}
 
+	/**
+	 * Builds a {@link DiffGroup} for the <code>targetParent</code> with its full hierarchy.
+	 * 
+	 * @param targetParent
+	 *            Parent of the operation we're building a {@link DiffGroup} for.
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffModel}.
+	 * @return {@link DiffGroup} containing the full hierarchy needed for the <code>targetParent</code>.
+	 */
 	@SuppressWarnings("unchecked")
 	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
 		// if targetElement has a parent, we call buildgroup on it, else we add the current group to the root
@@ -213,6 +418,15 @@ public class DiffMaker implements DiffEngine {
 		return curGroup;
 	}
 
+	/**
+	 * Searches for an existing {@link DiffGroup} under <code>root</code> to add the operation which parent is <code>targetParent</code>.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffModel}.
+	 * @param targetParent
+	 *            Parent of the operation we're seeking a {@link DiffGroup} for.
+	 * @return {@link DiffGroup} for the <code>targetParent</code>.
+	 */
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
 		final TreeIterator it = root.eAllContents();
 		while (it.hasNext()) {
@@ -223,32 +437,122 @@ public class DiffMaker implements DiffEngine {
 				}
 			}
 		}
-
 		return null;
 	}
 
+	/**
+	 * This will check if the elements matched by a given {@link Match3Element} have been moved since the models common ancestor.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if the elements have actually been moved.
+	 * @param matchElement
+	 *            This contains the mapping information about the elements we need to check for a move.
+	 */
 	@SuppressWarnings("unchecked")
-	private void checkForMove(DiffGroup root, Match2Elements matchElement) {
-		if (matchElement.getLeftElement().eContainer() != null
-				&& matchElement.getRightElement().eContainer() != null
-				&& getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement
-						.getRightElement().eContainer()) {
-			final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
-			operation.setRightElement(matchElement.getRightElement());
-			operation.setLeftElement(matchElement.getLeftElement());
-			operation.setRightTarget(getMatchedEObject(matchElement.getLeftElement().eContainer()));
-			operation.setLeftTarget(getMatchedEObject(matchElement.getRightElement().eContainer()));
-			root.getSubDiffElements().add(operation);
+	private void checkForMove(DiffGroup root, Match3Element matchElement) {
+		final EObject leftElement = matchElement.getLeftElement();
+		final EObject rightElement = matchElement.getRightElement();
+		final EObject originElement = matchElement.getOriginElement();
+
+		final boolean leftMoved = leftElement.eContainer() != null && !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
+		final boolean rightMoved = rightElement.eContainer() != null && !getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
+
+		// conflicting change
+		if (leftMoved && rightMoved && !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+			final ConflictingDiffGroup leftDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+			leftDiff.setLeftParent(originElement);
+			createMoveOperation(leftDiff, originElement, leftElement);
+			final ConflictingDiffGroup rightDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+			rightDiff.setLeftParent(originElement);
+			createMoveOperation(rightDiff, originElement, rightElement);
+
+			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE.createConflictingDiffElement();
+			conflictingDiff.setLeftParent(leftElement);
+			conflictingDiff.setRightParent(rightElement);
+			conflictingDiff.setLeftDiff(leftDiff);
+			conflictingDiff.setRightDiff(rightDiff);
+			root.getSubDiffElements().add(conflictingDiff);
+			// non conflicting change
+		} else if (rightMoved && !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+			createMoveOperation(root, leftElement, rightElement);
+		} else if (leftMoved && !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+			createRemoteMoveOperation(root, leftElement, rightElement);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
-		final EObject eClass = mapping.getLeftElement().eClass();
+	/**
+	 * This will check if the elements matched by a given {@link Match2Elements} have been moved..
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if the elements have actually been moved.
+	 * @param matchElement
+	 *            This contains the mapping information about the elements we need to check for a move.
+	 */
+	private void checkForMove(DiffGroup root, Match2Elements matchElement) {
+		if (matchElement.getLeftElement().eContainer() != null && matchElement.getRightElement().eContainer() != null
+				&& getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement.getRightElement().eContainer()) {
+			createMoveOperation(root, matchElement.getLeftElement(), matchElement.getRightElement());
+		}
+	}
 
-		List eclassAttributes = new LinkedList();
-		if (eClass instanceof EClass)
-			eclassAttributes = ((EClass)eClass).getEAllAttributes();
+	/**
+	 * This will create the {@link RemoteMoveModelElement} under the given {@link DiffGroup root}.<br/>A {@link RemoteMoveModelElement} represents
+	 * the fact that an element has been remotely moved since the ancestor model, but the right model has kept the element in its former place.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param left
+	 *            Element that has been moved in the left model.
+	 * @param right
+	 *            Element of the right model corresponding to the left one.
+	 */
+	@SuppressWarnings("unchecked")
+	private void createRemoteMoveOperation(DiffGroup root, EObject left, EObject right) {
+		final RemoteMoveModelElement operation = DiffFactory.eINSTANCE.createRemoteMoveModelElement();
+		operation.setRightElement(right);
+		operation.setLeftElement(left);
+		operation.setRightTarget(getMatchedEObject(left.eContainer()));
+		operation.setLeftTarget(getMatchedEObject(right.eContainer()));
+		root.getSubDiffElements().add(operation);
+	}
+
+	/**
+	 * This will create the {@link MoveModelElement} under the given {@link DiffGroup root}.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param left
+	 *            Element of the left model corresponding to the right one.
+	 * @param right
+	 *            Element that has been moved since the last (ancestor for three-way comparison, left for two-way comparison) version.
+	 */
+	@SuppressWarnings("unchecked")
+	private void createMoveOperation(DiffGroup root, EObject left, EObject right) {
+		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
+		operation.setRightElement(right);
+		operation.setLeftElement(left);
+		operation.setRightTarget(getMatchedEObject(left.eContainer()));
+		operation.setLeftTarget(getMatchedEObject(right.eContainer()));
+		root.getSubDiffElements().add(operation);
+	}
+
+	/**
+	 * This will iterate through all the attributes of the <code>mapping</code>'s three elements to check if any of them has been modified.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if one of the attribute has actually been changed.
+	 * @param mapping
+	 *            This contains the mapping information about the elements we need to check for a move.
+	 * @throws FactoryException
+	 *             Thrown if one of the checks fails.
+	 */
+	private void checkAttributesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
+		// Ignores matchElements when they don't have origin (no updates on these)
+		if (mapping.getOriginElement() == null)
+			return;
+		final EClass eClass = mapping.getOriginElement().eClass();
+
+		final List eclassAttributes = eClass.getEAllAttributes();
 		// for each feature, compare the value
 		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
@@ -257,34 +561,174 @@ public class DiffMaker implements DiffEngine {
 				final String attributeName = next.getName();
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
 				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
-				
-				if (leftValue != null && !leftValue.equals(rightValue) && next.isMany()) {
-					// If an object in the left list isn't contained in the right, it is a remove operation
-					for (Object aValue : (List)leftValue) {
-						if (!((List)rightValue).contains(aValue)) {
-							final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
-							operation.setAttribute(next);
-							operation.setRightElement(mapping.getRightElement());
-							operation.setLeftElement(mapping.getLeftElement());
-							operation.setLeftTarget((EObject)aValue);
-							root.getSubDiffElements().add(operation);
-						}
+				final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attributeName);
+
+				final boolean rightDistinctFromOrigin = rightValue != ancestorValue && rightValue != null && !rightValue.equals(ancestorValue);
+				final boolean rightDistinctFromLeft = rightValue != leftValue && rightValue != null && !rightValue.equals(leftValue);
+				final boolean leftDistinctFromOrigin = leftValue != ancestorValue && leftValue != null && !leftValue.equals(ancestorValue);
+
+				// There's a change if one of the above is true
+				if (rightDistinctFromOrigin || rightDistinctFromLeft || leftDistinctFromOrigin) {
+					// non conflicting change
+					if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
+						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping.getRightElement());
+						// only latest from head (left) has changed
+					} else if (leftDistinctFromOrigin && !rightDistinctFromOrigin) {
+						createRemoteAttributeChange(root, next, mapping);
+						// conflicting
+					} else if (!rightDistinctFromOrigin || rightDistinctFromLeft) {
+						checkConflictingAttributesUpdate(root, next, mapping);
 					}
-					for (Object aValue : (List)rightValue) {
-						if (!((List)leftValue).contains(aValue)) {
-							final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
-							operation.setAttribute(next);
-							operation.setRightElement(mapping.getRightElement());
-							operation.setLeftElement(mapping.getLeftElement());
-							operation.setRightTarget((EObject)aValue);
-							root.getSubDiffElements().add(operation);
-						}
-					}
-				} else if (leftValue != null && !leftValue.equals(rightValue)) {
-					final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will iterate through all the attributes of the <code>mapping</code>'s two elements to check if any of them has been modified.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if one of the attributes has actually been changed.
+	 * @param mapping
+	 *            This contains the mapping information about the elements we need to check for a move.
+	 * @throws FactoryException
+	 *             Thrown if one of the checks fails.
+	 */
+	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
+		final EClass eClass = mapping.getLeftElement().eClass();
+
+		final List eclassAttributes = eClass.getEAllAttributes();
+		// for each feature, compare the value
+		final Iterator it = eclassAttributes.iterator();
+		while (it.hasNext()) {
+			final EAttribute next = (EAttribute)it.next();
+			if (!next.isDerived()) {
+				final String attributeName = next.getName();
+				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
+				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
+
+				if (leftValue != null && !leftValue.equals(rightValue)) {
+					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping.getRightElement());
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will create the needed remote attribute change {@link DiffElement} under the given {@link DiffGroup root}.<br/>An attribute is
+	 * &quot;remotely changed&quot; if it has been added, updated or deleted in the left (latest from head) version but it has kept its former value
+	 * in the right (working copy) version.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param attribute
+	 *            Target {@link EAttribute} of the update.
+	 * @param mapping
+	 *            Contains the three (ancestor, left, right) elements' mapping.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch <code>attribute</code>'s left and right values.
+	 */
+	@SuppressWarnings("unchecked")
+	private void createRemoteAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping) throws FactoryException {
+		final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
+		final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
+
+		if (attribute.isMany()) {
+			for (Object aValue : (List)leftValue) {
+				// if the value is present in the left (latest) but not in the right (working copy), it's been
+				// added remotely
+				if (!((List)rightValue).contains(aValue)) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
+					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setAttribute(next);
+					operation.setRightTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+			for (Object aValue : (List)rightValue) {
+				// if the value is present in the right (working copy) but not in the left (latest), it's been
+				// removed remotely
+				if (!((List)leftValue).contains(aValue)) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoteRemoveAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setLeftTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+		} else {
+			final UpdateAttribute operation = DiffFactory.eINSTANCE.createRemoteUpdateAttribute();
+			operation.setRightElement(mapping.getRightElement());
+			operation.setLeftElement(mapping.getLeftElement());
+			operation.setAttribute(attribute);
+			root.getSubDiffElements().add(operation);
+		}
+	}
+
+	/**
+	 * Checks if there are conflictual changes between the values of the given {@link EAttribute}.<br/>An attribute update is considered
+	 * &quot;conflictual&quot; if it isn't multi-valued and its left (latest from head) value differs from the right (working copy) value.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if there actually are conflictual changes in the mapped elements
+	 *            <code>attribute</code> values.
+	 * @param attribute
+	 *            Target {@link EAttribute} to check.
+	 * @param mapping
+	 *            Contains the three (ancestor, left, right) elements' mapping.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped elements.
+	 */
+	@SuppressWarnings("unchecked")
+	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Element mapping) throws FactoryException {
+		if (!attribute.isMany()) {
+			createConflictingAttributeChange(root, attribute, mapping);
+		} else {
+			final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
+			final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
+			final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attribute.getName());
+
+			for (Object aValue : (List)leftValue) {
+				// If an object from the left is neither in the right nor in the origin, it's a remotely added
+				// attribute
+				if (!((List)rightValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setRightTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+					// If the object from the left is not in the right values, it's been removed since last
+					// checkout
+				} else if (!((List)rightValue).contains(aValue)) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setLeftTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+			for (Object aValue : (List)rightValue) {
+				// if an object from the right is neither in the left nor in the origin, it's been added since
+				// last checkout
+				if (!((List)leftValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setRightTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+					// if the object from the right is not in the left values yet present in the origin, it's
+					// been removed remotely
+				} else if (!((List)leftValue).contains(aValue)) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoteRemoveAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setLeftTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -292,79 +736,340 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
-		// for each reference, compare the targets
-		final Iterator it = mapping.getLeftElement().eClass().getEAllReferences().iterator();
+	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping) throws FactoryException {
+		final ConflictingDiffGroup leftDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+		leftDiff.setLeftParent(mapping.getOriginElement());
+		createNonConflictingAttributeChange(leftDiff, attribute, mapping.getOriginElement(), mapping.getLeftElement());
+		final ConflictingDiffGroup rightDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+		rightDiff.setLeftParent(mapping.getOriginElement());
+		createNonConflictingAttributeChange(rightDiff, attribute, mapping.getOriginElement(), mapping.getRightElement());
+
+		final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE.createConflictingDiffElement();
+		conflictingDiff.setLeftParent(mapping.getLeftElement());
+		conflictingDiff.setRightParent(mapping.getRightElement());
+		conflictingDiff.setLeftDiff(leftDiff);
+		conflictingDiff.setRightDiff(rightDiff);
+		root.getSubDiffElements().add(conflictingDiff);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void createNonConflictingAttributeChange(DiffGroup root, EAttribute attribute, EObject leftElement, EObject rightElement) throws FactoryException {
+		final Object leftValue = EFactory.eGet(leftElement, attribute.getName());
+		final Object rightValue = EFactory.eGet(rightElement, attribute.getName());
+
+		if (attribute.isMany()) {
+			for (Object aValue : (List)leftValue) {
+				if (!((List)rightValue).contains(aValue)) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(rightElement);
+					operation.setLeftElement(leftElement);
+					operation.setLeftTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+			for (Object aValue : (List)rightValue) {
+				if (!((List)leftValue).contains(aValue)) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
+					operation.setAttribute(attribute);
+					operation.setRightElement(rightElement);
+					operation.setLeftElement(leftElement);
+					operation.setRightTarget((EObject)aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+		} else {
+			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
+			operation.setRightElement(rightElement);
+			operation.setLeftElement(leftElement);
+			operation.setAttribute(attribute);
+			root.getSubDiffElements().add(operation);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkReferencesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
+		// Ignores matchElements when they don't have origin (no updates on these)
+		if (mapping.getOriginElement() == null)
+			return;
+		final EClass eClass = mapping.getOriginElement().eClass();
+		final List eclassReferences = eClass.getEAllReferences();
+
+		final Iterator it = eclassReferences.iterator();
 		while (it.hasNext()) {
 			final EReference next = (EReference)it.next();
-			final String referenceName = next.getName();
 			if (!next.isContainment() && !next.isDerived() && !next.isTransient()) {
-				final List leftElementReferences = EFactory.eGetAsList(mapping.getLeftElement(),
-						referenceName);
-				final List rightElementReferences = EFactory.eGetAsList(mapping.getRightElement(),
-						referenceName);
+				final String referenceName = next.getName();
+				final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+				final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+				final List ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
 
-				final List<EObject> deletedReferences = new ArrayList<EObject>();
-				final List<EObject> addedReferences = new ArrayList<EObject>();
-				if (leftElementReferences != null)
-					deletedReferences.addAll(leftElementReferences);
-				if (rightElementReferences != null)
-					addedReferences.addAll(rightElementReferences);
-
-				final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
-				final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
-
-				// "Added" references are the references from the left element that can't be mapped
-				addedReferences.removeAll(matchedOldReferences);
-				// "deleted" references are the references from the right element that can't be mapped
-				deletedReferences.removeAll(matchedNewReferences);
-
-				// Double check for objects defined in a different model and thus not matched
-				// We'll use a new list to keep track of theses elements !avoid concurrent modification!
-				final List<EObject> remoteMatchedElements = new ArrayList<EObject>();
-				for (EObject deleted : deletedReferences) {
-					if (addedReferences.contains(deleted)) {
-						remoteMatchedElements.add(deleted);
-					}
-				}
-				addedReferences.removeAll(remoteMatchedElements);
-				deletedReferences.removeAll(remoteMatchedElements);
-
-				// REFERENCES UPDATES
-				if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
-					/*
-					 * If neither the left nor the right target are proxies, or if their target URIs are
-					 * distinct, this is a reference update. Otherwise, we are here because we haven't been
-					 * able to resolve the proxy.
-					 */
-					if (!addedReferences.get(0).eIsProxy()
-							|| !deletedReferences.get(0).eIsProxy()
-							|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
-									EcoreUtil.getURI(deletedReferences.get(0)))) {
-						root.getSubDiffElements().add(
-								createUpdatedReferencesOperation(mapping, next, addedReferences,
-										deletedReferences));
-					}
+				// Checks if there're conflicts
+				if (isConflictual(next, leftReferences, rightReferences, ancestorReferences)) {
+					createConflictingReferenceUpdate(root, next, mapping);
+					// We know there aren't any conflicting changes
 				} else {
-					// REFERENCES ADD
-					if (addedReferences.size() > 0) {
-						createNewReferencesOperation(root, mapping, next, addedReferences);
+					final List<EObject> remoteDeletedReferences = new ArrayList<EObject>();
+					final List<EObject> remoteAddedReferences = new ArrayList<EObject>();
+					final List<EObject> deletedReferences = new ArrayList<EObject>();
+					final List<EObject> addedReferences = new ArrayList<EObject>();
+
+					populateThreeWayReferencesChanges(mapping, next, addedReferences, deletedReferences, remoteAddedReferences, remoteDeletedReferences);
+					createRemoteReferencesUpdate(root, next, mapping, remoteAddedReferences, remoteDeletedReferences);
+
+					boolean isUniqueReferenceUpdate = false;
+					if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
+						isUniqueReferenceUpdate = !addedReferences.get(0).eIsProxy() || !deletedReferences.get(0).eIsProxy()
+								|| !EcoreUtil.getURI(addedReferences.get(0)).equals(EcoreUtil.getURI(deletedReferences.get(0)));
 					}
-					// REFERENCES DEL
-					if (deletedReferences.size() > 0) {
-						createRemovedReferencesOperation(root, mapping, next, deletedReferences);
+
+					if (isUniqueReferenceUpdate) {
+						root.getSubDiffElements().add(createUpdatedReferencesOperation(mapping.getLeftElement(), mapping.getRightElement(), next, addedReferences, deletedReferences));
+					} else if (addedReferences.size() > 0) {
+						// REFERENCES ADD
+						createNewReferencesOperation(root, mapping.getLeftElement(), mapping.getRightElement(), next, addedReferences);
+					} else if (deletedReferences.size() > 0) {
+						// REFERENCES DEL
+						createRemovedReferencesOperation(root, mapping.getLeftElement(), mapping.getRightElement(), next, deletedReferences);
 					}
 				}
 			}
 		}
 	}
 
+	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
+		final EClass eClass = mapping.getLeftElement().eClass();
+		final List eclassReferences = eClass.getEAllReferences();
+
+		final Iterator it = eclassReferences.iterator();
+		while (it.hasNext()) {
+			final EReference next = (EReference)it.next();
+			if (!next.isContainment() && !next.isDerived() && !next.isTransient()) {
+				createNonConflictingReferencesUpdate(root, next, mapping.getLeftElement(), mapping.getRightElement());
+			}
+		}
+	}
+
+	/**
+	 * Checks if the values of a given reference have been changed both on the left (latest from head) and right (working copy) to distinct values
+	 * since the origin.
+	 * 
+	 * @param reference
+	 *            Reference we're checking for conflictual changes.
+	 * @param leftReferences
+	 *            {@link List} of values from the left (latest from head) model for <code>reference</code>.
+	 * @param rightReferences
+	 *            {@link List} of values from the right (working copy) model for <code>reference</code>.
+	 * @param ancestorReferences
+	 *            {@link List} of values from the origin (common ancestor) model for <code>reference</code>.
+	 * @return <code>True</code> if there's been a conflictual change for the given {@link EReference}, <code>False</code> otherwise.
+	 */
+	private boolean isConflictual(EReference reference, List leftReferences, List rightReferences, List ancestorReferences) {
+		boolean isConflictual = false;
+		// There CAN be a conflict ONLY if the reference is unique
+		if (!reference.isMany()) {
+			// If both left and right number of values have changed since origin ...
+			if (leftReferences.size() != ancestorReferences.size() && rightReferences.size() != ancestorReferences.size()) {
+				// ... There is a conflict if the value hasn't been erased AND the left value is different than the right one
+				if (leftReferences.size() > 0 && !leftReferences.get(0).equals(getMatchedEObject((EObject)rightReferences.get(0)))) {
+					isConflictual = true;
+				}
+				// If the number of values hasn't changed since origin, there cannot be a conflict if there are no values
+			} else if (leftReferences.size() > 0 && rightReferences.size() > 0) {
+				// There's a conflict in the values are all distinct
+				if (!leftReferences.get(0).equals(getMatchedEObject((EObject)ancestorReferences.get(0), LEFT_OBJECT))
+						&& !rightReferences.get(0).equals(getMatchedEObject((EObject)ancestorReferences.get(0), RIGHT_OBJECT))
+						&& !rightReferences.get(0).equals(getMatchedEObject((EObject)leftReferences.get(0)))) {
+					isConflictual = true;
+				}
+			}
+		}
+		return isConflictual;
+	}
+
+	private void populateThreeWayReferencesChanges(Match3Element mapping, EReference reference, List<EObject> addedReferences, List<EObject> deletedReferences, List<EObject> remoteAddedReferences,
+			List<EObject> remoteDeletedReferences) throws FactoryException {
+		final String referenceName = reference.getName();
+		final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+		final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+		final List ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
+
+		// populates remotely added references list
+		for (Object left : leftReferences) {
+			if (left instanceof EObject && !ancestorReferences.contains(getMatchedEObject((EObject)left, ANCESTOR_OBJECT)) && !rightReferences.contains(getMatchedEObject((EObject)left))) {
+				remoteAddedReferences.add((EObject)left);
+			}
+		}
+		// populates localy added list
+		for (Object right : rightReferences) {
+			if (right instanceof EObject && !ancestorReferences.contains(getMatchedEObject((EObject)right, ANCESTOR_OBJECT)) && !leftReferences.contains(getMatchedEObject((EObject)right))) {
+				addedReferences.add((EObject)right);
+			}
+		}
+		// populates remotely deleted and localy added lists
+		for (Object origin : ancestorReferences) {
+			if (origin instanceof EObject && !leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT)) && rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))) {
+				remoteDeletedReferences.add((EObject)origin);
+			} else if (origin instanceof EObject && !rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))
+					&& leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))) {
+				deletedReferences.add((EObject)origin);
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
-	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(Match2Elements mapping,
-			EReference newReference, List<EObject> deletedReferences, List<EObject> addedReferences) {
+	private List<EObject> computeAddedReferences(List leftReferences, List rightReferences) {
+		final List<EObject> deletedReferences = new ArrayList<EObject>();
+		final List<EObject> addedReferences = new ArrayList<EObject>();
+
+		if (leftReferences != null)
+			deletedReferences.addAll(leftReferences);
+		if (rightReferences != null)
+			addedReferences.addAll(rightReferences);
+		final List<EObject> matchedOldReferences = getMatchedReferences(deletedReferences);
+
+		// "Added" references are the references from the left element that can't be mapped
+		addedReferences.removeAll(matchedOldReferences);
+
+		// Double check for objects defined in a different model and thus not matched
+		// We'll use a new list to keep track of theses elements !avoid concurrent modification!
+		final List<EObject> remoteMatchedElements = new ArrayList<EObject>();
+		for (EObject deleted : deletedReferences) {
+			if (addedReferences.contains(deleted)) {
+				remoteMatchedElements.add(deleted);
+			}
+		}
+		addedReferences.removeAll(remoteMatchedElements);
+
+		return addedReferences;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<EObject> computeDeletedReferences(List leftReferences, List rightReferences) {
+		final List<EObject> deletedReferences = new ArrayList<EObject>();
+		final List<EObject> addedReferences = new ArrayList<EObject>();
+
+		if (leftReferences != null)
+			deletedReferences.addAll(leftReferences);
+		if (rightReferences != null)
+			addedReferences.addAll(rightReferences);
+		final List<EObject> matchedNewReferences = getMatchedReferences(addedReferences);
+
+		// "deleted" references are the references from the right element that can't be mapped
+		deletedReferences.removeAll(matchedNewReferences);
+
+		// Double check for objects defined in a different model and thus not matched
+		// We'll use a new list to keep track of theses elements !avoid concurrent modification!
+		final List<EObject> remoteMatchedElements = new ArrayList<EObject>();
+		for (EObject deleted : deletedReferences) {
+			if (addedReferences.contains(deleted)) {
+				remoteMatchedElements.add(deleted);
+			}
+		}
+		deletedReferences.removeAll(remoteMatchedElements);
+
+		return deletedReferences;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void createRemoteReferencesUpdate(DiffGroup root, EReference reference, Match3Element mapping, List<EObject> remotelyAdded, List<EObject> remotelyDeleted) {
+		if (!reference.isMany() && remotelyAdded.size() > 0 && remotelyDeleted.size() > 0) {
+			final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createRemoteUpdateUniqueReferenceValue();
+			operation.setLeftElement(mapping.getLeftElement());
+			operation.setRightElement(mapping.getRightElement());
+			operation.setReference(reference);
+
+			EObject leftTarget = getMatchedEObject(remotelyAdded.get(0));
+			EObject rightTarget = getMatchedEObject(remotelyDeleted.get(0));
+			// checks if target are defined remotely
+			if (leftTarget == null)
+				leftTarget = remotelyAdded.get(0);
+			if (rightTarget == null)
+				rightTarget = remotelyDeleted.get(0);
+
+			operation.setLeftTarget(leftTarget);
+			operation.setRightTarget(rightTarget);
+
+			root.getSubDiffElements().add(operation);
+		} else {
+			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator(); addedReferenceIterator.hasNext(); ) {
+				final EObject eobj = addedReferenceIterator.next();
+				final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createRemoteAddReferenceValue();
+				addOperation.setRightElement(mapping.getRightElement());
+				addOperation.setLeftElement(mapping.getLeftElement());
+				addOperation.setReference(reference);
+				addOperation.setRightAddedTarget(eobj);
+				if ((getMatchedEObject(eobj)) != null)
+					addOperation.setLeftAddedTarget(getMatchedEObject(eobj));
+				root.getSubDiffElements().add(addOperation);
+			}
+			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator(); deletedReferenceIterator.hasNext(); ) {
+				final EObject eobj = deletedReferenceIterator.next();
+				final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoteRemoveReferenceValue();
+				delOperation.setRightElement(mapping.getRightElement());
+				delOperation.setLeftElement(mapping.getLeftElement());
+				delOperation.setReference(reference);
+				delOperation.setLeftRemovedTarget(eobj);
+				if ((getMatchedEObject(eobj)) != null)
+					delOperation.setRightRemovedTarget(getMatchedEObject(eobj));
+				root.getSubDiffElements().add(delOperation);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void createConflictingReferenceUpdate(DiffGroup root, EReference reference, Match3Element mapping) throws FactoryException {
+		final ConflictingDiffGroup leftDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+		leftDiff.setLeftParent(mapping.getOriginElement());
+		createNonConflictingReferencesUpdate(leftDiff, reference, mapping.getOriginElement(), mapping.getLeftElement());
+		final ConflictingDiffGroup rightDiff = DiffFactory.eINSTANCE.createConflictingDiffGroup();
+		rightDiff.setLeftParent(mapping.getOriginElement());
+		createNonConflictingReferencesUpdate(rightDiff, reference, mapping.getOriginElement(), mapping.getRightElement());
+
+		if (leftDiff.getSubDiffElements().size() > 0) {
+			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE.createConflictingDiffElement();
+			conflictingDiff.setLeftParent(mapping.getLeftElement());
+			conflictingDiff.setRightParent(mapping.getRightElement());
+			conflictingDiff.setLeftDiff(leftDiff);
+			conflictingDiff.setRightDiff(rightDiff);
+			root.getSubDiffElements().add(conflictingDiff);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void createNonConflictingReferencesUpdate(DiffGroup root, EReference reference, EObject leftElement, EObject rightElement) throws FactoryException {
+		final List leftElementReferences = EFactory.eGetAsList(leftElement, reference.getName());
+		final List rightElementReferences = EFactory.eGetAsList(rightElement, reference.getName());
+
+		final List<EObject> deletedReferences = computeDeletedReferences(leftElementReferences, rightElementReferences);
+		final List<EObject> addedReferences = computeAddedReferences(leftElementReferences, rightElementReferences);
+
+		// REFERENCES UPDATES
+		if (!reference.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
+			/*
+			 * If neither the left nor the right target are proxies, or if their target URIs are distinct, this is a reference update. Otherwise, we
+			 * are here because we haven't been able to resolve the proxy.
+			 */
+			if (!addedReferences.get(0).eIsProxy() || !deletedReferences.get(0).eIsProxy() || !EcoreUtil.getURI(addedReferences.get(0)).equals(EcoreUtil.getURI(deletedReferences.get(0)))) {
+				root.getSubDiffElements().add(createUpdatedReferencesOperation(leftElement, rightElement, reference, addedReferences, deletedReferences));
+			}
+		} else {
+			// REFERENCES ADD
+			if (addedReferences.size() > 0) {
+				createNewReferencesOperation(root, leftElement, rightElement, reference, addedReferences);
+			}
+			// REFERENCES DEL
+			if (deletedReferences.size() > 0) {
+				createRemovedReferencesOperation(root, leftElement, rightElement, reference, deletedReferences);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right, EReference newReference, List<EObject> deletedReferences, List<EObject> addedReferences) {
 		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
-		operation.setLeftElement(mapping.getLeftElement());
-		operation.setRightElement(mapping.getRightElement());
+		operation.setLeftElement(left);
+		operation.setRightElement(right);
 		operation.setReference(newReference);
 
 		EObject leftTarget = getMatchedEObject(addedReferences.get(0));
@@ -382,54 +1087,32 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void createNewReferencesOperation(DiffGroup root, Match2Elements mapping, EReference newReference,
-			List<EObject> addedReferences) {
+	private void createNewReferencesOperation(DiffGroup root, EObject left, EObject right, EReference newReference, List<EObject> addedReferences) {
 		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator.hasNext(); ) {
 			final EObject eobj = addedReferenceIterator.next();
 			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
-			addOperation.setRightElement(mapping.getRightElement());
-			addOperation.setLeftElement(mapping.getLeftElement());
+			addOperation.setRightElement(right);
+			addOperation.setLeftElement(left);
 			addOperation.setReference(newReference);
 			addOperation.setRightAddedTarget(eobj);
-			if ((getMatchedEObject(eobj)) != null)
+			if (getMatchedEObject(eobj) != null)
 				addOperation.setLeftAddedTarget(getMatchedEObject(eobj));
 			root.getSubDiffElements().add(addOperation);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void createRemovedReferencesOperation(DiffGroup root, Match2Elements mapping,
-			EReference removedReference, List<EObject> deletedReferences) {
+	private void createRemovedReferencesOperation(DiffGroup root, EObject left, EObject right, EReference removedReference, List<EObject> deletedReferences) {
 		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator.hasNext(); ) {
 			final EObject eobj = deletedReferenceIterator.next();
 			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
-			delOperation.setRightElement(mapping.getRightElement());
-			delOperation.setLeftElement(mapping.getLeftElement());
+			delOperation.setRightElement(right);
+			delOperation.setLeftElement(left);
 			delOperation.setReference(removedReference);
 			delOperation.setLeftRemovedTarget(eobj);
-			if ((getMatchedEObject(eobj)) != null)
+			if (getMatchedEObject(eobj) != null)
 				delOperation.setRightRemovedTarget(getMatchedEObject(eobj));
 			root.getSubDiffElements().add(delOperation);
 		}
-	}
-
-	/**
-	 * Returns the list of references from the given list that can be matched.
-	 * 
-	 * @param references
-	 *            {@link List} of the references to match.
-	 * @return The list of references from the given list that can be matched.
-	 */
-	private List<EObject> getMatchedReferences(List<EObject> references) {
-		final List<EObject> matchedReferences = new ArrayList<EObject>();
-		for (final Iterator refIterator = references.iterator(); refIterator.hasNext(); ) {
-			final Object currentReference = refIterator.next();
-			if (currentReference != null) {
-				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
-				if (currentMapped != null)
-					matchedReferences.add(currentMapped);
-			}
-		}
-		return matchedReferences;
 	}
 }

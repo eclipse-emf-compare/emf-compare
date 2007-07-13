@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff.service;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.Messages;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.util.EngineConstants;
 
@@ -22,12 +23,25 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EngineDescriptor implements Comparable {
-	protected String priority;
+	/**
+	 * Priority of this descriptor. Should be one of
+	 * <ul>
+	 * <li>{@link EngineConstants#PRIORITY_HIGHEST}</li>
+	 * <li>{@link EngineConstants#PRIORITY_HIGH}</li>
+	 * <li>{@link EngineConstants#PRIORITY_NORMAL}</li>
+	 * <li>{@link EngineConstants#PRIORITY_LOW}</li>
+	 * <li>{@link EngineConstants#PRIORITY_LOWEST}</li>
+	 * </ul>
+	 */
+	protected final String priority;
 
-	protected String engineClassName;
+	/** Class name of this engine. */
+	protected final String engineClassName;
 
-	protected IConfigurationElement element;
+	/** Configuration element of this descriptor. */
+	protected final IConfigurationElement element;
 
+	/** {@link DiffEngine} this descriptor describes. */
 	private DiffEngine engine;
 
 	/**
@@ -48,7 +62,7 @@ public class EngineDescriptor implements Comparable {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException("Missing " + name + " attribute"); //$NON-NLS-1$ //$NON-NLS-2$
+		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -58,15 +72,6 @@ public class EngineDescriptor implements Comparable {
 	 */
 	public String getPriority() {
 		return priority.toLowerCase();
-	}
-
-	/**
-	 * Returns the engine class name.
-	 * 
-	 * @return The engine class name.
-	 */
-	public String getEngineClassName() {
-		return engineClassName;
 	}
 
 	/**
@@ -87,7 +92,7 @@ public class EngineDescriptor implements Comparable {
 
 	private int getPriorityValue(String value) {
 		if (value == null)
-			throw new IllegalArgumentException("Priority cannot be null."); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
 		if (value.equals("lowest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;

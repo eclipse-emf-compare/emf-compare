@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.DiffPlugin;
+import org.eclipse.emf.compare.diff.DiffPlugin;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 
 /**
@@ -26,18 +26,16 @@ import org.eclipse.emf.compare.merge.api.MergeFactory;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MergeService {
-	private static final String TAG_ENGINE = "factory"; //$NON-NLS-1$
+	/** Externalized here to avoid too many distinct usages. */
+	private static final String TAG_FACTORY = "factory"; //$NON-NLS-1$
 
-	// The shared instance
-	private static MergeService service;
-
-	private List<FactoryDescriptor> engines = new ArrayList<FactoryDescriptor>();
+	/** Keeps track of all the engines parsed. */
+	private final List<FactoryDescriptor> engines = new ArrayList<FactoryDescriptor>();
 
 	/**
 	 * Default constructor.
 	 */
 	public MergeService() {
-		service = this;
 		parseExtensionMetadata();
 	}
 
@@ -70,21 +68,10 @@ public class MergeService {
 	}
 
 	private FactoryDescriptor parseEngine(IConfigurationElement configElements) {
-		if (!configElements.getName().equals(TAG_ENGINE))
+		if (!configElements.getName().equals(TAG_FACTORY))
 			return null;
 		final FactoryDescriptor desc = new FactoryDescriptor(configElements);
 		return desc;
-	}
-
-	/**
-	 * Returns the singleton instance.
-	 * 
-	 * @return The singleton instance.
-	 */
-	public static MergeService getInstance() {
-		if (service == null)
-			service = new MergeService();
-		return service;
 	}
 
 	/**
@@ -94,7 +81,8 @@ public class MergeService {
 	 *            The extension of the file we need a {@link MergeFactory} for.
 	 * @return The best {@link MergeFactory} for the given file extension.
 	 */
-	public MergeFactory getBestDiffEngine(String extension) {
+	public MergeFactory getBestDiffEngine(@SuppressWarnings("unused")
+	String extension) {
 		final FactoryDescriptor desc = getBestDescriptor();
 		return desc.getEngineInstance();
 	}

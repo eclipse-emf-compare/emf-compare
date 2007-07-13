@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface RemoveReferenceValue extends ReferenceChange {
 	/**
 	 * Returns the value of the '<em><b>Left Removed Target</b></em>' reference.

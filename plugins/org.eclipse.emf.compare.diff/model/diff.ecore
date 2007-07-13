@@ -2,7 +2,7 @@
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diff"
-    nsURI="http://www.eclipse.org/emf/compare/diff/1.0" nsPrefix="diff">
+    nsURI="http://www.eclipse.org/emf/compare/diff/1.1" nsPrefix="diff">
   <eClassifiers xsi:type="ecore:EClass" name="DiffModel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" upperBound="-1"
@@ -29,14 +29,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelElementChange" eSuperTypes="#//DiffElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AddModelElement" eSuperTypes="#//ModelElementChange">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoveModelElement" eSuperTypes="#//ModelElementChange">
+  <eClassifiers xsi:type="ecore:EClass" name="ModelElementChangeLeftTarget" eSuperTypes="#//ModelElementChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelElementChangeRightTarget" eSuperTypes="#//ModelElementChange">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AddModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateModelElement" eSuperTypes="#//ModelElementChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
@@ -72,4 +74,22 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass ../../../plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConflictingDiffElement" eSuperTypes="#//DiffElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftDiff" eType="#//ConflictingDiffGroup"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightDiff" eType="#//ConflictingDiffGroup"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConflictingDiffGroup" eSuperTypes="#//DiffGroup"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteMoveModelElement" eSuperTypes="#//MoveModelElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddAttribute" eSuperTypes="#//AddAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveAttribute" eSuperTypes="#//RemoveAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateAttribute" eSuperTypes="#//UpdateAttribute"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddReferenceValue" eSuperTypes="#//AddReferenceValue"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveReferenceValue" eSuperTypes="#//RemoveReferenceValue"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateUniqueReferenceValue" eSuperTypes="#//UpdateUniqueReferenceValue"/>
 </ecore:EPackage>

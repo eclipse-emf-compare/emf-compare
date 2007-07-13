@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
+@SuppressWarnings("nls")
 public interface DiffElement extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Sub Diff Elements</b></em>' containment reference list.

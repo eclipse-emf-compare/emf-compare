@@ -19,24 +19,22 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Add Reference Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getRightAddedTarget <em>Right Added Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getRightAddedTarget <em>Right Added Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddReferenceValue {
 	/**
-	 * The cached value of the '{@link #getLeftAddedTarget() <em>Left Added Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftAddedTarget() <em>Left Added Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftAddedTarget()
 	 * @generated
 	 * @ordered
@@ -44,9 +42,8 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	protected EObject leftAddedTarget = null;
 
 	/**
-	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightAddedTarget()
 	 * @generated
 	 * @ordered
@@ -54,8 +51,8 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	protected EObject rightAddedTarget = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AddReferenceValueImpl() {
@@ -63,17 +60,18 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.ADD_REFERENCE_VALUE;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftAddedTarget() {
@@ -82,17 +80,15 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 			leftAddedTarget = eResolveProxy(oldLeftAddedTarget);
 			if (leftAddedTarget != oldLeftAddedTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, oldLeftAddedTarget,
-							leftAddedTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, oldLeftAddedTarget, leftAddedTarget));
 			}
 		}
 		return leftAddedTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftAddedTarget() {
@@ -100,21 +96,20 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftAddedTarget(EObject newLeftAddedTarget) {
 		EObject oldLeftAddedTarget = leftAddedTarget;
 		leftAddedTarget = newLeftAddedTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, oldLeftAddedTarget, leftAddedTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, oldLeftAddedTarget, leftAddedTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightAddedTarget() {
@@ -123,17 +118,15 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 			rightAddedTarget = eResolveProxy(oldRightAddedTarget);
 			if (rightAddedTarget != oldRightAddedTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, oldRightAddedTarget,
-							rightAddedTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, oldRightAddedTarget, rightAddedTarget));
 			}
 		}
 		return rightAddedTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightAddedTarget() {
@@ -141,24 +134,23 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightAddedTarget(EObject newRightAddedTarget) {
 		EObject oldRightAddedTarget = rightAddedTarget;
 		rightAddedTarget = newRightAddedTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, oldRightAddedTarget,
-					rightAddedTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, oldRightAddedTarget, rightAddedTarget));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
@@ -174,10 +166,11 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
@@ -191,10 +184,11 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
@@ -208,10 +202,11 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET:
@@ -222,4 +217,4 @@ public class AddReferenceValueImpl extends ReferenceChangeImpl implements AddRef
 		return super.eIsSet(featureID);
 	}
 
-} //AddReferenceValueImpl
+} // AddReferenceValueImpl

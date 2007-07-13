@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public abstract class AbstractMerger {
+	/** {@link DiffElement} to be merged by this merger. */
 	protected DiffElement diff;
 
 	/**
@@ -57,30 +58,41 @@ public abstract class AbstractMerger {
 	/**
 	 * Returns <code>True</code> if the merger is allowed to apply changes in the origin (left) model.
 	 * 
-	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model,
-	 *         <code>False</code> otherwise.
+	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model, <code>False</code> otherwise.
 	 */
 	public abstract boolean canApplyInOrigin();
 
 	/**
 	 * Returns <code>True</code> if the merger is allowed to undo changes in the target (right) model.
 	 * 
-	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model,
-	 *         <code>False</code> otherwise.
+	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model, <code>False</code> otherwise.
 	 */
 	public abstract boolean canUndoInTarget();
 
-	protected void removeFromContainer(EObject obj) {
-		final EObject parent = obj.eContainer();
-		EcoreUtil.remove(obj);
+	/**
+	 * Removes a {@link DiffElement} from its {@link DiffGroup}.
+	 * 
+	 * @param diffElement
+	 *            {@link DiffElement} to remove from its container.
+	 */
+	protected void removeFromContainer(DiffElement diffElement) {
+		final EObject parent = diffElement.eContainer();
+		EcoreUtil.remove(diffElement);
 
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
-		
+
 		// if diff was in a diffGroup and it was the last one, we also remove the diffgroup
-		cleanDiffGroup(parent);
+		if (parent instanceof DiffGroup)
+			cleanDiffGroup((DiffGroup)parent);
 	}
 
+	/**
+	 * Removes all references to the given {@link EObject} from the {@link DiffModel}.
+	 * 
+	 * @param deletedObject
+	 *            Object to remove all references to.
+	 */
 	protected void removeDanglingReferences(EObject deletedObject) {
 		EObject root = EcoreUtil.getRootContainer(deletedObject);
 		if (root instanceof ModelInputSnapshot)
@@ -88,14 +100,13 @@ public abstract class AbstractMerger {
 		if (root != null) {
 			EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
 				private static final long serialVersionUID = 616050158241084372L;
-	
+
 				{
 					crossReference();
 				}
-	
+
 				@Override
-				protected boolean crossReference(EObject eObject, EReference eReference,
-						EObject crossReferencedEObject) {
+				protected boolean crossReference(EObject eObject, EReference eReference, EObject crossReferencedEObject) {
 					return crossReferencedEObject.eResource() == null;
 				}
 			};
@@ -107,17 +118,28 @@ public abstract class AbstractMerger {
 			}
 		}
 	}
-	
-	protected void cleanDiffGroup(EObject diffGroup) {
-		if (diffGroup != null && diffGroup instanceof DiffGroup && ((DiffGroup)diffGroup).getSubchanges() == 0) {
+
+	/**
+	 * Removes the given {@link DiffGroup} from its container if it was its last child, also calls for the same cleanup operation on its hierarchy.
+	 * 
+	 * @param diffGroup
+	 *            {@link DiffGroup} we want to cleanup.
+	 */
+	protected void cleanDiffGroup(DiffGroup diffGroup) {
+		if (diffGroup != null && diffGroup.getSubchanges() == 0) {
 			final EObject parent = diffGroup.eContainer();
 			if (parent != null && parent instanceof DiffGroup) {
 				EcoreUtil.remove(diffGroup);
-				cleanDiffGroup(parent);
+				cleanDiffGroup((DiffGroup)parent);
 			}
 		}
 	}
-	
+
+	/**
+	 * Returns the {@link DiffModel} containing the {@link DiffElement} this merger is intended to merge.
+	 * 
+	 * @return The {@link DiffModel} containing the {@link DiffElement} this merger is intended to merge.
+	 */
 	protected DiffModel getDiffModel() {
 		return ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff();
 	}
@@ -138,7 +160,7 @@ public abstract class AbstractMerger {
 		}
 		return leftResource;
 	}
-	
+
 	/**
 	 * Returns the right resource.
 	 * 

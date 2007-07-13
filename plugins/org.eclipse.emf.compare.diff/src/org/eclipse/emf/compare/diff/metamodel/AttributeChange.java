@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface AttributeChange extends DiffElement {
 	/**
 	 * Returns the value of the '<em><b>Attribute</b></em>' reference.

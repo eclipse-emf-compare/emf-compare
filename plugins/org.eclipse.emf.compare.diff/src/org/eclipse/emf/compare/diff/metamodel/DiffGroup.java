@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface DiffGroup extends DiffElement {
 	/**
 	 * Returns the value of the '<em><b>Left Parent</b></em>' reference.

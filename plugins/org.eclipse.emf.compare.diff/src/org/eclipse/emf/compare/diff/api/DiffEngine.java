@@ -14,20 +14,20 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 
 /**
- * A Diff engine has the responsability to provide a diff (or delta) model from
- * a matching model.
+ * A Diff engine has the responsability to provide a diff (or delta) model from a matching model.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public interface DiffEngine {
 	/**
-	 * Return a diffmodel created using the match model. This implementation is
-	 * a generic and simple one.
+	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 
 	 * @param match
 	 *            the matching model
+	 * @param threeWay
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
 	 * @return the corresponding diff model
 	 * @throws FactoryException
 	 */
-	DiffModel doDiff(MatchModel match);
+	DiffModel doDiff(MatchModel match, boolean threeWay);
 }
