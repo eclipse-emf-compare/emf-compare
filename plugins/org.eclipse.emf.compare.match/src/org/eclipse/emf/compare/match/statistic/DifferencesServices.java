@@ -51,6 +51,9 @@ public class DifferencesServices implements MatchEngine {
 	/** Soft strategy considers ADD, REMOVE, CHANGE, MOVE and RENAME operations. */
 	public static final int SOFT_STRATEGY = 1;
 
+	/** Default value for the search window. Will be used if the GUI hasn't been loaded. */
+	private static final int DEFAULT_SEARCH_WINDOW = 100;
+
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
 	private static final double THRESHOLD = 0.96d;
@@ -185,7 +188,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the content similarity.
 	 */
-	public double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
+	private double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
 		final double nameSimilarity = nameSimilarity(obj1, obj2);
 		final double relationsSimilarity = relationsSimilarity(obj1, obj2);
 		double sameUri = 0d;
@@ -266,7 +269,7 @@ public class DifferencesServices implements MatchEngine {
 			if (nameSimilarity == 1 && hasSameUri) {
 				similar = true;
 				// softer test if we don't have enough attributes to compare the objects
-			} else if (nameSimilarity > fewerAttributesNameThreshold 
+			} else if (nameSimilarity > fewerAttributesNameThreshold
 					&& nonNullFeaturesCount(obj1) <= MIN_ATTRIBUTES_COUNT
 					&& nonNullFeaturesCount(obj2) <= MIN_ATTRIBUTES_COUNT
 					&& typeSimilarity(obj1, obj2) > generalThreshold) {
@@ -323,8 +326,13 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @return An <code>int</code> representing the number of siblings to consider for matching.
 	 */
-	private int getDefaultSearchWindow() {
-		return EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window"); //$NON-NLS-1$
+	private int getSearchWindow() {
+		int searchWindow = DEFAULT_SEARCH_WINDOW;
+		if (EMFComparePlugin.getDefault() != null
+				&& EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
+			searchWindow = EMFComparePlugin.getDefault().getPluginPreferences().getInt(
+					"emfcompare.search.window"); //$NON-NLS-1$
+		return searchWindow;
 	}
 
 	/**
@@ -365,7 +373,7 @@ public class DifferencesServices implements MatchEngine {
 		try {
 			monitor.subTask("matching roots"); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(root1.eResource().getContents(), root2
-					.eResource().getContents(), getDefaultSearchWindow(), monitor);
+					.eResource().getContents(), getSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			final List<EObject> unMatchedLeftRoots = new ArrayList(root1.eResource().getContents());
@@ -396,7 +404,7 @@ public class DifferencesServices implements MatchEngine {
 				final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
 				stillToFindFromModel1.clear();
 				stillToFindFromModel2.clear();
-				
+
 				createSubMatchElements(rootMapping, still1, still2, monitor);
 				// now the other elements won't be mapped, keep them in the model
 				createUnMatchElements(root, stillToFindFromModel1);
@@ -411,7 +419,7 @@ public class DifferencesServices implements MatchEngine {
 			createUnMatchElements(root, stillToFindFromModel1);
 			createUnMatchElements(root, stillToFindFromModel2);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, false);
+			EMFComparePlugin.log(e, false);
 		}
 		return root;
 	}
@@ -456,7 +464,7 @@ public class DifferencesServices implements MatchEngine {
 		mappingList.add(mapping);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
 		final List<Match2Elements> mapList = mapLists(current1.eContents(), current2.eContents(),
-				getDefaultSearchWindow(), monitor);
+				getSearchWindow(), monitor);
 		// We can map other elements with mapLists; we iterate through them.
 		final Iterator<Match2Elements> it = mapList.iterator();
 		while (it.hasNext()) {
@@ -523,7 +531,7 @@ public class DifferencesServices implements MatchEngine {
 			if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
 				continue;
 			}
-			
+
 			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) {
 				final Match2Elements mapping = matchFactory.createMatch2Elements();
 				double metric = 1d;
@@ -548,15 +556,16 @@ public class DifferencesServices implements MatchEngine {
 		stillToFindFromModel1.addAll(notFoundList1);
 		return result;
 	}
-	
-	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2, IProgressMonitor monitor) throws FactoryException, InterruptedException {
-		final List<Match2Elements> mappings = mapLists(list1, list2, getDefaultSearchWindow(),
-				monitor);
+
+	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2,
+			IProgressMonitor monitor) throws FactoryException, InterruptedException {
+		final List<Match2Elements> mappings = mapLists(list1, list2, getSearchWindow(), monitor);
 
 		final Iterator<Match2Elements> it = mappings.iterator();
 		while (it.hasNext()) {
 			final Match2Elements map = it.next();
-			final Match2Elements match = recursiveMappings(map.getLeftElement(), map.getRightElement(), monitor);
+			final Match2Elements match = recursiveMappings(map.getLeftElement(), map.getRightElement(),
+					monitor);
 			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, match);
 		}
 	}

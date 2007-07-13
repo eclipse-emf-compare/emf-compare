@@ -41,7 +41,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 				EcoreUtil.remove(leftElement);
 				EFactory.eAdd(leftTarget, ref.getName(), leftElement);
 			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e, true);
+				EMFComparePlugin.log(e, true);
 			}
 		} else {
 			// shouldn't be here
@@ -66,7 +66,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 				EcoreUtil.remove(rightElement);
 				EFactory.eAdd(rightTarget, ref.getName(), rightElement);
 			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e, true);
+				EMFComparePlugin.log(e, true);
 			}
 		} else {
 			// shouldn't be here

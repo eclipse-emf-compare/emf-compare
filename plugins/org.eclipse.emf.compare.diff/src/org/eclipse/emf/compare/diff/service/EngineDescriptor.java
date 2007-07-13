@@ -79,7 +79,7 @@ public class EngineDescriptor implements Comparable {
 			try {
 				engine = (DiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			}
 		}
 		return engine;

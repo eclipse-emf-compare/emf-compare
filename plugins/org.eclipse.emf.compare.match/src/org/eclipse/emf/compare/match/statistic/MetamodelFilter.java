@@ -109,7 +109,7 @@ public class MetamodelFilter {
 					featuresToInformation.get(feat).processValue("null"); //$NON-NLS-1$
 				}
 			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e.getMessage(), false);
+				EMFComparePlugin.log(e.getMessage(), false);
 			}
 		}
 	}

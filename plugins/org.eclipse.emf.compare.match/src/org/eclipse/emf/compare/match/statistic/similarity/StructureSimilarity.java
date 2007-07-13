@@ -82,7 +82,7 @@ public final class StructureSimilarity {
 	 * @throws FactoryException
 	 *             Thrown if we cannot get the {@link EObject}'s types' names.
 	 */
-	public static List<StringBuffer> typeValueList(EObject current) throws FactoryException {
+	private static List<StringBuffer> typeValueList(EObject current) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final List<StringBuffer> result = new ArrayList<StringBuffer>();
 		List eclassAttributes = new LinkedList();
@@ -129,7 +129,7 @@ public final class StructureSimilarity {
 	 * @throws FactoryException
 	 *             Thrown if we cannot retrieve <code>current</code>'s name.
 	 */
-	public static String typeValue(EObject current) throws FactoryException {
+	private static String typeValue(EObject current) throws FactoryException {
 		final List<StringBuffer> values = typeValueList(current);
 		final StringBuffer result = new StringBuffer();
 		final Iterator<StringBuffer> it = values.iterator();
@@ -150,7 +150,7 @@ public final class StructureSimilarity {
 	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
 	 */
 	@SuppressWarnings("unchecked")
-	public static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
+	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
 		List<EReference> eObjectFeatures = new LinkedList<EReference>();

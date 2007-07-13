@@ -61,7 +61,7 @@ public class RemoveModelElementMerger extends DefaultMerger {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
 			} catch (FactoryException e) {
-				EMFComparePlugin.getDefault().log(e, true);
+				EMFComparePlugin.log(e, true);
 			}
 		} else {
 			findRightResource().getContents().add(newOne);

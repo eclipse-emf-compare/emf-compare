@@ -37,7 +37,7 @@ public class UpdateAttributeMerger extends DefaultMerger {
 		try {
 			EFactory.eSet(origin, attr.getName(), EFactory.eGet(element, attr.getName()));
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.applyInOrigin();
 	}
@@ -56,7 +56,7 @@ public class UpdateAttributeMerger extends DefaultMerger {
 		try {
 			EFactory.eSet(element, attr.getName(), EFactory.eGet(origin, attr.getName()));
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, true);
+			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();
 	}

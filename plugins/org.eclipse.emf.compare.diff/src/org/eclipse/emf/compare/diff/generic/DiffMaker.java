@@ -150,7 +150,7 @@ public class DiffMaker implements DiffEngine {
 			checkReferencesUpdates(current, match);
 			checkForMove(current, match);
 		} catch (FactoryException e) {
-			EMFComparePlugin.getDefault().log(e, false);
+			EMFComparePlugin.log(e, false);
 		}
 		// we need to build this list to avoid concurrent modifications
 		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();

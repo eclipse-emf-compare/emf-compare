@@ -175,13 +175,13 @@ public class EFactory {
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
 			} catch (ClassNotFoundException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (NoSuchMethodException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (IllegalAccessException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (InvocationTargetException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			}
 		} else {
 			object.eSet(feature, arg);
@@ -212,13 +212,13 @@ public class EFactory {
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
 			} catch (ClassNotFoundException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (NoSuchMethodException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (IllegalAccessException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			} catch (InvocationTargetException e) {
-				EMFComparePlugin.getDefault().log(e, false);
+				EMFComparePlugin.log(e, false);
 			}
 		} else {
 			object.eSet(feature, arg);

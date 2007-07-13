@@ -96,7 +96,7 @@ public final class ETools {
 	public static EObject validate(EObject root, boolean blocker, String message) {
 		if (root != null && !(root.getClass().getName().startsWith("org.eclipse.uml2"))) { //$NON-NLS-1$
 			if (Diagnostician.INSTANCE.validate(root).getSeverity() != Diagnostic.OK) {
-				EMFComparePlugin.getDefault().log(message, false);
+				EMFComparePlugin.log(message, false);
 				if (blocker) {
 					return null;
 				}

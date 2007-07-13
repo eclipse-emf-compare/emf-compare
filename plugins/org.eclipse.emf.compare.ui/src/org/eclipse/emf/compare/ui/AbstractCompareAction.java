@@ -102,7 +102,7 @@ public abstract class AbstractCompareAction extends Action {
 					enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(
 							Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/" + imagePath))); //$NON-NLS-1$
 				} catch (IOException e) {
-					EMFComparePlugin.getDefault().log(e.getMessage(), false);
+					EMFComparePlugin.log(e.getMessage(), false);
 				}
 			}
 			

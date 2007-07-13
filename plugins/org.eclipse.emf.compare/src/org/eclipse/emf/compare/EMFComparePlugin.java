@@ -74,7 +74,7 @@ public class EMFComparePlugin extends Plugin {
 	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it
 	 *            as a warning.
 	 */
-	public void log(Exception e, boolean blocker) {
+	public static void log(Exception e, boolean blocker) {
 		e.printStackTrace();
 		if (e instanceof CoreException) {
 			final IStatus status = ((CoreException)e).getStatus();
@@ -102,7 +102,7 @@ public class EMFComparePlugin extends Plugin {
 	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it
 	 *            as a warning.
 	 */
-	public void log(String message, boolean blocker) {
+	public static void log(String message, boolean blocker) {
 		int severity = IStatus.WARNING;
 		if (blocker)
 			severity = IStatus.ERROR;
@@ -118,7 +118,11 @@ public class EMFComparePlugin extends Plugin {
 	 * @param status
 	 *            Error Status.
 	 */
-	public void log(IStatus status) {
-		getLog().log(status);
+	public static void log(IStatus status) {
+		if (getDefault() != null) {
+			getDefault().getLog().log(status);
+		} else {
+			throw new EMFCompareException(status.getException());
+		}
 	}
 }
