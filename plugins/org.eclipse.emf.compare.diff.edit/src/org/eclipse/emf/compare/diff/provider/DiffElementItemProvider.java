@@ -33,6 +33,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * <!-- end-user-doc -->
  * @generated
  */
+@SuppressWarnings("nls")
 public class DiffElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -50,6 +51,7 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -66,6 +68,8 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
@@ -80,8 +84,9 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_DiffElement_type");
+		return getString("_UI_DiffElement_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -91,13 +96,13 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DiffElement.class)) {
 			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
-						false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -110,53 +115,66 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createDiffGroup()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createDiffGroup()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createAttributeChange()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAttributeChange()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createReferenceChange()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createReferenceChange()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createModelElementChange()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createModelElementChange()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddModelElement()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createModelElementChangeLeftTarget()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveModelElement()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createModelElementChangeRightTarget()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateModelElement()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddModelElement()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createMoveModelElement()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveModelElement()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddAttribute()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateModelElement()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveAttribute()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createMoveModelElement()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateAttribute()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddAttribute()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddReferenceValue()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveAttribute()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveReferenceValue()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateAttribute()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateReference()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddReferenceValue()));
 
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue()));
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateReference()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createConflictingDiffElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createConflictingDiffGroup()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddModelElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveModelElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteMoveModelElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteUpdateAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteUpdateUniqueReferenceValue()));
 	}
 
 	/**
@@ -165,6 +183,7 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}

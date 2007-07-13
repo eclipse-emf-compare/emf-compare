@@ -19,10 +19,10 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -36,6 +36,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
+@SuppressWarnings("nls")
 public class AddAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -53,6 +54,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -68,13 +70,12 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addRightTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddAttribute_rightTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_AddAttribute_rightTarget_feature",
-						"_UI_AddAttribute_type"), DiffPackage.Literals.ADD_ATTRIBUTE__RIGHT_TARGET, true,
-				false, true, null, null, null));
+	@SuppressWarnings("unchecked")
+	protected void addRightTargetPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddAttribute_rightTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AddAttribute_rightTarget_feature", "_UI_AddAttribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				DiffPackage.Literals.ADD_ATTRIBUTE__RIGHT_TARGET, true, false, true, null, null, null));
 	}
 
 	/**
@@ -83,17 +84,18 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
 			List images = new ArrayList(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/AddAttribute"));
+			images.add(getResourceLocator().getImage("full/obj16/AddAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/AddAttribute");
+			labelImage = getResourceLocator().getImage("full/obj16/AddAttribute"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -105,15 +107,14 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		final AddAttribute addOp = (AddAttribute)object;
 		try {
-			return getString("_UI_AddAttribute_type", new Object[] {
-					NameSimilarity.findName(addOp.getRightTarget()),
-					NameSimilarity.findName(addOp.getAttribute()),
-					NameSimilarity.findName(addOp.getRightElement())});
+			return getString("_UI_AddAttribute_type", new Object[] {NameSimilarity.findName(addOp.getRightTarget()), NameSimilarity.findName(addOp.getAttribute()), //$NON-NLS-1$
+					NameSimilarity.findName(addOp.getRightElement()),});
 		} catch (FactoryException e) {
-			return getString("_UI_AddAttribute_type");
+			return getString("_UI_AddAttribute_type"); //$NON-NLS-1$
 		}
 	}
 
@@ -124,6 +125,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -136,6 +138,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
@@ -146,6 +149,7 @@ public class AddAttributeItemProvider extends AttributeChangeItemProvider implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}

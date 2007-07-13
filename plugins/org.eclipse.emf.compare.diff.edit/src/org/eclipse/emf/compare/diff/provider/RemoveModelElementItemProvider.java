@@ -22,7 +22,6 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -36,7 +35,8 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RemoveModelElementItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+@SuppressWarnings("nls")
+public class RemoveModelElementItemProvider extends ModelElementChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -53,48 +53,13 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addRightParentPropertyDescriptor(object);
-			addLeftElementPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Parent feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRightParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_RemoveModelElement_rightParent_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_RemoveModelElement_rightParent_feature", "_UI_RemoveModelElement_type"),
-						DiffPackage.Literals.REMOVE_MODEL_ELEMENT__RIGHT_PARENT, true, false, true, null,
-						null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Element feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_RemoveModelElement_leftElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_RemoveModelElement_leftElement_feature", "_UI_RemoveModelElement_type"),
-						DiffPackage.Literals.REMOVE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
-						null, null));
 	}
 
 	/**
@@ -103,9 +68,10 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getRemoveModelElement_LeftElement(), adapterFactory.getClass());
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE.getModelElementChangeLeftTarget_LeftElement(), adapterFactory.getClass());
 
 		if (labelImage != null) {
 			List images = new ArrayList(2);
@@ -125,13 +91,13 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		RemoveModelElement addOp = (RemoveModelElement)object;
 		try {
-			return getString("_UI_RemoveModelElement_type", new Object[] {NameSimilarity.findName(addOp
-					.getLeftElement())});
+			return getString("_UI_RemoveModelElement_type", new Object[] {NameSimilarity.findName(addOp.getLeftElement())}); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return getString("_UI_RemoveModelElement_type");
+			return getString("_UI_RemoveModelElement_type"); //$NON-NLS-1$
 		}
 	}
 
@@ -142,6 +108,7 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -154,6 +121,7 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
@@ -164,8 +132,8 @@ public class RemoveModelElementItemProvider extends ModelElementChangeItemProvid
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
-
 }

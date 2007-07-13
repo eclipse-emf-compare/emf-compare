@@ -33,6 +33,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
+@SuppressWarnings("nls")
 public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -50,6 +51,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -66,14 +68,12 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addLeftAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_leftAddedTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AddReferenceValue_leftAddedTarget_feature", "_UI_AddReferenceValue_type"),
-				DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, true, false, true, null, null,
-				null));
+	@SuppressWarnings("unchecked")
+	protected void addLeftAddedTargetPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddReferenceValue_leftAddedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_leftAddedTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						"_UI_AddReferenceValue_type"), DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, true, false, true, null, null, null)); //$NON-NLS-1$
 	}
 
 	/**
@@ -82,14 +82,12 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addRightAddedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_rightAddedTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AddReferenceValue_rightAddedTarget_feature", "_UI_AddReferenceValue_type"),
-				DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, true, false, true, null, null,
-				null));
+	@SuppressWarnings("unchecked")
+	protected void addRightAddedTargetPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AddReferenceValue_rightAddedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_rightAddedTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						"_UI_AddReferenceValue_type"), DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, true, false, true, null, null, null)); //$NON-NLS-1$
 	}
 
 	/**
@@ -98,8 +96,9 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AddReferenceValue"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AddReferenceValue")); //$NON-NLS-1$
 	}
 
 	/**
@@ -108,13 +107,14 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		AddReferenceValue addOp = (AddReferenceValue)object;
 		try {
-			return getString("_UI_AddReferenceValue_type", new Object[] {NameSimilarity.findName(addOp
-					.getLeftElement())});
+			return getString("_UI_AddReferenceValue_type", new Object[] {NameSimilarity.findName(addOp.getRightAddedTarget()), NameSimilarity.findName(addOp.getReference()), //$NON-NLS-1$
+					NameSimilarity.findName(addOp.getRightElement()),});
 		} catch (FactoryException e) {
-			return getString("_UI_AddReferenceValue_type");
+			return getString("_UI_AddReferenceValue_type"); //$NON-NLS-1$
 		}
 	}
 
@@ -125,6 +125,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -137,6 +138,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
@@ -147,6 +149,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}

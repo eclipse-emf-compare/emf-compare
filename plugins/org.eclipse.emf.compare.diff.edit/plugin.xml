@@ -5,14 +5,14 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.1 2007/04/03 06:47:07 cbrun Exp $
+ $Id: plugin.xml,v 1.2 2007/07/13 14:57:25 jmusset Exp $
 -->
 
 <plugin>
     
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
     <factory 
-       uri = "http://www.eclipse.org/emf/compare/diff/1.0" 
+       uri = "http://www.eclipse.org/emf/compare/diff/1.1" 
        class = "org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory" 
        supportedTypes = 
          "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
