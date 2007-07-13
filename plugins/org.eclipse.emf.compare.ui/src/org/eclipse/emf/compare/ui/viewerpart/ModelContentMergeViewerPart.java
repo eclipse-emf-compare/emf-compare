@@ -455,7 +455,7 @@ public class ModelContentMergeViewerPart {
 							}
 						}
 					}
-					if (selected.getData() instanceof EObject)
+					if (!selected.isDisposed() && selected.getData() instanceof EObject)
 						properties.setInput(findMatchFromElement((EObject)selected.getData()));
 				}
 			}

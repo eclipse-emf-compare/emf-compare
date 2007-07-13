@@ -99,7 +99,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	private RGB removedColor;
 
-	private IPropertyChangeListener structureSelectionListener;
+	private IPropertyChangeListener structurePropertyListener;
 
 	private IPropertyChangeListener preferenceListener;
 
@@ -141,7 +141,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		// disables diff copy from either side
 		switchCopyState(false);
 
-		structureSelectionListener = new IPropertyChangeListener() {
+		structurePropertyListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION)) {
 					Object selected = null;
@@ -151,10 +151,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					if (selected instanceof DiffElement && !(selected instanceof DiffGroup && ((DiffGroup)selected).getSubDiffElements().size() == 0)) {
 						setSelection((DiffElement)selected);
 					}
+				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED)) {
+					setInput(event.getNewValue());
 				}
 			}
 		};
-		configuration.addPropertyChangeListener(structureSelectionListener);
+		configuration.addPropertyChangeListener(structurePropertyListener);
 
 		preferenceListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -181,7 +183,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws the center Control.
 	 */
 	public void updateCenter() {
-		getCenterPart().redraw();
+		if (getCenterPart() != null)
+			getCenterPart().redraw();
 	}
 
 	/**
@@ -199,7 +202,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return The center {@link Canvas}.
 	 */
 	public Canvas getCenterPart() {
-		if (canvas == null)
+		if (canvas == null && !getControl().isDisposed())
 			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
 				public void doPaint(GC gc) {
 					// Draw lines on the left and right edges
@@ -207,12 +210,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					gc.drawLine(0, 0, 0, getBounds().height);
 					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
 
-					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
+					final ModelCompareInput input = (ModelCompareInput)getInput();
+					for (final DiffElement diff : input.getDiffAsList()) {
 						drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
 					}
 				}
 			};
-		canvas.moveAbove(null);
+		if (canvas != null)
+			canvas.moveAbove(null);
 		return canvas;
 	}
 
@@ -341,8 +346,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	public void setSelection(DiffElement diff) {
 		currentDiff = diff;
-		leftPart.navigateToDiff(currentDiff);
-		rightPart.navigateToDiff(currentDiff);
+		if (leftPart != null)
+			leftPart.navigateToDiff(currentDiff);
+		if (rightPart != null)
+			rightPart.navigateToDiff(currentDiff);
 		switchCopyState(true);
 	}
 
@@ -534,9 +541,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void updateToolItems() {
 		super.updateToolItems();
-		copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
-		copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
-		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
+		if (copyDiffRightToLeft != null)
+			copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
+		if (copyDiffLeftToRight != null)
+			copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
+		if (!getControl().isDisposed())
+			CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 
 	/**
@@ -572,8 +582,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
-		configuration.removePropertyChangeListener(structureSelectionListener);
-		structureSelectionListener = null;
+		configuration.removePropertyChangeListener(structurePropertyListener);
+		structurePropertyListener = null;
 		EMFCompareUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
 		preferenceListener = null;
 		leftPart = null;
@@ -600,7 +610,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth,
 			int height) {
-		getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
+		if (getCenterPart() != null)
+			getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
 		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
 		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
 		update();
