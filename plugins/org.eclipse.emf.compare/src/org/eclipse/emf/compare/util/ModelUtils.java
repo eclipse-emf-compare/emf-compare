@@ -39,21 +39,11 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ModelUtils {
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private ModelUtils() {
 		// prevents instantiation
-	}
-
-	/**
-	 * Loads a model from an {@link IPath}.
-	 * 
-	 * @param path
-	 *            {@link IPath} where the model lies.
-	 * @return The model loaded from the path.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(IPath path) throws IOException {
-		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path));
 	}
 
 	/**
@@ -72,19 +62,6 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads a model from an {@link org.eclipse.core.resources.IFile IFile}.
-	 * 
-	 * @param file
-	 *            {@link org.eclipse.core.resources.IFile IFile} containing the model to be loaded.
-	 * @return The model loaded from the file.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(IFile file) throws IOException {
-		return load(URI.createFileURI(file.getLocation().toOSString()));
-	}
-
-	/**
 	 * Loads a model from an {@link org.eclipse.core.resources.IFile IFile} in a given {@link ResourceSet}.
 	 * 
 	 * @param file
@@ -100,19 +77,6 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads a model from a {@link java.io.File File}.
-	 * 
-	 * @param file
-	 *            {@link java.io.File File} containing the model to be loaded.
-	 * @return The model loaded from the file.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(File file) throws IOException {
-		return load(URI.createFileURI(file.getPath()));
-	}
-
-	/**
 	 * Loads a model from a {@link java.io.File File} in a given {@link ResourceSet}.
 	 * 
 	 * @param file
@@ -125,19 +89,6 @@ public final class ModelUtils {
 	 */
 	public static EObject load(File file, ResourceSet resourceSet) throws IOException {
 		return load(URI.createFileURI(file.getPath()), resourceSet);
-	}
-
-	/**
-	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI}.
-	 * 
-	 * @param modelURI
-	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
-	 * @return The model loaded from the URI.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(URI modelURI) throws IOException {
-		return load(modelURI, new ResourceSetImpl());
 	}
 
 	/**
@@ -175,21 +126,6 @@ public final class ModelUtils {
 		if (modelResource.getContents().size() > 0)
 			result = (EObject)modelResource.getContents().get(0);
 		return result;
-	}
-
-	/**
-	 * Load a model from an {@link java.io.InputStream  InputStream}.
-	 * 
-	 * @param stream
-	 *            The inputstream to load from
-	 * @param fileName
-	 *            The original filename
-	 * @return The loaded model
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(InputStream stream, String fileName) throws IOException {
-		return load(stream, fileName, new ResourceSetImpl());
 	}
 
 	/**
@@ -291,8 +227,9 @@ public final class ModelUtils {
 			for (int i = 0; i < files.length; i++) {
 				final File aFile = files[i];
 
+				final ResourceSet resourceSet = new ResourceSetImpl();
 				if (!aFile.isDirectory() && !aFile.getName().startsWith(".")) { //$NON-NLS-1$
-					models.add(load(aFile));
+					models.add(load(aFile, resourceSet));
 				}
 			}
 		}

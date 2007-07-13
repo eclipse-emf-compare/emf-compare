@@ -36,12 +36,16 @@ public interface EngineConstants {
 	 */
 	/** Integer (value 1) representing the lowest priority. */
 	int PRIORITY_LOWEST = 1;
+	
 	/** Integer (value 2) representing low priority. */
 	int PRIORITY_LOW = 2;
+	
 	/** Integer (value 3) representing normal priority. */
 	int PRIORITY_NORMAL = 3;
+	
 	/** Integer (value 4) representing high priority. */
 	int PRIORITY_HIGH = 4;
+	
 	/** Integer (value 5) representing the highest priority. */
 	int PRIORITY_HIGHEST = 5;
 }

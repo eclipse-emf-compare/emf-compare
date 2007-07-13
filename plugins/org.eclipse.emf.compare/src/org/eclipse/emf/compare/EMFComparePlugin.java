@@ -25,7 +25,7 @@ public class EMFComparePlugin extends Plugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
 
-	// The shared instance
+	/** Plug-in's shared instance. */
 	private static EMFComparePlugin plugin;
 
 	/**
@@ -84,12 +84,12 @@ public class EMFComparePlugin extends Plugin {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, "Required element not found", e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity, Messages.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, "A java exception has been thrown", e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity, Messages.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
 		}
 	}
 
@@ -106,7 +106,7 @@ public class EMFComparePlugin extends Plugin {
 		int severity = IStatus.WARNING;
 		if (blocker)
 			severity = IStatus.ERROR;
-		String errorMessage = "Unknown EMF Compare problem"; //$NON-NLS-1$
+		String errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$
 		if (message != null)
 			errorMessage = message.trim().replaceFirst("\n", ";\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		log(new Status(severity, PLUGIN_ID, severity, errorMessage, null));

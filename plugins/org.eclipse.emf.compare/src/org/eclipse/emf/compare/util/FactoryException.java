@@ -16,7 +16,8 @@ package org.eclipse.emf.compare.util;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class FactoryException extends Exception {
-	private static final long serialVersionUID = 1;
+	/** Serial used for unserialization checks. */
+	private static final long serialVersionUID = 51499898584684757L;
 
 	/**
 	 * Instantiates a {@link FactoryException} given its error message.

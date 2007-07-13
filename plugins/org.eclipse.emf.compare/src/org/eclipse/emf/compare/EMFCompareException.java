@@ -16,6 +16,7 @@ package org.eclipse.emf.compare;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EMFCompareException extends RuntimeException {
+	/** Serial number of this class. Used for checks upon unserialization. */
 	private static final long serialVersionUID = 5727212239745736313L;
 
 	/**
