@@ -13,11 +13,11 @@ Export-Package: org.eclipse.emf.compare.match.api,
  org.eclipse.emf.compare.match.metamodel.util,
  org.eclipse.emf.compare.match.service,
  org.eclipse.emf.compare.match.statistic,
- org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit"
+ org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit,org.eclipse.emf.compare.ui"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.compare,
  org.eclipse.emf.edit
 Eclipse-LazyStart: true
-Bundle-Activator: org.eclipse.emf.compare.MatchPlugin
+Bundle-Activator: org.eclipse.emf.compare.match.MatchPlugin

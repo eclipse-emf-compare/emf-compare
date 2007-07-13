@@ -30,11 +30,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MetamodelFilter {
-	protected Map<EStructuralFeature, FeatureInformation> featuresToInformation = new HashMap<EStructuralFeature, FeatureInformation>();
+	/** Keeps track of all the informations of the features. */
+	protected final Map<EStructuralFeature, FeatureInformation> featuresToInformation = new HashMap<EStructuralFeature, FeatureInformation>();
 
+	/** List of the unused features' informations'. */
 	protected List<FeatureInformation> unusedFeatures;
 
-	private Map<EClass, List<EStructuralFeature>> eClassToFeaturesList;
+	/** This {@link HashMap} will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass class}. */
+	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new HashMap<EClass, List<EStructuralFeature>>();
 
 	/**
 	 * Returns a list of the pertinent features for this {@link EObject}.
@@ -45,8 +48,6 @@ public class MetamodelFilter {
 	 */
 	public List getFilteredFeatures(EObject eObj) {
 		// cache the filtered features for a type
-		if (eClassToFeaturesList == null)
-			eClassToFeaturesList = new HashMap<EClass, List<EStructuralFeature>>();
 		if (eClassToFeaturesList.containsKey(eObj.eClass()))
 			return eClassToFeaturesList.get(eObj.eClass());
 		// end of memorize cache
@@ -83,7 +84,7 @@ public class MetamodelFilter {
 			processEObject(eObj);
 		}
 		unusedFeatures = null;
-		eClassToFeaturesList = null;
+		eClassToFeaturesList.clear();
 	}
 
 	private void buildUnusedFeatures() {
@@ -121,13 +122,17 @@ public class MetamodelFilter {
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 class FeatureInformation {
-	private EStructuralFeature feature;
+	/** Structure which information is computed here. */
+	private final EStructuralFeature feature;
 
-	private int timesUsed;
-
+	/** Checks wether this feature's value is always the same. */
 	private boolean hasUniqueValue = true;
 
+	/** Value of this feature if it is never altered. */
 	private String uniqueValue;
+	
+	/** Counts the number of times this feature's information is accessed. */
+	private int timesUsed;
 
 	/**
 	 * Creates a {@link FeatureInformation} from a feature.

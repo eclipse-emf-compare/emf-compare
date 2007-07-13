@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
+@SuppressWarnings("nls")
 public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	/**
 	 * <!-- begin-user-doc -->
@@ -64,6 +66,13 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * @generated
 	 */
 	private EClass unMatchElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass remoteUnMatchElementEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -118,8 +127,7 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 			return (MatchPackage)EPackage.Registry.INSTANCE.getEPackage(MatchPackage.eNS_URI);
 
 		// Obtain or create and register package
-		MatchPackageImpl theMatchPackage = (MatchPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof MatchPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI)
+		MatchPackageImpl theMatchPackage = (MatchPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof MatchPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI)
 				: new MatchPackageImpl());
 
 		isInited = true;
@@ -285,6 +293,15 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getRemoteUnMatchElement() {
+		return remoteUnMatchElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MatchFactory getMatchFactory() {
 		return (MatchFactory)getEFactoryInstance();
 	}
@@ -329,6 +346,8 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 		unMatchElementEClass = createEClass(UN_MATCH_ELEMENT);
 		createEReference(unMatchElementEClass, UN_MATCH_ELEMENT__ELEMENT);
+
+		remoteUnMatchElementEClass = createEClass(REMOTE_UN_MATCH_ELEMENT);
 	}
 
 	/**
@@ -345,7 +364,7 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public void initializePackageContents() {
 		if (isInitialized)
 			return;
@@ -358,57 +377,43 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 		// Add supertypes to classes
 		match2ElementsEClass.getESuperTypes().add(this.getMatchElement());
-		match3ElementEClass.getESuperTypes().add(this.getMatchElement());
+		match3ElementEClass.getESuperTypes().add(this.getMatch2Elements());
+		remoteUnMatchElementEClass.getESuperTypes().add(this.getUnMatchElement());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(matchModelEClass, MatchModel.class, "MatchModel", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMatchModel_LeftModel(), ecorePackage.getEString(), "leftModel", null, 1, 1, //$NON-NLS-1$
-				MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+		initEClass(matchModelEClass, MatchModel.class, "MatchModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getMatchModel_LeftModel(), ecorePackage.getEString(), "leftModel", null, 1, 1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, //$NON-NLS-1$
+				!IS_DERIVED, !IS_ORDERED);
+		initEAttribute(getMatchModel_RightModel(), ecorePackage.getEString(), "rightModel", null, 1, 1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, //$NON-NLS-1$
 				!IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEAttribute(getMatchModel_RightModel(), ecorePackage.getEString(), "rightModel", null, 1, 1, //$NON-NLS-1$
-				MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+		initEAttribute(getMatchModel_OriginModel(), ecorePackage.getEString(), "originModel", null, 1, 1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, //$NON-NLS-1$
 				!IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEAttribute(getMatchModel_OriginModel(), ecorePackage.getEString(), "originModel", null, 1, 1, //$NON-NLS-1$
-				MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				!IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEReference(getMatchModel_MatchedElements(), this.getMatchElement(), null, "matchedElements", //$NON-NLS-1$
-				null, 0, -1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+		initEReference(getMatchModel_MatchedElements(), this.getMatchElement(), null, "matchedElements", null, 0, -1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, //$NON-NLS-1$
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMatchModel_UnMatchedElements(), this.getUnMatchElement(), null,
-				"unMatchedElements", null, 0, -1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
-				IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-
-		initEClass(matchElementEClass, MatchElement.class, "MatchElement", IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMatchElement_Similarity(), ecorePackage.getEDouble(), "similarity", null, 1, 1, //$NON-NLS-1$
-				MatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				!IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEReference(getMatchElement_SubMatchElements(), this.getMatchElement(), null, "subMatchElements", //$NON-NLS-1$
-				null, 0, -1, MatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+		initEReference(getMatchModel_UnMatchedElements(), this.getUnMatchElement(), null, "unMatchedElements", null, 0, -1, MatchModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, //$NON-NLS-1$
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(match2ElementsEClass, Match2Elements.class, "Match2Elements", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMatch2Elements_LeftElement(), ecorePackage.getEObject(), null, "leftElement", null, //$NON-NLS-1$
-				1, 1, Match2Elements.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+		initEClass(matchElementEClass, MatchElement.class, "MatchElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(getMatchElement_Similarity(), ecorePackage.getEDouble(), "similarity", null, 1, 1, MatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, //$NON-NLS-1$
+				!IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+		initEReference(getMatchElement_SubMatchElements(), this.getMatchElement(), null, "subMatchElements", null, 0, -1, MatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, //$NON-NLS-1$
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(match2ElementsEClass, Match2Elements.class, "Match2Elements", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getMatch2Elements_LeftElement(), ecorePackage.getEObject(), null, "leftElement", null, 1, 1, Match2Elements.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, //$NON-NLS-1$
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEReference(getMatch2Elements_RightElement(), ecorePackage.getEObject(), null, "rightElement", //$NON-NLS-1$
-				null, 1, 1, Match2Elements.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+		initEReference(getMatch2Elements_RightElement(), ecorePackage.getEObject(), null, "rightElement", null, 1, 1, Match2Elements.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, //$NON-NLS-1$
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
-		initEClass(match3ElementEClass, Match3Element.class, "Match3Element", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMatch3Element_OriginElement(), ecorePackage.getEObject(), null, "originElement", //$NON-NLS-1$
-				null, 1, 1, Match3Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+		initEClass(match3ElementEClass, Match3Element.class, "Match3Element", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getMatch3Element_OriginElement(), ecorePackage.getEObject(), null, "originElement", null, 1, 1, Match3Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, //$NON-NLS-1$
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 
-		initEClass(unMatchElementEClass, UnMatchElement.class, "UnMatchElement", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUnMatchElement_Element(), ecorePackage.getEObject(), null, "element", null, 1, 1, //$NON-NLS-1$
-				UnMatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+		initEClass(unMatchElementEClass, UnMatchElement.class, "UnMatchElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getUnMatchElement_Element(), ecorePackage.getEObject(), null, "element", null, 1, 1, UnMatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, //$NON-NLS-1$
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
+
+		initEClass(remoteUnMatchElementEClass, RemoteUnMatchElement.class, "RemoteUnMatchElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

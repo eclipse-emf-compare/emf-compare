@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface UnMatchElement extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Element</b></em>' reference.

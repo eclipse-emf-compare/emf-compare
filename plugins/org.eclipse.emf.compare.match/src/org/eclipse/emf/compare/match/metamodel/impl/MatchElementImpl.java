@@ -25,24 +25,22 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSimilarity <em>Similarity</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSubMatchElements <em>Sub Match Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSimilarity <em>Similarity</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl#getSubMatchElements <em>Sub Match Elements</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public abstract class MatchElementImpl extends EObjectImpl implements MatchElement {
 	/**
-	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSimilarity()
 	 * @generated
 	 * @ordered
@@ -50,9 +48,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	protected static final double SIMILARITY_EDEFAULT = 0.0;
 
 	/**
-	 * The cached value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSimilarity()
 	 * @generated
 	 * @ordered
@@ -60,9 +57,9 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	protected double similarity = SIMILARITY_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSubMatchElements() <em>Sub Match Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSubMatchElements() <em>Sub Match Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getSubMatchElements()
 	 * @generated
 	 * @ordered
@@ -70,8 +67,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	protected EList subMatchElements = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected MatchElementImpl() {
@@ -79,17 +76,18 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return MatchPackage.Literals.MATCH_ELEMENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public double getSimilarity() {
@@ -97,36 +95,35 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSimilarity(double newSimilarity) {
 		double oldSimilarity = similarity;
 		similarity = newSimilarity;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY,
-					oldSimilarity, similarity));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY, oldSimilarity, similarity));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getSubMatchElements() {
 		if (subMatchElements == null) {
-			subMatchElements = new EObjectContainmentEList(MatchElement.class, this,
-					MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
+			subMatchElements = new EObjectContainmentEList(MatchElement.class, this, MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
 		}
 		return subMatchElements;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
@@ -136,10 +133,11 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
@@ -151,11 +149,12 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
@@ -170,10 +169,11 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
@@ -187,10 +187,11 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
@@ -202,10 +203,11 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy())
 			return super.toString();
@@ -217,4 +219,4 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 		return result.toString();
 	}
 
-} //MatchElementImpl
+} // MatchElementImpl

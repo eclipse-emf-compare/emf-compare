@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
+@SuppressWarnings("nls")
 public interface MatchFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory.
@@ -64,6 +65,15 @@ public interface MatchFactory extends EFactory {
 	 * @generated
 	 */
 	UnMatchElement createUnMatchElement();
+
+	/**
+	 * Returns a new object of class '<em>Remote Un Match Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Remote Un Match Element</em>'.
+	 * @generated
+	 */
+	RemoteUnMatchElement createRemoteUnMatchElement();
 
 	/**
 	 * Returns the package supported by this factory.

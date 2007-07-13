@@ -20,23 +20,21 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Un Match Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Un Match Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getElement()
 	 * @generated
 	 * @ordered
@@ -44,8 +42,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	protected EObject element = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UnMatchElementImpl() {
@@ -53,17 +51,18 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return MatchPackage.Literals.UN_MATCH_ELEMENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getElement() {
@@ -72,16 +71,15 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 			element = eResolveProxy(oldElement);
 			if (element != oldElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
 			}
 		}
 		return element;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetElement() {
@@ -89,23 +87,23 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setElement(EObject newElement) {
 		EObject oldElement = element;
 		element = newElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT,
-					oldElement, element));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
@@ -117,10 +115,11 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
@@ -131,10 +130,11 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
@@ -145,10 +145,11 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
@@ -157,4 +158,4 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 		return super.eIsSet(featureID);
 	}
 
-} //UnMatchElementImpl
+} // UnMatchElementImpl

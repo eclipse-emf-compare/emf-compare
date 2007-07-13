@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EObject;
 
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
+@SuppressWarnings("nls")
 public class MatchAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package.
@@ -58,6 +60,7 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */
+	@Override
 	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
 			return true;
@@ -75,26 +78,37 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	protected MatchSwitch modelSwitch = new MatchSwitch() {
+		@Override
 		public Object caseMatchModel(MatchModel object) {
 			return createMatchModelAdapter();
 		}
 
+		@Override
 		public Object caseMatchElement(MatchElement object) {
 			return createMatchElementAdapter();
 		}
 
+		@Override
 		public Object caseMatch2Elements(Match2Elements object) {
 			return createMatch2ElementsAdapter();
 		}
 
+		@Override
 		public Object caseMatch3Element(Match3Element object) {
 			return createMatch3ElementAdapter();
 		}
 
+		@Override
 		public Object caseUnMatchElement(UnMatchElement object) {
 			return createUnMatchElementAdapter();
 		}
 
+		@Override
+		public Object caseRemoteUnMatchElement(RemoteUnMatchElement object) {
+			return createRemoteUnMatchElementAdapter();
+		}
+
+		@Override
 		public Object defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -108,6 +122,7 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @return the adapter for the <code>target</code>.
 	 * @generated
 	 */
+	@Override
 	public Adapter createAdapter(Notifier target) {
 		return (Adapter)modelSwitch.doSwitch((EObject)target);
 	}
@@ -179,6 +194,20 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUnMatchElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement <em>Remote Un Match Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement
+	 * @generated
+	 */
+	public Adapter createRemoteUnMatchElementAdapter() {
 		return null;
 	}
 

@@ -19,23 +19,21 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Match3 Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match3 Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
-public class Match3ElementImpl extends MatchElementImpl implements Match3Element {
+@SuppressWarnings("nls")
+public class Match3ElementImpl extends Match2ElementsImpl implements Match3Element {
 	/**
-	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getOriginElement()
 	 * @generated
 	 * @ordered
@@ -43,8 +41,8 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	protected EObject originElement = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected Match3ElementImpl() {
@@ -52,17 +50,18 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return MatchPackage.Literals.MATCH3_ELEMENT;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getOriginElement() {
@@ -71,16 +70,15 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 			originElement = eResolveProxy(oldOriginElement);
 			if (originElement != oldOriginElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 			}
 		}
 		return originElement;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -88,23 +86,23 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
 		EObject oldOriginElement = originElement;
 		originElement = newOriginElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
@@ -116,10 +114,11 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
@@ -130,10 +129,11 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
@@ -144,10 +144,11 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
@@ -156,4 +157,4 @@ public class Match3ElementImpl extends MatchElementImpl implements Match3Element
 		return super.eIsSet(featureID);
 	}
 
-} //Match3ElementImpl
+} // Match3ElementImpl

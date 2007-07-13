@@ -28,7 +28,8 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Match3Element extends MatchElement {
+@SuppressWarnings("nls")
+public interface Match3Element extends Match2Elements {
 	/**
 	 * Returns the value of the '<em><b>Origin Element</b></em>' reference.
 	 * <!-- begin-user-doc -->

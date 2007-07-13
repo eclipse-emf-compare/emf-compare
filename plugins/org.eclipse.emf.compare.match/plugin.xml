@@ -5,7 +5,7 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.5 2007/07/02 12:22:10 cbrun Exp $
+ $Id: plugin.xml,v 1.6 2007/07/13 14:57:43 jmusset Exp $
 -->
 
 <plugin>
@@ -29,7 +29,7 @@
  
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
     <factory 
-       uri = "http://www.eclipse.org/emf/compare/match/1.0" 
+       uri = "http://www.eclipse.org/emf/compare/match/1.1" 
        class = "org.eclipse.emf.compare.match.metamodel.provider.MatchItemProviderAdapterFactory" 
        supportedTypes = 
          "org.eclipse.emf.edit.provider.IEditingDomainItemProvider

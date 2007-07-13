@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
@@ -29,12 +28,18 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class NameSimilarity {
-	private static final int MAX_FEATURE_VALUE_LENGTH = 40;
+	/** Maximum length of the {@link String} we consider for a feature's value. */
+	private static final int MAX_FEATURE_VALUE_LENGTH = 50;
 
+	/** {@link String} assumed to be the name of the feature that holds the name of an object. */
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
 
+	/** This map associates an {@link EClass} with the {@link EAttribute} that is assumed to hold its name. */
 	private static final WeakHashMap<EClass, EAttribute> NAME_FEATURE_CACHE = new WeakHashMap<EClass, EAttribute>();
 
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private NameSimilarity() {
 		// prevents instantiation
 	}
@@ -52,7 +57,7 @@ public final class NameSimilarity {
 	 *            The {@link String} to process.
 	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
-	private static List<String> pairs(String source) {
+	public static List<String> pairs(String source) {
 		final List<String> result = new LinkedList<String>();
 		if (source != null) {
 			for (int i = 0; i < source.length() - 1; i++)
@@ -64,8 +69,8 @@ public final class NameSimilarity {
 	}
 
 	/**
-	 * Return a metric result about name similarity. It compares 2 strings and return a double comprised
-	 * between 0 and 1. The greater this metric, the more equal the strings are.
+	 * Return a metric result about name similarity. It compares 2 strings and return a double comprised between 0 and 1. The greater this metric, the
+	 * more equal the strings are.
 	 * 
 	 * @param str1
 	 *            First of the two {@link String}s to compare.
@@ -97,33 +102,6 @@ public final class NameSimilarity {
 					result = almostEquals;
 			}
 		}
-		return result;
-	}
-
-	/**
-	 * This service allow to find the best {@link EObject} corresponding to the given name.
-	 * 
-	 * @param current
-	 *            Current node.
-	 * @param name
-	 *            {@link String} used to find the element.
-	 * @return The {@link EObject} child of <code>current</code> which name is the nearest from
-	 *         <code>name</code>.
-	 */
-	public static EObject find(EObject current, String name) {
-		EObject result = current;
-		double max = 0d;
-
-		final TreeIterator it = current.eAllContents();
-		while (it.hasNext()) {
-			final Object next = it.next();
-			final double nameSimilarity = nameSimilarityMetric(next.toString(), name);
-			if (next instanceof EObject && nameSimilarity > max) {
-				max = nameSimilarity;
-				result = (EObject)next;
-			}
-		}
-
 		return result;
 	}
 

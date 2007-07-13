@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
+@SuppressWarnings("nls")
 public class MatchSwitch {
 	/**
 	 * The cached model package
@@ -76,11 +78,9 @@ public class MatchSwitch {
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		} else {
-			List eSuperTypes = theEClass.getESuperTypes();
-			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0),
-					theEObject);
 		}
+		List eSuperTypes = theEClass.getESuperTypes();
+		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0), theEObject);
 	}
 
 	/**
@@ -119,6 +119,8 @@ public class MatchSwitch {
 				Match3Element match3Element = (Match3Element)theEObject;
 				Object result = caseMatch3Element(match3Element);
 				if (result == null)
+					result = caseMatch2Elements(match3Element);
+				if (result == null)
 					result = caseMatchElement(match3Element);
 				if (result == null)
 					result = defaultCase(theEObject);
@@ -127,6 +129,15 @@ public class MatchSwitch {
 			case MatchPackage.UN_MATCH_ELEMENT: {
 				UnMatchElement unMatchElement = (UnMatchElement)theEObject;
 				Object result = caseUnMatchElement(unMatchElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case MatchPackage.REMOTE_UN_MATCH_ELEMENT: {
+				RemoteUnMatchElement remoteUnMatchElement = (RemoteUnMatchElement)theEObject;
+				Object result = caseRemoteUnMatchElement(remoteUnMatchElement);
+				if (result == null)
+					result = caseUnMatchElement(remoteUnMatchElement);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -147,7 +158,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatchModel(MatchModel object) {
+	public Object caseMatchModel(@SuppressWarnings("unused")
+	MatchModel object) {
 		return null;
 	}
 
@@ -162,7 +174,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatchElement(MatchElement object) {
+	public Object caseMatchElement(@SuppressWarnings("unused")
+	MatchElement object) {
 		return null;
 	}
 
@@ -177,7 +190,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatch2Elements(Match2Elements object) {
+	public Object caseMatch2Elements(@SuppressWarnings("unused")
+	Match2Elements object) {
 		return null;
 	}
 
@@ -192,7 +206,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatch3Element(Match3Element object) {
+	public Object caseMatch3Element(@SuppressWarnings("unused")
+	Match3Element object) {
 		return null;
 	}
 
@@ -207,7 +222,24 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseUnMatchElement(UnMatchElement object) {
+	public Object caseUnMatchElement(@SuppressWarnings("unused")
+	UnMatchElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseRemoteUnMatchElement(@SuppressWarnings("unused")
+	RemoteUnMatchElement object) {
 		return null;
 	}
 
@@ -222,7 +254,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
-	public Object defaultCase(EObject object) {
+	public Object defaultCase(@SuppressWarnings("unused")
+	EObject object) {
 		return null;
 	}
 

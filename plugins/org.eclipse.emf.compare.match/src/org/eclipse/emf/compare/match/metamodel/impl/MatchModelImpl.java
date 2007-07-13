@@ -27,27 +27,25 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getLeftModel <em>Left Model</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getRightModel <em>Right Model</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getOriginModel <em>Origin Model</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getMatchedElements <em>Matched Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getUnMatchedElements <em>Un Matched Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getLeftModel <em>Left Model</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getRightModel <em>Right Model</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getOriginModel <em>Origin Model</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getMatchedElements <em>Matched Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getUnMatchedElements <em>Un Matched Elements</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	/**
-	 * The default value of the '{@link #getLeftModel() <em>Left Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getLeftModel() <em>Left Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftModel()
 	 * @generated
 	 * @ordered
@@ -55,9 +53,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected static final String LEFT_MODEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftModel() <em>Left Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftModel() <em>Left Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftModel()
 	 * @generated
 	 * @ordered
@@ -65,9 +62,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected String leftModel = LEFT_MODEL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRightModel() <em>Right Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getRightModel() <em>Right Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightModel()
 	 * @generated
 	 * @ordered
@@ -75,9 +71,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected static final String RIGHT_MODEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRightModel() <em>Right Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightModel() <em>Right Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightModel()
 	 * @generated
 	 * @ordered
@@ -85,9 +80,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected String rightModel = RIGHT_MODEL_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getOriginModel() <em>Origin Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getOriginModel() <em>Origin Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getOriginModel()
 	 * @generated
 	 * @ordered
@@ -95,9 +89,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected static final String ORIGIN_MODEL_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOriginModel() <em>Origin Model</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOriginModel() <em>Origin Model</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getOriginModel()
 	 * @generated
 	 * @ordered
@@ -105,9 +98,9 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected String originModel = ORIGIN_MODEL_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getMatchedElements() <em>Matched Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMatchedElements() <em>Matched Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getMatchedElements()
 	 * @generated
 	 * @ordered
@@ -115,9 +108,9 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected EList matchedElements = null;
 
 	/**
-	 * The cached value of the '{@link #getUnMatchedElements() <em>Un Matched Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getUnMatchedElements() <em>Un Matched Elements</em>}' containment reference list. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getUnMatchedElements()
 	 * @generated
 	 * @ordered
@@ -125,8 +118,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected EList unMatchedElements = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected MatchModelImpl() {
@@ -134,17 +127,18 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return MatchPackage.Literals.MATCH_MODEL;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getLeftModel() {
@@ -152,21 +146,20 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftModel(String newLeftModel) {
 		String oldLeftModel = leftModel;
 		leftModel = newLeftModel;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__LEFT_MODEL,
-					oldLeftModel, leftModel));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__LEFT_MODEL, oldLeftModel, leftModel));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getRightModel() {
@@ -174,21 +167,20 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightModel(String newRightModel) {
 		String oldRightModel = rightModel;
 		rightModel = newRightModel;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__RIGHT_MODEL,
-					oldRightModel, rightModel));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__RIGHT_MODEL, oldRightModel, rightModel));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getOriginModel() {
@@ -196,49 +188,47 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setOriginModel(String newOriginModel) {
 		String oldOriginModel = originModel;
 		originModel = newOriginModel;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__ORIGIN_MODEL,
-					oldOriginModel, originModel));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_MODEL__ORIGIN_MODEL, oldOriginModel, originModel));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getMatchedElements() {
 		if (matchedElements == null) {
-			matchedElements = new EObjectContainmentEList(MatchElement.class, this,
-					MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS);
+			matchedElements = new EObjectContainmentEList(MatchElement.class, this, MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS);
 		}
 		return matchedElements;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getUnMatchedElements() {
 		if (unMatchedElements == null) {
-			unMatchedElements = new EObjectContainmentEList(UnMatchElement.class, this,
-					MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS);
+			unMatchedElements = new EObjectContainmentEList(UnMatchElement.class, this, MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS);
 		}
 		return unMatchedElements;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
@@ -250,10 +240,11 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
@@ -271,11 +262,12 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
@@ -300,10 +292,11 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
@@ -326,21 +319,19 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
-				return LEFT_MODEL_EDEFAULT == null ? leftModel != null : !LEFT_MODEL_EDEFAULT
-						.equals(leftModel);
+				return LEFT_MODEL_EDEFAULT == null ? leftModel != null : !LEFT_MODEL_EDEFAULT.equals(leftModel);
 			case MatchPackage.MATCH_MODEL__RIGHT_MODEL:
-				return RIGHT_MODEL_EDEFAULT == null ? rightModel != null : !RIGHT_MODEL_EDEFAULT
-						.equals(rightModel);
+				return RIGHT_MODEL_EDEFAULT == null ? rightModel != null : !RIGHT_MODEL_EDEFAULT.equals(rightModel);
 			case MatchPackage.MATCH_MODEL__ORIGIN_MODEL:
-				return ORIGIN_MODEL_EDEFAULT == null ? originModel != null : !ORIGIN_MODEL_EDEFAULT
-						.equals(originModel);
+				return ORIGIN_MODEL_EDEFAULT == null ? originModel != null : !ORIGIN_MODEL_EDEFAULT.equals(originModel);
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 				return matchedElements != null && !matchedElements.isEmpty();
 			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
@@ -350,10 +341,11 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy())
 			return super.toString();
@@ -369,4 +361,4 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 		return result.toString();
 	}
 
-} //MatchModelImpl
+} // MatchModelImpl

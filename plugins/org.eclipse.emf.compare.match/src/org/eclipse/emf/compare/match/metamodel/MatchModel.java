@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
+@SuppressWarnings("nls")
 public interface MatchModel extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Left Model</b></em>' attribute.

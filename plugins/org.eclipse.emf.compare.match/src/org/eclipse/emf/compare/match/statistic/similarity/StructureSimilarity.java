@@ -29,6 +29,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class StructureSimilarity {
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private StructureSimilarity() {
 		// prevents instantiation
 	}

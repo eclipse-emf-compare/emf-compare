@@ -31,16 +31,16 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchModel} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchModel} object. <!-- begin-user-doc --> <!--
+ * end-user-doc -->
+ * 
  * @generated
  */
+@SuppressWarnings("nls")
 public class MatchModelItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public MatchModelItemProvider(AdapterFactory adapterFactory) {
@@ -48,11 +48,11 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -65,62 +65,53 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Model feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Model feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addLeftModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_leftModel_feature"), getString( //$NON-NLS-1$
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, //$NON-NLS-1$
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	protected void addLeftModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MatchModel_leftModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Model feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Right Model feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addRightModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_rightModel_feature"), getString( //$NON-NLS-1$
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, //$NON-NLS-1$
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	protected void addRightModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MatchModel_rightModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin Model feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Origin Model feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addOriginModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchModel_originModel_feature"), getString( //$NON-NLS-1$
-						"_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_MatchModel_type"), MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, //$NON-NLS-1$
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	protected void addOriginModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MatchModel_originModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
@@ -131,10 +122,11 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	protected EStructuralFeature getChildFeature(Object object, Object child) {
 		// Check the type of the specified child object and return the proper feature to use for
 		// adding (see {@link AddCommand}) it as a child.
@@ -143,34 +135,33 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This returns MatchModel.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns MatchModel.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public Object getImage(Object object) {
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/MatchModel")); //$NON-NLS-1$
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
 		String label = ((MatchModel)object).getLeftModel();
-		return label == null || label.length() == 0 ? getString("_UI_MatchModel_type") //$NON-NLS-1$
-				: getString("_UI_MatchModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_MatchModel_type") : getString("_UI_MatchModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer notification, which
+	 * it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
@@ -178,45 +169,42 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
 			case MatchPackage.MATCH_MODEL__RIGHT_MODEL:
 			case MatchPackage.MATCH_MODEL__ORIGIN_MODEL:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
-						true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
-						false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that can be created under
+	 * this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createMatch2Elements()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS, MatchFactory.eINSTANCE.createMatch2Elements()));
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createMatch3Element()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS, MatchFactory.eINSTANCE.createMatch3Element()));
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createUnMatchElement()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS, MatchFactory.eINSTANCE.createUnMatchElement()));
+
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS, MatchFactory.eINSTANCE.createRemoteUnMatchElement()));
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return MatchEditPlugin.INSTANCE;
 	}

@@ -16,9 +16,6 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -26,19 +23,19 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements} object. <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
  * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class Match2ElementsItemProvider extends MatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public Match2ElementsItemProvider(AdapterFactory adapterFactory) {
+	public RemoteUnMatchElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -52,46 +49,18 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftElementPropertyDescriptor(object);
-			addRightElementPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match2Elements_leftElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match2Elements_leftElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				MatchPackage.Literals.MATCH2_ELEMENTS__LEFT_ELEMENT, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match2Elements_rightElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match2Elements_rightElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				MatchPackage.Literals.MATCH2_ELEMENTS__RIGHT_ELEMENT, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This returns Match2Elements.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RemoteUnMatchElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match2Elements")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteUnMatchElement")); //$NON-NLS-1$
 	}
 
 	/**
@@ -101,8 +70,7 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 */
 	@Override
 	public String getText(Object object) {
-		Match2Elements match2Elements = (Match2Elements)object;
-		return getString("_UI_Match2Elements_type") + " " + match2Elements.getSimilarity(); //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_RemoteUnMatchElement_type"); //$NON-NLS-1$
 	}
 
 	/**

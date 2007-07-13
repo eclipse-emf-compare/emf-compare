@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare;
+package org.eclipse.emf.compare.match;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
@@ -22,7 +22,7 @@ public class MatchPlugin extends Plugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.match"; //$NON-NLS-1$
 
-	// The shared instance
+	/** This plug-in's shared instance. */
 	private static MatchPlugin plugin;
 
 	/**
@@ -34,7 +34,7 @@ public class MatchPlugin extends Plugin {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -44,7 +44,7 @@ public class MatchPlugin extends Plugin {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override

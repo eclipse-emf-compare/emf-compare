@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.MatchPlugin;
+import org.eclipse.emf.compare.match.MatchPlugin;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
@@ -31,26 +31,24 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MatchService {
-	// The shared instance
-	private static MatchService service;
-
+	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_ENGINE = "engine"; //$NON-NLS-1$
 
+	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
-	private Map<String, ArrayList<EngineDescriptor>> engines = new HashMap<String, ArrayList<EngineDescriptor>>();
+	/** Keeps track of all the engines parsed. */
+	private final Map<String, ArrayList<EngineDescriptor>> engines = new HashMap<String, ArrayList<EngineDescriptor>>();
 
 	/**
 	 * Default constructor.
 	 */
 	public MatchService() {
-		service = this;
 		parseExtensionMetadata();
 	}
 
 	private void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				MatchPlugin.PLUGIN_ID, "engine") //$NON-NLS-1$
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(MatchPlugin.PLUGIN_ID, "engine") //$NON-NLS-1$
 				.getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
@@ -95,17 +93,6 @@ public class MatchService {
 	}
 
 	/**
-	 * Returns the singleton instance.
-	 * 
-	 * @return The singleton instance.
-	 */
-	public static MatchService getInstance() {
-		if (service == null)
-			service = new MatchService();
-		return service;
-	}
-
-	/**
 	 * Matches two models and returns the corresponding matching model.
 	 * 
 	 * @param leftRoot
@@ -118,8 +105,7 @@ public class MatchService {
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
-			throws InterruptedException {
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor) throws InterruptedException {
 		MatchModel result = null;
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
@@ -141,11 +127,22 @@ public class MatchService {
 	 *            Right model of this comparison.
 	 * @param ancestor
 	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
+	 * @param monitor
+	 *            Progress monitor to display for long operations.
 	 * @return Matching model result of the comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor) {
-		final MatchModel result = null;
-		// TODOCBR code 3 Way match
+	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor) throws InterruptedException {
+		MatchModel result = null;
+		String extension = "ecore"; //$NON-NLS-1$
+		if (leftRoot.eResource().getURI() != null)
+			extension = leftRoot.eResource().getURI().fileExtension();
+		if (extension == null && rightRoot.eResource() != null)
+			extension = rightRoot.eResource().getURI().fileExtension();
+		final EngineDescriptor desc = getBestDescriptor(extension);
+		final MatchEngine currentEngine = desc.getEngineInstance();
+		result = currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor);
 		return result;
 	}
 
