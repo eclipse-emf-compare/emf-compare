@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
  * Test the finding of the EMF adapterFactory.
@@ -49,7 +50,7 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 * 			If the file does not exist.
 	 */
 	public void testFindAdapterFactoryFromFile() throws AssertionFailedError, IOException {
-		final EObject model = ModelUtils.load(pluginFile("/data/result.diff")); //$NON-NLS-1$
+		final EObject model = ModelUtils.load(pluginFile("/data/result.diff"), new ResourceSetImpl()); //$NON-NLS-1$
 		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
 		assertNotNull(factory);
 	}

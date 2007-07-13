@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.emf.compare.tests.Messages;
 
 /**
  * Launches all the JUnit tests for EMF compare.
@@ -53,7 +54,7 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 	public Object run(Object args) throws Exception {
 		TestRunner.run(suite());
 		return Arrays
-				.asList(new String[] { "Please see raw test suite output for details." }); //$NON-NLS-1$
+				.asList(new String[] { Messages.getString("AllTests.output"), }); //$NON-NLS-1$
 	}
 
 }

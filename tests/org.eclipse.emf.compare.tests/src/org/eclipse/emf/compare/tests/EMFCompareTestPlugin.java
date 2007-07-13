@@ -22,7 +22,7 @@ public class EMFCompareTestPlugin extends AbstractUIPlugin {
 	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.tests"; //$NON-NLS-1$
 
-	// The shared instance
+	/** This plug-in's shared instance. */
 	private static EMFCompareTestPlugin plugin;
 
 	/**

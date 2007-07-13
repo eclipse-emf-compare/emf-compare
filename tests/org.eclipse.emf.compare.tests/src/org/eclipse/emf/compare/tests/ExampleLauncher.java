@@ -86,7 +86,7 @@ public final class ExampleLauncher {
 				final EObject model1 = load(new File(args[0]), resourceSet);
 				final EObject model2 = load(new File(args[1]), resourceSet);
 				final MatchModel match = new DifferencesServices().modelMatch(model1, model2, new NullProgressMonitor());
-				final DiffModel diff = new DiffMaker().doDiff(match);
+				final DiffModel diff = new DiffMaker().doDiff(match, false);
 				
 				try {
 					System.out.println(ModelUtils.serialize(match));

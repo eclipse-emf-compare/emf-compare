@@ -21,20 +21,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class CHighEngine implements MatchEngine {
 	/**
-	 * Returns the {@link org.eclipse.emf.compare.match.MatchModel MatchModel} of
-	 * the comparison of two models.
-	 * 
-	 * @param leftRoot
-	 * 			Left model of the comparison.
-	 * @param rightRoot
-	 * 			Right model of the comparison.
-	 * @param monitor
-	 * 			Progress monitor for this comparison.
-	 * @return
-	 * 			The {@link org.eclipse.emf.compare.match.MatchModel MatchModel} for
-	 * 			the comparison of those two models.
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot, IProgressMonitor monitor) {
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor) {
 		return null;
 	}
 }

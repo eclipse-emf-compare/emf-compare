@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.compare.tests.Messages;
 import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.tests.util.FileUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
@@ -34,27 +35,29 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class TestNonRegressionModels extends EMFCompareTestCase {
+	/** The input directory is the hierarchical root of the folder where we expect to find the models to compare. */
 	private String inputDirectory;
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
 	@Override
 	protected void setUp() throws Exception {
 		setInputDirectory("/inputs"); //$NON-NLS-1$
 	}
 
 	/**
-	 * Compare the expected models (in the expected directories) with the result
-	 * of the comparison services.
+	 * Compare the expected models (in the expected directories) with the result of the comparison services.
 	 * 
 	 * @throws IOException
 	 *             Thrown if an I/O operation has failed or been interrupted.
 	 * @throws InterruptedException
 	 *             If one of the threads is interrupted.
 	 */
-	public void testNonRegressionModels() throws IOException,
-			InterruptedException {
-		final File inputDir = new File(FileLocator.toFileURL(
-				getPlugin().getBundle().getEntry(getInputDirectory()))
-				.getFile());
+	public void testNonRegressionModels() throws IOException, InterruptedException {
+		final File inputDir = new File(FileLocator.toFileURL(getPlugin().getBundle().getEntry(getInputDirectory())).getFile());
 
 		final File[] directories = FileUtils.listDirectories(inputDir);
 
@@ -65,13 +68,11 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 			}
 		}
 		final Date end = Calendar.getInstance().getTime();
-		System.out.println("non-regression models evaluated in " //$NON-NLS-1$
-				+ (end.getTime() - start.getTime()) / 1000 + "s"); //$NON-NLS-1$
+		System.out.println(Messages.getString("TestNonRegressionModels.comparisonTime", (end.getTime() - start.getTime()) / 1000)); //$NON-NLS-1$
 	}
 
 	/**
-	 * Compares the snapshot of a given folder with its expected folder
-	 * snapshot.
+	 * Compares the snapshot of a given folder with its expected folder snapshot.
 	 * 
 	 * @param directory
 	 *            Input directory containing the models.
@@ -80,53 +81,40 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 * @throws InterruptedException
 	 *             If one of the threads is interrupted.
 	 */
-	private void compareSnapshots(File directory) throws IOException,
-			InterruptedException {
+	private void compareSnapshots(File directory) throws IOException, InterruptedException {
 		if (FileUtils.listDirectories(directory).length != 0) {
 			for (int i = 0; i < FileUtils.listDirectories(directory).length; i++) {
 				compareSnapshots(FileUtils.listDirectories(directory)[i]);
 			}
 		} else {
-			final File expectedDir = new File(directory.getPath().replace(
-					File.separator + "inputs", //$NON-NLS-1$
+			final File expectedDir = new File(directory.getPath().replace(File.separator + "inputs", //$NON-NLS-1$
 					File.separator + "expected" + File.separator + "inputs")); //$NON-NLS-1$ //$NON-NLS-2$
 
 			final String testedDir = directory.getName().toUpperCase();
 			System.out.println(testedDir + "\n==============="); //$NON-NLS-1$
-			final List<EObject> inputModels = ModelUtils
-					.getModelsFrom(directory);
-			final List<EObject> expectedSnapshot = ModelUtils
-					.getModelsFrom(expectedDir);
+			final List<EObject> inputModels = ModelUtils.getModelsFrom(directory);
+			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir);
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
-				final MatchModel inputMatch = new MatchService().doMatch(
-						inputModels.get(0), inputModels.get(1),
-						new NullProgressMonitor());
-				final DiffModel inputDiff = new DiffMaker().doDiff(inputMatch);
+				final MatchModel inputMatch = new MatchService().doMatch(inputModels.get(0), inputModels.get(1), new NullProgressMonitor());
+				final DiffModel inputDiff = new DiffMaker().doDiff(inputMatch, false);
 
 				// Serializes current and expected match and diff as Strings
 				final String currentMatch = ModelUtils.serialize(inputMatch);
 				final String currentDiff = ModelUtils.serialize(inputDiff);
-				final String expectedMatch = ModelUtils
-						.serialize(((ModelInputSnapshot)expectedSnapshot
-								.get(0)).getMatch());
-				final String expectedDiff = ModelUtils
-						.serialize(((ModelInputSnapshot)expectedSnapshot
-								.get(0)).getDiff());
+				final String expectedMatch = ModelUtils.serialize(((ModelInputSnapshot)expectedSnapshot.get(0)).getMatch());
+				final String expectedDiff = ModelUtils.serialize(((ModelInputSnapshot)expectedSnapshot.get(0)).getDiff());
 
-				assertEquals(testedDir + ", match doesn't match", //$NON-NLS-1$
-						suppressPathReferences(currentMatch),
-						suppressPathReferences(expectedMatch));
-				assertEquals(testedDir + ", diff doesn't match", //$NON-NLS-1$
-						suppressPathReferences(currentDiff),
-						suppressPathReferences(expectedDiff));
+				assertEquals(testedDir + ',' + Messages.getString("TestNonRegressionModels.matchAssertionFails"), //$NON-NLS-1$
+						suppressPathReferences(currentMatch), suppressPathReferences(expectedMatch));
+				assertEquals(testedDir + ',' + Messages.getString("TestNonRegressionModels.diffAssertionFails"), //$NON-NLS-1$
+						suppressPathReferences(currentDiff), suppressPathReferences(expectedDiff));
 			}
 		}
 	}
 
 	/**
-	 * Searches a {@link java.lang.String String} representing the contents of a
-	 * model for all references to "a href='path#element'" and supresses the
+	 * Searches a {@link java.lang.String String} representing the contents of a model for all references to "a href='path#element'" and supresses the
 	 * path.
 	 * 
 	 * @param aFile
@@ -154,7 +142,7 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 * Set the directory to use for model inputs.
 	 * 
 	 * @param inputDir
-	 * 			New input directory.
+	 *            New input directory.
 	 */
 	public void setInputDirectory(String inputDir) {
 		inputDirectory = inputDir;

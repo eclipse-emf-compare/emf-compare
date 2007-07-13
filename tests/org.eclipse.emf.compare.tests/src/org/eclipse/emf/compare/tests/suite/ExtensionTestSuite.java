@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.suite;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.compare.tests.Messages;
 import org.eclipse.emf.compare.tests.unit.TestEnginesPriority;
 import org.eclipse.emf.compare.tests.unit.TestFindAdapterFactory;
 
@@ -22,6 +23,9 @@ import org.eclipse.emf.compare.tests.unit.TestFindAdapterFactory;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ExtensionTestSuite {
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private ExtensionTestSuite() {
 		// prevents instantiation.
 	}
@@ -33,8 +37,7 @@ public final class ExtensionTestSuite {
 	 * 			The test suite.
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite(
-				"Test for org.eclipse.emf.compare.match.statistic.test.suite"); //$NON-NLS-1$
+		final TestSuite suite = new TestSuite(Messages.getString("ExtensionTestSuite.name")); //$NON-NLS-1$
 		// $JUnit-BEGIN$
 		suite.addTestSuite(TestEnginesPriority.class);
 		suite.addTestSuite(TestFindAdapterFactory.class);

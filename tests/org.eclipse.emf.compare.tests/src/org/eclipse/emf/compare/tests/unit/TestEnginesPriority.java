@@ -30,9 +30,9 @@ public class TestEnginesPriority extends EMFCompareTestCase {
 	 */
 	public void testEngineFileExtension() throws ComparisonFailure {
 		MatchEngine engine = null;
-		engine = MatchService.getInstance().getBestMatchEngine("a"); //$NON-NLS-1$
+		engine = new MatchService().getBestMatchEngine("a"); //$NON-NLS-1$
 		assertEquals("AEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
-		engine = MatchService.getInstance().getBestMatchEngine("b"); //$NON-NLS-1$
+		engine = new MatchService().getBestMatchEngine("b"); //$NON-NLS-1$
 		assertEquals("BEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}
 
@@ -44,7 +44,7 @@ public class TestEnginesPriority extends EMFCompareTestCase {
 	 */
 	public void testEnginePriority() throws ComparisonFailure {
 		MatchEngine engine = null;
-		engine = MatchService.getInstance().getBestMatchEngine("c"); //$NON-NLS-1$
+		engine = new MatchService().getBestMatchEngine("c"); //$NON-NLS-1$
 		assertEquals("CHighEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}
 }
