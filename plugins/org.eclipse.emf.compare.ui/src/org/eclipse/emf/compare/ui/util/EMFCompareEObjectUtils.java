@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.util;
 
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -20,89 +23,103 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class EMFCompareEObjectUtils {
+	/** Label provider used to compute images and texts for the {@link EObject}s. */
 	private static AdapterFactoryLabelProvider labelProvider;
-	
+
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private EMFCompareEObjectUtils() {
 		// prevents instantiation
 	}
-	
+
 	/**
 	 * Computes the name of the given {@link EObject}.
 	 * 
 	 * @param eObject
-	 * 			Object for which we need the name.
-	 * @return
-	 * 			Name of the given {@link EObject}.
+	 *            Object for which we need the name.
+	 * @return Name of the given {@link EObject}.
 	 */
 	public static String computeObjectName(EObject eObject) {
 		String objectName = getLabelProvider().getText(eObject);
 		if (objectName == null || objectName.equals(new String()))
-			objectName = "undefined"; //$NON-NLS-1$
+			objectName = Messages.getString("EMFCompareEObjectUtils.undefinedName"); //$NON-NLS-1$
 		return objectName;
 	}
-	
+
 	/**
 	 * Computes the image of the given {@link EObject}.
 	 * 
 	 * @param eObject
-	 * 			Object for which we need the image.
-	 * @return
-	 * 			Image of the given {@link EObject}.
+	 *            Object for which we need the image.
+	 * @return Image of the given {@link EObject}.
 	 */
 	public static Image computeObjectImage(EObject eObject) {
 		return getLabelProvider().getImage(eObject);
 	}
-	
+
 	/**
-	 * Returns the left element of the given {@link EObject}. Will try to
-	 * invoke the method called "getLeftElement" and, if it fails to find it,
-	 * "getLeftParent". <code>Null</code> if neither of these methods can be
-	 * found.<br/>
-	 * This method is intended to be called with a {@link DiffElement} or
-	 * {@link MatchElement} as argument.
+	 * Returns the left element of the given {@link EObject}. Will try to invoke the method called "getLeftElement" and, if it fails to find it,
+	 * "getLeftParent". <code>null</code> if neither of these methods can be found.<br/> This method is intended to be called with a
+	 * {@link DiffElement} or {@link MatchElement} as argument.
 	 * 
 	 * @param object
-	 * 			The {@link EObject}.
-	 * @return
-	 * 			The left element of the given {@link EObject}.
+	 *            The {@link EObject}.
+	 * @return The left element of the given {@link EObject}.
 	 */
 	public static EObject getLeftElement(EObject object) {
 		EObject leftElement = null;
-		
+
 		if (ClassUtils.hasMethod(object.getClass(), "getLeftElement")) { //$NON-NLS-1$
 			leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftElement"); //$NON-NLS-1$
 		} else if (ClassUtils.hasMethod(object.getClass(), "getLeftParent")) { //$NON-NLS-1$
 			leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftParent"); //$NON-NLS-1$
 		}
-		
+
 		return leftElement;
 	}
-	
+
 	/**
-	 * Returns the right element of the given {@link EObject}. Will try to
-	 * invoke the method called "getRightElement" and, if it fails to find it,
-	 * "getRightParent". <code>Null</code> if neither of these methods can be
-	 * found.<br/>
-	 * This method is intended to be called with a {@link DiffElement} or
-	 * {@link MatchElement} as argument.
+	 * Returns the right element of the given {@link EObject}. Will try to invoke the method called "getRightElement" and, if it fails to find it,
+	 * "getRightParent". <code>null</code> if neither of these methods can be found.<br/> This method is intended to be called with a
+	 * {@link DiffElement} or {@link MatchElement} as argument.
 	 * 
 	 * @param object
-	 * 			The {@link EObject}.
-	 * @return
-	 * 			The right element of the given {@link EObject}.
+	 *            The {@link EObject}.
+	 * @return The right element of the given {@link EObject}.
 	 */
 	public static EObject getRightElement(EObject object) {
-		EObject leftElement = null;
-		
+		EObject rightElement = null;
+
 		if (ClassUtils.hasMethod(object.getClass(), "getRightElement")) { //$NON-NLS-1$
-			leftElement = (EObject)ClassUtils.invokeMethod(object, "getRightElement"); //$NON-NLS-1$
+			rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightElement"); //$NON-NLS-1$
 		} else if (ClassUtils.hasMethod(object.getClass(), "getRightParent")) { //$NON-NLS-1$
-			leftElement = (EObject)ClassUtils.invokeMethod(object, "getRightParent"); //$NON-NLS-1$
+			rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightParent"); //$NON-NLS-1$
 		}
-		
-		return leftElement;
+
+		return rightElement;
 	}
-	
+
+	/**
+	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called "getLeftParent" if the {@link EObject} is a
+	 * {@link ConflictingDiffGroup}, "getOriginElement" if the {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these
+	 * methods can be found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or {@link Match3Element} as argument.
+	 * 
+	 * @param object
+	 *            The {@link EObject}.
+	 * @return The right element of the given {@link EObject}.
+	 */
+	public static EObject getAncestorElement(EObject object) {
+		EObject ancestorElement = null;
+
+		if (object instanceof ConflictingDiffGroup)
+			ancestorElement = ((ConflictingDiffGroup)object).getLeftParent();
+		else if (object instanceof Match3Element)
+			ancestorElement = ((Match3Element)object).getOriginElement();
+
+		return ancestorElement;
+	}
+
 	private static AdapterFactoryLabelProvider getLabelProvider() {
 		if (labelProvider == null) {
 			labelProvider = new AdapterFactoryLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory());

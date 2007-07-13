@@ -25,8 +25,12 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class EMFAdapterFactoryProvider {
+	/** {@link AdapterFactory} that will be fed by this provider. */
 	private static ComposedAdapterFactory adapterFactory;
 	
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private EMFAdapterFactoryProvider() {
 		// prevents instantiation
 	}

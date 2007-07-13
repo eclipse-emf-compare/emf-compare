@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -49,7 +50,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	public EMFComparePreferencesPage() {
 		super(GRID);
 		setPreferenceStore(EMFCompareUIPlugin.getDefault().getPreferenceStore());
-		setDescription("EMFCompare preferences"); //$NON-NLS-1$
+		setDescription(Messages.getString("EMFComparePreferencesPage.description")); //$NON-NLS-1$
 	}
 
 	/**
@@ -57,18 +58,17 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 * 
 	 * @see FieldEditorPreferencePage#createFieldEditors()
 	 */
+	@Override
 	public void createFieldEditors() {
-		final String searchWindowDescription = "The search window defines the number " + //$NON-NLS-1$
-				"of siblings we'll search\nthrough while comparing. The higher this number, " + //$NON-NLS-1$
-				"the longer\nthe comparison will last."; //$NON-NLS-1$
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
 				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
-		searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(searchWindowDescription);
+		searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(
+				Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 		addField(searchWindowEditor);
 
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
-		colorGroup.setText("colors"); //$NON-NLS-1$
+		colorGroup.setText(Messages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
 		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
 		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
@@ -101,9 +101,11 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 * default {@link Label}.
 	 */
 	private final class ImageIntegerFieldEditor extends IntegerFieldEditor {
+		/** maximum number of characters this field accepts. */
 		private static final int TEXT_LIMIT = 10;
 
-		private CLabel cLabel;
+		/** Label that will be used to display the image and text of this {@link FieldEditor}. */
+		protected CLabel cLabel;
 
 		/**
 		 * Creates an integer field editor.
@@ -133,7 +135,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			gd.horizontalSpan = numColumns - 2;
 			final GC gc = new GC(getTextControl(parent));
 			try {
-				final Point extent = gc.textExtent("X"); //$NON-NLS-1$
+				final Point extent = gc.textExtent("W"); //$NON-NLS-1$
 				gd.widthHint = TEXT_LIMIT * extent.x;
 			} finally {
 				gc.dispose();
@@ -204,6 +206,12 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			return 3;
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @see org.eclipse.jface.preference.StringFieldEditor#adjustForNumColumns(int)
+		 */
+		@Override
 		protected void adjustForNumColumns(int numColumns) {
 	        final GridData gd = (GridData)getTextControl().getLayoutData();
 	        gd.horizontalSpan = numColumns - 2;

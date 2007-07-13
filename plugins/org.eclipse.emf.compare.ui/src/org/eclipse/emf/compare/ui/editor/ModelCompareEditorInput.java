@@ -30,32 +30,41 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * This will be used as input for the {@link CompareEditor} used for the edition of 
- * emfdiff files.
+ * This will be used as input for the {@link CompareEditor} used for the edition of emfdiff files.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareEditorInput extends CompareEditorInput {
-	private DiffModel diff;
-	private MatchModel match;
-	private ModelInputSnapshot inputSnapshot;
-	private ICompareInputChangeListener inputListener;
+	/** Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of the view. */
+	protected ModelStructureMergeViewer structureMergeViewer;
+
+	/** Content merge viewer of this {@link CompareViewerPane}. It represents the bottom splitted part of the view. */
+	protected ModelContentMergeViewer contentMergeViewer;
+
+	/** {@link DiffModel} result of the underlying comparison. */
+	private final DiffModel diff;
 	
-	private ModelStructureMergeViewer structureMergeViewer;
-	private ModelContentMergeViewer contentMergeViewer;
-	
+	/** {@link MatchModel} result of the underlying comparison. */
+	private final MatchModel match;
+
+	/** {@link ModelInputSnapshot} result of the underlying comparison. */
+	private final ModelInputSnapshot inputSnapshot;
+
+	/** This listener will be in charge of updating the {@link ModelContentMergeViewer} and {@link ModelStructureMergeViewer}'s input. */
+	private final ICompareInputChangeListener inputListener;
+
 	/**
 	 * This constructor takes a {@link ModelInputSnapshot} as input.
 	 * 
 	 * @param snapshot
-	 * 			The {@link ModelInputSnapshot} loaded from an emfdiff.
+	 *            The {@link ModelInputSnapshot} loaded from an emfdiff.
 	 */
 	public ModelCompareEditorInput(ModelInputSnapshot snapshot) {
 		super(new CompareConfiguration());
 		diff = snapshot.getDiff();
 		match = snapshot.getMatch();
 		inputSnapshot = snapshot;
-		
+
 		inputListener = new ICompareInputChangeListener() {
 			public void compareInputChanged(ICompareInput source) {
 				structureMergeViewer.setInput(source);
@@ -63,18 +72,19 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			}
 		};
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see CompareEditorInput#prepareInput(IProgreeMonitor)
 	 */
+	@Override
 	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		final ModelCompareInput input = new ModelCompareInput(match, diff);
 		input.addCompareInputChangeListener(inputListener);
 		return input;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -92,11 +102,11 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		pane.setContent(contentMergeViewer.getControl());
 
 		contentMergeViewer.setInput(inputSnapshot);
-		
+
 		final int structureWeight = 30;
 		final int contentWeight = 70;
 		fComposite.setWeights(new int[] {structureWeight, contentWeight});
-		
+
 		return fComposite;
 	}
 

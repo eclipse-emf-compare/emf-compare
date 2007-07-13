@@ -27,7 +27,8 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergeContentProvider implements IMergeViewerContentProvider {
-	private CompareConfiguration configuration;
+	/** {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the one used to created this compare editor. */
+	private final CompareConfiguration configuration;
 
 	/**
 	 * Instantiates a content provider for our {@link ContentMergeViewer} given its

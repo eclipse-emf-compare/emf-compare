@@ -22,14 +22,18 @@ import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvider;
@@ -64,8 +68,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
- * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
- * getKind
+ * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor. getKind
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -83,44 +86,60 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public static final int CENTER_WIDTH = 34;
 
 	/**
-	 * Threshold for a change in the drawing comportment. If the number of {@link DiffElement}s is &lt; to
-	 * this threshold, we will draw each of the center lines. Otherwise we'll only draw the lines for the
-	 * visible elements as well as the line for the currently selected diff.
+	 * Threshold for a change in the drawing comportment. If the number of {@link DiffElement}s is &lt; to this threshold, we will draw each of the
+	 * center lines. Otherwise we'll only draw the lines for the visible elements as well as the line for the currently selected diff.
 	 */
 	public static final int MAX_DIFF_THRESHOLD = 30;
 
-	private CompareConfiguration configuration;
+	/** Keeps track of the currently selected tab for this viewer part. */
+	protected int selectedTab = TREE_TAB;
 
-	private RGB highlightColor;
+	/** Keeps track of the currently selected {@link DiffElement}. */
+	protected DiffElement currentDiff;
 
-	private RGB changedColor;
+	/** Left of the three possible parts of this content viewer. */
+	protected ModelContentMergeViewerPart leftPart;
 
-	private RGB addedColor;
+	/** Right of the three possible parts of this content viewer. */
+	protected ModelContentMergeViewerPart rightPart;
 
-	private RGB removedColor;
+	/** Ancestor part of the three possible parts of this content viewer. */
+	protected ModelContentMergeViewerPart ancestorPart;
 
-	private IPropertyChangeListener structurePropertyListener;
+	/** Color used to highlight the selected elements. */
+	/* package */RGB highlightColor;
 
-	private IPropertyChangeListener preferenceListener;
+	/** Color used to circle and draw the lines between modified elements. */
+	/* package */RGB changedColor;
 
-	private ModelContentMergeViewerPart leftPart;
+	/** Color used to circle and draw the lines to added elements. */
+	/* package */RGB addedColor;
 
-	private ModelContentMergeViewerPart rightPart;
+	/** Color used to circle and draw the lines from deleted elements. */
+	/* package */RGB removedColor;
 
-	private ModelContentMergeViewerPart ancestorPart;
+	/** {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the one used to created this compare editor. */
+	private final CompareConfiguration configuration;
 
+	/** This will listen for changes of the {@link CompareConfiguration} concerning the structure's input and selection. */
+	private final IPropertyChangeListener structureSelectionListener;
+
+	/** This will listen for changes made on this plug-in's {@link PreferenceStore} to update the GUI colors as needed. */
+	private final IPropertyChangeListener preferenceListener;
+
+	/** this is the "center" part of the content merge viewer where we handle all the drawing operations. */
 	private AbstractBufferedCanvas canvas;
 
-	private DiffElement currentDiff;
-
-	private int selectedTab = TREE_TAB;
-	
+	/** This is the action we instantiate to handle the {@link DiffElement}s merge from the right model to the left model. */
 	private Action copyDiffRightToLeft;
-	
+
+	/** This is the action we instantiate to handle the {@link DiffElement}s merge from the left model to the right model. */
 	private Action copyDiffLeftToRight;
 
+	/** Indicates that the left model has been modified since opening. Will allow us to prompt the user to save this model. */
 	private boolean leftDirty;
 
+	/** Indicates that the right model has been modified since opening. Will allow us to prompt the user to save this model. */
 	private boolean rightDirty;
 
 	/**
@@ -137,11 +156,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		buildControl(parent);
 		updateColors();
 		setContentProvider(new ModelContentMergeContentProvider(config));
-		
+
 		// disables diff copy from either side
 		switchCopyState(false);
 
-		structurePropertyListener = new IPropertyChangeListener() {
+		structureSelectionListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION)) {
 					Object selected = null;
@@ -151,12 +170,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					if (selected instanceof DiffElement && !(selected instanceof DiffGroup && ((DiffGroup)selected).getSubDiffElements().size() == 0)) {
 						setSelection((DiffElement)selected);
 					}
-				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED)) {
-					setInput(event.getNewValue());
 				}
 			}
 		};
-		configuration.addPropertyChangeListener(structurePropertyListener);
+		configuration.addPropertyChangeListener(structureSelectionListener);
 
 		preferenceListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -183,8 +200,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws the center Control.
 	 */
 	public void updateCenter() {
-		if (getCenterPart() != null)
-			getCenterPart().redraw();
+		getCenterPart().redraw();
 	}
 
 	/**
@@ -204,15 +220,16 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public Canvas getCenterPart() {
 		if (canvas == null && !getControl().isDisposed())
 			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
+				@Override
 				public void doPaint(GC gc) {
 					// Draw lines on the left and right edges
 					gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
 					gc.drawLine(0, 0, 0, getBounds().height);
 					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
 
-					final ModelCompareInput input = (ModelCompareInput)getInput();
-					for (final DiffElement diff : input.getDiffAsList()) {
-						drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
+					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
+						if (!(diff.eContainer() instanceof ConflictingDiffGroup))
+							drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
 					}
 				}
 			};
@@ -222,8 +239,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the left element of the
-	 * given {@link DiffElement}.
+	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the left element of the given {@link DiffElement}.
 	 * 
 	 * @param diff
 	 *            Diff we need to find the left item for.
@@ -236,16 +252,18 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			leftElement = diff;
 			rightElement = diff;
 		}
+		/*
+		 * RemoteAddModelElement behaves exactly as would a RemoveModelElement, and RemoteRemoveModeElement behaves as an AddModelElement. We then
+		 * invert Remote model element changes' right and left elements.
+		 */
 		Item leftItem = (Item)leftPart.find(leftElement);
 		final Item rightItem = (Item)rightPart.find(rightElement);
 
-		if (selectedTab == TREE_TAB && leftItem != null
-				&& (!leftItem.getData().equals(leftElement) || diff instanceof AddModelElement)) {
-			if (rightItem != null && rightItem.getData().equals(rightElement)
-					&& rightItem.getData() instanceof EObject
-					&& ((EObject)rightItem.getData()).eContainer() != null) {
-				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
-						rightItem.getData());
+		final boolean notVisibleTreeItemForDiff = leftItem != null && (!leftItem.getData().equals(leftElement) || (!(diff instanceof RemoteAddModelElement) || diff instanceof AddModelElement));
+		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
+			if (rightItem != null && rightItem.getData().equals(rightElement) && rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
+				assert leftItem != null;
+				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(rightItem.getData());
 				final EList leftList = ((EObject)leftItem.getData()).eContents();
 				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
 				if (leftIndex > 0)
@@ -259,8 +277,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the right element of the
-	 * given {@link DiffElement}.
+	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the right element of the given {@link DiffElement}.
 	 * 
 	 * @param diff
 	 *            Diff we need to find the right item for.
@@ -273,32 +290,51 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			leftElement = diff;
 			rightElement = diff;
 		}
+		/*
+		 * RemoteAddModelElement behaves exactly as would a RemoveModelElement, and RemoteRemoveModeElement behaves as an AddModelElement. We then
+		 * invert Remote model element changes' right and left elements.
+		 */
 		final Item leftItem = (Item)leftPart.find(leftElement);
 		Item rightItem = (Item)rightPart.find(rightElement);
 
 		if (rightItem == null) {
-			rightItem = (Item)rightPart.getTreeRoot();
+			rightItem = rightPart.getTreeRoot();
 			rightElement = (EObject)rightItem.getData();
 		}
 
-		if (selectedTab == TREE_TAB && rightItem != null
-				&& (!rightItem.getData().equals(rightElement) || diff instanceof RemoveModelElement)) {
-			if (leftItem != null && leftItem.getData().equals(leftElement)
-					&& leftItem.getData() instanceof EObject
-					&& ((EObject)leftItem.getData()).eContainer() != null) {
-				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
-						leftItem.getData());
+		final boolean notVisibleTreeItemForDiff = !rightItem.getData().equals(rightElement) || (!(diff instanceof RemoteRemoveModelElement) || diff instanceof RemoveModelElement);
+		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
+			if (leftItem != null && leftItem.getData().equals(leftElement) && leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
+				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(leftItem.getData());
 				// Ensures we cannot trigger ArrayOutOfBounds exeptions
 				final EList rightList = ((EObject)rightItem.getData()).eContents();
 				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
 				if (rightIndex > 0)
 					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(rightIndex));
 			}
-		} else if (selectedTab == TREE_TAB && rightItem == null) {
-			rightItem = rightPart.getTreeRoot();
 		}
 
 		return rightItem;
+	}
+
+	/**
+	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the ancestor element of the given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the ancestor item for.
+	 * @return The item representing the ancestor element of the given {@link DiffElement}.
+	 */
+	public Item getAncestorItem(DiffElement diff) {
+		EObject ancestorElement = diff;
+
+		if (selectedTab == TREE_TAB && diff instanceof ConflictingDiffGroup) {
+			ancestorElement = ((ConflictingDiffGroup)diff).getLeftParent();
+		}
+		Item ancestorItem = (Item)ancestorPart.find(ancestorElement);
+		if (ancestorItem == null)
+			ancestorItem = ancestorPart.getTreeRoot();
+
+		return ancestorItem;
 	}
 
 	/**
@@ -338,18 +374,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Sets the parts' tree selection given the {@link DiffElement} to select and the identifier of the side
-	 * which triggered the selection change.
+	 * Sets the parts' tree selection given the {@link DiffElement} to select and the identifier of the side which triggered the selection change.
 	 * 
 	 * @param diff
 	 *            {@link DiffElement} backing the current selection.
 	 */
 	public void setSelection(DiffElement diff) {
 		currentDiff = diff;
-		if (leftPart != null)
-			leftPart.navigateToDiff(currentDiff);
-		if (rightPart != null)
-			rightPart.navigateToDiff(currentDiff);
+		leftPart.navigateToDiff(currentDiff);
+		rightPart.navigateToDiff(currentDiff);
 		switchCopyState(true);
 	}
 
@@ -359,8 +392,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	public void setInput(Object input) {
 		if (configuration.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED) != null) {
-			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
-					.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED);
+			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
 		} else if (input instanceof ModelInputSnapshot) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
@@ -386,6 +418,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		setLeftDirty(rightDirty);
 	}
 
+	/**
+	 * Undoes the changed implied by the currently selected {@link DiffElement diff}.
+	 */
 	protected void copyDiffLeftToRight() {
 		if (currentDiff != null)
 			copy(currentDiff, true);
@@ -393,6 +428,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		switchCopyState(false);
 	}
 
+	/**
+	 * Applies the changed implied by the currently selected {@link DiffElement diff}.
+	 */
 	protected void copyDiffRightToLeft() {
 		if (currentDiff != null)
 			copy(currentDiff, false);
@@ -400,6 +438,16 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		switchCopyState(false);
 	}
 
+	/**
+	 * Copies a single {@link DiffElement} or a {@link DiffGroup} in the given direction, then updates the toolbar items states as well as the dirty
+	 * state of both the left and the right models.
+	 * 
+	 * @param diff
+	 *            {@link DiffElement Element} to copy.
+	 * @param leftToRight
+	 *            Direction of the copy.
+	 * @see ModelCompareInput#copy(DiffElement, boolean)
+	 */
 	protected void copy(DiffElement diff, boolean leftToRight) {
 		if (diff != null) {
 			((ModelCompareInput)getInput()).copy(diff, leftToRight);
@@ -441,33 +489,31 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected void createToolItems(ToolBarManager tbm) {
 		// COPY DIFF LEFT TO RIGHT
 		if (getCompareConfiguration().isRightEditable()) {
-			copyDiffLeftToRight = new AbstractCompareAction(ResourceBundle
-					.getBundle(BUNDLE_NAME), "action.CopyDiffLeftToRight.") { //$NON-NLS-1$
+			copyDiffLeftToRight = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.CopyDiffLeftToRight.") { //$NON-NLS-1$
+				@Override
 				public void run() {
 					copyDiffLeftToRight();
 				}
 			};
-			final ActionContributionItem copyLeftToRightContribution = new ActionContributionItem(
-					copyDiffLeftToRight);
+			final ActionContributionItem copyLeftToRightContribution = new ActionContributionItem(copyDiffLeftToRight);
 			copyLeftToRightContribution.setVisible(true);
 			tbm.appendToGroup("merge", copyLeftToRightContribution); //$NON-NLS-1$
 		}
 		// COPY DIFF RIGHT TO LEFT
 		if (getCompareConfiguration().isLeftEditable()) {
-			copyDiffRightToLeft = new AbstractCompareAction(ResourceBundle
-					.getBundle(BUNDLE_NAME), "action.CopyDiffRightToLeft.") { //$NON-NLS-1$
+			copyDiffRightToLeft = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.CopyDiffRightToLeft.") { //$NON-NLS-1$
+				@Override
 				public void run() {
 					copyDiffRightToLeft();
 				}
 			};
-			final ActionContributionItem copyRightToLeftContribution = new ActionContributionItem(
-					copyDiffRightToLeft);
+			final ActionContributionItem copyRightToLeftContribution = new ActionContributionItem(copyDiffRightToLeft);
 			copyRightToLeftContribution.setVisible(true);
 			tbm.appendToGroup("merge", copyRightToLeftContribution); //$NON-NLS-1$
 		}
 		// NEXT DIFF
-		final Action nextDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME),
-				"action.NextDiff.") { //$NON-NLS-1$
+		final Action nextDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.NextDiff.") { //$NON-NLS-1$
+			@Override
 			public void run() {
 				navigate(true);
 			}
@@ -476,8 +522,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		nextDiffContribution.setVisible(true);
 		tbm.appendToGroup("navigation", nextDiffContribution); //$NON-NLS-1$
 		// PREVIOUS DIFF
-		final Action previousDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME),
-				"action.PrevDiff.") { //$NON-NLS-1$
+		final Action previousDiff = new AbstractCompareAction(ResourceBundle.getBundle(BUNDLE_NAME), "action.PrevDiff.") { //$NON-NLS-1$
+			@Override
 			public void run() {
 				navigate(false);
 			}
@@ -486,18 +532,41 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		previousDiffContribution.setVisible(true);
 		tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
 	}
-	
+
+	/**
+	 * Checks if there are too much {@link DiffElement} in the current {@link DiffModel input} for the drawing to be readable.
+	 * 
+	 * @return <code>True</code> if too much {@link DiffElement}s need painting, <code>False</code> otherwise.
+	 */
 	protected boolean diffThresholdOverstepped() {
 		return ((ModelCompareInput)getInput()).getDiffAsList().size() > MAX_DIFF_THRESHOLD;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	@Override
+	protected void fireSelectionChanged(final SelectionChangedEvent event) {
+		super.fireSelectionChanged(event);
+	}
+
+	/**
+	 * Selects the next or previous {@link DiffElement} as compared to the currently selected one.
+	 * 
+	 * @param down
+	 *            <code>True</code> if we seek the next {@link DiffElement}, <code>False</code> for the previous.
+	 */
 	protected void navigate(boolean down) {
 		final List<DiffElement> diffs = ((ModelCompareInput)getInput()).getDiffAsList();
 		if (diffs.size() != 0) {
 			DiffElement theDiff = diffs.get(0);
-			if (currentDiff != null) {
-				theDiff = currentDiff;
+			if (currentDiff == null) {
+				setSelection(theDiff);
+				return;
 			}
+			theDiff = currentDiff;
 			for (int i = 0; i < diffs.size(); i++) {
 				if (diffs.get(i).equals(theDiff) && down) {
 					DiffElement next = diffs.get(0);
@@ -523,30 +592,21 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	protected void updateColors() {
 		final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-		highlightColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR);
-		changedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
-		addedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
-		removedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+		highlightColor = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR);
+		changedColor = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
+		addedColor = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+		removedColor = PreferenceConverter.getColor(comparePreferences, EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateToolItems()
 	 */
 	@Override
 	protected void updateToolItems() {
 		super.updateToolItems();
-		if (copyDiffRightToLeft != null)
-			copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
-		if (copyDiffLeftToRight != null)
-			copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
-		if (!getControl().isDisposed())
-			CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
+		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 
 	/**
@@ -558,11 +618,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected byte[] getContents(boolean left) {
 		byte[] contents = null;
 
-		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
-				.getLeftContent(getInput())).getObject();
+		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider()).getLeftContent(getInput())).getObject();
 		if (!left)
-			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
-					.getRightContent(getInput())).getObject();
+			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider()).getRightContent(getInput())).getObject();
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
@@ -576,16 +634,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Performs some additional cleanup at the viewer's disposal.
+	 * {@inheritDoc}
 	 * 
-	 * @see ContentMergeViewer#handleDispose(DisposeEvent)
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
+	@Override
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
-		configuration.removePropertyChangeListener(structurePropertyListener);
-		structurePropertyListener = null;
+		configuration.removePropertyChangeListener(structureSelectionListener);
 		EMFCompareUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
-		preferenceListener = null;
 		leftPart = null;
 		rightPart = null;
 		ancestorPart = null;
@@ -608,22 +665,29 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @see ContentMergeViewer#handleResizeLeftRight(int, int, int, int)
 	 */
 	@Override
-	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth,
-			int height) {
-		if (getCenterPart() != null)
-			getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
+	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth, int height) {
+		getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
 		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
 		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
 		update();
 	}
-	
+
+	/**
+	 * This will enable or disable the toolbar's copy actions according to the given <code>boolean</code>. The "copy diff left to right" action
+	 * will be enabled if <code>enable</code> is <code>True</code>, but the "copy diff right to left" action will only be activated if
+	 * <code>enable</code> is <code>True</code> AND the left model isn't a remote model.
+	 * 
+	 * @param enabled
+	 *            <code>True</code> if we seek to enable the actions, <code>False</code> otherwise.
+	 */
 	protected void switchCopyState(boolean enabled) {
 		boolean leftIsRemote = false;
 		if (configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE) != null)
 			leftIsRemote = Boolean.parseBoolean(configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE).toString());
-		configuration.setLeftEditable(!leftIsRemote && enabled);
-		configuration.setRightEditable(enabled);
-		updateToolItems();
+		if (copyDiffLeftToRight != null)
+			copyDiffLeftToRight.setEnabled(enabled);
+		if (copyDiffRightToLeft != null)
+			copyDiffRightToLeft.setEnabled(!leftIsRemote && enabled);
 	}
 
 	/**
@@ -634,19 +698,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
 		if (getInput() != null) {
+			Object ancestorObject = ancestor;
 			Object leftObject = left;
 			Object rightObject = right;
+			if (ancestorObject instanceof TypedElementWrapper)
+				ancestorObject = ((TypedElementWrapper)ancestorObject).getObject();
 			if (leftObject instanceof TypedElementWrapper)
 				leftObject = ((TypedElementWrapper)leftObject).getObject();
 			if (rightObject instanceof TypedElementWrapper)
 				rightObject = ((TypedElementWrapper)rightObject).getObject();
 
-			if (left != null) {
-				leftPart.setInput(left);
-			}
-			if (right != null) {
-				rightPart.setInput(right);
-			}
+			if (ancestorObject != null)
+				ancestorPart.setInput(ancestorObject);
+			if (leftObject != null)
+				leftPart.setInput(leftObject);
+			if (rightObject != null)
+				rightPart.setInput(rightObject);
 		}
 		update();
 	}
@@ -655,7 +722,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Basic implementation of an {@link ICompareEditorPartListener}.
 	 */
 	private class EditorPartListener implements ICompareEditorPartListener {
-		private ModelContentMergeViewerPart[] viewerParts;
+		/** Viewer parts this listener is registered for. */
+		private final ModelContentMergeViewerPart[] viewerParts;
 
 		/**
 		 * Instantiate this {@link EditorPartListener} given the left, right and ancestor viewer parts.
@@ -700,13 +768,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * We want to avoid flickering as much as possible for our draw operations on the center part, yet we
-	 * can't use double buffering to draw on it. We will then draw on a {@link Canvas} moved above that center
-	 * part.
+	 * We want to avoid flickering as much as possible for our draw operations on the center part, yet we can't use double buffering to draw on it. We
+	 * will then draw on a {@link Canvas} moved above that center part.
 	 */
-	private abstract class AbstractBufferedCanvas extends Canvas {
-		private Image buffer;
+	abstract class AbstractBufferedCanvas extends Canvas {
+		/** Buffer used by this {@link Canvas} to smoothly paint its content. */
+		protected Image buffer;
 
+		/** This array is used to compute the curve to draw between left and right matching elements. */
 		private double[] baseCenterCurve;
 
 		/**
@@ -736,7 +805,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			});
 		}
 
-		private void doubleBufferedPaint(GC dest) {
+		void doubleBufferedPaint(GC dest) {
 			final Point size = getSize();
 
 			if (size.x <= 0 || size.y <= 0)
@@ -768,9 +837,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		protected void drawLine(GC gc, Item leftItem, Item rightItem, DiffElement diff) {
 			if (leftItem == null || rightItem == null)
 				return;
-			
-			if (!diffThresholdOverstepped() || diff.equals(currentDiff)
-					|| leftPart.isVisible(leftItem) || rightPart.isVisible(rightItem)) {
+
+			if (!diffThresholdOverstepped() || diff.equals(currentDiff) || leftPart.isVisible(leftItem) || rightPart.isVisible(rightItem)) {
 				final Rectangle centerbounds = getCenterPart().getBounds();
 				Rectangle leftBounds = null;
 				Rectangle rightBounds = null;
@@ -781,42 +849,39 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					leftBounds = ((TableItem)leftItem).getBounds();
 					rightBounds = ((TableItem)rightItem).getBounds();
 				} else {
-					throw new IllegalStateException("Invalid value for tab selection"); //$NON-NLS-1$
+					throw new IllegalStateException(Messages.getString("IllegalTab")); //$NON-NLS-1$
 				}
-	
+
 				// Defines the circling Color
 				RGB color = changedColor;
-				if (diff instanceof AddModelElement) {
+				if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
 					color = addedColor;
-				} else if (diff instanceof RemoveModelElement) {
+				} else if (diff instanceof RemoveModelElement || diff instanceof RemoteRemoveModelElement) {
 					color = removedColor;
 				}
-	
+
 				// Defines all variables needed for drawing the line.
 				final int treeTabBorder = 5;
 				final int leftX = 0;
 				final int rightX = centerbounds.width;
 				final int leftRectangleHeight = leftBounds.height - 1;
 				final int rightRectangleHeight = rightBounds.height - 1;
-	
+
 				int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
-				int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder
-						+ rightPart.getHeaderHeight();
-				if (selectedTab == TREE_TAB
-						&& (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement)) {
+				int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder + rightPart.getHeaderHeight();
+				if (selectedTab == TREE_TAB && (!leftItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement || diff instanceof RemoteRemoveModelElement)) {
 					leftY += leftRectangleHeight / 2;
 				}
 				if (selectedTab == TREE_TAB
-						&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement)) {
+						&& (!rightItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement || diff instanceof RemoteAddModelElement)) {
 					rightY += rightRectangleHeight / 2;
 				}
-	
+
 				int lineWidth = 1;
-				if (selectedTab == PROPERTIES_TAB || leftPart.getSelectedElements().contains(leftItem)
-						|| rightPart.getSelectedElements().contains(rightItem)) {
+				if (selectedTab == PROPERTIES_TAB || diff == currentDiff) {
 					lineWidth = 2;
 				}
-	
+
 				// Performs the actual drawing
 				gc.setForeground(new Color(getCenterPart().getDisplay(), color));
 				gc.setLineWidth(lineWidth);

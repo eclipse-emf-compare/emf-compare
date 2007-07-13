@@ -19,6 +19,9 @@ import java.lang.reflect.Method;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ClassUtils {
+	/**
+	 * Utility classes don't need to be instantiated.
+	 */
 	private ClassUtils() {
 		// prevents instantiation
 	}

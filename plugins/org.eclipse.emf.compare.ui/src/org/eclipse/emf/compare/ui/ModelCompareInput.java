@@ -22,12 +22,12 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.merge.api.MergeFactory;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -37,20 +37,23 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareInput implements ICompareInput {
+	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
 	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
 
-	private DiffModel diff;
+	/** {@link DiffModel} result of the underlying comparison. */
+	private final DiffModel diff;
 
-	private MatchModel match;
+	/** {@link MatchModel} result of the underlying comparison. */
+	private final MatchModel match;
 
 	/**
-	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.MatchModel match} and
-	 * {@link org.eclipse.emf.compare.diff.DiffModel diff} of the comparison.
+	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} and
+	 * {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 * 
 	 * @param matchModel
-	 *            {@link org.eclipse.emf.compare.match.MatchModel match} of the comparison.
+	 *            {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} of the comparison.
 	 * @param diffModel
-	 *            {@link org.eclipse.emf.compare.diff.DiffModel diff} of the comparison.
+	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel) {
 		match = matchModel;
@@ -118,8 +121,7 @@ public class ModelCompareInput implements ICompareInput {
 	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
 		if (element instanceof DiffGroup) {
-			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element)
-					.getSubDiffElements());
+			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element).getSubDiffElements());
 			for (DiffElement subDiff : subDiffList) {
 				if (subDiff instanceof DiffGroup)
 					copy(subDiff, leftToRight);
@@ -133,18 +135,30 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take
-	 * {@link DiffGroup}s into account.
+	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take {@link DiffGroup}s into account.
 	 * 
 	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
 	public List<DiffElement> getDiffAsList() {
 		final List<DiffElement> diffs = new LinkedList<DiffElement>();
+		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
+//		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
+//		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
+//		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
 		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (!(aDiff instanceof DiffGroup))
 				diffs.add(aDiff);
+//			if (aDiff instanceof ModelElementChange)
+//				modelElementDiffs.add((ModelElementChange)aDiff);
+//			else if (aDiff instanceof AttributeChange)
+//				attributeChangeDiffs.add((AttributeChange)aDiff);
+//			else if (aDiff instanceof ReferenceChange)
+//				referenceChangeDiffs.add((ReferenceChange)aDiff);
 		}
+//		diffs.addAll(modelElementDiffs);
+//		diffs.addAll(attributeChangeDiffs);
+//		diffs.addAll(referenceChangeDiffs);
 		return diffs;
 	}
 
@@ -154,8 +168,12 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
-		// TODO LGT three way support
-		return null;
+		ITypedElement element = null;
+
+		if (getMatch().getMatchedElements().get(0) instanceof Match3Element)
+			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0)).getOriginElement());
+
+		return element;
 	}
 
 	/**
@@ -196,6 +214,8 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getKind()
 	 */
 	public int getKind() {
+		if (getAncestor() != null)
+			return EMFCompareConstants.ENABLE_ANCESTOR;
 		return EMFCompareConstants.NO_CHANGE;
 	}
 
@@ -208,8 +228,7 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement element = null;
 
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
-					.getLeftElement());
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getLeftElement());
 
 		return element;
 	}
@@ -223,36 +242,19 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement element = null;
 
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
-					.getRightElement());
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getRightElement());
 
 		return element;
 	}
 
 	/**
-	 * Fetches the {@link DiffElement diff} associated to the given {@link Match2Elements match}.
+	 * Applies the changes implied by a given {@link DiffElement} in the direction specified by <code>leftToRight</code>.
 	 * 
-	 * @param aMatch
-	 *            Match element for which we seek the diff.
-	 * @return the {@link DiffElement diff} associated to the given {@link Match2Elements match}.
+	 * @param element
+	 *            {@link DiffElement} containing the copy information.
+	 * @param leftToRight
+	 *            <code>True</code> if the changes must be applied from the left to the right model, <code>False</code> otherwise.
 	 */
-	public DiffElement findDiffFromMatch(Match2Elements aMatch) {
-		DiffElement result = null;
-		final EObject leftMatch = aMatch.getLeftElement();
-		final EObject rightMatch = aMatch.getRightElement();
-
-		for (final DiffElement target : getDiffAsList()) {
-			final EObject leftDiff = EMFCompareEObjectUtils.getLeftElement(target);
-			final EObject rightDiff = EMFCompareEObjectUtils.getRightElement(target);
-
-			if ((leftDiff != null && leftDiff.equals(leftMatch))
-					|| (rightDiff != null && rightDiff.equals(rightMatch))) {
-				result = target;
-			}
-		}
-		return result;
-	}
-
 	protected void doCopy(DiffElement element, boolean leftToRight) {
 		final AbstractMerger merger = MergeFactory.createMerger(element);
 		if (leftToRight && merger.canUndoInTarget()) {
@@ -262,6 +264,9 @@ public class ModelCompareInput implements ICompareInput {
 		}
 	}
 
+	/**
+	 * Notifies all {@link ICompareInputChangeListener listeners} registered for this {@link ModelCompareInput input} that a change occured.
+	 */
 	protected void fireCompareInputChanged() {
 		for (ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);

@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewerpart.ModelContentMergePropertyPart;
@@ -31,6 +32,14 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class PropertyContentProvider implements IStructuredContentProvider {
+	/**
+	 * This <code>int</code> represents the side of the viewer part this content provider feeds. Must be one of
+	 * <ul>
+	 * <li>{@link EMFCompareConstants#RIGHT}</li>
+	 * <li>{@link EMFCompareConstants#LEFT}</li>
+	 * <li>{@link EMFCompareConstants#ANCESTOR}</li>
+	 * </ul>
+	 */
 	private int partSide;
 	
 	/**
@@ -49,8 +58,8 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 				input = match.getLeftElement();
 			} else if (partSide == EMFCompareConstants.LEFT) {
 				input = match.getRightElement();
-			} else {
-				//TODO LGT input = match.getAncestor
+			} else if (inputElement instanceof Match3Element) {
+				input = ((Match3Element)match).getOriginElement();
 			}
 		} else if (inputElement instanceof UnMatchElement) {
 			input = ((UnMatchElement)inputElement).getElement();

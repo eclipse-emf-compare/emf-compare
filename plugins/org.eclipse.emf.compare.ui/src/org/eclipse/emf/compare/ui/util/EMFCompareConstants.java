@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.util;
 
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -22,13 +23,16 @@ public interface EMFCompareConstants {
 	int NO_CHANGE = 0;
 
 	/** Three-way change constant (value 1) indicating the left side. */
-	int LEFT = 1;
+	/* package */ int LEFT = 1;
 
 	/** Three-way change constant (value 2) indicating right side. */
-	int RIGHT = 2;
+	/* package */ int RIGHT = 2;
 
 	/** Three-way change constant (value 3) indicating the ancestor. */
-	int ANCESTOR = 3;
+	/* package */ int ANCESTOR = 3;
+	
+	/** Constant (value 12) allowing enablement of the "show ancestor" action. */
+	int ENABLE_ANCESTOR = 12;
 	
 	/** Full path of the preferences help icon. */
 	String ICONS_PREFERENCES_HELP = "icons/full/prefshelp.gif"; //$NON-NLS-1$
@@ -63,7 +67,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$
 	
 	/** Preferences description for the siblings search window. */
-	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = "&Search window : "; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = Messages.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
 	
 	/** Default value for the siblings search window. */
 	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
@@ -72,7 +76,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_KEY_HIGHLIGHT_COLOR = "highlight.color"; //$NON-NLS-1$
 
 	/** Preferences description for the highlight color. */
-	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = "&Highlight : "; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = Messages.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Default color (light yellow) for changes background. */
 	RGB PREFERENCES_DEFAULT_HIGHLIGHT_COLOR = new RGB(255, 255, 224);
@@ -81,7 +85,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_KEY_CHANGED_COLOR = "changed.color"; //$NON-NLS-1$
 
 	/** Preferences description for the changed element color. */
-	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = "&Modified element : "; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = Messages.getString("EMFCompareConstants.preferences.changedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Default color (blue) for a modified element circling. */
 	RGB PREFERENCES_DEFAULT_CHANGED_COLOR = new RGB(114, 159, 207);
@@ -90,7 +94,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_KEY_ADDED_COLOR = "added.color"; //$NON-NLS-1$
 
 	/** Preferences description for the added element color. */
-	String PREFERENCES_DESCRIPTION_ADDED_COLOR = "&Added element : "; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_ADDED_COLOR = Messages.getString("EMFCompareConstants.preferences.addedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Default color (green) for an added element circling. */
 	RGB PREFERENCES_DEFAULT_ADDED_COLOR = new RGB(138, 226, 52);
@@ -99,7 +103,7 @@ public interface EMFCompareConstants {
 	String PREFERENCES_KEY_REMOVED_COLOR = "removed.color"; //$NON-NLS-1$
 
 	/** Preferences description for the removed element color. */
-	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = "&Removed element : "; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = Messages.getString("EMFCompareConstants.preferences.removedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Default color (red) for a removed element circling. */
 	RGB PREFERENCES_DEFAULT_REMOVED_COLOR = new RGB(239, 41, 41);

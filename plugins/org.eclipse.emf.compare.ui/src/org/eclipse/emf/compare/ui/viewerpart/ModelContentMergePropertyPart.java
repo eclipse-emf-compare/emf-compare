@@ -15,8 +15,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.TableViewer;
@@ -36,7 +36,8 @@ import org.eclipse.swt.widgets.TableItem;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergePropertyPart extends TableViewer {
-	private int partSide;
+	/** <code>int</code> representing this viewer part side. */
+	protected final int partSide;
 	
 	/**
 	 * Creates a table viewer on a newly-created table control under the given
@@ -47,7 +48,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 	 * @param style
 	 * 			SWT style bits.
 	 * @param side
-	 * 			Sideof this viewer part.
+	 * 			Side of this viewer part.
 	 */
 	public ModelContentMergePropertyPart(Composite parent, int style, int side) {
 		super(parent, style);
@@ -65,21 +66,11 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		gc.dispose();
 
 		final TableColumn nameColumn = new TableColumn(getTable(), SWT.LEFT);
-		nameColumn.setText("Attribute Name"); //$NON-NLS-1$
+		nameColumn.setText(Messages.getString("ModelContentMergePropertyPart.column1.name")); //$NON-NLS-1$
 		nameColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, nameColumn.getText().length() * 3));
 		final TableColumn weightsColumn = new TableColumn(getTable(), SWT.RIGHT);
-		weightsColumn.setText("Value"); //$NON-NLS-1$
+		weightsColumn.setText(Messages.getString("ModelContentMergePropertyPart.column2.name")); //$NON-NLS-1$
 		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, weightsColumn.getText().length() * 3));
-	}
-	
-	/**
-	 * Returns the side of this viewer part.
-	 * 
-	 * @return
-	 * 			The side of this viewer part.
-	 */
-	public int getSide() {
-		return partSide;
 	}
 	
 	/**
@@ -98,18 +89,14 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		}
 		return item;
 	}
-
+	
 	/**
-	 * Returns the widget representing the given {@link EAttribute} in the table.
+	 * Returns the side of this viewer part.
 	 * 
-	 * @param attr
-	 * 			{@link EAttribute} to seek in the table.
-	 * @return
-	 * 			The widget representing the given {@link EAttribute}.
-	 * @see org.eclipse.jface.viewers.StructuredViewer#findItem(Object)
+	 * @return The side of this viewer part.
 	 */
-	public TableItem find(EAttribute attr) {
-		return (TableItem)findItem(attr);
+	public int getSide() {
+		return partSide;
 	}
 	
 	/**
@@ -183,6 +170,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		 * 
 		 * @see AdapterFactoryLabelProvider#getColumnText(Object, int)
 		 */
+		@Override
 		public String getColumnText(Object object, int columnIndex) {
 			String text = super.getColumnText(object, columnIndex);
 			if (object instanceof List) {
@@ -196,6 +184,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		 * 
 		 * @see AdapterFactoryLabelProvider#getColumnImage(Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object object, int columnIndex) {
 			Image image = super.getColumnImage(object, columnIndex);
 			if (object instanceof List) {

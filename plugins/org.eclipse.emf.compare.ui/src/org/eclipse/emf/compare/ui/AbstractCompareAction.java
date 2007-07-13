@@ -28,19 +28,16 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public abstract class AbstractCompareAction extends Action {
-	/* DIRTY 
-	 * should use Utilities.getIconPath(null) or 
-	 * CompareUIPlugin.getImageDescriptor(String) yet neither of these is accessible.
-	 * Another option would be to copy the icons in our own /icons/full.
-	 */
+	/** Fullpath for our action icons. */
 	private static final IPath ICONS_PATH = new Path("$nl$/icons/full/"); //$NON-NLS-1$
 	
 	/* DIRTY 
 	 * should use CompareUIPlugin.getDefault or CompareUIPlugin.PLUGIN_ID yet neither of 
 	 * these is accessible.
-	 * Again, another option would be to copy the icons in our own /icons/full as this
+	 * An alternative would be to copy compare icons in our own /icons/full as this
 	 * ID is used to resolve the icon path.
 	 */
+	/** Eclipse compare's plug-in id. Used to resolve their icons' paths. */
 	private static final String COMPARE_UI_PLUGIN_ID = "org.eclipse.compare"; //$NON-NLS-1$
 	
 	/**
@@ -53,10 +50,10 @@ public abstract class AbstractCompareAction extends Action {
 	 * 			Prefix for this action's keys.
 	 */
 	public AbstractCompareAction(ResourceBundle bundle, String keyPrefix) {
-		if (keyPrefix == null && keyPrefix.length() <= 0) {
-			throw new IllegalArgumentException("keyPrefix must be specified."); //$NON-NLS-1$
+		if (keyPrefix == null || keyPrefix.length() <= 0) {
+			throw new IllegalArgumentException(Messages.getString("AbstractCompareAction.IllegalKey")); //$NON-NLS-1$
 		} else if (bundle == null) {
-			throw new IllegalArgumentException("bundle cannot be null."); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("AbstractCompareAction.IllegalBundle")); //$NON-NLS-1$
 		}
 		final String labelKey = keyPrefix + "label"; //$NON-NLS-1$
 		final String tooltipKey = keyPrefix + "tooltip"; //$NON-NLS-1$
@@ -118,7 +115,7 @@ public abstract class AbstractCompareAction extends Action {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Subclasses should override this method to define their action's behavior.
 	 * 
 	 * @see Action#run()
 	 */

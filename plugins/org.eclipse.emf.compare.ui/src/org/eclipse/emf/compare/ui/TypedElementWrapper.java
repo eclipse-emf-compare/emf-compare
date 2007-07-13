@@ -21,7 +21,8 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class TypedElementWrapper implements ITypedElement {
-	private EObject wrappedObject;
+	/** {@link EObject} this wrapper is build upon. */
+	private final EObject wrappedObject;
 	
 	/**
 	 * Constructs an instance given the object to wrap.

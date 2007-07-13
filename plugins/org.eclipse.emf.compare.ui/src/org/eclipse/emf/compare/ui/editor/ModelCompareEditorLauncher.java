@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.ui.IEditorLauncher;
 
 /**
@@ -33,7 +34,7 @@ public class ModelCompareEditorLauncher implements IEditorLauncher {
 	 */
 	public void open(IPath file) {
 		try {
-			final EObject snapshot = ModelUtils.load(file.toFile());
+			final EObject snapshot = ModelUtils.load(file.toFile(), new ResourceSetImpl());
 			if (snapshot instanceof ModelInputSnapshot)
 				CompareUI.openCompareEditor(new ModelCompareEditorInput((ModelInputSnapshot)snapshot));
 		} catch (IOException e) {

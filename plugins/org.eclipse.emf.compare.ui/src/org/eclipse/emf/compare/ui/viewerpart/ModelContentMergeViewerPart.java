@@ -16,15 +16,18 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
+import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
-import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
@@ -63,21 +66,42 @@ import org.eclipse.swt.widgets.Widget;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergeViewerPart {
-	protected static final String INVALID_TAB = "Invalid tab index"; //$NON-NLS-1$
+	/** This {@link String} is used as an error message when an unexisting tab is accessed */
+	private static final String INVALID_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
 
+	/** This keeps track of the parent viewer of this viewer part. */
+	protected final ModelContentMergeViewer parentViewer;
+
+	/**
+	 * This <code>int</code> represents the side of this viewer part. Must be one of
+	 * <ul>
+	 * <li>{@link EMFCompareConstants#RIGHT}</li>
+	 * <li>{@link EMFCompareConstants#LEFT}</li>
+	 * <li>{@link EMFCompareConstants#ANCESTOR}</li>
+	 * </ul>
+	 */
+	protected final int partSide;
+
+	/** This is the content of the tree tab for this viewer part. */
+	protected ModelContentMergeTreePart tree;
+
+	/** This is the content of the properties tab for this viewer part. */
+	protected ModelContentMergePropertyPart properties;
+
+	/** This is the view displayed by this viewer part. */
+	protected CTabFolder tabFolder;
+
+	/** This contains all the listeners registered for this viewer part. */
 	private final List<ICompareEditorPartListener> editorPartListeners = new ArrayList<ICompareEditorPartListener>();
 
+	/**
+	 * Currently selected tab for this viewer. Must be one of
+	 * <ul>
+	 * <li>{@link ModelContentMergeViewer#TREE_TAB}</li>
+	 * <li>{@link ModelContentMergeViewer#PROPERTIES_TAB}</li>
+	 * </ul>
+	 */
 	private int selectedTab;
-
-	private CTabFolder tabFolder;
-
-	private ModelContentMergeViewer parentViewer;
-
-	private ModelContentMergeTreePart tree;
-
-	private ModelContentMergePropertyPart properties;
-
-	private int partSide;
 
 	/**
 	 * Instantiates a {@link ModelContentMergeViewerPart} given its parent {@link Composite} and its side.
@@ -87,15 +111,12 @@ public class ModelContentMergeViewerPart {
 	 * @param composite
 	 *            Parent {@link Composite} for this part.
 	 * @param side
-	 *            Comparison side of this part. Must be one of
-	 *            {@link EMFCompareConstants#LEFT EMFCompareConstants.RIGHT},
-	 *            {@link EMFCompareConstants#RIGHT EMFCompareConstants.LEFT} or
-	 *            {@link EMFCompareConstants#ANCESTOR EMFCompareConstants.ANCESTOR}.
+	 *            Comparison side of this part. Must be one of {@link EMFCompareConstants#LEFT EMFCompareConstants.RIGHT},
+	 *            {@link EMFCompareConstants#RIGHT EMFCompareConstants.LEFT} or {@link EMFCompareConstants#ANCESTOR EMFCompareConstants.ANCESTOR}.
 	 */
 	public ModelContentMergeViewerPart(ModelContentMergeViewer viewer, Composite composite, int side) {
-		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
-				&& side != EMFCompareConstants.ANCESTOR)
-			throw new IllegalArgumentException("PartSide cannot be " + side); //$NON-NLS-1$
+		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT && side != EMFCompareConstants.ANCESTOR)
+			throw new IllegalArgumentException(Messages.getString("IllegalSide", side)); //$NON-NLS-1$
 
 		parentViewer = viewer;
 		selectedTab = ModelContentMergeViewer.TREE_TAB;
@@ -112,10 +133,10 @@ public class ModelContentMergeViewerPart {
 	public void createContents(Composite composite) {
 		tabFolder = new CTabFolder(composite, SWT.BOTTOM);
 		final CTabItem treeTab = new CTabItem(tabFolder, SWT.NONE);
-		treeTab.setText("Tree"); //$NON-NLS-1$
+		treeTab.setText(Messages.getString("ModelContentMergeViewerPart.tab1.name")); //$NON-NLS-1$
 
 		final CTabItem propertiesTab = new CTabItem(tabFolder, SWT.NONE);
-		propertiesTab.setText("Properties"); //$NON-NLS-1$
+		propertiesTab.setText(Messages.getString("ModelContentMergeViewerPart.tab2.name")); //$NON-NLS-1$
 
 		final Composite treePanel = new Composite(tabFolder, SWT.NONE);
 		treePanel.setLayout(new GridLayout());
@@ -128,16 +149,16 @@ public class ModelContentMergeViewerPart {
 		propertyPanel.setLayout(new GridLayout());
 		propertyPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		propertyPanel.setFont(composite.getFont());
-		properties = createPropertiesPart(propertyPanel, partSide);
+		properties = createPropertiesPart(propertyPanel);
 		propertiesTab.setControl(propertyPanel);
 
 		tabFolder.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				if (e.item.equals(treeTab)) {
-					ModelContentMergeViewerPart.this.selectedTab = ModelContentMergeViewer.TREE_TAB;
+					setSelectedTab(ModelContentMergeViewer.TREE_TAB);
 				} else {
 					if (e.item.equals(propertiesTab)) {
-						ModelContentMergeViewerPart.this.selectedTab = ModelContentMergeViewer.PROPERTIES_TAB;
+						setSelectedTab(ModelContentMergeViewer.PROPERTIES_TAB);
 					}
 				}
 				fireSelectedtabChanged();
@@ -162,12 +183,12 @@ public class ModelContentMergeViewerPart {
 		Widget widget = null;
 		if (element != null) {
 			if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-				widget = tree.findVisibleTreeItemFor(element);
+				widget = tree.find(element);
 			} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
 				if (element instanceof DiffElement)
 					widget = properties.find((DiffElement)element);
 			} else {
-				throw new IllegalStateException(INVALID_TAB);
+				throw new IllegalStateException(Messages.getString(INVALID_TAB, selectedTab));
 			}
 		}
 		return widget;
@@ -241,8 +262,7 @@ public class ModelContentMergeViewerPart {
 	public boolean isVisible(Item item) {
 		if (item instanceof TreeItem)
 			return tree.getTree().getClientArea().contains(((TreeItem)item).getBounds().x, ((TreeItem)item).getBounds().y);
-		else
-			return true;
+		return false;
 	}
 
 	/**
@@ -265,14 +285,10 @@ public class ModelContentMergeViewerPart {
 	 *            New input of this viewer part.
 	 */
 	public void setInput(Object input) {
-		Object typedInput = input;
-		if (typedInput instanceof TypedElementWrapper) {
-			typedInput = ((TypedElementWrapper)typedInput).getObject();
-		}
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			tree.setReflectiveInput((EObject)typedInput);
+			tree.setReflectiveInput((EObject)input);
 		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			properties.setInput(typedInput);
+			properties.setInput(input);
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
 		}
@@ -350,8 +366,7 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Registers the given listener for notification. If the identical listener is already registered the
-	 * method has no effect.
+	 * Registers the given listener for notification. If the identical listener is already registered the method has no effect.
 	 * 
 	 * @param listener
 	 *            The listener to register for changes of this input.
@@ -360,25 +375,45 @@ public class ModelContentMergeViewerPart {
 		editorPartListeners.add(listener);
 	}
 
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the tab selection has been changed.
+	 */
 	protected void fireSelectedtabChanged() {
 		for (ICompareEditorPartListener listener : editorPartListeners) {
 			listener.selectedTabChanged(selectedTab);
 		}
 	}
 
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the user selection has changed on the properties
+	 * or tree tab.
+	 * 
+	 * @param event
+	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
+	 */
 	protected void fireSelectionChanged(SelectionChangedEvent event) {
 		for (ICompareEditorPartListener listener : editorPartListeners) {
 			listener.selectionChanged(event);
 		}
 	}
 
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the center part needs to be refreshed.
+	 */
 	protected void fireUpdateCenter() {
 		for (ICompareEditorPartListener listener : editorPartListeners) {
 			listener.updateCenter();
 		}
 	}
 
-	private Object findMatchFromElement(EObject element) {
+	/**
+	 * Returns the {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 * 
+	 * @param element
+	 *            Element we seek the {@link Match2Elements} for.
+	 * @return The {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 */
+	protected Object findMatchFromElement(EObject element) {
 		Object theElement = null;
 		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
 
@@ -387,8 +422,7 @@ public class ModelContentMergeViewerPart {
 
 			if (object instanceof Match2Elements) {
 				final Match2Elements matchElement = (Match2Elements)object;
-				if (matchElement.getLeftElement().equals(element)
-						|| matchElement.getRightElement().equals(element)) {
+				if (matchElement.getLeftElement().equals(element) || matchElement.getRightElement().equals(element)) {
 					theElement = matchElement;
 				}
 			} else if (object instanceof UnMatchElement) {
@@ -405,8 +439,7 @@ public class ModelContentMergeViewerPart {
 	private ModelContentMergeTreePart createTreePart(Composite composite) {
 		final ModelContentMergeTreePart treePart = new ModelContentMergeTreePart(composite);
 
-		treePart.setContentProvider(new AdapterFactoryContentProvider(EMFAdapterFactoryProvider
-				.getAdapterFactory()));
+		treePart.setContentProvider(new AdapterFactoryContentProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
 
 		treePart.getTree().addPaintListener(new TreePaintListener());
 
@@ -441,18 +474,17 @@ public class ModelContentMergeViewerPart {
 		});
 
 		treePart.getTree().addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (tree.getSelectedElements().size() > 0) {
 					final TreeItem selected = tree.getSelectedElements().get(0);
 					for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))) {
+							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)))
 								parentViewer.setSelection(diff);
-							}
 						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))) {
+							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)))
 								parentViewer.setSelection(diff);
-							}
 						}
 					}
 					if (!selected.isDisposed() && selected.getData() instanceof EObject)
@@ -464,9 +496,8 @@ public class ModelContentMergeViewerPart {
 		return treePart;
 	}
 
-	private ModelContentMergePropertyPart createPropertiesPart(Composite composite, int side) {
-		final ModelContentMergePropertyPart propertiesPart = new ModelContentMergePropertyPart(composite,
-				SWT.NONE, partSide);
+	private ModelContentMergePropertyPart createPropertiesPart(Composite composite) {
+		final ModelContentMergePropertyPart propertiesPart = new ModelContentMergePropertyPart(composite, SWT.NONE, partSide);
 
 		propertiesPart.setContentProvider(new PropertyContentProvider());
 		propertiesPart.getTable().setHeaderVisible(true);
@@ -492,7 +523,10 @@ public class ModelContentMergeViewerPart {
 
 	}
 
-	private void resizeBounds() {
+	/**
+	 * This will resize the tabs displayed by this content merge viewer.
+	 */
+	protected void resizeBounds() {
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			tree.getTree().setBounds(tabFolder.getClientArea());
 		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
@@ -503,32 +537,40 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
-	 * the tree tab.
+	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in the tree tab.
 	 */
-	private class TreePaintListener implements PaintListener {
+	class TreePaintListener implements PaintListener {
 		public void paintControl(PaintEvent event) {
 			// This will avoid strange random resize behavior on linux OS
 			if (tree.getTree().getBounds() != tabFolder.getClientArea())
 				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (partSide == EMFCompareConstants.RIGHT) {
-					drawRectangle(event, (TreeItem)parentViewer.getLeftItem(diff), diff);
-				} else if (partSide == EMFCompareConstants.LEFT) {
-					drawRectangle(event, (TreeItem)parentViewer.getRightItem(diff), diff);
+				if (!(diff.eContainer() instanceof ConflictingDiffGroup)) {
+					if (partSide == EMFCompareConstants.RIGHT) {
+						final TreeItem leftItem = (TreeItem)parentViewer.getLeftItem(diff);
+						drawRectangle(event, leftItem, diff);
+					} else if (partSide == EMFCompareConstants.LEFT) {
+						final TreeItem rightItem = (TreeItem)parentViewer.getRightItem(diff);
+						drawRectangle(event, rightItem, diff);
+					}
+				} else {
+					if (partSide == EMFCompareConstants.ANCESTOR) {
+						final TreeItem ancestorItem = (TreeItem)parentViewer.getAncestorItem((DiffElement)diff.eContainer());
+						drawRectangle(event, ancestorItem, (DiffElement)diff.eContainer());
+					}
 				}
 			}
 		}
 
 		private void drawRectangle(PaintEvent event, TreeItem treeItem, DiffElement diff) {
-			final Rectangle treeBounds = tree.getTree().getBounds();
+			final Rectangle treeBounds = tree.getTree().getClientArea();
 			final Rectangle treeItemBounds = treeItem.getBounds();
 			RGB color = parentViewer.getChangedColor();
 
 			// Defines the circling Color
-			if (diff instanceof AddModelElement) {
+			if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
 				color = parentViewer.getAddedColor();
-			} else if (diff instanceof RemoveModelElement) {
+			} else if (diff instanceof RemoveModelElement || diff instanceof RemoteRemoveModelElement) {
 				color = parentViewer.getRemovedColor();
 			}
 
@@ -555,46 +597,44 @@ public class ModelContentMergeViewerPart {
 			event.gc.setLineWidth(lineWidth);
 			event.gc.setForeground(new Color(treeItem.getDisplay(), color));
 			if (partSide == EMFCompareConstants.RIGHT) {
-				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
-						|| diff instanceof AddModelElement) {
+				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)) || diff instanceof AddModelElement || diff instanceof RemoteRemoveModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width, rectangleY
-							+ rectangleHeight);
+					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width, rectangleY + rectangleHeight);
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
-							rectangleArcWidth, rectangleArcHeight);
+					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, rectangleArcWidth, rectangleArcHeight);
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight / 2,
-							treeBounds.width, rectangleY + rectangleHeight / 2);
+					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight / 2, treeBounds.width, rectangleY + rectangleHeight / 2);
 				}
 			} else if (partSide == EMFCompareConstants.LEFT) {
-				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))
-						|| diff instanceof RemoveModelElement) {
+				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)) || diff instanceof RemoveModelElement || diff instanceof RemoteAddModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight,
-							treeBounds.x, rectangleY + rectangleHeight);
+					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight, treeBounds.x, rectangleY + rectangleHeight);
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
-							rectangleArcWidth, rectangleArcHeight);
+					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, rectangleArcWidth, rectangleArcHeight);
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight / 2, treeBounds.x, rectangleY
-							+ rectangleHeight / 2);
+					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight / 2, treeBounds.x, rectangleY + rectangleHeight / 2);
+				}
+			} else {
+				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getAncestorElement(diff))) {
+					event.gc.setLineStyle(SWT.LINE_SOLID);
+					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight, rectangleX, rectangleY + rectangleHeight);
+				} else {
+					event.gc.setLineStyle(SWT.LINE_DASHDOT);
+					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, rectangleArcWidth, rectangleArcHeight);
 				}
 			}
 		}
 	}
 
 	/**
-	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
-	 * the properties tab.
+	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in the properties tab.
 	 */
-	private class PropertyPaintListener implements PaintListener {
+	class PropertyPaintListener implements PaintListener {
 		public void paintControl(PaintEvent event) {
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (diff instanceof AttributeChange && find(diff) != null
-						&& partSide == EMFCompareConstants.RIGHT) {
+				if (diff instanceof AttributeChange && find(diff) != null && partSide == EMFCompareConstants.RIGHT) {
 					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
 				}
 			}
