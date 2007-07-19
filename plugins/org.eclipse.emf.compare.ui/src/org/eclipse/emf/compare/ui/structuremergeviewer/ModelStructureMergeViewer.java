@@ -34,6 +34,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -100,9 +101,20 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		super.inputChanged(input, oldInput);
 		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
 			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED, 
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, 
 					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(SelectionChangedEvent)
+	 */
+	@Override
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		// DIRTY
+		// cancels selection changed events that could be fired to avoid "NullViewer" opening.
 	}
 	
 	protected void fireOpen(OpenEvent event) {

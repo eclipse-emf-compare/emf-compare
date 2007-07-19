@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.util;
 
+import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -37,6 +38,11 @@ public interface EMFCompareConstants {
 	 * Key of the property associated with a change in the content merge viewer trees' selection.
 	 */
 	String PROPERTY_CONTENT_SELECTION = "content.selection.changed"; //$NON-NLS-1$
+	
+	/**
+	 * Key of the property associated with a change in the content input.
+	 */
+	String PROPERTY_CONTENT_INPUT_CHANGED = "content.input.changed"; //$NON-NLS-1$
 
 	/**
 	 * Key of the property associated with a double click in the structure merge viewer.
@@ -44,14 +50,9 @@ public interface EMFCompareConstants {
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 
 	/** 
-	 * Key of the property associated with an input change in the structure viewer.
+	 * Key of the {@link CompareConfiguration} property holding the comparison result.
 	 */
-	String PROPERTY_STRUCTURE_INPUT_CHANGED = "structure.input.changed"; //$NON-NLS-1$
-	
-	/** 
-	 * Key of the property associated with an input change in the content viewer.
-	 */
-	String PROPERTY_CONTENT_INPUT_CHANGED = "content.input.changed"; //$NON-NLS-1$
+	String PROPERTY_COMPARISON_RESULT = "comparison.result"; //$NON-NLS-1$
 	
 	/** Key for the property associated with the comparison time. */
 	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$

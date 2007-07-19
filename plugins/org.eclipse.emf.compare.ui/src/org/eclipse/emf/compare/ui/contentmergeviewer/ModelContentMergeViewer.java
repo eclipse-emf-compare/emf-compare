@@ -12,21 +12,36 @@ package org.eclipse.emf.compare.ui.contentmergeviewer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.compare.HistoryItem;
+import org.eclipse.compare.IStreamContentAccessor;
+import org.eclipse.compare.ITypedElement;
+import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
+import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
@@ -36,10 +51,14 @@ import org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvid
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewerpart.ModelContentMergeViewerPart;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -62,6 +81,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
@@ -102,8 +122,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private IPropertyChangeListener structureSelectionListener;
 
 	private IPropertyChangeListener preferenceListener;
+	
+	private long lastHistoryItemDate;
+	
+	private EObject leftModel;
 
 	private ModelContentMergeViewerPart leftPart;
+	
+	private EObject rightModel;
 
 	private ModelContentMergeViewerPart rightPart;
 
@@ -207,8 +233,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					gc.drawLine(0, 0, 0, getBounds().height);
 					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
 
-					for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
-						drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
+					if (getInput() != null) {
+						for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
+							drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
+						}
 					}
 				}
 			};
@@ -351,13 +379,72 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	public void setInput(Object input) {
-		if (configuration.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED) != null) {
+		// We won't compare again if the given input is the same as the last.
+		boolean changed = false;
+		if (input instanceof ICompareInput && ((ICompareInput)input).getRight() instanceof HistoryItem) {
+			changed = lastHistoryItemDate != ((HistoryItem)((ICompareInput)input).getRight()).getModificationDate();
+			if (changed)
+				lastHistoryItemDate = ((HistoryItem)((ICompareInput)input).getRight()).getModificationDate();
+		}
+		if (configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT) != null && !changed) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
-					.getProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED);
+					.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
-		} else if (input instanceof ModelInputSnapshot) {
-			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+		} else if (input instanceof ICompareInput) {
+			final ITypedElement left = ((ICompareInput)input).getLeft();
+			final ITypedElement right = ((ICompareInput)input).getRight();
+
+			try {
+				final ResourceSet modelResourceSet = new ResourceSetImpl();
+				
+				if (left instanceof ResourceNode && right instanceof ResourceNode) {
+					leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+							modelResourceSet);
+					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+							modelResourceSet);
+				} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
+					// this is the case of SVN/CVS comparison, we invert left and right.
+					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
+							left.getName(), modelResourceSet);
+					leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
+							.getName(), modelResourceSet);
+					final String leftLabel = configuration.getRightLabel(rightModel);
+					configuration.setRightLabel(configuration.getLeftLabel(leftModel));
+					configuration.setLeftLabel(leftLabel);
+					configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
+				}
+				if (leftModel != null && rightModel != null) {
+					final Date start = Calendar.getInstance().getTime();
+					final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+					
+					PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+							new IRunnableWithProgress() {
+								public void run(IProgressMonitor monitor) throws InvocationTargetException,
+										InterruptedException {
+									final MatchModel match = new MatchService().doMatch(leftModel,
+											rightModel, monitor);
+									final DiffModel diff = new DiffMaker().doDiff(match);
+
+									snapshot.setDiff(diff);
+									snapshot.setMatch(match);
+								}
+							});
+					final Date end = Calendar.getInstance().getTime();
+					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
+							- start.getTime());
+
+					configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
+					super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+				}
+			} catch (IOException e) {
+				throw new EMFCompareException(e);
+			} catch (CoreException e) {
+				throw new EMFCompareException(e);
+			} catch (InterruptedException e) {
+				throw new EMFCompareException(e);
+			} catch (InvocationTargetException e) {
+				throw new EMFCompareException(e);
+			}
 		}
 	}
 
@@ -534,8 +621,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void updateToolItems() {
 		super.updateToolItems();
-		copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
-		copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
+		if (copyDiffRightToLeft != null)
+			copyDiffRightToLeft.setEnabled(configuration.isLeftEditable());
+		if (copyDiffLeftToRight != null)
+			copyDiffLeftToRight.setEnabled(configuration.isRightEditable());
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 
