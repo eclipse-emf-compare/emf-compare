@@ -38,7 +38,7 @@ public final class NameSimilarity {
 	private static final WeakHashMap<EClass, EAttribute> NAME_FEATURE_CACHE = new WeakHashMap<EClass, EAttribute>();
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private NameSimilarity() {
 		// prevents instantiation

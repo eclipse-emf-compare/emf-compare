@@ -47,6 +47,9 @@ public class MatchService {
 		parseExtensionMetadata();
 	}
 
+	/**
+	 * This will parse the currently running platform for extensions and store all the match engines that can be found.
+	 */
 	private void parseExtensionMetadata() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(MatchPlugin.PLUGIN_ID, "engine") //$NON-NLS-1$
 				.getExtensions();
@@ -60,6 +63,12 @@ public class MatchService {
 
 	}
 
+	/**
+	 * Stores the given descriptor in the {@link List} of known {@link EngineDescriptor}s.
+	 * 
+	 * @param desc
+	 *            Descriptor to be added to the list of all know descriptors.
+	 */
 	private void storeEngineDescriptor(EngineDescriptor desc) {
 		if (!engines.containsKey(desc.getFileExtension())) {
 			engines.put(desc.getFileExtension(), new ArrayList<EngineDescriptor>());
@@ -68,6 +77,13 @@ public class MatchService {
 		set.add(desc);
 	}
 
+	/**
+	 * Returns the best {@link EngineDescriptor} for a given file extension.
+	 * 
+	 * @param extension
+	 *            The file extension we need a match engine for.
+	 * @return The best {@link EngineDescriptor}.
+	 */
 	private EngineDescriptor getBestDescriptor(String extension) {
 		EngineDescriptor descriptor = null;
 		if (engines.containsKey(extension)) {
@@ -78,6 +94,13 @@ public class MatchService {
 		return descriptor;
 	}
 
+	/**
+	 * Returns the highest {@link EngineDescriptor} from the given {@link List}.
+	 * 
+	 * @param set
+	 *            {@link List} of {@link EngineDescriptor} from which to find the highest one.
+	 * @return The highest {@link EngineDescriptor} from the given {@link List}.
+	 */
 	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
@@ -85,10 +108,17 @@ public class MatchService {
 		return null;
 	}
 
-	private EngineDescriptor parseEngine(IConfigurationElement configElements) {
-		if (!configElements.getName().equals(TAG_ENGINE))
+	/**
+	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor for it if it describes and engine.
+	 * 
+	 * @param configElement
+	 *            Configuration element to parse.
+	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine, <code>null</code> otherwise.
+	 */
+	private EngineDescriptor parseEngine(IConfigurationElement configElement) {
+		if (!configElement.getName().equals(TAG_ENGINE))
 			return null;
-		final EngineDescriptor desc = new EngineDescriptor(configElements);
+		final EngineDescriptor desc = new EngineDescriptor(configElement);
 		return desc;
 	}
 

@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  */
 public final class StructureSimilarity {
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private StructureSimilarity() {
 		// prevents instantiation

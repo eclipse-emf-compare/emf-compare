@@ -25,7 +25,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
- * This class determines the unused features in a metamodel using models.
+ * This class determines the unused features in a metamodel using models.<br/>
+ * <p>
+ * A feature is considered &quot;unused&quot; if its value is never changed throughout all the model's classes.
+ * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -33,7 +36,7 @@ public class MetamodelFilter {
 	/** Keeps track of all the informations of the features. */
 	protected final Map<EStructuralFeature, FeatureInformation> featuresToInformation = new HashMap<EStructuralFeature, FeatureInformation>();
 
-	/** List of the unused features' informations'. */
+	/** List of the unused features' informations. */
 	protected List<FeatureInformation> unusedFeatures;
 
 	/** This {@link HashMap} will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass class}. */
@@ -64,6 +67,11 @@ public class MetamodelFilter {
 		return result;
 	}
 
+	/**
+	 * Returns all the unused features of the {@link EObject} that's been parsed through {@link #processEObject(EObject)}.
+	 * 
+	 * @return All the unused features of the {@link EObject} that's been parsed through {@link #processEObject(EObject)}.
+	 */
 	private Collection getUnusedFeatures() {
 		if (unusedFeatures == null)
 			buildUnusedFeatures();
@@ -87,6 +95,10 @@ public class MetamodelFilter {
 		eClassToFeaturesList.clear();
 	}
 
+	/**
+	 * This will iterate through all the features stored via {@link #processEObject(EObject)} and populates the
+	 * {@link #unusedFeatures unused features list}.
+	 */
 	private void buildUnusedFeatures() {
 		unusedFeatures = new ArrayList<FeatureInformation>();
 		final Iterator<EStructuralFeature> it = featuresToInformation.keySet().iterator();
@@ -97,6 +109,13 @@ public class MetamodelFilter {
 		}
 	}
 
+	/**
+	 * Iterates through all the {@link EStructuralFeature features} of a given {@link EObject} and populates the
+	 * {@link #featuresToInformation known features list} for later use.
+	 * 
+	 * @param eObj
+	 *            {@link EObject} we need to parse for feature information.
+	 */
 	private void processEObject(EObject eObj) {
 		final Iterator featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (featIt.hasNext()) {
@@ -130,7 +149,7 @@ class FeatureInformation {
 
 	/** Value of this feature if it is never altered. */
 	private String uniqueValue;
-	
+
 	/** Counts the number of times this feature's information is accessed. */
 	private int timesUsed;
 
