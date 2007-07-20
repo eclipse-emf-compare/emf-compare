@@ -17,10 +17,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -34,7 +32,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class AddReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
 	 * <!-- begin-user-doc -->
@@ -56,38 +54,8 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addRightAddedTargetPropertyDescriptor(object);
-			addLeftAddedTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Added Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftAddedTargetPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_leftAddedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_leftAddedTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						"_UI_AddReferenceValue_type"), DiffPackage.Literals.ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET, true, false, true, null, null, null)); //$NON-NLS-1$
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Added Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightAddedTargetPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AddReferenceValue_rightAddedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AddReferenceValue_rightAddedTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						"_UI_AddReferenceValue_type"), DiffPackage.Literals.ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET, true, false, true, null, null, null)); //$NON-NLS-1$
 	}
 
 	/**
@@ -98,7 +66,7 @@ public class AddReferenceValueItemProvider extends ReferenceChangeItemProvider i
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AddReferenceValue")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AddReferenceValue"));
 	}
 
 	/**

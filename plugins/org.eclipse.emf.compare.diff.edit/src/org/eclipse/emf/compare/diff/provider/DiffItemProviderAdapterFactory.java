@@ -141,6 +141,52 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget} instances. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected AttributeChangeLeftTargetItemProvider attributeChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createAttributeChangeLeftTargetAdapter() {
+		if (attributeChangeLeftTargetItemProvider == null) {
+			attributeChangeLeftTargetItemProvider = new AttributeChangeLeftTargetItemProvider(this);
+		}
+
+		return attributeChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget} instances. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected AttributeChangeRightTargetItemProvider attributeChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createAttributeChangeRightTargetAdapter() {
+		if (attributeChangeRightTargetItemProvider == null) {
+			attributeChangeRightTargetItemProvider = new AttributeChangeRightTargetItemProvider(this);
+		}
+
+		return attributeChangeRightTargetItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange} instances. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
 	 * 
@@ -160,6 +206,52 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 		}
 
 		return referenceChangeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget} instances. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ReferenceChangeLeftTargetItemProvider referenceChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createReferenceChangeLeftTargetAdapter() {
+		if (referenceChangeLeftTargetItemProvider == null) {
+			referenceChangeLeftTargetItemProvider = new ReferenceChangeLeftTargetItemProvider(this);
+		}
+
+		return referenceChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget} instances. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ReferenceChangeRightTargetItemProvider referenceChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget}. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createReferenceChangeRightTargetAdapter() {
+		if (referenceChangeRightTargetItemProvider == null) {
+			referenceChangeRightTargetItemProvider = new ReferenceChangeRightTargetItemProvider(this);
+		}
+
+		return referenceChangeRightTargetItemProvider;
 	}
 
 	/**
@@ -520,29 +612,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ConflictingDiffGroupItemProvider conflictingDiffGroupItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createConflictingDiffGroupAdapter() {
-		if (conflictingDiffGroupItemProvider == null) {
-			conflictingDiffGroupItemProvider = new ConflictingDiffGroupItemProvider(this);
-		}
-
-		return conflictingDiffGroupItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement} instances. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -842,12 +911,12 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	public void dispose() {
 		if (diffModelItemProvider != null)
 			diffModelItemProvider.dispose();
+		if (conflictingDiffElementItemProvider != null)
+			conflictingDiffElementItemProvider.dispose();
 		if (diffGroupItemProvider != null)
 			diffGroupItemProvider.dispose();
-		if (attributeChangeItemProvider != null)
-			attributeChangeItemProvider.dispose();
-		if (referenceChangeItemProvider != null)
-			referenceChangeItemProvider.dispose();
+		if (modelInputSnapshotItemProvider != null)
+			modelInputSnapshotItemProvider.dispose();
 		if (modelElementChangeItemProvider != null)
 			modelElementChangeItemProvider.dispose();
 		if (modelElementChangeLeftTargetItemProvider != null)
@@ -856,48 +925,54 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			modelElementChangeRightTargetItemProvider.dispose();
 		if (addModelElementItemProvider != null)
 			addModelElementItemProvider.dispose();
+		if (remoteAddModelElementItemProvider != null)
+			remoteAddModelElementItemProvider.dispose();
 		if (removeModelElementItemProvider != null)
 			removeModelElementItemProvider.dispose();
+		if (remoteRemoveModelElementItemProvider != null)
+			remoteRemoveModelElementItemProvider.dispose();
 		if (updateModelElementItemProvider != null)
 			updateModelElementItemProvider.dispose();
 		if (moveModelElementItemProvider != null)
 			moveModelElementItemProvider.dispose();
+		if (remoteMoveModelElementItemProvider != null)
+			remoteMoveModelElementItemProvider.dispose();
+		if (attributeChangeItemProvider != null)
+			attributeChangeItemProvider.dispose();
+		if (attributeChangeLeftTargetItemProvider != null)
+			attributeChangeLeftTargetItemProvider.dispose();
+		if (attributeChangeRightTargetItemProvider != null)
+			attributeChangeRightTargetItemProvider.dispose();
 		if (addAttributeItemProvider != null)
 			addAttributeItemProvider.dispose();
+		if (remoteAddAttributeItemProvider != null)
+			remoteAddAttributeItemProvider.dispose();
 		if (removeAttributeItemProvider != null)
 			removeAttributeItemProvider.dispose();
+		if (remoteRemoveAttributeItemProvider != null)
+			remoteRemoveAttributeItemProvider.dispose();
 		if (updateAttributeItemProvider != null)
 			updateAttributeItemProvider.dispose();
+		if (remoteUpdateAttributeItemProvider != null)
+			remoteUpdateAttributeItemProvider.dispose();
+		if (referenceChangeItemProvider != null)
+			referenceChangeItemProvider.dispose();
+		if (referenceChangeLeftTargetItemProvider != null)
+			referenceChangeLeftTargetItemProvider.dispose();
+		if (referenceChangeRightTargetItemProvider != null)
+			referenceChangeRightTargetItemProvider.dispose();
 		if (addReferenceValueItemProvider != null)
 			addReferenceValueItemProvider.dispose();
+		if (remoteAddReferenceValueItemProvider != null)
+			remoteAddReferenceValueItemProvider.dispose();
 		if (removeReferenceValueItemProvider != null)
 			removeReferenceValueItemProvider.dispose();
+		if (remoteRemoveReferenceValueItemProvider != null)
+			remoteRemoveReferenceValueItemProvider.dispose();
 		if (updateReferenceItemProvider != null)
 			updateReferenceItemProvider.dispose();
 		if (updateUniqueReferenceValueItemProvider != null)
 			updateUniqueReferenceValueItemProvider.dispose();
-		if (modelInputSnapshotItemProvider != null)
-			modelInputSnapshotItemProvider.dispose();
-		if (conflictingDiffElementItemProvider != null)
-			conflictingDiffElementItemProvider.dispose();
-		if (conflictingDiffGroupItemProvider != null)
-			conflictingDiffGroupItemProvider.dispose();
-		if (remoteAddModelElementItemProvider != null)
-			remoteAddModelElementItemProvider.dispose();
-		if (remoteRemoveModelElementItemProvider != null)
-			remoteRemoveModelElementItemProvider.dispose();
-		if (remoteMoveModelElementItemProvider != null)
-			remoteMoveModelElementItemProvider.dispose();
-		if (remoteAddAttributeItemProvider != null)
-			remoteAddAttributeItemProvider.dispose();
-		if (remoteRemoveAttributeItemProvider != null)
-			remoteRemoveAttributeItemProvider.dispose();
-		if (remoteUpdateAttributeItemProvider != null)
-			remoteUpdateAttributeItemProvider.dispose();
-		if (remoteAddReferenceValueItemProvider != null)
-			remoteAddReferenceValueItemProvider.dispose();
-		if (remoteRemoveReferenceValueItemProvider != null)
-			remoteRemoveReferenceValueItemProvider.dispose();
 		if (remoteUpdateUniqueReferenceValueItemProvider != null)
 			remoteUpdateUniqueReferenceValueItemProvider.dispose();
 	}

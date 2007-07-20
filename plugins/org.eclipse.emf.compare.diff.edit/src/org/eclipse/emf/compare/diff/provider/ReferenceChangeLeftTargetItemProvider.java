@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -25,19 +25,19 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget} object. <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
  * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class ConflictingDiffGroupItemProvider extends DiffGroupItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ReferenceChangeLeftTargetItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public ConflictingDiffGroupItemProvider(AdapterFactory adapterFactory) {
+	public ReferenceChangeLeftTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -51,31 +51,56 @@ public class ConflictingDiffGroupItemProvider extends DiffGroupItemProvider impl
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addLeftRemovedTargetPropertyDescriptor(object);
+			addRightRemovedTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This returns ConflictingDiffGroup.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Removed Target feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addLeftRemovedTargetPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChangeLeftTarget_leftRemovedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_leftRemovedTarget_feature",
+						"_UI_ReferenceChangeLeftTarget_type"), DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Removed Target feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addRightRemovedTargetPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChangeLeftTarget_rightRemovedTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_rightRemovedTarget_feature",
+						"_UI_ReferenceChangeLeftTarget_type"), DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This returns ReferenceChangeLeftTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictingDiffGroup")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReferenceChangeLeftTarget"));
 	}
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated NOT
+	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
-		ConflictingDiffGroup conflictingDiffGroup = (ConflictingDiffGroup)object;
-		if (((ConflictingDiffElement)conflictingDiffGroup.eContainer()).getLeftDiff().equals(conflictingDiffGroup))
-			return getString("_UI_ConflictingDiffGroup_Local_type", new Object[] {conflictingDiffGroup.getSubchanges()}); //$NON-NLS-1$
-		return getString("_UI_ConflictingDiffGroup_Remote_type", new Object[] {conflictingDiffGroup.getSubchanges()}); //$NON-NLS-1$
+		return getString("_UI_ReferenceChangeLeftTarget_type");
 	}
 
 	/**

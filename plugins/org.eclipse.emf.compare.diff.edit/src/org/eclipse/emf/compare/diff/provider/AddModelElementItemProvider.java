@@ -57,6 +57,7 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
+
 		}
 		return itemPropertyDescriptors;
 	}

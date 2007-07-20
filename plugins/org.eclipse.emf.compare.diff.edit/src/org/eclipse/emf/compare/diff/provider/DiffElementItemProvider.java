@@ -86,7 +86,7 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_DiffElement_type"); //$NON-NLS-1$
+		return getString("_UI_DiffElement_type");
 	}
 
 	/**
@@ -120,11 +120,9 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createConflictingDiffElement()));
+
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createDiffGroup()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAttributeChange()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createReferenceChange()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createModelElementChange()));
 
@@ -134,45 +132,53 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddModelElement()));
 
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddModelElement()));
+
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveModelElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveModelElement()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateModelElement()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createMoveModelElement()));
 
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteMoveModelElement()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAttributeChange()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAttributeChangeLeftTarget()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAttributeChangeRightTarget()));
+
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddAttribute()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveAttribute()));
 
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveAttribute()));
+
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteUpdateAttribute()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createReferenceChange()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createReferenceChangeLeftTarget()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createReferenceChangeRightTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createAddReferenceValue()));
 
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddReferenceValue()));
+
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoveReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveReferenceValue()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateReference()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createConflictingDiffElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createConflictingDiffGroup()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteMoveModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteUpdateAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteAddReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteRemoveReferenceValue()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS, DiffFactory.eINSTANCE.createRemoteUpdateUniqueReferenceValue()));
 	}

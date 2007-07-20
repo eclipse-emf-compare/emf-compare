@@ -70,7 +70,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	protected void addAttributePropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_attribute_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_attribute_feature", "_UI_AttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				getString("_UI_AttributeChange_attribute_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_attribute_feature", "_UI_AttributeChange_type"),
 				DiffPackage.Literals.ATTRIBUTE_CHANGE__ATTRIBUTE, true, false, true, null, null, null));
 	}
 
@@ -84,7 +84,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	protected void addLeftElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_leftElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_leftElement_feature", "_UI_AttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				getString("_UI_AttributeChange_leftElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_leftElement_feature", "_UI_AttributeChange_type"),
 				DiffPackage.Literals.ATTRIBUTE_CHANGE__LEFT_ELEMENT, true, false, true, null, null, null));
 	}
 
@@ -98,7 +98,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	protected void addRightElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_rightElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_rightElement_feature", "_UI_AttributeChange_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				getString("_UI_AttributeChange_rightElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_rightElement_feature", "_UI_AttributeChange_type"),
 				DiffPackage.Literals.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, true, false, true, null, null, null));
 	}
 
@@ -110,7 +110,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChange")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChange"));
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_AttributeChange_type"); //$NON-NLS-1$
+		return getString("_UI_AttributeChange_type");
 	}
 
 	/**

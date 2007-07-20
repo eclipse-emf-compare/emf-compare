@@ -136,4 +136,5 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
+
 }
