@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Widget;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergeViewerPart {
-	/** This {@link String} is used as an error message when an unexisting tab is accessed */
+	/** This {@link String} is used as an error message when an unexisting tab is accessed. */
 	private static final String INVALID_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
 
 	/** This keeps track of the parent viewer of this viewer part. */
@@ -351,6 +351,8 @@ public class ModelContentMergeViewerPart {
 			final TreeItem treeItem = (TreeItem)find(target);
 			if (diff instanceof RemoveModelElement && treeItem != null)
 				treeItem.setExpanded(true);
+		} else if (partSide == EMFCompareConstants.ANCESTOR) {
+			target = EMFCompareEObjectUtils.getAncestorElement(diff);
 		}
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			tree.showItem(target);
@@ -436,6 +438,13 @@ public class ModelContentMergeViewerPart {
 		return theElement;
 	}
 
+	/**
+	 * Handles the creation of the tree tab of this viewer part given the parent {@link Composite} under which to create it.
+	 * 
+	 * @param composite
+	 *            Parent {@link Composite} of the tree to create.
+	 * @return The tree part displayed by this viewer part's tree tab.
+	 */
 	private ModelContentMergeTreePart createTreePart(Composite composite) {
 		final ModelContentMergeTreePart treePart = new ModelContentMergeTreePart(composite);
 
@@ -496,6 +505,13 @@ public class ModelContentMergeViewerPart {
 		return treePart;
 	}
 
+	/**
+	 * Handles the creation of the properties tab of this viewer part given the parent {@link Composite} under which to create it.
+	 * 
+	 * @param composite
+	 *            Parent {@link Composite} of the table to create.
+	 * @return The properties part displayed by this viewer part's properties tab.
+	 */
 	private ModelContentMergePropertyPart createPropertiesPart(Composite composite) {
 		final ModelContentMergePropertyPart propertiesPart = new ModelContentMergePropertyPart(composite, SWT.NONE, partSide);
 
@@ -540,38 +556,51 @@ public class ModelContentMergeViewerPart {
 	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in the tree tab.
 	 */
 	class TreePaintListener implements PaintListener {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+		 */
 		public void paintControl(PaintEvent event) {
 			// This will avoid strange random resize behavior on linux OS
 			if (tree.getTree().getBounds() != tabFolder.getClientArea())
 				resizeBounds();
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (!(diff.eContainer() instanceof ConflictingDiffGroup)) {
-					if (partSide == EMFCompareConstants.RIGHT) {
-						final TreeItem leftItem = (TreeItem)parentViewer.getLeftItem(diff);
-						drawRectangle(event, leftItem, diff);
-					} else if (partSide == EMFCompareConstants.LEFT) {
-						final TreeItem rightItem = (TreeItem)parentViewer.getRightItem(diff);
-						drawRectangle(event, rightItem, diff);
-					}
-				} else {
-					if (partSide == EMFCompareConstants.ANCESTOR) {
-						final TreeItem ancestorItem = (TreeItem)parentViewer.getAncestorItem((DiffElement)diff.eContainer());
-						drawRectangle(event, ancestorItem, (DiffElement)diff.eContainer());
-					}
+				if (partSide == EMFCompareConstants.RIGHT) {
+					final TreeItem leftItem = (TreeItem)parentViewer.getLeftItem(diff);
+					drawRectangle(event, leftItem, diff);
+				} else if (partSide == EMFCompareConstants.LEFT) {
+					final TreeItem rightItem = (TreeItem)parentViewer.getRightItem(diff);
+					drawRectangle(event, rightItem, diff);
+				} else if (partSide == EMFCompareConstants.ANCESTOR && diff.eContainer() instanceof ConflictingDiffElement) {
+					final TreeItem ancestorItem = (TreeItem)parentViewer.getAncestorItem((DiffElement)diff.eContainer());
+					drawRectangle(event, ancestorItem, (DiffElement)diff.eContainer());
 				}
 			}
 		}
 
+		/**
+		 * Handles the drawing itself.
+		 * 
+		 * @param event
+		 *            {@link PaintEvent} that triggered this operation.
+		 * @param treeItem
+		 *            {@link TreeItem} that need to be circled and connected to the center part.
+		 * @param diff
+		 *            {@link DiffElement} we're circling this {@link TreeItem} for.
+		 */
 		private void drawRectangle(PaintEvent event, TreeItem treeItem, DiffElement diff) {
 			final Rectangle treeBounds = tree.getTree().getClientArea();
 			final Rectangle treeItemBounds = treeItem.getBounds();
-			RGB color = parentViewer.getChangedColor();
-
+			
 			// Defines the circling Color
+			RGB color = parentViewer.getChangedColor();
 			if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
 				color = parentViewer.getAddedColor();
 			} else if (diff instanceof RemoveModelElement || diff instanceof RemoteRemoveModelElement) {
 				color = parentViewer.getRemovedColor();
+			} else if (diff instanceof ConflictingDiffElement || diff.eContainer() instanceof ConflictingDiffElement) {
+				color = parentViewer.getConflictingColor();
 			}
 
 			/*
@@ -632,6 +661,11 @@ public class ModelContentMergeViewerPart {
 	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in the properties tab.
 	 */
 	class PropertyPaintListener implements PaintListener {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+		 */
 		public void paintControl(PaintEvent event) {
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
 				if (diff instanceof AttributeChange && find(diff) != null && partSide == EMFCompareConstants.RIGHT) {
@@ -640,6 +674,14 @@ public class ModelContentMergeViewerPart {
 			}
 		}
 
+		/**
+		 * Handles the drawing itself.
+		 * 
+		 * @param event
+		 *            {@link PaintEvent} that triggered this operation.
+		 * @param tableItem
+		 *            Item we want connected to the center part.
+		 */
 		private void drawLine(PaintEvent event, TableItem tableItem) {
 			final Rectangle tableBounds = properties.getTable().getBounds();
 			final Rectangle tableItemBounds = tableItem.getBounds();

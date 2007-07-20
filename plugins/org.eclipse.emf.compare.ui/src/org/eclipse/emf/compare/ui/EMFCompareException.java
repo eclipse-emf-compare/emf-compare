@@ -20,13 +20,22 @@ public class EMFCompareException extends RuntimeException {
 	private static final long serialVersionUID = 5727212239745736313L;
 
 	/**
-	 * *Constructs a new runtime exception with the specified detail message.
+	 * Constructs a new runtime exception with the specified detail message.
 	 * 
 	 * @param message
-	 *            The detail message. The detail message is saved for later retrieval by the
-	 *            {@link #getMessage()} method.
+	 *            The detail message. The detail message is saved for later retrieval by the {@link #getMessage()} method.
 	 */
 	public EMFCompareException(String message) {
 		super(message);
+	}
+
+	/**
+	 * Constructs a new runtime exception wrapped around another exception.
+	 * 
+	 * @param exception
+	 *            Exception to wrapp within this new one.
+	 */
+	public EMFCompareException(Throwable exception) {
+		super(exception);
 	}
 }

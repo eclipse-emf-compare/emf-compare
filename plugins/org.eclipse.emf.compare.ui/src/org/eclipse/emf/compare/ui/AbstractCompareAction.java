@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ui;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.eclipse.compare.CompareUI;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -30,15 +31,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 public abstract class AbstractCompareAction extends Action {
 	/** Fullpath for our action icons. */
 	private static final IPath ICONS_PATH = new Path("$nl$/icons/full/"); //$NON-NLS-1$
-	
-	/* DIRTY 
-	 * should use CompareUIPlugin.getDefault or CompareUIPlugin.PLUGIN_ID yet neither of 
-	 * these is accessible.
-	 * An alternative would be to copy compare icons in our own /icons/full as this
-	 * ID is used to resolve the icon path.
-	 */
-	/** Eclipse compare's plug-in id. Used to resolve their icons' paths. */
-	private static final String COMPARE_UI_PLUGIN_ID = "org.eclipse.compare"; //$NON-NLS-1$
 	
 	/**
 	 * Creates and initializes and action given its {@link ResourceBundle} and its 
@@ -61,13 +53,7 @@ public abstract class AbstractCompareAction extends Action {
 		
 		setText(bundle.getString(labelKey));
 		setToolTipText(bundle.getString(tooltipKey));
-		
-		/* DIRTY
-		 * We are here using the native icons of org.eclipse.compare for actions, yet
-		 * some needed information is not open API. 
-		 * see #ICONS_PATH
-		 * see #COMPARE_UI_PLUGIN_ID
-		 */
+
 		final String imagePath = bundle.getString(imageKey);
 		if (imagePath != null && imagePath.trim().length() > 0) {
 			String disabledImagePath;
@@ -83,11 +69,11 @@ public abstract class AbstractCompareAction extends Action {
 			}
 			
 			ImageDescriptor disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(
-					Platform.getBundle(COMPARE_UI_PLUGIN_ID), 
+					Platform.getBundle(CompareUI.PLUGIN_ID), 
 					ICONS_PATH.append(disabledImagePath),
 					null));
 			ImageDescriptor enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(
-					Platform.getBundle(COMPARE_UI_PLUGIN_ID), 
+					Platform.getBundle(CompareUI.PLUGIN_ID), 
 					ICONS_PATH.append(enabledImagePath),
 					null));
 			

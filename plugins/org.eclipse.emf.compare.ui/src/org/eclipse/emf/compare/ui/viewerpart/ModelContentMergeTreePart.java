@@ -15,13 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.util.AdapterUtils;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -62,21 +58,8 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public Widget find(Object element) {
 		Widget res = super.findItem(element);
-		if (res == null && element instanceof EObject) {
-			double maxSimilarity = 0d;
-			Object mostSimilarData = null;
-			for (TreeItem item : getVisibleElements()) {
-				if (haveDistinctXMIID((EObject)element, (EObject)item.getData()))
-					continue;
-				final double similarity = contentSimilarity((EObject)element, (EObject)item.getData());
-				if (similarity > maxSimilarity) {
-					maxSimilarity = similarity;
-					mostSimilarData = item.getData();
-				}
-			}
-			if (mostSimilarData != null) {
-				res = super.findItem(mostSimilarData);
-			} else if (((EObject)element).eContainer() != null) {
+		if (res == null && element instanceof EObject) { 
+			if (((EObject)element).eContainer() != null) {
 				res = find(((EObject)element).eContainer());
 			} else
 				res = getTree().getItem(0);
@@ -173,41 +156,6 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			}
 		}
 		super.setSelectionToWidget(l, reveal);
-	}
-
-	/**
-	 * This will compare two objects to see if they have ID and in that case, if these IDs are distinct.
-	 * 
-	 * @param left
-	 *            Left of the two objects to compare.
-	 * @param right
-	 *            right of the two objects to compare.
-	 * @return <code>True</code> if only one of the two objects has an ID or the two are distinct, <code>False</code> otherwise.
-	 */
-	private boolean haveDistinctXMIID(EObject left, EObject right) {
-		boolean result = false;
-		String item1ID = null;
-		String item2ID = null;
-		if (left.eResource() != null && left.eResource() instanceof XMIResource)
-			item1ID = ((XMIResource)left.eResource()).getID(left);
-		if (right.eResource() != null && right.eResource() instanceof XMIResource)
-			item2ID = ((XMIResource)right.eResource()).getID(right);
-		if (item1ID != null) {
-			result = !item1ID.equals(item2ID);
-		} else {
-			result = item2ID != null;
-		}
-		return result;
-	}
-
-	private double contentSimilarity(EObject obj1, EObject obj2) {
-		double similarity = 0d;
-		try {
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, new MetamodelFilter()), NameSimilarity.contentValue(obj2, new MetamodelFilter()));
-		} catch (FactoryException e) {
-			// fails silently, will return 0d
-		}
-		return similarity;
 	}
 
 	/**

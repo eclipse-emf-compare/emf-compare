@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.util;
 
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +27,7 @@ public final class EMFCompareEObjectUtils {
 	private static AdapterFactoryLabelProvider labelProvider;
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private EMFCompareEObjectUtils() {
 		// prevents instantiation
@@ -112,14 +112,18 @@ public final class EMFCompareEObjectUtils {
 	public static EObject getAncestorElement(EObject object) {
 		EObject ancestorElement = null;
 
-		if (object instanceof ConflictingDiffGroup)
-			ancestorElement = ((ConflictingDiffGroup)object).getLeftParent();
+		if (object instanceof ConflictingDiffElement)
+			ancestorElement = ((ConflictingDiffElement)object).getOriginElement();
 		else if (object instanceof Match3Element)
 			ancestorElement = ((Match3Element)object).getOriginElement();
 
 		return ancestorElement;
 	}
 
+	/**
+	 * Returns the label provider wrapped around {@link EMFAdapterFactoryProvider#getAdapterFactory()}.
+	 * @return The label provider wrapped around {@link EMFAdapterFactoryProvider#getAdapterFactory()}.
+	 */
 	private static AdapterFactoryLabelProvider getLabelProvider() {
 		if (labelProvider == null) {
 			labelProvider = new AdapterFactoryLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory());

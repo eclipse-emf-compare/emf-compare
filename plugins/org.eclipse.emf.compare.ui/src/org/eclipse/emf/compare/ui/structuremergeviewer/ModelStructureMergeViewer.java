@@ -35,6 +35,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -80,18 +81,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * Returns the widget representing the given element.
-	 * 
-	 * @param element
-	 *            Element we seek the {@link TreeItem} for.
-	 * @return The widget representing the given element.
-	 */
-	/* package */Widget find(Object element) {
-		final Widget widget = super.findItem(element);
-		return widget;
-	}
-
-	/**
 	 * This will initialize the "save as emfdiff" action and put its icon in the {@link CompareViewerPane} toolbar.
 	 */
 	protected void createToolItems() {
@@ -116,6 +105,28 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.jface.viewers.StructuredViewer#fireOpen(org.eclipse.jface.viewers.OpenEvent)
+	 */
+	@Override
+	protected void fireOpen(OpenEvent event) {
+		// DIRTY
+		// cancels open events that could be fired to avoid "NullViewer" opening.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	@Override
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		// DIRTY
+		// cancels selection changed events that could be fired to avoid "NullViewer" opening.
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -123,22 +134,29 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		super.inputChanged(input, oldInput);
 		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
 			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_INPUT_CHANGED, ((ModelStructureContentProvider)getContentProvider()).getSnapshot());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, ((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Returns the widget representing the given element.
 	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#fireOpen(org.eclipse.jface.viewers.OpenEvent)
+	 * @param element
+	 *            Element we seek the {@link TreeItem} for.
+	 * @return The widget representing the given element.
 	 */
-	@Override
-	protected void fireOpen(OpenEvent event) {
-		/*
-		 * DIRTY cancels open events that could be fired to avoid "NullViewer" opening.
-		 */
+	/* package */Widget find(Object element) {
+		final Widget widget = super.findItem(element);
+		return widget;
 	}
 
+	/**
+	 * initializer of this structure merge viewer. It sets the {@link LabelProvider label} and content provider for the tree and creates the different
+	 * needed listeners.
+	 * 
+	 * @param compareConfiguration
+	 *            Configuration of the underlying comparison.
+	 */
 	private void initialize(CompareConfiguration compareConfiguration) {
 		configuration = compareConfiguration;
 		setLabelProvider(new ModelStructureLabelProvider());
@@ -182,8 +200,12 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		}
 
 		/**
-		 * Returns the platform icon for a file. You can replace with your own icon if not a IFile, then pass it to the regular EMF.Edit providers.
+		 * Returns the platform icon for a given {@link IFile}. If not an {@link IFile}, delegates to the {@link AdapterFactoryLabelProvider} to get
+		 * the {@link Image}.
 		 * 
+		 * @param object
+		 *            Object to get the {@link Image} for.
+		 * @return The platform icon for the given object.
 		 * @see AdapterFactoryLabelProvider#getImage(Object)
 		 */
 		@Override
@@ -206,6 +228,9 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		/**
 		 * Returns the name of the given {@link IFile}, delegates to {@link AdapterFactoryLabelProvider#getText(Object)} if not an {@link IFile}.
 		 * 
+		 * @param object
+		 *            Object we seek the name for.
+		 * @return The name of the given object.
 		 * @see AdapterFactoryLabelProvider#getText(Object)
 		 */
 		@Override

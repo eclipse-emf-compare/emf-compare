@@ -155,7 +155,13 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		((TreeViewer)viewer).getTree().clearAll(true);
-		if (newInput instanceof ICompareInput) {
+		if (newInput instanceof ModelInputSnapshot) {
+			snapshot = (ModelInputSnapshot)newInput;
+			diffInput = snapshot.getDiff();
+		} else if (configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT) != null) {
+			snapshot = (ModelInputSnapshot)configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
+			diffInput = snapshot.getDiff();
+		} else if (newInput instanceof ICompareInput) {
 			final ITypedElement left = ((ICompareInput)newInput).getLeft();
 			final ITypedElement right = ((ICompareInput)newInput).getRight();
 			final ITypedElement ancestor = ((ICompareInput)newInput).getAncestor();
@@ -165,9 +171,6 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 
 			prepareComparison(left, right, ancestor);
 			doCompare();
-		} else if (newInput instanceof ModelInputSnapshot) {
-			snapshot = (ModelInputSnapshot)newInput;
-			diffInput = snapshot.getDiff();
 		}
 	}
 
@@ -217,9 +220,9 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 							ancestor.getName(), modelResourceSet);
 			}
 		} catch (IOException e) {
-			throw new EMFCompareException(e.getMessage());
+			throw new EMFCompareException(e);
 		} catch (CoreException e) {
-			throw new EMFCompareException(e.getMessage());
+			throw new EMFCompareException(e);
 		}
 	}
 	
@@ -261,11 +264,6 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
-
-			// prints comparison time
-			// System.out.println(EMFCompareEObjectUtils.computeObjectName(leftModel) +
-			// " and " + EMFCompareEObjectUtils.computeObjectName(rightModel) +
-			// " compared in : " + (end.getTime() - start.getTime()) + "ms");
 
 			diffInput = snapshot.getDiff();
 		} catch (InterruptedException e) {

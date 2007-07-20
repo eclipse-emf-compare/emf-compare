@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  */
 public final class ClassUtils {
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private ClassUtils() {
 		// prevents instantiation

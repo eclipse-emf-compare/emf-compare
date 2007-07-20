@@ -18,9 +18,12 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -142,23 +145,24 @@ public class ModelCompareInput implements ICompareInput {
 	public List<DiffElement> getDiffAsList() {
 		final List<DiffElement> diffs = new LinkedList<DiffElement>();
 		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
-//		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
-//		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
-//		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
+		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
+		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
+		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
 		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
-			if (!(aDiff instanceof DiffGroup))
-				diffs.add(aDiff);
-//			if (aDiff instanceof ModelElementChange)
-//				modelElementDiffs.add((ModelElementChange)aDiff);
-//			else if (aDiff instanceof AttributeChange)
-//				attributeChangeDiffs.add((AttributeChange)aDiff);
-//			else if (aDiff instanceof ReferenceChange)
-//				referenceChangeDiffs.add((ReferenceChange)aDiff);
+			if (aDiff instanceof ModelElementChange)
+				modelElementDiffs.add((ModelElementChange)aDiff);
+			else if (aDiff instanceof AttributeChange)
+				attributeChangeDiffs.add((AttributeChange)aDiff);
+			else if (aDiff instanceof ReferenceChange)
+				referenceChangeDiffs.add((ReferenceChange)aDiff);
 		}
-//		diffs.addAll(modelElementDiffs);
-//		diffs.addAll(attributeChangeDiffs);
-//		diffs.addAll(referenceChangeDiffs);
+		diffs.addAll(modelElementDiffs);
+		diffs.addAll(attributeChangeDiffs);
+		diffs.addAll(referenceChangeDiffs);
+		modelElementDiffs.clear();
+		attributeChangeDiffs.clear();
+		referenceChangeDiffs.clear();
 		return diffs;
 	}
 
