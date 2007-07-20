@@ -38,7 +38,7 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private AdapterUtils() {
 		// prevents instantiation.
@@ -59,7 +59,7 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Returnq the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
+	 * Returns the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
 	 * 
 	 * @param eObj
 	 *            {@link EObject} we seek the {@link AdapterFactory} for.
@@ -103,7 +103,7 @@ public final class AdapterUtils {
  * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code> and the {@link IConfigurationElement}
  * it's been created from.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 final class AdapterFactoryDescriptor {
 	/** Name space URI of the wrapped {@link AdapterFactory}. */

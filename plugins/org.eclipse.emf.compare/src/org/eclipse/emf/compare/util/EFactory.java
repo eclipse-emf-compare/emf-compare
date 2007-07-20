@@ -35,7 +35,7 @@ public final class EFactory {
 	private static final String GETTER_PREFIX = "get"; //$NON-NLS-1$
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private EFactory() {
 		// prevents instantiation

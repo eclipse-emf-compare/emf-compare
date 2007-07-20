@@ -27,7 +27,7 @@ public final class Messages {
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private Messages() {
 		// prevents instantiation

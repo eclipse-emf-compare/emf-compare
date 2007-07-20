@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  */
 public final class ModelUtils {
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private ModelUtils() {
 		// prevents instantiation
