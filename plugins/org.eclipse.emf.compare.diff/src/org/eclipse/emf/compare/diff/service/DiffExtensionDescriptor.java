@@ -109,17 +109,31 @@ public class DiffExtensionDescriptor implements Comparable {
 		return diffExtension;
 	}
 
-	private int getPriorityValue(String value) {
-		if (value == null)
+	/**
+	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according to <code>priorityString</code> value :
+	 * <ul>
+	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
+	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
+	 * <li>&quot;high&quot; =&gt; {@value EngineConstants#PRIORITY_HIGH}</li>
+	 * <li>&quot;highest&quot; =&gt; {@value EngineConstants#PRIORITY_HIGHEST}</li>
+	 * <li>anything else =&gt; {@value EngineConstants#PRIORITY_NORMAL}</li>
+	 * </ul>
+	 * 
+	 * @param priorityString
+	 *            {@link String} value of the priority we seek.
+	 * @return <code>int</code> corresponding to the given priority {@link String}.
+	 */
+	private int getPriorityValue(String priorityString) {
+		if (priorityString == null)
 			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if (value.equals("lowest")) { //$NON-NLS-1$
+		if (priorityString.equals("lowest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if (value.equals("low")) { //$NON-NLS-1$
+		} else if (priorityString.equals("low")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if (value.equals("high")) { //$NON-NLS-1$
+		} else if (priorityString.equals("high")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if (value.equals("highest")) { //$NON-NLS-1$
+		} else if (priorityString.equals("highest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;

@@ -58,6 +58,24 @@ public interface DiffFactory extends EFactory {
 	AttributeChange createAttributeChange();
 
 	/**
+	 * Returns a new object of class '<em>Attribute Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attribute Change Left Target</em>'.
+	 * @generated
+	 */
+	AttributeChangeLeftTarget createAttributeChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>Attribute Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attribute Change Right Target</em>'.
+	 * @generated
+	 */
+	AttributeChangeRightTarget createAttributeChangeRightTarget();
+
+	/**
 	 * Returns a new object of class '<em>Reference Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -65,6 +83,24 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	ReferenceChange createReferenceChange();
+
+	/**
+	 * Returns a new object of class '<em>Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Reference Change Left Target</em>'.
+	 * @generated
+	 */
+	ReferenceChangeLeftTarget createReferenceChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Reference Change Right Target</em>'.
+	 * @generated
+	 */
+	ReferenceChangeRightTarget createReferenceChangeRightTarget();
 
 	/**
 	 * Returns a new object of class '<em>Model Element Change</em>'.
@@ -209,15 +245,6 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	ConflictingDiffElement createConflictingDiffElement();
-
-	/**
-	 * Returns a new object of class '<em>Conflicting Diff Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Conflicting Diff Group</em>'.
-	 * @generated
-	 */
-	ConflictingDiffGroup createConflictingDiffGroup();
 
 	/**
 	 * Returns a new object of class '<em>Remote Add Model Element</em>'.

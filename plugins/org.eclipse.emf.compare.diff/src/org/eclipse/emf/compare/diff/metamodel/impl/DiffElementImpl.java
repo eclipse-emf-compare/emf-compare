@@ -27,18 +27,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff Elements</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getSubDiffElements()
 	 * @generated
 	 * @ordered
@@ -47,7 +47,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DiffElementImpl() {
@@ -56,7 +55,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -66,7 +64,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getSubDiffElements() {
@@ -78,7 +75,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,7 +88,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,7 +101,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -123,7 +117,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -138,7 +131,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

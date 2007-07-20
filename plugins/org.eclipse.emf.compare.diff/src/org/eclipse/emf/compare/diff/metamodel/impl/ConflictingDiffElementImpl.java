@@ -11,9 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -25,20 +23,19 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftDiff <em>Left Diff</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightDiff <em>Right Diff</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class ConflictingDiffElementImpl extends DiffElementImpl implements ConflictingDiffElement {
 	/**
-	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getLeftParent()
 	 * @generated
 	 * @ordered
@@ -46,8 +43,8 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject leftParent = null;
 
 	/**
-	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getRightParent()
 	 * @generated
 	 * @ordered
@@ -55,26 +52,17 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject rightParent = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftDiff() <em>Left Diff</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftDiff()
+	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOriginElement()
 	 * @generated
 	 * @ordered
 	 */
-	protected ConflictingDiffGroup leftDiff = null;
-
-	/**
-	 * The cached value of the '{@link #getRightDiff() <em>Right Diff</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightDiff()
-	 * @generated
-	 * @ordered
-	 */
-	protected ConflictingDiffGroup rightDiff = null;
+	protected EObject originElement = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ConflictingDiffElementImpl() {
@@ -83,7 +71,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -93,7 +80,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftParent() {
@@ -110,7 +96,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -119,7 +104,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftParent(EObject newLeftParent) {
@@ -131,7 +115,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightParent() {
@@ -148,7 +131,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightParent() {
@@ -157,7 +139,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightParent(EObject newRightParent) {
@@ -168,114 +149,45 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConflictingDiffGroup getLeftDiff() {
-		return leftDiff;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetLeftDiff(ConflictingDiffGroup newLeftDiff, NotificationChain msgs) {
-		ConflictingDiffGroup oldLeftDiff = leftDiff;
-		leftDiff = newLeftDiff;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF, oldLeftDiff, newLeftDiff);
-			if (msgs == null)
-				return notification;
-			msgs.add(notification);
+	public EObject getOriginElement() {
+		if (originElement != null && originElement.eIsProxy()) {
+			InternalEObject oldOriginElement = (InternalEObject)originElement;
+			originElement = eResolveProxy(oldOriginElement);
+			if (originElement != oldOriginElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+			}
 		}
-		return msgs;
+		return originElement;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLeftDiff(ConflictingDiffGroup newLeftDiff) {
-		if (newLeftDiff != leftDiff) {
-			NotificationChain msgs = null;
-			if (leftDiff != null)
-				msgs = ((InternalEObject)leftDiff).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF, null, msgs);
-			if (newLeftDiff != null)
-				msgs = ((InternalEObject)newLeftDiff).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF, null, msgs);
-			msgs = basicSetLeftDiff(newLeftDiff, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF, newLeftDiff, newLeftDiff));
+	public EObject basicGetOriginElement() {
+		return originElement;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ConflictingDiffGroup getRightDiff() {
-		return rightDiff;
+	public void setOriginElement(EObject newOriginElement) {
+		EObject oldOriginElement = originElement;
+		originElement = newOriginElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public NotificationChain basicSetRightDiff(ConflictingDiffGroup newRightDiff, NotificationChain msgs) {
-		ConflictingDiffGroup oldRightDiff = rightDiff;
-		rightDiff = newRightDiff;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF, oldRightDiff, newRightDiff);
-			if (msgs == null)
-				return notification;
-			msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setRightDiff(ConflictingDiffGroup newRightDiff) {
-		if (newRightDiff != rightDiff) {
-			NotificationChain msgs = null;
-			if (rightDiff != null)
-				msgs = ((InternalEObject)rightDiff).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF, null, msgs);
-			if (newRightDiff != null)
-				msgs = ((InternalEObject)newRightDiff).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF, null, msgs);
-			msgs = basicSetRightDiff(newRightDiff, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF, newRightDiff, newRightDiff));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF:
-				return basicSetLeftDiff(null, msgs);
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF:
-				return basicSetRightDiff(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -289,17 +201,16 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 				if (resolve)
 					return getRightParent();
 				return basicGetRightParent();
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF:
-				return getLeftDiff();
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF:
-				return getRightDiff();
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
+				if (resolve)
+					return getOriginElement();
+				return basicGetOriginElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -311,11 +222,8 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT:
 				setRightParent((EObject)newValue);
 				return;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF:
-				setLeftDiff((ConflictingDiffGroup)newValue);
-				return;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF:
-				setRightDiff((ConflictingDiffGroup)newValue);
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
+				setOriginElement((EObject)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -323,7 +231,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -335,11 +242,8 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT:
 				setRightParent((EObject)null);
 				return;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF:
-				setLeftDiff((ConflictingDiffGroup)null);
-				return;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF:
-				setRightDiff((ConflictingDiffGroup)null);
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
+				setOriginElement((EObject)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -347,7 +251,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -357,10 +260,8 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 				return leftParent != null;
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT:
 				return rightParent != null;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_DIFF:
-				return leftDiff != null;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF:
-				return rightDiff != null;
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
+				return originElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

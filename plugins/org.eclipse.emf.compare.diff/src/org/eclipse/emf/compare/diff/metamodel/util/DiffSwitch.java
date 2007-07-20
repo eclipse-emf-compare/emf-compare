@@ -16,8 +16,9 @@ import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -28,6 +29,8 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
@@ -101,9 +104,8 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage) {
+		if (theEClass.eContainer() == modelPackage)
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
 		List eSuperTypes = theEClass.getESuperTypes();
 		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0), theEObject);
 	}
@@ -131,6 +133,15 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT: {
+				ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)theEObject;
+				Object result = caseConflictingDiffElement(conflictingDiffElement);
+				if (result == null)
+					result = caseDiffElement(conflictingDiffElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.DIFF_GROUP: {
 				DiffGroup diffGroup = (DiffGroup)theEObject;
 				Object result = caseDiffGroup(diffGroup);
@@ -140,20 +151,9 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
-			case DiffPackage.ATTRIBUTE_CHANGE: {
-				AttributeChange attributeChange = (AttributeChange)theEObject;
-				Object result = caseAttributeChange(attributeChange);
-				if (result == null)
-					result = caseDiffElement(attributeChange);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REFERENCE_CHANGE: {
-				ReferenceChange referenceChange = (ReferenceChange)theEObject;
-				Object result = caseReferenceChange(referenceChange);
-				if (result == null)
-					result = caseDiffElement(referenceChange);
+			case DiffPackage.MODEL_INPUT_SNAPSHOT: {
+				ModelInputSnapshot modelInputSnapshot = (ModelInputSnapshot)theEObject;
+				Object result = caseModelInputSnapshot(modelInputSnapshot);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -202,6 +202,19 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.REMOTE_ADD_MODEL_ELEMENT: {
+				RemoteAddModelElement remoteAddModelElement = (RemoteAddModelElement)theEObject;
+				Object result = caseRemoteAddModelElement(remoteAddModelElement);
+				if (result == null)
+					result = caseModelElementChangeLeftTarget(remoteAddModelElement);
+				if (result == null)
+					result = caseModelElementChange(remoteAddModelElement);
+				if (result == null)
+					result = caseDiffElement(remoteAddModelElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.REMOVE_MODEL_ELEMENT: {
 				RemoveModelElement removeModelElement = (RemoveModelElement)theEObject;
 				Object result = caseRemoveModelElement(removeModelElement);
@@ -211,6 +224,19 @@ public class DiffSwitch {
 					result = caseModelElementChange(removeModelElement);
 				if (result == null)
 					result = caseDiffElement(removeModelElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOTE_REMOVE_MODEL_ELEMENT: {
+				RemoteRemoveModelElement remoteRemoveModelElement = (RemoteRemoveModelElement)theEObject;
+				Object result = caseRemoteRemoveModelElement(remoteRemoveModelElement);
+				if (result == null)
+					result = caseModelElementChangeRightTarget(remoteRemoveModelElement);
+				if (result == null)
+					result = caseModelElementChange(remoteRemoveModelElement);
+				if (result == null)
+					result = caseDiffElement(remoteRemoveModelElement);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -239,9 +265,57 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.REMOTE_MOVE_MODEL_ELEMENT: {
+				RemoteMoveModelElement remoteMoveModelElement = (RemoteMoveModelElement)theEObject;
+				Object result = caseRemoteMoveModelElement(remoteMoveModelElement);
+				if (result == null)
+					result = caseMoveModelElement(remoteMoveModelElement);
+				if (result == null)
+					result = caseUpdateModelElement(remoteMoveModelElement);
+				if (result == null)
+					result = caseModelElementChange(remoteMoveModelElement);
+				if (result == null)
+					result = caseDiffElement(remoteMoveModelElement);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ATTRIBUTE_CHANGE: {
+				AttributeChange attributeChange = (AttributeChange)theEObject;
+				Object result = caseAttributeChange(attributeChange);
+				if (result == null)
+					result = caseDiffElement(attributeChange);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET: {
+				AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)theEObject;
+				Object result = caseAttributeChangeLeftTarget(attributeChangeLeftTarget);
+				if (result == null)
+					result = caseAttributeChange(attributeChangeLeftTarget);
+				if (result == null)
+					result = caseDiffElement(attributeChangeLeftTarget);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET: {
+				AttributeChangeRightTarget attributeChangeRightTarget = (AttributeChangeRightTarget)theEObject;
+				Object result = caseAttributeChangeRightTarget(attributeChangeRightTarget);
+				if (result == null)
+					result = caseAttributeChange(attributeChangeRightTarget);
+				if (result == null)
+					result = caseDiffElement(attributeChangeRightTarget);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.ADD_ATTRIBUTE: {
 				AddAttribute addAttribute = (AddAttribute)theEObject;
 				Object result = caseAddAttribute(addAttribute);
+				if (result == null)
+					result = caseAttributeChangeRightTarget(addAttribute);
 				if (result == null)
 					result = caseAttributeChange(addAttribute);
 				if (result == null)
@@ -250,13 +324,41 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.REMOTE_ADD_ATTRIBUTE: {
+				RemoteAddAttribute remoteAddAttribute = (RemoteAddAttribute)theEObject;
+				Object result = caseRemoteAddAttribute(remoteAddAttribute);
+				if (result == null)
+					result = caseAttributeChangeLeftTarget(remoteAddAttribute);
+				if (result == null)
+					result = caseAttributeChange(remoteAddAttribute);
+				if (result == null)
+					result = caseDiffElement(remoteAddAttribute);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.REMOVE_ATTRIBUTE: {
 				RemoveAttribute removeAttribute = (RemoveAttribute)theEObject;
 				Object result = caseRemoveAttribute(removeAttribute);
 				if (result == null)
+					result = caseAttributeChangeLeftTarget(removeAttribute);
+				if (result == null)
 					result = caseAttributeChange(removeAttribute);
 				if (result == null)
 					result = caseDiffElement(removeAttribute);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOTE_REMOVE_ATTRIBUTE: {
+				RemoteRemoveAttribute remoteRemoveAttribute = (RemoteRemoveAttribute)theEObject;
+				Object result = caseRemoteRemoveAttribute(remoteRemoveAttribute);
+				if (result == null)
+					result = caseAttributeChangeRightTarget(remoteRemoveAttribute);
+				if (result == null)
+					result = caseAttributeChange(remoteRemoveAttribute);
+				if (result == null)
+					result = caseDiffElement(remoteRemoveAttribute);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -272,9 +374,55 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.REMOTE_UPDATE_ATTRIBUTE: {
+				RemoteUpdateAttribute remoteUpdateAttribute = (RemoteUpdateAttribute)theEObject;
+				Object result = caseRemoteUpdateAttribute(remoteUpdateAttribute);
+				if (result == null)
+					result = caseUpdateAttribute(remoteUpdateAttribute);
+				if (result == null)
+					result = caseAttributeChange(remoteUpdateAttribute);
+				if (result == null)
+					result = caseDiffElement(remoteUpdateAttribute);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REFERENCE_CHANGE: {
+				ReferenceChange referenceChange = (ReferenceChange)theEObject;
+				Object result = caseReferenceChange(referenceChange);
+				if (result == null)
+					result = caseDiffElement(referenceChange);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET: {
+				ReferenceChangeLeftTarget referenceChangeLeftTarget = (ReferenceChangeLeftTarget)theEObject;
+				Object result = caseReferenceChangeLeftTarget(referenceChangeLeftTarget);
+				if (result == null)
+					result = caseReferenceChange(referenceChangeLeftTarget);
+				if (result == null)
+					result = caseDiffElement(referenceChangeLeftTarget);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET: {
+				ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)theEObject;
+				Object result = caseReferenceChangeRightTarget(referenceChangeRightTarget);
+				if (result == null)
+					result = caseReferenceChange(referenceChangeRightTarget);
+				if (result == null)
+					result = caseDiffElement(referenceChangeRightTarget);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.ADD_REFERENCE_VALUE: {
 				AddReferenceValue addReferenceValue = (AddReferenceValue)theEObject;
 				Object result = caseAddReferenceValue(addReferenceValue);
+				if (result == null)
+					result = caseReferenceChangeRightTarget(addReferenceValue);
 				if (result == null)
 					result = caseReferenceChange(addReferenceValue);
 				if (result == null)
@@ -283,13 +431,41 @@ public class DiffSwitch {
 					result = defaultCase(theEObject);
 				return result;
 			}
+			case DiffPackage.REMOTE_ADD_REFERENCE_VALUE: {
+				RemoteAddReferenceValue remoteAddReferenceValue = (RemoteAddReferenceValue)theEObject;
+				Object result = caseRemoteAddReferenceValue(remoteAddReferenceValue);
+				if (result == null)
+					result = caseReferenceChangeLeftTarget(remoteAddReferenceValue);
+				if (result == null)
+					result = caseReferenceChange(remoteAddReferenceValue);
+				if (result == null)
+					result = caseDiffElement(remoteAddReferenceValue);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
 			case DiffPackage.REMOVE_REFERENCE_VALUE: {
 				RemoveReferenceValue removeReferenceValue = (RemoveReferenceValue)theEObject;
 				Object result = caseRemoveReferenceValue(removeReferenceValue);
 				if (result == null)
+					result = caseReferenceChangeLeftTarget(removeReferenceValue);
+				if (result == null)
 					result = caseReferenceChange(removeReferenceValue);
 				if (result == null)
 					result = caseDiffElement(removeReferenceValue);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.REMOTE_REMOVE_REFERENCE_VALUE: {
+				RemoteRemoveReferenceValue remoteRemoveReferenceValue = (RemoteRemoveReferenceValue)theEObject;
+				Object result = caseRemoteRemoveReferenceValue(remoteRemoveReferenceValue);
+				if (result == null)
+					result = caseReferenceChangeRightTarget(remoteRemoveReferenceValue);
+				if (result == null)
+					result = caseReferenceChange(remoteRemoveReferenceValue);
+				if (result == null)
+					result = caseDiffElement(remoteRemoveReferenceValue);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -314,139 +490,6 @@ public class DiffSwitch {
 					result = caseReferenceChange(updateUniqueReferenceValue);
 				if (result == null)
 					result = caseDiffElement(updateUniqueReferenceValue);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.MODEL_INPUT_SNAPSHOT: {
-				ModelInputSnapshot modelInputSnapshot = (ModelInputSnapshot)theEObject;
-				Object result = caseModelInputSnapshot(modelInputSnapshot);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT: {
-				ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)theEObject;
-				Object result = caseConflictingDiffElement(conflictingDiffElement);
-				if (result == null)
-					result = caseDiffElement(conflictingDiffElement);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.CONFLICTING_DIFF_GROUP: {
-				ConflictingDiffGroup conflictingDiffGroup = (ConflictingDiffGroup)theEObject;
-				Object result = caseConflictingDiffGroup(conflictingDiffGroup);
-				if (result == null)
-					result = caseDiffGroup(conflictingDiffGroup);
-				if (result == null)
-					result = caseDiffElement(conflictingDiffGroup);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_ADD_MODEL_ELEMENT: {
-				RemoteAddModelElement remoteAddModelElement = (RemoteAddModelElement)theEObject;
-				Object result = caseRemoteAddModelElement(remoteAddModelElement);
-				if (result == null)
-					result = caseModelElementChangeLeftTarget(remoteAddModelElement);
-				if (result == null)
-					result = caseModelElementChange(remoteAddModelElement);
-				if (result == null)
-					result = caseDiffElement(remoteAddModelElement);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_REMOVE_MODEL_ELEMENT: {
-				RemoteRemoveModelElement remoteRemoveModelElement = (RemoteRemoveModelElement)theEObject;
-				Object result = caseRemoteRemoveModelElement(remoteRemoveModelElement);
-				if (result == null)
-					result = caseModelElementChangeRightTarget(remoteRemoveModelElement);
-				if (result == null)
-					result = caseModelElementChange(remoteRemoveModelElement);
-				if (result == null)
-					result = caseDiffElement(remoteRemoveModelElement);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_MOVE_MODEL_ELEMENT: {
-				RemoteMoveModelElement remoteMoveModelElement = (RemoteMoveModelElement)theEObject;
-				Object result = caseRemoteMoveModelElement(remoteMoveModelElement);
-				if (result == null)
-					result = caseMoveModelElement(remoteMoveModelElement);
-				if (result == null)
-					result = caseUpdateModelElement(remoteMoveModelElement);
-				if (result == null)
-					result = caseModelElementChange(remoteMoveModelElement);
-				if (result == null)
-					result = caseDiffElement(remoteMoveModelElement);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_ADD_ATTRIBUTE: {
-				RemoteAddAttribute remoteAddAttribute = (RemoteAddAttribute)theEObject;
-				Object result = caseRemoteAddAttribute(remoteAddAttribute);
-				if (result == null)
-					result = caseAddAttribute(remoteAddAttribute);
-				if (result == null)
-					result = caseAttributeChange(remoteAddAttribute);
-				if (result == null)
-					result = caseDiffElement(remoteAddAttribute);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_REMOVE_ATTRIBUTE: {
-				RemoteRemoveAttribute remoteRemoveAttribute = (RemoteRemoveAttribute)theEObject;
-				Object result = caseRemoteRemoveAttribute(remoteRemoveAttribute);
-				if (result == null)
-					result = caseRemoveAttribute(remoteRemoveAttribute);
-				if (result == null)
-					result = caseAttributeChange(remoteRemoveAttribute);
-				if (result == null)
-					result = caseDiffElement(remoteRemoveAttribute);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_UPDATE_ATTRIBUTE: {
-				RemoteUpdateAttribute remoteUpdateAttribute = (RemoteUpdateAttribute)theEObject;
-				Object result = caseRemoteUpdateAttribute(remoteUpdateAttribute);
-				if (result == null)
-					result = caseUpdateAttribute(remoteUpdateAttribute);
-				if (result == null)
-					result = caseAttributeChange(remoteUpdateAttribute);
-				if (result == null)
-					result = caseDiffElement(remoteUpdateAttribute);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_ADD_REFERENCE_VALUE: {
-				RemoteAddReferenceValue remoteAddReferenceValue = (RemoteAddReferenceValue)theEObject;
-				Object result = caseRemoteAddReferenceValue(remoteAddReferenceValue);
-				if (result == null)
-					result = caseAddReferenceValue(remoteAddReferenceValue);
-				if (result == null)
-					result = caseReferenceChange(remoteAddReferenceValue);
-				if (result == null)
-					result = caseDiffElement(remoteAddReferenceValue);
-				if (result == null)
-					result = defaultCase(theEObject);
-				return result;
-			}
-			case DiffPackage.REMOTE_REMOVE_REFERENCE_VALUE: {
-				RemoteRemoveReferenceValue remoteRemoveReferenceValue = (RemoteRemoveReferenceValue)theEObject;
-				Object result = caseRemoteRemoveReferenceValue(remoteRemoveReferenceValue);
-				if (result == null)
-					result = caseRemoveReferenceValue(remoteRemoveReferenceValue);
-				if (result == null)
-					result = caseReferenceChange(remoteRemoveReferenceValue);
-				if (result == null)
-					result = caseDiffElement(remoteRemoveReferenceValue);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
@@ -536,6 +579,38 @@ public class DiffSwitch {
 	}
 
 	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Attribute Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Attribute Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseAttributeChangeLeftTarget(@SuppressWarnings("unused")
+	AttributeChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Attribute Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Attribute Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseAttributeChangeRightTarget(@SuppressWarnings("unused")
+	AttributeChangeRightTarget object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpretting the object as an instance of '<em>Reference Change</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -548,6 +623,38 @@ public class DiffSwitch {
 	 */
 	public Object caseReferenceChange(@SuppressWarnings("unused")
 	ReferenceChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Reference Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseReferenceChangeLeftTarget(@SuppressWarnings("unused")
+	ReferenceChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Reference Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseReferenceChangeRightTarget(@SuppressWarnings("unused")
+	ReferenceChangeRightTarget object) {
 		return null;
 	}
 
@@ -804,22 +911,6 @@ public class DiffSwitch {
 	 */
 	public Object caseConflictingDiffElement(@SuppressWarnings("unused")
 	ConflictingDiffElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Conflicting Diff Group</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Conflicting Diff Group</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseConflictingDiffGroup(@SuppressWarnings("unused")
-	ConflictingDiffGroup object) {
 		return null;
 	}
 

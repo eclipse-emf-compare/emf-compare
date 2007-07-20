@@ -14,17 +14,24 @@ import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for an {@link RemoveReferenceValue}.
+ * Merger for an {@link ReferenceChangeLeftTarget} operation.<br/>
+ * <p>
+ * Are considered for this merger :
+ * <ul>
+ * <li>{@link RemoveReferenceValue}</li>
+ * <li>{@link RemoteAddReferenceValue}</li>
+ * </ul>
+ * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class RemoveReferenceValueMerger extends DefaultMerger {
+public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
@@ -32,7 +39,7 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
+		final ReferenceChangeLeftTarget diff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = diff.getLeftElement();
 		final EObject leftTarget = diff.getLeftRemovedTarget();
 		try {
@@ -44,8 +51,8 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof RemoveReferenceValue) {
-				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(diff.getReference().getEOpposite())
 						&& link.getLeftRemovedTarget().equals(element)) {
@@ -63,7 +70,7 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final RemoveReferenceValue diff = (RemoveReferenceValue)this.diff;
+		final ReferenceChangeLeftTarget diff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = diff.getRightElement();
 		final EObject rightTarget = diff.getRightRemovedTarget();
 		try {
@@ -75,8 +82,8 @@ public class RemoveReferenceValueMerger extends DefaultMerger {
 		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof RemoveReferenceValue) {
-				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(diff.getReference().getEOpposite())
 						&& link.getRightRemovedTarget().equals(element)) {

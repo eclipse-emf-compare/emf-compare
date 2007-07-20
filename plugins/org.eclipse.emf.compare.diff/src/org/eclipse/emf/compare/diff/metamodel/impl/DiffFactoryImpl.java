@@ -14,8 +14,9 @@ import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -26,6 +27,8 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
@@ -94,12 +97,12 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 		switch (eClass.getClassifierID()) {
 			case DiffPackage.DIFF_MODEL:
 				return createDiffModel();
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT:
+				return createConflictingDiffElement();
 			case DiffPackage.DIFF_GROUP:
 				return createDiffGroup();
-			case DiffPackage.ATTRIBUTE_CHANGE:
-				return createAttributeChange();
-			case DiffPackage.REFERENCE_CHANGE:
-				return createReferenceChange();
+			case DiffPackage.MODEL_INPUT_SNAPSHOT:
+				return createModelInputSnapshot();
 			case DiffPackage.MODEL_ELEMENT_CHANGE:
 				return createModelElementChange();
 			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET:
@@ -108,48 +111,54 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 				return createModelElementChangeRightTarget();
 			case DiffPackage.ADD_MODEL_ELEMENT:
 				return createAddModelElement();
+			case DiffPackage.REMOTE_ADD_MODEL_ELEMENT:
+				return createRemoteAddModelElement();
 			case DiffPackage.REMOVE_MODEL_ELEMENT:
 				return createRemoveModelElement();
+			case DiffPackage.REMOTE_REMOVE_MODEL_ELEMENT:
+				return createRemoteRemoveModelElement();
 			case DiffPackage.UPDATE_MODEL_ELEMENT:
 				return createUpdateModelElement();
 			case DiffPackage.MOVE_MODEL_ELEMENT:
 				return createMoveModelElement();
+			case DiffPackage.REMOTE_MOVE_MODEL_ELEMENT:
+				return createRemoteMoveModelElement();
+			case DiffPackage.ATTRIBUTE_CHANGE:
+				return createAttributeChange();
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET:
+				return createAttributeChangeLeftTarget();
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET:
+				return createAttributeChangeRightTarget();
 			case DiffPackage.ADD_ATTRIBUTE:
 				return createAddAttribute();
+			case DiffPackage.REMOTE_ADD_ATTRIBUTE:
+				return createRemoteAddAttribute();
 			case DiffPackage.REMOVE_ATTRIBUTE:
 				return createRemoveAttribute();
+			case DiffPackage.REMOTE_REMOVE_ATTRIBUTE:
+				return createRemoteRemoveAttribute();
 			case DiffPackage.UPDATE_ATTRIBUTE:
 				return createUpdateAttribute();
+			case DiffPackage.REMOTE_UPDATE_ATTRIBUTE:
+				return createRemoteUpdateAttribute();
+			case DiffPackage.REFERENCE_CHANGE:
+				return createReferenceChange();
+			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET:
+				return createReferenceChangeLeftTarget();
+			case DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET:
+				return createReferenceChangeRightTarget();
 			case DiffPackage.ADD_REFERENCE_VALUE:
 				return createAddReferenceValue();
+			case DiffPackage.REMOTE_ADD_REFERENCE_VALUE:
+				return createRemoteAddReferenceValue();
 			case DiffPackage.REMOVE_REFERENCE_VALUE:
 				return createRemoveReferenceValue();
+			case DiffPackage.REMOTE_REMOVE_REFERENCE_VALUE:
+				return createRemoteRemoveReferenceValue();
 			case DiffPackage.UPDATE_REFERENCE:
 				return createUpdateReference();
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE:
 				return createUpdateUniqueReferenceValue();
-			case DiffPackage.MODEL_INPUT_SNAPSHOT:
-				return createModelInputSnapshot();
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT:
-				return createConflictingDiffElement();
-			case DiffPackage.CONFLICTING_DIFF_GROUP:
-				return createConflictingDiffGroup();
-			case DiffPackage.REMOTE_ADD_MODEL_ELEMENT:
-				return createRemoteAddModelElement();
-			case DiffPackage.REMOTE_REMOVE_MODEL_ELEMENT:
-				return createRemoteRemoveModelElement();
-			case DiffPackage.REMOTE_MOVE_MODEL_ELEMENT:
-				return createRemoteMoveModelElement();
-			case DiffPackage.REMOTE_ADD_ATTRIBUTE:
-				return createRemoteAddAttribute();
-			case DiffPackage.REMOTE_REMOVE_ATTRIBUTE:
-				return createRemoteRemoveAttribute();
-			case DiffPackage.REMOTE_UPDATE_ATTRIBUTE:
-				return createRemoteUpdateAttribute();
-			case DiffPackage.REMOTE_ADD_REFERENCE_VALUE:
-				return createRemoteAddReferenceValue();
-			case DiffPackage.REMOTE_REMOVE_REFERENCE_VALUE:
-				return createRemoteRemoveReferenceValue();
 			case DiffPackage.REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE:
 				return createRemoteUpdateUniqueReferenceValue();
 			default:
@@ -192,9 +201,49 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
+		AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
+		return attributeChangeLeftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
+		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
+		return attributeChangeRightTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ReferenceChange createReferenceChange() {
 		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
 		return referenceChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
+		ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
+		return referenceChangeLeftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
+		ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
+		return referenceChangeRightTarget;
 	}
 
 	/**
@@ -355,16 +404,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public ConflictingDiffElement createConflictingDiffElement() {
 		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
 		return conflictingDiffElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ConflictingDiffGroup createConflictingDiffGroup() {
-		ConflictingDiffGroupImpl conflictingDiffGroup = new ConflictingDiffGroupImpl();
-		return conflictingDiffGroup;
 	}
 
 	/**

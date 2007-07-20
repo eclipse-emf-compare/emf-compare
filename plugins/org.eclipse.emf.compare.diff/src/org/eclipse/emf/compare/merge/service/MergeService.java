@@ -39,6 +39,9 @@ public class MergeService {
 		parseExtensionMetadata();
 	}
 
+	/**
+	 * This will parse the currently running platform for extensions and store all the merge engines that can be found.
+	 */
 	private void parseExtensionMetadata() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
 				DiffPlugin.PLUGIN_ID, "mergeFactory") //$NON-NLS-1$
@@ -47,19 +50,27 @@ public class MergeService {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
 				final FactoryDescriptor desc = parseEngine(configElements[j]);
-				storeEngineDescriptor(desc);
+				engines.add(desc);
 			}
 		}
 	}
 
-	private void storeEngineDescriptor(FactoryDescriptor desc) {
-		engines.add(desc);
-	}
-
+	/**
+	 * Returns the best {@link FactoryDescriptor}.
+	 * 
+	 * @return The best {@link FactoryDescriptor}.
+	 */
 	private FactoryDescriptor getBestDescriptor() {
 		return getHighestDescriptor(engines);
 	}
 
+	/**
+	 * Returns the highest {@link FactoryDescriptor} from the given {@link List}.
+	 * 
+	 * @param set
+	 *            {@link List} of {@link FactoryDescriptor} from which to find the highest one.
+	 * @return The highest {@link FactoryDescriptor} from the given {@link List}.
+	 */
 	private FactoryDescriptor getHighestDescriptor(List<FactoryDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
@@ -67,10 +78,17 @@ public class MergeService {
 		return null;
 	}
 
-	private FactoryDescriptor parseEngine(IConfigurationElement configElements) {
-		if (!configElements.getName().equals(TAG_FACTORY))
+	/**
+	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor for it if it describes and engine.
+	 * 
+	 * @param configElement
+	 *            Configuration element to parse.
+	 * @return {@link FactoryDescriptor} wrapped around <code>configElement</code> if it describes an engine, <code>null</code> otherwise.
+	 */
+	private FactoryDescriptor parseEngine(IConfigurationElement configElement) {
+		if (!configElement.getName().equals(TAG_FACTORY))
 			return null;
-		final FactoryDescriptor desc = new FactoryDescriptor(configElements);
+		final FactoryDescriptor desc = new FactoryDescriptor(configElement);
 		return desc;
 	}
 

@@ -56,6 +56,16 @@ public class EngineDescriptor implements Comparable {
 		engineClassName = getAttribute("engineClass", null); //$NON-NLS-1$
 	}
 
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the attribute hasn't been set, we'll
+	 * return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);
 		if (value != null)
@@ -90,17 +100,31 @@ public class EngineDescriptor implements Comparable {
 		return engine;
 	}
 
-	private int getPriorityValue(String value) {
-		if (value == null)
+	/**
+	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according to <code>priorityString</code> value :
+	 * <ul>
+	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
+	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
+	 * <li>&quot;high&quot; =&gt; {@value EngineConstants#PRIORITY_HIGH}</li>
+	 * <li>&quot;highest&quot; =&gt; {@value EngineConstants#PRIORITY_HIGHEST}</li>
+	 * <li>anything else =&gt; {@value EngineConstants#PRIORITY_NORMAL}</li>
+	 * </ul>
+	 * 
+	 * @param priorityString
+	 *            {@link String} value of the priority we seek.
+	 * @return <code>int</code> corresponding to the given priority {@link String}.
+	 */
+	private int getPriorityValue(String priorityString) {
+		if (priorityString == null)
 			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if (value.equals("lowest")) { //$NON-NLS-1$
+		if (priorityString.equals("lowest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if (value.equals("low")) { //$NON-NLS-1$
+		} else if (priorityString.equals("low")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if (value.equals("high")) { //$NON-NLS-1$
+		} else if (priorityString.equals("high")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if (value.equals("highest")) { //$NON-NLS-1$
+		} else if (priorityString.equals("highest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;

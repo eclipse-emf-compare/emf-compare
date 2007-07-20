@@ -24,19 +24,19 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getAttribute <em>Attribute</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getLeftElement <em>Left Element</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getAttribute <em>Attribute</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getLeftElement <em>Left Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class AttributeChangeImpl extends DiffElementImpl implements AttributeChange {
 	/**
-	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getAttribute()
 	 * @generated
 	 * @ordered
@@ -44,8 +44,8 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	protected EAttribute attribute = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getLeftElement()
 	 * @generated
 	 * @ordered
@@ -53,8 +53,8 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	protected EObject leftElement = null;
 
 	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getRightElement()
 	 * @generated
 	 * @ordered
@@ -63,7 +63,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AttributeChangeImpl() {
@@ -72,7 +71,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -82,7 +80,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAttribute() {
@@ -99,7 +96,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute basicGetAttribute() {
@@ -108,7 +104,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setAttribute(EAttribute newAttribute) {
@@ -120,7 +115,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -137,7 +131,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -146,7 +139,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -158,7 +150,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -175,7 +166,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -184,7 +174,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -196,7 +185,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -220,7 +208,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -241,7 +228,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -262,7 +248,6 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

@@ -13,24 +13,24 @@ package org.eclipse.emf.compare.merge.api;
 import java.util.HashMap;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.generic.merge.impl.AddAttributeMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.AddReferenceValueMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeRightTargetMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.DefaultMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.ModelElementChangeLeftTargetMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.ModelElementChangeRightTargetMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.MoveModelElementMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveAttributeMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.RemoveReferenceValueMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.ReferenceChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.generic.merge.impl.ReferenceChangeRightTargetMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateAttributeMerger;
 import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateUniqueReferenceValueMerger;
-import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 
@@ -53,16 +53,16 @@ public final class MergeFactory {
 		MERGER_TYPES.put(ModelElementChangeRightTarget.class, ModelElementChangeRightTargetMerger.class);
 		MERGER_TYPES.put(ModelElementChangeLeftTarget.class, ModelElementChangeLeftTargetMerger.class);
 		MERGER_TYPES.put(MoveModelElement.class, MoveModelElementMerger.class);
-		MERGER_TYPES.put(AddReferenceValue.class, AddReferenceValueMerger.class);
-		MERGER_TYPES.put(RemoveReferenceValue.class, RemoveReferenceValueMerger.class);
+		MERGER_TYPES.put(ReferenceChangeRightTarget.class, ReferenceChangeRightTargetMerger.class);
+		MERGER_TYPES.put(ReferenceChangeLeftTarget.class, ReferenceChangeLeftTargetMerger.class);
 		MERGER_TYPES.put(UpdateUniqueReferenceValue.class, UpdateUniqueReferenceValueMerger.class);
-		MERGER_TYPES.put(AddAttribute.class, AddAttributeMerger.class);
-		MERGER_TYPES.put(RemoveAttribute.class, RemoveAttributeMerger.class);
+		MERGER_TYPES.put(AttributeChangeRightTarget.class, AttributeChangeRightTargetMerger.class);
+		MERGER_TYPES.put(AttributeChangeLeftTarget.class, AttributeChangeLeftTargetMerger.class);
 		MERGER_TYPES.put(UpdateAttribute.class, UpdateAttributeMerger.class);
 	}
 
 	/**
-	 * Utility classes don't need to be instantiated.
+	 * Utility classes don't need to (and shouldn't be) be instantiated.
 	 */
 	private MergeFactory() {
 		// prevents instantiation
@@ -116,6 +116,14 @@ public final class MergeFactory {
 		return elementMerger;
 	}
 
+	/**
+	 * Returns the merger class that is best suited for the given {@link DiffElement}. Merger classes can be managed via
+	 * {@link #addMergerType(Class, Class)} and {@link #removeMergerType(Class)}.
+	 * 
+	 * @param element
+	 *            {@link DiffElement} we want a merger for.
+	 * @return The merger class that is best suited for the given {@link DiffElement}.
+	 */
 	private static Class<? extends AbstractMerger> getBestMerger(DiffElement element) {
 		Class<? extends AbstractMerger> mergerClass = DefaultMerger.class;
 		// If we know the merger for this class, we return it

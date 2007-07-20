@@ -18,14 +18,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Update Unique Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class RemoteUpdateUniqueReferenceValueImpl extends UpdateUniqueReferenceValueImpl implements RemoteUpdateUniqueReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteUpdateUniqueReferenceValueImpl() {
@@ -34,7 +33,6 @@ public class RemoteUpdateUniqueReferenceValueImpl extends UpdateUniqueReferenceV
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

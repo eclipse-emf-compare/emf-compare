@@ -22,8 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getLeftParent <em>Left Parent</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getRightParent <em>Right Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getLeftDiff <em>Left Diff</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getRightDiff <em>Right Diff</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
  *
@@ -86,55 +85,29 @@ public interface ConflictingDiffElement extends DiffElement {
 	void setRightParent(EObject value);
 
 	/**
-	 * Returns the value of the '<em><b>Left Diff</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Origin Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Diff</em>' reference isn't clear,
+	 * If the meaning of the '<em>Origin Element</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Diff</em>' containment reference.
-	 * @see #setLeftDiff(ConflictingDiffGroup)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getConflictingDiffElement_LeftDiff()
-	 * @model containment="true"
+	 * @return the value of the '<em>Origin Element</em>' reference.
+	 * @see #setOriginElement(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getConflictingDiffElement_OriginElement()
+	 * @model
 	 * @generated
 	 */
-	ConflictingDiffGroup getLeftDiff();
+	EObject getOriginElement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getLeftDiff <em>Left Diff</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getOriginElement <em>Origin Element</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Diff</em>' containment reference.
-	 * @see #getLeftDiff()
+	 * @param value the new value of the '<em>Origin Element</em>' reference.
+	 * @see #getOriginElement()
 	 * @generated
 	 */
-	void setLeftDiff(ConflictingDiffGroup value);
-
-	/**
-	 * Returns the value of the '<em><b>Right Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Right Diff</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Diff</em>' containment reference.
-	 * @see #setRightDiff(ConflictingDiffGroup)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getConflictingDiffElement_RightDiff()
-	 * @model containment="true"
-	 * @generated
-	 */
-	ConflictingDiffGroup getRightDiff();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getRightDiff <em>Right Diff</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Diff</em>' containment reference.
-	 * @see #getRightDiff()
-	 * @generated
-	 */
-	void setRightDiff(ConflictingDiffGroup value);
+	void setOriginElement(EObject value);
 
 } // ConflictingDiffElement

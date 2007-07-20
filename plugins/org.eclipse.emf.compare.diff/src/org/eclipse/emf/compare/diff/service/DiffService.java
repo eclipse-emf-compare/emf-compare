@@ -39,25 +39,36 @@ public class DiffService {
 		parseExtensionMetadata();
 	}
 
+	/**
+	 * This will parse the currently running platform for extensions and store all the diff engines that can be found.
+	 */
 	private void parseExtensionMetadata() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(DiffPlugin.PLUGIN_ID, TAG_ENGINE).getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
 				final EngineDescriptor desc = parseEngine(configElements[j]);
-				storeEngineDescriptor(desc);
+				engines.add(desc);
 			}
 		}
 	}
 
-	private void storeEngineDescriptor(EngineDescriptor desc) {
-		engines.add(desc);
-	}
-
+	/**
+	 * Returns the best {@link EngineDescriptor}.
+	 * 
+	 * @return The best {@link EngineDescriptor}.
+	 */
 	private EngineDescriptor getBestDescriptor() {
 		return getHighestDescriptor(engines);
 	}
 
+	/**
+	 * Returns the highest {@link EngineDescriptor} from the given {@link List}.
+	 * 
+	 * @param set
+	 *            {@link List} of {@link EngineDescriptor} from which to find the highest one.
+	 * @return The highest {@link EngineDescriptor} from the given {@link List}.
+	 */
 	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
@@ -65,10 +76,17 @@ public class DiffService {
 		return null;
 	}
 
-	private EngineDescriptor parseEngine(IConfigurationElement configElements) {
-		if (!configElements.getName().equals(TAG_ENGINE))
+	/**
+	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor for it if it describes and engine.
+	 * 
+	 * @param configElement
+	 *            Configuration element to parse.
+	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine, <code>null</code> otherwise.
+	 */
+	private EngineDescriptor parseEngine(IConfigurationElement configElement) {
+		if (!configElement.getName().equals(TAG_ENGINE))
 			return null;
-		final EngineDescriptor desc = new EngineDescriptor(configElements);
+		final EngineDescriptor desc = new EngineDescriptor(configElement);
 		return desc;
 	}
 

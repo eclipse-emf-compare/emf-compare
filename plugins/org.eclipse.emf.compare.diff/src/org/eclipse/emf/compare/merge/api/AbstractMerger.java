@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -82,6 +83,10 @@ public abstract class AbstractMerger {
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
 
+		// If diff was contained by a ConflictingDiffElement, we call back this on it
+		if (parent instanceof ConflictingDiffElement)
+			removeFromContainer((DiffElement)parent);
+		
 		// if diff was in a diffGroup and it was the last one, we also remove the diffgroup
 		if (parent instanceof DiffGroup)
 			cleanDiffGroup((DiffGroup)parent);

@@ -21,6 +21,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 @SuppressWarnings("nls")
-public interface RemoteAddReferenceValue extends AddReferenceValue {
+public interface RemoteAddReferenceValue extends ReferenceChangeLeftTarget {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteAddReferenceValue

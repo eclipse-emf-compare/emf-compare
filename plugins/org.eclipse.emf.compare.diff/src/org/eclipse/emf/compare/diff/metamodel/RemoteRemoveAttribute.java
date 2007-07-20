@@ -21,6 +21,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 @SuppressWarnings("nls")
-public interface RemoteRemoveAttribute extends RemoveAttribute {
+public interface RemoteRemoveAttribute extends AttributeChangeRightTarget {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteRemoveAttribute

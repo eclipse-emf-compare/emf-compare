@@ -13,8 +13,8 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -22,7 +22,14 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for a {@link RemoveModelElement}.
+ * Merger for an {@link ModelElementChangeLeftTarget} operation.<br/>
+ * <p>
+ * Are considered for this merger :
+ * <ul>
+ * <li>{@link RemoveModelElement}</li>
+ * <li>{@link RemoteAddModelElement}</li>
+ * </ul>
+ * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -34,7 +41,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final RemoveModelElement diff = (RemoveModelElement)this.diff;
+		final ModelElementChangeLeftTarget diff = (ModelElementChangeLeftTarget)this.diff;
 		final EObject element = diff.getLeftElement();
 		final EObject parent = diff.getLeftElement().eContainer();
 		EcoreUtil.remove(element);
@@ -51,7 +58,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void undoInTarget() {
-		final RemoveModelElement diff = (RemoveModelElement)this.diff;
+		final ModelElementChangeLeftTarget diff = (ModelElementChangeLeftTarget)this.diff;
 		// we should copy the element to the Origin one.
 		final EObject origin = diff.getRightParent();
 		final EObject element = diff.getLeftElement();
@@ -70,8 +77,8 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final Object op = siblings.next();
-			if (op instanceof RemoveReferenceValue) {
-				final RemoveReferenceValue link = (RemoveReferenceValue)op;
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getLeftRemovedTarget().equals(element)) {
 					link.setRightRemovedTarget(newOne);

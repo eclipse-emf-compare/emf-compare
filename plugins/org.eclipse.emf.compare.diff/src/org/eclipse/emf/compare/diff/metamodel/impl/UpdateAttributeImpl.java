@@ -18,14 +18,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Attribute</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UpdateAttributeImpl() {
@@ -34,7 +33,6 @@ public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAt
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

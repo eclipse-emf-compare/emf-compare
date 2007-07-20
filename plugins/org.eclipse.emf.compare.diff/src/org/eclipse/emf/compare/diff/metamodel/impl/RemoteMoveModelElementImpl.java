@@ -18,14 +18,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Move Model Element</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements RemoteMoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteMoveModelElementImpl() {
@@ -34,7 +33,6 @@ public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

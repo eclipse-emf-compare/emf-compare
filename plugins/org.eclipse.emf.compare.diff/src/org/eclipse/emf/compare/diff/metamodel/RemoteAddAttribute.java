@@ -21,6 +21,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 @SuppressWarnings("nls")
-public interface RemoteAddAttribute extends AddAttribute {
+public interface RemoteAddAttribute extends AttributeChangeLeftTarget {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteAddAttribute

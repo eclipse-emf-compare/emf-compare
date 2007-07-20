@@ -18,14 +18,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteRemoveReferenceValueImpl extends RemoveReferenceValueImpl implements RemoteRemoveReferenceValue {
+public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetImpl implements RemoteRemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteRemoveReferenceValueImpl() {
@@ -34,7 +33,6 @@ public class RemoteRemoveReferenceValueImpl extends RemoveReferenceValueImpl imp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

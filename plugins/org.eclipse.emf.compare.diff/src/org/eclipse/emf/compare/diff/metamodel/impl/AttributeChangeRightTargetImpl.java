@@ -11,39 +11,28 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Move Model Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Change Right Target</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
-@SuppressWarnings("nls")
-public class MoveModelElementImpl extends UpdateModelElementImpl implements MoveModelElement {
+public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implements AttributeChangeRightTarget {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getLeftTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject leftTarget = null;
-
-	/**
-	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightTarget()
 	 * @generated
 	 * @ordered
@@ -52,58 +41,26 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	protected MoveModelElementImpl() {
+	protected AttributeChangeRightTargetImpl() {
 		super();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return DiffPackage.Literals.MOVE_MODEL_ELEMENT;
+		return DiffPackage.Literals.ATTRIBUTE_CHANGE_RIGHT_TARGET;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftTarget() {
-		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
-			leftTarget = eResolveProxy(oldLeftTarget);
-			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
-			}
-		}
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetLeftTarget() {
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
-		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
@@ -112,7 +69,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, oldRightTarget, rightTarget));
 			}
 		}
 		return rightTarget;
@@ -120,6 +77,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -128,27 +86,25 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
 		EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, oldRightTarget, rightTarget));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
-				if (resolve)
-					return getLeftTarget();
-				return basicGetLeftTarget();
-			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
 				if (resolve)
 					return getRightTarget();
 				return basicGetRightTarget();
@@ -158,15 +114,13 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
-				setLeftTarget((EObject)newValue);
-				return;
-			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
 				setRightTarget((EObject)newValue);
 				return;
 		}
@@ -175,15 +129,13 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
-				setLeftTarget((EObject)null);
-				return;
-			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
 				setRightTarget((EObject)null);
 				return;
 		}
@@ -192,17 +144,16 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
-				return leftTarget != null;
-			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
+			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
 				return rightTarget != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} // MoveModelElementImpl
+} // AttributeChangeRightTargetImpl

@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -19,11 +19,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for an {@link RemoveAttribute} operation.
+ * Merger for an {@link AttributeChangeLeftTarget} operation.<br/>
+ * <p>
+ * Are considered for this merger :
+ * <ul>
+ * <li>{@link RemoveAttribute}</li>
+ * <li>{@link RemoteAddAttribute}</li>
+ * </ul>
+ * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class RemoveAttributeMerger extends DefaultMerger {
+public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -32,7 +39,7 @@ public class RemoveAttributeMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final RemoveAttribute diff = (RemoveAttribute)this.diff;
+		final AttributeChangeLeftTarget diff = (AttributeChangeLeftTarget)this.diff;
 		final EObject origin = diff.getLeftElement();
 		final EObject element = diff.getLeftTarget();
 		final EAttribute attr = diff.getAttribute();
@@ -46,12 +53,12 @@ public class RemoveAttributeMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final RemoveAttribute diff = (RemoveAttribute)this.diff;
+		final AttributeChangeLeftTarget diff = (AttributeChangeLeftTarget)this.diff;
 		final EObject target = diff.getRightElement();
 		final EObject element = diff.getLeftTarget();
 		final EObject newOne = EcoreUtil.copy(element);

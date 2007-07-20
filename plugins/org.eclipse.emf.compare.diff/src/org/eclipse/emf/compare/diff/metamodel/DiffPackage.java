@@ -146,7 +146,272 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffGroup()
 	 * @generated
 	 */
-	int DIFF_GROUP = 2;
+	int DIFF_GROUP = 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChange()
+	 * @generated
+	 */
+	int ATTRIBUTE_CHANGE = 15;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl <em>Attribute Change Left Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeLeftTarget()
+	 * @generated
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET = 16;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl <em>Attribute Change Right Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeRightTarget()
+	 * @generated
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET = 17;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChange()
+	 * @generated
+	 */
+	int REFERENCE_CHANGE = 24;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl <em>Reference Change Left Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeLeftTarget()
+	 * @generated
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET = 25;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl <em>Reference Change Right Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeRightTarget()
+	 * @generated
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET = 26;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChange()
+	 * @generated
+	 */
+	int MODEL_ELEMENT_CHANGE = 5;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl <em>Model Element Change Left Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeLeftTarget()
+	 * @generated
+	 */
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 6;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl <em>Model Element Change Right Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeRightTarget()
+	 * @generated
+	 */
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 7;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl <em>Add Model Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddModelElement()
+	 * @generated
+	 */
+	int ADD_MODEL_ELEMENT = 8;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl <em>Remove Model Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveModelElement()
+	 * @generated
+	 */
+	int REMOVE_MODEL_ELEMENT = 10;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl <em>Update Model Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateModelElement()
+	 * @generated
+	 */
+	int UPDATE_MODEL_ELEMENT = 12;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getMoveModelElement()
+	 * @generated
+	 */
+	int MOVE_MODEL_ELEMENT = 13;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddAttribute()
+	 * @generated
+	 */
+	int ADD_ATTRIBUTE = 18;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveAttribute()
+	 * @generated
+	 */
+	int REMOVE_ATTRIBUTE = 20;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateAttribute()
+	 * @generated
+	 */
+	int UPDATE_ATTRIBUTE = 22;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl <em>Add Reference Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddReferenceValue()
+	 * @generated
+	 */
+	int ADD_REFERENCE_VALUE = 27;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl <em>Remove Reference Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveReferenceValue()
+	 * @generated
+	 */
+	int REMOVE_REFERENCE_VALUE = 29;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl <em>Update Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateReference()
+	 * @generated
+	 */
+	int UPDATE_REFERENCE = 31;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
+	 * @generated
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE = 32;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
+	 * @generated
+	 */
+	int MODEL_INPUT_SNAPSHOT = 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl <em>Conflicting Diff Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffElement()
+	 * @generated
+	 */
+	int CONFLICTING_DIFF_ELEMENT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__LEFT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Origin Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Conflicting Diff Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -185,124 +450,40 @@ public interface DiffPackage extends EPackage {
 	int DIFF_GROUP_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChange()
-	 * @generated
-	 */
-	int ATTRIBUTE_CHANGE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
+	int MODEL_INPUT_SNAPSHOT__DATE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * The feature id for the '<em><b>Diff</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_CHANGE__ATTRIBUTE = DIFF_ELEMENT_FEATURE_COUNT + 0;
+	int MODEL_INPUT_SNAPSHOT__DIFF = 1;
 
 	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * The feature id for the '<em><b>Match</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_CHANGE__LEFT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
+	int MODEL_INPUT_SNAPSHOT__MATCH = 2;
 
 	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * The number of structural features of the '<em>Model Input Snapshot</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ATTRIBUTE_CHANGE__RIGHT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of structural features of the '<em>Attribute Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ATTRIBUTE_CHANGE_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChange()
-	 * @generated
-	 */
-	int REFERENCE_CHANGE = 4;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE_CHANGE__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE_CHANGE__REFERENCE = DIFF_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE_CHANGE__RIGHT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE_CHANGE__LEFT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of structural features of the '<em>Reference Change</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REFERENCE_CHANGE_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChange()
-	 * @generated
-	 */
-	int MODEL_ELEMENT_CHANGE = 5;
+	int MODEL_INPUT_SNAPSHOT_FEATURE_COUNT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -321,16 +502,6 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl <em>Model Element Change Left Target</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeLeftTarget()
-	 * @generated
-	 */
-	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 6;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -369,16 +540,6 @@ public interface DiffPackage extends EPackage {
 	int MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl <em>Model Element Change Right Target</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeRightTarget()
-	 * @generated
-	 */
-	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 7;
-
-	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -413,16 +574,6 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl <em>Add Model Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddModelElement()
-	 * @generated
-	 */
-	int ADD_MODEL_ELEMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -461,14 +612,50 @@ public interface DiffPackage extends EPackage {
 	int ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl <em>Remove Model Element</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl <em>Remote Add Model Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveModelElement()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddModelElement()
 	 * @generated
 	 */
-	int REMOVE_MODEL_ELEMENT = 9;
+	int REMOTE_ADD_MODEL_ELEMENT = 9;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The number of structural features of the '<em>Remote Add Model Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -507,14 +694,50 @@ public interface DiffPackage extends EPackage {
 	int REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl <em>Update Model Element</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl <em>Remote Remove Model Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateModelElement()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveModelElement()
 	 * @generated
 	 */
-	int UPDATE_MODEL_ELEMENT = 10;
+	int REMOTE_REMOVE_MODEL_ELEMENT = 11;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The number of structural features of the '<em>Remote Remove Model Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -551,16 +774,6 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getMoveModelElement()
-	 * @generated
-	 */
-	int MOVE_MODEL_ELEMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -617,14 +830,14 @@ public interface DiffPackage extends EPackage {
 	int MOVE_MODEL_ELEMENT_FEATURE_COUNT = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl <em>Remote Move Model Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddAttribute()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteMoveModelElement()
 	 * @generated
 	 */
-	int ADD_ATTRIBUTE = 12;
+	int REMOTE_MOVE_MODEL_ELEMENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -633,25 +846,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE__ATTRIBUTE;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE__LEFT_ELEMENT;
+	int REMOTE_MOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -660,53 +855,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Add Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveAttribute()
-	 * @generated
-	 */
-	int REMOVE_ATTRIBUTE = 13;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE__ATTRIBUTE;
+	int REMOTE_MOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MOVE_MODEL_ELEMENT__RIGHT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -715,16 +864,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
+	int REMOTE_MOVE_MODEL_ELEMENT__LEFT_ELEMENT = MOVE_MODEL_ELEMENT__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Target</b></em>' reference.
@@ -733,7 +873,341 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+	int REMOTE_MOVE_MODEL_ELEMENT__LEFT_TARGET = MOVE_MODEL_ELEMENT__LEFT_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_MOVE_MODEL_ELEMENT__RIGHT_TARGET = MOVE_MODEL_ELEMENT__RIGHT_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Remote Move Model Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_MOVE_MODEL_ELEMENT_FEATURE_COUNT = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__ATTRIBUTE = DIFF_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__LEFT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__RIGHT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Attribute Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE = ATTRIBUTE_CHANGE__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT = ATTRIBUTE_CHANGE__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Attribute Change Left Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE = ATTRIBUTE_CHANGE__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT = ATTRIBUTE_CHANGE__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Attribute Change Right Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Add Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl <em>Remote Add Attribute</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddAttribute()
+	 * @generated
+	 */
+	int REMOTE_ADD_ATTRIBUTE = 19;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Remote Add Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remove Attribute</em>' class.
@@ -742,17 +1216,71 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
+	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl <em>Remote Remove Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateAttribute()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveAttribute()
 	 * @generated
 	 */
-	int UPDATE_ATTRIBUTE = 14;
+	int REMOTE_REMOVE_ATTRIBUTE = 21;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Remote Remove Attribute</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -800,14 +1328,14 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl <em>Add Reference Value</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateAttributeImpl <em>Remote Update Attribute</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddReferenceValue()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateAttributeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateAttribute()
 	 * @generated
 	 */
-	int ADD_REFERENCE_VALUE = 15;
+	int REMOTE_UPDATE_ATTRIBUTE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -816,25 +1344,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE__SUB_DIFF_ELEMENTS;
+	int REMOTE_UPDATE_ATTRIBUTE__SUB_DIFF_ELEMENTS = UPDATE_ATTRIBUTE__SUB_DIFF_ELEMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE__REFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE__RIGHT_ELEMENT;
+	int REMOTE_UPDATE_ATTRIBUTE__ATTRIBUTE = UPDATE_ATTRIBUTE__ATTRIBUTE;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -843,44 +1362,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
+	int REMOTE_UPDATE_ATTRIBUTE__LEFT_ELEMENT = UPDATE_ATTRIBUTE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int REMOTE_UPDATE_ATTRIBUTE__RIGHT_ELEMENT = UPDATE_ATTRIBUTE__RIGHT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
+	 * The number of structural features of the '<em>Remote Update Attribute</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Add Reference Value</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl <em>Remove Reference Value</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveReferenceValue()
-	 * @generated
-	 */
-	int REMOVE_REFERENCE_VALUE = 16;
+	int REMOTE_UPDATE_ATTRIBUTE_FEATURE_COUNT = UPDATE_ATTRIBUTE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -889,7 +1389,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE__SUB_DIFF_ELEMENTS;
+	int REFERENCE_CHANGE__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -898,7 +1398,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE__REFERENCE;
+	int REFERENCE_CHANGE__REFERENCE = DIFF_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -907,7 +1407,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE__RIGHT_ELEMENT;
+	int REFERENCE_CHANGE__RIGHT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -916,7 +1416,52 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
+	int REFERENCE_CHANGE__LEFT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Reference Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__REFERENCE = REFERENCE_CHANGE__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT = REFERENCE_CHANGE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
@@ -925,7 +1470,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
@@ -934,7 +1479,269 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Reference Change Left Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE = REFERENCE_CHANGE__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT = REFERENCE_CHANGE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Reference Change Right Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Add Reference Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddReferenceValueImpl <em>Remote Add Reference Value</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddReferenceValue()
+	 * @generated
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE = 28;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Remote Add Reference Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remove Reference Value</em>' class.
@@ -943,17 +1750,80 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
+	int REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl <em>Update Reference</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl <em>Remote Remove Reference Value</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateReference()
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveReferenceValue()
 	 * @generated
 	 */
-	int UPDATE_REFERENCE = 17;
+	int REMOTE_REMOVE_REFERENCE_VALUE = 30;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET;
+
+	/**
+	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET;
+
+	/**
+	 * The number of structural features of the '<em>Remote Remove Reference Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -999,16 +1869,6 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_REFERENCE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
-	 * @generated
-	 */
-	int UPDATE_UNIQUE_REFERENCE_VALUE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1074,647 +1934,6 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_UNIQUE_REFERENCE_VALUE_FEATURE_COUNT = UPDATE_REFERENCE_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
-	 * @generated
-	 */
-	int MODEL_INPUT_SNAPSHOT = 19;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__DATE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__DIFF = 1;
-
-	/**
-	 * The feature id for the '<em><b>Match</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__MATCH = 2;
-
-	/**
-	 * The number of structural features of the '<em>Model Input Snapshot</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT_FEATURE_COUNT = 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl <em>Conflicting Diff Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffElement()
-	 * @generated
-	 */
-	int CONFLICTING_DIFF_ELEMENT = 20;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT__LEFT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Left Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT__LEFT_DIFF = DIFF_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Right Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF = DIFF_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>Conflicting Diff Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_ELEMENT_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffGroupImpl <em>Conflicting Diff Group</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffGroupImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffGroup()
-	 * @generated
-	 */
-	int CONFLICTING_DIFF_GROUP = 21;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_GROUP__SUB_DIFF_ELEMENTS = DIFF_GROUP__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_GROUP__LEFT_PARENT = DIFF_GROUP__LEFT_PARENT;
-
-	/**
-	 * The feature id for the '<em><b>Subchanges</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_GROUP__SUBCHANGES = DIFF_GROUP__SUBCHANGES;
-
-	/**
-	 * The number of structural features of the '<em>Conflicting Diff Group</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONFLICTING_DIFF_GROUP_FEATURE_COUNT = DIFF_GROUP_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl <em>Remote Add Model Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddModelElement()
-	 * @generated
-	 */
-	int REMOTE_ADD_MODEL_ELEMENT = 22;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
-
-	/**
-	 * The number of structural features of the '<em>Remote Add Model Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl <em>Remote Remove Model Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveModelElement()
-	 * @generated
-	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT = 23;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
-
-	/**
-	 * The number of structural features of the '<em>Remote Remove Model Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl <em>Remote Move Model Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteMoveModelElement()
-	 * @generated
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT = 24;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MOVE_MODEL_ELEMENT__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT__LEFT_ELEMENT = MOVE_MODEL_ELEMENT__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT__LEFT_TARGET = MOVE_MODEL_ELEMENT__LEFT_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT__RIGHT_TARGET = MOVE_MODEL_ELEMENT__RIGHT_TARGET;
-
-	/**
-	 * The number of structural features of the '<em>Remote Move Model Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_MOVE_MODEL_ELEMENT_FEATURE_COUNT = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl <em>Remote Add Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddAttribute()
-	 * @generated
-	 */
-	int REMOTE_ADD_ATTRIBUTE = 25;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE__ATTRIBUTE = ADD_ATTRIBUTE__ATTRIBUTE;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE__LEFT_ELEMENT = ADD_ATTRIBUTE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE__RIGHT_ELEMENT = ADD_ATTRIBUTE__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE__RIGHT_TARGET = ADD_ATTRIBUTE__RIGHT_TARGET;
-
-	/**
-	 * The number of structural features of the '<em>Remote Add Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_ATTRIBUTE_FEATURE_COUNT = ADD_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl <em>Remote Remove Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveAttribute()
-	 * @generated
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE = 26;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE__ATTRIBUTE = REMOVE_ATTRIBUTE__ATTRIBUTE;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE__LEFT_ELEMENT = REMOVE_ATTRIBUTE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_ELEMENT = REMOVE_ATTRIBUTE__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE__LEFT_TARGET = REMOVE_ATTRIBUTE__LEFT_TARGET;
-
-	/**
-	 * The number of structural features of the '<em>Remote Remove Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_ATTRIBUTE_FEATURE_COUNT = REMOVE_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateAttributeImpl <em>Remote Update Attribute</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateAttributeImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateAttribute()
-	 * @generated
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE = 27;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE__SUB_DIFF_ELEMENTS = UPDATE_ATTRIBUTE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Attribute</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE__ATTRIBUTE = UPDATE_ATTRIBUTE__ATTRIBUTE;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE__LEFT_ELEMENT = UPDATE_ATTRIBUTE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE__RIGHT_ELEMENT = UPDATE_ATTRIBUTE__RIGHT_ELEMENT;
-
-	/**
-	 * The number of structural features of the '<em>Remote Update Attribute</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_ATTRIBUTE_FEATURE_COUNT = UPDATE_ATTRIBUTE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddReferenceValueImpl <em>Remote Add Reference Value</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddReferenceValueImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddReferenceValue()
-	 * @generated
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE = 28;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__REFERENCE = ADD_REFERENCE_VALUE__REFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_ELEMENT = ADD_REFERENCE_VALUE__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__LEFT_ELEMENT = ADD_REFERENCE_VALUE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET;
-
-	/**
-	 * The number of structural features of the '<em>Remote Add Reference Value</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_ADD_REFERENCE_VALUE_FEATURE_COUNT = ADD_REFERENCE_VALUE_FEATURE_COUNT + 0;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl <em>Remote Remove Reference Value</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveReferenceValue()
-	 * @generated
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE = 29;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Reference</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__REFERENCE = REMOVE_REFERENCE_VALUE__REFERENCE;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REMOVE_REFERENCE_VALUE__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET;
-
-	/**
-	 * The number of structural features of the '<em>Remote Remove Reference Value</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REMOVE_REFERENCE_VALUE_FEATURE_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateUniqueReferenceValueImpl <em>Remote Update Unique Reference Value</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1722,7 +1941,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateUniqueReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 30;
+	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1927,6 +2146,48 @@ public interface DiffPackage extends EPackage {
 	EReference getAttributeChange_RightElement();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget <em>Attribute Change Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Attribute Change Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget
+	 * @generated
+	 */
+	EClass getAttributeChangeLeftTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget()
+	 * @see #getAttributeChangeLeftTarget()
+	 * @generated
+	 */
+	EReference getAttributeChangeLeftTarget_LeftTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget <em>Attribute Change Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Attribute Change Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget
+	 * @generated
+	 */
+	EClass getAttributeChangeRightTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget#getRightTarget()
+	 * @see #getAttributeChangeRightTarget()
+	 * @generated
+	 */
+	EReference getAttributeChangeRightTarget_RightTarget();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange <em>Reference Change</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1968,6 +2229,70 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getReferenceChange_LeftElement();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget <em>Reference Change Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference Change Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget
+	 * @generated
+	 */
+	EClass getReferenceChangeLeftTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget <em>Left Removed Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Removed Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget()
+	 * @see #getReferenceChangeLeftTarget()
+	 * @generated
+	 */
+	EReference getReferenceChangeLeftTarget_LeftRemovedTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget <em>Right Removed Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Removed Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget()
+	 * @see #getReferenceChangeLeftTarget()
+	 * @generated
+	 */
+	EReference getReferenceChangeLeftTarget_RightRemovedTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget <em>Reference Change Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference Change Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget
+	 * @generated
+	 */
+	EClass getReferenceChangeRightTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget <em>Right Added Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Added Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget()
+	 * @see #getReferenceChangeRightTarget()
+	 * @generated
+	 */
+	EReference getReferenceChangeRightTarget_RightAddedTarget();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget <em>Left Added Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Added Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget()
+	 * @see #getReferenceChangeRightTarget()
+	 * @generated
+	 */
+	EReference getReferenceChangeRightTarget_LeftAddedTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ModelElementChange <em>Model Element Change</em>}'.
@@ -2138,17 +2463,6 @@ public interface DiffPackage extends EPackage {
 	EClass getAddAttribute();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddAttribute#getRightTarget <em>Right Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.AddAttribute#getRightTarget()
-	 * @see #getAddAttribute()
-	 * @generated
-	 */
-	EReference getAddAttribute_RightTarget();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute <em>Remove Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2157,17 +2471,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getRemoveAttribute();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute#getLeftTarget <em>Left Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveAttribute#getLeftTarget()
-	 * @see #getRemoveAttribute()
-	 * @generated
-	 */
-	EReference getRemoveAttribute_LeftTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute <em>Update Attribute</em>}'.
@@ -2190,28 +2493,6 @@ public interface DiffPackage extends EPackage {
 	EClass getAddReferenceValue();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget <em>Left Added Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Added Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getLeftAddedTarget()
-	 * @see #getAddReferenceValue()
-	 * @generated
-	 */
-	EReference getAddReferenceValue_LeftAddedTarget();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget <em>Right Added Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Added Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.AddReferenceValue#getRightAddedTarget()
-	 * @see #getAddReferenceValue()
-	 * @generated
-	 */
-	EReference getAddReferenceValue_RightAddedTarget();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue <em>Remove Reference Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2220,28 +2501,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getRemoveReferenceValue();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget <em>Left Removed Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Removed Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getLeftRemovedTarget()
-	 * @see #getRemoveReferenceValue()
-	 * @generated
-	 */
-	EReference getRemoveReferenceValue_LeftRemovedTarget();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget <em>Right Removed Target</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Removed Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue#getRightRemovedTarget()
-	 * @see #getRemoveReferenceValue()
-	 * @generated
-	 */
-	EReference getRemoveReferenceValue_RightRemovedTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.UpdateReference <em>Update Reference</em>}'.
@@ -2361,36 +2620,15 @@ public interface DiffPackage extends EPackage {
 	EReference getConflictingDiffElement_RightParent();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getLeftDiff <em>Left Diff</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getOriginElement <em>Origin Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Left Diff</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getLeftDiff()
+	 * @return the meta object for the reference '<em>Origin Element</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getOriginElement()
 	 * @see #getConflictingDiffElement()
 	 * @generated
 	 */
-	EReference getConflictingDiffElement_LeftDiff();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getRightDiff <em>Right Diff</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Right Diff</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement#getRightDiff()
-	 * @see #getConflictingDiffElement()
-	 * @generated
-	 */
-	EReference getConflictingDiffElement_RightDiff();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup <em>Conflicting Diff Group</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Conflicting Diff Group</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ConflictingDiffGroup
-	 * @generated
-	 */
-	EClass getConflictingDiffGroup();
+	EReference getConflictingDiffElement_OriginElement();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement <em>Remote Add Model Element</em>}'.
@@ -2617,6 +2855,42 @@ public interface DiffPackage extends EPackage {
 		EReference ATTRIBUTE_CHANGE__RIGHT_ELEMENT = eINSTANCE.getAttributeChange_RightElement();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl <em>Attribute Change Left Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeLeftTarget()
+		 * @generated
+		 */
+		EClass ATTRIBUTE_CHANGE_LEFT_TARGET = eINSTANCE.getAttributeChangeLeftTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET = eINSTANCE.getAttributeChangeLeftTarget_LeftTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl <em>Attribute Change Right Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeRightTarget()
+		 * @generated
+		 */
+		EClass ATTRIBUTE_CHANGE_RIGHT_TARGET = eINSTANCE.getAttributeChangeRightTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET = eINSTANCE.getAttributeChangeRightTarget_RightTarget();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2649,6 +2923,58 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EReference REFERENCE_CHANGE__LEFT_ELEMENT = eINSTANCE.getReferenceChange_LeftElement();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl <em>Reference Change Left Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeLeftTarget()
+		 * @generated
+		 */
+		EClass REFERENCE_CHANGE_LEFT_TARGET = eINSTANCE.getReferenceChangeLeftTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Removed Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET = eINSTANCE.getReferenceChangeLeftTarget_LeftRemovedTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET = eINSTANCE.getReferenceChangeLeftTarget_RightRemovedTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl <em>Reference Change Right Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeRightTarget()
+		 * @generated
+		 */
+		EClass REFERENCE_CHANGE_RIGHT_TARGET = eINSTANCE.getReferenceChangeRightTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET = eINSTANCE.getReferenceChangeRightTarget_RightAddedTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Added Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET = eINSTANCE.getReferenceChangeRightTarget_LeftAddedTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -2795,14 +3121,6 @@ public interface DiffPackage extends EPackage {
 		EClass ADD_ATTRIBUTE = eINSTANCE.getAddAttribute();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ADD_ATTRIBUTE__RIGHT_TARGET = eINSTANCE.getAddAttribute_RightTarget();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2811,14 +3129,6 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass REMOVE_ATTRIBUTE = eINSTANCE.getRemoveAttribute();
-
-		/**
-		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REMOVE_ATTRIBUTE__LEFT_TARGET = eINSTANCE.getRemoveAttribute_LeftTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
@@ -2841,22 +3151,6 @@ public interface DiffPackage extends EPackage {
 		EClass ADD_REFERENCE_VALUE = eINSTANCE.getAddReferenceValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Added Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = eINSTANCE.getAddReferenceValue_LeftAddedTarget();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = eINSTANCE.getAddReferenceValue_RightAddedTarget();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl <em>Remove Reference Value</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -2865,22 +3159,6 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass REMOVE_REFERENCE_VALUE = eINSTANCE.getRemoveReferenceValue();
-
-		/**
-		 * The meta object literal for the '<em><b>Left Removed Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = eINSTANCE.getRemoveReferenceValue_LeftRemovedTarget();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = eINSTANCE.getRemoveReferenceValue_RightRemovedTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl <em>Update Reference</em>}' class.
@@ -2979,30 +3257,12 @@ public interface DiffPackage extends EPackage {
 		EReference CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT = eINSTANCE.getConflictingDiffElement_RightParent();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Diff</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Origin Element</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONFLICTING_DIFF_ELEMENT__LEFT_DIFF = eINSTANCE.getConflictingDiffElement_LeftDiff();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Diff</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference CONFLICTING_DIFF_ELEMENT__RIGHT_DIFF = eINSTANCE.getConflictingDiffElement_RightDiff();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffGroupImpl <em>Conflicting Diff Group</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffGroupImpl
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffGroup()
-		 * @generated
-		 */
-		EClass CONFLICTING_DIFF_GROUP = eINSTANCE.getConflictingDiffGroup();
+		EReference CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT = eINSTANCE.getConflictingDiffElement_OriginElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl <em>Remote Add Model Element</em>}' class.

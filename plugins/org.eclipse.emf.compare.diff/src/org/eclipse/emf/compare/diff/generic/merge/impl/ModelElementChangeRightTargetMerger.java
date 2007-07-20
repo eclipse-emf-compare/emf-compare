@@ -13,9 +13,9 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -23,7 +23,14 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for an {@link AddModelElement}.
+ * Merger for an {@link ModelElementChangeRightTarget} operation.<br/>
+ * <p>
+ * Are considered for this merger :
+ * <ul>
+ * <li>{@link AddModelElement}</li>
+ * <li>{@link RemoteRemoveModelElement}</li>
+ * </ul>
+ * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -36,7 +43,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final AddModelElement diff = (AddModelElement)this.diff;
+		final ModelElementChangeRightTarget diff = (ModelElementChangeRightTarget)this.diff;
 		final EObject origin = diff.getLeftParent();
 		final EObject element = diff.getRightElement();
 		final EObject newOne = EcoreUtil.copy(element);
@@ -54,8 +61,8 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof AddReferenceValue) {
-				final AddReferenceValue link = (AddReferenceValue)op;
+			if (op instanceof ReferenceChangeRightTarget) {
+				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getRightAddedTarget().equals(element)) {
 					link.setLeftAddedTarget(newOne);
@@ -72,7 +79,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AddModelElement diff = (AddModelElement)this.diff;
+		final ModelElementChangeRightTarget diff = (ModelElementChangeRightTarget)this.diff;
 		final EObject element = diff.getRightElement();
 		final EObject parent = diff.getRightElement().eContainer();
 		EcoreUtil.remove(element);
