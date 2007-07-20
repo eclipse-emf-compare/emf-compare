@@ -119,6 +119,7 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 * 
 	 * @param aFile
 	 *            The file to parse.
+	 * @return The {@link String} <code>aFile</code> stripped from all pathes preceded by "href=".
 	 */
 	private String suppressPathReferences(String aFile) {
 		final String[] fragments = aFile.split("\n"); //$NON-NLS-1$
