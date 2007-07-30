@@ -13,7 +13,8 @@ package org.eclipse.emf.compare.match.statistic.similarity;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.WeakHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
@@ -35,7 +36,7 @@ public final class NameSimilarity {
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
 
 	/** This map associates an {@link EClass} with the {@link EAttribute} that is assumed to hold its name. */
-	private static final WeakHashMap<EClass, EAttribute> NAME_FEATURE_CACHE = new WeakHashMap<EClass, EAttribute>();
+	private static final Map<EClass, EAttribute> NAME_FEATURE_CACHE = new ConcurrentHashMap<EClass, EAttribute>(256);
 
 	/**
 	 * Utility classes don't need to (and shouldn't be) be instantiated.
@@ -51,7 +52,7 @@ public final class NameSimilarity {
 	 * pairs(&quot;MyString&quot;)
 	 * </pre>
 	 * 
-	 * returns ["MY","YS","ST","TR","RI","IN","NG"]
+	 * returns ["My","yS","St","tr","ri","in","ng"]
 	 * 
 	 * @param source
 	 *            The {@link String} to process.
@@ -61,9 +62,9 @@ public final class NameSimilarity {
 		final List<String> result = new LinkedList<String>();
 		if (source != null) {
 			for (int i = 0; i < source.length() - 1; i++)
-				result.add(source.toUpperCase().substring(i, i + 2));
+				result.add(source.substring(i, i + 2));
 			if (source.length() % 2 == 1 && source.length() > 1)
-				result.add(source.toUpperCase().substring(source.length() - 2, source.length() - 1));
+				result.add(source.substring(source.length() - 2, source.length() - 1));
 		}
 		return result;
 	}

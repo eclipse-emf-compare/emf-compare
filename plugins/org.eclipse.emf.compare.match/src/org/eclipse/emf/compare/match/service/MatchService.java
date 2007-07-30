@@ -12,9 +12,9 @@ package org.eclipse.emf.compare.match.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -38,7 +38,7 @@ public class MatchService {
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
 	/** Keeps track of all the engines parsed. */
-	private final Map<String, ArrayList<EngineDescriptor>> engines = new HashMap<String, ArrayList<EngineDescriptor>>();
+	private final Map<String, ArrayList<EngineDescriptor>> engines = new ConcurrentHashMap<String, ArrayList<EngineDescriptor>>(512);
 
 	/**
 	 * Default constructor.

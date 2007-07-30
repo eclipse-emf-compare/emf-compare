@@ -12,10 +12,10 @@ package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.util.EFactory;
@@ -34,13 +34,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  */
 public class MetamodelFilter {
 	/** Keeps track of all the informations of the features. */
-	protected final Map<EStructuralFeature, FeatureInformation> featuresToInformation = new HashMap<EStructuralFeature, FeatureInformation>();
+	protected final Map<EStructuralFeature, FeatureInformation> featuresToInformation = new ConcurrentHashMap<EStructuralFeature, FeatureInformation>(1024);
 
 	/** List of the unused features' informations. */
 	protected List<FeatureInformation> unusedFeatures;
 
-	/** This {@link HashMap} will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass class}. */
-	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new HashMap<EClass, List<EStructuralFeature>>();
+	/** This {@link ConcurrentHashMap map} will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass class}. */
+	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new ConcurrentHashMap<EClass, List<EStructuralFeature>>(1024);
 
 	/**
 	 * Returns a list of the pertinent features for this {@link EObject}.
