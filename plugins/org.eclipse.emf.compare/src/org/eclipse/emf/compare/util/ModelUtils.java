@@ -17,9 +17,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -122,7 +122,9 @@ public final class ModelUtils {
 		}
 
 		final Resource modelResource = resourceSet.createResource(modelURI);
-		modelResource.load(Collections.EMPTY_MAP);
+		final Map<String, String> options = new ConcurrentHashMap<String, String>();
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
+		modelResource.load(options);
 		if (modelResource.getContents().size() > 0)
 			result = (EObject)modelResource.getContents().get(0);
 		return result;
@@ -186,7 +188,7 @@ public final class ModelUtils {
 				Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
 		final Resource newModelResource = resourceSet.createResource(modelURI);
 		newModelResource.getContents().add(root);
-		final Map<String, String> options = new HashMap<String, String>();
+		final Map<String, String> options = new ConcurrentHashMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
 		newModelResource.save(options);
 	}
