@@ -298,10 +298,6 @@ public class DiffMaker implements DiffEngine {
 		while (it.hasNext()) {
 			final EReference next = (EReference)it.next();
 			final String referenceName = next.getName();
-			// TODO CBR check this boolean expression.
-			// We filter through containment AND container references, is it accurate in terms of detection?
-			// This is done to avoid duplicate detection when an object containing a reference to its parent
-			// is moved.
 			if (!next.isContainment() && !next.isDerived() && !next.isTransient() && !next.isContainer()) {
 				final List leftElementReferences = EFactory.eGetAsList(mapping.getLeftElement(),
 						referenceName);
