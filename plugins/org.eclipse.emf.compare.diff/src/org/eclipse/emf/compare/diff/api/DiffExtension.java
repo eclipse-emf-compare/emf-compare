@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.api;
 
+import org.eclipse.emf.compare.diff.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.merge.api.AbstractMerger;
 
 /**
  * A Diff Extension may be used to define higher level diff operations.

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.merge.service;
+package org.eclipse.emf.compare.diff.merge.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.diff.DiffPlugin;
-import org.eclipse.emf.compare.merge.api.MergeFactory;
+import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
 
 /**
  * Services for model merging.

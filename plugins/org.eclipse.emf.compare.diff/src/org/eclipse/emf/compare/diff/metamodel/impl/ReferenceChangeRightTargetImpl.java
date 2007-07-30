@@ -23,17 +23,17 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl#getRightAddedTarget <em>Right Added Target</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl#getRightAddedTarget <em>Right Added Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl#getLeftAddedTarget <em>Left Added Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implements ReferenceChangeRightTarget {
 	/**
-	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getRightAddedTarget()
 	 * @generated
 	 * @ordered
@@ -41,8 +41,8 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 	protected EObject rightAddedTarget = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftAddedTarget() <em>Left Added Target</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftAddedTarget() <em>Left Added Target</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getLeftAddedTarget()
 	 * @generated
 	 * @ordered
@@ -51,7 +51,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeRightTargetImpl() {
@@ -60,7 +59,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,7 +68,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightAddedTarget() {
@@ -87,7 +84,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightAddedTarget() {
@@ -96,7 +92,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightAddedTarget(EObject newRightAddedTarget) {
@@ -108,7 +103,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftAddedTarget() {
@@ -125,7 +119,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftAddedTarget() {
@@ -134,7 +127,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftAddedTarget(EObject newLeftAddedTarget) {
@@ -146,7 +138,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -166,7 +157,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -184,7 +174,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -202,7 +191,6 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

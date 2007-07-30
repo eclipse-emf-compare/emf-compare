@@ -38,7 +38,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -51,6 +51,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		if (ref != null) {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
+				copyXMIID(element, newOne);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
@@ -75,7 +76,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {

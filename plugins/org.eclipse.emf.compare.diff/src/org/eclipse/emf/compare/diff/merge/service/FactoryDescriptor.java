@@ -8,13 +8,13 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.merge.service;
+package org.eclipse.emf.compare.diff.merge.service;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.Messages;
-import org.eclipse.emf.compare.merge.api.MergeFactory;
+import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
 import org.eclipse.emf.compare.util.EngineConstants;
 
 /**

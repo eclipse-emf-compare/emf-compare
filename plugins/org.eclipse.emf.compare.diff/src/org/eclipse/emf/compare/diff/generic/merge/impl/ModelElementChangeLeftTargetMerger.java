@@ -37,7 +37,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
@@ -53,7 +53,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -67,6 +67,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 		if (ref != null) {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
+				copyXMIID(element, newOne);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}

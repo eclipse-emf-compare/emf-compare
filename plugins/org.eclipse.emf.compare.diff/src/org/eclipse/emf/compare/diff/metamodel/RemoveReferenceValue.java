@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Remove Reference Value</b></em>'.

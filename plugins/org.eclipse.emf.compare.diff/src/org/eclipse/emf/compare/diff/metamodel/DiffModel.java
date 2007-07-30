@@ -21,9 +21,10 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft <em>Left</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOwnedElements <em>Owned Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft <em>Left</em>}</li>
  * </ul>
  * </p>
  *
@@ -100,5 +101,31 @@ public interface DiffModel extends EObject {
 	 * @generated
 	 */
 	void setLeft(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Origin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Origin</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Origin</em>' attribute.
+	 * @see #setOrigin(String)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_Origin()
+	 * @model
+	 * @generated
+	 */
+	String getOrigin();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Origin</em>' attribute.
+	 * @see #getOrigin()
+	 * @generated
+	 */
+	void setOrigin(String value);
 
 } // DiffModel

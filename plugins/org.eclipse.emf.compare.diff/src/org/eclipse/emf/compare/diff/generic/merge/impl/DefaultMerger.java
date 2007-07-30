@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
-import org.eclipse.emf.compare.merge.api.AbstractMerger;
+import org.eclipse.emf.compare.diff.merge.api.AbstractMerger;
 
 /**
  * Default implementation of an {@link AbstractMerger}.
@@ -21,7 +21,7 @@ public class DefaultMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
@@ -31,7 +31,7 @@ public class DefaultMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
@@ -41,7 +41,7 @@ public class DefaultMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#canApplyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#canApplyInOrigin()
 	 */
 	@Override
 	public boolean canApplyInOrigin() {
@@ -51,7 +51,7 @@ public class DefaultMerger extends AbstractMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#canUndoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#canUndoInTarget()
 	 */
 	@Override
 	public boolean canUndoInTarget() {

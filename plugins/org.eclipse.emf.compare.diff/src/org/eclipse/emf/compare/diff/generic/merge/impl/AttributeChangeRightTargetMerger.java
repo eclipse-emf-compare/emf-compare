@@ -34,7 +34,7 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -46,6 +46,7 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 		final EAttribute attr = diff.getAttribute();
 		try {
 			EFactory.eAdd(origin, attr.getName(), newOne);
+			copyXMIID(element, newOne);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -55,7 +56,7 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {

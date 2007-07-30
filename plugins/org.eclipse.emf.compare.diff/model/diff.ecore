@@ -4,10 +4,11 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diff"
     nsURI="http://www.eclipse.org/emf/compare/diff/1.1" nsPrefix="diff">
   <eClassifiers xsi:type="ecore:EClass" name="DiffModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" upperBound="-1"
         eType="#//DiffElement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subDiffElements" upperBound="-1"

@@ -9,9 +9,10 @@
       interfacePackageSuffix="metamodel" metaDataPackageSuffix="metamodel" classPackageSuffix="metamodel.impl"
       utilityPackageSuffix="metamodel.util" ecorePackage="diff.ecore#/">
     <genClasses ecoreClass="diff.ecore#//DiffModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/origin"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/right"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/ownedElements"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
     </genClasses>
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>

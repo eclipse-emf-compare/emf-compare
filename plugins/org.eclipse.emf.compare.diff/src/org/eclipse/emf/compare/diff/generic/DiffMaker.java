@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -69,8 +71,11 @@ public class DiffMaker implements DiffEngine {
 	/** Allows retrieval of the right matched object. */
 	private static final int RIGHT_OBJECT = 2;
 
-	/** This hashmap is useful to find the Match from any EObject instance. */
-	private HashMap<EObject, Match2Elements> eObjectToMatch = new HashMap<EObject, Match2Elements>();
+	/** This map is useful to find the Match from any EObject instance. */
+	private final Map<EObject, Match2Elements> eObjectToMatch = new ConcurrentHashMap<EObject, Match2Elements>(1024);
+
+	/** This map will keep track of the top level unmatched elements, as well as whether they are conflicting. */
+	private final Map<UnMatchElement, Boolean> unMatchedElements = new HashMap<UnMatchElement, Boolean>(128);
 
 	/**
 	 * {@inheritDoc}
@@ -81,6 +86,9 @@ public class DiffMaker implements DiffEngine {
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
 		updateEObjectToMatch(match, threeWay);
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
+		result.setLeft(match.getLeftModel());
+		result.setRight(match.getRightModel());
+		result.setOrigin(match.getOriginModel());
 
 		DiffGroup diffRoot = null;
 		if (threeWay)
@@ -112,31 +120,24 @@ public class DiffMaker implements DiffEngine {
 		final Iterator unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
 			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
-			final boolean isRemoteUnMatch = unMatchElement instanceof RemoteUnMatchElement;
-
-			if (isRemoteUnMatch && unMatchElement.getElement().eResource() == leftModel) {
-				final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE.createRemoteAddModelElement();
-				addOperation.setLeftElement(unMatchElement.getElement());
-				addOperation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, addOperation, unMatchElement.getElement().eContainer());
-			} else if (isRemoteUnMatch) {
-				final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoteRemoveModelElement();
-				removeOperation.setRightElement(unMatchElement.getElement());
-				removeOperation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, removeOperation, removeOperation.getLeftParent());
-			} else if (unMatchElement.getElement().eResource() == leftModel) {
-				final RemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoveModelElement();
-				removeOperation.setLeftElement(unMatchElement.getElement());
-				removeOperation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, removeOperation, unMatchElement.getElement().eContainer());
-			} else {
-				final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
-				addOperation.setRightElement(unMatchElement.getElement());
-				addOperation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, addOperation, getMatchedEObject(unMatchElement.getElement().eContainer()));
+			boolean isChild = false;
+			boolean isAncestor = false;
+			for (Object object : match.getUnMatchedElements()) {
+				if (unMatchElement != ((UnMatchElement)object)) {
+					if (EcoreUtil.isAncestor(unMatchElement.getElement(), ((UnMatchElement)object).getElement())) {
+						isAncestor = true;
+					}
+					if (EcoreUtil.isAncestor(((UnMatchElement)object).getElement(), unMatchElement.getElement())) {
+						isChild = true;
+					}
+				}
+				if (isChild || isAncestor)
+					break;
 			}
+			if (!isChild)
+				unMatchedElements.put(unMatchElement, isAncestor);
 		}
-
+		processUnMatchedElements(diffRoot, leftModel);
 		return diffRoot;
 	}
 
@@ -412,8 +413,8 @@ public class DiffMaker implements DiffEngine {
 		final EObject rightElement = matchElement.getRightElement();
 		final EObject originElement = matchElement.getOriginElement();
 
-		final boolean leftMoved = leftElement.eContainer() != null && !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
-		final boolean rightMoved = rightElement.eContainer() != null && !getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
+		final boolean leftMoved = originElement != null && leftElement.eContainer() != null && !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
+		final boolean rightMoved = originElement != null && rightElement.eContainer() != null && !getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(originElement.eContainer());
 
 		// conflicting change
 		if (leftMoved && rightMoved && !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
@@ -624,7 +625,7 @@ public class DiffMaker implements DiffEngine {
 		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute, EObject, EObject)
 		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
 		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping.getRightElement());
-		
+
 		if (dummyGroup.getSubDiffElements().size() > 0) {
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE.createConflictingDiffElement();
 			conflictingDiff.setLeftParent(mapping.getLeftElement());
@@ -993,7 +994,7 @@ public class DiffMaker implements DiffEngine {
 	 * @return The {@link DiffElement} corresponding to an unique reference's value update
 	 */
 	@SuppressWarnings("unchecked")
-	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right, EReference reference, List<EObject> deletedReferences, List<EObject> addedReferences) {
+	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right, EReference reference, List<EObject> addedReferences, List<EObject> deletedReferences) {
 		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
 		operation.setLeftElement(left);
 		operation.setRightElement(right);
@@ -1290,7 +1291,78 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Fill the <code>eObjectToMatch</code> hashmap to retrieve matchings from left, right or origin {@link EObject}.
+	 * This will process the {@link #unMatchedElements unmatched elements} list and create the appropriate {@link DiffElement}s.
+	 * 
+	 * @param diffRoot
+	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
+	 * @param leftModel
+	 *            {@link Resource} representing the left model.
+	 */
+	@SuppressWarnings("unchecked")
+	private void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel) {
+		for (UnMatchElement unMatchElement : unMatchedElements.keySet()) {
+			final boolean isConflicting = unMatchedElements.get(unMatchElement);
+			
+			final EObject element = unMatchElement.getElement();
+			final EObject matchedParent = getMatchedEObject(element.eContainer());
+			final EObject matchedAncestor = getMatchedEObject(element, ANCESTOR_OBJECT);
+
+			if (unMatchElement instanceof RemoteUnMatchElement && unMatchElement.getElement().eResource() == leftModel) {
+				final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE.createRemoteAddModelElement();
+				addOperation.setLeftElement(element);
+				addOperation.setRightParent(matchedParent);
+				addInContainerPackage(diffRoot, addOperation, unMatchElement.getElement().eContainer());
+			} else if (unMatchElement instanceof RemoteUnMatchElement) {
+				final DiffElement operation;
+				if (isConflicting) {
+					operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
+					((ConflictingDiffElement)operation).setLeftParent(matchedParent);
+					((ConflictingDiffElement)operation).setRightParent(element);
+					((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
+
+					final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoteRemoveModelElement();
+					removeOperation.setRightElement(element);
+					removeOperation.setLeftParent(matchedParent);
+
+					operation.getSubDiffElements().add(removeOperation);
+				} else {
+					operation = DiffFactory.eINSTANCE.createRemoteRemoveModelElement();
+					((RemoteRemoveModelElement)operation).setRightElement(element);
+					((RemoteRemoveModelElement)operation).setLeftParent(matchedParent);
+				}
+
+				addInContainerPackage(diffRoot, operation, matchedParent);
+			} else if (unMatchElement.getElement().eResource() == leftModel) {
+				final DiffElement operation;
+				if (isConflicting) {
+					operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
+					((ConflictingDiffElement)operation).setLeftParent(element);
+					((ConflictingDiffElement)operation).setRightParent(matchedParent);
+					((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
+
+					final RemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoveModelElement();
+					removeOperation.setLeftElement(element);
+					removeOperation.setRightParent(matchedParent);
+
+					operation.getSubDiffElements().add(removeOperation);
+				} else {
+					operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+					((RemoveModelElement)operation).setLeftElement(element);
+					((RemoveModelElement)operation).setRightParent(matchedParent);
+				}
+
+				addInContainerPackage(diffRoot, operation, matchedParent);
+			} else {
+				final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
+				addOperation.setRightElement(element);
+				addOperation.setLeftParent(matchedParent);
+				addInContainerPackage(diffRoot, addOperation, matchedParent);
+			}
+		}
+	}
+
+	/**
+	 * Fill the <code>eObjectToMatch</code> map to retrieve matchings from left, right or origin {@link EObject}.
 	 * 
 	 * @param match
 	 *            {@link MatchModel} to extract the {@link MatchElement}s from.
@@ -1314,6 +1386,5 @@ public class DiffMaker implements DiffEngine {
 					eObjectToMatch.put(((Match3Element)matchElem).getOriginElement(), matchElem);
 			}
 		}
-
 	}
 }

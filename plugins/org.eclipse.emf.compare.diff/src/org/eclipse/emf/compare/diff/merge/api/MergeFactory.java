@@ -8,9 +8,10 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.merge.api;
+package org.eclipse.emf.compare.diff.merge.api;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeLeftTargetMerger;
@@ -41,10 +42,10 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
  */
 public final class MergeFactory {
 	/**
-	 * This {@link HashMap} keeps a bridge between a given {@link DiffElement}'s class and the most accurate merger's class for that particular
+	 * This {@link ConcurrentHashMap map} keeps a bridge between a given {@link DiffElement}'s class and the most accurate merger's class for that particular
 	 * {@link DiffElement}.
 	 */
-	private static final HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new HashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
+	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new ConcurrentHashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>(32);
 
 	/**
 	 * Associates basic {@link DiffElement}s with generic merger implementations.

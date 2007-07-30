@@ -389,7 +389,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	public EAttribute getDiffModel_Right() {
-		return (EAttribute)diffModelEClass.getEStructuralFeatures().get(0);
+		return (EAttribute)diffModelEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -398,7 +398,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	public EReference getDiffModel_OwnedElements() {
-		return (EReference)diffModelEClass.getEStructuralFeatures().get(1);
+		return (EReference)diffModelEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -407,7 +407,16 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	public EAttribute getDiffModel_Left() {
-		return (EAttribute)diffModelEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)diffModelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiffModel_Origin() {
+		return (EAttribute)diffModelEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1016,9 +1025,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		// Create classes and their features
 		diffModelEClass = createEClass(DIFF_MODEL);
+		createEAttribute(diffModelEClass, DIFF_MODEL__LEFT);
+		createEAttribute(diffModelEClass, DIFF_MODEL__ORIGIN);
 		createEAttribute(diffModelEClass, DIFF_MODEL__RIGHT);
 		createEReference(diffModelEClass, DIFF_MODEL__OWNED_ELEMENTS);
-		createEAttribute(diffModelEClass, DIFF_MODEL__LEFT);
 
 		diffElementEClass = createEClass(DIFF_ELEMENT);
 		createEReference(diffElementEClass, DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
@@ -1182,12 +1192,14 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(diffModelEClass, DiffModel.class, "DiffModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDiffModel_Left(), ecorePackage.getEString(), "left", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getDiffModel_Origin(), ecorePackage.getEString(), "origin", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDiffModel_Right(), ecorePackage.getEString(), "right", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getDiffModel_OwnedElements(), this.getDiffElement(), null, "ownedElements", null, 0, -1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiffModel_Left(), ecorePackage.getEString(), "left", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
 
 		initEClass(diffElementEClass, DiffElement.class, "DiffElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiffElement_SubDiffElements(), this.getDiffElement(), null, "subDiffElements", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,

@@ -75,13 +75,31 @@ public interface DiffPackage extends EPackage {
 	int DIFF_MODEL = 0;
 
 	/**
+	 * The feature id for the '<em><b>Left</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_MODEL__LEFT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Origin</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_MODEL__ORIGIN = 1;
+
+	/**
 	 * The feature id for the '<em><b>Right</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_MODEL__RIGHT = 0;
+	int DIFF_MODEL__RIGHT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Owned Elements</b></em>' containment reference list.
@@ -90,16 +108,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_MODEL__OWNED_ELEMENTS = 1;
-
-	/**
-	 * The feature id for the '<em><b>Left</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIFF_MODEL__LEFT = 2;
+	int DIFF_MODEL__OWNED_ELEMENTS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Model</em>' class.
@@ -108,7 +117,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_MODEL_FEATURE_COUNT = 3;
+	int DIFF_MODEL_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl <em>Element</em>}' class.
@@ -2050,6 +2059,17 @@ public interface DiffPackage extends EPackage {
 	EAttribute getDiffModel_Left();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Origin</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin()
+	 * @see #getDiffModel()
+	 * @generated
+	 */
+	EAttribute getDiffModel_Origin();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2775,6 +2795,14 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIFF_MODEL__LEFT = eINSTANCE.getDiffModel_Left();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF_MODEL__ORIGIN = eINSTANCE.getDiffModel_Origin();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl <em>Element</em>}' class.

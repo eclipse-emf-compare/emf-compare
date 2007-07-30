@@ -27,7 +27,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -38,8 +38,11 @@ public class MoveModelElementMerger extends DefaultMerger {
 		final EReference ref = aDiff.getRightElement().eContainmentFeature();
 		if (ref != null) {
 			try {
+				// We'll store the element's ID because moving an element deletes its XMI ID
+				final String elementID = getXMIID(leftElement);
 				EcoreUtil.remove(leftElement);
 				EFactory.eAdd(leftTarget, ref.getName(), leftElement);
+				setXMIID(leftElement, elementID);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
@@ -53,7 +56,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
@@ -63,8 +66,10 @@ public class MoveModelElementMerger extends DefaultMerger {
 		final EReference ref = aDiff.getLeftElement().eContainmentFeature();
 		if (ref != null) {
 			try {
+				final String elementID = getXMIID(rightElement);
 				EcoreUtil.remove(rightElement);
 				EFactory.eAdd(rightTarget, ref.getName(), rightElement);
+				setXMIID(rightElement, elementID);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
