@@ -56,9 +56,9 @@ public final class NameSimilarity {
 		final List<String> result = new LinkedList<String>();
 		if (source != null) {
 			for (int i = 0; i < source.length() - 1; i++)
-				result.add(source.toUpperCase().substring(i, i + 2));
+				result.add(source.substring(i, i + 2));
 			if (source.length() % 2 == 1 && source.length() > 1)
-				result.add(source.toUpperCase().substring(source.length() - 2, source.length() - 1));
+				result.add(source.substring(source.length() - 2, source.length() - 1));
 		}
 		return result;
 	}

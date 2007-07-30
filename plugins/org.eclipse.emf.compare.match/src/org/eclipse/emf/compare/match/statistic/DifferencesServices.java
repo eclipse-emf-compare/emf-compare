@@ -750,6 +750,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @param right
 	 *            Second of the {@link XMIResource resources} to visit.
 	 */
+	// TODO check eID (ecoreUtil#getID(EObject))
 	private void matchByID(XMIResource left, XMIResource right) {
 		matchedByID.clear();
 		final Iterator leftIterator = left.getAllContents();
