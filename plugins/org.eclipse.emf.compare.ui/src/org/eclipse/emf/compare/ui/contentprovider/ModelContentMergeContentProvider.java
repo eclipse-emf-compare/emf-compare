@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
@@ -149,7 +149,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (input.getLeft() instanceof TypedElementWrapper) {
 				final TypedElementWrapper left = (TypedElementWrapper)input.getLeft();
 				try {
-					left.getObject().eResource().save(new HashMap());
+					left.getObject().eResource().save(Collections.EMPTY_MAP);
 				} catch (IOException e) {
 					EMFComparePlugin.log(e.getMessage(), false);
 				}
@@ -206,7 +206,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (input.getRight() instanceof TypedElementWrapper) {
 				final TypedElementWrapper right = (TypedElementWrapper)input.getRight();
 				try {
-					right.getObject().eResource().save(new HashMap());
+					right.getObject().eResource().save(Collections.EMPTY_MAP);
 				} catch (IOException e) {
 					EMFComparePlugin.log(e.getMessage(), false);
 				}

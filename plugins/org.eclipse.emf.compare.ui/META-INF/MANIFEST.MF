@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.ui.workbench.texteditor
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.emf.compare.ui,
- org.eclipse.emf.compare.ui.editor
+ org.eclipse.emf.compare.ui.editor,
+ org.eclipse.emf.compare.ui.util

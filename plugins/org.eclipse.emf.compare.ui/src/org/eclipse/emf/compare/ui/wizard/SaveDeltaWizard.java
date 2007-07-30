@@ -18,8 +18,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
-import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
@@ -57,11 +57,12 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	 * @param workbench
 	 *            Current workbench.
 	 * @param inputSnapshot
-	 *            The current {@link ModelCompareInput}.
+	 *            The {@link ModelInputSnapshot} to save.
 	 */
 	public void init(IWorkbench workbench, ModelInputSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
-		input = inputSnapshot;
+		// ensures no modification will be made to the input
+		input = (ModelInputSnapshot)EcoreUtil.copy(inputSnapshot);
 	}
 
 	/**
@@ -73,22 +74,23 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	public boolean performFinish() {
 		boolean result = false;
 		final String page = "newFilePage1"; //$NON-NLS-1$
-		if (((WizardNewFileCreationPage)getPage(page)).getFileName().endsWith(fileExtension)) {
-			final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
-			if (createdFile != null) {
-				try {
-					final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-					modelInputSnapshot.setDiff(input.getDiff());
-					modelInputSnapshot.setMatch(input.getMatch());
-					modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-					ModelUtils.save(modelInputSnapshot, createdFile.getFullPath().toString());
-				} catch (IOException e) {
-					EMFComparePlugin.log(e, false);
-				}
-				result = true;
+		
+		final String fileName = ((WizardNewFileCreationPage)getPage(page)).getFileName();
+		if (!fileName.endsWith(fileExtension))
+			((WizardNewFileCreationPage)getPage(page)).setFileName(fileName + '.' + fileExtension);
+		
+		final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
+		if (createdFile != null) {
+			try {
+				final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+				modelInputSnapshot.setDiff(input.getDiff());
+				modelInputSnapshot.setMatch(input.getMatch());
+				modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
+				ModelUtils.save(modelInputSnapshot, createdFile.getFullPath().toOSString());
+			} catch (IOException e) {
+				EMFComparePlugin.log(e, false);
 			}
-		} else {
-			((WizardNewFileCreationPage)getPage(page)).setErrorMessage(Messages.getString("SaveDeltaWizard.IllegalFileExtension", fileExtension)); //$NON-NLS-1$
+			result = true;
 		}
 		return result;
 	}

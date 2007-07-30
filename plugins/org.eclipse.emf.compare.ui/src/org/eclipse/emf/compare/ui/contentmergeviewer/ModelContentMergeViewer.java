@@ -39,6 +39,8 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
@@ -329,25 +331,28 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			leftElement = diff;
 			rightElement = diff;
 		}
-		/*
-		 * RemoteAddModelElement behaves exactly as would a RemoveModelElement, and RemoteRemoveModeElement behaves as an AddModelElement. We then
-		 * invert Remote model element changes' right and left elements.
-		 */
 		Item leftItem = (Item)leftPart.find(leftElement);
 		final Item rightItem = (Item)rightPart.find(rightElement);
+		
+		if (leftItem == null) {
+			leftItem = leftPart.getTreeRoot();
+			// might still be null!
+			if (leftItem != null)
+				leftElement = (EObject)leftItem.getData();
+		}
 
-		final boolean notVisibleTreeItemForDiff = leftItem != null && (!leftItem.getData().equals(leftElement) || (!(diff instanceof RemoteAddModelElement) || diff instanceof AddModelElement));
+		final boolean notVisibleTreeItemForDiff = leftItem != null && (!leftItem.getData().equals(leftElement) || diff instanceof ModelElementChangeRightTarget);
 		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
+			// keeps compiler happy, we cannot be here if leftItem is null
+			assert leftItem != null;
 			if (rightItem != null && rightItem.getData().equals(rightElement) && rightItem.getData() instanceof EObject && ((EObject)rightItem.getData()).eContainer() != null) {
-				assert leftItem != null;
 				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(rightItem.getData());
 				final EList leftList = ((EObject)leftItem.getData()).eContents();
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
 				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
 				if (leftIndex > 0)
 					leftItem = (TreeItem)leftPart.find((EObject)leftList.get(leftIndex));
 			}
-		} else if (selectedTab == TREE_TAB && leftItem == null) {
-			leftItem = leftPart.getTreeRoot();
 		}
 
 		return leftItem;
@@ -376,24 +381,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			leftElement = diff;
 			rightElement = diff;
 		}
-		/*
-		 * RemoteAddModelElement behaves exactly as would a RemoveModelElement, and RemoteRemoveModeElement behaves as an AddModelElement. We then
-		 * invert Remote model element changes' right and left elements.
-		 */
 		final Item leftItem = (Item)leftPart.find(leftElement);
 		Item rightItem = (Item)rightPart.find(rightElement);
 
 		if (rightItem == null) {
 			rightItem = rightPart.getTreeRoot();
-			rightElement = (EObject)rightItem.getData();
+			// might still be null
+			if (rightItem != null)
+				rightElement = (EObject)rightItem.getData();
 		}
 
-		final boolean notVisibleTreeItemForDiff = !rightItem.getData().equals(rightElement) || (!(diff instanceof RemoteRemoveModelElement) || diff instanceof RemoveModelElement);
+		final boolean notVisibleTreeItemForDiff = rightItem != null && (!rightItem.getData().equals(rightElement) || diff instanceof ModelElementChangeLeftTarget);
 		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
+			// keeps compiler happy, we cannot be here if rightItem is null
+			assert rightItem != null;
 			if (leftItem != null && leftItem.getData().equals(leftElement) && leftItem.getData() instanceof EObject && ((EObject)leftItem.getData()).eContainer() != null) {
 				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(leftItem.getData());
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
 				final EList rightList = ((EObject)rightItem.getData()).eContents();
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
 				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
 				if (rightIndex > 0)
 					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(rightIndex));
@@ -418,6 +423,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT) != null && !changed) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
 					.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
+			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+		} else if (input instanceof ModelInputSnapshot) {
+			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
 		} else if (input instanceof ICompareInput) {
 			final ITypedElement left = ((ICompareInput)input).getLeft();
@@ -627,6 +635,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 										rightModel, monitor);
 								final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
 	
+								snapshot.setDate(Calendar.getInstance().getTime());
 								snapshot.setDiff(diff);
 								snapshot.setMatch(match);
 							}
@@ -640,6 +649,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 										rightModel, ancestorModel, monitor);
 								final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
 								
+								snapshot.setDate(Calendar.getInstance().getTime());
 								snapshot.setDiff(diff);
 								snapshot.setMatch(match);
 							}
@@ -788,9 +798,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				if (isThreeWay)
 					ancestorModel = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
 							modelResourceSet);
-			} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-				// this is the case of SVN/CVS comparison, we invert left and right.
-				rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
+			} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
+				// this is the case of SVN/CVS comparison, we invert left (remote) and right (local).
+				rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 						modelResourceSet);
 				leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
 						modelResourceSet);
@@ -957,12 +967,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 				// Defines the circling Color
 				RGB color = changedColor;
-				if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
+				if (diff.eContainer() instanceof ConflictingDiffElement) {
+					color = conflictingColor;
+				} else if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
 					color = addedColor;
 				} else if (diff instanceof RemoveModelElement || diff instanceof RemoteRemoveModelElement) {
 					color = removedColor;
-				} else if (diff.eContainer() instanceof ConflictingDiffElement) {
-					color = conflictingColor;
 				}
 
 				// Defines all variables needed for drawing the line.

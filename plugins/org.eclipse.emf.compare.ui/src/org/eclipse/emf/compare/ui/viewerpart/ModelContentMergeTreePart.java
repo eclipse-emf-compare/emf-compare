@@ -61,7 +61,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		if (res == null && element instanceof EObject) { 
 			if (((EObject)element).eContainer() != null) {
 				res = find(((EObject)element).eContainer());
-			} else
+			} else if (getTree().getItemCount() > 0)
 				res = getTree().getItem(0);
 		}
 		if (res instanceof Tree) {

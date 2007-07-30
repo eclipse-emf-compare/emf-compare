@@ -184,6 +184,8 @@ public class ModelContentMergeViewerPart {
 		if (element != null) {
 			if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 				widget = tree.find(element);
+				if (!isVisible((TreeItem)widget) && element.eContainer() != null)
+					widget = find(element.eContainer());
 			} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
 				if (element instanceof DiffElement)
 					widget = properties.find((DiffElement)element);
@@ -260,9 +262,16 @@ public class ModelContentMergeViewerPart {
 	 * @return <code>True</code> if the item is visible, <code>False</code> otherwise.
 	 */
 	public boolean isVisible(Item item) {
-		if (item instanceof TreeItem)
-			return tree.getTree().getClientArea().contains(((TreeItem)item).getBounds().x, ((TreeItem)item).getBounds().y);
-		return false;
+		boolean visible = false;
+		if (item instanceof TreeItem) {
+			final TreeItem treeItem = (TreeItem)item;
+			// First we check that the treeItem is contained within the tree's client area
+			visible = tree.getTree().getClientArea().contains(treeItem.getBounds().x, treeItem.getBounds().y);
+			// Then we check that the treeItem's parent is expanded
+			if (visible && treeItem.getParentItem() != null)
+				visible = treeItem.getParentItem().getExpanded();
+		}
+		return visible;
 	}
 
 	/**
@@ -352,7 +361,7 @@ public class ModelContentMergeViewerPart {
 			if (diff instanceof RemoveModelElement && treeItem != null)
 				treeItem.setExpanded(true);
 		} else if (partSide == EMFCompareConstants.ANCESTOR) {
-			target = EMFCompareEObjectUtils.getAncestorElement(diff);
+			target = EMFCompareEObjectUtils.getAncestorElement(diff.eContainer());
 		}
 		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 			tree.showItem(target);
@@ -595,12 +604,12 @@ public class ModelContentMergeViewerPart {
 			
 			// Defines the circling Color
 			RGB color = parentViewer.getChangedColor();
-			if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
+			if (diff instanceof ConflictingDiffElement || diff.eContainer() instanceof ConflictingDiffElement) {
+				color = parentViewer.getConflictingColor();
+			} else if (diff instanceof AddModelElement || diff instanceof RemoteAddModelElement) {
 				color = parentViewer.getAddedColor();
 			} else if (diff instanceof RemoveModelElement || diff instanceof RemoteRemoveModelElement) {
 				color = parentViewer.getRemovedColor();
-			} else if (diff instanceof ConflictingDiffElement || diff.eContainer() instanceof ConflictingDiffElement) {
-				color = parentViewer.getConflictingColor();
 			}
 
 			/*
