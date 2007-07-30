@@ -16,10 +16,12 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -105,8 +107,13 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	public String getText(Object object) {
 		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
 		try {
+			final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
+			final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
+			if (updateRef.eContainer() instanceof ConflictingDiffElement)
+				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(leftValue),
+						NameSimilarity.findName(rightValue),});
 			return getString("_UI_UpdateUniqueReferenceValue_type", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(updateRef.getLeftElement()), //$NON-NLS-1$
-					NameSimilarity.findName(updateRef.getLeftTarget()), NameSimilarity.findName(updateRef.getRightTarget()),});
+					NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
 		} catch (FactoryException e) {
 			return getString("_UI_UpdateUniqueReferenceValue_type"); //$NON-NLS-1$
 		}

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
@@ -75,7 +76,10 @@ public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRigh
 	public String getText(Object object) {
 		final RemoteRemoveModelElement removeOp = (RemoteRemoveModelElement)object;
 		try {
-			return getString("_UI_RemoteRemoveModelElement_type", new Object[] {NameSimilarity.findName(removeOp.getRightElement())}); //$NON-NLS-1$
+			final String target = NameSimilarity.findName(removeOp.getRightElement());
+			if (removeOp.eContainer() instanceof ConflictingDiffElement)
+				return getString("_UI_RemoteRemoveModelElement_conflicting", new Object[] {target}); //$NON-NLS-1$
+			return getString("_UI_RemoteRemoveModelElement_type", new Object[] {target}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_RemoteRemoveModelElement_type"); //$NON-NLS-1$
 		}

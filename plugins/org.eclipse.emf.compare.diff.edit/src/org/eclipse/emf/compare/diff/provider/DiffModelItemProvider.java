@@ -56,8 +56,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addRightPropertyDescriptor(object);
 			addLeftPropertyDescriptor(object);
+			addOriginPropertyDescriptor(object);
+			addRightPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -85,6 +86,20 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(), getString("_UI_DiffModel_left_feature"),
 				getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_left_feature", "_UI_DiffModel_type"), DiffPackage.Literals.DIFF_MODEL__LEFT, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Origin feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addOriginPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(), getString("_UI_DiffModel_origin_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_origin_feature", "_UI_DiffModel_type"), DiffPackage.Literals.DIFF_MODEL__ORIGIN, true, false, false,
 				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -122,7 +137,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((DiffModel)object).getRight();
+		String label = ((DiffModel)object).getLeft();
 		return label == null || label.length() == 0 ? getString("_UI_DiffModel_type") : getString("_UI_DiffModel_type") + " " + label;
 	}
 
@@ -137,8 +152,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DiffModel.class)) {
-			case DiffPackage.DIFF_MODEL__RIGHT:
 			case DiffPackage.DIFF_MODEL__LEFT:
+			case DiffPackage.DIFF_MODEL__ORIGIN:
+			case DiffPackage.DIFF_MODEL__RIGHT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:

@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
@@ -93,9 +94,12 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	 */
 	@Override
 	public String getText(Object object) {
-		RemoveModelElement addOp = (RemoveModelElement)object;
+		RemoveModelElement removeOp = (RemoveModelElement)object;
 		try {
-			return getString("_UI_RemoveModelElement_type", new Object[] {NameSimilarity.findName(addOp.getLeftElement())}); //$NON-NLS-1$
+			final String target = NameSimilarity.findName(removeOp.getLeftElement());
+			if (removeOp.eContainer() instanceof ConflictingDiffElement)
+				return getString("_UI_RemoveModelElement_conflicting", new Object[] {target}); //$NON-NLS-1$
+			return getString("_UI_RemoveModelElement_type", new Object[] {target}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_RemoveModelElement_type"); //$NON-NLS-1$
 		}

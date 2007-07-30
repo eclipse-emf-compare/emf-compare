@@ -76,9 +76,11 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	public String getText(Object object) {
 		UpdateAttribute updateOp = (UpdateAttribute)object;
 		try {
+			final Object leftValue = updateOp.getLeftElement().eGet(updateOp.getAttribute());
+			final Object rightValue = updateOp.getRightElement().eGet(updateOp.getAttribute());
 			if (updateOp.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_UpdateAttribute_conlicting", new Object[] {NameSimilarity.findName(updateOp.getAttribute()),});
-			return getString("_UI_UpdateAttribute_type", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), NameSimilarity.findName(updateOp.getLeftElement()),}); //$NON-NLS-1$
+				return getString("_UI_UpdateAttribute_conflicting", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), leftValue, rightValue,});
+			return getString("_UI_UpdateAttribute_type", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), NameSimilarity.findName(updateOp.getLeftElement()), leftValue, rightValue,}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_UpdateAttribute_type"); //$NON-NLS-1$
 		}

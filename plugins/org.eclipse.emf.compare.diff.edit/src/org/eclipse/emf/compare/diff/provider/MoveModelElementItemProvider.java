@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
@@ -105,8 +106,11 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	public String getText(Object object) {
 		MoveModelElement moveOp = (MoveModelElement)object;
 		try {
-			return getString("_UI_MoveModelElement_type", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), NameSimilarity.findName(moveOp.getRightTarget()), //$NON-NLS-1$
-					NameSimilarity.findName(moveOp.getLeftTarget())});
+			final String rightTarget = NameSimilarity.findName(moveOp.getRightTarget());
+			final String leftTarget = NameSimilarity.findName(moveOp.getLeftTarget());
+			if (moveOp.eContainer() instanceof ConflictingDiffElement)
+				return getString("_UI_MoveModelElement_conflicting", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), rightTarget, leftTarget,}); //$NON-NLS-1$
+			return getString("_UI_MoveModelElement_type", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), rightTarget, leftTarget,}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_MoveModelElement_type"); //$NON-NLS-1$
 		}
