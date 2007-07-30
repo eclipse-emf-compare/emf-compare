@@ -159,10 +159,9 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 							modelResourceSet);
 					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
 							modelResourceSet);
-				} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
+				} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 					// this is the case of SVN/CVS comparison, we invert left and right.
-					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
-							left.getName(), modelResourceSet);
+					rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(), modelResourceSet);
 					leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
 							.getName(), modelResourceSet);
 					final String leftLabel = configuration.getRightLabel(rightModel);

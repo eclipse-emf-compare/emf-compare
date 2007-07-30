@@ -262,8 +262,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		Item leftItem = (Item)leftPart.find(leftElement);
 		final Item rightItem = (Item)rightPart.find(rightElement);
 
-		if (selectedTab == TREE_TAB && leftItem != null
-				&& (!leftItem.getData().equals(leftElement) || diff instanceof AddModelElement)) {
+		if (leftItem != null && (selectedTab == TREE_TAB && (!leftItem.getData().equals(leftElement) || diff instanceof AddModelElement))) {
 			if (rightItem != null && rightItem.getData().equals(rightElement)
 					&& rightItem.getData() instanceof EObject
 					&& ((EObject)rightItem.getData()).eContainer() != null) {
@@ -300,12 +299,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		Item rightItem = (Item)rightPart.find(rightElement);
 
 		if (rightItem == null) {
-			rightItem = (Item)rightPart.getTreeRoot();
-			rightElement = (EObject)rightItem.getData();
+			rightItem = rightPart.getTreeRoot();
+			// might still be null
+			if (rightItem != null)
+				rightElement = (EObject)rightItem.getData();
 		}
 
-		if (selectedTab == TREE_TAB && rightItem != null
-				&& (!rightItem.getData().equals(rightElement) || diff instanceof RemoveModelElement)) {
+		if (rightItem != null && (selectedTab == TREE_TAB && (!rightItem.getData().equals(rightElement) || diff instanceof RemoveModelElement))) {
 			if (leftItem != null && leftItem.getData().equals(leftElement)
 					&& leftItem.getData() instanceof EObject
 					&& ((EObject)leftItem.getData()).eContainer() != null) {
@@ -390,6 +390,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
 					.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+		} else if (input instanceof ModelInputSnapshot) {
+			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
+			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
 		} else if (input instanceof ICompareInput) {
 			final ITypedElement left = ((ICompareInput)input).getLeft();
 			final ITypedElement right = ((ICompareInput)input).getRight();
@@ -402,10 +405,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 							modelResourceSet);
 					rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
 							modelResourceSet);
-				} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
+				} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 					// this is the case of SVN/CVS comparison, we invert left and right.
-					rightModel = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
-							left.getName(), modelResourceSet);
+					rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(), 
+							modelResourceSet);
 					leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right
 							.getName(), modelResourceSet);
 					final String leftLabel = configuration.getRightLabel(rightModel);

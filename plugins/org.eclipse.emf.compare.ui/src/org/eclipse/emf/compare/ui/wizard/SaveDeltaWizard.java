@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
@@ -30,31 +31,38 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class SaveDeltaWizard extends BasicNewFileResourceWizard {
+	/** Result of the comparison this wizard is meant to save. */
 	private ModelInputSnapshot input;
-	private String fileExtension;
-	
+
+	/** File extension of the files this wizard creates. If no extension is specified for the instantiation, we initialize this to "emfdiff". */
+	private final String fileExtension;
+
 	/**
 	 * Creates a new file wizard given the file extension to use.
 	 * 
 	 * @param extension
-	 * 			Extension of the file(s) to generate.
+	 *            Extension of the file(s) to generate.
 	 */
 	public SaveDeltaWizard(String extension) {
 		super();
-		fileExtension = extension;
+		if (extension == null)
+			fileExtension = "emfdiff"; //$NON-NLS-1$
+		else
+			fileExtension = extension;
 	}
-	
+
 	/**
 	 * initalizes the wizard.
 	 * 
 	 * @param workbench
-	 * 			Current workbench.
+	 *            Current workbench.
 	 * @param inputSnapshot
-	 * 			The current {@link ModelCompareInput}.	
+	 *            The {@link ModelInputSnapshot} to save.
 	 */
 	public void init(IWorkbench workbench, ModelInputSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
-		input = inputSnapshot;
+		// ensures no modification will be made to the input
+		input = (ModelInputSnapshot)EcoreUtil.copy(inputSnapshot);
 	}
 
 	/**
@@ -66,26 +74,27 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	public boolean performFinish() {
 		boolean result = false;
 		final String page = "newFilePage1"; //$NON-NLS-1$
-		if (((WizardNewFileCreationPage)getPage(page)).getFileName().endsWith(fileExtension)) { 
-			final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
-	        if (createdFile != null) {
-		        try {
-		        	final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-		        	modelInputSnapshot.setDiff(input.getDiff());
-		        	modelInputSnapshot.setMatch(input.getMatch());
-		        	modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-					ModelUtils.save(modelInputSnapshot, createdFile.getFullPath().toString());
-				} catch (IOException e) {
-					EMFComparePlugin.log(e, false);
-				}
-				result = true;
-	        }
-		} else {
-			((WizardNewFileCreationPage)getPage(page)).setErrorMessage("The file name must end in " + fileExtension); //$NON-NLS-1$
+		
+		final String fileName = ((WizardNewFileCreationPage)getPage(page)).getFileName();
+		if (!fileName.endsWith('.' + fileExtension))
+			((WizardNewFileCreationPage)getPage(page)).setFileName(fileName + '.' + fileExtension);
+		
+		final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
+		if (createdFile != null) {
+			try {
+				final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+				modelInputSnapshot.setDiff(input.getDiff());
+				modelInputSnapshot.setMatch(input.getMatch());
+				modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
+				ModelUtils.save(modelInputSnapshot, createdFile.getFullPath().toOSString());
+			} catch (IOException e) {
+				EMFComparePlugin.log(e, false);
+			}
+			result = true;
 		}
 		return result;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 

@@ -10,23 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.structuremergeviewer;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
-import org.eclipse.emf.compare.ui.AbstractCompareAction;
-import org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.contentprovider.ModelStructureContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.compare.ui.wizard.SaveDeltaWizard;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -37,7 +30,6 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -52,6 +44,9 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ModelStructureMergeViewer extends TreeViewer {
 	private CompareConfiguration configuration;
+	
+	/** This is the action displaying the "export diff as..." menu. */
+	protected ExportMenu exportMenu;
 	
 	/**
 	 * Creates a new model structure merge viewer and intializes it.
@@ -80,20 +75,10 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	
 	protected void createToolItems() {
 		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-		final ResourceBundle bundle = ResourceBundle.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
-		final Action save = new AbstractCompareAction(bundle, "action.save.") { //$NON-NLS-1$
-			public void run() {
-				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
-				wizard.init(PlatformUI.getWorkbench(),
-						(ModelInputSnapshot)getInput());
-				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
-				dialog.open();
-			}
-		};
-		final ActionContributionItem saveContribution = new ActionContributionItem(save);
-		saveContribution.setVisible(true);
+		if (exportMenu == null)
+			exportMenu = new ExportMenu(tbm.getControl(), this);
 		tbm.add(new Separator("IO")); //$NON-NLS-1$
-		tbm.appendToGroup("IO", saveContribution); //$NON-NLS-1$
+		tbm.appendToGroup("IO", exportMenu); //$NON-NLS-1$
 		tbm.update(true);
 	}
 	
@@ -104,6 +89,10 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, 
 					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 		}
+		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
+		if (enableSave == null)
+			enableSave = false;
+		exportMenu.enableSave(!enableSave);
 	}
 	
 	/**
