@@ -12,9 +12,11 @@ package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -114,7 +116,7 @@ public class DifferencesServices implements MatchEngine {
 	 * {@link UnMatchElement} will then be filtered to retain only those that actually cannot be matched.
 	 * </p>
 	 */
-	private final List<EObject> remainingUnMatchedElements = new ArrayList<EObject>();
+	private final Set<EObject> remainingUnMatchedElements = new HashSet<EObject>();
 
 	/** This list will be intensively used while matching elements to keep track of the unmatched ones from the left model. */
 	private final List<EObject> stillToFindFromModel1 = new ArrayList<EObject>();
@@ -156,9 +158,13 @@ public class DifferencesServices implements MatchEngine {
 			redirectedAdd(root, "matchedElements", subMatchRoot); //$NON-NLS-1$
 			createSub3Match(root, subMatchRoot, root1Match, root2Match);
 
-			// #createSub3Match(MatchModel, Match3Element, Match2Elements, Match2Elements) will have cleaned "remainingUnMatchedElements"
-			final List<EObject> remainingLeft = new ArrayList<EObject>();
-			final List<EObject> remainingRight = new ArrayList<EObject>();
+			// We will now check through the unmatched object for matches. This will allow for a more accurate detection
+			// for models with multiple roots.
+			processUnmatchedElements(root, subMatchRoot);
+
+			// #createSub3Match(MatchModel, Match3Element, Match2Elements, Match2Elements) will have updated "remainingUnMatchedElements"
+			final Set<EObject> remainingLeft = new HashSet<EObject>();
+			final Set<EObject> remainingRight = new HashSet<EObject>();
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == root1.eResource()) {
 					remainingLeft.add(unMatched);
@@ -172,7 +178,7 @@ public class DifferencesServices implements MatchEngine {
 			}
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
-			final List<Match2Elements> mappings = mapLists(remainingLeft, remainingRight, getSearchWindow(), monitor);
+			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft), new ArrayList<EObject>(remainingRight), getSearchWindow(), monitor);
 			for (Match2Elements map : mappings) {
 				final Match3Element subMatch = MatchFactory.eINSTANCE.createMatch3Element();
 				subMatch.setLeftElement(map.getLeftElement());
@@ -239,6 +245,9 @@ public class DifferencesServices implements MatchEngine {
 			stillToFindFromModel2.clear();
 			final List<EObject> unMatchedLeftRoots = new ArrayList(root1.eResource().getContents());
 			final List<EObject> unMatchedRightRoots = new ArrayList(root2.eResource().getContents());
+			// These sets will help us in keeping track of the yet to be found elements
+			final Set<EObject> still1 = new HashSet<EObject>();
+			final Set<EObject> still2 = new HashSet<EObject>();
 
 			Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
 			// We haven't found any similar roots, we then consider the firsts to be similar
@@ -259,14 +268,14 @@ public class DifferencesServices implements MatchEngine {
 					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
 				}
 
-				// Keep current lists in a corner and init the objects list we still have to map
-				final List<EObject> still1 = new ArrayList<EObject>(stillToFindFromModel1);
-				final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
-
-				createSubMatchElements(rootMapping, still1, still2, monitor);
-				// now the other elements won't be mapped, keep them in the model
-				createUnMatchElements(root, stillToFindFromModel1);
-				createUnMatchElements(root, stillToFindFromModel2);
+				// Synchronizes the two lists to avoid multiple elements
+				still1.removeAll(stillToFindFromModel1);
+				still2.removeAll(stillToFindFromModel2);
+				// checks for matches within the yet to found elements lists
+				createSubMatchElements(rootMapping, new ArrayList<EObject>(stillToFindFromModel1), new ArrayList<EObject>(stillToFindFromModel2), monitor);
+				// Adds all unfound elements to the sets
+				still1.addAll(stillToFindFromModel1);
+				still2.addAll(stillToFindFromModel2);
 
 				unMatchedLeftRoots.remove(matchedRoot.getLeftElement());
 				unMatchedRightRoots.remove(matchedRoot.getRightElement());
@@ -274,8 +283,12 @@ public class DifferencesServices implements MatchEngine {
 			// We'll iterate through the unMatchedRoots all contents
 			monitor.subTask(Messages.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
 			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
-			createUnMatchElements(root, stillToFindFromModel1);
-			createUnMatchElements(root, stillToFindFromModel2);
+
+			// Now takes care of remaining unfound elements
+			still1.addAll(stillToFindFromModel1);
+			still2.addAll(stillToFindFromModel2);
+			createUnMatchElements(root, still1);
+			createUnMatchElements(root, still2);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
@@ -424,16 +437,10 @@ public class DifferencesServices implements MatchEngine {
 		}
 
 		for (Match2Elements nextLeftNotFound : leftNotFound) {
-			final UnMatchElement unMatch = MatchFactory.eINSTANCE.createUnMatchElement();
-			unMatch.setElement(nextLeftNotFound.getLeftElement());
-			remainingUnMatchedElements.remove(nextLeftNotFound.getRightElement());
-			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMatch);
+			stillToFindFromModel1.add(nextLeftNotFound);
 		}
 		for (Match2Elements nextRightNotFound : rightNotFound) {
-			final RemoteUnMatchElement unMatch = MatchFactory.eINSTANCE.createRemoteUnMatchElement();
-			unMatch.setElement(nextRightNotFound.getLeftElement());
-			remainingUnMatchedElements.remove(nextRightNotFound.getRightElement());
-			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMatch);
+			stillToFindFromModel2.add(nextRightNotFound);
 		}
 	}
 
@@ -476,7 +483,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot add elements under the given {@link MatchModel root}.
 	 */
-	private void createUnMatchElements(MatchModel root, List<EObject> unMatchedElements) throws FactoryException {
+	private void createUnMatchElements(MatchModel root, Set<EObject> unMatchedElements) throws FactoryException {
 		for (EObject element : unMatchedElements) {
 			final UnMatchElement unMap = MatchFactory.eINSTANCE.createUnMatchElement();
 			unMap.setElement(element);
@@ -722,15 +729,16 @@ public class DifferencesServices implements MatchEngine {
 
 		final Iterator it1 = list1.iterator();
 		// then iterate over the 2 lists and compare the elements
-		while (it1.hasNext() && list2.size() > 0) {
+		while (it1.hasNext() && notFoundList2.size() > 0) {
 			final EObject obj1 = (EObject)it1.next();
 			EObject obj2 = matchedByID.get(obj1);
 
 			if (obj2 == null) {
-				final int end = Math.min(curIndex + window, list2.size());
-				final int index = Math.min(Math.max(curIndex, 0), end);
+				// subtracts the difference between the notfound and the original list to avoid ArrayOutOfBounds
+				final int end = Math.min(curIndex + window - (list2.size() - notFoundList2.size()), notFoundList2.size());
+				final int index = Math.min(Math.max(curIndex - (list2.size() - notFoundList2.size()), 0), end);
 
-				obj2 = findMostSimilar(obj1, list2.subList(index, end));
+				obj2 = findMostSimilar(obj1, notFoundList2.subList(index, end));
 				// checks if the most similar to obj2 is obj1
 				final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
 				if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
@@ -856,6 +864,68 @@ public class DifferencesServices implements MatchEngine {
 		if (!(similarityKind.equals(NAME_SIMILARITY) || similarityKind.equals(TYPE_SIMILARITY) || similarityKind.equals(VALUE_SIMILARITY) || similarityKind.equals(RELATION_SIMILARITY)))
 			throw new IllegalArgumentException(Messages.getString("DifferencesServices.illegalSimilarityKind", similarityKind)); //$NON-NLS-1$
 		return similarityKind + obj1.hashCode() + obj2.hashCode();
+	}
+
+	/**
+	 * Allows for a more accurate modifications detection for three way comparison with multiple roots models.
+	 * 
+	 * @param root
+	 *            Root of the {@link MatchModel}.
+	 * @param subMatchRoot
+	 *            Root of the {@link Match3Element}s' hierarchy for the current element to be created.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute {@link EObject}s similarity or if adding elements to either <code>root</code> or
+	 *             <code>subMatchRoot</code> fails somehow.
+	 */
+	private void processUnmatchedElements(MatchModel root, Match3Element subMatchRoot) throws FactoryException {
+		for (EObject obj1 : new ArrayList<EObject>(stillToFindFromModel1)) {
+			boolean matchFound = false;
+			if (obj1 instanceof Match2Elements) {
+				final Match2Elements match1 = (Match2Elements)obj1;
+				for (EObject obj2 : new ArrayList<EObject>(stillToFindFromModel2)) {
+					if (obj2 instanceof Match2Elements) {
+						final Match2Elements match2 = (Match2Elements)obj2;
+
+						if (match1.getRightElement() == match2.getRightElement()) {
+							matchFound = true;
+							final Match3Element match = MatchFactory.eINSTANCE.createMatch3Element();
+							match.setSimilarity(absoluteMetric(match1.getLeftElement(), match2.getLeftElement(), match2.getRightElement()));
+							match.setLeftElement(match1.getLeftElement());
+							match.setRightElement(match2.getLeftElement());
+							match.setOriginElement(match2.getRightElement());
+							redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, match);
+							createSub3Match(root, subMatchRoot, match1, match2);
+							stillToFindFromModel1.remove(match1);
+							stillToFindFromModel2.remove(match2);
+						}
+					}
+				}
+				if (!matchFound) {
+					remainingUnMatchedElements.add(match1.getLeftElement());
+				}
+			}
+		}
+
+		for (EObject eObj : new ArrayList<EObject>(stillToFindFromModel1)) {
+			if (eObj instanceof Match2Elements) {
+				final Match2Elements nextLeftNotFound = (Match2Elements)eObj;
+				final UnMatchElement unMatch = MatchFactory.eINSTANCE.createUnMatchElement();
+				unMatch.setElement(nextLeftNotFound.getLeftElement());
+				remainingUnMatchedElements.remove(nextLeftNotFound.getLeftElement());
+				remainingUnMatchedElements.remove(nextLeftNotFound.getRightElement());
+				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMatch);
+			}
+		}
+		for (EObject eObj : new ArrayList<EObject>(stillToFindFromModel2)) {
+			if (eObj instanceof Match2Elements) {
+				final Match2Elements nextRightNotFound = (Match2Elements)eObj;
+				final RemoteUnMatchElement unMatch = MatchFactory.eINSTANCE.createRemoteUnMatchElement();
+				unMatch.setElement(nextRightNotFound.getLeftElement());
+				remainingUnMatchedElements.remove(nextRightNotFound.getLeftElement());
+				remainingUnMatchedElements.remove(nextRightNotFound.getRightElement());
+				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMatch);
+			}
+		}
 	}
 
 	/**
