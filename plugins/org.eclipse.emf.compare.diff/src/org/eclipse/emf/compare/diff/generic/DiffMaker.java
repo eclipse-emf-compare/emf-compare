@@ -459,10 +459,6 @@ public class DiffMaker implements DiffEngine {
 		final Iterator it = eclassReferences.iterator();
 		while (it.hasNext()) {
 			final EReference next = (EReference)it.next();
-			// TODO CBR check this boolean expression.
-			// We filter through containment AND container references, is it accurate in terms of detection?
-			// This is done to avoid duplicate detection when an object containing a reference to its parent
-			// is moved.
 			if (!next.isContainment() && !next.isDerived() && !next.isTransient() && !next.isContainer()) {
 				createNonConflictingReferencesUpdate(root, next, mapping.getLeftElement(), mapping.getRightElement());
 			}
@@ -737,7 +733,7 @@ public class DiffMaker implements DiffEngine {
 
 		if (attribute.isMany()) {
 			for (Object aValue : (List)leftValue) {
-				if (!((List)rightValue).contains(aValue)) {
+				if (!((List)rightValue).contains(aValue) && aValue instanceof EObject) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -747,7 +743,7 @@ public class DiffMaker implements DiffEngine {
 				}
 			}
 			for (Object aValue : (List)rightValue) {
-				if (!((List)leftValue).contains(aValue)) {
+				if (!((List)leftValue).contains(aValue) && aValue instanceof EObject) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -1382,7 +1378,7 @@ public class DiffMaker implements DiffEngine {
 				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
 				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);
 				eObjectToMatch.put(matchElem.getRightElement(), matchElem);
-				if (threeWay)
+				if (threeWay && ((Match3Element)matchElem).getOriginElement() != null)
 					eObjectToMatch.put(((Match3Element)matchElem).getOriginElement(), matchElem);
 			}
 		}

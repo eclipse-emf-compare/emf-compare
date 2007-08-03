@@ -101,6 +101,11 @@ public abstract class AbstractMerger {
 			final XMIResource copyResource = (XMIResource)copy.eResource();
 			if (originResource.getID(original) != null)
 				copyResource.setID(copy, originResource.getID(original));
+			// Recursively copy XMI ID of the object's children.
+			// Assumes EObject#eContents() preserves order
+			for (int i = 0; i < original.eContents().size(); i++) {
+				copyXMIID((EObject)original.eContents().get(i), (EObject)copy.eContents().get(i));
+			}
 		}
 	}
 
