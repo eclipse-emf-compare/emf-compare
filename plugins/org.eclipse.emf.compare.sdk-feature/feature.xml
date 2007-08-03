@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.emf.compare.sdk"
-      label="EMF Compare SDK"
+      label="EMF Compare SDK (Incubation)"
       version="0.7.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
-      Source code and documentation of Model Comparison Support
+      EMF Compare SDK includes runtime, source, and documentation (Incubation)
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.emf.compare"
-      label="Model comparison support"
+      label="Model comparison support (Incubation)"
       version="0.7.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
-      Model comparison support.
+      Model comparison support (Incubation)
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">

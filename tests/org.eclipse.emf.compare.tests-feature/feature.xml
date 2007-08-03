@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.emf.compare.tests"
-      label="Tests Feature for EMF Compare"
+      label="EMF Compare Tests (Incubation)"
       version="0.7.0"
       provider-name="Eclipse.org">
 
    <description>
-      Tests for EMF Compare
+      EMF Compare Tests (Incubation)
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">

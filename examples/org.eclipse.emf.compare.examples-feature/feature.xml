@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.emf.compare.examples"
-      label="Examples of the EMF Compare use"
+      label="EMF Compare Examples (Incubation)"
       version="0.7.0"
       provider-name="Eclipse.org">
 
    <description>
-      Examples of the EMF Compare use
+      EMF Compare Examples (Incubation)
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">
