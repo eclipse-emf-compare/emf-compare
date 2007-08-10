@@ -479,7 +479,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @param root
 	 *            Root of the {@link MatchModel} under which to insert all these {@link UnMatchElement}s.
 	 * @param unMatchedElements
-	 *            {@link List} containing all the elements we haven't been able to match.
+	 *            {@link Set} containing all the elements we haven't been able to match.
 	 * @throws FactoryException
 	 *             Thrown if we cannot add elements under the given {@link MatchModel root}.
 	 */
@@ -739,10 +739,12 @@ public class DifferencesServices implements MatchEngine {
 				final int index = Math.min(Math.max(curIndex - (list2.size() - notFoundList2.size()), 0), end);
 
 				obj2 = findMostSimilar(obj1, notFoundList2.subList(index, end));
-				// checks if the most similar to obj2 is obj1
-				final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
-				if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
-					continue;
+				if (obj2 != null) {
+					// checks if the most similar to obj2 is obj1
+					final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
+					if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
+						continue;
+					}
 				}
 			}
 

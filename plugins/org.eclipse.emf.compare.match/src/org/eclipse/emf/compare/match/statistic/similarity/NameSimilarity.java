@@ -39,7 +39,7 @@ public final class NameSimilarity {
 	private static final Map<EClass, EAttribute> NAME_FEATURE_CACHE = new ConcurrentHashMap<EClass, EAttribute>(256);
 
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private NameSimilarity() {
 		// prevents instantiation
