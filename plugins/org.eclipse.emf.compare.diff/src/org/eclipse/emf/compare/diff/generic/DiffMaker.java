@@ -167,17 +167,22 @@ public class DiffMaker implements DiffEngine {
 				// add RemoveModelElement
 				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
 				operation.setLeftElement(unMatchElement.getElement());
-				operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				// Container will be null if we're adding a root
+				if (unMatchElement.getElement().eContainer() != null)
+					operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
 				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
 			}
 			if (unMatchElement.getElement().eResource() == rightModel) {
 				// add AddModelElement
 				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
-				final EObject addedElement = unMatchElement.getElement();
-				operation.setRightElement(addedElement);
-				final EObject targetParent = getMatchedEObject(addedElement.eContainer());
-				operation.setLeftParent(targetParent);
-				addInContainerPackage(diffRoot, operation, targetParent);
+				operation.setRightElement(unMatchElement.getElement());
+				// Container will be null if we're adding a root
+				if (unMatchElement.getElement().eContainer() != null) {
+					operation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+					addInContainerPackage(diffRoot, operation, getMatchedEObject(unMatchElement.getElement().eContainer()));
+				} else {
+					addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
+				}
 			}
 		}
 

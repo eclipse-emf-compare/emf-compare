@@ -63,7 +63,7 @@ public final class MergeFactory {
 	}
 
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private MergeFactory() {
 		// prevents instantiation
