@@ -27,7 +27,7 @@ public final class EMFCompareEObjectUtils {
 	private static AdapterFactoryLabelProvider labelProvider;
 
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private EMFCompareEObjectUtils() {
 		// prevents instantiation

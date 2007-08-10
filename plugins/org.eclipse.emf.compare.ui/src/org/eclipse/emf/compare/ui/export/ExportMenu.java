@@ -8,23 +8,27 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.structuremergeviewer;
+package org.eclipse.emf.compare.ui.export;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer;
+import org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer;
 import org.eclipse.emf.compare.ui.wizard.SaveDeltaWizard;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -36,14 +40,17 @@ import org.eclipse.ui.PlatformUI;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
+	/** Name of the extension point to parse for actions. */
+	private static final String EXPORT_ACTIONS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.export"; //$NON-NLS-1$
+
+	/** Wild card for all file extensions. */
+	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
+
 	/** Bundle where the messages and icons can be found. */
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
 
-	/** Keeps track of the {@link ActionContributionItem actions} displayed by the menu. */
-	private static final ArrayList<ExportActionDescriptor> CACHED_ACTIONS = new ArrayList<ExportActionDescriptor>();
-
-	/** Name of the extension point to parse for actions. */
-	private static final String EXPORT_ACTIONS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.export"; //$NON-NLS-1$
+	/** Keeps track of the {@link ActionContributionItem actions} declared for the extension point. */
+	private static final Set<ExportActionDescriptor> CACHED_ACTIONS = new HashSet<ExportActionDescriptor>();
 
 	/** Control under which the menu must be created. */
 	protected final Control parentControl;
@@ -51,8 +58,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	/** Viewer currently displaying this menu. */
 	protected final ModelStructureMergeViewer parentViewer;
 
-	/** Menu displayed for this action. */
-	private Menu menu;
+	/** Menu manager for this action. */
+	private MenuManager menuManager = new MenuManager();
 
 	/** Default action of the displayed menu. */
 	private Action saveAction;
@@ -74,8 +81,16 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		setMenuCreator(this);
 		parentControl = parent;
 		parentViewer = owner;
-
-		initializeMenu();
+		final ResourceBundle bundle = ResourceBundle.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
+		saveAction = new AbstractCompareAction(bundle, "action.export.emfdiff.") { //$NON-NLS-1$
+			@Override
+			public void run() {
+				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
+				wizard.init(PlatformUI.getWorkbench(), (ModelInputSnapshot)parentViewer.getInput());
+				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+				dialog.open();
+			}
+		};
 	}
 
 	/**
@@ -99,7 +114,7 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 */
 	public void addActionToMenu(Action action) {
 		final ActionContributionItem contribution = new ActionContributionItem(action);
-		contribution.fill(getMenu(parentControl), -1);
+		menuManager.add(contribution);
 	}
 
 	/**
@@ -108,8 +123,9 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 * @see org.eclipse.jface.action.IMenuCreator#dispose()
 	 */
 	public void dispose() {
-		if (menu != null)
-			menu.dispose();
+		if (menuManager.getMenu() != null)
+			menuManager.getMenu().dispose();
+		menuManager.dispose();
 	}
 
 	/**
@@ -123,17 +139,69 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
+	 * Returns the file extension of the compared models. If the extensions aren't the same, returns {@value #ALL_EXTENSIONS}.
+	 * 
+	 * @return The file extension of the compared models.
+	 */
+	public String getComparedModelsExtension() {
+		final DiffModel diffModel = ((ModelInputSnapshot)parentViewer.getInput()).getDiff();
+		final String leftModel = diffModel.getLeft();
+		final String rightModel = diffModel.getRight();
+		final String originModel = diffModel.getOrigin();
+
+		if (leftModel.substring(leftModel.lastIndexOf('.')).equals(rightModel.substring(rightModel.lastIndexOf('.')))
+				&& (originModel == null || leftModel.substring(leftModel.lastIndexOf('.')).equals(originModel.substring(originModel.lastIndexOf('.')))))
+			return leftModel.substring(leftModel.lastIndexOf('.') + 1);
+		return ALL_EXTENSIONS;
+	}
+
+	/**
+	 * This will return all actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given <code>fileExtension</code>.
+	 * 
+	 * @param fileExtension
+	 *            File extension which we seel actions for.
+	 * @return All actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given <code>fileExtension</code>.
+	 * @see #ALL_EXTENSIONS
+	 * @see #getComparedModelsExtension()
+	 */
+	public Set<ExportActionDescriptor> getActions(String fileExtension) {
+		final Set<ExportActionDescriptor> result = new HashSet<ExportActionDescriptor>(CACHED_ACTIONS.size());
+		for (ExportActionDescriptor actionDescriptor : CACHED_ACTIONS) {
+			final String extension;
+			if (actionDescriptor.getFileExtension() != null)
+				extension = actionDescriptor.getFileExtension();
+			else
+				extension = ALL_EXTENSIONS;
+			if (extension.equals(ALL_EXTENSIONS) || extension.equals(fileExtension)) {
+				result.add(actionDescriptor);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
 	 */
 	public Menu getMenu(Control parent) {
-		if (menu == null) {
-			menu = new Menu(parent);
-			for (ExportActionDescriptor descriptor : CACHED_ACTIONS)
-				addActionToMenu(descriptor.getActionInstance());
+		// Creates the menu if needed, or removes all elements except for the save action
+		if (menuManager.getMenu() == null)
+			menuManager.createContextMenu(parent);
+		else
+			menuManager.removeAll();
+		menuManager.add(saveAction);
+		for (ExportActionDescriptor descriptor : getActions(getComparedModelsExtension())) {
+			final IExportAction actionDescriptor = descriptor.getActionDescriptorInstance();
+			final Action action = new AbstractCompareAction(actionDescriptor) {
+				@Override
+				public void run() {
+					actionDescriptor.exportSnapshot((ModelInputSnapshot)parentViewer.getInput());
+				}
+			};
+			addActionToMenu(action);
 		}
-		return menu;
+		return menuManager.getMenu();
 	}
 
 	/**
@@ -142,8 +210,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Menu)
 	 */
 	public Menu getMenu(Menu parent) {
-		if (menu != null)
-			return menu;
+		if (menuManager.getMenu() != null)
+			return menuManager.getMenu();
 		return null;
 	}
 
@@ -157,24 +225,6 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		if (saveAction.isEnabled())
 			saveAction.run();
 	}
-
-	/**
-	 * Creates the menu and adds the save ("export as emfdiff") to it.
-	 */
-	private void initializeMenu() {
-		final ResourceBundle bundle = ResourceBundle.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
-		saveAction = new AbstractCompareAction(bundle, "action.export.emfdiff.") { //$NON-NLS-1$
-			@Override
-			public void run() {
-				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
-				wizard.init(PlatformUI.getWorkbench(), (ModelInputSnapshot)parentViewer.getInput());
-				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
-				dialog.open();
-			}
-		};
-		final ActionContributionItem contribution = new ActionContributionItem(saveAction);
-		contribution.fill(getMenu(parentControl), 0);
-	}
 }
 
 /**
@@ -184,13 +234,16 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
  */
 final class ExportActionDescriptor {
 	/** Name of the extension point attribute corresponding to the action's class. */
-	private static final String EXPORT_ACTION_CLASS = "class"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_EXPORT_ACTION_CLASS = "class"; //$NON-NLS-1$
 
-	/** This descriptor's wrapped {@link Action}. */
-	private Action action;
+	/** Name of the extension point attribute corresponding to the file extensions considered. */
+	private static final String ATTRIBUTE_FILE_EXTENSION = "fileExtension"; //$NON-NLS-1$
 
-	/** class of the action. */
-	private final String actionClass;
+	/** This descriptor's wrapped {@link IExportAction action}. */
+	private IExportAction action;
+
+	/** Considered file extensions. */
+	private final String fileExtension;
 
 	/** Keeps a reference to the configuration element that describes the {@link Action}. */
 	private final IConfigurationElement element;
@@ -203,27 +256,27 @@ final class ExportActionDescriptor {
 	 */
 	public ExportActionDescriptor(IConfigurationElement configuration) {
 		element = configuration;
-		actionClass = element.getAttribute(EXPORT_ACTION_CLASS);
+		fileExtension = element.getAttribute(ATTRIBUTE_FILE_EXTENSION);
 	}
 
 	/**
-	 * Returns the wrapped action's class name.
+	 * Returns the wrapped action's considered file extensions.
 	 * 
-	 * @return The wrapped action's class name.
+	 * @return The wrapped action's considered file extensions.
 	 */
-	public String getActionClass() {
-		return actionClass;
+	public String getFileExtension() {
+		return fileExtension;
 	}
 
 	/**
-	 * Returns an instance of the described {@link Action}.
+	 * Returns an instance of the {@link IExportAction action's decriptor}.
 	 * 
-	 * @return Instance of the described {@link Action}.
+	 * @return Instance of the {@link IExportAction action's decriptor}.
 	 */
-	public Action getActionInstance() {
+	public IExportAction getActionDescriptorInstance() {
 		if (action == null) {
 			try {
-				action = (Action)element.createExecutableExtension(EXPORT_ACTION_CLASS);
+				action = (IExportAction)element.createExecutableExtension(ATTRIBUTE_EXPORT_ACTION_CLASS);
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, true);
 			}

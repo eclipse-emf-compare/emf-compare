@@ -29,7 +29,7 @@ public final class EMFAdapterFactoryProvider {
 	private static ComposedAdapterFactory adapterFactory;
 	
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private EMFAdapterFactoryProvider() {
 		// prevents instantiation

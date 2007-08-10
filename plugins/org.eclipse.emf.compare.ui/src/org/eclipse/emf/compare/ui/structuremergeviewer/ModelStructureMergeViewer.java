@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.contentprovider.ModelStructureContentProvider;
+import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.ecore.EObject;
@@ -48,7 +49,7 @@ import org.eclipse.ui.PlatformUI;
 public class ModelStructureMergeViewer extends TreeViewer {
 	/** Configuration element of the underlying comparison. */
 	protected CompareConfiguration configuration;
-	
+
 	/** This is the action displaying the "export diff as..." menu. */
 	protected ExportMenu exportMenu;
 
@@ -64,6 +65,15 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		super(parent);
 		initialize(compareConfiguration);
 		createToolItems();
+	}
+
+	/**
+	 * Returns the compare configuration of this viewer, or <code>null</code> if this viewer does not yet have a configuration.
+	 * 
+	 * @return the compare configuration, or <code>null</code> if none
+	 */
+	public CompareConfiguration getCompareConfiguration() {
+		return configuration;
 	}
 
 	/**
@@ -101,7 +111,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	@Override
@@ -109,7 +119,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		// DIRTY
 		// cancels selection changed events that could be fired to avoid "NullViewer" opening.
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -122,10 +132,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, ((ModelStructureContentProvider)getContentProvider()).getSnapshot());
 		}
-		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
-		if (enableSave == null)
-			enableSave = false;
-		exportMenu.enableSave(!enableSave);
+		updateToolItems();
 	}
 
 	/**
@@ -139,16 +146,28 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		final Widget widget = super.findItem(element);
 		return widget;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
 	 */
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
 		exportMenu.dispose();
+	}
+
+	/**
+	 * Updates the Structure viewer's tool items. This will modify the actions of the "export diff as..." menu.
+	 */
+	protected void updateToolItems() {
+		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
+		if (enableSave == null)
+			enableSave = false;
+
+		exportMenu.enableSave(!enableSave);
+		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 
 	/**
