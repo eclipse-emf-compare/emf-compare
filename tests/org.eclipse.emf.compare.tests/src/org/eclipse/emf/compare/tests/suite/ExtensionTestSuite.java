@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.tests.unit.TestFindAdapterFactory;
  */
 public final class ExtensionTestSuite {
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private ExtensionTestSuite() {
 		// prevents instantiation.

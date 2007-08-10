@@ -21,7 +21,7 @@ import java.util.Arrays;
  */
 public final class FileUtils {
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private FileUtils() {
 		// prevents instantiation.
