@@ -36,7 +36,7 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 * 			Thrown if the adapterFactory hasn't been found.
 	 */
 	public void testFindAdapterFactory() throws AssertionFailedError {
-		final String uri = "http://www.eclipse.org/emf/compare/diff/1.0"; //$NON-NLS-1$
+		final String uri = "http://www.eclipse.org/emf/compare/diff/1.1"; //$NON-NLS-1$
 		final AdapterFactory factory = AdapterUtils.findAdapterFactory(uri);
 		assertNotNull(factory);
 	}
