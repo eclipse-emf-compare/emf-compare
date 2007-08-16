@@ -298,7 +298,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final Item leftItem = (Item)leftPart.find(leftElement);
 		Item rightItem = (Item)rightPart.find(rightElement);
 
-		if (rightItem == null) {
+		if (rightItem == null && selectedTab == TREE_TAB) {
 			rightItem = rightPart.getTreeRoot();
 			// might still be null
 			if (rightItem != null)

@@ -22,4 +22,5 @@ Require-Bundle: org.eclipse.compare,
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.ui.editor,
+ org.eclipse.emf.compare.ui.export,
  org.eclipse.emf.compare.ui.util

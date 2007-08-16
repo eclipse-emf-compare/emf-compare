@@ -51,13 +51,20 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="fileExtension" type="string" use="default" value="*">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.jface.action.Action"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.ui.export.IExportAction"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -69,7 +76,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         0.7
       </documentation>
    </annotation>
 
@@ -78,7 +85,13 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;extension
+         id=&quot;org.eclipse.emf.compare.contrib.exportashtml&quot;
+         point=&quot;org.eclipse.emf.compare.ui.export&quot;&gt;
+      &lt;action
+      	class=&quot;org.eclipse.emf.compare.contrib.xslt.action.ExportAsHTMLAction&quot;
+            id=&quot;org.eclipse.emf.compare.contrib.action.exportashtmlaction&quot;/&gt;
+   &lt;/extension&gt;
       </documentation>
    </annotation>
 
