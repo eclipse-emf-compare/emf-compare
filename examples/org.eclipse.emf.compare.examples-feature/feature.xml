@@ -227,7 +227,7 @@ litigation.
          id="org.eclipse.emf.compare.examples.diff.extension"
          download-size="0"
          install-size="0"
-         version="0.0.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
