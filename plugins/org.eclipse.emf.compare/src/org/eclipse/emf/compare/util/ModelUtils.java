@@ -39,8 +39,11 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ModelUtils {
+	/** Constant for the file encoding system property. */
+	private static final String ENCODING_PROPERTY = "file.encoding"; //$NON-NLS-1$
+	
 	/**
-	 * Utility classes don't need to (and shouldn't be) be instantiated.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private ModelUtils() {
 		// prevents instantiation
@@ -98,8 +101,32 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
+	@SuppressWarnings("unchecked")
 	public static EObject load(IFile file, ResourceSet resourceSet) throws IOException {
-		return load(URI.createFileURI(file.getLocation().toOSString()), resourceSet);
+		EObject result = null;
+
+		String fileExtension = file.getFileExtension();
+		if (fileExtension == null || fileExtension.length() == 0) {
+			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
+		}
+
+		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
+		if (resourceFactory != null) {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					resourceFactory);
+		} else {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					new XMIResourceFactoryImpl());
+		}
+
+		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString()));
+		final Map<String, String> options = new ConcurrentHashMap<String, String>();
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
+		modelResource.load(options);
+		if (modelResource.getContents().size() > 0)
+			result = (EObject)modelResource.getContents().get(0);
+		return result;
 	}
 
 	/**
@@ -175,7 +202,7 @@ public final class ModelUtils {
 
 		final Resource modelResource = resourceSet.createResource(modelURI);
 		final Map<String, String> options = new ConcurrentHashMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
 		if (modelResource.getContents().size() > 0)
 			result = (EObject)modelResource.getContents().get(0);
@@ -256,7 +283,7 @@ public final class ModelUtils {
 		final Resource newModelResource = resourceSet.createResource(modelURI);
 		newModelResource.getContents().add(root);
 		final Map<String, String> options = new ConcurrentHashMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty("file.encoding")); //$NON-NLS-1$
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		newModelResource.save(options);
 	}
 
