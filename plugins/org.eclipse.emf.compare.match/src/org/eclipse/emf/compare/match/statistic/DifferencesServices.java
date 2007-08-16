@@ -12,9 +12,11 @@ package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -437,6 +439,7 @@ public class DifferencesServices implements MatchEngine {
 	@SuppressWarnings("unchecked")
 	public MatchModel modelMatch(EObject root1, EObject root2, IProgressMonitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
+		setModelURIs(root, root1, root2);
 		launchMonitor(monitor, root1);
 
 		// filtering unused features
@@ -458,6 +461,9 @@ public class DifferencesServices implements MatchEngine {
 			stillToFindFromModel2.clear();
 			final List<EObject> unMatchedLeftRoots = new ArrayList(root1.eResource().getContents());
 			final List<EObject> unMatchedRightRoots = new ArrayList(root2.eResource().getContents());
+			// These sets will help us in keeping track of the yet to be found elements
+			final Set<EObject> still1 = new HashSet<EObject>();
+			final Set<EObject> still2 = new HashSet<EObject>();
 
 			Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
 			// We haven't found any similar roots, we then consider the firsts to be similar
@@ -478,14 +484,14 @@ public class DifferencesServices implements MatchEngine {
 					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
 				}
 
-				// Keep current lists in a corner and init the objects list we still have to map
-				final List<EObject> still1 = new ArrayList<EObject>(stillToFindFromModel1);
-				final List<EObject> still2 = new ArrayList<EObject>(stillToFindFromModel2);
-
-				createSubMatchElements(rootMapping, still1, still2, monitor);
-				// now the other elements won't be mapped, keep them in the model
-				createUnMatchElements(root, stillToFindFromModel1);
-				createUnMatchElements(root, stillToFindFromModel2);
+				// Synchronizes the two lists to avoid multiple elements
+				still1.removeAll(stillToFindFromModel1);
+				still2.removeAll(stillToFindFromModel2);
+				// checks for matches within the yet to found elements lists
+				createSubMatchElements(rootMapping, new ArrayList<EObject>(stillToFindFromModel1), new ArrayList<EObject>(stillToFindFromModel2), monitor);
+				// Adds all unfound elements to the sets
+				still1.addAll(stillToFindFromModel1);
+				still2.addAll(stillToFindFromModel2);
 
 				unMatchedLeftRoots.remove(matchedRoot.getLeftElement());
 				unMatchedRightRoots.remove(matchedRoot.getRightElement());
@@ -493,8 +499,12 @@ public class DifferencesServices implements MatchEngine {
 			// We'll iterate through the unMatchedRoots all contents
 			monitor.subTask("processing unmatched roots"); //$NON-NLS-1$
 			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
-			createUnMatchElements(root, stillToFindFromModel1);
-			createUnMatchElements(root, stillToFindFromModel2);
+			
+			// Now takes care of remaining unfound elements
+			still1.addAll(stillToFindFromModel1);
+			still2.addAll(stillToFindFromModel2);
+			createUnMatchElements(root, still1);
+			createUnMatchElements(root, still2);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
@@ -609,19 +619,22 @@ public class DifferencesServices implements MatchEngine {
 
 		final Iterator it1 = list1.iterator();
 		// then iterate over the 2 lists and compare the elements
-		while (it1.hasNext() && list2.size() > 0) {
+		while (it1.hasNext() && notFoundList2.size() > 0) {
 			final EObject obj1 = (EObject)it1.next();
 			EObject obj2 = matchedByID.get(obj1);
 
 			if (obj2 == null) {
-				final int end = Math.min(curIndex + window, list2.size());
-				final int index = Math.min(Math.max(curIndex, 0), end);
+				// subtracts the difference between the notfound and the original list to avoid ArrayOutOfBounds
+				final int end = Math.min(curIndex + window - (list2.size() - notFoundList2.size()), notFoundList2.size());
+				final int index = Math.min(Math.max(curIndex - (list2.size() - notFoundList2.size()), 0), end);
 
-				obj2 = findMostSimilar(obj1, list2.subList(index, end));
-				// checks if the most similar to obj2 is obj1
-				final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
-				if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
-					continue;
+				obj2 = findMostSimilar(obj1, notFoundList2.subList(index, end));
+				if (obj2 != null) {
+					// checks if the most similar to obj2 is obj1
+					final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
+					if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
+						continue;
+					}
 				}
 			}
 
@@ -683,11 +696,11 @@ public class DifferencesServices implements MatchEngine {
 	 * @param root
 	 *            Root of the {@link MatchModel} under which to insert all these {@link UnMatchElement}s.
 	 * @param unMatchedElements
-	 *            {@link List} containing all the elements we haven't been able to match.
+	 *            {@link Set} containing all the elements we haven't been able to match.
 	 * @throws FactoryException
 	 *             Thrown if we cannot add elements under the given {@link MatchModel root}.
 	 */
-	private void createUnMatchElements(MatchModel root, List<EObject> unMatchedElements) throws FactoryException {
+	private void createUnMatchElements(MatchModel root, Set<EObject> unMatchedElements) throws FactoryException {
 		for (EObject element : unMatchedElements) {
 			final UnMatchElement unMap = MatchFactory.eINSTANCE.createUnMatchElement();
 			unMap.setElement(element);
@@ -765,5 +778,26 @@ public class DifferencesServices implements MatchEngine {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Sets the values of the {@link MatchModel}'s left, right and ancestor models.
+	 * 
+	 * @param modelRoot
+	 *            Root of the {@link MatchModel}.
+	 * @param left
+	 *            Element from which to resolve the left model URI.
+	 * @param right
+	 *            Element from which to resolve the right model URI.
+	 */
+	private void setModelURIs(MatchModel modelRoot, EObject left, EObject right) {
+		// Sets values of left, right and ancestor model URIs
+		final Resource leftResource = left.eResource();
+		final Resource rightResource = right.eResource();
+
+		if (leftResource != null)
+			modelRoot.setLeftModel(leftResource.getURI().path());
+		if (rightResource != null)
+			modelRoot.setRightModel(rightResource.getURI().path());
 	}
 }
