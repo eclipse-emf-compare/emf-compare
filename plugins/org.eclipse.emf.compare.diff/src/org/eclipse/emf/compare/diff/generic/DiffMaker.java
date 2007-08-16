@@ -67,6 +67,8 @@ public class DiffMaker implements DiffEngine {
 	public DiffModel doDiff(MatchModel match) {
 		updateEObjectToMatch(match);
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
+		result.setLeft(match.getLeftModel());
+		result.setRight(match.getRightModel());
 		// we have to browse the model and create the corresponding operations
 		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
 		final Resource leftModel = matchRoot.getLeftElement().eResource();
@@ -261,7 +263,7 @@ public class DiffMaker implements DiffEngine {
 				if (leftValue != null && !leftValue.equals(rightValue) && next.isMany()) {
 					// If an object in the left list isn't contained in the right, it is a remove operation
 					for (Object aValue : (List)leftValue) {
-						if (!((List)rightValue).contains(aValue)) {
+						if (!((List)rightValue).contains(aValue) && aValue instanceof EObject) {
 							final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 							operation.setAttribute(next);
 							operation.setRightElement(mapping.getRightElement());
@@ -271,7 +273,7 @@ public class DiffMaker implements DiffEngine {
 						}
 					}
 					for (Object aValue : (List)rightValue) {
-						if (!((List)leftValue).contains(aValue)) {
+						if (!((List)leftValue).contains(aValue) && aValue instanceof EObject) {
 							final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 							operation.setAttribute(next);
 							operation.setRightElement(mapping.getRightElement());
