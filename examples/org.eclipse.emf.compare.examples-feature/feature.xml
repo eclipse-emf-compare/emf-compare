@@ -222,12 +222,12 @@ litigation.
    <requires>
       <import feature="org.eclipse.emf.compare" version="0.7.0.qualifier"/>
    </requires>
-
+<!--
    <plugin
          id="org.eclipse.emf.compare.examples.diff.extension"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+-->
 </feature>
