@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="Overview" link_to="toc.xml#concepts"> 
-	<topic label="General Design"  href="html/concepts/general_design.html"> 
-	</topic>
-	<topic label="Architecture"  href="html/concepts/architecture.html">
-	</topic> 
-</toc>
