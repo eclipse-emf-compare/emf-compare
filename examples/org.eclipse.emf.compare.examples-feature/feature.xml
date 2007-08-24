@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.examples"
       label="EMF Compare Examples (Incubation)"
-      version="0.7.0"
+      version="0.7.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -229,6 +229,5 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
 
 </feature>
