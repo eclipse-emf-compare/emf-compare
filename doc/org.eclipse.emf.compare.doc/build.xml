@@ -8,7 +8,7 @@
 	<property name="plugin" value="org.eclipse.emf.compare"/>
 	<property name="docPlugin" value="org.eclipse.emf.compare.doc"/>
 
-	<property name="filesToInclude" value="META-INF/**,about.html,about.ini,about.mappings,about.properties,modeling*.png,plugin.xml,plugin.properties,doc.zip,toc.xml,topics_*.xml,index/**"/>
+	<property name="filesToInclude" value="META-INF/**,about.html,about.ini,about.mappings,about.properties,modeling*.png,plugin.xml,plugin.properties,doc.zip,*.xml,index/**"/>
 	<property name="filesToExclude" value="**/*.dnx"/>
 
 	<!-- Compiler settings. -->
