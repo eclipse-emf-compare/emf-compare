@@ -220,7 +220,7 @@ litigation.
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="0.7.0.200701051744"/>
+      <import feature="org.eclipse.emf.compare" version="0.7.0.qualifier"/>
    </requires>
 
    <plugin
