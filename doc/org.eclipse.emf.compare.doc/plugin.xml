@@ -2,32 +2,35 @@
 <?eclipse version="3.2"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.help.toc">
-         
-      <!--
-      <toc
-            file="toc.xml"
-            primary="true">
-      </toc>
-      <toc
-            file="tocconcepts.xml">
-      </toc>
-      -->
-      <toc
-            file="topics_Reference.xml">
-      </toc>
-      <!--
-      <toc
-            file="tocsamples.xml">
-      </toc>
-      -->    
+  <!-- ====================================================================== -->
+  <!-- Define primary TOC                                                     -->
+  <!-- ====================================================================== -->
+  
+  <extension point="org.eclipse.help.toc">
+    <toc file="toc.xml" primary="true"/>
+  </extension>
+
+  <!-- ====================================================================== -->
+  <!-- Define TOCs                                                            -->
+  <!-- ====================================================================== -->
+
+   <extension point="org.eclipse.help.toc">
+       <toc file="topics_Reference.xml" />
    </extension>
-   
-      <extension point="org.eclipse.pde.core.javadoc">
+
+<!-- ============================================================================= -->
+<!-- Define Javadoc locations                                                      -->
+<!-- ============================================================================= -->
+   <extension point="org.eclipse.pde.core.javadoc">
        <javadoc path="doc.zip!/references/javadoc" archive="true">
-          <!-- @pluginIDs@ --><plugin id="org.eclipse.emf.compare"/>
+          <plugin id="org.eclipse.emf.compare"/>
+          <plugin id="org.eclipse.emf.compare.diff"/>
+          <plugin id="org.eclipse.emf.compare.diff.edit"/>
+          <plugin id="org.eclipse.emf.compare.match"/>
+          <plugin id="org.eclipse.emf.compare.ui"/>
        </javadoc>
    </extension>
+
+
 
 </plugin>
