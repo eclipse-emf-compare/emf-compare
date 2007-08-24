@@ -5,18 +5,18 @@
    <extension
          point="org.eclipse.help.toc">
          
-      <!--
       <toc
             file="toc.xml"
             primary="true">
       </toc>
+      <!--
       <toc
             file="tocconcepts.xml">
       </toc>
-      -->
       <toc
             file="tocreference.xml">
       </toc>
+      -->
       <!--
       <toc
             file="tocsamples.xml">
