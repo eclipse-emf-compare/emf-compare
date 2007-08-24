@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,7 +18,9 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -107,11 +110,24 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * This returns ReferenceChange.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReferenceChange"));
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
+		if (labelImage != null) {
+			List images = new ArrayList(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/ReferenceChange"));
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/ReferenceChange");
+		}
+
+		return labelImage;
 	}
+
 
 	/**
 	 * This returns the label text for the adapted class.
