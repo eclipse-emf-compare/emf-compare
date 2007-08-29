@@ -1,5 +1,4 @@
 ___ TODO ___
- - using functionnal ID through Ecore ID
  - complete documentation and tutorials
       - coding a match engine
       - extending diff metamodel
@@ -8,6 +7,9 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+14/08/2007 - using functionnal ID through Ecore ID
+14/08/2007 diff extension API
+14/08/2007 export diff as API
 30/07/2007 (DRAFT) - export diff as... extension point
 30/07/2007 - 3 Way compare
 10/07/2007 - suppress unused code
