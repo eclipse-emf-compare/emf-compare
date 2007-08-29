@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoveAttribute {
+public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl
+		implements RemoveAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

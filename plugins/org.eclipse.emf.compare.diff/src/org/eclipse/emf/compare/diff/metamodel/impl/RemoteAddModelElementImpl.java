@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoteAddModelElement {
+public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl
+		implements RemoteAddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

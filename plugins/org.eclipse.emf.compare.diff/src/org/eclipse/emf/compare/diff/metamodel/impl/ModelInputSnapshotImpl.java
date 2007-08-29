@@ -37,7 +37,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * @generated
  */
 @SuppressWarnings("nls")
-public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSnapshot {
+public class ModelInputSnapshotImpl extends EObjectImpl implements
+		ModelInputSnapshot {
 	/**
 	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -63,7 +64,7 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	 * @generated
 	 * @ordered
 	 */
-	protected DiffModel diff = null;
+	protected DiffModel diff;
 
 	/**
 	 * The cached value of the '{@link #getMatch() <em>Match</em>}' containment reference.
@@ -72,7 +73,7 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	 * @generated
 	 * @ordered
 	 */
-	protected MatchModel match = null;
+	protected MatchModel match;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -107,7 +108,8 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 		Date oldDate = date;
 		date = newDate;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__DATE, oldDate, date));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MODEL_INPUT_SNAPSHOT__DATE, oldDate, date));
 	}
 
 	/**
@@ -122,18 +124,20 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDiff(DiffModel newDiff, NotificationChain msgs) {
+	public NotificationChain basicSetDiff(DiffModel newDiff,
+			NotificationChain msgs) {
 		DiffModel oldDiff = diff;
 		diff = newDiff;
-		NotificationChain message = msgs;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, oldDiff, newDiff);
-			if (message == null)
-				message = notification;
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF,
+					oldDiff, newDiff);
+			if (msgs == null)
+				msgs = notification;
 			else
-				message.add(notification);
+				msgs.add(notification);
 		}
-		return message;
+		return msgs;
 	}
 
 	/**
@@ -144,14 +148,21 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 		if (newDiff != diff) {
 			NotificationChain msgs = null;
 			if (diff != null)
-				msgs = ((InternalEObject)diff).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, null, msgs);
+				msgs = ((InternalEObject) diff).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE
+								- DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, null,
+						msgs);
 			if (newDiff != null)
-				msgs = ((InternalEObject)newDiff).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, null, msgs);
+				msgs = ((InternalEObject) newDiff).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE
+								- DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, null,
+						msgs);
 			msgs = basicSetDiff(newDiff, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, newDiff, newDiff));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, newDiff, newDiff));
 	}
 
 	/**
@@ -166,18 +177,20 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetMatch(MatchModel newMatch, NotificationChain msgs) {
+	public NotificationChain basicSetMatch(MatchModel newMatch,
+			NotificationChain msgs) {
 		MatchModel oldMatch = match;
 		match = newMatch;
-		NotificationChain message = msgs;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, oldMatch, newMatch);
-			if (message == null)
-				message = notification;
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH,
+					oldMatch, newMatch);
+			if (msgs == null)
+				msgs = notification;
 			else
-				message.add(notification);
+				msgs.add(notification);
 		}
-		return message;
+		return msgs;
 	}
 
 	/**
@@ -188,14 +201,21 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 		if (newMatch != match) {
 			NotificationChain msgs = null;
 			if (match != null)
-				msgs = ((InternalEObject)match).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, null, msgs);
+				msgs = ((InternalEObject) match).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE
+								- DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH,
+						null, msgs);
 			if (newMatch != null)
-				msgs = ((InternalEObject)newMatch).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, null, msgs);
+				msgs = ((InternalEObject) newMatch).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE
+								- DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH,
+						null, msgs);
 			msgs = basicSetMatch(newMatch, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, newMatch, newMatch));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, newMatch, newMatch));
 	}
 
 	/**
@@ -203,12 +223,13 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
-				return basicSetDiff(null, msgs);
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				return basicSetMatch(null, msgs);
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
+			return basicSetDiff(null, msgs);
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
+			return basicSetMatch(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -220,12 +241,12 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
-				return getDate();
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
-				return getDiff();
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				return getMatch();
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
+			return getDate();
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
+			return getDiff();
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
+			return getMatch();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -237,15 +258,15 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
-				setDate((Date)newValue);
-				return;
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
-				setDiff((DiffModel)newValue);
-				return;
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				setMatch((MatchModel)newValue);
-				return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
+			setDate((Date) newValue);
+			return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
+			setDiff((DiffModel) newValue);
+			return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
+			setMatch((MatchModel) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -257,15 +278,15 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
-				setDate(DATE_EDEFAULT);
-				return;
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
-				setDiff((DiffModel)null);
-				return;
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				setMatch((MatchModel)null);
-				return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
+			setDate(DATE_EDEFAULT);
+			return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
+			setDiff((DiffModel) null);
+			return;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
+			setMatch((MatchModel) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -277,12 +298,13 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
-				return DATE_EDEFAULT == null ? date != null : !DATE_EDEFAULT.equals(date);
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
-				return diff != null;
-			case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
-				return match != null;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DATE:
+			return DATE_EDEFAULT == null ? date != null : !DATE_EDEFAULT
+					.equals(date);
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF:
+			return diff != null;
+		case DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH:
+			return match != null;
 		}
 		return super.eIsSet(featureID);
 	}

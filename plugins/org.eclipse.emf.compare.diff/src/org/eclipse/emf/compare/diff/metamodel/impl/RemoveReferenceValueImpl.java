@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoveReferenceValue {
+public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl
+		implements RemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

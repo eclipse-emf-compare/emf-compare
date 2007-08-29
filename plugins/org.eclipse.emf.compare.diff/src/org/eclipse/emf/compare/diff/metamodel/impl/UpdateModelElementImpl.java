@@ -31,7 +31,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 @SuppressWarnings("nls")
-public class UpdateModelElementImpl extends ModelElementChangeImpl implements UpdateModelElement {
+public class UpdateModelElementImpl extends ModelElementChangeImpl implements
+		UpdateModelElement {
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -39,7 +40,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement = null;
+	protected EObject rightElement;
 
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
@@ -48,7 +49,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftElement = null;
+	protected EObject leftElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -73,11 +74,13 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	 */
 	public EObject getRightElement() {
 		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			InternalEObject oldRightElement = (InternalEObject) rightElement;
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT,
+							oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -99,7 +102,9 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT,
+					oldRightElement, rightElement));
 	}
 
 	/**
@@ -108,11 +113,13 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	 */
 	public EObject getLeftElement() {
 		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			InternalEObject oldLeftElement = (InternalEObject) leftElement;
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT,
+							oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
@@ -134,7 +141,9 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT,
+					oldLeftElement, leftElement));
 	}
 
 	/**
@@ -144,14 +153,14 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
-				if (resolve)
-					return getRightElement();
-				return basicGetRightElement();
-			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
-				if (resolve)
-					return getLeftElement();
-				return basicGetLeftElement();
+		case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
+			if (resolve)
+				return getRightElement();
+			return basicGetRightElement();
+		case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
+			if (resolve)
+				return getLeftElement();
+			return basicGetLeftElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -163,12 +172,12 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
-				setRightElement((EObject)newValue);
-				return;
-			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
-				setLeftElement((EObject)newValue);
-				return;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
+			setRightElement((EObject) newValue);
+			return;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
+			setLeftElement((EObject) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -180,12 +189,12 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
-				setRightElement((EObject)null);
-				return;
-			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
-				setLeftElement((EObject)null);
-				return;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
+			setRightElement((EObject) null);
+			return;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
+			setLeftElement((EObject) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -197,10 +206,10 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
-				return rightElement != null;
-			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
-				return leftElement != null;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
+			return rightElement != null;
+		case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
+			return leftElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

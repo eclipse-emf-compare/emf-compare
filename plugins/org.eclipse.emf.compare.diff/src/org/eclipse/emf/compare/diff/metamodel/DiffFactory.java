@@ -28,7 +28,8 @@ public interface DiffFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	DiffFactory eINSTANCE = org.eclipse.emf.compare.diff.metamodel.impl.DiffFactoryImpl.init();
+	DiffFactory eINSTANCE = org.eclipse.emf.compare.diff.metamodel.impl.DiffFactoryImpl
+			.init();
 
 	/**
 	 * Returns a new object of class '<em>Model</em>'.

@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements AddAttribute {
+public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements
+		AddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

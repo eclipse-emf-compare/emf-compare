@@ -14,57 +14,51 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.Messages;
-import org.eclipse.emf.compare.diff.api.DiffExtension;
-import org.eclipse.emf.compare.util.EngineConstants;
+import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 
 /**
- * The engine descriptor represents a diff extension contribution trough the extension point.
+ * The engine descriptor represents a diff extension contribution trough the
+ * extension point.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class DiffExtensionDescriptor implements Comparable {
-	/**
-	 * Priority of this descriptor. Should be one of
-	 * <ul>
-	 * <li>{@link EngineConstants#PRIORITY_HIGHEST}</li>
-	 * <li>{@link EngineConstants#PRIORITY_HIGH}</li>
-	 * <li>{@link EngineConstants#PRIORITY_NORMAL}</li>
-	 * <li>{@link EngineConstants#PRIORITY_LOW}</li>
-	 * <li>{@link EngineConstants#PRIORITY_LOWEST}</li>
-	 * </ul>
-	 */
-	protected final String priority;
+public class DiffExtensionDescriptor {
 
 	/** Class name of this {@link DiffExtension}. */
 	protected final String diffextensionClassName;
 
+	/** File extension on which applying this diff extension */
+	protected final String fileExtension;
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
 	/** {@link DiffExtension} this descriptor describes. */
-	private DiffExtension diffExtension;
+	private AbstractDiffExtension diffExtension;
 
 	/**
 	 * Instantiate the descriptor given its configuration.
 	 * 
 	 * @param configuration
-	 *            {@link IConfigurationElement configuration element} of this descriptor.
+	 *            {@link IConfigurationElement configuration element} of this
+	 *            descriptor.
 	 */
 	public DiffExtensionDescriptor(IConfigurationElement configuration) {
 		element = configuration;
-		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
+		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$//$NON-NLS-2$
 		diffextensionClassName = getAttribute("extensionClass", null); //$NON-NLS-1$
 	}
 
 	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the attribute hasn't been set, we'll
-	 * return <code>defaultValue</code> instead.
+	 * Returns the value of the attribute <code>name</code> of this
+	 * descriptor's configuration element. if the attribute hasn't been set,
+	 * we'll return <code>defaultValue</code> instead.
 	 * 
 	 * @param name
 	 *            Name of the attribute we seek the value of.
 	 * @param defaultValue
 	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 * @return The value of the attribute <code>name</code>,
+	 *         <code>defaultValue</code> if it hasn't been set.
 	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);
@@ -72,16 +66,8 @@ public class DiffExtensionDescriptor implements Comparable {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns this {@link DiffExtension} priority.
-	 * 
-	 * @return The diff extension priority.
-	 */
-	public String getPriority() {
-		return priority.toLowerCase();
+		throw new IllegalArgumentException(Messages.getString(
+				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -98,10 +84,11 @@ public class DiffExtensionDescriptor implements Comparable {
 	 * 
 	 * @return the diff extension instance.
 	 */
-	public DiffExtension getDiffExtensionInstance() {
+	public AbstractDiffExtension getDiffExtensionInstance() {
 		if (diffExtension == null) {
 			try {
-				diffExtension = (DiffExtension)element.createExecutableExtension("diffExtensionClass"); //$NON-NLS-1$
+				diffExtension = (AbstractDiffExtension) element
+						.createExecutableExtension("extensionClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}
@@ -110,91 +97,11 @@ public class DiffExtensionDescriptor implements Comparable {
 	}
 
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according to <code>priorityString</code> value :
-	 * <ul>
-	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
-	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
-	 * <li>&quot;high&quot; =&gt; {@value EngineConstants#PRIORITY_HIGH}</li>
-	 * <li>&quot;highest&quot; =&gt; {@value EngineConstants#PRIORITY_HIGHEST}</li>
-	 * <li>anything else =&gt; {@value EngineConstants#PRIORITY_NORMAL}</li>
-	 * </ul>
 	 * 
-	 * @param priorityString
-	 *            {@link String} value of the priority we seek.
-	 * @return <code>int</code> corresponding to the given priority {@link String}.
+	 * @return the file extension associated with this contribution.
 	 */
-	private int getPriorityValue(String priorityString) {
-		if (priorityString == null)
-			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
-		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if (priorityString.equals("lowest")) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if (priorityString.equals("low")) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if (priorityString.equals("high")) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if (priorityString.equals("highest")) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGHEST;
-		}
-		return priorityValue;
+	public String getFileExtension() {
+		return fileExtension;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int classNameHash = 0;
-		if (diffextensionClassName != null)
-			classNameHash = diffextensionClassName.hashCode();
-		int priorityHash = 0;
-		if (priority != null)
-			priorityHash = priority.hashCode();
-
-		return (prime + classNameHash) * prime + priorityHash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(Object other) {
-		if (other instanceof DiffExtensionDescriptor) {
-			final int nombre1 = getPriorityValue(((DiffExtensionDescriptor)other).getPriority());
-			final int nombre2 = getPriorityValue(getPriority());
-			return nombre2 - nombre1;
-		}
-		return 1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		boolean isEqual = true;
-		if (this == obj) {
-			isEqual = true;
-		} else if (obj == null || getClass() != obj.getClass()) {
-			isEqual = false;
-		} else {
-			final DiffExtensionDescriptor other = (DiffExtensionDescriptor)obj;
-			if (diffextensionClassName == null && other.diffextensionClassName != null) {
-				isEqual = false;
-			} else if (!diffextensionClassName.equals(other.diffextensionClassName)) {
-				isEqual = false;
-			} else if (priority == null && other.priority != null) {
-				isEqual = false;
-			} else if (!priority.equals(other.priority)) {
-				isEqual = false;
-			}
-		}
-		return isEqual;
-	}
 }

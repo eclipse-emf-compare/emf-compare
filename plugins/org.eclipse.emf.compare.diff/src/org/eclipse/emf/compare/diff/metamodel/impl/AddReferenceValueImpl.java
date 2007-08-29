@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implements AddReferenceValue {
+public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl
+		implements AddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

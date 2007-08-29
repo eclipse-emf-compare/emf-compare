@@ -5,11 +5,12 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.4 2007/06/28 11:47:46 cbrun Exp $
+ $Id: plugin.xml,v 1.5 2007/08/29 07:11:29 cbrun Exp $
 -->
 
 <plugin>
    <extension-point id="engine" name="engine" schema="schema/engine.exsd"/>
+   <extension-point id="diff_extension" name="diff_extension" schema="schema/diff_extension.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
@@ -23,6 +24,8 @@
             engineClass="org.eclipse.emf.compare.diff.generic.DiffMaker"
             priority="low"/>
    </extension>
+   
+   
 
 </plugin>
 

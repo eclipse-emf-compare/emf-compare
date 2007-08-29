@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteAddAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoteAddAttribute {
+public class RemoteAddAttributeImpl extends AttributeChangeLeftTargetImpl
+		implements RemoteAddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

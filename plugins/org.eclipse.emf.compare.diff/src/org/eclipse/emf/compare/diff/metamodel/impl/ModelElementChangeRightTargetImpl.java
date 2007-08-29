@@ -31,7 +31,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 @SuppressWarnings("nls")
-public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl implements ModelElementChangeRightTarget {
+public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl
+		implements ModelElementChangeRightTarget {
 	/**
 	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -39,7 +40,7 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftParent = null;
+	protected EObject leftParent;
 
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
@@ -48,7 +49,7 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement = null;
+	protected EObject rightElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -73,11 +74,15 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	 */
 	public EObject getLeftParent() {
 		if (leftParent != null && leftParent.eIsProxy()) {
-			InternalEObject oldLeftParent = (InternalEObject)leftParent;
+			InternalEObject oldLeftParent = (InternalEObject) leftParent;
 			leftParent = eResolveProxy(oldLeftParent);
 			if (leftParent != oldLeftParent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT, oldLeftParent, leftParent));
+					eNotify(new ENotificationImpl(
+							this,
+							Notification.RESOLVE,
+							DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT,
+							oldLeftParent, leftParent));
 			}
 		}
 		return leftParent;
@@ -99,7 +104,9 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 		EObject oldLeftParent = leftParent;
 		leftParent = newLeftParent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT, oldLeftParent, leftParent));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT,
+					oldLeftParent, leftParent));
 	}
 
 	/**
@@ -108,11 +115,15 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	 */
 	public EObject getRightElement() {
 		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			InternalEObject oldRightElement = (InternalEObject) rightElement;
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(
+							this,
+							Notification.RESOLVE,
+							DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
+							oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -134,7 +145,11 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(
+					this,
+					Notification.SET,
+					DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
+					oldRightElement, rightElement));
 	}
 
 	/**
@@ -144,14 +159,14 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
-				if (resolve)
-					return getLeftParent();
-				return basicGetLeftParent();
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
-				if (resolve)
-					return getRightElement();
-				return basicGetRightElement();
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
+			if (resolve)
+				return getLeftParent();
+			return basicGetLeftParent();
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
+			if (resolve)
+				return getRightElement();
+			return basicGetRightElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -163,12 +178,12 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
-				setLeftParent((EObject)newValue);
-				return;
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
-				setRightElement((EObject)newValue);
-				return;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
+			setLeftParent((EObject) newValue);
+			return;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
+			setRightElement((EObject) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -180,12 +195,12 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
-				setLeftParent((EObject)null);
-				return;
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
-				setRightElement((EObject)null);
-				return;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
+			setLeftParent((EObject) null);
+			return;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
+			setRightElement((EObject) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -197,10 +212,10 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
-				return leftParent != null;
-			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
-				return rightElement != null;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT:
+			return leftParent != null;
+		case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT:
+			return rightElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

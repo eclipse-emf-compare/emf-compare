@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements RemoteMoveModelElement {
+public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements
+		RemoteMoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

@@ -33,7 +33,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 @SuppressWarnings("nls")
-public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceChange {
+public class ReferenceChangeImpl extends DiffElementImpl implements
+		ReferenceChange {
 	/**
 	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -41,7 +42,7 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EReference reference = null;
+	protected EReference reference;
 
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
@@ -50,7 +51,7 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement = null;
+	protected EObject rightElement;
 
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
@@ -59,7 +60,7 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftElement = null;
+	protected EObject leftElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -84,11 +85,13 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 */
 	public EReference getReference() {
 		if (reference != null && reference.eIsProxy()) {
-			InternalEObject oldReference = (InternalEObject)reference;
-			reference = (EReference)eResolveProxy(oldReference);
+			InternalEObject oldReference = (InternalEObject) reference;
+			reference = (EReference) eResolveProxy(oldReference);
 			if (reference != oldReference) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.REFERENCE_CHANGE__REFERENCE, oldReference, reference));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__REFERENCE,
+							oldReference, reference));
 			}
 		}
 		return reference;
@@ -110,7 +113,9 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 		EReference oldReference = reference;
 		reference = newReference;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__REFERENCE, oldReference, reference));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE__REFERENCE, oldReference,
+					reference));
 	}
 
 	/**
@@ -119,11 +124,13 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 */
 	public EObject getRightElement() {
 		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			InternalEObject oldRightElement = (InternalEObject) rightElement;
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT,
+							oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -145,7 +152,9 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT,
+					oldRightElement, rightElement));
 	}
 
 	/**
@@ -154,11 +163,13 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 */
 	public EObject getLeftElement() {
 		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			InternalEObject oldLeftElement = (InternalEObject) leftElement;
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT,
+							oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
@@ -180,7 +191,9 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT, oldLeftElement,
+					leftElement));
 	}
 
 	/**
@@ -190,18 +203,18 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
-				if (resolve)
-					return getReference();
-				return basicGetReference();
-			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
-				if (resolve)
-					return getRightElement();
-				return basicGetRightElement();
-			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
-				if (resolve)
-					return getLeftElement();
-				return basicGetLeftElement();
+		case DiffPackage.REFERENCE_CHANGE__REFERENCE:
+			if (resolve)
+				return getReference();
+			return basicGetReference();
+		case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
+			if (resolve)
+				return getRightElement();
+			return basicGetRightElement();
+		case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
+			if (resolve)
+				return getLeftElement();
+			return basicGetLeftElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -213,15 +226,15 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
-				setReference((EReference)newValue);
-				return;
-			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
-				setRightElement((EObject)newValue);
-				return;
-			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
-				setLeftElement((EObject)newValue);
-				return;
+		case DiffPackage.REFERENCE_CHANGE__REFERENCE:
+			setReference((EReference) newValue);
+			return;
+		case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
+			setRightElement((EObject) newValue);
+			return;
+		case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
+			setLeftElement((EObject) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -233,15 +246,15 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
-				setReference((EReference)null);
-				return;
-			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
-				setRightElement((EObject)null);
-				return;
-			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
-				setLeftElement((EObject)null);
-				return;
+		case DiffPackage.REFERENCE_CHANGE__REFERENCE:
+			setReference((EReference) null);
+			return;
+		case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
+			setRightElement((EObject) null);
+			return;
+		case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
+			setLeftElement((EObject) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -253,12 +266,12 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
-				return reference != null;
-			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
-				return rightElement != null;
-			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
-				return leftElement != null;
+		case DiffPackage.REFERENCE_CHANGE__REFERENCE:
+			return reference != null;
+		case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
+			return rightElement != null;
+		case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
+			return leftElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getSubDiffElements <em>Sub Diff Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getIsHiddenBy <em>Is Hidden By</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,5 +47,23 @@ public interface DiffElement extends EObject {
 	 * @generated
 	 */
 	EList getSubDiffElements();
+
+	/**
+	 * Returns the value of the '<em><b>Is Hidden By</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension#getHideElements <em>Hide Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Is Hidden By</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Is Hidden By</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_IsHiddenBy()
+	 * @see org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension#getHideElements
+	 * @model type="org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension" opposite="hideElements"
+	 * @generated
+	 */
+	EList getIsHiddenBy();
 
 } // DiffElement

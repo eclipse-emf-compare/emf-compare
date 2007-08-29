@@ -22,7 +22,9 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteUpdateUniqueReferenceValueImpl extends UpdateUniqueReferenceValueImpl implements RemoteUpdateUniqueReferenceValue {
+public class RemoteUpdateUniqueReferenceValueImpl extends
+		UpdateUniqueReferenceValueImpl implements
+		RemoteUpdateUniqueReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

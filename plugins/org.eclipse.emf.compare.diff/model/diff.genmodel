@@ -3,11 +3,12 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.emf.compare.diff/src"
     modelPluginID="org.eclipse.emf.compare.diff" modelName="Diff" codeFormatting="true"
-    importerID="org.eclipse.emf.importer.ecore" usedGenPackages="../../../plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../../plugin/org.eclipse.emf.compare.match/model/match.genmodel#//match">
+    importerID="org.eclipse.emf.importer.ecore" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.emf.compare.match/model/match.genmodel#//match">
   <foreignModel>diff.ecore</foreignModel>
   <genPackages prefix="Diff" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       interfacePackageSuffix="metamodel" metaDataPackageSuffix="metamodel" classPackageSuffix="metamodel.impl"
       utilityPackageSuffix="metamodel.util" ecorePackage="diff.ecore#/">
+    <genDataTypes ecoreDataType="diff.ecore#//AbstractMerger"/>
     <genClasses ecoreClass="diff.ecore#//DiffModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/origin"/>
@@ -16,6 +17,7 @@
     </genClasses>
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/isHiddenBy"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//ConflictingDiffElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ConflictingDiffElement/leftParent"/>
@@ -93,5 +95,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateUniqueReferenceValue/rightTarget"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//RemoteUpdateUniqueReferenceValue"/>
+    <genClasses image="false" ecoreClass="diff.ecore#//AbstractDiffExtension">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AbstractDiffExtension/hideElements"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//AbstractDiffExtension/isCollapsed"/>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/providesMerger"/>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/visit">
+        <genParameters ecoreParameter="diff.ecore#//AbstractDiffExtension/visit/diffModel"/>
+      </genOperations>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getMerger"/>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getText"/>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getImage"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

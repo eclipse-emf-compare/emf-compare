@@ -29,7 +29,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implements AttributeChangeLeftTarget {
+public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl
+		implements AttributeChangeLeftTarget {
 	/**
 	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -37,7 +38,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftTarget = null;
+	protected EObject leftTarget;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -62,11 +63,15 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	 */
 	public EObject getLeftTarget() {
 		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			InternalEObject oldLeftTarget = (InternalEObject) leftTarget;
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
+					eNotify(new ENotificationImpl(
+							this,
+							Notification.RESOLVE,
+							DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET,
+							oldLeftTarget, leftTarget));
 			}
 		}
 		return leftTarget;
@@ -88,7 +93,9 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 		EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET,
+					oldLeftTarget, leftTarget));
 	}
 
 	/**
@@ -98,10 +105,10 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				if (resolve)
-					return getLeftTarget();
-				return basicGetLeftTarget();
+		case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+			if (resolve)
+				return getLeftTarget();
+			return basicGetLeftTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -113,9 +120,9 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)newValue);
-				return;
+		case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+			setLeftTarget((EObject) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -127,9 +134,9 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)null);
-				return;
+		case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+			setLeftTarget((EObject) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -141,8 +148,8 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				return leftTarget != null;
+		case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+			return leftTarget != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -22,7 +22,8 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 @SuppressWarnings("nls")
-public class ModelElementChangeImpl extends DiffElementImpl implements ModelElementChange {
+public class ModelElementChangeImpl extends DiffElementImpl implements
+		ModelElementChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

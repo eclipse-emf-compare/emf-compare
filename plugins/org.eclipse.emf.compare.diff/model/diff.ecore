@@ -13,11 +13,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="DiffElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subDiffElements" upperBound="-1"
         eType="#//DiffElement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isHiddenBy" upperBound="-1"
+        eType="#//AbstractDiffExtension" eOpposite="#//AbstractDiffExtension/hideElements"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConflictingDiffElement" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" eType="ecore:EClass ../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffGroup" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
@@ -28,7 +30,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="#//DiffModel"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass ../../../plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelElementChange" eSuperTypes="#//DiffElement"/>
@@ -54,7 +56,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteMoveModelElement" eSuperTypes="#//MoveModelElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeChange" eSuperTypes="#//DiffElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
@@ -71,7 +73,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="UpdateAttribute" eSuperTypes="#//AttributeChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateAttribute" eSuperTypes="#//UpdateAttribute"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceChange" eSuperTypes="#//DiffElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="ecore:EClass ../../../plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
@@ -93,4 +95,18 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateUniqueReferenceValue" eSuperTypes="#//UpdateUniqueReferenceValue"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractDiffExtension" abstract="true">
+    <eOperations name="providesMerger" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean"/>
+    <eOperations name="visit">
+      <eParameters name="diffModel" eType="#//DiffModel"/>
+    </eOperations>
+    <eOperations name="getMerger" eType="#//AbstractMerger"/>
+    <eOperations name="getText" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eOperations name="getImage" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hideElements" upperBound="-1"
+        eType="#//DiffElement" eOpposite="#//DiffElement/isHiddenBy"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isCollapsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="AbstractMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.AbstractMerger"/>
 </ecore:EPackage>

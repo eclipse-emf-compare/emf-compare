@@ -33,7 +33,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * @generated
  */
 @SuppressWarnings("nls")
-public class AttributeChangeImpl extends DiffElementImpl implements AttributeChange {
+public class AttributeChangeImpl extends DiffElementImpl implements
+		AttributeChange {
 	/**
 	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -41,7 +42,7 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EAttribute attribute = null;
+	protected EAttribute attribute;
 
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
@@ -50,7 +51,7 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftElement = null;
+	protected EObject leftElement;
 
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference.
@@ -59,7 +60,7 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement = null;
+	protected EObject rightElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -84,11 +85,13 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 */
 	public EAttribute getAttribute() {
 		if (attribute != null && attribute.eIsProxy()) {
-			InternalEObject oldAttribute = (InternalEObject)attribute;
-			attribute = (EAttribute)eResolveProxy(oldAttribute);
+			InternalEObject oldAttribute = (InternalEObject) attribute;
+			attribute = (EAttribute) eResolveProxy(oldAttribute);
 			if (attribute != oldAttribute) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute, attribute));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE,
+							oldAttribute, attribute));
 			}
 		}
 		return attribute;
@@ -110,7 +113,9 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 		EAttribute oldAttribute = attribute;
 		attribute = newAttribute;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute, attribute));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE, oldAttribute,
+					attribute));
 	}
 
 	/**
@@ -119,11 +124,13 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 */
 	public EObject getLeftElement() {
 		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			InternalEObject oldLeftElement = (InternalEObject) leftElement;
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT,
+							oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
@@ -145,7 +152,9 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT, oldLeftElement,
+					leftElement));
 	}
 
 	/**
@@ -154,11 +163,13 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	 */
 	public EObject getRightElement() {
 		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			InternalEObject oldRightElement = (InternalEObject) rightElement;
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT,
+							oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -180,7 +191,9 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT,
+					oldRightElement, rightElement));
 	}
 
 	/**
@@ -190,18 +203,18 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
-				if (resolve)
-					return getAttribute();
-				return basicGetAttribute();
-			case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
-				if (resolve)
-					return getLeftElement();
-				return basicGetLeftElement();
-			case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
-				if (resolve)
-					return getRightElement();
-				return basicGetRightElement();
+		case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
+			if (resolve)
+				return getAttribute();
+			return basicGetAttribute();
+		case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
+			if (resolve)
+				return getLeftElement();
+			return basicGetLeftElement();
+		case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
+			if (resolve)
+				return getRightElement();
+			return basicGetRightElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -213,15 +226,15 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
-				setAttribute((EAttribute)newValue);
-				return;
-			case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
-				setLeftElement((EObject)newValue);
-				return;
-			case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
-				setRightElement((EObject)newValue);
-				return;
+		case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
+			setAttribute((EAttribute) newValue);
+			return;
+		case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
+			setLeftElement((EObject) newValue);
+			return;
+		case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
+			setRightElement((EObject) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -233,15 +246,15 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
-				setAttribute((EAttribute)null);
-				return;
-			case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
-				setLeftElement((EObject)null);
-				return;
-			case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
-				setRightElement((EObject)null);
-				return;
+		case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
+			setAttribute((EAttribute) null);
+			return;
+		case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
+			setLeftElement((EObject) null);
+			return;
+		case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
+			setRightElement((EObject) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -253,12 +266,12 @@ public class AttributeChangeImpl extends DiffElementImpl implements AttributeCha
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
-				return attribute != null;
-			case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
-				return leftElement != null;
-			case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
-				return rightElement != null;
+		case DiffPackage.ATTRIBUTE_CHANGE__ATTRIBUTE:
+			return attribute != null;
+		case DiffPackage.ATTRIBUTE_CHANGE__LEFT_ELEMENT:
+			return leftElement != null;
+		case DiffPackage.ATTRIBUTE_CHANGE__RIGHT_ELEMENT:
+			return rightElement != null;
 		}
 		return super.eIsSet(featureID);
 	}
