@@ -30,36 +30,35 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 /**
- * Represents the property view under a {@link ModelContentMergeViewerPart}'s property
- * tab.
+ * Represents the property view under a {@link ModelContentMergeViewerPart}'s property tab.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelContentMergePropertyPart extends TableViewer {
 	/** <code>int</code> representing this viewer part side. */
 	protected final int partSide;
-	
+
 	/**
-	 * Creates a table viewer on a newly-created table control under the given
-	 * parent. The table control is created using the given style bits.
+	 * Creates a table viewer on a newly-created table control under the given parent. The table control is
+	 * created using the given style bits.
 	 * 
 	 * @param parent
-	 * 			the parent control.
+	 *            the parent control.
 	 * @param style
-	 * 			SWT style bits.
+	 *            SWT style bits.
 	 * @param side
-	 * 			Side of this viewer part.
+	 *            Side of this viewer part.
 	 */
 	public ModelContentMergePropertyPart(Composite parent, int style, int side) {
 		super(parent, style);
 		partSide = side;
-		
+
 		setLabelProvider(new PropertyLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
 
 		setUseHashlookup(true);
 		getTable().setLinesVisible(true);
 		getTable().setHeaderVisible(true);
-		
+
 		final GC gc = new GC(getTable());
 		gc.setFont(getTable().getFont());
 		final FontMetrics metrics = gc.getFontMetrics();
@@ -70,16 +69,16 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		nameColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, nameColumn.getText().length() * 3));
 		final TableColumn weightsColumn = new TableColumn(getTable(), SWT.RIGHT);
 		weightsColumn.setText(Messages.getString("ModelContentMergePropertyPart.column2.name")); //$NON-NLS-1$
-		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, weightsColumn.getText().length() * 3));
+		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics,
+				weightsColumn.getText().length() * 3));
 	}
-	
+
 	/**
 	 * Returns the widget representing the given {@link DiffElement} in the table.
 	 * 
 	 * @param diff
-	 * 			{@link DiffElement} to seek in the table.
-	 * @return
-	 * 			The widget representing the given {@link DiffElement}.
+	 *            {@link DiffElement} to seek in the table.
+	 * @return The widget representing the given {@link DiffElement}.
 	 * @see org.eclipse.jface.viewers.StructuredViewer#findItem(Object)
 	 */
 	public TableItem find(DiffElement diff) {
@@ -89,7 +88,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		}
 		return item;
 	}
-	
+
 	/**
 	 * Returns the side of this viewer part.
 	 * 
@@ -98,12 +97,12 @@ public class ModelContentMergePropertyPart extends TableViewer {
 	public int getSide() {
 		return partSide;
 	}
-	
+
 	/**
 	 * Ensures that the given diff is visible in the table.
 	 * 
 	 * @param diff
-	 * 			{@link DiffElement} to make visible.
+	 *            {@link DiffElement} to make visible.
 	 */
 	public void showItem(DiffElement diff) {
 		final TableItem elementItem = find(diff);
@@ -111,7 +110,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 			getTable().setSelection(elementItem);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -149,7 +148,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 			}
 		}
 	}
-	
+
 	/**
 	 * Label provider used by the table control of this part.
 	 */
@@ -158,13 +157,12 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		 * Instantiates this label provider given its {@link AdapterFactory}.
 		 * 
 		 * @param adapterFactory
-		 * 			Adapter factory providing this {@link LabelProvider}'s text and
-		 * 			images.
+		 *            Adapter factory providing this {@link LabelProvider}'s text and images.
 		 */
 		public PropertyLabelProvider(AdapterFactory adapterFactory) {
 			super(adapterFactory);
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 * 

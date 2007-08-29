@@ -59,9 +59,10 @@ public final class EMFCompareEObjectUtils {
 	}
 
 	/**
-	 * Returns the left element of the given {@link EObject}. Will try to invoke the method called "getLeftElement" and, if it fails to find it,
-	 * "getLeftParent". <code>null</code> if neither of these methods can be found.<br/> This method is intended to be called with a
-	 * {@link DiffElement} or {@link MatchElement} as argument.
+	 * Returns the left element of the given {@link EObject}. Will try to invoke the method called
+	 * "getLeftElement" and, if it fails to find it, "getLeftParent". <code>null</code> if neither of these
+	 * methods can be found.<br/> This method is intended to be called with a {@link DiffElement} or
+	 * {@link MatchElement} as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -80,9 +81,10 @@ public final class EMFCompareEObjectUtils {
 	}
 
 	/**
-	 * Returns the right element of the given {@link EObject}. Will try to invoke the method called "getRightElement" and, if it fails to find it,
-	 * "getRightParent". <code>null</code> if neither of these methods can be found.<br/> This method is intended to be called with a
-	 * {@link DiffElement} or {@link MatchElement} as argument.
+	 * Returns the right element of the given {@link EObject}. Will try to invoke the method called
+	 * "getRightElement" and, if it fails to find it, "getRightParent". <code>null</code> if neither of
+	 * these methods can be found.<br/> This method is intended to be called with a {@link DiffElement} or
+	 * {@link MatchElement} as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -101,9 +103,11 @@ public final class EMFCompareEObjectUtils {
 	}
 
 	/**
-	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called "getLeftParent" if the {@link EObject} is a
-	 * {@link ConflictingDiffGroup}, "getOriginElement" if the {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these
-	 * methods can be found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or {@link Match3Element} as argument.
+	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called
+	 * "getLeftParent" if the {@link EObject} is a {@link ConflictingDiffGroup}, "getOriginElement" if the
+	 * {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these methods can be
+	 * found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or
+	 * {@link Match3Element} as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -122,6 +126,7 @@ public final class EMFCompareEObjectUtils {
 
 	/**
 	 * Returns the label provider wrapped around {@link EMFAdapterFactoryProvider#getAdapterFactory()}.
+	 * 
 	 * @return The label provider wrapped around {@link EMFAdapterFactoryProvider#getAdapterFactory()}.
 	 */
 	private static AdapterFactoryLabelProvider getLabelProvider() {

@@ -39,7 +39,7 @@ public interface EMFCompareConstants {
 
 	/** Default color (blue) for a modified element circling. */
 	RGB PREFERENCES_DEFAULT_CHANGED_COLOR = new RGB(114, 159, 207);
-	
+
 	/** Default color (orange) for a conflicting element circling. */
 	RGB PREFERENCES_DEFAULT_CONFLICTING_COLOR = new RGB(255, 165, 0);
 
@@ -53,22 +53,28 @@ public interface EMFCompareConstants {
 	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
 
 	/** Preferences description for the added element color. */
-	String PREFERENCES_DESCRIPTION_ADDED_COLOR = Messages.getString("EMFCompareConstants.preferences.addedColorLabel") + ':'; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_ADDED_COLOR = Messages
+			.getString("EMFCompareConstants.preferences.addedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the changed element color. */
-	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = Messages.getString("EMFCompareConstants.preferences.changedColorLabel") + ':'; //$NON-NLS-1$
-	
+	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = Messages
+			.getString("EMFCompareConstants.preferences.changedColorLabel") + ':'; //$NON-NLS-1$
+
 	/** Preferences description for the conflicting element color. */
-	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = Messages.getString("EMFCompareConstants.preferences.conflictingColorLabel") + ':'; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = Messages
+			.getString("EMFCompareConstants.preferences.conflictingColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the highlight color. */
-	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = Messages.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = Messages
+			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the removed element color. */
-	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = Messages.getString("EMFCompareConstants.preferences.removedColorLabel") + ':'; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = Messages
+			.getString("EMFCompareConstants.preferences.removedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the siblings search window. */
-	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = Messages.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
+	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = Messages
+			.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences key for the circling color of an added element. */
 	String PREFERENCES_KEY_ADDED_COLOR = "added.color"; //$NON-NLS-1$

@@ -12,7 +12,9 @@ package org.eclipse.emf.compare.ui.contentprovider;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -27,6 +29,7 @@ import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareException;
@@ -58,17 +61,23 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 
 	/** Ancestor model used in this comparison. */
 	protected EObject ancestorModel;
-	
+
 	/** Indicates that this is a three way comparison. */
 	protected boolean isThreeWay;
-	
+
 	/** Keeps track of the comparison result. */
-	/* package */ ModelInputSnapshot snapshot;
-	
-	/** {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the one used to created this compare editor. */
+	/* package */ModelInputSnapshot snapshot;
+
+	/**
+	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
+	 * one used to created this compare editor.
+	 */
 	private final CompareConfiguration configuration;
 
-	/** {@link DiffModel} result of the underlying comparison. This contains the data for this content provider. */
+	/**
+	 * {@link DiffModel} result of the underlying comparison. This contains the data for this content
+	 * provider.
+	 */
 	private DiffModel diffInput;
 
 	/**
@@ -89,7 +98,13 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		Object[] children = null;
 		if (parentElement instanceof EObject) {
-			children = ((EObject)parentElement).eContents().toArray();
+			Collection childrenList = new ArrayList();
+			for (EObject child : ((EObject)parentElement).eContents()) {
+				if (!DiffAdapterFactory.shouldBeHidden(child))
+					childrenList.add(child);
+
+			}
+			children = childrenList.toArray();
 		}
 		return children;
 	}
@@ -133,7 +148,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			try {
 				elements = diffInput.getOwnedElements().toArray();
 			} catch (NullPointerException e) {
-				throw new EMFCompareException(Messages.getString("ModelStructureContentProvider.inputException")); //$NON-NLS-1$
+				throw new EMFCompareException(Messages
+						.getString("ModelStructureContentProvider.inputException")); //$NON-NLS-1$
 			}
 		}
 		return elements;
@@ -159,7 +175,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			snapshot = (ModelInputSnapshot)newInput;
 			diffInput = snapshot.getDiff();
 		} else if (configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT) != null) {
-			snapshot = (ModelInputSnapshot)configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
+			snapshot = (ModelInputSnapshot)configuration
+					.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
 			diffInput = snapshot.getDiff();
 		} else if (newInput instanceof ICompareInput) {
 			final ITypedElement left = ((ICompareInput)newInput).getLeft();
@@ -205,7 +222,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					ancestorModel = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
 							modelResourceSet);
 			} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
-				// this is the case of SVN/CVS comparison, we invert left and right.
+				// this is the case of SVN/CVS comparison, we invert left and
+				// right.
 				rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 						modelResourceSet);
 				leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
@@ -225,7 +243,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			throw new EMFCompareException(e);
 		}
 	}
-	
+
 	/**
 	 * Handles the comparison (either two or three ways) of the models.
 	 */
@@ -233,35 +251,32 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		try {
 			final Date start = Calendar.getInstance().getTime();
 			if (!isThreeWay) {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-						new IRunnableWithProgress() {
-							public void run(IProgressMonitor monitor) throws InvocationTargetException,
-									InterruptedException {
-								final MatchModel match = new MatchService().doMatch(leftModel,
-										rightModel, monitor);
-								final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
-	
-								snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-								snapshot.setDate(Calendar.getInstance().getTime());
-								snapshot.setDiff(diff);
-								snapshot.setMatch(match);
-							}
-						});
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
+						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
+						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+
+						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+						snapshot.setDate(Calendar.getInstance().getTime());
+						snapshot.setDiff(diff);
+						snapshot.setMatch(match);
+					}
+				});
 			} else {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-						new IRunnableWithProgress() {
-							public void run(IProgressMonitor monitor) throws InvocationTargetException,
-									InterruptedException {
-								final MatchModel match = new MatchService().doMatch(leftModel,
-										rightModel, ancestorModel, monitor);
-								final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
-								
-								snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-								snapshot.setDate(Calendar.getInstance().getTime());
-								snapshot.setDiff(diff);
-								snapshot.setMatch(match);
-							}
-						});
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
+						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
+								ancestorModel, monitor);
+						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+
+						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+						snapshot.setDate(Calendar.getInstance().getTime());
+						snapshot.setDiff(diff);
+						snapshot.setMatch(match);
+					}
+				});
 			}
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()

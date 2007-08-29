@@ -23,16 +23,17 @@ import org.eclipse.swt.graphics.Image;
 public class TypedElementWrapper implements ITypedElement {
 	/** {@link EObject} this wrapper is build upon. */
 	private final EObject wrappedObject;
-	
+
 	/**
 	 * Constructs an instance given the object to wrap.
+	 * 
 	 * @param eObject
-	 * 			Object to wrap as an {@link ITypedElement}.
+	 *            Object to wrap as an {@link ITypedElement}.
 	 */
 	public TypedElementWrapper(EObject eObject) {
 		wrappedObject = eObject;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -59,12 +60,11 @@ public class TypedElementWrapper implements ITypedElement {
 	public String getType() {
 		return wrappedObject.getClass().getName();
 	}
-	
+
 	/**
 	 * Returns the object wrapped within this {@link TypedElementWrapper}.
 	 * 
-	 * @return
-	 * 			The object wrapped within this {@link TypedElementWrapper}.
+	 * @return The object wrapped within this {@link TypedElementWrapper}.
 	 */
 	public EObject getObject() {
 		return wrappedObject;

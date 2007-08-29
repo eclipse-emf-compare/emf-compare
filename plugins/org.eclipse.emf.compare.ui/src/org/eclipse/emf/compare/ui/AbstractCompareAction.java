@@ -67,14 +67,18 @@ public abstract class AbstractCompareAction extends Action {
 				enabledImagePath = "elcl16/" + imagePath; //$NON-NLS-1$
 			}
 
-			ImageDescriptor disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(Platform.getBundle(CompareUI.PLUGIN_ID), ICONS_PATH.append(disabledImagePath), null));
-			ImageDescriptor enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(Platform.getBundle(CompareUI.PLUGIN_ID), ICONS_PATH.append(enabledImagePath), null));
+			ImageDescriptor disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(Platform
+					.getBundle(CompareUI.PLUGIN_ID), ICONS_PATH.append(disabledImagePath), null));
+			ImageDescriptor enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.find(Platform
+					.getBundle(CompareUI.PLUGIN_ID), ICONS_PATH.append(enabledImagePath), null));
 
 			// if the image cannot be found in CompareUIPlugin's icon path, we seek in ours.
 			if (disabledImageDescriptor.equals(ImageDescriptor.getMissingImageDescriptor())) {
 				try {
-					disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/" + imagePath))); //$NON-NLS-1$
-					enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/" + imagePath))); //$NON-NLS-1$
+					disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
+							.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/" + imagePath))); //$NON-NLS-1$
+					enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
+							.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/" + imagePath))); //$NON-NLS-1$
 				} catch (IOException e) {
 					EMFComparePlugin.log(e.getMessage(), false);
 				}

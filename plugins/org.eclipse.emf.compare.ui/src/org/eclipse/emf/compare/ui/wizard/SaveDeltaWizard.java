@@ -34,7 +34,10 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	/** Result of the comparison this wizard is meant to save. */
 	private ModelInputSnapshot input;
 
-	/** File extension of the files this wizard creates. If no extension is specified for the instantiation, we initialize this to "emfdiff". */
+	/**
+	 * File extension of the files this wizard creates. If no extension is specified for the instantiation, we
+	 * initialize this to "emfdiff".
+	 */
 	private final String fileExtension;
 
 	/**
@@ -74,15 +77,16 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	public boolean performFinish() {
 		boolean result = false;
 		final String page = "newFilePage1"; //$NON-NLS-1$
-		
+
 		final String fileName = ((WizardNewFileCreationPage)getPage(page)).getFileName();
 		if (!fileName.endsWith(fileExtension))
 			((WizardNewFileCreationPage)getPage(page)).setFileName(fileName + '.' + fileExtension);
-		
+
 		final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
 		if (createdFile != null) {
 			try {
-				final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+				final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE
+						.createModelInputSnapshot();
 				modelInputSnapshot.setDiff(input.getDiff());
 				modelInputSnapshot.setMatch(input.getMatch());
 				modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());

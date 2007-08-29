@@ -14,7 +14,8 @@ import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Describes an action that can be used by EMF Compare "export diff as" menu. EMF Compare "export" extension point requires a class implementing this.
+ * Describes an action that can be used by EMF Compare "export diff as" menu. EMF Compare "export" extension
+ * point requires a class implementing this.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -36,7 +37,8 @@ public interface IExportAction {
 	String getText();
 
 	/**
-	 * Returns the action's display image while enabled as well as the image that will be displayed when the mouse hovers over it.
+	 * Returns the action's display image while enabled as well as the image that will be displayed when the
+	 * mouse hovers over it.
 	 * 
 	 * @return The action's display image while enabled.
 	 * @see org.eclipse.jface.action.Action#setImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
@@ -55,7 +57,8 @@ public interface IExportAction {
 	/**
 	 * This will be called when the described action will be triggered.
 	 * <p>
-	 * Implementing classes should implement this method as they would implement {@link org.eclipse.jface.action.Action#run()}.
+	 * Implementing classes should implement this method as they would implement
+	 * {@link org.eclipse.jface.action.Action#run()}.
 	 * </p>
 	 * 
 	 * @param snapshot

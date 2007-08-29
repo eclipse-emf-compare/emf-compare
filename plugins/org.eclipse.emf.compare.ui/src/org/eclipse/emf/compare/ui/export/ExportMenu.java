@@ -35,7 +35,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * This implementation of {@link AbstractCompareAction} is used to create the structure viewer's "export as" action.
+ * This implementation of {@link AbstractCompareAction} is used to create the structure viewer's "export as"
+ * action.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -47,7 +48,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
 	/** Bundle where the messages and icons can be found. */
-	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
+	private static final ResourceBundle BUNDLE = ResourceBundle
+			.getBundle(ModelContentMergeViewer.BUNDLE_NAME);
 
 	/** Keeps track of the {@link ActionContributionItem actions} declared for the extension point. */
 	private static final Set<ExportActionDescriptor> CACHED_ACTIONS = new HashSet<ExportActionDescriptor>();
@@ -69,7 +71,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
-	 * This default constructor will instantiate an action given the {@link #BUNDLE bundle} resources prefixed by &quot;action.save&quot;.
+	 * This default constructor will instantiate an action given the {@link #BUNDLE bundle} resources prefixed
+	 * by &quot;action.save&quot;.
 	 * 
 	 * @param parent
 	 *            {@link Control} under which this {@link Action}'s menu must be created.
@@ -85,9 +88,11 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		saveAction = new AbstractCompareAction(bundle, "action.export.emfdiff.") { //$NON-NLS-1$
 			@Override
 			public void run() {
-				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
+				final SaveDeltaWizard wizard = new SaveDeltaWizard(bundle
+						.getString("UI_SaveDeltaWizard_FileExtension")); //$NON-NLS-1$
 				wizard.init(PlatformUI.getWorkbench(), (ModelInputSnapshot)parentViewer.getInput());
-				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
+				final WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getShell(), wizard);
 				dialog.open();
 			}
 		};
@@ -97,7 +102,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	 * This will parse {@link #EXPORT_ACTIONS_EXTENSION_POINT} for actions to display.
 	 */
 	private static void parseExtensionMetaData() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				EXPORT_ACTIONS_EXTENSION_POINT).getExtensions();
 		for (IExtension extension : extensions) {
 			for (IConfigurationElement configElement : extension.getConfigurationElements()) {
 				final ExportActionDescriptor descriptor = new ExportActionDescriptor(configElement);
@@ -139,7 +145,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
-	 * Returns the file extension of the compared models. If the extensions aren't the same, returns {@value #ALL_EXTENSIONS}.
+	 * Returns the file extension of the compared models. If the extensions aren't the same, returns
+	 * {@value #ALL_EXTENSIONS}.
 	 * 
 	 * @return The file extension of the compared models.
 	 */
@@ -149,18 +156,22 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 		final String rightModel = diffModel.getRight();
 		final String originModel = diffModel.getOrigin();
 
-		if (leftModel.substring(leftModel.lastIndexOf('.')).equals(rightModel.substring(rightModel.lastIndexOf('.')))
-				&& (originModel == null || leftModel.substring(leftModel.lastIndexOf('.')).equals(originModel.substring(originModel.lastIndexOf('.')))))
+		if (leftModel.substring(leftModel.lastIndexOf('.')).equals(
+				rightModel.substring(rightModel.lastIndexOf('.')))
+				&& (originModel == null || leftModel.substring(leftModel.lastIndexOf('.')).equals(
+						originModel.substring(originModel.lastIndexOf('.')))))
 			return leftModel.substring(leftModel.lastIndexOf('.') + 1);
 		return ALL_EXTENSIONS;
 	}
 
 	/**
-	 * This will return all actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given <code>fileExtension</code>.
+	 * This will return all actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given
+	 * <code>fileExtension</code>.
 	 * 
 	 * @param fileExtension
 	 *            File extension which we seel actions for.
-	 * @return All actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given <code>fileExtension</code>.
+	 * @return All actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given
+	 *         <code>fileExtension</code>.
 	 * @see #ALL_EXTENSIONS
 	 * @see #getComparedModelsExtension()
 	 */
@@ -216,7 +227,8 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
-	 * If this action is triggered, it'll run the action with id {@link EMFCompareConstants#ACTION_ID_SAVE} if it is contained within its menu.
+	 * If this action is triggered, it'll run the action with id {@link EMFCompareConstants#ACTION_ID_SAVE} if
+	 * it is contained within its menu.
 	 * 
 	 * @see org.eclipse.emf.compare.ui.AbstractCompareAction#run()
 	 */

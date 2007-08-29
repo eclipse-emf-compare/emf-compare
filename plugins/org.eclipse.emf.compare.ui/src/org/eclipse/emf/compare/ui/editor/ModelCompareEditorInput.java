@@ -35,22 +35,31 @@ import org.eclipse.swt.widgets.Control;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareEditorInput extends CompareEditorInput {
-	/** Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of the view. */
+	/**
+	 * Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of
+	 * the view.
+	 */
 	protected ModelStructureMergeViewer structureMergeViewer;
 
-	/** Content merge viewer of this {@link CompareViewerPane}. It represents the bottom splitted part of the view. */
+	/**
+	 * Content merge viewer of this {@link CompareViewerPane}. It represents the bottom splitted part of the
+	 * view.
+	 */
 	protected ModelContentMergeViewer contentMergeViewer;
 
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
-	
+
 	/** {@link MatchModel} result of the underlying comparison. */
 	private final MatchModel match;
 
 	/** {@link ModelInputSnapshot} result of the underlying comparison. */
 	private final ModelInputSnapshot inputSnapshot;
 
-	/** This listener will be in charge of updating the {@link ModelContentMergeViewer} and {@link ModelStructureMergeViewer}'s input. */
+	/**
+	 * This listener will be in charge of updating the {@link ModelContentMergeViewer} and
+	 * {@link ModelStructureMergeViewer}'s input.
+	 */
 	private final ICompareInputChangeListener inputListener;
 
 	/**
@@ -79,7 +88,8 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 * @see CompareEditorInput#prepareInput(IProgreeMonitor)
 	 */
 	@Override
-	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException {
 		final ModelCompareInput input = new ModelCompareInput(match, diff);
 		input.addCompareInputChangeListener(inputListener);
 		return input;

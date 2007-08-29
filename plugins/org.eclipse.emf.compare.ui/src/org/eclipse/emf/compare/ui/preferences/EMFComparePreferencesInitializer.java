@@ -30,11 +30,17 @@ public class EMFComparePreferencesInitializer extends AbstractPreferenceInitiali
 	@Override
 	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW, EMFCompareConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
-		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR, EMFCompareConstants.PREFERENCES_DEFAULT_HIGHLIGHT_COLOR);
-		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR, EMFCompareConstants.PREFERENCES_DEFAULT_CHANGED_COLOR);
-		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR, EMFCompareConstants.PREFERENCES_DEFAULT_CONFLICTING_COLOR);
-		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR, EMFCompareConstants.PREFERENCES_DEFAULT_ADDED_COLOR);
-		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR, EMFCompareConstants.PREFERENCES_DEFAULT_REMOVED_COLOR);
+		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFCompareConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
+		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
+				EMFCompareConstants.PREFERENCES_DEFAULT_HIGHLIGHT_COLOR);
+		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
+				EMFCompareConstants.PREFERENCES_DEFAULT_CHANGED_COLOR);
+		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR,
+				EMFCompareConstants.PREFERENCES_DEFAULT_CONFLICTING_COLOR);
+		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR,
+				EMFCompareConstants.PREFERENCES_DEFAULT_ADDED_COLOR);
+		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
+				EMFCompareConstants.PREFERENCES_DEFAULT_REMOVED_COLOR);
 	}
 }

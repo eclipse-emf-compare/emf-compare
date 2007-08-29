@@ -38,8 +38,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
- * Preference page used for <b>EMFCompare</b>, it allows the user to define which files to compare with <b>EMFCompare</b> and the colors to use for
- * the differences' highlighting.
+ * Preference page used for <b>EMFCompare</b>, it allows the user to define which files to compare with
+ * <b>EMFCompare</b> and the colors to use for the differences' highlighting.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -60,18 +60,25 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 */
 	@Override
 	public void createFieldEditors() {
-		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW, EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW,
-				getFieldEditorParent());
-		searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
+		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
+				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
+		searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(
+				Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 		addField(searchWindowEditor);
 
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
 		colorGroup.setText(Messages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR, EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR, EMFCompareConstants.PREFERENCES_DESCRIPTION_CHANGED_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR, EMFCompareConstants.PREFERENCES_DESCRIPTION_CONFLICTING_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR, EMFCompareConstants.PREFERENCES_DESCRIPTION_ADDED_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR, EMFCompareConstants.PREFERENCES_DESCRIPTION_REMOVED_COLOR, colorGroup));
+		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
+		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_CHANGED_COLOR, colorGroup));
+		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_CONFLICTING_COLOR, colorGroup));
+		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_ADDED_COLOR, colorGroup));
+		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_REMOVED_COLOR, colorGroup));
 	}
 
 	/**
@@ -83,7 +90,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW)) {
-					EMFComparePlugin.getDefault().getPluginPreferences().setValue(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+					EMFComparePlugin.getDefault().getPluginPreferences().setValue(
+							EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 							getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
 				}
 			}
@@ -91,7 +99,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	/**
-	 * Creates an {@link IntegerFieldEditor} showing a {@link CLabel} with text and image instead of the default {@link Label}.
+	 * Creates an {@link IntegerFieldEditor} showing a {@link CLabel} with text and image instead of the
+	 * default {@link Label}.
 	 */
 	private final class ImageIntegerFieldEditor extends IntegerFieldEditor {
 		/** maximum number of characters this field accepts. */
@@ -115,7 +124,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		}
 
 		/**
-		 * Overrides {@link StringFieldEditor#doFillIntoGrid(Composite, int)} for our {@link CLabel} instead of the old {@link Label}.
+		 * Overrides {@link StringFieldEditor#doFillIntoGrid(Composite, int)} for our {@link CLabel} instead
+		 * of the old {@link Label}.
 		 * 
 		 * @param parent
 		 *            Parent {@link Composite} of the editor.
@@ -175,8 +185,9 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		private Image getHelpIcon() {
 			Image helpIcon = null;
 			try {
-				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
-						EMFCompareConstants.ICONS_PREFERENCES_HELP)));
+				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator
+						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
+								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
 				helpIcon = descriptor.createImage();
 			} catch (IOException e) {
 				// this try catch keeps the compiler happy, we should never be here
@@ -186,10 +197,12 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		}
 
 		/**
-		 * Overrides {@link StringFieldEditor#setEnabled(boolean, Composite)} to enable our {@link CLabel} instead of the old {@link Label}.
+		 * Overrides {@link StringFieldEditor#setEnabled(boolean, Composite)} to enable our {@link CLabel}
+		 * instead of the old {@link Label}.
 		 * 
 		 * @param enabled
-		 *            <code>True</code> if we should enable the edition of the {@link CLabel label}, <code>False</code> otherwise.
+		 *            <code>True</code> if we should enable the edition of the {@link CLabel label},
+		 *            <code>False</code> otherwise.
 		 * @param parent
 		 *            parent {@link Composite} of the {@link CLabel label}.
 		 * @see StringFieldEditor#setEnabled(boolean, Composite)

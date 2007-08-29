@@ -26,14 +26,14 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
- * Content provider used by {@link ModelContentMergePropertiesPart}s displaying 
- * {@link Match2Elements}.
+ * Content provider used by {@link ModelContentMergePropertiesPart}s displaying {@link Match2Elements}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class PropertyContentProvider implements IStructuredContentProvider {
 	/**
-	 * This <code>int</code> represents the side of the viewer part this content provider feeds. Must be one of
+	 * This <code>int</code> represents the side of the viewer part this content provider feeds. Must be one
+	 * of
 	 * <ul>
 	 * <li>{@link EMFCompareConstants#RIGHT}</li>
 	 * <li>{@link EMFCompareConstants#LEFT}</li>
@@ -41,19 +41,19 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 	 * </ul>
 	 */
 	private int partSide;
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see IStructuredContentProvider#getElements(Object)
 	 */
 	public Object[] getElements(Object inputElement) {
-		Object[] elements = new Object[]{};
+		Object[] elements = new Object[] {};
 		EObject input = null;
-		
+
 		if (inputElement instanceof Match2Elements) {
 			final Match2Elements match = (Match2Elements)inputElement;
-			
+
 			if (partSide == EMFCompareConstants.RIGHT) {
 				input = match.getLeftElement();
 			} else if (partSide == EMFCompareConstants.LEFT) {
@@ -66,7 +66,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		}
 		if (input != null) {
 			final List<List<Object>> inputElements = new ArrayList<List<Object>>();
-			
+
 			for (Object attObject : input.eClass().getEAllAttributes()) {
 				final List<Object> row = new ArrayList<Object>();
 				row.add(attObject);
@@ -79,7 +79,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 				public int compare(Object first, Object second) {
 					final String name1 = ((EAttribute)((List)first).get(0)).getName();
 					final String name2 = ((EAttribute)((List)second).get(0)).getName();
-					
+
 					return name1.compareTo(name2);
 				}
 			});

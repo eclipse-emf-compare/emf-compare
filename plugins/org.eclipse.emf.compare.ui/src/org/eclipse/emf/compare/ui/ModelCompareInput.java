@@ -50,7 +50,8 @@ public class ModelCompareInput implements ICompareInput {
 	private final MatchModel match;
 
 	/**
-	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} and
+	 * Creates a CompareInput given the resulting
+	 * {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} and
 	 * {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 * 
 	 * @param matchModel
@@ -124,7 +125,8 @@ public class ModelCompareInput implements ICompareInput {
 	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
 		if (element instanceof DiffGroup) {
-			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element).getSubDiffElements());
+			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element)
+					.getSubDiffElements());
 			for (DiffElement subDiff : subDiffList) {
 				if (subDiff instanceof DiffGroup)
 					copy(subDiff, leftToRight);
@@ -138,7 +140,8 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take {@link DiffGroup}s into account.
+	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take
+	 * {@link DiffGroup}s into account.
 	 * 
 	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
@@ -148,7 +151,7 @@ public class ModelCompareInput implements ICompareInput {
 		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
 		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
-		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext();) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (aDiff instanceof ModelElementChange)
 				modelElementDiffs.add((ModelElementChange)aDiff);
@@ -175,7 +178,8 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement element = null;
 
 		if (getMatch().getMatchedElements().get(0) instanceof Match3Element)
-			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0)).getOriginElement());
+			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
+					.getOriginElement());
 
 		return element;
 	}
@@ -232,7 +236,8 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement element = null;
 
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getLeftElement());
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
+					.getLeftElement());
 
 		return element;
 	}
@@ -246,18 +251,21 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement element = null;
 
 		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0)).getRightElement());
+			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
+					.getRightElement());
 
 		return element;
 	}
 
 	/**
-	 * Applies the changes implied by a given {@link DiffElement} in the direction specified by <code>leftToRight</code>.
+	 * Applies the changes implied by a given {@link DiffElement} in the direction specified by
+	 * <code>leftToRight</code>.
 	 * 
 	 * @param element
 	 *            {@link DiffElement} containing the copy information.
 	 * @param leftToRight
-	 *            <code>True</code> if the changes must be applied from the left to the right model, <code>False</code> otherwise.
+	 *            <code>True</code> if the changes must be applied from the left to the right model,
+	 *            <code>False</code> otherwise.
 	 */
 	protected void doCopy(DiffElement element, boolean leftToRight) {
 		final AbstractMerger merger = MergeFactory.createMerger(element);
@@ -269,7 +277,8 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Notifies all {@link ICompareInputChangeListener listeners} registered for this {@link ModelCompareInput input} that a change occured.
+	 * Notifies all {@link ICompareInputChangeListener listeners} registered for this
+	 * {@link ModelCompareInput input} that a change occured.
 	 */
 	protected void fireCompareInputChanged() {
 		for (ICompareInputChangeListener listener : inputChangeListeners) {

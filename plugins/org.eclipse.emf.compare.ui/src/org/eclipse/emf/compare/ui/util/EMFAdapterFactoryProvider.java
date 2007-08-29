@@ -27,7 +27,7 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 public final class EMFAdapterFactoryProvider {
 	/** {@link AdapterFactory} that will be fed by this provider. */
 	private static ComposedAdapterFactory adapterFactory;
-	
+
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
@@ -36,27 +36,24 @@ public final class EMFAdapterFactoryProvider {
 	}
 
 	/**
-	 * Creates a list containing the project's needed 
-	 * {@link AdapterFactory adapterFactories}.
+	 * Creates a list containing the project's needed {@link AdapterFactory adapterFactories}.
 	 * 
-	 * @return
-	 * 			The default EMF adapterFactories list.
+	 * @return The default EMF adapterFactories list.
 	 */
 	public static List<AdapterFactory> createFactoryList() {
 		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
 		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		factories.add(new ReflectiveItemProviderAdapterFactory());
-		
+
 		// Add other adapter factories as needed.
 		return factories;
 	}
 
 	/**
-	 * Returns the {@link ComposedAdapterFactory} containing all the adapterFactories
-	 * defined in {@link #createFactoryList()}.
+	 * Returns the {@link ComposedAdapterFactory} containing all the adapterFactories defined in
+	 * {@link #createFactoryList()}.
 	 * 
-	 * @return
-	 * 			The adapter factory.
+	 * @return The adapter factory.
 	 */
 	public static ComposedAdapterFactory getAdapterFactory() {
 		if (adapterFactory == null) {
@@ -64,16 +61,14 @@ public final class EMFAdapterFactoryProvider {
 		}
 		return adapterFactory;
 	}
-	
+
 	/**
-	 * Adds to the factories list an {@link AdapterFactory} adapted to the given
-	 * {@link EObject}.
+	 * Adds to the factories list an {@link AdapterFactory} adapted to the given {@link EObject}.
 	 * 
 	 * @param eObject
-	 * 			{@link EObject} we need to compute the {@link AdapterFactory} for.
-	 * @return
-	 * 			<code>True</code> if we found the {@link AdapterFactory} for the
-	 * 			given {@link EObject}, <code>False</code> otherwise.
+	 *            {@link EObject} we need to compute the {@link AdapterFactory} for.
+	 * @return <code>True</code> if we found the {@link AdapterFactory} for the given {@link EObject},
+	 *         <code>False</code> otherwise.
 	 */
 	public static boolean addAdapterFactoryFor(EObject eObject) {
 		boolean success = false;

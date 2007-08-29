@@ -21,8 +21,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.ui.IEditorLauncher;
 
 /**
- * This launcher will be called to open a {@link CompareEditor} for the edition of
- * emfdiff files.
+ * This launcher will be called to open a {@link CompareEditor} for the edition of emfdiff files.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */

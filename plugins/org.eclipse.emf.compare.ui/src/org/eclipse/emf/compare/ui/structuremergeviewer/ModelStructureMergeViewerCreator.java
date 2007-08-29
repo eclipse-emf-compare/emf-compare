@@ -16,8 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Required when creating a {@link ModelStructureMergeViewer} from a 
- * plugin.xml file.
+ * Required when creating a {@link ModelStructureMergeViewer} from a plugin.xml file.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */

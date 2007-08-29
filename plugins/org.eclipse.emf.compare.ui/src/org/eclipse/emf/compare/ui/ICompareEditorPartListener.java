@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ui;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
- * Listens for events sent by 
+ * Listens for events sent by
  * {@link org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer ModelContentMergeViewers}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
@@ -23,7 +23,7 @@ public interface ICompareEditorPartListener {
 	 * Sent when the viewer changes tabs.
 	 * 
 	 * @param newIndex
-	 * 			Index of the newly selected tab.
+	 *            Index of the newly selected tab.
 	 */
 	void selectedTabChanged(int newIndex);
 
@@ -31,10 +31,10 @@ public interface ICompareEditorPartListener {
 	 * Sent when the selection changes in one of the displayed tabs.
 	 * 
 	 * @param event
-	 * 			Object describing the selection changed event.
+	 *            Object describing the selection changed event.
 	 */
 	void selectionChanged(SelectionChangedEvent event);
-	
+
 	/**
 	 * Notifies that the center part of the viewer needs to be updated.
 	 */

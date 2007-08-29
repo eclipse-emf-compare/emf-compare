@@ -20,7 +20,9 @@ import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -58,7 +60,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public Widget find(Object element) {
 		Widget res = super.findItem(element);
-		if (res == null && element instanceof EObject) { 
+		if (res == null && element instanceof EObject) {
 			if (((EObject)element).eContainer() != null) {
 				res = find(((EObject)element).eContainer());
 			} else if (getTree().getItemCount() > 0)
@@ -151,7 +153,8 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		// Will expand the treeItem to one level below the current if needed
 		for (Object data : l) {
 			final Widget widget = find(data);
-			if (widget != null && widget instanceof TreeItem && ((TreeItem)widget).getExpanded() && getChildren(widget).length > 0) {
+			if (widget != null && widget instanceof TreeItem && ((TreeItem)widget).getExpanded()
+					&& getChildren(widget).length > 0) {
 				expandToLevel(data, 1);
 			}
 		}
