@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,7 +18,9 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -30,7 +33,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("nls")
 public class AttributeChangeItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
@@ -48,7 +50,6 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -66,12 +67,13 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addAttributePropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_attribute_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_attribute_feature", "_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__ATTRIBUTE, true, false, true, null, null, null));
+	protected void addAttributePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AttributeChange_attribute_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_AttributeChange_attribute_feature",
+						"_UI_AttributeChange_type"), DiffPackage.Literals.ATTRIBUTE_CHANGE__ATTRIBUTE, true,
+				false, true, null, null, null));
 	}
 
 	/**
@@ -80,12 +82,13 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_leftElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_leftElement_feature", "_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__LEFT_ELEMENT, true, false, true, null, null, null));
+	protected void addLeftElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AttributeChange_leftElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_AttributeChange_leftElement_feature",
+						"_UI_AttributeChange_type"), DiffPackage.Literals.ATTRIBUTE_CHANGE__LEFT_ELEMENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
@@ -94,23 +97,35 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChange_rightElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeChange_rightElement_feature", "_UI_AttributeChange_type"),
-				DiffPackage.Literals.ATTRIBUTE_CHANGE__RIGHT_ELEMENT, true, false, true, null, null, null));
+	protected void addRightElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AttributeChange_rightElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_AttributeChange_rightElement_feature",
+						"_UI_AttributeChange_type"), DiffPackage.Literals.ATTRIBUTE_CHANGE__RIGHT_ELEMENT,
+				true, false, true, null, null, null));
 	}
 
 	/**
 	 * This returns AttributeChange.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChange"));
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
+		if (labelImage != null) {
+			List images = new ArrayList(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/AttributeChange"));
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/AttributeChange");
+		}
+
+		return labelImage;
 	}
 
 	/**
@@ -119,7 +134,6 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public String getText(Object object) {
 		return getString("_UI_AttributeChange_type");
 	}
@@ -131,7 +145,6 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -144,7 +157,6 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
@@ -155,7 +167,6 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}

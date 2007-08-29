@@ -26,16 +26,18 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public RemoteAddReferenceValueItemProvider(AdapterFactory adapterFactory) {
@@ -43,8 +45,9 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -57,8 +60,8 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	}
 
 	/**
-	 * This returns RemoteAddReferenceValue.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RemoteAddReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -75,17 +78,19 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	public String getText(Object object) {
 		RemoteAddReferenceValue addOp = (RemoteAddReferenceValue)object;
 		try {
-			return getString("_UI_RemoteAddReferenceValue_type", new Object[] {NameSimilarity.findName(addOp.getLeftRemovedTarget()), NameSimilarity.findName(addOp.getReference()), //$NON-NLS-1$
-					NameSimilarity.findName(addOp.getRightElement()),});
+			return getString(
+					"_UI_RemoteAddReferenceValue_type", new Object[] {NameSimilarity.findName(addOp.getLeftRemovedTarget()), NameSimilarity.findName(addOp.getReference()), //$NON-NLS-1$
+							NameSimilarity.findName(addOp.getRightElement()),});
 		} catch (FactoryException e) {
 			return getString("_UI_RemoteAddReferenceValue_type"); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -95,9 +100,9 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,8 +111,9 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -10,18 +10,20 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
+import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -30,15 +32,15 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
- * <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("nls")
 public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public MoveModelElementItemProvider(AdapterFactory adapterFactory) {
@@ -47,10 +49,10 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 
 	/**
 	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -63,66 +65,81 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 
 	/**
 	 * This adds a property descriptor for the Left Target feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftTargetPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_leftTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftTarget_feature", "_UI_MoveModelElement_type"),
-				DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_TARGET, true, false, true, null, null, null));
+	protected void addLeftTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MoveModelElement_leftTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftTarget_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_TARGET,
+				true, false, true, null, null, null));
 	}
 
 	/**
 	 * This adds a property descriptor for the Right Target feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightTargetPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_rightTarget_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightTarget_feature", "_UI_MoveModelElement_type"),
-				DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_TARGET, true, false, true, null, null, null));
+	protected void addRightTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_MoveModelElement_rightTarget_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightTarget_feature",
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_TARGET,
+				true, false, true, null, null, null));
 	}
 
 	/**
 	 * This returns MoveModelElement.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
 	 */
-	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/MoveModelElement"));
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
+		if (labelImage != null) {
+			List images = new ArrayList(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement"));
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement");
+		}
+
+		return labelImage;
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
-	@Override
 	public String getText(Object object) {
 		MoveModelElement moveOp = (MoveModelElement)object;
 		try {
-			final String rightTarget = NameSimilarity.findName(moveOp.getRightTarget());
-			final String leftTarget = NameSimilarity.findName(moveOp.getLeftTarget());
-			if (moveOp.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_MoveModelElement_conflicting", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), rightTarget, leftTarget,}); //$NON-NLS-1$
-			return getString("_UI_MoveModelElement_type", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), rightTarget, leftTarget,}); //$NON-NLS-1$
+			return getString("_UI_MoveModelElement_type", new Object[] {
+					NameSimilarity.findName(moveOp.getLeftElement()),
+					NameSimilarity.findName(moveOp.getLeftTarget()),
+					NameSimilarity.findName(moveOp.getRightTarget())});
 		} catch (FactoryException e) {
-			return getString("_UI_MoveModelElement_type"); //$NON-NLS-1$
+			return getString("_UI_MoveModelElement_type");
 		}
 	}
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -131,20 +148,20 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	/**
 	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
 	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 
 	/**
 	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}

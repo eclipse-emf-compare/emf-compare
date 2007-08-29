@@ -28,16 +28,18 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class ConflictingDiffElementItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public ConflictingDiffElementItemProvider(AdapterFactory adapterFactory) {
@@ -45,8 +47,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -62,48 +65,61 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Parent feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addLeftParentPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ConflictingDiffElement_leftParent_feature",
-						"_UI_ConflictingDiffElement_type"), DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, true, false, true, null, null, null));
+	protected void addLeftParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_ConflictingDiffElement_leftParent_feature", "_UI_ConflictingDiffElement_type"),
+				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, true, false, true, null, null,
+				null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Parent feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addRightParentPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ConflictingDiffElement_rightParent_feature",
-						"_UI_ConflictingDiffElement_type"), DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, true, false, true, null, null, null));
+	protected void addRightParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_ConflictingDiffElement_rightParent_feature", "_UI_ConflictingDiffElement_type"),
+				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, true, false, true, null, null,
+				null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin Element feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	protected void addOriginElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_originElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ConflictingDiffElement_originElement_feature",
-						"_UI_ConflictingDiffElement_type"), DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null, null));
+	protected void addOriginElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(), getResourceLocator(),
+						getString("_UI_ConflictingDiffElement_originElement_feature"), getString(
+								"_UI_PropertyDescriptor_description",
+								"_UI_ConflictingDiffElement_originElement_feature",
+								"_UI_ConflictingDiffElement_type"),
+						DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true,
+						null, null, null));
 	}
 
 	/**
-	 * This returns ConflictingDiffElement.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns ConflictingDiffElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -120,17 +136,19 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	public String getText(Object object) {
 		final ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)object;
 		try {
-			return getString("_UI_ConflictingDiffElement_type", new Object[] {NameSimilarity.findName(conflictingDiffElement.getLeftParent()), //$NON-NLS-1$
-					NameSimilarity.findName(conflictingDiffElement.getRightParent())});
+			return getString(
+					"_UI_ConflictingDiffElement_type", new Object[] {NameSimilarity.findName(conflictingDiffElement.getLeftParent()), //$NON-NLS-1$
+							NameSimilarity.findName(conflictingDiffElement.getRightParent())});
 		} catch (FactoryException e) {
 			return getString("_UI_ConflictingDiffElement_type"); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -140,9 +158,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,8 +169,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

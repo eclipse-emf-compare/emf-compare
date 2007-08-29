@@ -30,17 +30,17 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class AddModelElementItemProvider extends ModelElementChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public AddModelElementItemProvider(AdapterFactory adapterFactory) {
@@ -48,9 +48,9 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -63,15 +63,15 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	}
 
 	/**
-	 * This returns AddModelElement.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns AddModelElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE.getAttributeChange_Attribute(), adapterFactory.getClass());
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
 			List images = new ArrayList(2);
@@ -86,26 +86,26 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		AddModelElement addOp = (AddModelElement)object;
 		try {
-			return getString("_UI_AddModelElement_type", new Object[] {NameSimilarity.findName(addOp.getRightElement())}); //$NON-NLS-1$
+			return getString(
+					"_UI_AddModelElement_type", new Object[] {NameSimilarity.findName(addOp.getRightElement())}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_AddModelElement_type"); //$NON-NLS-1$
 		}
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -115,10 +115,9 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -127,9 +126,9 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
