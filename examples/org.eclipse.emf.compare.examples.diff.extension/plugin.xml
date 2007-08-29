@@ -5,17 +5,17 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.1 2007/04/03 06:36:44 cbrun Exp $
+ $Id: plugin.xml,v 1.2 2007/08/29 07:20:02 cbrun Exp $
 -->
 
 <plugin>
-
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.eclipse.org/emf/compare/sample/diff_extension/1.0" 
-       class = "diff_extension.Diff_extensionPackage"
-       genModel = "model/diff_extension.genmodel" /> 
-  </extension>
+   <extension
+         point="org.eclipse.emf.compare.diff.diff_extension">
+      <diff_extension
+            extensionClass="org.eclipse.emf.compare.examples.diff.extension.extensions.AddUMLAssociationExtension"
+            fileExtension="uml">
+      </diff_extension>
+   </extension>
 
 </plugin>
 
