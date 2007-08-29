@@ -1283,11 +1283,11 @@ public class DifferencesServices implements MatchEngine {
 		if (ancestor != null)
 			ancestorResource = ancestor.eResource();
 
-		if (leftResource != null)
+		if (leftResource != null && leftResource.getURI() != null)
 			modelRoot.setLeftModel(leftResource.getURI().path());
-		if (rightResource != null)
+		if (rightResource != null && rightResource.getURI() != null)
 			modelRoot.setRightModel(rightResource.getURI().path());
-		if (ancestorResource != null)
+		if (ancestorResource != null && ancestorResource.getURI() != null)
 			modelRoot.setOriginModel(ancestorResource.getURI().path());
 	}
 
