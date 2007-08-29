@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.tests"
       label="EMF Compare Tests (Incubation)"
-      version="0.7.0"
+      version="0.7.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -240,17 +240,18 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
    <plugin
          id="org.eclipse.test"
          download-size="0"
          install-size="0"
          version="3.1.0"/>
+
    <plugin
          id="org.eclipse.ant.optional.junit"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"/>
-        
 
 </feature>
