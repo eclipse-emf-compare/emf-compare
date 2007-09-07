@@ -276,7 +276,7 @@ public final class ModelUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void save(EObject root, String path) throws IOException {
-		final URI modelURI = URI.createURI(path);
+		final URI modelURI = URI.createFileURI(path);
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
 				Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
