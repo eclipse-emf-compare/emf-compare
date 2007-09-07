@@ -90,7 +90,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 				modelInputSnapshot.setDiff(input.getDiff());
 				modelInputSnapshot.setMatch(input.getMatch());
 				modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-				ModelUtils.save(modelInputSnapshot, createdFile.getFullPath().toOSString());
+				ModelUtils.save(modelInputSnapshot, createdFile.getLocation().toOSString());
 			} catch (IOException e) {
 				EMFComparePlugin.log(e, false);
 			}
