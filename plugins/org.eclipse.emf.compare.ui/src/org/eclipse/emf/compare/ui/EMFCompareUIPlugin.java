@@ -34,6 +34,15 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
+	 * Returns the plugin's shared instance.
+	 * 
+	 * @return The plugin's shared instance.
+	 */
+	public static EMFCompareUIPlugin getDefault() {
+		return plugin;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
@@ -55,14 +64,5 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-	}
-
-	/**
-	 * Returns the plugin's shared instance.
-	 * 
-	 * @return The plugin's shared instance.
-	 */
-	public static EMFCompareUIPlugin getDefault() {
-		return plugin;
 	}
 }

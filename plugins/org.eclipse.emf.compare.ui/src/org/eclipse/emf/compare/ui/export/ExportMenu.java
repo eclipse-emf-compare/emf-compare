@@ -41,9 +41,6 @@ import org.eclipse.ui.PlatformUI;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
-	/** Name of the extension point to parse for actions. */
-	private static final String EXPORT_ACTIONS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.export"; //$NON-NLS-1$
-
 	/** Wild card for all file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
@@ -54,6 +51,9 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	/** Keeps track of the {@link ActionContributionItem actions} declared for the extension point. */
 	private static final Set<ExportActionDescriptor> CACHED_ACTIONS = new HashSet<ExportActionDescriptor>();
 
+	/** Name of the extension point to parse for actions. */
+	private static final String EXPORT_ACTIONS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.export"; //$NON-NLS-1$
+	
 	/** Control under which the menu must be created. */
 	protected final Control parentControl;
 
@@ -145,26 +145,6 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	}
 
 	/**
-	 * Returns the file extension of the compared models. If the extensions aren't the same, returns
-	 * {@value #ALL_EXTENSIONS}.
-	 * 
-	 * @return The file extension of the compared models.
-	 */
-	public String getComparedModelsExtension() {
-		final DiffModel diffModel = ((ModelInputSnapshot)parentViewer.getInput()).getDiff();
-		final String leftModel = diffModel.getLeft();
-		final String rightModel = diffModel.getRight();
-		final String originModel = diffModel.getOrigin();
-
-		if (leftModel.substring(leftModel.lastIndexOf('.')).equals(
-				rightModel.substring(rightModel.lastIndexOf('.')))
-				&& (originModel == null || leftModel.substring(leftModel.lastIndexOf('.')).equals(
-						originModel.substring(originModel.lastIndexOf('.')))))
-			return leftModel.substring(leftModel.lastIndexOf('.') + 1);
-		return ALL_EXTENSIONS;
-	}
-
-	/**
 	 * This will return all actions from the {@link #CACHED_ACTIONS cached actions} that apply to the given
 	 * <code>fileExtension</code>.
 	 * 
@@ -188,6 +168,26 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns the file extension of the compared models. If the extensions aren't the same, returns
+	 * {@value #ALL_EXTENSIONS}.
+	 * 
+	 * @return The file extension of the compared models.
+	 */
+	public String getComparedModelsExtension() {
+		final DiffModel diffModel = ((ModelInputSnapshot)parentViewer.getInput()).getDiff();
+		final String leftModel = diffModel.getLeft();
+		final String rightModel = diffModel.getRight();
+		final String originModel = diffModel.getOrigin();
+
+		if (leftModel.substring(leftModel.lastIndexOf('.')).equals(
+				rightModel.substring(rightModel.lastIndexOf('.')))
+				&& (originModel == null || leftModel.substring(leftModel.lastIndexOf('.')).equals(
+						originModel.substring(originModel.lastIndexOf('.')))))
+			return leftModel.substring(leftModel.lastIndexOf('.') + 1);
+		return ALL_EXTENSIONS;
 	}
 
 	/**
@@ -254,11 +254,11 @@ final class ExportActionDescriptor {
 	/** This descriptor's wrapped {@link IExportAction action}. */
 	private IExportAction action;
 
-	/** Considered file extensions. */
-	private final String fileExtension;
-
 	/** Keeps a reference to the configuration element that describes the {@link Action}. */
 	private final IConfigurationElement element;
+
+	/** Considered file extensions. */
+	private final String fileExtension;
 
 	/**
 	 * Constructs a new descriptor from an IConfigurationElement.
@@ -269,15 +269,6 @@ final class ExportActionDescriptor {
 	public ExportActionDescriptor(IConfigurationElement configuration) {
 		element = configuration;
 		fileExtension = element.getAttribute(ATTRIBUTE_FILE_EXTENSION);
-	}
-
-	/**
-	 * Returns the wrapped action's considered file extensions.
-	 * 
-	 * @return The wrapped action's considered file extensions.
-	 */
-	public String getFileExtension() {
-		return fileExtension;
 	}
 
 	/**
@@ -294,5 +285,14 @@ final class ExportActionDescriptor {
 			}
 		}
 		return action;
+	}
+
+	/**
+	 * Returns the wrapped action's considered file extensions.
+	 * 
+	 * @return The wrapped action's considered file extensions.
+	 */
+	public String getFileExtension() {
+		return fileExtension;
 	}
 }

@@ -33,6 +33,20 @@ public abstract class AbstractCompareAction extends Action {
 	private static final IPath ICONS_PATH = new Path("$nl$/icons/full/"); //$NON-NLS-1$
 
 	/**
+	 * Creates and initializes an action given a {@link IExportAction descriptor}.
+	 * 
+	 * @param descriptor
+	 *            Descriptor from which we'll get the needed parameters.
+	 */
+	public AbstractCompareAction(IExportAction descriptor) {
+		setText(descriptor.getText());
+		setToolTipText(descriptor.getToolTipText());
+		setImageDescriptor(ImageDescriptor.createFromImage(descriptor.getEnabledImage()));
+		setHoverImageDescriptor(ImageDescriptor.createFromImage(descriptor.getEnabledImage()));
+		setDisabledImageDescriptor(ImageDescriptor.createFromImage(descriptor.getDisabledImage()));
+	}
+
+	/**
 	 * Creates and initializes an action given its {@link ResourceBundle} and its keys prefix.
 	 * 
 	 * @param bundle
@@ -93,20 +107,6 @@ public abstract class AbstractCompareAction extends Action {
 				setHoverImageDescriptor(enabledImageDescriptor);
 			}
 		}
-	}
-
-	/**
-	 * Creates and initializes an action given a {@link IExportAction descriptor}.
-	 * 
-	 * @param descriptor
-	 *            Descriptor from which we'll get the needed parameters.
-	 */
-	public AbstractCompareAction(IExportAction descriptor) {
-		setText(descriptor.getText());
-		setToolTipText(descriptor.getToolTipText());
-		setImageDescriptor(ImageDescriptor.createFromImage(descriptor.getEnabledImage()));
-		setHoverImageDescriptor(ImageDescriptor.createFromImage(descriptor.getEnabledImage()));
-		setDisabledImageDescriptor(ImageDescriptor.createFromImage(descriptor.getDisabledImage()));
 	}
 
 	/**

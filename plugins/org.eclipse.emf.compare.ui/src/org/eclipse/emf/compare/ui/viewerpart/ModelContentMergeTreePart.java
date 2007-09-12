@@ -20,9 +20,7 @@ import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -73,18 +71,12 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	}
 
 	/**
-	 * Ensures that the given item is visible in the tree.
+	 * Returns a {@link List} of the selected elements.
 	 * 
-	 * @param item
-	 *            {@link Object} to make visible.
+	 * @return {@link List} of the selected elements.
 	 */
-	public void showItem(Object item) {
-		if (item != null) {
-			if (item instanceof TreeItem) {
-				super.showItem((TreeItem)item);
-			}
-			setSelection(new StructuredSelection(item), true);
-		}
+	public List<TreeItem> getSelectedElements() {
+		return Arrays.asList(getTree().getSelection());
 	}
 
 	/**
@@ -120,15 +112,6 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	}
 
 	/**
-	 * Returns a {@link List} of the selected elements.
-	 * 
-	 * @return {@link List} of the selected elements.
-	 */
-	public List<TreeItem> getSelectedElements() {
-		return Arrays.asList(getTree().getSelection());
-	}
-
-	/**
 	 * Modifies the input of this viewer. Sets a new label provider adapted to the given {@link EObject}.
 	 * 
 	 * @param eObject
@@ -141,6 +124,21 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			adapterFactory.addAdapterFactory(best);
 		setLabelProvider(new TreeLabelProvider(adapterFactory));
 		setInput(eObject.eResource());
+	}
+
+	/**
+	 * Ensures that the given item is visible in the tree.
+	 * 
+	 * @param item
+	 *            {@link Object} to make visible.
+	 */
+	public void showItem(Object item) {
+		if (item != null) {
+			if (item instanceof TreeItem) {
+				super.showItem((TreeItem)item);
+			}
+			setSelection(new StructuredSelection(item), true);
+		}
 	}
 
 	/**
@@ -168,26 +166,11 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		/**
 		 * Instantiates this label provider given its {@link AdapterFactory}.
 		 * 
-		 * @param adapterFactory
+		 * @param theAdapterFactory
 		 *            Adapter factory providing this {@link LabelProvider}'s text and images.
 		 */
-		public TreeLabelProvider(AdapterFactory adapterFactory) {
-			super(adapterFactory);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see AdapterFactoryLabelProvider#getText(Object)
-		 */
-		@Override
-		public String getText(Object object) {
-			String text = super.getText(object);
-			if (text == null && object instanceof EObject) {
-				EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object);
-				text = super.getText(object);
-			}
-			return text;
+		public TreeLabelProvider(AdapterFactory theAdapterFactory) {
+			super(theAdapterFactory);
 		}
 
 		/**
@@ -203,6 +186,21 @@ public class ModelContentMergeTreePart extends TreeViewer {
 				image = super.getImage(object);
 			}
 			return image;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see AdapterFactoryLabelProvider#getText(Object)
+		 */
+		@Override
+		public String getText(Object object) {
+			String text = super.getText(object);
+			if (text == null && object instanceof EObject) {
+				EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object);
+				text = super.getText(object);
+			}
+			return text;
 		}
 	}
 }

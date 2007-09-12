@@ -36,6 +36,23 @@ public final class EMFAdapterFactoryProvider {
 	}
 
 	/**
+	 * Adds to the factories list an {@link AdapterFactory} adapted to the given {@link EObject}.
+	 * 
+	 * @param eObject
+	 *            {@link EObject} we need to compute the {@link AdapterFactory} for.
+	 * @return <code>True</code> if we found the {@link AdapterFactory} for the given {@link EObject},
+	 *         <code>False</code> otherwise.
+	 */
+	public static boolean addAdapterFactoryFor(EObject eObject) {
+		boolean success = false;
+		if (AdapterUtils.findAdapterFactory(eObject) != null) {
+			getAdapterFactory().addAdapterFactory(AdapterUtils.findAdapterFactory(eObject));
+			success = true;
+		}
+		return success;
+	}
+
+	/**
 	 * Creates a list containing the project's needed {@link AdapterFactory adapterFactories}.
 	 * 
 	 * @return The default EMF adapterFactories list.
@@ -60,22 +77,5 @@ public final class EMFAdapterFactoryProvider {
 			adapterFactory = new ComposedAdapterFactory(createFactoryList());
 		}
 		return adapterFactory;
-	}
-
-	/**
-	 * Adds to the factories list an {@link AdapterFactory} adapted to the given {@link EObject}.
-	 * 
-	 * @param eObject
-	 *            {@link EObject} we need to compute the {@link AdapterFactory} for.
-	 * @return <code>True</code> if we found the {@link AdapterFactory} for the given {@link EObject},
-	 *         <code>False</code> otherwise.
-	 */
-	public static boolean addAdapterFactoryFor(EObject eObject) {
-		boolean success = false;
-		if (AdapterUtils.findAdapterFactory(eObject) != null) {
-			getAdapterFactory().addAdapterFactory(AdapterUtils.findAdapterFactory(eObject));
-			success = true;
-		}
-		return success;
 	}
 }

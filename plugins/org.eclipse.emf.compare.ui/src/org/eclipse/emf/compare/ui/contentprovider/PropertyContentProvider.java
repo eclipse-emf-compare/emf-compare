@@ -45,6 +45,15 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 */
+	public void dispose() {
+		// Nothing needs to be disposed.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see IStructuredContentProvider#getElements(Object)
 	 */
 	public Object[] getElements(Object inputElement) {
@@ -85,15 +94,6 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 			});
 		}
 		return elements;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-	 */
-	public void dispose() {
-		// Nothing needs to be disposed.
 	}
 
 	/**

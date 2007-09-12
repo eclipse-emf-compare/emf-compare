@@ -90,95 +90,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * This will initialize the "save as emfdiff" action and put its icon in the {@link CompareViewerPane}
-	 * toolbar.
-	 */
-	protected void createToolItems() {
-		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-		if (exportMenu == null)
-			exportMenu = new ExportMenu(tbm.getControl(), this);
-		tbm.add(new Separator("IO")); //$NON-NLS-1$
-		tbm.appendToGroup("IO", exportMenu); //$NON-NLS-1$
-		tbm.update(true);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.StructuredViewer#fireOpen(org.eclipse.jface.viewers.OpenEvent)
-	 */
-	@Override
-	protected void fireOpen(OpenEvent event) {
-		// DIRTY
-		// cancels open events that could be fired to avoid "NullViewer"
-		// opening.
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	@Override
-	protected void fireSelectionChanged(SelectionChangedEvent event) {
-		// DIRTY
-		// cancels selection changed events that could be fired to avoid
-		// "NullViewer" opening.
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	protected void inputChanged(Object input, Object oldInput) {
-		super.inputChanged(input, oldInput);
-		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
-			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT,
-					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-		}
-		updateToolItems();
-	}
-
-	/**
-	 * Returns the widget representing the given element.
-	 * 
-	 * @param element
-	 *            Element we seek the {@link TreeItem} for.
-	 * @return The widget representing the given element.
-	 */
-	/* package */Widget find(Object element) {
-		final Widget widget = super.findItem(element);
-		return widget;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
-	 */
-	@Override
-	protected void handleDispose(DisposeEvent event) {
-		super.handleDispose(event);
-		exportMenu.dispose();
-	}
-
-	/**
-	 * Updates the Structure viewer's tool items. This will modify the actions of the "export diff as..."
-	 * menu.
-	 */
-	protected void updateToolItems() {
-		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
-		if (enableSave == null)
-			enableSave = false;
-
-		exportMenu.enableSave(!enableSave);
-		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
-	}
-
-	/**
 	 * initializer of this structure merge viewer. It sets the {@link LabelProvider label} and content
 	 * provider for the tree and creates the different needed listeners.
 	 * 
@@ -218,6 +129,95 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
+	 * This will initialize the "save as emfdiff" action and put its icon in the {@link CompareViewerPane}
+	 * toolbar.
+	 */
+	protected void createToolItems() {
+		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
+		if (exportMenu == null)
+			exportMenu = new ExportMenu(tbm.getControl(), this);
+		tbm.add(new Separator("IO")); //$NON-NLS-1$
+		tbm.appendToGroup("IO", exportMenu); //$NON-NLS-1$
+		tbm.update(true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.StructuredViewer#fireOpen(org.eclipse.jface.viewers.OpenEvent)
+	 */
+	@Override
+	protected void fireOpen(OpenEvent event) {
+		// DIRTY
+		// cancels open events that could be fired to avoid "NullViewer"
+		// opening.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	@Override
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		// DIRTY
+		// cancels selection changed events that could be fired to avoid
+		// "NullViewer" opening.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.ContentViewer#handleDispose(org.eclipse.swt.events.DisposeEvent)
+	 */
+	@Override
+	protected void handleDispose(DisposeEvent event) {
+		super.handleDispose(event);
+		exportMenu.dispose();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	protected void inputChanged(Object input, Object oldInput) {
+		super.inputChanged(input, oldInput);
+		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
+			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT,
+					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
+		}
+		updateToolItems();
+	}
+
+	/**
+	 * Updates the Structure viewer's tool items. This will modify the actions of the "export diff as..."
+	 * menu.
+	 */
+	protected void updateToolItems() {
+		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
+		if (enableSave == null)
+			enableSave = false;
+
+		exportMenu.enableSave(!enableSave);
+		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
+	}
+
+	/**
+	 * Returns the widget representing the given element.
+	 * 
+	 * @param element
+	 *            Element we seek the {@link TreeItem} for.
+	 * @return The widget representing the given element.
+	 */
+	/* package */Widget find(Object element) {
+		final Widget widget = super.findItem(element);
+		return widget;
+	}
+
+	/**
 	 * {@link LabelProvider} of this viewer.
 	 */
 	private class ModelStructureLabelProvider extends LabelProvider {
@@ -225,7 +225,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		 * We uses this generic label provider, but we want to customize some aspects that's why we choose to
 		 * aggregate it.
 		 */
-		AdapterFactoryLabelProvider adapterProvider = null;
+		/*package*/AdapterFactoryLabelProvider adapterProvider;
 
 		/**
 		 * Default constructor.

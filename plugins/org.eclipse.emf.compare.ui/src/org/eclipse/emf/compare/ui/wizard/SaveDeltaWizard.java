@@ -31,14 +31,14 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class SaveDeltaWizard extends BasicNewFileResourceWizard {
-	/** Result of the comparison this wizard is meant to save. */
-	private ModelInputSnapshot input;
-
 	/**
 	 * File extension of the files this wizard creates. If no extension is specified for the instantiation, we
 	 * initialize this to "emfdiff".
 	 */
 	private final String fileExtension;
+
+	/** Result of the comparison this wizard is meant to save. */
+	private ModelInputSnapshot input;
 
 	/**
 	 * Creates a new file wizard given the file extension to use.
@@ -52,6 +52,18 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 			fileExtension = "emfdiff"; //$NON-NLS-1$
 		else
 			fileExtension = extension;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see BasicNewFileResourceWizard#addPages()
+	 */
+	@Override
+	public void addPages() {
+		super.addPages();
+		((WizardNewFileCreationPage)getPage("newFilePage1")) //$NON-NLS-1$
+				.setFileName("result." + fileExtension); //$NON-NLS-1$
 	}
 
 	/**
@@ -97,17 +109,5 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 			result = true;
 		}
 		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see BasicNewFileResourceWizard#addPages()
-	 */
-	@Override
-	public void addPages() {
-		super.addPages();
-		((WizardNewFileCreationPage)getPage("newFilePage1")) //$NON-NLS-1$
-				.setFileName("result." + fileExtension); //$NON-NLS-1$
 	}
 }

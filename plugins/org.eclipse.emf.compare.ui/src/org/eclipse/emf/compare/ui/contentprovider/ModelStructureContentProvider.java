@@ -53,21 +53,21 @@ import org.eclipse.ui.PlatformUI;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
-	/** Left model used in this comparison. */
-	protected EObject leftModel;
-
-	/** Right model used in this comparison. */
-	protected EObject rightModel;
-
 	/** Ancestor model used in this comparison. */
 	protected EObject ancestorModel;
 
 	/** Indicates that this is a three way comparison. */
 	protected boolean isThreeWay;
 
+	/** Left model used in this comparison. */
+	protected EObject leftModel;
+
+	/** Right model used in this comparison. */
+	protected EObject rightModel;
+
 	/** Keeps track of the comparison result. */
 	/* package */ModelInputSnapshot snapshot;
-
+	
 	/**
 	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
 	 * one used to created this compare editor.
@@ -93,46 +93,28 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 */
+	public void dispose() {
+		// Nothing needs to be disposed of here.
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see ITreeContentProvider#getChildren(Object)
 	 */
 	public Object[] getChildren(Object parentElement) {
 		Object[] children = null;
 		if (parentElement instanceof EObject) {
-			Collection childrenList = new ArrayList();
+			final Collection childrenList = new ArrayList();
 			for (EObject child : ((EObject)parentElement).eContents()) {
 				if (!DiffAdapterFactory.shouldBeHidden(child))
 					childrenList.add(child);
-
 			}
 			children = childrenList.toArray();
 		}
 		return children;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see ITreeContentProvider#getParent(Object)
-	 */
-	public Object getParent(Object element) {
-		Object parent = null;
-		if (element instanceof EObject) {
-			parent = ((EObject)element).eContainer();
-		}
-		return parent;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see ITreeContentProvider#hasChildren(Object)
-	 */
-	public boolean hasChildren(Object element) {
-		boolean hasChildren = false;
-		if (element instanceof EObject) {
-			hasChildren = !((EObject)element).eContents().isEmpty();
-		}
-		return hasChildren;
 	}
 
 	/**
@@ -158,10 +140,36 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 * @see ITreeContentProvider#getParent(Object)
 	 */
-	public void dispose() {
-		// Nothing needs to be disposed of here.
+	public Object getParent(Object element) {
+		Object parent = null;
+		if (element instanceof EObject) {
+			parent = ((EObject)element).eContainer();
+		}
+		return parent;
+	}
+
+	/**
+	 * Returns this content provider's input.
+	 * 
+	 * @return This content provider's input.
+	 */
+	public ModelInputSnapshot getSnapshot() {
+		return snapshot;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see ITreeContentProvider#hasChildren(Object)
+	 */
+	public boolean hasChildren(Object element) {
+		boolean hasChildren = false;
+		if (element instanceof EObject) {
+			hasChildren = !((EObject)element).eContents().isEmpty();
+		}
+		return hasChildren;
 	}
 
 	/**
@@ -192,12 +200,47 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * Returns this content provider's input.
-	 * 
-	 * @return This content provider's input.
+	 * Handles the comparison (either two or three ways) of the models.
 	 */
-	public ModelInputSnapshot getSnapshot() {
-		return snapshot;
+	protected void doCompare() {
+		try {
+			final Date start = Calendar.getInstance().getTime();
+			if (!isThreeWay) {
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InterruptedException {
+						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
+						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+
+						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+						snapshot.setDate(Calendar.getInstance().getTime());
+						snapshot.setDiff(diff);
+						snapshot.setMatch(match);
+					}
+				});
+			} else {
+				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InterruptedException {
+						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
+								ancestorModel, monitor);
+						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+
+						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+						snapshot.setDate(Calendar.getInstance().getTime());
+						snapshot.setDiff(diff);
+						snapshot.setMatch(match);
+					}
+				});
+			}
+			final Date end = Calendar.getInstance().getTime();
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
+					- start.getTime());
+
+			diffInput = snapshot.getDiff();
+		} catch (InterruptedException e) {
+			throw new EMFCompareException(e.getMessage());
+		} catch (InvocationTargetException e) {
+			EMFComparePlugin.log(e, true);
+		}
 	}
 
 	/**
@@ -241,52 +284,6 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			throw new EMFCompareException(e);
 		} catch (CoreException e) {
 			throw new EMFCompareException(e);
-		}
-	}
-
-	/**
-	 * Handles the comparison (either two or three ways) of the models.
-	 */
-	protected void doCompare() {
-		try {
-			final Date start = Calendar.getInstance().getTime();
-			if (!isThreeWay) {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
-
-						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
-					}
-				});
-			} else {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
-								ancestorModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
-
-						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
-					}
-				});
-			}
-			final Date end = Calendar.getInstance().getTime();
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
-					- start.getTime());
-
-			diffInput = snapshot.getDiff();
-		} catch (InterruptedException e) {
-			throw new EMFCompareException(e.getMessage());
-		} catch (InvocationTargetException e) {
-			EMFComparePlugin.log(e, true);
 		}
 	}
 }

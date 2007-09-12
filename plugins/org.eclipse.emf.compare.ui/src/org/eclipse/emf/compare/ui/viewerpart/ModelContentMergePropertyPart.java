@@ -156,25 +156,11 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		/**
 		 * Instantiates this label provider given its {@link AdapterFactory}.
 		 * 
-		 * @param adapterFactory
+		 * @param theAdapterFactory
 		 *            Adapter factory providing this {@link LabelProvider}'s text and images.
 		 */
-		public PropertyLabelProvider(AdapterFactory adapterFactory) {
-			super(adapterFactory);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see AdapterFactoryLabelProvider#getColumnText(Object, int)
-		 */
-		@Override
-		public String getColumnText(Object object, int columnIndex) {
-			String text = super.getColumnText(object, columnIndex);
-			if (object instanceof List) {
-				text = super.getColumnText(((List)object).get(columnIndex), columnIndex);
-			}
-			return text;
+		public PropertyLabelProvider(AdapterFactory theAdapterFactory) {
+			super(theAdapterFactory);
 		}
 
 		/**
@@ -190,6 +176,20 @@ public class ModelContentMergePropertyPart extends TableViewer {
 
 			}
 			return image;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see AdapterFactoryLabelProvider#getColumnText(Object, int)
+		 */
+		@Override
+		public String getColumnText(Object object, int columnIndex) {
+			String text = super.getColumnText(object, columnIndex);
+			if (object instanceof List) {
+				text = super.getColumnText(((List)object).get(columnIndex), columnIndex);
+			}
+			return text;
 		}
 	}
 }

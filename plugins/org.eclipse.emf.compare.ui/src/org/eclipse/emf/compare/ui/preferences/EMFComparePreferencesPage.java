@@ -124,6 +124,89 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		}
 
 		/**
+		 * Allows us to show an image after the {@link Text} field.
+		 * 
+		 * @param parent
+		 *            Parent control of the label.
+		 * @return The {@link CLabel} to show.
+		 */
+		public CLabel getCLabelControl(Composite parent) {
+			if (cLabel == null) {
+				cLabel = new CLabel(parent, SWT.RIGHT);
+				final Image icon = getHelpIcon();
+				if (icon != null) {
+					cLabel.setImage(icon);
+				}
+				cLabel.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent event) {
+						cLabel = null;
+					}
+				});
+			}
+			return cLabel;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
+		 */
+		@Override
+		public int getNumberOfControls() {
+			return 3;
+		}
+
+		/**
+		 * Overrides {@link StringFieldEditor#setEnabled(boolean, Composite)} to enable our {@link CLabel}
+		 * instead of the old {@link Label}.
+		 * 
+		 * @param enabled
+		 *            <code>True</code> if we should enable the edition of the {@link CLabel label},
+		 *            <code>False</code> otherwise.
+		 * @param parent
+		 *            parent {@link Composite} of the {@link CLabel label}.
+		 * @see StringFieldEditor#setEnabled(boolean, Composite)
+		 */
+		@Override
+		public void setEnabled(boolean enabled, Composite parent) {
+			getCLabelControl(parent).setEnabled(enabled);
+		}
+
+		/**
+		 * Creates and return the help icon to show in our label.
+		 * 
+		 * @return The help icon to show in our label.
+		 */
+		private Image getHelpIcon() {
+			Image helpIcon = null;
+			try {
+				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator
+						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
+								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
+				helpIcon = descriptor.createImage();
+			} catch (IOException e) {
+				// this try catch keeps the compiler happy, we should never be here
+				assert false;
+			}
+			return helpIcon;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.StringFieldEditor#adjustForNumColumns(int)
+		 */
+		@Override
+		protected void adjustForNumColumns(int numColumns) {
+			final GridData gd = (GridData)getTextControl().getLayoutData();
+			gd.horizontalSpan = numColumns - 2;
+			// We only grab excess space if we have to
+			// If another field editor has more columns then
+			// we assume it is setting the width.
+			gd.grabExcessHorizontalSpace = gd.horizontalSpan == 1;
+		}
+
+		/**
 		 * Overrides {@link StringFieldEditor#doFillIntoGrid(Composite, int)} for our {@link CLabel} instead
 		 * of the old {@link Label}.
 		 * 
@@ -152,89 +235,6 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			gd.horizontalAlignment = GridData.FILL;
 			gd.grabExcessHorizontalSpace = true;
 			getCLabelControl(parent).setLayoutData(gd);
-		}
-
-		/**
-		 * Allows us to show an image after the {@link Text} field.
-		 * 
-		 * @param parent
-		 *            Parent control of the label.
-		 * @return The {@link CLabel} to show.
-		 */
-		public CLabel getCLabelControl(Composite parent) {
-			if (cLabel == null) {
-				cLabel = new CLabel(parent, SWT.RIGHT);
-				final Image icon = getHelpIcon();
-				if (icon != null) {
-					cLabel.setImage(icon);
-				}
-				cLabel.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent event) {
-						cLabel = null;
-					}
-				});
-			}
-			return cLabel;
-		}
-
-		/**
-		 * Creates and return the help icon to show in our label.
-		 * 
-		 * @return The help icon to show in our label.
-		 */
-		private Image getHelpIcon() {
-			Image helpIcon = null;
-			try {
-				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator
-						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
-								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
-				helpIcon = descriptor.createImage();
-			} catch (IOException e) {
-				// this try catch keeps the compiler happy, we should never be here
-				assert false;
-			}
-			return helpIcon;
-		}
-
-		/**
-		 * Overrides {@link StringFieldEditor#setEnabled(boolean, Composite)} to enable our {@link CLabel}
-		 * instead of the old {@link Label}.
-		 * 
-		 * @param enabled
-		 *            <code>True</code> if we should enable the edition of the {@link CLabel label},
-		 *            <code>False</code> otherwise.
-		 * @param parent
-		 *            parent {@link Composite} of the {@link CLabel label}.
-		 * @see StringFieldEditor#setEnabled(boolean, Composite)
-		 */
-		@Override
-		public void setEnabled(boolean enabled, Composite parent) {
-			getCLabelControl(parent).setEnabled(enabled);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
-		 */
-		@Override
-		public int getNumberOfControls() {
-			return 3;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.preference.StringFieldEditor#adjustForNumColumns(int)
-		 */
-		@Override
-		protected void adjustForNumColumns(int numColumns) {
-			final GridData gd = (GridData)getTextControl().getLayoutData();
-			gd.horizontalSpan = numColumns - 2;
-			// We only grab excess space if we have to
-			// If another field editor has more columns then
-			// we assume it is setting the width.
-			gd.grabExcessHorizontalSpace = gd.horizontalSpan == 1;
 		}
 	}
 }

@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Widget;
 public class ModelContentMergeViewerPart {
 	/** This {@link String} is used as an error message when an unexisting tab is accessed. */
 	private static final String INVALID_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
-
+	
 	/** This keeps track of the parent viewer of this viewer part. */
 	protected final ModelContentMergeViewer parentViewer;
 
@@ -83,14 +83,14 @@ public class ModelContentMergeViewerPart {
 	 */
 	protected final int partSide;
 
-	/** This is the content of the tree tab for this viewer part. */
-	protected ModelContentMergeTreePart tree;
-
 	/** This is the content of the properties tab for this viewer part. */
 	protected ModelContentMergePropertyPart properties;
 
 	/** This is the view displayed by this viewer part. */
 	protected CTabFolder tabFolder;
+
+	/** This is the content of the tree tab for this viewer part. */
+	protected ModelContentMergeTreePart tree;
 
 	/** This contains all the listeners registered for this viewer part. */
 	private final List<ICompareEditorPartListener> editorPartListeners = new ArrayList<ICompareEditorPartListener>();
@@ -129,6 +129,17 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
+	 * Registers the given listener for notification. If the identical listener is already registered the
+	 * method has no effect.
+	 * 
+	 * @param listener
+	 *            The listener to register for changes of this input.
+	 */
+	public void addCompareEditorPartListener(ICompareEditorPartListener listener) {
+		editorPartListeners.add(listener);
+	}
+
+	/**
 	 * Creates the contents of this viewer part given its parent composite.
 	 * 
 	 * @param composite
@@ -157,6 +168,10 @@ public class ModelContentMergeViewerPart {
 		propertiesTab.setControl(propertyPanel);
 
 		tabFolder.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
 			public void widgetSelected(SelectionEvent e) {
 				if (e.item.equals(treeTab)) {
 					setSelectedTab(ModelContentMergeViewer.TREE_TAB);
@@ -166,10 +181,6 @@ public class ModelContentMergeViewerPart {
 					}
 				}
 				fireSelectedtabChanged();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
 			}
 		});
 
@@ -292,61 +303,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Sets the input of this viewer part.
-	 * 
-	 * @param input
-	 *            New input of this viewer part.
-	 */
-	public void setInput(Object input) {
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			tree.setReflectiveInput((EObject)input);
-		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			properties.setInput(input);
-		} else {
-			throw new IllegalStateException(INVALID_TAB);
-		}
-	}
-
-	/**
-	 * Sets the receiver's size and location to the rectangular area specified by the arguments.
-	 * 
-	 * @param x
-	 *            Desired x coordinate of the part.
-	 * @param y
-	 *            Desired y coordinate of the part.
-	 * @param width
-	 *            Desired width of the part.
-	 * @param height
-	 *            Desired height of the part.
-	 */
-	public void setBounds(int x, int y, int width, int height) {
-		setBounds(new Rectangle(x, y, width, height));
-	}
-
-	/**
-	 * Sets the receiver's size and location to given rectangular area.
-	 * 
-	 * @param bounds
-	 *            Desired bounds for this receiver.
-	 */
-	public void setBounds(Rectangle bounds) {
-		tabFolder.setBounds(bounds);
-		resizeBounds();
-	}
-
-	/**
-	 * Changes the current tab.
-	 * 
-	 * @param index
-	 *            New tab to set selected.
-	 */
-	public void setSelectedTab(int index) {
-		selectedTab = index;
-		tabFolder.setSelection(selectedTab);
-		resizeBounds();
-	}
-
-	/**
 	 * Shows the given item on the tree tab or its properties on the property tab.
 	 * 
 	 * @param diff
@@ -381,78 +337,94 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Registers the given listener for notification. If the identical listener is already registered the
-	 * method has no effect.
+	 * Sets the receiver's size and location to the rectangular area specified by the arguments.
 	 * 
-	 * @param listener
-	 *            The listener to register for changes of this input.
+	 * @param x
+	 *            Desired x coordinate of the part.
+	 * @param y
+	 *            Desired y coordinate of the part.
+	 * @param width
+	 *            Desired width of the part.
+	 * @param height
+	 *            Desired height of the part.
 	 */
-	public void addCompareEditorPartListener(ICompareEditorPartListener listener) {
-		editorPartListeners.add(listener);
+	public void setBounds(int x, int y, int width, int height) {
+		setBounds(new Rectangle(x, y, width, height));
 	}
 
 	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the tab
-	 * selection has been changed.
+	 * Sets the receiver's size and location to given rectangular area.
+	 * 
+	 * @param bounds
+	 *            Desired bounds for this receiver.
 	 */
-	protected void fireSelectedtabChanged() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.selectedTabChanged(selectedTab);
+	public void setBounds(Rectangle bounds) {
+		tabFolder.setBounds(bounds);
+		resizeBounds();
+	}
+
+	/**
+	 * Sets the input of this viewer part.
+	 * 
+	 * @param input
+	 *            New input of this viewer part.
+	 */
+	public void setInput(Object input) {
+		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
+			tree.setReflectiveInput((EObject)input);
+		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
+			properties.setInput(input);
+		} else {
+			throw new IllegalStateException(INVALID_TAB);
 		}
 	}
 
 	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the user
-	 * selection has changed on the properties or tree tab.
+	 * Changes the current tab.
 	 * 
-	 * @param event
-	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
+	 * @param index
+	 *            New tab to set selected.
 	 */
-	protected void fireSelectionChanged(SelectionChangedEvent event) {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.selectionChanged(event);
-		}
+	public void setSelectedTab(int index) {
+		selectedTab = index;
+		tabFolder.setSelection(selectedTab);
+		resizeBounds();
 	}
 
 	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the
-	 * center part needs to be refreshed.
-	 */
-	protected void fireUpdateCenter() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.updateCenter();
-		}
-	}
-
-	/**
-	 * Returns the {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 * Handles the creation of the properties tab of this viewer part given the parent {@link Composite} under
+	 * which to create it.
 	 * 
-	 * @param element
-	 *            Element we seek the {@link Match2Elements} for.
-	 * @return The {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 * @param composite
+	 *            Parent {@link Composite} of the table to create.
+	 * @return The properties part displayed by this viewer part's properties tab.
 	 */
-	protected Object findMatchFromElement(EObject element) {
-		Object theElement = null;
-		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
+	private ModelContentMergePropertyPart createPropertiesPart(Composite composite) {
+		final ModelContentMergePropertyPart propertiesPart = new ModelContentMergePropertyPart(composite,
+				SWT.NONE, partSide);
 
-		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext();) {
-			final Object object = iterator.next();
+		propertiesPart.setContentProvider(new PropertyContentProvider());
+		propertiesPart.getTable().setHeaderVisible(true);
+		propertiesPart.getTable().addPaintListener(new PropertyPaintListener());
 
-			if (object instanceof Match2Elements) {
-				final Match2Elements matchElement = (Match2Elements)object;
-				if (matchElement.getLeftElement().equals(element)
-						|| matchElement.getRightElement().equals(element)) {
-					theElement = matchElement;
-				}
-			} else if (object instanceof UnMatchElement) {
-				final UnMatchElement matchElement = (UnMatchElement)object;
-				if (matchElement.getElement().equals(element)) {
-					theElement = matchElement;
-				}
+		propertiesPart.getTable().getVerticalBar().addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
 			}
-		}
 
-		return theElement;
+			public void widgetSelected(SelectionEvent e) {
+				parentViewer.updateCenter();
+			}
+		});
+
+		propertiesPart.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				fireSelectionChanged(event);
+			}
+		});
+
+		return propertiesPart;
+
 	}
 
 	/**
@@ -472,12 +444,12 @@ public class ModelContentMergeViewerPart {
 		treePart.getTree().addPaintListener(new TreePaintListener());
 
 		treePart.getTree().getVerticalBar().addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				fireUpdateCenter();
-			}
-
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				fireUpdateCenter();
 			}
 		});
 
@@ -526,39 +498,67 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Handles the creation of the properties tab of this viewer part given the parent {@link Composite} under
-	 * which to create it.
+	 * Returns the {@link Match2Elements} containing the given {@link EObject} as its left or right element.
 	 * 
-	 * @param composite
-	 *            Parent {@link Composite} of the table to create.
-	 * @return The properties part displayed by this viewer part's properties tab.
+	 * @param element
+	 *            Element we seek the {@link Match2Elements} for.
+	 * @return The {@link Match2Elements} containing the given {@link EObject} as its left or right element.
 	 */
-	private ModelContentMergePropertyPart createPropertiesPart(Composite composite) {
-		final ModelContentMergePropertyPart propertiesPart = new ModelContentMergePropertyPart(composite,
-				SWT.NONE, partSide);
+	protected Object findMatchFromElement(EObject element) {
+		Object theElement = null;
+		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
 
-		propertiesPart.setContentProvider(new PropertyContentProvider());
-		propertiesPart.getTable().setHeaderVisible(true);
-		propertiesPart.getTable().addPaintListener(new PropertyPaintListener());
+		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext(); ) {
+			final Object object = iterator.next();
 
-		propertiesPart.getTable().getVerticalBar().addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				parentViewer.updateCenter();
+			if (object instanceof Match2Elements) {
+				final Match2Elements matchElement = (Match2Elements)object;
+				if (matchElement.getLeftElement().equals(element)
+						|| matchElement.getRightElement().equals(element)) {
+					theElement = matchElement;
+				}
+			} else if (object instanceof UnMatchElement) {
+				final UnMatchElement matchElement = (UnMatchElement)object;
+				if (matchElement.getElement().equals(element)) {
+					theElement = matchElement;
+				}
 			}
+		}
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+		return theElement;
+	}
 
-		propertiesPart.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				fireSelectionChanged(event);
-			}
-		});
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the tab
+	 * selection has been changed.
+	 */
+	protected void fireSelectedtabChanged() {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.selectedTabChanged(selectedTab);
+		}
+	}
 
-		return propertiesPart;
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the user
+	 * selection has changed on the properties or tree tab.
+	 * 
+	 * @param event
+	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
+	 */
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.selectionChanged(event);
+		}
+	}
 
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the
+	 * center part needs to be refreshed.
+	 */
+	protected void fireUpdateCenter() {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.updateCenter();
+		}
 	}
 
 	/**
@@ -571,6 +571,46 @@ public class ModelContentMergeViewerPart {
 			properties.getTable().setBounds(tabFolder.getClientArea());
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
+		}
+	}
+
+	/**
+	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
+	 * the properties tab.
+	 */
+	class PropertyPaintListener implements PaintListener {
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+		 */
+		public void paintControl(PaintEvent event) {
+			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
+				if (diff instanceof AttributeChange && find(diff) != null
+						&& partSide == EMFCompareConstants.RIGHT) {
+					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
+				}
+			}
+		}
+
+		/**
+		 * Handles the drawing itself.
+		 * 
+		 * @param event
+		 *            {@link PaintEvent} that triggered this operation.
+		 * @param tableItem
+		 *            Item we want connected to the center part.
+		 */
+		private void drawLine(PaintEvent event, TableItem tableItem) {
+			final Rectangle tableBounds = properties.getTable().getBounds();
+			final Rectangle tableItemBounds = tableItem.getBounds();
+			tableItem.setBackground(new Color(tableItem.getDisplay(), parentViewer.getHighlightColor()));
+
+			final int lineY = tableItemBounds.y + tableItemBounds.height / 2;
+
+			event.gc.setLineWidth(2);
+			event.gc.setForeground(new Color(tableItem.getDisplay(), parentViewer.getChangedColor()));
+			event.gc.drawLine(getTotalColumnsWidth(), lineY, tableBounds.width, lineY);
 		}
 	}
 
@@ -692,46 +732,6 @@ public class ModelContentMergeViewerPart {
 							rectangleArcWidth, rectangleArcHeight);
 				}
 			}
-		}
-	}
-
-	/**
-	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
-	 * the properties tab.
-	 */
-	class PropertyPaintListener implements PaintListener {
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-		 */
-		public void paintControl(PaintEvent event) {
-			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (diff instanceof AttributeChange && find(diff) != null
-						&& partSide == EMFCompareConstants.RIGHT) {
-					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
-				}
-			}
-		}
-
-		/**
-		 * Handles the drawing itself.
-		 * 
-		 * @param event
-		 *            {@link PaintEvent} that triggered this operation.
-		 * @param tableItem
-		 *            Item we want connected to the center part.
-		 */
-		private void drawLine(PaintEvent event, TableItem tableItem) {
-			final Rectangle tableBounds = properties.getTable().getBounds();
-			final Rectangle tableItemBounds = tableItem.getBounds();
-			tableItem.setBackground(new Color(tableItem.getDisplay(), parentViewer.getHighlightColor()));
-
-			final int lineY = tableItemBounds.y + tableItemBounds.height / 2;
-
-			event.gc.setLineWidth(2);
-			event.gc.setForeground(new Color(tableItem.getDisplay(), parentViewer.getChangedColor()));
-			event.gc.drawLine(getTotalColumnsWidth(), lineY, tableBounds.width, lineY);
 		}
 	}
 }

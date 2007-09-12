@@ -13,9 +13,7 @@ package org.eclipse.emf.compare.ui.contentmergeviewer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -119,7 +117,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** ID of the Tree tab of the {@link ModelContentMergeViewerPart}. */
 	public static final int TREE_TAB = 0;
-
+	
 	/**
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
 	 * content provider.
@@ -533,6 +531,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			getCenterPart().redraw();
 	}
 
+	private DiffElement getNextVisibleDiff(List<DiffElement> diffs, DiffElement current) {
+		DiffElement theDiff = null;
+		Iterator<DiffElement> it = diffs.iterator();
+		if (current != null) {
+			while (theDiff != current && it.hasNext()) {
+				it.next();
+			}
+		}
+		while (theDiff == null && it.hasNext()) {
+			DiffElement elem = it.next();
+			if (!DiffAdapterFactory.shouldBeHidden(elem))
+				theDiff = elem;
+		}
+		return theDiff;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -693,8 +707,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
+					public void run(IProgressMonitor monitor) throws InterruptedException {
 						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
 						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
 
@@ -705,8 +718,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				});
 			} else {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
+					public void run(IProgressMonitor monitor) throws InterruptedException {
 						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
 								ancestorModel, monitor);
 						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
@@ -807,22 +819,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		update();
 	}
 
-	private DiffElement getNextVisibleDiff(List<DiffElement> diffs, DiffElement current) {
-		DiffElement theDiff = null;
-		Iterator<DiffElement> it = diffs.iterator();
-		if (current != null) {
-			while (theDiff != current && it.hasNext()) {
-				it.next();
-			}
-		}
-		while (theDiff == null && it.hasNext()) {
-			DiffElement elem = it.next();
-			if (!DiffAdapterFactory.shouldBeHidden(elem))
-				theDiff = elem;
-		}
-		return theDiff;
-	}
-
 	/**
 	 * Selects the next or previous {@link DiffElement} as compared to the currently selected one.
 	 * 
@@ -839,6 +835,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				setSelection(theDiff);
 				return;
 			}
+//			final DiffElement theDiff;
+//			if (currentDiff == null && down)
+//				theDiff = diffs.get(diffs.size() - 1);
+//			else if (currentDiff == null && !down)
+//				theDiff = diffs.get(1);
+//			else
 			theDiff = currentDiff;
 			for (int i = 0; i < diffs.size(); i++) {
 				if (diffs.get(i).equals(theDiff) && down) {
@@ -992,7 +994,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private abstract class AbstractBufferedCanvas extends Canvas {
 		/** Buffer used by this {@link Canvas} to smoothly paint its content. */
 		protected Image buffer;
-
+		
 		/**
 		 * This array is used to compute the curve to draw between left and right matching elements.
 		 */
@@ -1032,6 +1034,48 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 *            {@link GC} used for the painting.
 		 */
 		public abstract void doPaint(GC gc);
+
+		/**
+		 * Computes the points needed to draw a curve of the given width.
+		 * 
+		 * @param width
+		 *            This is the width of the curve to build.
+		 */
+		private void buildBaseCenterCurve(int width) {
+			final double doubleWidth = width;
+			baseCenterCurve = new double[CENTER_WIDTH];
+			for (int i = 0; i < CENTER_WIDTH; i++) {
+				final double r = i / doubleWidth;
+				baseCenterCurve[i] = Math.cos(Math.PI * r);
+			}
+		}
+
+		/**
+		 * Computes the points to connect for the curve between the two items to connect.
+		 * 
+		 * @param startx
+		 *            X coordinate of the starting point.
+		 * @param starty
+		 *            Y coordinate of the starting point.
+		 * @param endx
+		 *            X coordinate of the ending point.
+		 * @param endy
+		 *            Y coordinate of the ending point.
+		 * @return The points to connect to draw the curve between the two items to connect.
+		 */
+		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
+			if (baseCenterCurve == null) {
+				buildBaseCenterCurve(endx - startx);
+			}
+			double height = endy - starty;
+			height = height / 2;
+			final int width = endx - startx;
+			final int[] points = new int[width];
+			for (int i = 0; i < width; i++) {
+				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
+			}
+			return points;
+		}
 
 		/**
 		 * Draws a line connecting the given right and left items.
@@ -1145,48 +1189,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 
 			dest.drawImage(buffer, 0, 0);
-		}
-
-		/**
-		 * Computes the points needed to draw a curve of the given width.
-		 * 
-		 * @param width
-		 *            This is the width of the curve to build.
-		 */
-		private void buildBaseCenterCurve(int width) {
-			final double doubleWidth = width;
-			baseCenterCurve = new double[CENTER_WIDTH];
-			for (int i = 0; i < CENTER_WIDTH; i++) {
-				final double r = i / doubleWidth;
-				baseCenterCurve[i] = Math.cos(Math.PI * r);
-			}
-		}
-
-		/**
-		 * Computes the points to connect for the curve between the two items to connect.
-		 * 
-		 * @param startx
-		 *            X coordinate of the starting point.
-		 * @param starty
-		 *            Y coordinate of the starting point.
-		 * @param endx
-		 *            X coordinate of the ending point.
-		 * @param endy
-		 *            Y coordinate of the ending point.
-		 * @return The points to connect to draw the curve between the two items to connect.
-		 */
-		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
-			if (baseCenterCurve == null) {
-				buildBaseCenterCurve(endx - startx);
-			}
-			double height = endy - starty;
-			height = height / 2;
-			final int width = endx - startx;
-			final int[] points = new int[width];
-			for (int i = 0; i < width; i++) {
-				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
-			}
-			return points;
 		}
 	}
 

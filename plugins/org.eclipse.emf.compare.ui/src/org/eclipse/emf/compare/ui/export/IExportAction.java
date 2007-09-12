@@ -21,20 +21,24 @@ import org.eclipse.swt.graphics.Image;
  */
 public interface IExportAction {
 	/**
-	 * Defines the action's tool tip text.
+	 * This will be called when the described action will be triggered.
+	 * <p>
+	 * Implementing classes should implement this method as they would implement
+	 * {@link org.eclipse.jface.action.Action#run()}.
+	 * </p>
 	 * 
-	 * @return The action's tool tip text.
-	 * @see org.eclipse.jface.action.Action#setToolTipText(String)
+	 * @param snapshot
+	 *            This represents the contents that should be exported.
 	 */
-	String getToolTipText();
+	void exportSnapshot(ModelInputSnapshot snapshot);
 
 	/**
-	 * Defines the action's display text.
+	 * Returns the action's display icon when disabled.
 	 * 
-	 * @return The action's display text.
-	 * @see org.eclipse.jface.action.Action#setText(String)
+	 * @return The action's display icon when disabled.
+	 * @see org.eclipse.jface.action.Action#setDisabledImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
 	 */
-	String getText();
+	Image getDisabledImage();
 
 	/**
 	 * Returns the action's display image while enabled as well as the image that will be displayed when the
@@ -47,22 +51,18 @@ public interface IExportAction {
 	Image getEnabledImage();
 
 	/**
-	 * Returns the action's display icon when disabled.
+	 * Defines the action's display text.
 	 * 
-	 * @return The action's display icon when disabled.
-	 * @see org.eclipse.jface.action.Action#setDisabledImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
+	 * @return The action's display text.
+	 * @see org.eclipse.jface.action.Action#setText(String)
 	 */
-	Image getDisabledImage();
+	String getText();
 
 	/**
-	 * This will be called when the described action will be triggered.
-	 * <p>
-	 * Implementing classes should implement this method as they would implement
-	 * {@link org.eclipse.jface.action.Action#run()}.
-	 * </p>
+	 * Defines the action's tool tip text.
 	 * 
-	 * @param snapshot
-	 *            This represents the contents that should be exported.
+	 * @return The action's tool tip text.
+	 * @see org.eclipse.jface.action.Action#setToolTipText(String)
 	 */
-	void exportSnapshot(ModelInputSnapshot snapshot);
+	String getToolTipText();
 }

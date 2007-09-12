@@ -37,7 +37,7 @@ public final class ClassUtils {
 	 * @return <code>True</code> if the given {@link Class} object declares a {@link Method} called
 	 *         <code>methodName</code>.
 	 */
-	public static boolean hasMethod(Class clazz, String methodName) {
+	public static boolean hasMethod(Class<?> clazz, String methodName) {
 		boolean hasMethod = false;
 		/*
 		 * We use Class#getMethods() instead of Class#getDeclaredMethods() to avoid protected, private and

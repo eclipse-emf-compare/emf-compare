@@ -40,11 +40,11 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareInput implements ICompareInput {
-	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
-	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
-
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
+
+	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
+	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
 
 	/** {@link MatchModel} result of the underlying comparison. */
 	private final MatchModel match;
@@ -65,39 +65,12 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Returns this ModelCompareInput's DiffModel.
-	 * 
-	 * @return This ModelCompareInput's DiffModel.
-	 */
-	public DiffModel getDiff() {
-		return diff;
-	}
-
-	/**
-	 * Returns this ModelCompareInput's MatchModel.
-	 * 
-	 * @return This ModelCompareInput's MatchModel.
-	 */
-	public MatchModel getMatch() {
-		return match;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see ICompareInput#addCompareInputChangeListener(ICompareInputChangeListener)
 	 */
 	public void addCompareInputChangeListener(ICompareInputChangeListener listener) {
 		inputChangeListeners.add(listener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see ICompareInput#removeCompareInputChangeListener(ICompareInputChangeListener)
-	 */
-	public void removeCompareInputChangeListener(ICompareInputChangeListener listener) {
-		inputChangeListeners.remove(listener);
 	}
 
 	/**
@@ -140,6 +113,30 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see ICompareInput#getAncestor()
+	 */
+	public ITypedElement getAncestor() {
+		ITypedElement element = null;
+
+		if (getMatch().getMatchedElements().get(0) instanceof Match3Element)
+			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
+					.getOriginElement());
+
+		return element;
+	}
+
+	/**
+	 * Returns this ModelCompareInput's DiffModel.
+	 * 
+	 * @return This ModelCompareInput's DiffModel.
+	 */
+	public DiffModel getDiff() {
+		return diff;
+	}
+
+	/**
 	 * Returns the {@link DiffElement} of the input {@link DiffModel} as a list. Doesn't take
 	 * {@link DiffGroup}s into account.
 	 * 
@@ -151,7 +148,7 @@ public class ModelCompareInput implements ICompareInput {
 		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
 		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
-		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext();) {
+		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (aDiff instanceof ModelElementChange)
 				modelElementDiffs.add((ModelElementChange)aDiff);
@@ -172,21 +169,6 @@ public class ModelCompareInput implements ICompareInput {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see ICompareInput#getAncestor()
-	 */
-	public ITypedElement getAncestor() {
-		ITypedElement element = null;
-
-		if (getMatch().getMatchedElements().get(0) instanceof Match3Element)
-			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
-					.getOriginElement());
-
-		return element;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see ICompareInput#getImage()
 	 */
 	public Image getImage() {
@@ -198,22 +180,6 @@ public class ModelCompareInput implements ICompareInput {
 			image = EMFCompareEObjectUtils.computeObjectImage(getDiff());
 
 		return image;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see ICompareInput#getName()
-	 */
-	public String getName() {
-		String name = null;
-
-		if (getMatch() != null)
-			name = EMFCompareEObjectUtils.computeObjectName(getMatch());
-		else if (getDiff() != null)
-			name = EMFCompareEObjectUtils.computeObjectName(getDiff());
-
-		return name;
 	}
 
 	/**
@@ -243,6 +209,31 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
+	 * Returns this ModelCompareInput's MatchModel.
+	 * 
+	 * @return This ModelCompareInput's MatchModel.
+	 */
+	public MatchModel getMatch() {
+		return match;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see ICompareInput#getName()
+	 */
+	public String getName() {
+		String name = null;
+
+		if (getMatch() != null)
+			name = EMFCompareEObjectUtils.computeObjectName(getMatch());
+		else if (getDiff() != null)
+			name = EMFCompareEObjectUtils.computeObjectName(getDiff());
+
+		return name;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see ICompareInput#getRight()
@@ -255,6 +246,15 @@ public class ModelCompareInput implements ICompareInput {
 					.getRightElement());
 
 		return element;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see ICompareInput#removeCompareInputChangeListener(ICompareInputChangeListener)
+	 */
+	public void removeCompareInputChangeListener(ICompareInputChangeListener listener) {
+		inputChangeListeners.remove(listener);
 	}
 
 	/**

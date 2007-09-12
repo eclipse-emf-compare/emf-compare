@@ -53,20 +53,20 @@ public class TypedElementWrapper implements ITypedElement {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see ITypedElement#getType()
-	 */
-	public String getType() {
-		return wrappedObject.getClass().getName();
-	}
-
-	/**
 	 * Returns the object wrapped within this {@link TypedElementWrapper}.
 	 * 
 	 * @return The object wrapped within this {@link TypedElementWrapper}.
 	 */
 	public EObject getObject() {
 		return wrappedObject;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see ITypedElement#getType()
+	 */
+	public String getType() {
+		return wrappedObject.getClass().getName();
 	}
 }

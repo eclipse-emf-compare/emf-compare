@@ -34,6 +34,17 @@ public final class EMFCompareEObjectUtils {
 	}
 
 	/**
+	 * Computes the image of the given {@link EObject}.
+	 * 
+	 * @param eObject
+	 *            Object for which we need the image.
+	 * @return Image of the given {@link EObject}.
+	 */
+	public static Image computeObjectImage(EObject eObject) {
+		return getLabelProvider().getImage(eObject);
+	}
+
+	/**
 	 * Computes the name of the given {@link EObject}.
 	 * 
 	 * @param eObject
@@ -48,14 +59,25 @@ public final class EMFCompareEObjectUtils {
 	}
 
 	/**
-	 * Computes the image of the given {@link EObject}.
+	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called
+	 * "getLeftParent" if the {@link EObject} is a {@link ConflictingDiffGroup}, "getOriginElement" if the
+	 * {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these methods can be
+	 * found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or
+	 * {@link Match3Element} as argument.
 	 * 
-	 * @param eObject
-	 *            Object for which we need the image.
-	 * @return Image of the given {@link EObject}.
+	 * @param object
+	 *            The {@link EObject}.
+	 * @return The right element of the given {@link EObject}.
 	 */
-	public static Image computeObjectImage(EObject eObject) {
-		return getLabelProvider().getImage(eObject);
+	public static EObject getAncestorElement(EObject object) {
+		EObject ancestorElement = null;
+
+		if (object instanceof ConflictingDiffElement)
+			ancestorElement = ((ConflictingDiffElement)object).getOriginElement();
+		else if (object instanceof Match3Element)
+			ancestorElement = ((Match3Element)object).getOriginElement();
+
+		return ancestorElement;
 	}
 
 	/**
@@ -100,28 +122,6 @@ public final class EMFCompareEObjectUtils {
 		}
 
 		return rightElement;
-	}
-
-	/**
-	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called
-	 * "getLeftParent" if the {@link EObject} is a {@link ConflictingDiffGroup}, "getOriginElement" if the
-	 * {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these methods can be
-	 * found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or
-	 * {@link Match3Element} as argument.
-	 * 
-	 * @param object
-	 *            The {@link EObject}.
-	 * @return The right element of the given {@link EObject}.
-	 */
-	public static EObject getAncestorElement(EObject object) {
-		EObject ancestorElement = null;
-
-		if (object instanceof ConflictingDiffElement)
-			ancestorElement = ((ConflictingDiffElement)object).getOriginElement();
-		else if (object instanceof Match3Element)
-			ancestorElement = ((Match3Element)object).getOriginElement();
-
-		return ancestorElement;
 	}
 
 	/**

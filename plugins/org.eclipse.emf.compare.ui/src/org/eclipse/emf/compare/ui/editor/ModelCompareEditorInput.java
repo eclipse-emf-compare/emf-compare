@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.editor;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.CompareViewerPane;
@@ -36,31 +34,31 @@ import org.eclipse.swt.widgets.Control;
  */
 public class ModelCompareEditorInput extends CompareEditorInput {
 	/**
-	 * Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of
-	 * the view.
-	 */
-	protected ModelStructureMergeViewer structureMergeViewer;
-
-	/**
 	 * Content merge viewer of this {@link CompareViewerPane}. It represents the bottom splitted part of the
 	 * view.
 	 */
 	protected ModelContentMergeViewer contentMergeViewer;
 
+	/**
+	 * Structure merge viewer of this {@link CompareViewerPane}. It represents the top {@link TreeViewer} of
+	 * the view.
+	 */
+	protected ModelStructureMergeViewer structureMergeViewer;
+	
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
-
-	/** {@link MatchModel} result of the underlying comparison. */
-	private final MatchModel match;
-
-	/** {@link ModelInputSnapshot} result of the underlying comparison. */
-	private final ModelInputSnapshot inputSnapshot;
 
 	/**
 	 * This listener will be in charge of updating the {@link ModelContentMergeViewer} and
 	 * {@link ModelStructureMergeViewer}'s input.
 	 */
 	private final ICompareInputChangeListener inputListener;
+
+	/** {@link ModelInputSnapshot} result of the underlying comparison. */
+	private final ModelInputSnapshot inputSnapshot;
+
+	/** {@link MatchModel} result of the underlying comparison. */
+	private final MatchModel match;
 
 	/**
 	 * This constructor takes a {@link ModelInputSnapshot} as input.
@@ -80,19 +78,6 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 				contentMergeViewer.setInput(source);
 			}
 		};
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see CompareEditorInput#prepareInput(IProgreeMonitor)
-	 */
-	@Override
-	protected Object prepareInput(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
-		final ModelCompareInput input = new ModelCompareInput(match, diff);
-		input.addCompareInputChangeListener(inputListener);
-		return input;
 	}
 
 	/**
@@ -137,5 +122,17 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		structureMergeViewer.setInput(inputSnapshot);
 
 		return splitter;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see CompareEditorInput#prepareInput(IProgressMonitor)
+	 */
+	@Override
+	protected Object prepareInput(IProgressMonitor monitor) {
+		final ModelCompareInput input = new ModelCompareInput(match, diff);
+		input.addCompareInputChangeListener(inputListener);
+		return input;
 	}
 }
