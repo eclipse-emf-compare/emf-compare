@@ -22,23 +22,24 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Group</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Group</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffGroupImpl#getLeftParent <em>Left Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffGroupImpl#getSubchanges <em>Subchanges</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffGroupImpl#getLeftParent <em>Left Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffGroupImpl#getSubchanges <em>Subchanges</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	/**
-	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftParent()
 	 * @generated
 	 * @ordered
@@ -46,8 +47,9 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	protected EObject leftParent;
 
 	/**
-	 * The default value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubchanges()
 	 * @generated
 	 * @ordered
@@ -55,8 +57,9 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	protected static final int SUBCHANGES_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubchanges()
 	 * @generated
 	 * @ordered
@@ -64,8 +67,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	protected int subchanges = SUBCHANGES_EDEFAULT;
 
 	/**
-	 * This is true if the Subchanges attribute has been set. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This is true if the Subchanges attribute has been set. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
@@ -74,6 +76,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiffGroupImpl() {
@@ -82,6 +85,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -91,17 +95,17 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftParent() {
 		if (leftParent != null && leftParent.eIsProxy()) {
-			InternalEObject oldLeftParent = (InternalEObject) leftParent;
+			InternalEObject oldLeftParent = (InternalEObject)leftParent;
 			leftParent = eResolveProxy(oldLeftParent);
 			if (leftParent != oldLeftParent) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.DIFF_GROUP__LEFT_PARENT, oldLeftParent,
-							leftParent));
+							DiffPackage.DIFF_GROUP__LEFT_PARENT, oldLeftParent, leftParent));
 			}
 		}
 		return leftParent;
@@ -109,6 +113,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -117,15 +122,15 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftParent(EObject newLeftParent) {
 		EObject oldLeftParent = leftParent;
 		leftParent = newLeftParent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.DIFF_GROUP__LEFT_PARENT, oldLeftParent,
-					leftParent));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_GROUP__LEFT_PARENT,
+					oldLeftParent, leftParent));
 	}
 
 	/**
@@ -137,10 +142,10 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 		Iterator it = getSubDiffElements().iterator();
 		int result = 0;
 		while (it.hasNext()) {
-			EObject eObj = (EObject) it.next();
+			EObject eObj = (EObject)it.next();
 			if (!DiffAdapterFactory.shouldBeHidden(eObj))
 				if (eObj instanceof DiffGroup) {
-					result += ((DiffGroup) eObj).getSubchanges();
+					result += ((DiffGroup)eObj).getSubchanges();
 				} else {
 					result += 1;
 				}
@@ -151,6 +156,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSubchanges(int newSubchanges) {
@@ -159,13 +165,13 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 		boolean oldSubchangesESet = subchangesESet;
 		subchangesESet = true;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.DIFF_GROUP__SUBCHANGES, oldSubchanges,
-					subchanges, !oldSubchangesESet));
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_GROUP__SUBCHANGES,
+					oldSubchanges, subchanges, !oldSubchangesESet));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void unsetSubchanges() {
@@ -174,13 +180,13 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 		subchanges = SUBCHANGES_EDEFAULT;
 		subchangesESet = false;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.UNSET,
-					DiffPackage.DIFF_GROUP__SUBCHANGES, oldSubchanges,
-					SUBCHANGES_EDEFAULT, oldSubchangesESet));
+			eNotify(new ENotificationImpl(this, Notification.UNSET, DiffPackage.DIFF_GROUP__SUBCHANGES,
+					oldSubchanges, SUBCHANGES_EDEFAULT, oldSubchangesESet));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isSetSubchanges() {
@@ -189,72 +195,77 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.DIFF_GROUP__LEFT_PARENT:
-			if (resolve)
-				return getLeftParent();
-			return basicGetLeftParent();
-		case DiffPackage.DIFF_GROUP__SUBCHANGES:
-			return new Integer(getSubchanges());
+			case DiffPackage.DIFF_GROUP__LEFT_PARENT:
+				if (resolve)
+					return getLeftParent();
+				return basicGetLeftParent();
+			case DiffPackage.DIFF_GROUP__SUBCHANGES:
+				return new Integer(getSubchanges());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.DIFF_GROUP__LEFT_PARENT:
-			setLeftParent((EObject) newValue);
-			return;
-		case DiffPackage.DIFF_GROUP__SUBCHANGES:
-			setSubchanges(((Integer) newValue).intValue());
-			return;
+			case DiffPackage.DIFF_GROUP__LEFT_PARENT:
+				setLeftParent((EObject)newValue);
+				return;
+			case DiffPackage.DIFF_GROUP__SUBCHANGES:
+				setSubchanges(((Integer)newValue).intValue());
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_GROUP__LEFT_PARENT:
-			setLeftParent((EObject) null);
-			return;
-		case DiffPackage.DIFF_GROUP__SUBCHANGES:
-			unsetSubchanges();
-			return;
+			case DiffPackage.DIFF_GROUP__LEFT_PARENT:
+				setLeftParent((EObject)null);
+				return;
+			case DiffPackage.DIFF_GROUP__SUBCHANGES:
+				unsetSubchanges();
+				return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_GROUP__LEFT_PARENT:
-			return leftParent != null;
-		case DiffPackage.DIFF_GROUP__SUBCHANGES:
-			return isSetSubchanges();
+			case DiffPackage.DIFF_GROUP__LEFT_PARENT:
+				return leftParent != null;
+			case DiffPackage.DIFF_GROUP__SUBCHANGES:
+				return isSetSubchanges();
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

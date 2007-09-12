@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Attribute</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Attribute</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl
-		implements RemoveAttribute {
+public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoveAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoveAttributeImpl() {
@@ -34,6 +35,7 @@ public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

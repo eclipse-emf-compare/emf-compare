@@ -13,11 +13,9 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -45,9 +43,9 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final ModelElementChangeRightTarget diff = (ModelElementChangeRightTarget)this.diff;
-		final EObject origin = diff.getLeftParent();
-		final EObject element = diff.getRightElement();
+		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
+		final EObject origin = theDiff.getLeftParent();
+		final EObject element = theDiff.getRightElement();
 		final EObject newOne = EcoreUtil.copy(element);
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {
@@ -77,14 +75,14 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final ModelElementChangeRightTarget diff = (ModelElementChangeRightTarget)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject parent = diff.getRightElement().eContainer();
+		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject parent = theDiff.getRightElement().eContainer();
 		EcoreUtil.remove(element);
 		// now removes all the dangling references
 		removeDanglingReferences(parent);

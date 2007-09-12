@@ -24,16 +24,16 @@ import org.eclipse.emf.ecore.EObject;
 public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
-		final UpdateUniqueReferenceValue diff = (UpdateUniqueReferenceValue)this.diff;
-		final EObject element = diff.getLeftElement();
-		final EObject leftTarget = diff.getLeftTarget();
+		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
+		final EObject element = theDiff.getLeftElement();
+		final EObject leftTarget = theDiff.getLeftTarget();
 		try {
-			EFactory.eSet(element, diff.getReference().getName(), leftTarget);
+			EFactory.eSet(element, theDiff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -42,16 +42,16 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final UpdateUniqueReferenceValue diff = (UpdateUniqueReferenceValue)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject rightTarget = diff.getRightTarget();
+		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject rightTarget = theDiff.getRightTarget();
 		try {
-			EFactory.eSet(element, diff.getReference().getName(), rightTarget);
+			EFactory.eSet(element, theDiff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}

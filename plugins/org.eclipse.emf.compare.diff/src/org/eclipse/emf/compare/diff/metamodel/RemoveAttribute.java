@@ -11,11 +11,9 @@
 package org.eclipse.emf.compare.diff.metamodel;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Remove Attribute</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Remove Attribute</b></em>'. <!--
+ * end-user-doc -->
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoveAttribute()
  * @model
  * @generated

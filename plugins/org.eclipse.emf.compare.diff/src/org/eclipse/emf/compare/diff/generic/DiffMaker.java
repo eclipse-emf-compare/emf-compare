@@ -26,14 +26,12 @@ import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
@@ -49,7 +47,6 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
-import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
@@ -63,8 +60,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * This class is useful when one wants to determine a diff from a matching
- * model.
+ * This class is useful when one wants to determine a diff from a matching model.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
@@ -83,11 +79,9 @@ public class DiffMaker implements DiffEngine {
 			1024);
 
 	/**
-	 * This map will keep track of the top level unmatched elements, as well as
-	 * whether they are conflicting.
+	 * This map will keep track of the top level unmatched elements, as well as whether they are conflicting.
 	 */
-	private final Map<UnMatchElement, Boolean> unMatchedElements = new HashMap<UnMatchElement, Boolean>(
-			128);
+	private final Map<UnMatchElement, Boolean> unMatchedElements = new HashMap<UnMatchElement, Boolean>(128);
 
 	/**
 	 * {@inheritDoc}
@@ -111,15 +105,15 @@ public class DiffMaker implements DiffEngine {
 
 		result.getOwnedElements().add(diffRoot);
 
-		Iterator<EObject> it = match.eAllContents();
+		final Iterator<EObject> it = match.eAllContents();
 		boolean found = false;
 		EObject leftRoot = null;
 		EObject rightRoot = null;
 		while (it.hasNext() && !found) {
-			EObject itMatch = it.next();
+			final EObject itMatch = it.next();
 			if (itMatch instanceof Match2Elements) {
-				leftRoot = ((Match2Elements) itMatch).getLeftElement();
-				rightRoot = ((Match2Elements) itMatch).getRightElement();
+				leftRoot = ((Match2Elements)itMatch).getLeftElement();
+				rightRoot = ((Match2Elements)itMatch).getRightElement();
 				found = true;
 			}
 		}
@@ -127,12 +121,11 @@ public class DiffMaker implements DiffEngine {
 		 * First get the file extension..
 		 */
 		String extension = "ecore"; //$NON-NLS-1$
-		if (leftRoot.eResource().getURI() != null)
+		if (leftRoot != null && leftRoot.eResource() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
-		if (extension == null && rightRoot.eResource() != null)
+		if (extension == null && rightRoot != null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		Collection<AbstractDiffExtension> extensions = new DiffService()
-				.getCorrespondingDiffExtensions(extension);
+		final Collection<AbstractDiffExtension> extensions = new DiffService().getCorrespondingDiffExtensions(extension);
 		if (extensions != null)
 			for (AbstractDiffExtension ext : extensions) {
 				if (ext != null)
@@ -142,39 +135,35 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * The diff computing for three way comparisons is handled here. We'll
-	 * compute the diff model from the given match model.
+	 * The diff computing for three way comparisons is handled here. We'll compute the diff model from the
+	 * given match model.
 	 * 
 	 * @param match
-	 *            {@link MatchModel match model} we'll be using to compute the
-	 *            differences.
-	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the
-	 *         given {@link MatchModel}.
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
 	 */
 	protected DiffGroup doDiffThreeWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
 
 		// we have to browse the model and create the corresponding operations
-		final Match3Element matchRoot = (Match3Element) match
-				.getMatchedElements().get(0);
+		final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
 		final Resource leftModel = matchRoot.getLeftElement().eResource();
 
 		doDiffDelegate(diffRoot, matchRoot);
 
 		final Iterator unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement) unMatched
-					.next();
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
 			boolean isChild = false;
 			boolean isAncestor = false;
 			for (Object object : match.getUnMatchedElements()) {
-				if (unMatchElement != ((UnMatchElement) object)) {
-					if (EcoreUtil.isAncestor(unMatchElement.getElement(),
-							((UnMatchElement) object).getElement())) {
+				if (unMatchElement != ((UnMatchElement)object)) {
+					if (EcoreUtil.isAncestor(unMatchElement.getElement(), ((UnMatchElement)object)
+							.getElement())) {
 						isAncestor = true;
 					}
-					if (EcoreUtil.isAncestor(((UnMatchElement) object)
-							.getElement(), unMatchElement.getElement())) {
+					if (EcoreUtil.isAncestor(((UnMatchElement)object).getElement(), unMatchElement
+							.getElement())) {
 						isChild = true;
 					}
 				}
@@ -189,21 +178,18 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * The diff computing for two way comparisons is handled here. We'll compute
-	 * the diff model from the given match model.
+	 * The diff computing for two way comparisons is handled here. We'll compute the diff model from the given
+	 * match model.
 	 * 
 	 * @param match
-	 *            {@link MatchModel match model} we'll be using to compute the
-	 *            differences.
-	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the
-	 *         given {@link MatchModel}.
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
 	 */
 	protected DiffGroup doDiffTwoWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
 
 		// we have to browse the model and create the corresponding operations
-		final Match2Elements matchRoot = (Match2Elements) match
-				.getMatchedElements().get(0);
+		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
 		final Resource leftModel = matchRoot.getLeftElement().eResource();
 		final Resource rightModel = matchRoot.getRightElement().eResource();
 
@@ -213,35 +199,27 @@ public class DiffMaker implements DiffEngine {
 		// added or removed.
 		final Iterator unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement) unMatched
-					.next();
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
 			if (unMatchElement.getElement().eResource() == leftModel) {
 				// add RemoveModelElement
-				final RemoveModelElement operation = DiffFactory.eINSTANCE
-						.createRemoveModelElement();
+				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
 				operation.setLeftElement(unMatchElement.getElement());
 				// Container will be null if we're adding a root
 				if (unMatchElement.getElement().eContainer() != null)
-					operation.setRightParent(getMatchedEObject(unMatchElement
-							.getElement().eContainer()));
-				addInContainerPackage(diffRoot, operation, unMatchElement
-						.getElement().eContainer());
+					operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
 			}
 			if (unMatchElement.getElement().eResource() == rightModel) {
 				// add AddModelElement
-				final AddModelElement operation = DiffFactory.eINSTANCE
-						.createAddModelElement();
+				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
 				operation.setRightElement(unMatchElement.getElement());
 				// Container will be null if we're adding a root
 				if (unMatchElement.getElement().eContainer() != null) {
-					operation.setLeftParent(getMatchedEObject(unMatchElement
-							.getElement().eContainer()));
-					addInContainerPackage(diffRoot, operation,
-							getMatchedEObject(unMatchElement.getElement()
-									.eContainer()));
+					operation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+					addInContainerPackage(diffRoot, operation, getMatchedEObject(unMatchElement.getElement()
+							.eContainer()));
 				} else {
-					addInContainerPackage(diffRoot, operation, unMatchElement
-							.getElement().eContainer());
+					addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
 				}
 			}
 		}
@@ -250,8 +228,8 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Looks for an already created {@link DiffGroup diff group} in order to add
-	 * the operation, if none exists, create one where the operation belongs to.
+	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none
+	 * exists, create one where the operation belongs to.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffModel}.
@@ -261,8 +239,7 @@ public class DiffMaker implements DiffEngine {
 	 *            Parent {@link EObject} for the operation.
 	 */
 	@SuppressWarnings("unchecked")
-	private void addInContainerPackage(DiffGroup root, DiffElement operation,
-			EObject targetParent) {
+	private void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
 		if (targetParent == null) {
 			root.getSubDiffElements().add(operation);
 			return;
@@ -270,24 +247,20 @@ public class DiffMaker implements DiffEngine {
 		final DiffGroup targetGroup = findExistingGroup(root, targetParent);
 		if (targetGroup == null) {
 			// we have to create the group
-			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(
-					operation);
+			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(operation);
 		} else {
 			targetGroup.getSubDiffElements().add(operation);
 		}
 	}
 
 	/**
-	 * Builds a {@link DiffGroup} for the <code>targetParent</code> with its
-	 * full hierarchy.
+	 * Builds a {@link DiffGroup} for the <code>targetParent</code> with its full hierarchy.
 	 * 
 	 * @param targetParent
-	 *            Parent of the operation we're building a {@link DiffGroup}
-	 *            for.
+	 *            Parent of the operation we're building a {@link DiffGroup} for.
 	 * @param root
 	 *            {@link DiffGroup Root} of the {@link DiffModel}.
-	 * @return {@link DiffGroup} containing the full hierarchy needed for the
-	 *         <code>targetParent</code>.
+	 * @return {@link DiffGroup} containing the full hierarchy needed for the <code>targetParent</code>.
 	 */
 	@SuppressWarnings("unchecked")
 	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
@@ -302,63 +275,56 @@ public class DiffMaker implements DiffEngine {
 			root.getSubDiffElements().add(curGroup);
 			return curGroup;
 		}
-		buildHierarchyGroup(targetParent.eContainer(), root)
-				.getSubDiffElements().add(curGroup);
+		buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
 		return curGroup;
 	}
 
 	/**
-	 * This will iterate through all the attributes of the <code>mapping</code>'s
-	 * two elements to check if any of them has been modified.
+	 * This will iterate through all the attributes of the <code>mapping</code>'s two elements to check if
+	 * any of them has been modified.
 	 * 
 	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if
-	 *            one of the attributes has actually been changed.
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if one of the attributes has
+	 *            actually been changed.
 	 * @param mapping
-	 *            This contains the mapping information about the elements we
-	 *            need to check for a move.
+	 *            This contains the mapping information about the elements we need to check for a move.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
 	 */
-	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping)
-			throws FactoryException {
+	private void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
 		final EClass eClass = mapping.getLeftElement().eClass();
 
 		final List eclassAttributes = eClass.getEAllAttributes();
 		// for each feature, compare the value
 		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
-			final EAttribute next = (EAttribute) it.next();
+			final EAttribute next = (EAttribute)it.next();
 			if (!next.isDerived()) {
 				final String attributeName = next.getName();
-				final Object leftValue = EFactory.eGet(
-						mapping.getLeftElement(), attributeName);
-				final Object rightValue = EFactory.eGet(mapping
-						.getRightElement(), attributeName);
+				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
+				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
 
 				if (leftValue != null && !leftValue.equals(rightValue)) {
-					createNonConflictingAttributeChange(root, next, mapping
-							.getLeftElement(), mapping.getRightElement());
+					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
+							.getRightElement());
 				}
 			}
 		}
 	}
 
 	/**
-	 * This will iterate through all the attributes of the <code>mapping</code>'s
-	 * three elements to check if any of them has been modified.
+	 * This will iterate through all the attributes of the <code>mapping</code>'s three elements to check
+	 * if any of them has been modified.
 	 * 
 	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if
-	 *            one of the attribute has actually been changed.
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if one of the attribute has
+	 *            actually been changed.
 	 * @param mapping
-	 *            This contains the mapping information about the elements we
-	 *            need to check for a move.
+	 *            This contains the mapping information about the elements we need to check for a move.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
 	 */
-	private void checkAttributesUpdates(DiffGroup root, Match3Element mapping)
-			throws FactoryException {
+	private void checkAttributesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
 		// Ignores matchElements when they don't have origin (no updates on
 		// these)
 		if (mapping.getOriginElement() == null)
@@ -369,39 +335,31 @@ public class DiffMaker implements DiffEngine {
 		// for each feature, compare the value
 		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
-			final EAttribute next = (EAttribute) it.next();
+			final EAttribute next = (EAttribute)it.next();
 			if (!next.isDerived()) {
 				final String attributeName = next.getName();
-				final Object leftValue = EFactory.eGet(
-						mapping.getLeftElement(), attributeName);
-				final Object rightValue = EFactory.eGet(mapping
-						.getRightElement(), attributeName);
-				final Object ancestorValue = EFactory.eGet(mapping
-						.getOriginElement(), attributeName);
+				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
+				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
+				final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attributeName);
 
-				final boolean rightDistinctFromOrigin = rightValue != ancestorValue
-						&& rightValue != null
+				final boolean rightDistinctFromOrigin = rightValue != ancestorValue && rightValue != null
 						&& !rightValue.equals(ancestorValue);
-				final boolean rightDistinctFromLeft = rightValue != leftValue
-						&& rightValue != null && !rightValue.equals(leftValue);
-				final boolean leftDistinctFromOrigin = leftValue != ancestorValue
-						&& leftValue != null
+				final boolean rightDistinctFromLeft = rightValue != leftValue && rightValue != null
+						&& !rightValue.equals(leftValue);
+				final boolean leftDistinctFromOrigin = leftValue != ancestorValue && leftValue != null
 						&& !leftValue.equals(ancestorValue);
 
 				// There's a change if one of the above is true
-				if (rightDistinctFromOrigin || rightDistinctFromLeft
-						|| leftDistinctFromOrigin) {
+				if (rightDistinctFromOrigin || rightDistinctFromLeft || leftDistinctFromOrigin) {
 					// non conflicting change
 					if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
-						createNonConflictingAttributeChange(root, next, mapping
-								.getLeftElement(), mapping.getRightElement());
+						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
+								.getRightElement());
 						// only latest from head (left) has changed
-					} else if (leftDistinctFromOrigin
-							&& !rightDistinctFromOrigin) {
+					} else if (leftDistinctFromOrigin && !rightDistinctFromOrigin) {
 						createRemoteAttributeChange(root, next, mapping);
 						// conflicting
-					} else if (!rightDistinctFromOrigin
-							|| rightDistinctFromLeft) {
+					} else if (!rightDistinctFromOrigin || rightDistinctFromLeft) {
 						checkConflictingAttributesUpdate(root, next, mapping);
 					}
 				}
@@ -410,89 +368,77 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Checks if there are conflictual changes between the values of the given
-	 * {@link EAttribute}.<br/>
+	 * Checks if there are conflictual changes between the values of the given {@link EAttribute}.<br/>
 	 * <p>
-	 * An attribute update is considered &quot;conflictual&quot; if it isn't
-	 * multi-valued and its left (latest from head) value differs from the right
-	 * (working copy) value.
+	 * An attribute update is considered &quot;conflictual&quot; if it isn't multi-valued and its left (latest
+	 * from head) value differs from the right (working copy) value.
 	 * </p>
 	 * 
 	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if
-	 *            there actually are conflictual changes in the mapped elements
-	 *            <code>attribute</code> values.
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if there actually are
+	 *            conflictual changes in the mapped elements <code>attribute</code> values.
 	 * @param attribute
 	 *            Target {@link EAttribute} to check.
 	 * @param mapping
 	 *            Contains the three (ancestor, left, right) elements' mapping.
 	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>attribute</code>'s values
-	 *             for either one of the mapped elements.
+	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped
+	 *             elements.
 	 */
 	@SuppressWarnings("unchecked")
-	private void checkConflictingAttributesUpdate(DiffGroup root,
-			EAttribute attribute, Match3Element mapping)
+	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
 		if (!attribute.isMany()) {
 			createConflictingAttributeChange(root, attribute, mapping);
 		} else {
-			final Object leftValue = EFactory.eGet(mapping.getLeftElement(),
-					attribute.getName());
-			final Object rightValue = EFactory.eGet(mapping.getRightElement(),
-					attribute.getName());
-			final Object ancestorValue = EFactory.eGet(mapping
-					.getOriginElement(), attribute.getName());
+			final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
+			final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
+			final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attribute.getName());
 
-			for (Object aValue : (List) leftValue) {
+			for (Object aValue : (List)leftValue) {
 				// If an object from the left is neither in the right nor in the
 				// origin, it's a remotely added
 				// attribute
-				if (!((List) rightValue).contains(aValue)
-						&& !((List) ancestorValue).contains(aValue)) {
-					final RemoteAddAttribute operation = DiffFactory.eINSTANCE
-							.createRemoteAddAttribute();
+				if (!((List)rightValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject) aValue);
+					operation.setLeftTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 					// If the object from the left is not in the right values,
 					// it's been removed since last
 					// checkout
-				} else if (!((List) rightValue).contains(aValue)) {
-					final RemoveAttribute operation = DiffFactory.eINSTANCE
-							.createRemoveAttribute();
+				} else if (!((List)rightValue).contains(aValue)) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject) aValue);
+					operation.setLeftTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List) rightValue) {
+			for (Object aValue : (List)rightValue) {
 				// if an object from the right is neither in the left nor in the
 				// origin, it's been added since
 				// last checkout
-				if (!((List) leftValue).contains(aValue)
-						&& !((List) ancestorValue).contains(aValue)) {
-					final AddAttribute operation = DiffFactory.eINSTANCE
-							.createAddAttribute();
+				if (!((List)leftValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject) aValue);
+					operation.setRightTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 					// if the object from the right is not in the left values
 					// yet present in the origin, it's
 					// been removed remotely
-				} else if (!((List) leftValue).contains(aValue)) {
+				} else if (!((List)leftValue).contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject) aValue);
+					operation.setRightTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -500,36 +446,32 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will check if the elements matched by a given {@link Match2Elements}
-	 * have been moved..
+	 * This will check if the elements matched by a given {@link Match2Elements} have been moved..
 	 * 
 	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if
-	 *            the elements have actually been moved.
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if the elements have actually
+	 *            been moved.
 	 * @param matchElement
-	 *            This contains the mapping information about the elements we
-	 *            need to check for a move.
+	 *            This contains the mapping information about the elements we need to check for a move.
 	 */
 	private void checkForMove(DiffGroup root, Match2Elements matchElement) {
 		if (matchElement.getLeftElement().eContainer() != null
 				&& matchElement.getRightElement().eContainer() != null
 				&& getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement
 						.getRightElement().eContainer()) {
-			createMoveOperation(root, matchElement.getLeftElement(),
-					matchElement.getRightElement());
+			createMoveOperation(root, matchElement.getLeftElement(), matchElement.getRightElement());
 		}
 	}
 
 	/**
-	 * This will check if the elements matched by a given {@link Match3Element}
-	 * have been moved since the models common ancestor.
+	 * This will check if the elements matched by a given {@link Match3Element} have been moved since the
+	 * models common ancestor.
 	 * 
 	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if
-	 *            the elements have actually been moved.
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if the elements have actually
+	 *            been moved.
 	 * @param matchElement
-	 *            This contains the mapping information about the elements we
-	 *            need to check for a move.
+	 *            This contains the mapping information about the elements we need to check for a move.
 	 */
 	@SuppressWarnings("unchecked")
 	private void checkForMove(DiffGroup root, Match3Element matchElement) {
@@ -539,26 +481,21 @@ public class DiffMaker implements DiffEngine {
 
 		final boolean leftMoved = originElement != null
 				&& leftElement.eContainer() != null
-				&& !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT)
-						.equals(originElement.eContainer());
+				&& !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(
+						originElement.eContainer());
 		final boolean rightMoved = originElement != null
 				&& rightElement.eContainer() != null
-				&& !getMatchedEObject(rightElement.eContainer(),
-						ANCESTOR_OBJECT).equals(originElement.eContainer());
+				&& !getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(
+						originElement.eContainer());
 
 		// conflicting change
-		if (leftMoved
-				&& rightMoved
-				&& !getMatchedEObject(leftElement.eContainer()).equals(
-						rightElement.eContainer())) {
-			final MoveModelElement operation = DiffFactory.eINSTANCE
-					.createMoveModelElement();
+		if (leftMoved && rightMoved
+				&& !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+			final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 			operation.setRightElement(rightElement);
 			operation.setLeftElement(leftElement);
-			operation
-					.setRightTarget(getMatchedEObject(leftElement.eContainer()));
-			operation
-					.setLeftTarget(getMatchedEObject(rightElement.eContainer()));
+			operation.setRightTarget(getMatchedEObject(leftElement.eContainer()));
+			operation.setLeftTarget(getMatchedEObject(rightElement.eContainer()));
 
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
 					.createConflictingDiffElement();
@@ -569,12 +506,10 @@ public class DiffMaker implements DiffEngine {
 			root.getSubDiffElements().add(conflictingDiff);
 			// non conflicting change
 		} else if (rightMoved
-				&& !getMatchedEObject(leftElement.eContainer()).equals(
-						rightElement.eContainer())) {
+				&& !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
 			createMoveOperation(root, leftElement, rightElement);
 		} else if (leftMoved
-				&& !getMatchedEObject(leftElement.eContainer()).equals(
-						rightElement.eContainer())) {
+				&& !getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
 			createRemoteMoveOperation(root, leftElement, rightElement);
 		}
 	}
@@ -582,32 +517,28 @@ public class DiffMaker implements DiffEngine {
 	/**
 	 * Checks if there's been references updates in the model.<br/>
 	 * <p>
-	 * A reference is considered updated if its value(s) has been changed
-	 * (either removal or addition of an element if the reference is
-	 * multi-valued or update of a single-valued reference) between the left and
+	 * A reference is considered updated if its value(s) has been changed (either removal or addition of an
+	 * element if the reference is multi-valued or update of a single-valued reference) between the left and
 	 * the right model.
 	 * </p>
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
 	 * @param mapping
-	 *            Contains informations about the left and right model elements
-	 *            we have to compare.
+	 *            Contains informations about the left and right model elements we have to compare.
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch the references' values.
 	 */
-	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping)
-			throws FactoryException {
+	private void checkReferencesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
 		final EClass eClass = mapping.getLeftElement().eClass();
 		final List eclassReferences = eClass.getEAllReferences();
 
 		final Iterator it = eclassReferences.iterator();
 		while (it.hasNext()) {
-			final EReference next = (EReference) it.next();
-			if (!next.isContainment() && !next.isDerived()
-					&& !next.isTransient() && !next.isContainer()) {
-				createNonConflictingReferencesUpdate(root, next, mapping
-						.getLeftElement(), mapping.getRightElement());
+			final EReference next = (EReference)it.next();
+			if (!next.isContainment() && !next.isDerived() && !next.isTransient() && !next.isContainer()) {
+				createNonConflictingReferencesUpdate(root, next, mapping.getLeftElement(), mapping
+						.getRightElement());
 			}
 		}
 	}
@@ -615,24 +546,20 @@ public class DiffMaker implements DiffEngine {
 	/**
 	 * Checks if there's been references updates in the model.<br/>
 	 * <p>
-	 * A reference is considered updated if its value(s) has been changed
-	 * (either removal or addition of an element if the reference is
-	 * multi-valued or update of a single-valued reference) between the left and
-	 * the ancestor model, the right and the ancestor or between the left and
-	 * the right model.
+	 * A reference is considered updated if its value(s) has been changed (either removal or addition of an
+	 * element if the reference is multi-valued or update of a single-valued reference) between the left and
+	 * the ancestor model, the right and the ancestor or between the left and the right model.
 	 * </p>
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
 	 * @param mapping
-	 *            Contains informations about the left, right and origin model
-	 *            elements we have to compare.
+	 *            Contains informations about the left, right and origin model elements we have to compare.
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch the references' values.
 	 */
 	@SuppressWarnings("unchecked")
-	private void checkReferencesUpdates(DiffGroup root, Match3Element mapping)
-			throws FactoryException {
+	private void checkReferencesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
 		// Ignores matchElements when they don't have origin (no updates on
 		// these)
 		if (mapping.getOriginElement() == null)
@@ -642,20 +569,16 @@ public class DiffMaker implements DiffEngine {
 
 		final Iterator it = eclassReferences.iterator();
 		while (it.hasNext()) {
-			final EReference next = (EReference) it.next();
-			if (!next.isContainment() && !next.isDerived()
-					&& !next.isTransient()) {
+			final EReference next = (EReference)it.next();
+			if (!next.isContainment() && !next.isDerived() && !next.isTransient()) {
 				final String referenceName = next.getName();
-				final List leftReferences = EFactory.eGetAsList(mapping
-						.getLeftElement(), referenceName);
-				final List rightReferences = EFactory.eGetAsList(mapping
-						.getRightElement(), referenceName);
-				final List ancestorReferences = EFactory.eGetAsList(mapping
-						.getOriginElement(), referenceName);
+				final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+				final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+				final List ancestorReferences = EFactory
+						.eGetAsList(mapping.getOriginElement(), referenceName);
 
 				// Checks if there're conflicts
-				if (isConflictual(next, leftReferences, rightReferences,
-						ancestorReferences)) {
+				if (isConflictual(next, leftReferences, rightReferences, ancestorReferences)) {
 					createConflictingReferenceUpdate(root, next, mapping);
 					// We know there aren't any conflicting changes
 				} else {
@@ -664,42 +587,31 @@ public class DiffMaker implements DiffEngine {
 					final List<EObject> deletedReferences = new ArrayList<EObject>();
 					final List<EObject> addedReferences = new ArrayList<EObject>();
 
-					populateThreeWayReferencesChanges(mapping, next,
-							addedReferences, deletedReferences,
+					populateThreeWayReferencesChanges(mapping, next, addedReferences, deletedReferences,
 							remoteAddedReferences, remoteDeletedReferences);
-					createRemoteReferencesUpdate(root, next, mapping,
-							remoteAddedReferences, remoteDeletedReferences);
+					createRemoteReferencesUpdate(root, next, mapping, remoteAddedReferences,
+							remoteDeletedReferences);
 
 					boolean isUniqueReferenceUpdate = false;
-					if (!next.isMany() && addedReferences.size() > 0
-							&& deletedReferences.size() > 0) {
-						isUniqueReferenceUpdate = !addedReferences.get(0)
-								.eIsProxy()
+					if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
+						isUniqueReferenceUpdate = !addedReferences.get(0).eIsProxy()
 								|| !deletedReferences.get(0).eIsProxy()
-								|| !EcoreUtil
-										.getURI(addedReferences.get(0))
-										.equals(
-												EcoreUtil
-														.getURI(deletedReferences
-																.get(0)));
+								|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
+										EcoreUtil.getURI(deletedReferences.get(0)));
 					}
 
 					if (isUniqueReferenceUpdate) {
 						root.getSubDiffElements().add(
-								createUpdatedReferencesOperation(mapping
-										.getLeftElement(), mapping
-										.getRightElement(), next,
-										addedReferences, deletedReferences));
+								createUpdatedReferencesOperation(mapping.getLeftElement(), mapping
+										.getRightElement(), next, addedReferences, deletedReferences));
 					} else if (addedReferences.size() > 0) {
 						// REFERENCES ADD
-						createNewReferencesOperation(root, mapping
-								.getLeftElement(), mapping.getRightElement(),
-								next, addedReferences);
+						createNewReferencesOperation(root, mapping.getLeftElement(), mapping
+								.getRightElement(), next, addedReferences);
 					} else if (deletedReferences.size() > 0) {
 						// REFERENCES DEL
-						createRemovedReferencesOperation(root, mapping
-								.getLeftElement(), mapping.getRightElement(),
-								next, deletedReferences);
+						createRemovedReferencesOperation(root, mapping.getLeftElement(), mapping
+								.getRightElement(), next, deletedReferences);
 					}
 				}
 			}
@@ -707,20 +619,19 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will create and populate a {@link List} with all the references from
-	 * the <code>rightReferences</code> {@link List} that cannot be matched in
-	 * the <code>leftReferences</code> {@link List}.
+	 * This will create and populate a {@link List} with all the references from the
+	 * <code>rightReferences</code> {@link List} that cannot be matched in the <code>leftReferences</code>
+	 * {@link List}.
 	 * 
 	 * @param leftReferences
 	 *            List of the left element reference values.
 	 * @param rightReferences
 	 *            List of the right element reference values.
-	 * @return {@link List} of all the references that have been added in the
-	 *         right element since the left element.
+	 * @return {@link List} of all the references that have been added in the right element since the left
+	 *         element.
 	 */
 	@SuppressWarnings("unchecked")
-	private List<EObject> computeAddedReferences(List leftReferences,
-			List rightReferences) {
+	private List<EObject> computeAddedReferences(List leftReferences, List rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
 
@@ -750,20 +661,19 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will create and populate a {@link List} with all the references from
-	 * the <code>leftReferences</code> {@link List} that cannot be matched in
-	 * the <code>rightReferences</code> {@link List}.
+	 * This will create and populate a {@link List} with all the references from the
+	 * <code>leftReferences</code> {@link List} that cannot be matched in the <code>rightReferences</code>
+	 * {@link List}.
 	 * 
 	 * @param leftReferences
 	 *            List of the left element reference values.
 	 * @param rightReferences
 	 *            List of the right element reference values.
-	 * @return {@link List} of all the references that have been deleted from
-	 *         the right element since the left element.
+	 * @return {@link List} of all the references that have been deleted from the right element since the left
+	 *         element.
 	 */
 	@SuppressWarnings("unchecked")
-	private List<EObject> computeDeletedReferences(List leftReferences,
-			List rightReferences) {
+	private List<EObject> computeDeletedReferences(List leftReferences, List rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
 
@@ -793,30 +703,27 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will create the {@link ConflictingDiffGroup} and its children for a
-	 * conflictual {@link AttributeChange}.
+	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual
+	 * {@link AttributeChange}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
 	 * @param attribute
 	 *            Attribute which has been changed to conflictual values.
 	 * @param mapping
-	 *            Contains informations about the left, right and origin
-	 *            element.
+	 *            Contains informations about the left, right and origin element.
 	 * @throws FactoryException
-	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s
-	 *             children.
+	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s children.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createConflictingAttributeChange(DiffGroup root,
-			EAttribute attribute, Match3Element mapping)
+	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
 		// We'll use this diffGroup to make use of
 		// #createNonConflictingAttributeChange(DiffGroup, EAttribute, EObject,
 		// EObject)
 		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingAttributeChange(dummyGroup, attribute, mapping
-				.getLeftElement(), mapping.getRightElement());
+		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping
+				.getRightElement());
 
 		if (dummyGroup.getSubDiffElements().size() > 0) {
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
@@ -825,37 +732,34 @@ public class DiffMaker implements DiffEngine {
 			conflictingDiff.setRightParent(mapping.getRightElement());
 			conflictingDiff.setOriginElement(mapping.getOriginElement());
 			// Dummy DiffGroup should have a single change
-			conflictingDiff.getSubDiffElements().add(
-					dummyGroup.getSubDiffElements().get(0));
+			conflictingDiff.getSubDiffElements().add(dummyGroup.getSubDiffElements().get(0));
 			root.getSubDiffElements().add(conflictingDiff);
 		}
 	}
 
 	/**
-	 * This will create the {@link ConflictingDiffGroup} and its children for a
-	 * conflictual {@link ReferenceChange}.
+	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual
+	 * {@link ReferenceChange}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup Root} of the {@link DiffElement} to create.
 	 * @param reference
 	 *            Target {@link EReference} of the modification.
 	 * @param mapping
-	 *            Contains informations about the left, right and origin element
-	 *            where the given reference has changed.
+	 *            Contains informations about the left, right and origin element where the given reference has
+	 *            changed.
 	 * @throws FactoryException
-	 *             Thrown if we cannot create the underlying
-	 *             {@link ReferenceChange}s.
+	 *             Thrown if we cannot create the underlying {@link ReferenceChange}s.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createConflictingReferenceUpdate(DiffGroup root,
-			EReference reference, Match3Element mapping)
+	private void createConflictingReferenceUpdate(DiffGroup root, EReference reference, Match3Element mapping)
 			throws FactoryException {
 		// We'll use this diffGroup to make use of
 		// #createNonConflictingAttributeChange(DiffGroup, EAttribute, EObject,
 		// EObject)
 		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingReferencesUpdate(dummyGroup, reference, mapping
-				.getLeftElement(), mapping.getRightElement());
+		createNonConflictingReferencesUpdate(dummyGroup, reference, mapping.getLeftElement(), mapping
+				.getRightElement());
 
 		if (dummyGroup.getSubDiffElements().size() > 0) {
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
@@ -864,28 +768,25 @@ public class DiffMaker implements DiffEngine {
 			conflictingDiff.setRightParent(mapping.getRightElement());
 			conflictingDiff.setOriginElement(mapping.getOriginElement());
 			// Dummy DiffGroup should have a single change
-			conflictingDiff.getSubDiffElements().add(
-					dummyGroup.getSubDiffElements().get(0));
+			conflictingDiff.getSubDiffElements().add(dummyGroup.getSubDiffElements().get(0));
 			root.getSubDiffElements().add(conflictingDiff);
 		}
 	}
 
 	/**
-	 * This will create the {@link MoveModelElement} under the given
-	 * {@link DiffGroup root}.
+	 * This will create the {@link MoveModelElement} under the given {@link DiffGroup root}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
 	 * @param left
 	 *            Element of the left model corresponding to the right one.
 	 * @param right
-	 *            Element that has been moved since the last (ancestor for
-	 *            three-way comparison, left for two-way comparison) version.
+	 *            Element that has been moved since the last (ancestor for three-way comparison, left for
+	 *            two-way comparison) version.
 	 */
 	@SuppressWarnings("unchecked")
 	private void createMoveOperation(DiffGroup root, EObject left, EObject right) {
-		final MoveModelElement operation = DiffFactory.eINSTANCE
-				.createMoveModelElement();
+		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
 		operation.setRightTarget(getMatchedEObject(left.eContainer()));
@@ -894,10 +795,9 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Creates the {@link DiffGroup} corresponding to a reference's value
-	 * addition under the given {@link DiffGroup}.<br/>The parameters include
-	 * the list of added references which can be computed using
-	 * {@link #computeAddedReferences(List, List)}.
+	 * Creates the {@link DiffGroup} corresponding to a reference's value addition under the given
+	 * {@link DiffGroup}.<br/>The parameters include the list of added references which can be computed
+	 * using {@link #computeAddedReferences(List, List)}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement}s to create.
@@ -908,18 +808,15 @@ public class DiffMaker implements DiffEngine {
 	 * @param reference
 	 *            {@link EReference} target of the operation.
 	 * @param addedReferences
-	 *            {@link List} of reference values that have been added in the
-	 *            <code>right</code> element since the <code>left</code>
-	 *            element.
+	 *            {@link List} of reference values that have been added in the <code>right</code> element
+	 *            since the <code>left</code> element.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createNewReferencesOperation(DiffGroup root, EObject left,
-			EObject right, EReference reference, List<EObject> addedReferences) {
-		for (final Iterator<EObject> addedReferenceIterator = addedReferences
-				.iterator(); addedReferenceIterator.hasNext();) {
+	private void createNewReferencesOperation(DiffGroup root, EObject left, EObject right,
+			EReference reference, List<EObject> addedReferences) {
+		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator.hasNext(); ) {
 			final EObject eobj = addedReferenceIterator.next();
-			final AddReferenceValue addOperation = DiffFactory.eINSTANCE
-					.createAddReferenceValue();
+			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
 			addOperation.setRightElement(right);
 			addOperation.setLeftElement(left);
 			addOperation.setReference(reference);
@@ -931,8 +828,8 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Creates and add the {@link DiffGroup} corresponding to an
-	 * {@link AttributeChange} operation to the given {@link DiffGroup root}.
+	 * Creates and add the {@link DiffGroup} corresponding to an {@link AttributeChange} operation to the
+	 * given {@link DiffGroup root}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
@@ -943,46 +840,37 @@ public class DiffMaker implements DiffEngine {
 	 * @param rightElement
 	 *            Right element of the attribute change.
 	 * @throws FactoryException
-	 *             Thrown if we cannot fetch the attribute's value for either
-	 *             one of the elements.
+	 *             Thrown if we cannot fetch the attribute's value for either one of the elements.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createNonConflictingAttributeChange(DiffGroup root,
-			EAttribute attribute, EObject leftElement, EObject rightElement)
-			throws FactoryException {
-		final Object leftValue = EFactory
-				.eGet(leftElement, attribute.getName());
-		final Object rightValue = EFactory.eGet(rightElement, attribute
-				.getName());
+	private void createNonConflictingAttributeChange(DiffGroup root, EAttribute attribute,
+			EObject leftElement, EObject rightElement) throws FactoryException {
+		final Object leftValue = EFactory.eGet(leftElement, attribute.getName());
+		final Object rightValue = EFactory.eGet(rightElement, attribute.getName());
 
 		if (attribute.isMany()) {
-			for (Object aValue : (List) leftValue) {
-				if (!((List) rightValue).contains(aValue)
-						&& aValue instanceof EObject) {
-					final RemoveAttribute operation = DiffFactory.eINSTANCE
-							.createRemoveAttribute();
+			for (Object aValue : (List)leftValue) {
+				if (!((List)rightValue).contains(aValue) && aValue instanceof EObject) {
+					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
-					operation.setLeftTarget((EObject) aValue);
+					operation.setLeftTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List) rightValue) {
-				if (!((List) leftValue).contains(aValue)
-						&& aValue instanceof EObject) {
-					final AddAttribute operation = DiffFactory.eINSTANCE
-							.createAddAttribute();
+			for (Object aValue : (List)rightValue) {
+				if (!((List)leftValue).contains(aValue) && aValue instanceof EObject) {
+					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
-					operation.setRightTarget((EObject) aValue);
+					operation.setRightTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
 		} else {
-			final UpdateAttribute operation = DiffFactory.eINSTANCE
-					.createUpdateAttribute();
+			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
 			operation.setRightElement(rightElement);
 			operation.setLeftElement(leftElement);
 			operation.setAttribute(attribute);
@@ -991,9 +879,8 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will check the given <code>reference</code> for modification
-	 * between <code>leftElement</code> and <code>rightElement</code> and
-	 * create the corresponding {@link DiffElement}s under the given
+	 * This will check the given <code>reference</code> for modification between <code>leftElement</code>
+	 * and <code>rightElement</code> and create the corresponding {@link DiffElement}s under the given
 	 * {@link DiffGroup}.
 	 * 
 	 * @param root
@@ -1001,66 +888,57 @@ public class DiffMaker implements DiffEngine {
 	 * @param reference
 	 *            {@link EReference} to check for modifications.
 	 * @param leftElement
-	 *            Element corresponding to the initial value for the given
-	 *            reference.
+	 *            Element corresponding to the initial value for the given reference.
 	 * @param rightElement
-	 *            Element corresponding to the final value for the given
-	 *            reference.
+	 *            Element corresponding to the final value for the given reference.
 	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>reference</code>'s values
-	 *             for either the left or the right element.
+	 *             Thrown if we cannot fetch <code>reference</code>'s values for either the left or the
+	 *             right element.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createNonConflictingReferencesUpdate(DiffGroup root,
-			EReference reference, EObject leftElement, EObject rightElement)
-			throws FactoryException {
-		final List leftElementReferences = EFactory.eGetAsList(leftElement,
-				reference.getName());
-		final List rightElementReferences = EFactory.eGetAsList(rightElement,
-				reference.getName());
+	private void createNonConflictingReferencesUpdate(DiffGroup root, EReference reference,
+			EObject leftElement, EObject rightElement) throws FactoryException {
+		final List leftElementReferences = EFactory.eGetAsList(leftElement, reference.getName());
+		final List rightElementReferences = EFactory.eGetAsList(rightElement, reference.getName());
 
-		final List<EObject> deletedReferences = computeDeletedReferences(
-				leftElementReferences, rightElementReferences);
-		final List<EObject> addedReferences = computeAddedReferences(
-				leftElementReferences, rightElementReferences);
+		final List<EObject> deletedReferences = computeDeletedReferences(leftElementReferences,
+				rightElementReferences);
+		final List<EObject> addedReferences = computeAddedReferences(leftElementReferences,
+				rightElementReferences);
 
 		// REFERENCES UPDATES
-		if (!reference.isMany() && addedReferences.size() > 0
-				&& deletedReferences.size() > 0) {
+		if (!reference.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
 			/*
-			 * If neither the left nor the right target are proxies, or if their
-			 * target URIs are distinct, this is a reference update. Otherwise,
-			 * we are here because we haven't been able to resolve the proxy.
+			 * If neither the left nor the right target are proxies, or if their target URIs are distinct,
+			 * this is a reference update. Otherwise, we are here because we haven't been able to resolve the
+			 * proxy.
 			 */
 			if (!addedReferences.get(0).eIsProxy()
 					|| !deletedReferences.get(0).eIsProxy()
 					|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
 							EcoreUtil.getURI(deletedReferences.get(0)))) {
 				root.getSubDiffElements().add(
-						createUpdatedReferencesOperation(leftElement,
-								rightElement, reference, addedReferences,
-								deletedReferences));
+						createUpdatedReferencesOperation(leftElement, rightElement, reference,
+								addedReferences, deletedReferences));
 			}
 		} else {
 			// REFERENCES ADD
 			if (addedReferences.size() > 0) {
-				createNewReferencesOperation(root, leftElement, rightElement,
-						reference, addedReferences);
+				createNewReferencesOperation(root, leftElement, rightElement, reference, addedReferences);
 			}
 			// REFERENCES DEL
 			if (deletedReferences.size() > 0) {
-				createRemovedReferencesOperation(root, leftElement,
-						rightElement, reference, deletedReferences);
+				createRemovedReferencesOperation(root, leftElement, rightElement, reference,
+						deletedReferences);
 			}
 		}
 	}
 
 	/**
-	 * This will create the needed remote attribute change {@link DiffElement}
-	 * under the given {@link DiffGroup root}.<br/>An attribute is
-	 * &quot;remotely changed&quot; if it has been added, updated or deleted in
-	 * the left (latest from head) version but it has kept its former value in
-	 * the right (working copy) version.
+	 * This will create the needed remote attribute change {@link DiffElement} under the given
+	 * {@link DiffGroup root}.<br/>An attribute is &quot;remotely changed&quot; if it has been added,
+	 * updated or deleted in the left (latest from head) version but it has kept its former value in the right
+	 * (working copy) version.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
@@ -1069,50 +947,44 @@ public class DiffMaker implements DiffEngine {
 	 * @param mapping
 	 *            Contains the three (ancestor, left, right) elements' mapping.
 	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>attribute</code>'s left
-	 *             and right values.
+	 *             Thrown if we cannot fetch <code>attribute</code>'s left and right values.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createRemoteAttributeChange(DiffGroup root,
-			EAttribute attribute, Match3Element mapping)
+	private void createRemoteAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
-		final Object leftValue = EFactory.eGet(mapping.getLeftElement(),
-				attribute.getName());
-		final Object rightValue = EFactory.eGet(mapping.getRightElement(),
-				attribute.getName());
+		final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
+		final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
 
 		if (attribute.isMany()) {
-			for (Object aValue : (List) leftValue) {
+			for (Object aValue : (List)leftValue) {
 				// if the value is present in the left (latest) but not in the
 				// right (working copy), it's been
 				// added remotely
-				if (!((List) rightValue).contains(aValue)) {
-					final RemoteAddAttribute operation = DiffFactory.eINSTANCE
-							.createRemoteAddAttribute();
+				if (!((List)rightValue).contains(aValue)) {
+					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject) aValue);
+					operation.setLeftTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List) rightValue) {
+			for (Object aValue : (List)rightValue) {
 				// if the value is present in the right (working copy) but not
 				// in the left (latest), it's been
 				// removed remotely
-				if (!((List) leftValue).contains(aValue)) {
+				if (!((List)leftValue).contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject) aValue);
+					operation.setRightTarget((EObject)aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
 		} else {
-			final UpdateAttribute operation = DiffFactory.eINSTANCE
-					.createRemoteUpdateAttribute();
+			final UpdateAttribute operation = DiffFactory.eINSTANCE.createRemoteUpdateAttribute();
 			operation.setRightElement(mapping.getRightElement());
 			operation.setLeftElement(mapping.getLeftElement());
 			operation.setAttribute(attribute);
@@ -1121,10 +993,9 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will create the {@link RemoteMoveModelElement} under the given
-	 * {@link DiffGroup root}.<br/>A {@link RemoteMoveModelElement} represents
-	 * the fact that an element has been remotely moved since the ancestor
-	 * model, but the right model has kept the element in its former place.
+	 * This will create the {@link RemoteMoveModelElement} under the given {@link DiffGroup root}.<br/>A
+	 * {@link RemoteMoveModelElement} represents the fact that an element has been remotely moved since the
+	 * ancestor model, but the right model has kept the element in its former place.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
@@ -1134,10 +1005,8 @@ public class DiffMaker implements DiffEngine {
 	 *            Element of the right model corresponding to the left one.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createRemoteMoveOperation(DiffGroup root, EObject left,
-			EObject right) {
-		final RemoteMoveModelElement operation = DiffFactory.eINSTANCE
-				.createRemoteMoveModelElement();
+	private void createRemoteMoveOperation(DiffGroup root, EObject left, EObject right) {
+		final RemoteMoveModelElement operation = DiffFactory.eINSTANCE.createRemoteMoveModelElement();
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
 		operation.setRightTarget(getMatchedEObject(left.eContainer()));
@@ -1146,13 +1015,12 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This will check for remote {@link ReferenceChange} operations and create
-	 * the corresponding {@link DiffElement}s.<br/>
+	 * This will check for remote {@link ReferenceChange} operations and create the corresponding
+	 * {@link DiffElement}s.<br/>
 	 * <p>
-	 * A reference is considered &quot;remotely changed&quot; if its values
-	 * differ between the left (latest from HEAD) and origin (common ancestor)
-	 * model, but its values haven't changed between the right (working copy)
-	 * and the origin model.
+	 * A reference is considered &quot;remotely changed&quot; if its values differ between the left (latest
+	 * from HEAD) and origin (common ancestor) model, but its values haven't changed between the right
+	 * (working copy) and the origin model.
 	 * </p>
 	 * 
 	 * @param root
@@ -1160,21 +1028,17 @@ public class DiffMaker implements DiffEngine {
 	 * @param reference
 	 *            {@link EReference} to check for {@link ReferenceChange}s.
 	 * @param mapping
-	 *            Contains informations about the left, right and original model
-	 *            elements.
+	 *            Contains informations about the left, right and original model elements.
 	 * @param remotelyAdded
-	 *            {@link List} of reference values that have been added in the
-	 *            left model since the origin.
+	 *            {@link List} of reference values that have been added in the left model since the origin.
 	 * @param remotelyDeleted
-	 *            {@link List} of reference values that have been removed from
-	 *            the left model since the origin.
+	 *            {@link List} of reference values that have been removed from the left model since the
+	 *            origin.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createRemoteReferencesUpdate(DiffGroup root,
-			EReference reference, Match3Element mapping,
+	private void createRemoteReferencesUpdate(DiffGroup root, EReference reference, Match3Element mapping,
 			List<EObject> remotelyAdded, List<EObject> remotelyDeleted) {
-		if (!reference.isMany() && remotelyAdded.size() > 0
-				&& remotelyDeleted.size() > 0) {
+		if (!reference.isMany() && remotelyAdded.size() > 0 && remotelyDeleted.size() > 0) {
 			final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE
 					.createRemoteUpdateUniqueReferenceValue();
 			operation.setLeftElement(mapping.getLeftElement());
@@ -1194,8 +1058,7 @@ public class DiffMaker implements DiffEngine {
 
 			root.getSubDiffElements().add(operation);
 		} else {
-			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded
-					.iterator(); addedReferenceIterator.hasNext();) {
+			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator(); addedReferenceIterator.hasNext(); ) {
 				final EObject eobj = addedReferenceIterator.next();
 				final RemoteAddReferenceValue addOperation = DiffFactory.eINSTANCE
 						.createRemoteAddReferenceValue();
@@ -1207,8 +1070,7 @@ public class DiffMaker implements DiffEngine {
 					addOperation.setRightRemovedTarget(getMatchedEObject(eobj));
 				root.getSubDiffElements().add(addOperation);
 			}
-			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted
-					.iterator(); deletedReferenceIterator.hasNext();) {
+			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator(); deletedReferenceIterator.hasNext(); ) {
 				final EObject eobj = deletedReferenceIterator.next();
 				final RemoteRemoveReferenceValue delOperation = DiffFactory.eINSTANCE
 						.createRemoteRemoveReferenceValue();
@@ -1224,10 +1086,9 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Creates the {@link DiffGroup} corresponding to a reference's value
-	 * removal under the given {@link DiffGroup}.<br/>The parameters include
-	 * the list of removed references which can be computed using
-	 * {@link #computeDeletedReferences(List, List)}.
+	 * Creates the {@link DiffGroup} corresponding to a reference's value removal under the given
+	 * {@link DiffGroup}.<br/>The parameters include the list of removed references which can be computed
+	 * using {@link #computeDeletedReferences(List, List)}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement}s to create.
@@ -1238,18 +1099,15 @@ public class DiffMaker implements DiffEngine {
 	 * @param reference
 	 *            {@link EReference} target of the operation.
 	 * @param deletedReferences
-	 *            {@link List} of reference values that have been removed in the
-	 *            <code>right</code> element since the <code>left</code>
-	 *            element.
+	 *            {@link List} of reference values that have been removed in the <code>right</code> element
+	 *            since the <code>left</code> element.
 	 */
 	@SuppressWarnings("unchecked")
-	private void createRemovedReferencesOperation(DiffGroup root, EObject left,
-			EObject right, EReference reference, List<EObject> deletedReferences) {
-		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences
-				.iterator(); deletedReferenceIterator.hasNext();) {
+	private void createRemovedReferencesOperation(DiffGroup root, EObject left, EObject right,
+			EReference reference, List<EObject> deletedReferences) {
+		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator.hasNext(); ) {
 			final EObject eobj = deletedReferenceIterator.next();
-			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE
-					.createRemoveReferenceValue();
+			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
 			delOperation.setRightElement(right);
 			delOperation.setLeftElement(left);
 			delOperation.setReference(reference);
@@ -1261,11 +1119,9 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Creates the {@link DiffElement} corresponding to an unique reference's
-	 * value update.<br/>The parameters include the lists of added and removed
-	 * references, these can be computed using
-	 * {@link #computeAddedReferences(List, List)} and
-	 * {@link #computeDeletedReferences(List, List)}.
+	 * Creates the {@link DiffElement} corresponding to an unique reference's value update.<br/>The
+	 * parameters include the lists of added and removed references, these can be computed using
+	 * {@link #computeAddedReferences(List, List)} and {@link #computeDeletedReferences(List, List)}.
 	 * 
 	 * @param left
 	 *            Left element of the reference change.
@@ -1274,22 +1130,17 @@ public class DiffMaker implements DiffEngine {
 	 * @param reference
 	 *            {@link EReference} target of the operation.
 	 * @param deletedReferences
-	 *            {@link List} of reference values that have been removed in the
-	 *            <code>right</code> element since the <code>left</code>
-	 *            element.
+	 *            {@link List} of reference values that have been removed in the <code>right</code> element
+	 *            since the <code>left</code> element.
 	 * @param addedReferences
-	 *            {@link List} of reference values that have been added in the
-	 *            <code>right</code> element since the <code>left</code>
-	 *            element.
-	 * @return The {@link DiffElement} corresponding to an unique reference's
-	 *         value update
+	 *            {@link List} of reference values that have been added in the <code>right</code> element
+	 *            since the <code>left</code> element.
+	 * @return The {@link DiffElement} corresponding to an unique reference's value update
 	 */
 	@SuppressWarnings("unchecked")
-	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(
-			EObject left, EObject right, EReference reference,
-			List<EObject> addedReferences, List<EObject> deletedReferences) {
-		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE
-				.createUpdateUniqueReferenceValue();
+	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right,
+			EReference reference, List<EObject> addedReferences, List<EObject> deletedReferences) {
+		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
 		operation.setLeftElement(left);
 		operation.setRightElement(right);
 		operation.setReference(reference);
@@ -1309,15 +1160,13 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * This is the core of the diff computing for two way comparison. This will
-	 * call for checks on attributes, references and model elements to check for
-	 * updates/changes.
+	 * This is the core of the diff computing for two way comparison. This will call for checks on attributes,
+	 * references and model elements to check for updates/changes.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
 	 * @param match
-	 *            {@link Match3Element root} of the {@link MatchModel} to
-	 *            analyze.
+	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
 	 */
 	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
 		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
@@ -1337,7 +1186,7 @@ public class DiffMaker implements DiffEngine {
 			while (it2.hasNext()) {
 				final Object eObj = it2.next();
 				if (!(eObj instanceof DiffGroup)) {
-					shouldAddToList.add((DiffElement) eObj);
+					shouldAddToList.add((DiffElement)eObj);
 				}
 			}
 			for (DiffElement diff : shouldAddToList) {
@@ -1349,21 +1198,19 @@ public class DiffMaker implements DiffEngine {
 		// taking care of our childs
 		final Iterator it = match.getSubMatchElements().iterator();
 		while (it.hasNext()) {
-			final Match2Elements element = (Match2Elements) it.next();
+			final Match2Elements element = (Match2Elements)it.next();
 			doDiffDelegate(root, element);
 		}
 	}
 
 	/**
-	 * This is the core of the diff computing for three way comparison. This
-	 * will call for checks on attributes, references and model elements to
-	 * check for updates/changes.
+	 * This is the core of the diff computing for three way comparison. This will call for checks on
+	 * attributes, references and model elements to check for updates/changes.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
 	 * @param match
-	 *            {@link Match3Element root} of the {@link MatchModel} to
-	 *            analyze.
+	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
 	 */
 	private void doDiffDelegate(DiffGroup root, Match3Element match) {
 		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
@@ -1383,7 +1230,7 @@ public class DiffMaker implements DiffEngine {
 			while (it2.hasNext()) {
 				final Object eObj = it2.next();
 				if (!(eObj instanceof DiffGroup)) {
-					shouldAddToList.add((DiffElement) eObj);
+					shouldAddToList.add((DiffElement)eObj);
 				}
 			}
 			for (DiffElement diff : shouldAddToList) {
@@ -1395,14 +1242,14 @@ public class DiffMaker implements DiffEngine {
 		// taking care of our childs
 		final Iterator it = match.getSubMatchElements().iterator();
 		while (it.hasNext()) {
-			final Match3Element element = (Match3Element) it.next();
+			final Match3Element element = (Match3Element)it.next();
 			doDiffDelegate(root, element);
 		}
 	}
 
 	/**
-	 * Searches for an existing {@link DiffGroup} under <code>root</code> to
-	 * add the operation which parent is <code>targetParent</code>.
+	 * Searches for an existing {@link DiffGroup} under <code>root</code> to add the operation which parent
+	 * is <code>targetParent</code>.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup Root} of the {@link DiffModel}.
@@ -1413,10 +1260,10 @@ public class DiffMaker implements DiffEngine {
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
 		final TreeIterator it = root.eAllContents();
 		while (it.hasNext()) {
-			final EObject obj = (EObject) it.next();
+			final EObject obj = (EObject)it.next();
 			if (obj instanceof DiffGroup) {
-				if (((DiffGroup) obj).getLeftParent() == targetParent) {
-					return (DiffGroup) obj;
+				if (((DiffGroup)obj).getLeftParent() == targetParent) {
+					return (DiffGroup)obj;
 				}
 			}
 		}
@@ -1424,9 +1271,8 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Return the left or right matched EObject from the one given. More
-	 * specifically, this will return the left matched element if the given
-	 * {@link EObject} is the right one, or the right matched element if the
+	 * Return the left or right matched EObject from the one given. More specifically, this will return the
+	 * left matched element if the given {@link EObject} is the right one, or the right matched element if the
 	 * given {@link EObject} is either the left or the origin one.
 	 * 
 	 * @param from
@@ -1459,12 +1305,9 @@ public class DiffMaker implements DiffEngine {
 	 * @throws IllegalArgumentException
 	 *             Thrown if <code>side</code> is invalid.
 	 */
-	private EObject getMatchedEObject(EObject from, int side)
-			throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT
-				&& side != ANCESTOR_OBJECT)
-			throw new IllegalArgumentException(Messages
-					.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
+	private EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
+			throw new IllegalArgumentException(Messages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null) {
@@ -1472,29 +1315,27 @@ public class DiffMaker implements DiffEngine {
 				matchedEObject = matchElem.getLeftElement();
 			else if (side == RIGHT_OBJECT)
 				matchedEObject = matchElem.getRightElement();
-			else if (side == ANCESTOR_OBJECT
-					&& matchElem instanceof Match3Element)
-				matchedEObject = ((Match3Element) matchElem).getOriginElement();
+			else if (side == ANCESTOR_OBJECT && matchElem instanceof Match3Element)
+				matchedEObject = ((Match3Element)matchElem).getOriginElement();
 		}
 		return matchedEObject;
 	}
 
 	/**
-	 * Returns the list of references from the given list that can be matched on
-	 * either right or left {@link EObject}s.
+	 * Returns the list of references from the given list that can be matched on either right or left
+	 * {@link EObject}s.
 	 * 
 	 * @param references
 	 *            {@link List} of the references to match.
-	 * @return The list of references from the given list that can be matched on
-	 *         either right or left {@link EObject}s.
+	 * @return The list of references from the given list that can be matched on either right or left
+	 *         {@link EObject}s.
 	 */
 	private List<EObject> getMatchedReferences(List<EObject> references) {
 		final List<EObject> matchedReferences = new ArrayList<EObject>();
-		for (final Iterator refIterator = references.iterator(); refIterator
-				.hasNext();) {
+		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext(); ) {
 			final Object currentReference = refIterator.next();
 			if (currentReference != null) {
-				final EObject currentMapped = getMatchedEObject((EObject) currentReference);
+				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
 				if (currentMapped != null)
 					matchedReferences.add(currentMapped);
 			}
@@ -1503,39 +1344,31 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Checks if the values of a given reference have been changed both on the
-	 * left (latest from head) and right (working copy) to distinct values since
-	 * the origin.
+	 * Checks if the values of a given reference have been changed both on the left (latest from head) and
+	 * right (working copy) to distinct values since the origin.
 	 * 
 	 * @param reference
 	 *            Reference we're checking for conflictual changes.
 	 * @param leftReferences
-	 *            {@link List} of values from the left (latest from head) model
-	 *            for <code>reference</code>.
+	 *            {@link List} of values from the left (latest from head) model for <code>reference</code>.
 	 * @param rightReferences
-	 *            {@link List} of values from the right (working copy) model for
-	 *            <code>reference</code>.
+	 *            {@link List} of values from the right (working copy) model for <code>reference</code>.
 	 * @param ancestorReferences
-	 *            {@link List} of values from the origin (common ancestor) model
-	 *            for <code>reference</code>.
-	 * @return <code>True</code> if there's been a conflictual change for the
-	 *         given {@link EReference}, <code>False</code> otherwise.
+	 *            {@link List} of values from the origin (common ancestor) model for <code>reference</code>.
+	 * @return <code>True</code> if there's been a conflictual change for the given {@link EReference},
+	 *         <code>False</code> otherwise.
 	 */
-	private boolean isConflictual(EReference reference, List leftReferences,
-			List rightReferences, List ancestorReferences) {
+	private boolean isConflictual(EReference reference, List leftReferences, List rightReferences, List ancestorReferences) {
 		boolean isConflictual = false;
 		// There CAN be a conflict ONLY if the reference is unique
 		if (!reference.isMany()) {
-			// If both left and right number of values have changed since origin
-			// ...
+			// If both left and right number of values have changed since origin...
 			if (leftReferences.size() != ancestorReferences.size()
 					&& rightReferences.size() != ancestorReferences.size()) {
 				// ... There is a conflict if the value hasn't been erased AND
 				// the left value is different than the right one
 				if (leftReferences.size() > 0
-						&& !leftReferences.get(0).equals(
-								getMatchedEObject((EObject) rightReferences
-										.get(0)))) {
+						&& !leftReferences.get(0).equals(getMatchedEObject((EObject)rightReferences.get(0)))) {
 					isConflictual = true;
 				}
 				// If the number of values hasn't changed since origin, there
@@ -1543,14 +1376,10 @@ public class DiffMaker implements DiffEngine {
 			} else if (leftReferences.size() > 0 && rightReferences.size() > 0) {
 				// There's a conflict in the values are all distinct
 				if (!leftReferences.get(0).equals(
-						getMatchedEObject((EObject) ancestorReferences.get(0),
-								LEFT_OBJECT))
+						getMatchedEObject((EObject)ancestorReferences.get(0), LEFT_OBJECT))
 						&& !rightReferences.get(0).equals(
-								getMatchedEObject((EObject) ancestorReferences
-										.get(0), RIGHT_OBJECT))
-						&& !rightReferences.get(0).equals(
-								getMatchedEObject((EObject) leftReferences
-										.get(0)))) {
+								getMatchedEObject((EObject)ancestorReferences.get(0), RIGHT_OBJECT))
+						&& !rightReferences.get(0).equals(getMatchedEObject((EObject)leftReferences.get(0)))) {
 					isConflictual = true;
 				}
 			}
@@ -1559,103 +1388,84 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Checks a given {@link EReference reference} for changes related to a
-	 * given <code>mapping</code> and populates the given {@link List}s with
-	 * the reference values belonging to them.
+	 * Checks a given {@link EReference reference} for changes related to a given <code>mapping</code> and
+	 * populates the given {@link List}s with the reference values belonging to them.
 	 * 
 	 * @param mapping
-	 *            Contains informations about the left, right and origin
-	 *            elements.<br/>
+	 *            Contains informations about the left, right and origin elements.<br/>
 	 *            <ul>
-	 *            <li>&quot;Added&quot; values are the values that have been
-	 *            added in the right element since the origin and that haven't
-	 *            been added in the left element.</li>
-	 *            <li>&quot;Deleted&quot; values are the values that have been
-	 *            removed from the right element since the origin but are still
-	 *            present in the left element.</li>
-	 *            <li>&quot;Remotely added&quot; values are the values that
-	 *            have been added in the left element since the origin but
-	 *            haven't been added in the right element.</li>
-	 *            <li>&quot;Remotely deleted&quot; values are the values that
-	 *            have been removed from the left element since the origin but
-	 *            are still present in the right element.</li>
+	 *            <li>&quot;Added&quot; values are the values that have been added in the right element since
+	 *            the origin and that haven't been added in the left element.</li>
+	 *            <li>&quot;Deleted&quot; values are the values that have been removed from the right element
+	 *            since the origin but are still present in the left element.</li>
+	 *            <li>&quot;Remotely added&quot; values are the values that have been added in the left
+	 *            element since the origin but haven't been added in the right element.</li>
+	 *            <li>&quot;Remotely deleted&quot; values are the values that have been removed from the left
+	 *            element since the origin but are still present in the right element.</li>
 	 *            </ul>
 	 * @param reference
 	 *            {@link EReference} we're checking for changes.
 	 * @param addedReferences
-	 *            {@link List} that will be populated with the values that have
-	 *            been added in the right element since the origin.
+	 *            {@link List} that will be populated with the values that have been added in the right
+	 *            element since the origin.
 	 * @param deletedReferences
-	 *            {@link List} that will be populated with the values that have
-	 *            been removed from the right element since the origin.
+	 *            {@link List} that will be populated with the values that have been removed from the right
+	 *            element since the origin.
 	 * @param remoteAddedReferences
-	 *            {@link List} that will be populated with the values that have
-	 *            been added in the left element since the origin.
+	 *            {@link List} that will be populated with the values that have been added in the left element
+	 *            since the origin.
 	 * @param remoteDeletedReferences
-	 *            {@link List} that will be populated with the values that have
-	 *            been removed from the left element since the origin.
+	 *            {@link List} that will be populated with the values that have been removed from the left
+	 *            element since the origin.
 	 * @throws FactoryException
-	 *             Thrown if we cannot fetch the reference's values in either
-	 *             the left, right or origin element.
+	 *             Thrown if we cannot fetch the reference's values in either the left, right or origin
+	 *             element.
 	 */
-	private void populateThreeWayReferencesChanges(Match3Element mapping,
-			EReference reference, List<EObject> addedReferences,
-			List<EObject> deletedReferences,
-			List<EObject> remoteAddedReferences,
-			List<EObject> remoteDeletedReferences) throws FactoryException {
+	private void populateThreeWayReferencesChanges(Match3Element mapping, EReference reference,
+			List<EObject> addedReferences, List<EObject> deletedReferences,
+			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
+			throws FactoryException {
 		final String referenceName = reference.getName();
-		final List leftReferences = EFactory.eGetAsList(mapping
-				.getLeftElement(), referenceName);
-		final List rightReferences = EFactory.eGetAsList(mapping
-				.getRightElement(), referenceName);
-		final List ancestorReferences = EFactory.eGetAsList(mapping
-				.getOriginElement(), referenceName);
+		final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+		final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+		final List ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
 
 		// populates remotely added references list
 		for (Object left : leftReferences) {
 			if (left instanceof EObject
-					&& !ancestorReferences.contains(getMatchedEObject(
-							(EObject) left, ANCESTOR_OBJECT))
-					&& !rightReferences
-							.contains(getMatchedEObject((EObject) left))) {
-				remoteAddedReferences.add((EObject) left);
+					&& !ancestorReferences.contains(getMatchedEObject((EObject)left, ANCESTOR_OBJECT))
+					&& !rightReferences.contains(getMatchedEObject((EObject)left))) {
+				remoteAddedReferences.add((EObject)left);
 			}
 		}
 		// populates localy added list
 		for (Object right : rightReferences) {
 			if (right instanceof EObject
-					&& !ancestorReferences.contains(getMatchedEObject(
-							(EObject) right, ANCESTOR_OBJECT))
-					&& !leftReferences
-							.contains(getMatchedEObject((EObject) right))) {
-				addedReferences.add((EObject) right);
+					&& !ancestorReferences.contains(getMatchedEObject((EObject)right, ANCESTOR_OBJECT))
+					&& !leftReferences.contains(getMatchedEObject((EObject)right))) {
+				addedReferences.add((EObject)right);
 			}
 		}
 		// populates remotely deleted and localy added lists
 		for (Object origin : ancestorReferences) {
 			if (origin instanceof EObject
-					&& !leftReferences.contains(getMatchedEObject(
-							(EObject) origin, LEFT_OBJECT))
-					&& rightReferences.contains(getMatchedEObject(
-							(EObject) origin, RIGHT_OBJECT))) {
-				remoteDeletedReferences.add((EObject) origin);
+					&& !leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))
+					&& rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))) {
+				remoteDeletedReferences.add((EObject)origin);
 			} else if (origin instanceof EObject
-					&& !rightReferences.contains(getMatchedEObject(
-							(EObject) origin, RIGHT_OBJECT))
-					&& leftReferences.contains(getMatchedEObject(
-							(EObject) origin, LEFT_OBJECT))) {
-				deletedReferences.add((EObject) origin);
+					&& !rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))
+					&& leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))) {
+				deletedReferences.add((EObject)origin);
 			}
 		}
 	}
 
 	/**
-	 * This will process the {@link #unMatchedElements unmatched elements} list
-	 * and create the appropriate {@link DiffElement}s.
+	 * This will process the {@link #unMatchedElements unmatched elements} list and create the appropriate
+	 * {@link DiffElement}s.
 	 * 
 	 * @param diffRoot
-	 *            {@link DiffGroup} under which to create the
-	 *            {@link DiffElement}s.
+	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
 	 * @param leftModel
 	 *            {@link Resource} representing the left model.
 	 */
@@ -1665,10 +1475,8 @@ public class DiffMaker implements DiffEngine {
 			final boolean isConflicting = unMatchedElements.get(unMatchElement);
 
 			final EObject element = unMatchElement.getElement();
-			final EObject matchedParent = getMatchedEObject(element
-					.eContainer());
-			final EObject matchedAncestor = getMatchedEObject(element,
-					ANCESTOR_OBJECT);
+			final EObject matchedParent = getMatchedEObject(element.eContainer());
+			final EObject matchedAncestor = getMatchedEObject(element, ANCESTOR_OBJECT);
 
 			if (unMatchElement instanceof RemoteUnMatchElement
 					&& unMatchElement.getElement().eResource() == leftModel) {
@@ -1676,19 +1484,14 @@ public class DiffMaker implements DiffEngine {
 						.createRemoteAddModelElement();
 				addOperation.setLeftElement(element);
 				addOperation.setRightParent(matchedParent);
-				addInContainerPackage(diffRoot, addOperation, unMatchElement
-						.getElement().eContainer());
+				addInContainerPackage(diffRoot, addOperation, unMatchElement.getElement().eContainer());
 			} else if (unMatchElement instanceof RemoteUnMatchElement) {
 				final DiffElement operation;
 				if (isConflicting) {
-					operation = DiffFactory.eINSTANCE
-							.createConflictingDiffElement();
-					((ConflictingDiffElement) operation)
-							.setLeftParent(matchedParent);
-					((ConflictingDiffElement) operation)
-							.setRightParent(element);
-					((ConflictingDiffElement) operation)
-							.setOriginElement(matchedAncestor);
+					operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
+					((ConflictingDiffElement)operation).setLeftParent(matchedParent);
+					((ConflictingDiffElement)operation).setRightParent(element);
+					((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
 
 					final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE
 							.createRemoteRemoveModelElement();
@@ -1697,25 +1500,19 @@ public class DiffMaker implements DiffEngine {
 
 					operation.getSubDiffElements().add(removeOperation);
 				} else {
-					operation = DiffFactory.eINSTANCE
-							.createRemoteRemoveModelElement();
-					((RemoteRemoveModelElement) operation)
-							.setRightElement(element);
-					((RemoteRemoveModelElement) operation)
-							.setLeftParent(matchedParent);
+					operation = DiffFactory.eINSTANCE.createRemoteRemoveModelElement();
+					((RemoteRemoveModelElement)operation).setRightElement(element);
+					((RemoteRemoveModelElement)operation).setLeftParent(matchedParent);
 				}
 
 				addInContainerPackage(diffRoot, operation, matchedParent);
 			} else if (unMatchElement.getElement().eResource() == leftModel) {
 				final DiffElement operation;
 				if (isConflicting) {
-					operation = DiffFactory.eINSTANCE
-							.createConflictingDiffElement();
-					((ConflictingDiffElement) operation).setLeftParent(element);
-					((ConflictingDiffElement) operation)
-							.setRightParent(matchedParent);
-					((ConflictingDiffElement) operation)
-							.setOriginElement(matchedAncestor);
+					operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
+					((ConflictingDiffElement)operation).setLeftParent(element);
+					((ConflictingDiffElement)operation).setRightParent(matchedParent);
+					((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
 
 					final RemoveModelElement removeOperation = DiffFactory.eINSTANCE
 							.createRemoveModelElement();
@@ -1724,17 +1521,14 @@ public class DiffMaker implements DiffEngine {
 
 					operation.getSubDiffElements().add(removeOperation);
 				} else {
-					operation = DiffFactory.eINSTANCE
-							.createRemoveModelElement();
-					((RemoveModelElement) operation).setLeftElement(element);
-					((RemoveModelElement) operation)
-							.setRightParent(matchedParent);
+					operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+					((RemoveModelElement)operation).setLeftElement(element);
+					((RemoveModelElement)operation).setRightParent(matchedParent);
 				}
 
 				addInContainerPackage(diffRoot, operation, matchedParent);
 			} else {
-				final AddModelElement addOperation = DiffFactory.eINSTANCE
-						.createAddModelElement();
+				final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
 				addOperation.setRightElement(element);
 				addOperation.setLeftParent(matchedParent);
 				addInContainerPackage(diffRoot, addOperation, matchedParent);
@@ -1743,34 +1537,29 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * Fill the <code>eObjectToMatch</code> map to retrieve matchings from
-	 * left, right or origin {@link EObject}.
+	 * Fill the <code>eObjectToMatch</code> map to retrieve matchings from left, right or origin
+	 * {@link EObject}.
 	 * 
 	 * @param match
 	 *            {@link MatchModel} to extract the {@link MatchElement}s from.
 	 * @param threeWay
-	 *            <code>True</code> if we need to retrieve the informations
-	 *            from the origin model too.
+	 *            <code>True</code> if we need to retrieve the informations from the origin model too.
 	 */
 	private void updateEObjectToMatch(MatchModel match, boolean threeWay) {
 		final Iterator rootElemIt = match.getMatchedElements().iterator();
 		while (rootElemIt.hasNext()) {
-			final Match2Elements matchRoot = (Match2Elements) rootElemIt.next();
+			final Match2Elements matchRoot = (Match2Elements)rootElemIt.next();
 			eObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);
 			eObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
 			if (threeWay)
-				eObjectToMatch.put(((Match3Element) matchRoot)
-						.getOriginElement(), matchRoot);
+				eObjectToMatch.put(((Match3Element)matchRoot).getOriginElement(), matchRoot);
 			final TreeIterator matchElemIt = matchRoot.eAllContents();
 			while (matchElemIt.hasNext()) {
-				final Match2Elements matchElem = (Match2Elements) matchElemIt
-						.next();
+				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
 				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);
 				eObjectToMatch.put(matchElem.getRightElement(), matchElem);
-				if (threeWay
-						&& ((Match3Element) matchElem).getOriginElement() != null)
-					eObjectToMatch.put(((Match3Element) matchElem)
-							.getOriginElement(), matchElem);
+				if (threeWay && ((Match3Element)matchElem).getOriginElement() != null)
+					eObjectToMatch.put(((Match3Element)matchElem).getOriginElement(), matchElem);
 			}
 		}
 	}

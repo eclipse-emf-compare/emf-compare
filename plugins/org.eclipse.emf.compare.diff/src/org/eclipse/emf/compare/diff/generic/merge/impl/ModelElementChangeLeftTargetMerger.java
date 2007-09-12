@@ -15,8 +15,6 @@ import java.util.Iterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -38,14 +36,14 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
-		final ModelElementChangeLeftTarget diff = (ModelElementChangeLeftTarget)this.diff;
-		final EObject element = diff.getLeftElement();
-		final EObject parent = diff.getLeftElement().eContainer();
+		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
+		final EObject element = theDiff.getLeftElement();
+		final EObject parent = theDiff.getLeftElement().eContainer();
 		EcoreUtil.remove(element);
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
@@ -54,16 +52,16 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void undoInTarget() {
-		final ModelElementChangeLeftTarget diff = (ModelElementChangeLeftTarget)this.diff;
+		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
 		// we should copy the element to the Origin one.
-		final EObject origin = diff.getRightParent();
-		final EObject element = diff.getLeftElement();
+		final EObject origin = theDiff.getRightParent();
+		final EObject element = theDiff.getLeftElement();
 		final EObject newOne = EcoreUtil.copy(element);
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {

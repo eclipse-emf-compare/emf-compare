@@ -30,10 +30,10 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final UpdateAttribute diff = (UpdateAttribute)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject origin = diff.getLeftElement();
-		final EAttribute attr = diff.getAttribute();
+		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject origin = theDiff.getLeftElement();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eSet(origin, attr.getName(), EFactory.eGet(element, attr.getName()));
 		} catch (FactoryException e) {
@@ -44,15 +44,15 @@ public class UpdateAttributeMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final UpdateAttribute diff = (UpdateAttribute)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject origin = diff.getLeftElement();
-		final EAttribute attr = diff.getAttribute();
+		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject origin = theDiff.getLeftElement();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eSet(element, attr.getName(), EFactory.eGet(origin, attr.getName()));
 		} catch (FactoryException e) {

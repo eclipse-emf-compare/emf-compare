@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Reference</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Reference</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class UpdateReferenceImpl extends ReferenceChangeImpl implements
-		UpdateReference {
+public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateReference {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateReferenceImpl() {
@@ -34,6 +35,7 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

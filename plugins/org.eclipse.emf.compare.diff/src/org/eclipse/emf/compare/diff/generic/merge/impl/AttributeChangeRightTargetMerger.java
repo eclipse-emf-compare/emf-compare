@@ -11,9 +11,7 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -41,11 +39,11 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final AttributeChangeRightTarget diff = (AttributeChangeRightTarget)this.diff;
-		final EObject origin = diff.getLeftElement();
-		final EObject element = diff.getRightTarget();
+		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final EObject origin = theDiff.getLeftElement();
+		final EObject element = theDiff.getRightTarget();
 		final EObject newOne = EcoreUtil.copy(element);
-		final EAttribute attr = diff.getAttribute();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eAdd(origin, attr.getName(), newOne);
 			copyXMIID(element, newOne);
@@ -57,15 +55,15 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final AttributeChangeRightTarget diff = (AttributeChangeRightTarget)this.diff;
-		final EObject target = diff.getRightElement();
-		final EObject element = diff.getRightTarget();
-		final EAttribute attr = diff.getAttribute();
+		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final EObject target = theDiff.getRightElement();
+		final EObject element = theDiff.getRightTarget();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eRemove(target, attr.getName(), element);
 		} catch (FactoryException e) {

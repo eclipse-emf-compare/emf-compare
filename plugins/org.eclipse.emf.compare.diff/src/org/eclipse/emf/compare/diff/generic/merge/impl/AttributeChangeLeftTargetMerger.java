@@ -12,8 +12,6 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
@@ -41,10 +39,10 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final AttributeChangeLeftTarget diff = (AttributeChangeLeftTarget)this.diff;
-		final EObject origin = diff.getLeftElement();
-		final EObject element = diff.getLeftTarget();
-		final EAttribute attr = diff.getAttribute();
+		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
+		final EObject origin = theDiff.getLeftElement();
+		final EObject element = theDiff.getLeftTarget();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eRemove(origin, attr.getName(), element);
 		} catch (FactoryException e) {
@@ -60,11 +58,11 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AttributeChangeLeftTarget diff = (AttributeChangeLeftTarget)this.diff;
-		final EObject target = diff.getRightElement();
-		final EObject element = diff.getLeftTarget();
+		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
+		final EObject target = theDiff.getRightElement();
+		final EObject element = theDiff.getLeftTarget();
 		final EObject newOne = EcoreUtil.copy(element);
-		final EAttribute attr = diff.getAttribute();
+		final EAttribute attr = theDiff.getAttribute();
 		try {
 			EFactory.eAdd(target, attr.getName(), newOne);
 			copyXMIID(element, newOne);

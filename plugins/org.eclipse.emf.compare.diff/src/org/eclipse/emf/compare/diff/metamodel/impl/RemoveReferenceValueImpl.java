@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Reference Value</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Reference Value</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl
-		implements RemoveReferenceValue {
+public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoveReferenceValueImpl() {
@@ -34,6 +35,7 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

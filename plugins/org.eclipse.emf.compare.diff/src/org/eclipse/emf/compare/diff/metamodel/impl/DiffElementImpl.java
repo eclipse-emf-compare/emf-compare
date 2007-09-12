@@ -25,24 +25,24 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getIsHiddenBy <em>Is Hidden By</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getIsHiddenBy <em>Is Hidden By</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public abstract class DiffElementImpl extends EObjectImpl implements
-		DiffElement {
+public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubDiffElements()
 	 * @generated
 	 * @ordered
@@ -50,9 +50,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	protected EList subDiffElements;
 
 	/**
-	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getIsHiddenBy()
 	 * @generated
 	 * @ordered
@@ -61,6 +61,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiffElementImpl() {
@@ -69,6 +70,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -78,25 +80,25 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getSubDiffElements() {
 		if (subDiffElements == null) {
-			subDiffElements = new EObjectContainmentEList(DiffElement.class,
-					this, DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
+			subDiffElements = new EObjectContainmentEList(DiffElement.class, this,
+					DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
 		}
 		return subDiffElements;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList getIsHiddenBy() {
 		if (isHiddenBy == null) {
-			isHiddenBy = new EObjectWithInverseResolvingEList.ManyInverse(
-					AbstractDiffExtension.class, this,
+			isHiddenBy = new EObjectWithInverseResolvingEList.ManyInverse(AbstractDiffExtension.class, this,
 					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY,
 					DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS);
 		}
@@ -104,100 +106,101 @@ public abstract class DiffElementImpl extends EObjectImpl implements
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			return ((InternalEList) getIsHiddenBy()).basicAdd(otherEnd, msgs);
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				return ((InternalEList)getIsHiddenBy()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return ((InternalEList) getSubDiffElements()).basicRemove(otherEnd,
-					msgs);
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			return ((InternalEList) getIsHiddenBy())
-					.basicRemove(otherEnd, msgs);
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return ((InternalEList)getSubDiffElements()).basicRemove(otherEnd, msgs);
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				return ((InternalEList)getIsHiddenBy()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return getSubDiffElements();
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			return getIsHiddenBy();
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return getSubDiffElements();
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				return getIsHiddenBy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			getSubDiffElements().clear();
-			getSubDiffElements().addAll((Collection) newValue);
-			return;
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			getIsHiddenBy().clear();
-			getIsHiddenBy().addAll((Collection) newValue);
-			return;
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				getSubDiffElements().clear();
+				getSubDiffElements().addAll((Collection)newValue);
+				return;
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				getIsHiddenBy().clear();
+				getIsHiddenBy().addAll((Collection)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			getSubDiffElements().clear();
-			return;
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			getIsHiddenBy().clear();
-			return;
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				getSubDiffElements().clear();
+				return;
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				getIsHiddenBy().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
-			return subDiffElements != null && !subDiffElements.isEmpty();
-		case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
-			return isHiddenBy != null && !isHiddenBy.isEmpty();
+			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
+				return subDiffElements != null && !subDiffElements.isEmpty();
+			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
+				return isHiddenBy != null && !isHiddenBy.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

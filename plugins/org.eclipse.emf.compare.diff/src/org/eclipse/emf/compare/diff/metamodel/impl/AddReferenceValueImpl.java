@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Reference Value</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Reference Value</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl
-		implements AddReferenceValue {
+public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implements AddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AddReferenceValueImpl() {
@@ -34,6 +35,7 @@ public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

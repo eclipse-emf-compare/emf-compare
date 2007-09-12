@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Model Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Model Element</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddModelElementImpl extends ModelElementChangeRightTargetImpl
-		implements AddModelElement {
+public class AddModelElementImpl extends ModelElementChangeRightTargetImpl implements AddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AddModelElementImpl() {
@@ -34,6 +35,7 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

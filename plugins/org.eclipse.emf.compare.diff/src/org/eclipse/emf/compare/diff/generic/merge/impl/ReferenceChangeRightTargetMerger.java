@@ -13,10 +13,8 @@ package org.eclipse.emf.compare.diff.generic.merge.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
@@ -36,16 +34,16 @@ import org.eclipse.emf.ecore.EObject;
 public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
-		final ReferenceChangeRightTarget diff = (ReferenceChangeRightTarget)this.diff;
-		final EObject element = diff.getLeftElement();
-		final EObject leftTarget = diff.getLeftAddedTarget();
+		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
+		final EObject element = theDiff.getLeftElement();
+		final EObject leftTarget = theDiff.getLeftAddedTarget();
 		try {
-			EFactory.eAdd(element, diff.getReference().getName(), leftTarget);
+			EFactory.eAdd(element, theDiff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -56,7 +54,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeRightTarget) {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getReference().equals(diff.getReference().getEOpposite())
+				if (link.getReference().equals(theDiff.getReference().getEOpposite())
 						&& link.getLeftAddedTarget().equals(element)) {
 					removeFromContainer(link);
 				}
@@ -67,16 +65,16 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final ReferenceChangeRightTarget diff = (ReferenceChangeRightTarget)this.diff;
-		final EObject element = diff.getRightElement();
-		final EObject rightTarget = diff.getRightAddedTarget();
+		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject rightTarget = theDiff.getRightAddedTarget();
 		try {
-			EFactory.eRemove(element, diff.getReference().getName(), rightTarget);
+			EFactory.eRemove(element, theDiff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -87,7 +85,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeRightTarget) {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getReference().equals(diff.getReference().getEOpposite())
+				if (link.getReference().equals(theDiff.getReference().getEOpposite())
 						&& link.getRightAddedTarget().equals(element)) {
 					removeFromContainer(link);
 				}

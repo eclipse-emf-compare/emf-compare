@@ -40,19 +40,16 @@ public class MergeService {
 	}
 
 	/**
-	 * This will parse the currently running platform for extensions and store all the merge engines that can be found.
+	 * Returns the best {@link MergeFactory} from a file extension.
+	 * 
+	 * @param extension
+	 *            The extension of the file we need a {@link MergeFactory} for.
+	 * @return The best {@link MergeFactory} for the given file extension.
 	 */
-	private void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				DiffPlugin.PLUGIN_ID, "mergeFactory") //$NON-NLS-1$
-				.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final FactoryDescriptor desc = parseEngine(configElements[j]);
-				engines.add(desc);
-			}
-		}
+	public MergeFactory getBestDiffEngine(@SuppressWarnings("unused")
+	String extension) {
+		final FactoryDescriptor desc = getBestDescriptor();
+		return desc.getEngineInstance();
 	}
 
 	/**
@@ -79,11 +76,13 @@ public class MergeService {
 	}
 
 	/**
-	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor for it if it describes and engine.
+	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
+	 * for it if it describes and engine.
 	 * 
 	 * @param configElement
 	 *            Configuration element to parse.
-	 * @return {@link FactoryDescriptor} wrapped around <code>configElement</code> if it describes an engine, <code>null</code> otherwise.
+	 * @return {@link FactoryDescriptor} wrapped around <code>configElement</code> if it describes an
+	 *         engine, <code>null</code> otherwise.
 	 */
 	private FactoryDescriptor parseEngine(IConfigurationElement configElement) {
 		if (!configElement.getName().equals(TAG_FACTORY))
@@ -93,15 +92,19 @@ public class MergeService {
 	}
 
 	/**
-	 * Returns the best {@link MergeFactory} from a file extension.
-	 * 
-	 * @param extension
-	 *            The extension of the file we need a {@link MergeFactory} for.
-	 * @return The best {@link MergeFactory} for the given file extension.
+	 * This will parse the currently running platform for extensions and store all the merge engines that can
+	 * be found.
 	 */
-	public MergeFactory getBestDiffEngine(@SuppressWarnings("unused")
-	String extension) {
-		final FactoryDescriptor desc = getBestDescriptor();
-		return desc.getEngineInstance();
+	private void parseExtensionMetadata() {
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				DiffPlugin.PLUGIN_ID, "mergeFactory") //$NON-NLS-1$
+				.getExtensions();
+		for (int i = 0; i < extensions.length; i++) {
+			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+			for (int j = 0; j < configElements.length; j++) {
+				final FactoryDescriptor desc = parseEngine(configElements[j]);
+				engines.add(desc);
+			}
+		}
 	}
 }

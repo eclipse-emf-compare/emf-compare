@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Add Reference Value</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Add Reference Value</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl
-		implements RemoteAddReferenceValue {
+public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoteAddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteAddReferenceValueImpl() {
@@ -34,6 +35,7 @@ public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -11,17 +11,14 @@
 package org.eclipse.emf.compare.diff.metamodel;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Remote Update Unique Reference Value</b></em>'.
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Remote Update Unique Reference Value</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoteUpdateUniqueReferenceValue()
  * @model
  * @generated
  */
 @SuppressWarnings("nls")
-public interface RemoteUpdateUniqueReferenceValue extends
-		UpdateUniqueReferenceValue {
+public interface RemoteUpdateUniqueReferenceValue extends UpdateUniqueReferenceValue {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteUpdateUniqueReferenceValue

@@ -23,6 +23,12 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class FactoryDescriptor implements Comparable {
+	/** Configuration element of this descriptor. */
+	protected final IConfigurationElement element;
+
+	/** Class name of this factory. */
+	protected final String factoryClassName;
+	
 	/**
 	 * Priority of this descriptor. Should be one of
 	 * <ul>
@@ -34,13 +40,7 @@ public class FactoryDescriptor implements Comparable {
 	 * </ul>
 	 */
 	protected final String priority;
-
-	/** Class name of this factory. */
-	protected final String factoryClassName;
-
-	/** Configuration element of this descriptor. */
-	protected final IConfigurationElement element;
-
+	
 	/** {@link MergeFactory} this descriptor describes. */
 	private MergeFactory factory;
 
@@ -57,31 +57,44 @@ public class FactoryDescriptor implements Comparable {
 	}
 
 	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the attribute hasn't been set, we'll
-	 * return <code>defaultValue</code> instead.
+	 * {@inheritDoc}
 	 * 
-	 * @param name
-	 *            Name of the attribute we seek the value of.
-	 * @param defaultValue
-	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	private String getAttribute(String name, String defaultValue) {
-		final String value = element.getAttribute(name);
-		if (value != null)
-			return value;
-		if (defaultValue != null)
-			return defaultValue;
-		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
+	public int compareTo(Object other) {
+		if (other instanceof FactoryDescriptor) {
+			final int nombre1 = getPriorityValue(((FactoryDescriptor)other).getPriority());
+			final int nombre2 = getPriorityValue(getPriority());
+			return nombre2 - nombre1;
+		}
+		return 1;
 	}
 
 	/**
-	 * Returns the factory priority.
+	 * {@inheritDoc}
 	 * 
-	 * @return The factory priority.
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public String getPriority() {
-		return priority.toLowerCase();
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEqual = true;
+		if (this == obj) {
+			isEqual = true;
+		} else if (obj == null || getClass() != obj.getClass()) {
+			isEqual = false;
+		} else {
+			final FactoryDescriptor other = (FactoryDescriptor)obj;
+			if (factoryClassName == null && other.factoryClassName != null) {
+				isEqual = false;
+			} else if (!factoryClassName.equals(other.factoryClassName)) {
+				isEqual = false;
+			} else if (priority == null && other.priority != null) {
+				isEqual = false;
+			} else if (!priority.equals(other.priority)) {
+				isEqual = false;
+			}
+		}
+		return isEqual;
 	}
 
 	/**
@@ -101,7 +114,55 @@ public class FactoryDescriptor implements Comparable {
 	}
 
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according to <code>priorityString</code> value :
+	 * Returns the factory priority.
+	 * 
+	 * @return The factory priority.
+	 */
+	public String getPriority() {
+		return priority.toLowerCase();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int classNameHash = 0;
+		if (factoryClassName != null)
+			classNameHash = factoryClassName.hashCode();
+		int priorityHash = 0;
+		if (priority != null)
+			priorityHash = priority.hashCode();
+
+		return (prime + classNameHash) * prime + priorityHash;
+	}
+
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
+	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
+	 *         set.
+	 */
+	private String getAttribute(String name, String defaultValue) {
+		final String value = element.getAttribute(name);
+		if (value != null)
+			return value;
+		if (defaultValue != null)
+			return defaultValue;
+		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values
+	 * according to <code>priorityString</code> value :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
@@ -128,64 +189,5 @@ public class FactoryDescriptor implements Comparable {
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int classNameHash = 0;
-		if (factoryClassName != null)
-			classNameHash = factoryClassName.hashCode();
-		int priorityHash = 0;
-		if (priority != null)
-			priorityHash = priority.hashCode();
-		
-		return (prime + classNameHash) * prime + priorityHash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(Object other) {
-		if (other instanceof FactoryDescriptor) {
-			final int nombre1 = getPriorityValue(((FactoryDescriptor)other).getPriority());
-			final int nombre2 = getPriorityValue(getPriority());
-			return nombre2 - nombre1;
-		}
-		return 1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		boolean isEqual = true;
-		if (this == obj) {
-			isEqual = true;
-		} else if (obj == null || getClass() != obj.getClass()) {
-			isEqual = false;
-		} else {
-			final FactoryDescriptor other = (FactoryDescriptor)obj;
-			if (factoryClassName == null && other.factoryClassName != null) {
-				isEqual = false;
-			} else if (!factoryClassName.equals(other.factoryClassName)) {
-				isEqual = false;
-			} else if (priority == null && other.priority != null) {
-				isEqual = false;
-			} else if (!priority.equals(other.priority)) {
-				isEqual = false;
-			}
-		}
-		return isEqual;
 	}
 }

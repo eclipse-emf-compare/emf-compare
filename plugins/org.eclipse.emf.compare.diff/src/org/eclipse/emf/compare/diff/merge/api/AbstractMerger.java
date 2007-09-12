@@ -45,14 +45,16 @@ public abstract class AbstractMerger {
 	/**
 	 * Returns <code>True</code> if the merger is allowed to apply changes in the origin (left) model.
 	 * 
-	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model, <code>False</code> otherwise.
+	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model,
+	 *         <code>False</code> otherwise.
 	 */
 	public abstract boolean canApplyInOrigin();
 
 	/**
 	 * Returns <code>True</code> if the merger is allowed to undo changes in the target (right) model.
 	 * 
-	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model, <code>False</code> otherwise.
+	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model,
+	 *         <code>False</code> otherwise.
 	 */
 	public abstract boolean canUndoInTarget();
 
@@ -72,7 +74,8 @@ public abstract class AbstractMerger {
 	public abstract void undoInTarget();
 
 	/**
-	 * Removes the given {@link DiffGroup} from its container if it was its last child, also calls for the same cleanup operation on its hierarchy.
+	 * Removes the given {@link DiffGroup} from its container if it was its last child, also calls for the
+	 * same cleanup operation on its hierarchy.
 	 * 
 	 * @param diffGroup
 	 *            {@link DiffGroup} we want to cleanup.
@@ -180,12 +183,14 @@ public abstract class AbstractMerger {
 			EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
 				private static final long serialVersionUID = 616050158241084372L;
 
+				// initializer for this anonymous class
 				{
 					crossReference();
 				}
 
 				@Override
-				protected boolean crossReference(EObject eObject, EReference eReference, EObject crossReferencedEObject) {
+				protected boolean crossReference(EObject eObject, EReference eReference,
+						EObject crossReferencedEObject) {
 					return crossReferencedEObject.eResource() == null;
 				}
 			};

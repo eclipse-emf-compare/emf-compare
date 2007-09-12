@@ -32,16 +32,17 @@ public class MoveModelElementMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final MoveModelElement aDiff = (MoveModelElement)this.diff;
-		final EObject leftTarget = aDiff.getLeftTarget();
-		final EObject leftElement = aDiff.getLeftElement();
-		final EReference ref = aDiff.getRightElement().eContainmentFeature();
+		final MoveModelElement theDiff = (MoveModelElement)this.diff;
+		final EObject leftTarget = theDiff.getLeftTarget();
+		final EObject leftElement = theDiff.getLeftElement();
+		final EReference ref = theDiff.getRightElement().eContainmentFeature();
 		if (ref != null) {
 			try {
 				// We'll store the element's ID because moving an element deletes its XMI ID
 				final String elementID = getXMIID(leftElement);
 				EcoreUtil.remove(leftElement);
 				EFactory.eAdd(leftTarget, ref.getName(), leftElement);
+				// Sets anew the element's ID
 				setXMIID(leftElement, elementID);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
@@ -55,15 +56,15 @@ public class MoveModelElementMerger extends DefaultMerger {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {
-		final MoveModelElement aDiff = (MoveModelElement)this.diff;
-		final EObject rightTarget = aDiff.getRightTarget();
-		final EObject rightElement = aDiff.getRightElement();
-		final EReference ref = aDiff.getLeftElement().eContainmentFeature();
+		final MoveModelElement theDiff = (MoveModelElement)this.diff;
+		final EObject rightTarget = theDiff.getRightTarget();
+		final EObject rightElement = theDiff.getRightElement();
+		final EReference ref = theDiff.getLeftElement().eContainmentFeature();
 		if (ref != null) {
 			try {
 				final String elementID = getXMIID(rightElement);

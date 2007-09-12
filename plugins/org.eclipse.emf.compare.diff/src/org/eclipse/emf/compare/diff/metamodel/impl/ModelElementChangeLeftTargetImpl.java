@@ -19,23 +19,24 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change Left Target</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change Left Target</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl#getRightParent <em>Right Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl#getRightParent <em>Right Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
-		implements ModelElementChangeLeftTarget {
+public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl implements ModelElementChangeLeftTarget {
 	/**
-	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightParent()
 	 * @generated
 	 * @ordered
@@ -43,8 +44,9 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 	protected EObject rightParent;
 
 	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftElement()
 	 * @generated
 	 * @ordered
@@ -53,6 +55,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ModelElementChangeLeftTargetImpl() {
@@ -61,6 +64,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,19 +74,18 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightParent() {
 		if (rightParent != null && rightParent.eIsProxy()) {
-			InternalEObject oldRightParent = (InternalEObject) rightParent;
+			InternalEObject oldRightParent = (InternalEObject)rightParent;
 			rightParent = eResolveProxy(oldRightParent);
 			if (rightParent != oldRightParent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(
-							this,
-							Notification.RESOLVE,
-							DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT,
-							oldRightParent, rightParent));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, oldRightParent,
+							rightParent));
 			}
 		}
 		return rightParent;
@@ -90,6 +93,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightParent() {
@@ -98,6 +102,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightParent(EObject newRightParent) {
@@ -105,25 +110,23 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 		rightParent = newRightParent;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT,
-					oldRightParent, rightParent));
+					DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, oldRightParent, rightParent));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
 		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject) leftElement;
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(
-							this,
-							Notification.RESOLVE,
-							DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT,
-							oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, oldLeftElement,
+							leftElement));
 			}
 		}
 		return leftElement;
@@ -131,6 +134,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -139,6 +143,7 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -146,74 +151,77 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT,
-					oldLeftElement, leftElement));
+					DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, oldLeftElement, leftElement));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
-			if (resolve)
-				return getRightParent();
-			return basicGetRightParent();
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
-			if (resolve)
-				return getLeftElement();
-			return basicGetLeftElement();
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
+				if (resolve)
+					return getRightParent();
+				return basicGetRightParent();
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
+				if (resolve)
+					return getLeftElement();
+				return basicGetLeftElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
-			setRightParent((EObject) newValue);
-			return;
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
-			setLeftElement((EObject) newValue);
-			return;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
+				setRightParent((EObject)newValue);
+				return;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
+				setLeftElement((EObject)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
-			setRightParent((EObject) null);
-			return;
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
-			setLeftElement((EObject) null);
-			return;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
+				setRightParent((EObject)null);
+				return;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
+				setLeftElement((EObject)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
-			return rightParent != null;
-		case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
-			return leftElement != null;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT:
+				return rightParent != null;
+			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT:
+				return leftElement != null;
 		}
 		return super.eIsSet(featureID);
 	}

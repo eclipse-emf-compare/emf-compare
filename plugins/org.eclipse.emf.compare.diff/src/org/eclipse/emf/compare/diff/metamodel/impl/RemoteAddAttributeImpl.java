@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Add Attribute</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Add Attribute</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteAddAttributeImpl extends AttributeChangeLeftTargetImpl
-		implements RemoteAddAttribute {
+public class RemoteAddAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoteAddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteAddAttributeImpl() {
@@ -34,6 +35,7 @@ public class RemoteAddAttributeImpl extends AttributeChangeLeftTargetImpl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

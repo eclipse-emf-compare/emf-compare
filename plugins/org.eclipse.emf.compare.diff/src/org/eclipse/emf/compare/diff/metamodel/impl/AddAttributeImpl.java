@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Attribute</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Attribute</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements
-		AddAttribute {
+public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements AddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AddAttributeImpl() {
@@ -34,6 +35,7 @@ public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

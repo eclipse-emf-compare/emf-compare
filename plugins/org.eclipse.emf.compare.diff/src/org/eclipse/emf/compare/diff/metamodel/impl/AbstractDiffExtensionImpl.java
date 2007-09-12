@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.1 2007/08/29 07:11:28 cbrun Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.2 2007/09/12 13:24:15 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -42,11 +42,10 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * 
  * @generated
  */
-public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
-		AbstractDiffExtension {
+public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements AbstractDiffExtension {
 	/**
-	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}'
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getHideElements()
 	 * @generated
@@ -55,17 +54,18 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	protected EList hideElements;
 
 	/**
-	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
 	 */
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
+
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
@@ -98,8 +98,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 */
 	public EList getHideElements() {
 		if (hideElements == null) {
-			hideElements = new EObjectWithInverseResolvingEList.ManyInverse(
-					DiffElement.class, this,
+			hideElements = new EObjectWithInverseResolvingEList.ManyInverse(DiffElement.class, this,
 					DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS,
 					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
 		}
@@ -125,15 +124,13 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 		isCollapsed = newIsCollapsed;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED,
-					oldIsCollapsed, isCollapsed));
+					DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
 	}
 
 	/**
-	 * <!-- begin-user-doc --> returns true if this extension provides its own
-	 * merger, false otherwhise. If the extension is not providing its merger
-	 * then the hiddent elements will be merged one after the other using the
-	 * default mergers. <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> returns true if this extension provides its own merger, false otherwhise. If
+	 * the extension is not providing its merger then the hiddent elements will be merged one after the other
+	 * using the default mergers. <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -142,9 +139,8 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	}
 
 	/**
-	 * <!-- begin-user-doc --> This method is called by the {@link DiffMaker} to
-	 * let the diff extension a chance to refactor the diff model and plug
-	 * themselves inside. <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> This method is called by the {@link DiffMaker} to let the diff extension a
+	 * chance to refactor the diff model and plug themselves inside. <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -153,9 +149,9 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	}
 
 	/**
-	 * <!-- begin-user-doc --> This method provides the merger corresponding to
-	 * the {@link AbstractDiffExtension} if providesMerger() return true.
-	 * Otherwhise it should return null. <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> This method provides the merger corresponding to the
+	 * {@link AbstractDiffExtension} if providesMerger() return true. Otherwhise it should return null. <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -165,19 +161,18 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	}
 
 	/**
-	 * <!-- begin-user-doc --> Should return the text used to represent the
-	 * {@link AbstractDiffExtension}; <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> Should return the text used to represent the {@link AbstractDiffExtension};
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
 	public String getText() {
-		return "Diff Extension";
+		return "Diff Extension"; //$NON-NLS-1$
 	}
 
 	/**
-	 * <!-- begin-user-doc --> Should return a org.eclipse.swt.graphics.Image
-	 * object representing the {@link AbstractDiffExtension}. <!-- end-user-doc
-	 * -->
+	 * <!-- begin-user-doc --> Should return a org.eclipse.swt.graphics.Image object representing the
+	 * {@link AbstractDiffExtension}. <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -190,11 +185,10 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 * 
 	 * @generated
 	 */
-	public NotificationChain eInverseAdd(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			return ((InternalEList) getHideElements()).basicAdd(otherEnd, msgs);
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				return ((InternalEList)getHideElements()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -204,12 +198,10 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 * 
 	 * @generated
 	 */
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			return ((InternalEList) getHideElements()).basicRemove(otherEnd,
-					msgs);
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				return ((InternalEList)getHideElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -221,10 +213,10 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			return getHideElements();
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-			return isIsCollapsed() ? Boolean.TRUE : Boolean.FALSE;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				return getHideElements();
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
+				return isIsCollapsed() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -236,13 +228,13 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 */
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			getHideElements().clear();
-			getHideElements().addAll((Collection) newValue);
-			return;
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-			setIsCollapsed(((Boolean) newValue).booleanValue());
-			return;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				getHideElements().clear();
+				getHideElements().addAll((Collection)newValue);
+				return;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
+				setIsCollapsed(((Boolean)newValue).booleanValue());
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -254,12 +246,12 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 */
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			getHideElements().clear();
-			return;
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-			setIsCollapsed(IS_COLLAPSED_EDEFAULT);
-			return;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				getHideElements().clear();
+				return;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
+				setIsCollapsed(IS_COLLAPSED_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -271,10 +263,10 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements
 	 */
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-			return hideElements != null && !hideElements.isEmpty();
-		case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-			return isCollapsed != IS_COLLAPSED_EDEFAULT;
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+				return hideElements != null && !hideElements.isEmpty();
+			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
+				return isCollapsed != IS_COLLAPSED_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}

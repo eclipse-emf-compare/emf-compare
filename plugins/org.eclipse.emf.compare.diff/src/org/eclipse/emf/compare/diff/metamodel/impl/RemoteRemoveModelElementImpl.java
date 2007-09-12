@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Model Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Model Element</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class RemoteRemoveModelElementImpl extends
-		ModelElementChangeRightTargetImpl implements RemoteRemoveModelElement {
+public class RemoteRemoveModelElementImpl extends ModelElementChangeRightTargetImpl implements RemoteRemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteRemoveModelElementImpl() {
@@ -34,6 +35,7 @@ public class RemoteRemoveModelElementImpl extends
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

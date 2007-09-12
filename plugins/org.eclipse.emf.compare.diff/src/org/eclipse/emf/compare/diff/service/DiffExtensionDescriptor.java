@@ -17,20 +17,19 @@ import org.eclipse.emf.compare.diff.Messages;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 
 /**
- * The engine descriptor represents a diff extension contribution trough the
- * extension point.
+ * The engine descriptor represents a diff extension contribution trough the extension point.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class DiffExtensionDescriptor {
-
 	/** Class name of this {@link DiffExtension}. */
 	protected final String diffextensionClassName;
 
-	/** File extension on which applying this diff extension */
-	protected final String fileExtension;
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
+
+	/** File extension on which applying this diff extension. */
+	protected final String fileExtension;
 
 	/** {@link DiffExtension} this descriptor describes. */
 	private AbstractDiffExtension diffExtension;
@@ -39,35 +38,12 @@ public class DiffExtensionDescriptor {
 	 * Instantiate the descriptor given its configuration.
 	 * 
 	 * @param configuration
-	 *            {@link IConfigurationElement configuration element} of this
-	 *            descriptor.
+	 *            {@link IConfigurationElement configuration element} of this descriptor.
 	 */
 	public DiffExtensionDescriptor(IConfigurationElement configuration) {
 		element = configuration;
 		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$//$NON-NLS-2$
 		diffextensionClassName = getAttribute("extensionClass", null); //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns the value of the attribute <code>name</code> of this
-	 * descriptor's configuration element. if the attribute hasn't been set,
-	 * we'll return <code>defaultValue</code> instead.
-	 * 
-	 * @param name
-	 *            Name of the attribute we seek the value of.
-	 * @param defaultValue
-	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>,
-	 *         <code>defaultValue</code> if it hasn't been set.
-	 */
-	private String getAttribute(String name, String defaultValue) {
-		final String value = element.getAttribute(name);
-		if (value != null)
-			return value;
-		if (defaultValue != null)
-			return defaultValue;
-		throw new IllegalArgumentException(Messages.getString(
-				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -87,8 +63,7 @@ public class DiffExtensionDescriptor {
 	public AbstractDiffExtension getDiffExtensionInstance() {
 		if (diffExtension == null) {
 			try {
-				diffExtension = (AbstractDiffExtension) element
-						.createExecutableExtension("extensionClass"); //$NON-NLS-1$
+				diffExtension = (AbstractDiffExtension)element.createExecutableExtension("extensionClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}
@@ -97,11 +72,32 @@ public class DiffExtensionDescriptor {
 	}
 
 	/**
+	 * Returns the file extension associated with this contribution.
 	 * 
-	 * @return the file extension associated with this contribution.
+	 * @return The file extension associated with this contribution.
 	 */
 	public String getFileExtension() {
 		return fileExtension;
+	}
+
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
+	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
+	 *         set.
+	 */
+	private String getAttribute(String name, String defaultValue) {
+		final String value = element.getAttribute(name);
+		if (value != null)
+			return value;
+		if (defaultValue != null)
+			return defaultValue;
+		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 }

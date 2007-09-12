@@ -31,16 +31,14 @@ public class DiffExtensionMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		final AbstractDiffExtension extension = (AbstractDiffExtension) this.diff;
+		final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
 		if (!extension.providesMerger()) {
 			/*
-			 * No merger is provided so we'll browse the hidden elements and
-			 * merge them..
+			 * No merger is provided so we'll browse the hidden elements and merge them..
 			 */
-			for (Iterator<DiffElement> iterator = extension.getHideElements()
-					.iterator(); iterator.hasNext();) {
-				DiffElement hidden = iterator.next();
-				AbstractMerger merger = MergeFactory.createMerger(hidden);
+			for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator(); iterator.hasNext(); ) {
+				final DiffElement hidden = iterator.next();
+				final AbstractMerger merger = MergeFactory.createMerger(hidden);
 				merger.applyInOrigin();
 			}
 		} else {
@@ -55,16 +53,14 @@ public class DiffExtensionMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AbstractDiffExtension extension = (AbstractDiffExtension) this.diff;
+		final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
 		if (!extension.providesMerger()) {
 			/*
-			 * No merger is provided so we'll browse the hidden elements and
-			 * merge them..
+			 * No merger is provided so we'll browse the hidden elements and merge them..
 			 */
-			for (Iterator<DiffElement> iterator = extension.getHideElements()
-					.iterator(); iterator.hasNext();) {
-				DiffElement hidden = iterator.next();
-				AbstractMerger merger = MergeFactory.createMerger(hidden);
+			for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator(); iterator.hasNext(); ) {
+				final DiffElement hidden = iterator.next();
+				final AbstractMerger merger = MergeFactory.createMerger(hidden);
 				merger.undoInTarget();
 			}
 		} else {

@@ -15,17 +15,18 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
-public class ModelElementChangeImpl extends DiffElementImpl implements
-		ModelElementChange {
+public class ModelElementChangeImpl extends DiffElementImpl implements ModelElementChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ModelElementChangeImpl() {
@@ -34,6 +35,7 @@ public class ModelElementChangeImpl extends DiffElementImpl implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

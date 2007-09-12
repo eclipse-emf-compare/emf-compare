@@ -11,11 +11,9 @@
 package org.eclipse.emf.compare.diff.metamodel;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Remote Update Attribute</b></em>'.
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Remote Update Attribute</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoteUpdateAttribute()
  * @model
  * @generated

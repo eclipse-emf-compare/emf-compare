@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.diff.api;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.util.FactoryException;
 
 /**
  * A Diff engine has the responsability to provide a diff (or delta) model from a matching model.
@@ -26,7 +25,8 @@ public interface DiffEngine {
 	 * @param match
 	 *            the matching model
 	 * @param threeWay
-	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code>
+	 *            otherwise.
 	 * @return the corresponding diff model
 	 * @throws FactoryException
 	 */

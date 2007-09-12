@@ -42,10 +42,11 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
  */
 public final class MergeFactory {
 	/**
-	 * This {@link ConcurrentHashMap map} keeps a bridge between a given {@link DiffElement}'s class and the most accurate merger's class for that particular
-	 * {@link DiffElement}.
+	 * This {@link ConcurrentHashMap map} keeps a bridge between a given {@link DiffElement}'s class and the
+	 * most accurate merger's class for that particular {@link DiffElement}.
 	 */
-	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new ConcurrentHashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>(32);
+	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new ConcurrentHashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>(
+			32);
 
 	/**
 	 * Associates basic {@link DiffElement}s with generic merger implementations.
@@ -72,25 +73,17 @@ public final class MergeFactory {
 	/**
 	 * Associates {@link DiffElement}s of the given class with the given merger.
 	 * <p>
-	 * Mergers must extend {@link AbstractMerger org.eclipse.emf.compare.merge.api.AbstractMerger} and provide a default constructor.
+	 * Mergers must extend {@link AbstractMerger org.eclipse.emf.compare.merge.api.AbstractMerger} and provide
+	 * a default constructor.
 	 * 
 	 * @param diffClass
 	 *            {@link Class} of the {@link DiffElement}s to associate with <code>mergerClass</code>.
 	 * @param mergerClass
 	 *            {@link Class} of the merger for these {@link DiffElement}.
 	 */
-	public static void addMergerType(Class<? extends DiffElement> diffClass, Class<? extends AbstractMerger> mergerClass) {
+	public static void addMergerType(Class<? extends DiffElement> diffClass,
+			Class<? extends AbstractMerger> mergerClass) {
 		MERGER_TYPES.put(diffClass, mergerClass);
-	}
-
-	/**
-	 * Unregisters the merger for the given {@link DiffElement} class.
-	 * 
-	 * @param diffClass
-	 *            {@link Class} we want to unregister the merger for.
-	 */
-	public static void removeMergerType(Class<? extends DiffElement> diffClass) {
-		MERGER_TYPES.remove(diffClass);
 	}
 
 	/**
@@ -98,7 +91,8 @@ public final class MergeFactory {
 	 * 
 	 * @param element
 	 *            {@link DiffElement} for which we need a merger.
-	 * @return The merger adapted to <code>element</code>, <code>null</code> if it cannot be instantiated.
+	 * @return The merger adapted to <code>element</code>, <code>null</code> if it cannot be
+	 *         instantiated.
 	 */
 	public static AbstractMerger createMerger(DiffElement element) {
 		final Class<? extends AbstractMerger> mergerClass = getBestMerger(element);
@@ -118,8 +112,18 @@ public final class MergeFactory {
 	}
 
 	/**
-	 * Returns the merger class that is best suited for the given {@link DiffElement}. Merger classes can be managed via
-	 * {@link #addMergerType(Class, Class)} and {@link #removeMergerType(Class)}.
+	 * Unregisters the merger for the given {@link DiffElement} class.
+	 * 
+	 * @param diffClass
+	 *            {@link Class} we want to unregister the merger for.
+	 */
+	public static void removeMergerType(Class<? extends DiffElement> diffClass) {
+		MERGER_TYPES.remove(diffClass);
+	}
+
+	/**
+	 * Returns the merger class that is best suited for the given {@link DiffElement}. Merger classes can be
+	 * managed via {@link #addMergerType(Class, Class)} and {@link #removeMergerType(Class)}.
 	 * 
 	 * @param element
 	 *            {@link DiffElement} we want a merger for.
