@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionItemProvider.java,v 1.1 2007/08/29 07:10:37 cbrun Exp $
+ * $Id: AbstractDiffExtensionItemProvider.java,v 1.2 2007/09/12 13:24:25 cbrun Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
@@ -11,13 +11,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;

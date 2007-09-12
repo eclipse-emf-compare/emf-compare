@@ -63,9 +63,8 @@ public class AddReferenceValueItemProvider extends ReferenceChangeRightTargetIte
 	}
 
 	/**
-	 * This returns AddReferenceValue.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns AddReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Object getImage(Object object) {

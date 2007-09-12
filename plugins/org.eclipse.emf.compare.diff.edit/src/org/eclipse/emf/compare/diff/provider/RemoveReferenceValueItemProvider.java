@@ -63,9 +63,8 @@ public class RemoveReferenceValueItemProvider extends ReferenceChangeLeftTargetI
 	}
 
 	/**
-	 * This returns RemoveReferenceValue.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns RemoveReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Object getImage(Object object) {

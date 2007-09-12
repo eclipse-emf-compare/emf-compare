@@ -36,14 +36,14 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffGroup} object.
- * <!-- begin-user-doc
- * --> <!-- end-user-doc -->
+ * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class DiffGroupItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -52,8 +52,8 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -68,8 +68,8 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Parent feature. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -83,9 +83,9 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This adds a property descriptor for the Subchanges feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Subchanges feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addSubchangesPropertyDescriptor(Object object) {
@@ -98,13 +98,13 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This returns DiffGroup.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns DiffGroup.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Object getImage(Object object) {
-		if (object instanceof EObject && ((EObject)object).eContainer() != null && ((EObject)object).eContainer() instanceof DiffModel)
-		{
+		if (object instanceof EObject && ((EObject)object).eContainer() != null
+				&& ((EObject)object).eContainer() instanceof DiffModel) {
 			return getResourceLocator().getImage("full/obj16/DiffModel");
 		}
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
@@ -123,8 +123,7 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */
@@ -145,10 +144,10 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void notifyChanged(Notification notification) {
@@ -164,10 +163,9 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
+	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
@@ -175,8 +173,8 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */

@@ -31,16 +31,17 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public UpdateUniqueReferenceValueItemProvider(AdapterFactory adapterFactory) {
@@ -48,9 +49,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	public List getPropertyDescriptors(Object object) {
@@ -64,9 +65,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Target feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addLeftTargetPropertyDescriptor(Object object) {
@@ -81,9 +82,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Right Target feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addRightTargetPropertyDescriptor(Object object) {
@@ -98,10 +99,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This returns UpdateUniqueReferenceValue.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	  * @generated NOT
+	 * This returns UpdateUniqueReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
@@ -120,17 +120,15 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public String getText(Object object) {
 		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
 		try {
 			return getString("_UI_UpdateUniqueReferenceValue_type", new Object[] {
-					updateRef.getReference().getName(),
-					NameSimilarity.findName(updateRef.getLeftTarget()),
+					updateRef.getReference().getName(), NameSimilarity.findName(updateRef.getLeftTarget()),
 					NameSimilarity.findName(updateRef.getRightTarget())});
 		} catch (FactoryException e) {
 			return getString("_UI_UpdateUniqueReferenceValue_type");
@@ -138,10 +136,10 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void notifyChanged(Notification notification) {
@@ -150,10 +148,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-	 * describing all of the children that can be created under this object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
+	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
@@ -161,9 +158,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ResourceLocator getResourceLocator() {

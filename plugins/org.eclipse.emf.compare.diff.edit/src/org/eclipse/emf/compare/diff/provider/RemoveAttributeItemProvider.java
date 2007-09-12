@@ -63,9 +63,8 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	}
 
 	/**
-	 * This returns RemoveAttribute.gif.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This returns RemoveAttribute.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Object getImage(Object object) {
@@ -83,7 +82,6 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 
 		return labelImage;
 	}
-
 
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
