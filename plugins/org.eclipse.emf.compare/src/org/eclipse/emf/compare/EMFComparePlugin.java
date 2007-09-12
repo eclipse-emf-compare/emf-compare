@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
 public class EMFComparePlugin extends Plugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
-
+	
 	/** Plug-in's shared instance. */
 	private static EMFComparePlugin plugin;
 
@@ -33,27 +33,6 @@ public class EMFComparePlugin extends Plugin {
 	 */
 	public EMFComparePlugin() {
 		plugin = this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see Plugin#start(BundleContext)
-	 */
-	@Override
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see Plugin#stop(BundleContext)
-	 */
-	@Override
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
 	}
 
 	/**
@@ -84,12 +63,28 @@ public class EMFComparePlugin extends Plugin {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, Messages.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity, Messages
+					.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, Messages.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity, Messages
+					.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Puts the given status in the error log view.
+	 * 
+	 * @param status
+	 *            Error Status.
+	 */
+	public static void log(IStatus status) {
+		if (getDefault() != null) {
+			getDefault().getLog().log(status);
+		} else {
+			throw new EMFCompareException(status.getException());
 		}
 	}
 
@@ -113,16 +108,23 @@ public class EMFComparePlugin extends Plugin {
 	}
 
 	/**
-	 * Puts the given status in the error log view.
+	 * {@inheritDoc}
 	 * 
-	 * @param status
-	 *            Error Status.
+	 * @see Plugin#start(BundleContext)
 	 */
-	public static void log(IStatus status) {
-		if (getDefault() != null) {
-			getDefault().getLog().log(status);
-		} else {
-			throw new EMFCompareException(status.getException());
-		}
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see Plugin#stop(BundleContext)
+	 */
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
 	}
 }

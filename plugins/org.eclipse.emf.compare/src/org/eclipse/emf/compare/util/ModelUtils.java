@@ -42,6 +42,11 @@ public final class ModelUtils {
 	/** Constant for the file encoding system property. */
 	private static final String ENCODING_PROPERTY = "file.encoding"; //$NON-NLS-1$
 	
+	/** Will determine if the URIs must be encoded depending on the current system. */
+	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS =
+	    System.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null && //$NON-NLS-1$
+	    !System.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
@@ -50,18 +55,46 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads a model from an {@link IPath} in a given {@link ResourceSet}.
+	 * Loads the models contained by the given directory.
 	 * 
-	 * @param path
-	 *            {@link IPath} where the model lies.
+	 * @param directory
+	 *            The directory from which to load the models.
+	 * @return The models contained by the given directory.
+	 * @throws IOException
+	 *             Thrown if an I/O operation has failed or been interrupted.
+	 */
+	public static List<EObject> getModelsFrom(File directory) throws IOException {
+		final List<EObject> models = new ArrayList<EObject>();
+
+		if (directory.exists() && directory.isDirectory()) {
+			final File[] files = directory.listFiles();
+			Arrays.sort(files);
+			for (int i = 0; i < files.length; i++) {
+				final File aFile = files[i];
+
+				final ResourceSet resourceSet = new ResourceSetImpl();
+				if (!aFile.isDirectory() && !aFile.getName().startsWith(".")) { //$NON-NLS-1$
+					models.add(load(aFile, resourceSet));
+				}
+			}
+		}
+
+		return models;
+	}
+
+	/**
+	 * Loads a model from a {@link java.io.File File} in a given {@link ResourceSet}.
+	 * 
+	 * @param file
+	 *            {@link java.io.File File} containing the model to be loaded.
 	 * @param resourceSet
 	 *            The {@link ResourceSet} to load the model in.
-	 * @return The model loaded from the path.
+	 * @return The model loaded from the file.
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
-		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
+	public static EObject load(File file, ResourceSet resourceSet) throws IOException {
+		return load(URI.createFileURI(file.getPath()), resourceSet);
 	}
 
 	/**
@@ -94,61 +127,7 @@ public final class ModelUtils {
 					new XMIResourceFactoryImpl());
 		}
 
-		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString()));
-		final Map<String, String> options = new ConcurrentHashMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
-		modelResource.load(options);
-		if (modelResource.getContents().size() > 0)
-			result = (EObject)modelResource.getContents().get(0);
-		return result;
-	}
-
-	/**
-	 * Loads a model from a {@link java.io.File File} in a given {@link ResourceSet}.
-	 * 
-	 * @param file
-	 *            {@link java.io.File File} containing the model to be loaded.
-	 * @param resourceSet
-	 *            The {@link ResourceSet} to load the model in.
-	 * @return The model loaded from the file.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(File file, ResourceSet resourceSet) throws IOException {
-		return load(URI.createFileURI(file.getPath()), resourceSet);
-	}
-
-	/**
-	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI} in a given {@link ResourceSet}.
-	 * 
-	 * @param modelURI
-	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
-	 * @param resourceSet
-	 *            The {@link ResourceSet} to load the model in.
-	 * @return The model loaded from the URI.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	@SuppressWarnings("unchecked")
-	public static EObject load(URI modelURI, ResourceSet resourceSet) throws IOException {
-		EObject result = null;
-
-		String fileExtension = modelURI.fileExtension();
-		if (fileExtension == null || fileExtension.length() == 0) {
-			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
-		}
-
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
-		if (resourceFactory != null) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					resourceFactory);
-		} else {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					new XMIResourceFactoryImpl());
-		}
-
-		final Resource modelResource = resourceSet.createResource(modelURI);
+		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), ENCODE_PLATFORM_RESOURCE_URIS));
 		final Map<String, String> options = new ConcurrentHashMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
@@ -198,6 +177,60 @@ public final class ModelUtils {
 	}
 
 	/**
+	 * Loads a model from an {@link IPath} in a given {@link ResourceSet}.
+	 * 
+	 * @param path
+	 *            {@link IPath} where the model lies.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the path.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
+		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
+	}
+
+	/**
+	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI} in a given {@link ResourceSet}.
+	 * 
+	 * @param modelURI
+	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the URI.
+	 * @throws IOException
+	 *             If the given file does not exist.
+	 */
+	@SuppressWarnings("unchecked")
+	public static EObject load(URI modelURI, ResourceSet resourceSet) throws IOException {
+		EObject result = null;
+
+		String fileExtension = modelURI.fileExtension();
+		if (fileExtension == null || fileExtension.length() == 0) {
+			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
+		}
+
+		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
+		if (resourceFactory != null) {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					resourceFactory);
+		} else {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					new XMIResourceFactoryImpl());
+		}
+
+		final Resource modelResource = resourceSet.createResource(modelURI);
+		final Map<String, String> options = new ConcurrentHashMap<String, String>();
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
+		modelResource.load(options);
+		if (modelResource.getContents().size() > 0)
+			result = (EObject)modelResource.getContents().get(0);
+		return result;
+	}
+
+	/**
 	 * Saves a model as a file to the given path.
 	 * 
 	 * @param root
@@ -236,33 +269,5 @@ public final class ModelUtils {
 		newResource.getContents().add(root);
 		newResource.save(writer, Collections.EMPTY_MAP);
 		return writer.toString();
-	}
-
-	/**
-	 * Loads the models contained by the given directory.
-	 * 
-	 * @param directory
-	 *            The directory from which to load the models.
-	 * @return The models contained by the given directory.
-	 * @throws IOException
-	 *             Thrown if an I/O operation has failed or been interrupted.
-	 */
-	public static List<EObject> getModelsFrom(File directory) throws IOException {
-		final List<EObject> models = new ArrayList<EObject>();
-
-		if (directory.exists() && directory.isDirectory()) {
-			final File[] files = directory.listFiles();
-			Arrays.sort(files);
-			for (int i = 0; i < files.length; i++) {
-				final File aFile = files[i];
-
-				final ResourceSet resourceSet = new ResourceSetImpl();
-				if (!aFile.isDirectory() && !aFile.getName().startsWith(".")) { //$NON-NLS-1$
-					models.add(load(aFile, resourceSet));
-				}
-			}
-		}
-
-		return models;
 	}
 }

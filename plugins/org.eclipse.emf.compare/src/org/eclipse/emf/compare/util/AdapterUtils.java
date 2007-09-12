@@ -30,9 +30,13 @@ public final class AdapterUtils {
 	private static final String ADAPTER_FACTORY_EXTENSION_POINT = "org.eclipse.emf.edit.itemProviderAdapterFactories"; //$NON-NLS-1$
 
 	/** Keeps track of all the {@link AdapterFactory adapter factories} this plug-in knows of. */
-	private static final Map<String, AdapterFactoryDescriptor> FACTORIES = new ConcurrentHashMap<String, AdapterFactoryDescriptor>(512);
+	private static final Map<String, AdapterFactoryDescriptor> FACTORIES = new ConcurrentHashMap<String, AdapterFactoryDescriptor>(
+			512);
 
-	/** This static initializer will parse the extension point to seek for factory classes and populate the factories list. */
+	/**
+	 * This static initializer will parse the extension point to seek for factory classes and populate the
+	 * factories list.
+	 */
 	static {
 		parseExtensionMetadata();
 	}
@@ -45,11 +49,26 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Returns the factory described by the given <code>nsURI</code>, <code>null</code> if it cannot be found.
+	 * Returns the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
+	 * 
+	 * @param eObj
+	 *            {@link EObject} we seek the {@link AdapterFactory} for.
+	 * @return Specific {@link AdapterFactory} adapted to the {@link EObject}, <code>null</code> if it
+	 *         cannot be found.
+	 */
+	public static AdapterFactory findAdapterFactory(EObject eObj) {
+		final String uri = eObj.eClass().getEPackage().getNsURI();
+		return findAdapterFactory(uri);
+	}
+
+	/**
+	 * Returns the factory described by the given <code>nsURI</code>, <code>null</code> if it cannot be
+	 * found.
 	 * 
 	 * @param nsURI
 	 *            <code>nsURI</code> of the desired {@link AdapterFactory}.
-	 * @return The factory described by the fiven <code>nsURI</code>, <code>null</code> if it cannot be found.
+	 * @return The factory described by the fiven <code>nsURI</code>, <code>null</code> if it cannot be
+	 *         found.
 	 */
 	public static AdapterFactory findAdapterFactory(String nsURI) {
 		AdapterFactory adapterFactory = null;
@@ -59,23 +78,26 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Returns the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
+	 * Creates an {@link AdapterFactoryDescriptor} given the
+	 * {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory} from.
 	 * 
-	 * @param eObj
-	 *            {@link EObject} we seek the {@link AdapterFactory} for.
-	 * @return Specific {@link AdapterFactory} adapted to the {@link EObject}, <code>null</code> if it cannot be found.
+	 * @param configElement
+	 *            The {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory}
+	 *            from.
+	 * @return The descriptor for the {@link AdapterFactory} defined by the given
+	 *         {@link IConfigurationElement configuration element}.
 	 */
-	public static AdapterFactory findAdapterFactory(EObject eObj) {
-		final String uri = eObj.eClass().getEPackage().getNsURI();
-		return findAdapterFactory(uri);
+	private static AdapterFactoryDescriptor parseAdapterFactory(IConfigurationElement configElement) {
+		return new AdapterFactoryDescriptor(configElement);
 	}
 
 	/**
-	 * This will parse {@link #ADAPTER_FACTORY_EXTENSION_POINT} for information about factories and populate the {@link #FACTORIES known factories}
-	 * list.
+	 * This will parse {@link #ADAPTER_FACTORY_EXTENSION_POINT} for information about factories and populate
+	 * the {@link #FACTORIES known factories} list.
 	 */
 	private static void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(ADAPTER_FACTORY_EXTENSION_POINT).getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+				ADAPTER_FACTORY_EXTENSION_POINT).getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
@@ -85,35 +107,23 @@ public final class AdapterUtils {
 		}
 
 	}
-
-	/**
-	 * Creates an {@link AdapterFactoryDescriptor} given the {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory}
-	 * from.
-	 * 
-	 * @param configElement
-	 *            The {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory} from.
-	 * @return The descriptor for the {@link AdapterFactory} defined by the given {@link IConfigurationElement configuration element}.
-	 */
-	private static AdapterFactoryDescriptor parseAdapterFactory(IConfigurationElement configElement) {
-		return new AdapterFactoryDescriptor(configElement);
-	}
 }
 
 /**
- * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code> and the {@link IConfigurationElement}
- * it's been created from.
+ * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code>
+ * and the {@link IConfigurationElement} it's been created from.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 final class AdapterFactoryDescriptor {
-	/** Name space URI of the wrapped {@link AdapterFactory}. */
-	private final String nsURI;
-	
 	/** Keeps a reference to the configuration element that describes the {@link AdapterFactory factory}. */
 	private final IConfigurationElement element;
 
 	/** This descriptor's wrapped factory. */
 	private AdapterFactory factory;
+
+	/** Name space URI of the wrapped {@link AdapterFactory}. */
+	private final String nsURI;
 
 	/**
 	 * Constructs a new descriptor from an IConfigurationElement.
@@ -124,15 +134,6 @@ final class AdapterFactoryDescriptor {
 	public AdapterFactoryDescriptor(IConfigurationElement configElements) {
 		element = configElements;
 		this.nsURI = element.getAttribute("uri"); //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns the {@link AdapterFactory} <code>nsURI</code>.
-	 * 
-	 * @return The {@link AdapterFactory} <code>nsURI</code>.
-	 */
-	public String getNsURI() {
-		return nsURI;
 	}
 
 	/**
@@ -149,5 +150,14 @@ final class AdapterFactoryDescriptor {
 			}
 		}
 		return factory;
+	}
+
+	/**
+	 * Returns the {@link AdapterFactory} <code>nsURI</code>.
+	 * 
+	 * @return The {@link AdapterFactory} <code>nsURI</code>.
+	 */
+	public String getNsURI() {
+		return nsURI;
 	}
 }

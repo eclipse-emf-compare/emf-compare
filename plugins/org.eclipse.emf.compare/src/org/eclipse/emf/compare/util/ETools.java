@@ -37,37 +37,6 @@ public final class ETools {
 	}
 
 	/**
-	 * Returns a URI for the eObject, i.e., either the eProxyURI, the URI of the eResource with the fragment produced by the eResource, or the URI
-	 * consisting of just the fragment that would be produced by a default Resource with the eObject as its only contents.
-	 * 
-	 * @param eObject
-	 *            The object for which to get the URI.
-	 * @return The URI for the object.
-	 */
-	public static String getURI(EObject eObject) {
-		EObject object = eObject;
-		if (object.eResource() != null)
-			return object.eResource().getURIFragment(object);
-		// inspired from EMF sources
-		final StringBuffer result = new StringBuffer("//"); //$NON-NLS-1$
-		final List<String> uriFragmentPath = new ArrayList<String>();
-		for (EObject container = object.eContainer(); container != null; container = object.eContainer()) {
-			uriFragmentPath.add(((InternalEObject)container).eURIFragmentSegment(object.eContainmentFeature(), object));
-			object = container;
-		}
-		final int size = uriFragmentPath.size();
-		if (size > 0) {
-			for (int i = size - 1;; --i) {
-				result.append(uriFragmentPath.get(i));
-				if (i == 0)
-					break;
-				result.append('/');
-			}
-		}
-		return result.toString();
-	}
-
-	/**
 	 * Search a classifier recursively in a package.
 	 * <p>
 	 * Remarks :
@@ -120,7 +89,8 @@ public final class ETools {
 			String name = eClassifier.getName();
 			if (eClassifier.getEPackage() != null) {
 				EPackage container = eClassifier.getEPackage();
-				if (container != null && instanceClassName != null && instanceClassName.endsWith(container.getName() + SEPARATOR + name)) {
+				if (container != null && instanceClassName != null
+						&& instanceClassName.endsWith(container.getName() + SEPARATOR + name)) {
 					fullPath = instanceClassName;
 				} else {
 					while (container != null) {
@@ -135,18 +105,51 @@ public final class ETools {
 	}
 
 	/**
-	 * Indicates if an instance of the classifier is an instance of the type.
+	 * Returns a URI for the eObject, i.e., either the eProxyURI, the URI of the eResource with the fragment
+	 * produced by the eResource, or the URI consisting of just the fragment that would be produced by a
+	 * default Resource with the eObject as its only contents.
+	 * 
+	 * @param eObject
+	 *            The object for which to get the URI.
+	 * @return The URI for the object.
+	 */
+	public static String getURI(EObject eObject) {
+		EObject object = eObject;
+		if (object.eResource() != null)
+			return object.eResource().getURIFragment(object);
+		// inspired from EMF sources
+		final StringBuffer result = new StringBuffer("//"); //$NON-NLS-1$
+		final List<String> uriFragmentPath = new ArrayList<String>();
+		for (EObject container = object.eContainer(); container != null; container = object.eContainer()) {
+			uriFragmentPath.add(((InternalEObject)container).eURIFragmentSegment(
+					object.eContainmentFeature(), object));
+			object = container;
+		}
+		final int size = uriFragmentPath.size();
+		if (size > 0) {
+			for (int i = size - 1;; --i) {
+				result.append(uriFragmentPath.get(i));
+				if (i == 0)
+					break;
+				result.append('/');
+			}
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Indicates if the type corresponds to the name of the classifier.
 	 * 
 	 * @param classifier
-	 *            Classifier to test against the instances of <code>type</code>.
+	 *            The classifier to test.
 	 * @param type
-	 *            Type to test.
-	 * @return <code>True</code> if an instance of the classifier is an instance of the type, <code>False</code> otherwise.
+	 *            Type to test against <code>classifier</code> name.
+	 * @return <code>True</code> if the type corresponds to the name of the classifier, <code>False</code>
+	 *         otherwise.
 	 */
-	public static boolean ofType(EClassifier classifier, String type) {
-		if (classifier instanceof EClass)
-			return ofType((EClass)classifier, type);
-		return ofClass(classifier, type);
+	public static boolean ofClass(EClassifier classifier, String type) {
+		final String path = ETools.getEClassifierPath(classifier);
+		return (SEPARATOR + path).endsWith(SEPARATOR + type);
 	}
 
 	/**
@@ -156,7 +159,8 @@ public final class ETools {
 	 *            Class to test agaisnt <code>type</code>.
 	 * @param type
 	 *            Name of the type to test.
-	 * @return <code>True</code> if an instance of the class is an instance of the type, <code>False</code> otherwise.
+	 * @return <code>True</code> if an instance of the class is an instance of the type, <code>False</code>
+	 *         otherwise.
 	 */
 	public static boolean ofType(EClass eClass, String type) {
 		boolean isOfType = false;
@@ -172,17 +176,19 @@ public final class ETools {
 	}
 
 	/**
-	 * Indicates if the type corresponds to the name of the classifier.
+	 * Indicates if an instance of the classifier is an instance of the type.
 	 * 
 	 * @param classifier
-	 *            The classifier to test.
+	 *            Classifier to test against the instances of <code>type</code>.
 	 * @param type
-	 *            Type to test against <code>classifier</code> name.
-	 * @return <code>True</code> if the type corresponds to the name of the classifier, <code>False</code> otherwise.
+	 *            Type to test.
+	 * @return <code>True</code> if an instance of the classifier is an instance of the type,
+	 *         <code>False</code> otherwise.
 	 */
-	public static boolean ofClass(EClassifier classifier, String type) {
-		final String path = ETools.getEClassifierPath(classifier);
-		return (SEPARATOR + path).endsWith(SEPARATOR + type);
+	public static boolean ofType(EClassifier classifier, String type) {
+		if (classifier instanceof EClass)
+			return ofType((EClass)classifier, type);
+		return ofClass(classifier, type);
 	}
 
 }

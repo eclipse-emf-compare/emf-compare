@@ -27,16 +27,6 @@ public class EMFCompareException extends RuntimeException {
 	}
 
 	/**
-	 * Constructs a new runtime exception wrapping another exception.
-	 * 
-	 * @param e
-	 *            the cause exception.
-	 */
-	public EMFCompareException(Throwable e) {
-		super(e);
-	}
-
-	/**
 	 * Constructs a new runtime exception with the specified detail message.
 	 * 
 	 * @param message
@@ -45,5 +35,15 @@ public class EMFCompareException extends RuntimeException {
 	 */
 	public EMFCompareException(String message) {
 		super(message);
+	}
+
+	/**
+	 * Constructs a new runtime exception wrapping another exception.
+	 * 
+	 * @param e
+	 *            the cause exception.
+	 */
+	public EMFCompareException(Throwable e) {
+		super(e);
 	}
 }
