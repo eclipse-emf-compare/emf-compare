@@ -15,7 +15,8 @@ import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Un Match Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Un Match Element</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
  * 

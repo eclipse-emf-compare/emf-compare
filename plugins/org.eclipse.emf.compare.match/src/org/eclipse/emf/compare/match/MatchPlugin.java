@@ -33,6 +33,15 @@ public class MatchPlugin extends Plugin {
 	}
 
 	/**
+	 * Returns the shared instance.
+	 * 
+	 * @return the shared instance
+	 */
+	public static MatchPlugin getDefault() {
+		return plugin;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
@@ -51,14 +60,5 @@ public class MatchPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance.
-	 * 
-	 * @return the shared instance
-	 */
-	public static MatchPlugin getDefault() {
-		return plugin;
 	}
 }

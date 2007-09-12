@@ -32,7 +32,7 @@ public final class MatchEditPlugin extends EMFPlugin {
 	 * 
 	 * @generated
 	 */
-	/* package */ static Implementation plugin;
+	/* package */static Implementation plugin;
 
 	/**
 	 * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->

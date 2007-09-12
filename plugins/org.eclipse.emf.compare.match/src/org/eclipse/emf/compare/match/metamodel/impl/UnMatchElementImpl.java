@@ -20,7 +20,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Un Match Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Un Match Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -33,7 +34,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 @SuppressWarnings("nls")
 public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @see #getElement()
 	 * @generated
@@ -71,7 +73,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 			element = eResolveProxy(oldElement);
 			if (element != oldElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
 			}
 		}
 		return element;
@@ -95,7 +98,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 		EObject oldElement = element;
 		element = newElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT,
+					oldElement, element));
 	}
 
 	/**

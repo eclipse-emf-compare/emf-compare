@@ -19,7 +19,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match3 Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match3 Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -32,7 +33,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 @SuppressWarnings("nls")
 public class Match3ElementImpl extends Match2ElementsImpl implements Match3Element {
 	/**
-	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getOriginElement()
 	 * @generated
@@ -70,7 +72,8 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 			originElement = eResolveProxy(oldOriginElement);
 			if (originElement != oldOriginElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 			}
 		}
 		return originElement;
@@ -94,7 +97,8 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 		EObject oldOriginElement = originElement;
 		originElement = newOriginElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 	}
 
 	/**

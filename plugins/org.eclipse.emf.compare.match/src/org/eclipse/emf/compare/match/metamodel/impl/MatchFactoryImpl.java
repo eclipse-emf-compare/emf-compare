@@ -37,7 +37,8 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 */
 	public static MatchFactory init() {
 		try {
-			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$
+			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
+					.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$
 			if (theMatchFactory != null) {
 				return theMatchFactory;
 			}
@@ -75,7 +76,8 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 			case MatchPackage.REMOTE_UN_MATCH_ELEMENT:
 				return createRemoteUnMatchElement();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalArgumentException(
+						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

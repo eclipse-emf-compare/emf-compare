@@ -25,7 +25,8 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -39,7 +40,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 @SuppressWarnings("nls")
 public abstract class MatchElementImpl extends EObjectImpl implements MatchElement {
 	/**
-	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSimilarity()
 	 * @generated
@@ -48,7 +50,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	protected static final double SIMILARITY_EDEFAULT = 0.0;
 
 	/**
-	 * The cached value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSimilarity()
 	 * @generated
@@ -57,8 +60,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	protected double similarity = SIMILARITY_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getSubMatchElements() <em>Sub Match Elements</em>}' containment reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSubMatchElements() <em>Sub Match Elements</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSubMatchElements()
 	 * @generated
@@ -103,7 +106,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 		double oldSimilarity = similarity;
 		similarity = newSimilarity;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY, oldSimilarity, similarity));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY,
+					oldSimilarity, similarity));
 	}
 
 	/**
@@ -113,7 +117,8 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 */
 	public EList getSubMatchElements() {
 		if (subMatchElements == null) {
-			subMatchElements = new EObjectContainmentEList(MatchElement.class, this, MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
+			subMatchElements = new EObjectContainmentEList(MatchElement.class, this,
+					MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
 		}
 		return subMatchElements;
 	}

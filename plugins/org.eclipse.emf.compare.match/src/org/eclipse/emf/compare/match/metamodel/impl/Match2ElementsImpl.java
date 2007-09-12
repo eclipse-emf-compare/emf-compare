@@ -19,7 +19,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match2 Elements</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Match2 Elements</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -33,7 +34,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 @SuppressWarnings("nls")
 public class Match2ElementsImpl extends MatchElementImpl implements Match2Elements {
 	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLeftElement()
 	 * @generated
@@ -42,7 +44,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	protected EObject leftElement = null;
 
 	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRightElement()
 	 * @generated
@@ -80,7 +83,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 			leftElement = eResolveProxy(oldLeftElement);
 			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
 			}
 		}
 		return leftElement;
@@ -104,7 +108,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 		EObject oldLeftElement = leftElement;
 		leftElement = newLeftElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT,
+					oldLeftElement, leftElement));
 	}
 
 	/**
@@ -118,7 +123,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 			rightElement = eResolveProxy(oldRightElement);
 			if (rightElement != oldRightElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
 			}
 		}
 		return rightElement;
@@ -142,7 +148,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 		EObject oldRightElement = rightElement;
 		rightElement = newRightElement;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
 	}
 
 	/**

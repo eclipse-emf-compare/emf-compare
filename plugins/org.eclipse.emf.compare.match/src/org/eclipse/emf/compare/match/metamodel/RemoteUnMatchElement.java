@@ -11,11 +11,9 @@
 package org.eclipse.emf.compare.match.metamodel;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Remote Un Match Element</b></em>'.
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Remote Un Match Element</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getRemoteUnMatchElement()
  * @model
  * @generated

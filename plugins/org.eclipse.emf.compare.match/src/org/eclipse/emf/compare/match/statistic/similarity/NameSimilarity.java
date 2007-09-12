@@ -29,81 +29,21 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class NameSimilarity {
-	/** Maximum length of the {@link String} we consider for a feature's value. */
-	private static final int MAX_FEATURE_VALUE_LENGTH = 50;
-
 	/** {@link String} assumed to be the name of the feature that holds the name of an object. */
 	private static final String EOBJECT_NAME_FEATURE = "name"; //$NON-NLS-1$
 
+	/** Maximum length of the {@link String} we consider for a feature's value. */
+	private static final int MAX_FEATURE_VALUE_LENGTH = 50;
+
 	/** This map associates an {@link EClass} with the {@link EAttribute} that is assumed to hold its name. */
-	private static final Map<EClass, EAttribute> NAME_FEATURE_CACHE = new ConcurrentHashMap<EClass, EAttribute>(256);
+	private static final Map<EClass, EAttribute> NAME_FEATURE_CACHE = new ConcurrentHashMap<EClass, EAttribute>(
+			256);
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private NameSimilarity() {
 		// prevents instantiation
-	}
-
-	/**
-	 * This method returns a {@link List} of {@link String}s called "pairs". For example,
-	 * 
-	 * <pre>
-	 * pairs(&quot;MyString&quot;)
-	 * </pre>
-	 * 
-	 * returns ["My","yS","St","tr","ri","in","ng"]
-	 * 
-	 * @param source
-	 *            The {@link String} to process.
-	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
-	 */
-	public static List<String> pairs(String source) {
-		final List<String> result = new LinkedList<String>();
-		if (source != null) {
-			for (int i = 0; i < source.length() - 1; i++)
-				result.add(source.substring(i, i + 2));
-			if (source.length() % 2 == 1 && source.length() > 1)
-				result.add(source.substring(source.length() - 2, source.length() - 1));
-		}
-		return result;
-	}
-
-	/**
-	 * Return a metric result about name similarity. It compares 2 strings and return a double comprised between 0 and 1. The greater this metric, the
-	 * more equal the strings are.
-	 * 
-	 * @param str1
-	 *            First of the two {@link String}s to compare.
-	 * @param str2
-	 *            Second of the two {@link String}s to compare.
-	 * @return A metric result about name similarity (0 &lt;= value &lt;= 1).
-	 */
-	public static double nameSimilarityMetric(String str1, String str2) {
-		double result = 0d;
-		final double almostEquals = 0.999999d;
-		if (str1 != null && str2 != null) {
-			if (str1.equals(str2)) {
-				result = 1d;
-			} else if (str1.length() != 1 && str2.length() != 1) {
-				final String string1 = str1.toLowerCase();
-				final String string2 = str2.toLowerCase();
-
-				final List<String> pairs1 = pairs(string1);
-				final List<String> pairs2 = pairs(string2);
-
-				final double union = pairs1.size() + pairs2.size();
-				pairs1.retainAll(pairs2);
-				final int inter = pairs1.size();
-
-				result = inter * 2d / union;
-				if (result > 1)
-					result = 1;
-				if (result == 1.0 && !string1.equals(string2))
-					result = almostEquals;
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -213,5 +153,66 @@ public final class NameSimilarity {
 		}
 		// now we should return the feature value
 		return bestFeature;
+	}
+
+	/**
+	 * Return a metric result about name similarity. It compares 2 strings and return a double comprised
+	 * between 0 and 1. The greater this metric, the more equal the strings are.
+	 * 
+	 * @param str1
+	 *            First of the two {@link String}s to compare.
+	 * @param str2
+	 *            Second of the two {@link String}s to compare.
+	 * @return A metric result about name similarity (0 &lt;= value &lt;= 1).
+	 */
+	public static double nameSimilarityMetric(String str1, String str2) {
+		double result = 0d;
+		final double almostEquals = 0.999999d;
+		if (str1 != null && str2 != null) {
+			if (str1.equals(str2)) {
+				result = 1d;
+			} else if (str1.length() != 1 && str2.length() != 1) {
+				final String string1 = str1.toLowerCase();
+				final String string2 = str2.toLowerCase();
+
+				final List<String> pairs1 = pairs(string1);
+				final List<String> pairs2 = pairs(string2);
+
+				final double union = pairs1.size() + pairs2.size();
+				pairs1.retainAll(pairs2);
+				final int inter = pairs1.size();
+
+				result = inter * 2d / union;
+				if (result > 1)
+					result = 1;
+				if (result == 1.0 && !string1.equals(string2))
+					result = almostEquals;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * This method returns a {@link List} of {@link String}s called "pairs". For example,
+	 * 
+	 * <pre>
+	 * pairs(&quot;MyString&quot;)
+	 * </pre>
+	 * 
+	 * returns ["My","yS","St","tr","ri","in","ng"]
+	 * 
+	 * @param source
+	 *            The {@link String} to process.
+	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
+	 */
+	public static List<String> pairs(String source) {
+		final List<String> result = new LinkedList<String>();
+		if (source != null) {
+			for (int i = 0; i < source.length() - 1; i++)
+				result.add(source.substring(i, i + 2));
+			if (source.length() % 2 == 1 && source.length() > 1)
+				result.add(source.substring(source.length() - 2, source.length() - 1));
+		}
+		return result;
 	}
 }

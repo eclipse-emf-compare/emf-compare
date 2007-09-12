@@ -37,24 +37,6 @@ public final class StructureSimilarity {
 	}
 
 	/**
-	 * This method returns a double comprised between 0 and 1 representing the type similarities of the 2
-	 * EObjects. - 1 means the 2 objects types are very similar - 0 means the 2 objects types are very
-	 * differents.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s to compare.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s to compare.
-	 * @return Returns a <code>double</code> representing the type similarity of the 2 objects (0 &lt; value
-	 *         &lt; 1).
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the similarity.
-	 */
-	public static double typeSimilarityMetric(EObject obj1, EObject obj2) throws FactoryException {
-		return NameSimilarity.nameSimilarityMetric(typeValue(obj1), typeValue(obj2));
-	}
-
-	/**
 	 * This method returns a double comprised between 0 and 1 representing the relations similarities of the 2
 	 * EObjects. - 1 means the 2 objects surroundings are very similar - 0 means the 2 objects surroundings
 	 * are very different.
@@ -73,6 +55,87 @@ public final class StructureSimilarity {
 			throws FactoryException {
 		return NameSimilarity
 				.nameSimilarityMetric(relationsValue(obj1, filter), relationsValue(obj2, filter));
+	}
+
+	/**
+	 * This method returns a double comprised between 0 and 1 representing the type similarities of the 2
+	 * EObjects. - 1 means the 2 objects types are very similar - 0 means the 2 objects types are very
+	 * differents.
+	 * 
+	 * @param obj1
+	 *            First of the two {@link EObject}s to compare.
+	 * @param obj2
+	 *            Second of the two {@link EObject}s to compare.
+	 * @return Returns a <code>double</code> representing the type similarity of the 2 objects (0 &lt; value
+	 *         &lt; 1).
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the similarity.
+	 */
+	public static double typeSimilarityMetric(EObject obj1, EObject obj2) throws FactoryException {
+		return NameSimilarity.nameSimilarityMetric(typeValue(obj1), typeValue(obj2));
+	}
+
+	/**
+	 * This method returns a {@link String} representing the {@link EObject} attributes' values.
+	 * 
+	 * @param current
+	 *            {@link EObject} we need the attributes' values of.
+	 * @param filter
+	 *            Allows filtering of the pertinent features.
+	 * @return A {@link String} representing the {@link EObject} attributes' values.
+	 * @throws FactoryException
+	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
+	 */
+	@SuppressWarnings("unchecked")
+	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
+		final EObject eclass = current.eClass();
+		final StringBuffer result = new StringBuffer();
+		List<EReference> eObjectFeatures = new LinkedList<EReference>();
+		if (eclass instanceof EClass) {
+			if (filter != null)
+				eObjectFeatures = filter.getFilteredFeatures(current);
+			else
+				eObjectFeatures = ((EClass)eclass).getEAllReferences();
+		}
+		for (EStructuralFeature feature : eObjectFeatures) {
+			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
+				final Object value = current.eGet(feature);
+				if (value instanceof List) {
+					for (final Iterator valueIterator = ((List)value).iterator(); valueIterator.hasNext(); ) {
+						final Object next = valueIterator.next();
+						if (next instanceof EObject) {
+							final String objName = NameSimilarity.findName((EObject)next);
+							result.append(objName);
+						}
+					}
+				} else if (value instanceof EObject) {
+					final String objName = NameSimilarity.findName((EObject)value);
+					result.append(objName);
+				}
+			}
+		}
+		if (current.eContainer() != null)
+			result.append(NameSimilarity.findName(current.eContainer())).append("\n"); //$NON-NLS-1$
+
+		return result.toString();
+	}
+
+	/**
+	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s type.
+	 * 
+	 * @param current
+	 *            {@link EObject} we need the type of.
+	 * @return A {@link String} with content corresponding to the {@link EObject}'s type.
+	 * @throws FactoryException
+	 *             Thrown if we cannot retrieve <code>current</code>'s name.
+	 */
+	private static String typeValue(EObject current) throws FactoryException {
+		final List<StringBuffer> values = typeValueList(current);
+		final StringBuffer result = new StringBuffer();
+		final Iterator<StringBuffer> it = values.iterator();
+		while (it.hasNext())
+			result.append(it.next());
+		return result.toString();
 	}
 
 	/**
@@ -121,68 +184,5 @@ public final class StructureSimilarity {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s type.
-	 * 
-	 * @param current
-	 *            {@link EObject} we need the type of.
-	 * @return A {@link String} with content corresponding to the {@link EObject}'s type.
-	 * @throws FactoryException
-	 *             Thrown if we cannot retrieve <code>current</code>'s name.
-	 */
-	private static String typeValue(EObject current) throws FactoryException {
-		final List<StringBuffer> values = typeValueList(current);
-		final StringBuffer result = new StringBuffer();
-		final Iterator<StringBuffer> it = values.iterator();
-		while (it.hasNext())
-			result.append(it.next());
-		return result.toString();
-	}
-
-	/**
-	 * This method returns a {@link String} representing the {@link EObject} attributes' values.
-	 * 
-	 * @param current
-	 *            {@link EObject} we need the attributes' values of.
-	 * @param filter
-	 *            Allows filtering of the pertinent features.
-	 * @return A {@link String} representing the {@link EObject} attributes' values.
-	 * @throws FactoryException
-	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
-	 */
-	@SuppressWarnings("unchecked")
-	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
-		final EObject eclass = current.eClass();
-		final StringBuffer result = new StringBuffer();
-		List<EReference> eObjectFeatures = new LinkedList<EReference>();
-		if (eclass instanceof EClass) {
-			if (filter != null)
-				eObjectFeatures = filter.getFilteredFeatures(current);
-			else
-				eObjectFeatures = ((EClass)eclass).getEAllReferences();
-		}
-		for (EStructuralFeature feature : eObjectFeatures) {
-			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
-				final Object value = current.eGet(feature);
-				if (value instanceof List) {
-					for (final Iterator valueIterator = ((List)value).iterator(); valueIterator.hasNext(); ) {
-						final Object next = valueIterator.next();
-						if (next instanceof EObject) {
-							final String objName = NameSimilarity.findName((EObject)next);
-							result.append(objName);
-						}
-					}
-				} else if (value instanceof EObject) {
-					final String objName = NameSimilarity.findName((EObject)value);
-					result.append(objName);
-				}
-			}
-		}
-		if (current.eContainer() != null)
-			result.append(NameSimilarity.findName(current.eContainer())).append("\n"); //$NON-NLS-1$
-		
-		return result.toString();
 	}
 }

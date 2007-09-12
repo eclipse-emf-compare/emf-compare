@@ -30,15 +30,16 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchElement} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class MatchElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -47,7 +48,8 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -62,22 +64,28 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
-	 * This adds a property descriptor for the Similarity feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Similarity feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addSimilarityPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MatchElement_similarity_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature", "_UI_MatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true, false, false, ItemPropertyDescriptor.REAL_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchElement_similarity_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature", "_UI_MatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true, false, false,
+						ItemPropertyDescriptor.REAL_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
-	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
+	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
+	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -103,8 +111,9 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer notification, which
-	 * it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -114,18 +123,20 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 
 		switch (notification.getFeatureID(MatchElement.class)) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
+						true));
 				return;
 			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
+						false));
 				return;
 		}
 		super.notifyChanged(notification);
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that can be created under
-	 * this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
+	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -134,13 +145,16 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS, MatchFactory.eINSTANCE.createMatch2Elements()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS,
+				MatchFactory.eINSTANCE.createMatch2Elements()));
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS, MatchFactory.eINSTANCE.createMatch3Element()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS,
+				MatchFactory.eINSTANCE.createMatch3Element()));
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */

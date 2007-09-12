@@ -22,22 +22,6 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface MatchEngine {
 	/**
-	 * This method returns a 2 models match.
-	 * 
-	 * @param leftRoot
-	 *            Left model for the comparison.
-	 * @param rightRoot
-	 *            Right model for the comparison.
-	 * @param monitor
-	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
-	 * @return The corresponding {@link MatchModel}.
-	 * @throws InterruptedException
-	 *             Thrown if the comparison is interrupted somehow.
-	 */
-	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
-			throws InterruptedException;
-
-	/**
 	 * This method returns a 3 models match.
 	 * 
 	 * @param leftRoot
@@ -53,5 +37,21 @@ public interface MatchEngine {
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor)
+			throws InterruptedException;
+
+	/**
+	 * This method returns a 2 models match.
+	 * 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param monitor
+	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 * @return The corresponding {@link MatchModel}.
+	 * @throws InterruptedException
+	 *             Thrown if the comparison is interrupted somehow.
+	 */
+	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException;
 }

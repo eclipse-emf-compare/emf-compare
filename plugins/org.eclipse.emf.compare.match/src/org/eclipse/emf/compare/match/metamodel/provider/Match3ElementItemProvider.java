@@ -26,15 +26,16 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class Match3ElementItemProvider extends Match2ElementsItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -43,7 +44,8 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
 	 * @generated
 	 */
@@ -58,16 +60,21 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	protected void addOriginElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_Match3Element_originElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match3Element_originElement_feature", "_UI_Match3Element_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_Match3Element_originElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match3Element_originElement_feature", "_UI_Match3Element_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null,
+						null));
 	}
 
 	/**
@@ -92,8 +99,9 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating a viewer notification, which
-	 * it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -104,8 +112,8 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all of the children that can be created under
-	 * this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
+	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
@@ -115,7 +123,8 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
