@@ -15,14 +15,15 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Group</b></em>'. <!--
  * end-user-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffGroup()
  * @model
  * @generated
@@ -30,13 +31,13 @@ import org.eclipse.emf.ecore.EObject;
 @SuppressWarnings("nls")
 public interface DiffGroup extends DiffElement {
 	/**
-	 * Returns the value of the '<em><b>Left Parent</b></em>' reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Parent</em>' reference isn't clear, there really should be more of
 	 * a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Left Parent</em>' reference.
 	 * @see #setLeftParent(EObject)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffGroup_LeftParent()
@@ -46,24 +47,22 @@ public interface DiffGroup extends DiffElement {
 	EObject getLeftParent();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Left Parent</em>' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Parent</em>' reference.
 	 * @see #getLeftParent()
 	 * @generated
 	 */
 	void setLeftParent(EObject value);
 
 	/**
-	 * Returns the value of the '<em><b>Subchanges</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Subchanges</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Subchanges</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Subchanges</em>' attribute.
 	 * @see #isSetSubchanges()
 	 * @see #unsetSubchanges()
@@ -75,11 +74,9 @@ public interface DiffGroup extends DiffElement {
 	int getSubchanges();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Subchanges</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Subchanges</em>' attribute.
 	 * @see #isSetSubchanges()
 	 * @see #unsetSubchanges()
 	 * @see #getSubchanges()
@@ -88,9 +85,8 @@ public interface DiffGroup extends DiffElement {
 	void setSubchanges(int value);
 
 	/**
-	 * Unsets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Unsets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #isSetSubchanges()
 	 * @see #getSubchanges()
 	 * @see #setSubchanges(int)
@@ -99,9 +95,8 @@ public interface DiffGroup extends DiffElement {
 	void unsetSubchanges();
 
 	/**
-	 * Returns whether the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}'
-	 * attribute is set. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns whether the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute is set.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return whether the value of the '<em>Subchanges</em>' attribute is set.
 	 * @see #unsetSubchanges()
 	 * @see #getSubchanges()

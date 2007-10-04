@@ -29,20 +29,20 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getDate <em>Date</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getDiff <em>Diff</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getMatch <em>Match</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getDate <em>Date</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getDiff <em>Diff</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl#getMatch <em>Match</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSnapshot {
 	/**
-	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getDate() <em>Date</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -50,9 +50,9 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	protected static final Date DATE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getDate() <em>Date</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getDate()
 	 * @generated
 	 * @ordered
@@ -60,9 +60,9 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	protected Date date = DATE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDiff() <em>Diff</em>}' containment reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getDiff() <em>Diff</em>}' containment reference.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getDiff()
 	 * @generated
 	 * @ordered
@@ -81,7 +81,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ModelInputSnapshotImpl() {
@@ -90,7 +89,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -100,7 +98,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Date getDate() {
@@ -109,7 +106,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setDate(Date newDate) {
@@ -122,7 +118,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffModel getDiff() {
@@ -131,7 +126,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetDiff(DiffModel newDiff, NotificationChain msgs) {
@@ -150,7 +144,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setDiff(DiffModel newDiff) {
@@ -172,7 +165,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchModel getMatch() {
@@ -181,7 +173,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetMatch(MatchModel newMatch, NotificationChain msgs) {
@@ -200,7 +191,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setMatch(MatchModel newMatch) {
@@ -222,7 +212,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -238,7 +227,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -256,7 +244,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -277,7 +264,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -298,7 +284,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -316,7 +301,6 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

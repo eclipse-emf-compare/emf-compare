@@ -19,14 +19,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoteAddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteAddModelElementImpl() {
@@ -35,7 +34,6 @@ public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

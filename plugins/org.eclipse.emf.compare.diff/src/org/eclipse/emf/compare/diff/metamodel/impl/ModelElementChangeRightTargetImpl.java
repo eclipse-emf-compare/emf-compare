@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl#getLeftParent <em>Left Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl#getLeftParent <em>Left Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
@@ -55,7 +55,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ModelElementChangeRightTargetImpl() {
@@ -64,7 +63,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -74,7 +72,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftParent() {
@@ -93,7 +90,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -102,7 +98,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftParent(EObject newLeftParent) {
@@ -115,7 +110,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -134,7 +128,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -143,7 +136,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -157,7 +149,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -177,7 +168,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -195,7 +185,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -213,7 +202,6 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

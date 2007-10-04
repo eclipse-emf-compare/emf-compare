@@ -10,35 +10,37 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
-import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.GenericDiffElement;
+
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Attribute</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Generic Diff Element</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
-@SuppressWarnings("nls")
-public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements AddAttribute {
+public class GenericDiffElementImpl extends DiffElementImpl implements GenericDiffElement {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AddAttributeImpl() {
+	protected GenericDiffElementImpl() {
 		super();
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	protected EClass eStaticClass() {
-		return DiffPackage.Literals.ADD_ATTRIBUTE;
+		return DiffPackage.Literals.GENERIC_DIFF_ELEMENT;
 	}
 
-} // AddAttributeImpl
+} //GenericDiffElementImpl

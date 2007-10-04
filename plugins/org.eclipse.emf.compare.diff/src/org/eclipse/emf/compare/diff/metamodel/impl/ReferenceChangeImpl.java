@@ -25,20 +25,20 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getReference <em>Reference</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getRightElement <em>Right Element</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getLeftElement <em>Left Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getReference <em>Reference</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceChange {
 	/**
-	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getReference()
 	 * @generated
 	 * @ordered
@@ -67,7 +67,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeImpl() {
@@ -76,7 +75,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -86,7 +84,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReference() {
@@ -104,7 +101,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference basicGetReference() {
@@ -113,7 +109,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setReference(EReference newReference) {
@@ -126,7 +121,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -144,7 +138,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -153,7 +146,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -166,7 +158,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -184,7 +175,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -193,7 +183,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -206,7 +195,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -230,7 +218,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -251,7 +238,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -272,7 +258,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

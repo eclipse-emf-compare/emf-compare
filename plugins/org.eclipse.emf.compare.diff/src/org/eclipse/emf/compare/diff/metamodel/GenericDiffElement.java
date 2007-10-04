@@ -11,15 +11,15 @@
 package org.eclipse.emf.compare.diff.metamodel;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Remove Attribute</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Generic Diff Element</b></em>'.
+ * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoveAttribute()
+ * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getGenericDiffElement()
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
-public interface RemoveAttribute extends AttributeChangeLeftTarget {
-	// This class doesn't need any Overriding to be functionnal
-} // RemoveAttribute
+public interface GenericDiffElement extends DiffElement {
+	// No overriding needed
+} // GenericDiffElement

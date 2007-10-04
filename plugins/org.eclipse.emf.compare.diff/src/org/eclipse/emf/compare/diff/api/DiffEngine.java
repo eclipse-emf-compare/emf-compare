@@ -23,12 +23,20 @@ public interface DiffEngine {
 	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 
 	 * @param match
+	 *            The matching model.
+	 * @return The corresponding diff model.
+	 */
+	DiffModel doDiff(MatchModel match);
+
+	/**
+	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
+	 * 
+	 * @param match
 	 *            the matching model
 	 * @param threeWay
 	 *            <code>True</code> if we're computing a three way comparison, <code>False</code>
 	 *            otherwise.
 	 * @return the corresponding diff model
-	 * @throws FactoryException
 	 */
 	DiffModel doDiff(MatchModel match, boolean threeWay);
 }

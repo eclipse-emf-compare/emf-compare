@@ -16,6 +16,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="isHiddenBy" upperBound="-1"
         eType="#//AbstractDiffExtension" eOpposite="#//AbstractDiffExtension/hideElements"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GenericDiffElement" eSuperTypes="#//DiffElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConflictingDiffElement" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
@@ -96,11 +97,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateUniqueReferenceValue" eSuperTypes="#//UpdateUniqueReferenceValue"/>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractDiffExtension" abstract="true">
-    <eOperations name="providesMerger" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean"/>
     <eOperations name="visit">
       <eParameters name="diffModel" eType="#//DiffModel"/>
     </eOperations>
-    <eOperations name="getMerger" eType="#//AbstractMerger"/>
     <eOperations name="getText" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eOperations name="getImage" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hideElements" upperBound="-1"

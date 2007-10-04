@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.diff.merge.api;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeLeftTargetMerger;
@@ -34,6 +33,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.util.FastMap;
 
 /**
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.
@@ -42,11 +42,10 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
  */
 public final class MergeFactory {
 	/**
-	 * This {@link ConcurrentHashMap map} keeps a bridge between a given {@link DiffElement}'s class and the
+	 * This map keeps a bridge between a given {@link DiffElement}'s class and the
 	 * most accurate merger's class for that particular {@link DiffElement}.
 	 */
-	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new ConcurrentHashMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>(
-			32);
+	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new FastMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
 
 	/**
 	 * Associates basic {@link DiffElement}s with generic merger implementations.
@@ -136,7 +135,7 @@ public final class MergeFactory {
 			mergerClass = MERGER_TYPES.get(element.getClass());
 			// Else we seek through the map if our element is an instance of one of the class keys.
 		} else {
-			for (Class clazz : MERGER_TYPES.keySet()) {
+			for (Class<? extends DiffElement> clazz : MERGER_TYPES.keySet()) {
 				if (clazz.isInstance(element)) {
 					mergerClass = MERGER_TYPES.get(clazz);
 					break;

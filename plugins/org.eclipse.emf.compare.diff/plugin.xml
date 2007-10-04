@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
+<?eclipse version="3.2"?>
 
 <!--
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.5 2007/08/29 07:11:29 cbrun Exp $
+ $Id: plugin.xml,v 1.6 2007/10/04 13:25:11 lgoubet Exp $
 -->
 
 <plugin>
-   <extension-point id="engine" name="engine" schema="schema/engine.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine" schema="schema/org.eclipse.emf.compare.diff.engine.exsd"/>
    <extension-point id="diff_extension" name="diff_extension" schema="schema/diff_extension.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
@@ -20,7 +20,7 @@
   </extension>
   <extension
          point="org.eclipse.emf.compare.diff.engine">
-      <engine
+      <diffengine
             engineClass="org.eclipse.emf.compare.diff.generic.DiffMaker"
             priority="low"/>
    </extension>

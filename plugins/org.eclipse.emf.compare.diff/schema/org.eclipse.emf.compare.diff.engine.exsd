@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.emf.compare.match">
+<schema targetNamespace="org.eclipse.emf.compare.diff">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.emf.compare.match" id="engine" name="engine"/>
+         <meta.schema plugin="org.eclipse.emf.compare.diff" id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows a plug-in to register a distinct match engine to adress specific comparison needs.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
-         <sequence>
-            <element ref="engine"/>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="diffengine"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,15 +42,22 @@
       </complexType>
    </element>
 
-   <element name="engine">
+   <element name="diffengine">
       <complexType>
+         <attribute name="fileExtension" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the extensions this engine targets. * for any file extension.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="engineClass" type="string" use="required">
             <annotation>
                <documentation>
                   The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.DiffEngine&lt;/code&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.match.MatchEngine"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.diff.api.DiffEngine"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -83,7 +90,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         0.8
       </documentation>
    </annotation>
 

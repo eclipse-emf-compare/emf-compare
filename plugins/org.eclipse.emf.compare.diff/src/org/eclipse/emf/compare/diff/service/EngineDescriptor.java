@@ -22,7 +22,16 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class EngineDescriptor implements Comparable {
+public class EngineDescriptor implements Comparable<EngineDescriptor> {
+	/** Configuration element of this descriptor. */
+	protected final IConfigurationElement element;
+
+	/** Class name of this engine. */
+	protected final String engineClassName;
+	
+	/** File extensions this engine takes into account. */
+	protected final String fileExtension;
+
 	/**
 	 * Priority of this descriptor. Should be one of
 	 * <ul>
@@ -35,12 +44,6 @@ public class EngineDescriptor implements Comparable {
 	 */
 	protected final String priority;
 
-	/** Class name of this engine. */
-	protected final String engineClassName;
-
-	/** Configuration element of this descriptor. */
-	protected final IConfigurationElement element;
-
 	/** {@link DiffEngine} this descriptor describes. */
 	private DiffEngine engine;
 
@@ -52,8 +55,106 @@ public class EngineDescriptor implements Comparable {
 	 */
 	public EngineDescriptor(IConfigurationElement configuration) {
 		element = configuration;
+		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
 		engineClassName = getAttribute("engineClass", null); //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(EngineDescriptor other) {
+		final int nombre1 = getPriorityValue(other.getPriority());
+		final int nombre2 = getPriorityValue(getPriority());
+		return nombre2 - nombre1;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		boolean isEqual = true;
+		if (this == obj) {
+			isEqual = true;
+		} else if (obj == null || getClass() != obj.getClass()) {
+			isEqual = false;
+		} else {
+			final EngineDescriptor other = (EngineDescriptor)obj;
+			if (engineClassName == null && other.engineClassName != null) {
+				isEqual = false;
+			} else if (!engineClassName.equals(other.engineClassName)) {
+				isEqual = false;
+			} else if (fileExtension == null && other.fileExtension != null) {
+				isEqual = false;
+			} else if (!fileExtension.equals(other.fileExtension)) {
+				isEqual = false;
+			} else if (priority == null && other.priority != null) {
+				isEqual = false;
+			} else if (!priority.equals(other.priority)) {
+				isEqual = false;
+			}
+		}
+		return isEqual;
+	}
+
+	/**
+	 * Returns the engine instance.
+	 * 
+	 * @return The engine instance.
+	 */
+	public DiffEngine getEngineInstance() {
+		if (engine == null) {
+			try {
+				engine = (DiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
+			} catch (CoreException e) {
+				EMFComparePlugin.log(e, false);
+			}
+		}
+		return engine;
+	}
+	
+	/**
+	 * Returns the file extension this engine should handle.
+	 * 
+	 * @return The file extension this engine should handle.
+	 */
+	public String getFileExtension() {
+		return fileExtension;
+	}
+
+	/**
+	 * Returns the engine priority.
+	 * 
+	 * @return The engine priority.
+	 */
+	public String getPriority() {
+		return priority.toLowerCase();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int classNameHash = 0;
+		if (engineClassName != null)
+			classNameHash = engineClassName.hashCode();
+		int extensionHash = 0;
+		if (fileExtension != null)
+			extensionHash = fileExtension.hashCode();
+		int priorityHash = 0;
+		if (priority != null)
+			priorityHash = priority.hashCode();
+
+		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
 	}
 
 	/**
@@ -73,31 +174,6 @@ public class EngineDescriptor implements Comparable {
 		if (defaultValue != null)
 			return defaultValue;
 		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns the engine priority.
-	 * 
-	 * @return The engine priority.
-	 */
-	public String getPriority() {
-		return priority.toLowerCase();
-	}
-
-	/**
-	 * Returns the engine instance.
-	 * 
-	 * @return The engine instance.
-	 */
-	public DiffEngine getEngineInstance() {
-		if (engine == null) {
-			try {
-				engine = (DiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
-			} catch (CoreException e) {
-				EMFComparePlugin.log(e, false);
-			}
-		}
-		return engine;
 	}
 
 	/**
@@ -128,64 +204,5 @@ public class EngineDescriptor implements Comparable {
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int classNameHash = 0;
-		if (engineClassName != null)
-			classNameHash = engineClassName.hashCode();
-		int priorityHash = 0;
-		if (priority != null)
-			priorityHash = priority.hashCode();
-
-		return (prime + classNameHash) * prime + priorityHash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public int compareTo(Object other) {
-		if (other instanceof EngineDescriptor) {
-			final int nombre1 = getPriorityValue(((EngineDescriptor)other).getPriority());
-			final int nombre2 = getPriorityValue(getPriority());
-			return nombre2 - nombre1;
-		}
-		return 1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		boolean isEqual = true;
-		if (this == obj) {
-			isEqual = true;
-		} else if (obj == null || getClass() != obj.getClass()) {
-			isEqual = false;
-		} else {
-			final EngineDescriptor other = (EngineDescriptor)obj;
-			if (engineClassName == null && other.engineClassName != null) {
-				isEqual = false;
-			} else if (!engineClassName.equals(other.engineClassName)) {
-				isEqual = false;
-			} else if (priority == null && other.priority != null) {
-				isEqual = false;
-			} else if (!priority.equals(other.priority)) {
-				isEqual = false;
-			}
-		}
-		return isEqual;
 	}
 }

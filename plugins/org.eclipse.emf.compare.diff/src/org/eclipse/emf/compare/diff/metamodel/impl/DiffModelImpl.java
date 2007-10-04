@@ -31,21 +31,21 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeft <em>Left</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOrigin <em>Origin</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRight <em>Right</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeft <em>Left</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOrigin <em>Origin</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRight <em>Right</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	/**
-	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -53,9 +53,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String LEFT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getLeft()
 	 * @generated
 	 * @ordered
@@ -63,9 +63,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected String left = LEFT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getOrigin()
 	 * @generated
 	 * @ordered
@@ -73,9 +73,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String ORIGIN_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getOrigin()
 	 * @generated
 	 * @ordered
@@ -83,9 +83,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected String origin = ORIGIN_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -93,9 +93,9 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String RIGHT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getRight()
 	 * @generated
 	 * @ordered
@@ -103,9 +103,8 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected String right = RIGHT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference
-	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getOwnedElements()
 	 * @generated
 	 * @ordered
@@ -114,7 +113,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DiffModelImpl() {
@@ -123,7 +121,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -133,7 +130,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getRight() {
@@ -142,7 +138,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRight(String newRight) {
@@ -155,7 +150,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getOwnedElements() {
@@ -168,7 +162,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getLeft() {
@@ -177,7 +170,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeft(String newLeft) {
@@ -189,7 +181,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getOrigin() {
@@ -198,7 +189,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOrigin(String newOrigin) {
@@ -211,7 +201,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -225,7 +214,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -245,7 +233,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -271,7 +258,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -295,7 +281,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -315,7 +300,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

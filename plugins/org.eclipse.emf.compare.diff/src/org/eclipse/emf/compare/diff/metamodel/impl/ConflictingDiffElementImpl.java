@@ -24,12 +24,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
@@ -66,7 +66,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ConflictingDiffElementImpl() {
@@ -75,7 +74,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -85,7 +83,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftParent() {
@@ -103,7 +100,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -112,7 +108,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftParent(EObject newLeftParent) {
@@ -125,7 +120,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightParent() {
@@ -143,7 +137,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightParent() {
@@ -152,7 +145,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightParent(EObject newRightParent) {
@@ -165,7 +157,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getOriginElement() {
@@ -184,7 +175,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -193,7 +183,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
@@ -206,7 +195,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -230,7 +218,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -251,7 +238,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -272,7 +258,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
