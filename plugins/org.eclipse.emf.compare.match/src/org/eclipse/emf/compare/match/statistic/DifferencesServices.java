@@ -11,13 +11,11 @@
 package org.eclipse.emf.compare.match.statistic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -35,6 +33,7 @@ import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ETools;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -111,13 +110,13 @@ public class DifferencesServices implements MatchEngine {
 	/**
 	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
 	 */
-	private final Map<EObject, EObject> matchedByID = new ConcurrentHashMap<EObject, EObject>(512);
+	private final Map<EObject, EObject> matchedByID = new FastMap<EObject, EObject>();
 
 	/**
 	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
 	 * valueSimilarity, relationSimilarity, TypeSimilarity].
 	 */
-	private final Map<String, Double> metricsCache = new ConcurrentHashMap<String, Double>(1024);
+	private final Map<String, Double> metricsCache = new FastMap<String, Double>();
 
 	/**
 	 * This list allows us to memorize the unMatched elements for a three-way comparison.<br/>
@@ -210,7 +209,7 @@ public class DifferencesServices implements MatchEngine {
 				subMatch.setRightElement(map.getRightElement());
 				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
 			}
-			final Map<EObject, Boolean> unMatchedElements = new HashMap<EObject, Boolean>(128);
+			final Map<EObject, Boolean> unMatchedElements = new FastMap<EObject, Boolean>();
 			for (EObject remoteUnMatch : stillToFindFromModel1) {
 				unMatchedElements.put(remoteUnMatch, true);
 			}
@@ -337,6 +336,167 @@ public class DifferencesServices implements MatchEngine {
 	public void setStrategy(int strategyId) {
 		currentStrategy = strategyId;
 	}
+	
+	/**
+	 * This will compute the similarity between two {@link EObject}s' contents.
+	 * 
+	 * @param obj1
+	 *            First of the two {@link EObject}s.
+	 * @param obj2
+	 *            Second of the two {@link EObject}s.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents.
+	 *         0 &lt; value &lt; 1.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
+	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
+	 */
+	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
+		double similarity = 0d;
+		final Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		if (value != null) {
+			similarity = value;
+		} else {
+			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
+					NameSimilarity.contentValue(obj2, filter));
+			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
+		}
+		return similarity;
+	}
+	
+	/**
+	 * This will compare two objects to see if they have ID and in that case, if these IDs are distinct.
+	 * 
+	 * @param left
+	 *            Left of the two objects to compare.
+	 * @param right
+	 *            right of the two objects to compare.
+	 * @return <code>True</code> if only one of the two objects has an ID or the two are distinct,
+	 *         <code>False</code> otherwise.
+	 */
+	protected boolean haveDistinctXMIID(EObject left, EObject right) {
+		boolean result = false;
+		String item1ID = null;
+		String item2ID = null;
+		if (left.eResource() != null && left.eResource() instanceof XMIResource)
+			item1ID = ((XMIResource)left.eResource()).getID(left);
+		if (right.eResource() != null && right.eResource() instanceof XMIResource)
+			item2ID = ((XMIResource)right.eResource()).getID(right);
+		if (item1ID != null) {
+			result = !item1ID.equals(item2ID);
+		} else {
+			result = item2ID != null;
+		}
+		/*
+		 * Now checking the Ecore ID's
+		 */
+		if (left.eClass().getEIDAttribute() != null && right.eClass().getEIDAttribute() != null) {
+			final Object leftID = left.eGet(left.eClass().getEIDAttribute());
+			final Object rightID = right.eGet(right.eClass().getEIDAttribute());
+			if (leftID != null && rightID != null && leftID.equals(rightID))
+				result = false;
+			else
+				result = true;
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Returns <code>True</code> if the 2 given {@link EObject}s are considered similar.
+	 * 
+	 * @param obj1
+	 *            The first {@link EObject} to compare.
+	 * @param obj2
+	 *            Second of the {@link EObject}s to compare.
+	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
+	 *         otherwise.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute one of the needed similarity.
+	 */
+	protected boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
+		boolean similar = false;
+
+		// Defines threshold constants to assume objects' similarity
+		final double fewerAttributesNameThreshold = 0.8d;
+		final double relationsThreshold = 0.9d;
+		final double nameThreshold = 0.2d;
+		final double softContentThreshold = 0.59d;
+		final double strongContentThreshold = 0.9d;
+		final double softTriWayThreshold = 0.8d;
+		final double strongTriWayThreshold = 0.9d;
+
+		double contentThreshold = softContentThreshold;
+		double triWayThreshold = softTriWayThreshold;
+		double generalThreshold = THRESHOLD;
+		if (currentStrategy == STRONG_STRATEGY) {
+			contentThreshold = strongContentThreshold;
+			triWayThreshold = strongTriWayThreshold;
+			generalThreshold = STRONGER_THRESHOLD;
+		}
+
+		final double nameSimilarity = nameSimilarity(obj1, obj2);
+		final boolean hasSameUri = hasSameUri(obj1, obj2);
+		if (haveDistinctXMIID(obj1, obj2)) {
+			similar = false;
+		} else if (nameSimilarity == 1 && hasSameUri) {
+			similar = true;
+			// softer test if we don't have enough attributes to compare the objects
+		} else if (nameSimilarity > fewerAttributesNameThreshold
+				&& nonNullFeaturesCount(obj1) <= MIN_ATTRIBUTES_COUNT
+				&& nonNullFeaturesCount(obj2) <= MIN_ATTRIBUTES_COUNT
+				&& typeSimilarity(obj1, obj2) > generalThreshold) {
+			similar = true;
+		} else {
+			final double contentSimilarity = contentSimilarity(obj1, obj2);
+			final double relationsSimilarity = relationsSimilarity(obj1, obj2);
+
+			if (relationsSimilarity == 1 && hasSameUri && nameSimilarity > nameThreshold) {
+				similar = true;
+			} else if (contentSimilarity == 1 && relationsSimilarity == 1) {
+				similar = true;
+			} else if (contentSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
+					&& nameSimilarity > nameThreshold) {
+				similar = true;
+			} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
+				similar = true;
+			} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
+					&& relationsSimilarity > triWayThreshold) {
+				similar = true;
+			} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
+					&& typeSimilarity(obj1, obj2) > generalThreshold) {
+				similar = true;
+			}
+		}
+		return similar;
+	}
+	
+	/**
+	 * This will compute the similarity between two {@link EObject}s' names.
+	 * 
+	 * @param obj1
+	 *            First of the two {@link EObject}s.
+	 * @param obj2
+	 *            Second of the two {@link EObject}s.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0
+	 *         &lt; value &lt; 1.
+	 * @see NameSimilarity#nameSimilarityMetric(String, String)
+	 */
+	protected double nameSimilarity(EObject obj1, EObject obj2) {
+		double similarity = 0d;
+		try {
+			final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+			if (value != null) {
+				similarity = value;
+			} else {
+				similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
+						NameSimilarity.findName(obj2));
+				setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
+			}
+		} catch (FactoryException e) {
+			// fails silently, will return 0d
+		}
+		return similarity;
+	}
 
 	/**
 	 * Returns an absolute comparison metric between the two given {@link EObject}s.
@@ -388,32 +548,6 @@ public class DifferencesServices implements MatchEngine {
 		final double metric3 = absoluteMetric(obj2, obj3);
 
 		return (metric1 + metric2 + metric3) / 3;
-	}
-
-	/**
-	 * This will compute the similarity between two {@link EObject}s' contents.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents.
-	 *         0 &lt; value &lt; 1.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
-	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
-	 */
-	private double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
-		if (value != null) {
-			similarity = value;
-		} else {
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
-					NameSimilarity.contentValue(obj2, filter));
-			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
-		}
-		return similarity;
 	}
 
 	/**
@@ -649,114 +783,6 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * This will compare two objects to see if they have ID and in that case, if these IDs are distinct.
-	 * 
-	 * @param left
-	 *            Left of the two objects to compare.
-	 * @param right
-	 *            right of the two objects to compare.
-	 * @return <code>True</code> if only one of the two objects has an ID or the two are distinct,
-	 *         <code>False</code> otherwise.
-	 */
-	private boolean haveDistinctXMIID(EObject left, EObject right) {
-		boolean result = false;
-		String item1ID = null;
-		String item2ID = null;
-		if (left.eResource() != null && left.eResource() instanceof XMIResource)
-			item1ID = ((XMIResource)left.eResource()).getID(left);
-		if (right.eResource() != null && right.eResource() instanceof XMIResource)
-			item2ID = ((XMIResource)right.eResource()).getID(right);
-		if (item1ID != null) {
-			result = !item1ID.equals(item2ID);
-		} else {
-			result = item2ID != null;
-		}
-		/*
-		 * Now checking the Ecore ID's
-		 */
-		if (left.eClass().getEIDAttribute() != null && right.eClass().getEIDAttribute() != null) {
-			final Object leftID = left.eGet(left.eClass().getEIDAttribute());
-			final Object rightID = right.eGet(right.eClass().getEIDAttribute());
-			if (leftID != null && rightID != null && leftID.equals(rightID))
-				result = false;
-			else
-				result = true;
-		}
-
-		return result;
-	}
-
-	/**
-	 * Returns <code>True</code> if the 2 given {@link EObject}s are considered similar.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
-	 *         otherwise.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute one of the needed similarity.
-	 */
-	private boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-		boolean similar = false;
-
-		final double fewerAttributesNameThreshold = 0.8d;
-		final double relationsThreshold = 0.9d;
-		final double nameThreshold = 0.2d;
-		final double softContentThreshold = 0.59d;
-		final double strongContentThreshold = 0.9d;
-		final double softTriWayThreshold = 0.8d;
-		final double strongTriWayThreshold = 0.9d;
-
-		double contentThreshold = softContentThreshold;
-		double triWayThreshold = softTriWayThreshold;
-		double generalThreshold = THRESHOLD;
-		if (currentStrategy == STRONG_STRATEGY) {
-			contentThreshold = strongContentThreshold;
-			triWayThreshold = strongTriWayThreshold;
-			generalThreshold = STRONGER_THRESHOLD;
-		}
-
-		final double nameSimilarity = nameSimilarity(obj1, obj2);
-		final boolean hasSameUri = hasSameUri(obj1, obj2);
-
-		if (haveDistinctXMIID(obj1, obj2)) {
-			similar = false;
-		} else if (nameSimilarity == 1 && hasSameUri) {
-			similar = true;
-			// softer test if we don't have enough attributes to compare the
-			// objects
-		} else if (nameSimilarity > fewerAttributesNameThreshold
-				&& nonNullFeaturesCount(obj1) <= MIN_ATTRIBUTES_COUNT
-				&& nonNullFeaturesCount(obj2) <= MIN_ATTRIBUTES_COUNT
-				&& typeSimilarity(obj1, obj2) > generalThreshold) {
-			similar = true;
-		} else {
-			final double contentSimilarity = contentSimilarity(obj1, obj2);
-			final double relationsSimilarity = relationsSimilarity(obj1, obj2);
-
-			if (relationsSimilarity == 1 && hasSameUri && nameSimilarity > nameThreshold) {
-				similar = true;
-			} else if (contentSimilarity == 1 && relationsSimilarity == 1) {
-				similar = true;
-			} else if (contentSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
-					&& nameSimilarity > nameThreshold) {
-				similar = true;
-			} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
-				similar = true;
-			} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
-					&& relationsSimilarity > triWayThreshold) {
-				similar = true;
-			} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
-					&& typeSimilarity(obj1, obj2) > generalThreshold) {
-				similar = true;
-			}
-		}
-		return similar;
-	}
-
-	/**
 	 * Sizes the given {@link IProgressMonitor monitor} and launches its main task for model comparison.
 	 * 
 	 * @param monitor
@@ -870,34 +896,6 @@ public class DifferencesServices implements MatchEngine {
 				}
 			}
 		}
-	}
-
-	/**
-	 * This will compute the similarity between two {@link EObject}s' names.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0
-	 *         &lt; value &lt; 1.
-	 * @see NameSimilarity#nameSimilarityMetric(String, String)
-	 */
-	private double nameSimilarity(EObject obj1, EObject obj2) {
-		double similarity = 0d;
-		try {
-			final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
-			if (value != null) {
-				similarity = value;
-			} else {
-				similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
-						NameSimilarity.findName(obj2));
-				setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
-			}
-		} catch (FactoryException e) {
-			// fails silently, will return 0d
-		}
-		return similarity;
 	}
 
 	/**

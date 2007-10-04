@@ -10,18 +10,18 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.statistic.similarity;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
  * This class provides services to work on strings and to compare EObjects.
@@ -36,8 +36,7 @@ public final class NameSimilarity {
 	private static final int MAX_FEATURE_VALUE_LENGTH = 50;
 
 	/** This map associates an {@link EClass} with the {@link EAttribute} that is assumed to hold its name. */
-	private static final Map<EClass, EAttribute> NAME_FEATURE_CACHE = new ConcurrentHashMap<EClass, EAttribute>(
-			256);
+	private static final Map<String, EAttribute> NAME_FEATURE_CACHE = new FastMap<String, EAttribute>();
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
@@ -61,31 +60,25 @@ public final class NameSimilarity {
 	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
-		List<EAttribute> eclassAttributes = new LinkedList<EAttribute>();
+		List<EStructuralFeature> eclassAttributes = new LinkedList<EStructuralFeature>();
 		if (filter != null) {
 			if (eclass instanceof EClass) {
 				eclassAttributes = filter.getFilteredFeatures(current);
 			}
 		} else {
 			if (eclass instanceof EClass) {
-				eclassAttributes = ((EClass)eclass).getEAllAttributes();
+				eclassAttributes.addAll(((EClass)eclass).getEAllAttributes());
 			}
 		}
 		eclassAttributes.remove(findNameFeature(current));
 		if (eclassAttributes.size() > 0) {
-			final Iterator it = eclassAttributes.iterator();
-			while (it.hasNext()) {
-				final Object next = it.next();
-				if (next instanceof EObject) {
-					final EObject obj = (EObject)next;
-					final String attributeName = EFactory.eGetAsString(obj, EOBJECT_NAME_FEATURE);
-					// get the feature name and the feature value
-					final String value = EFactory.eGetAsString(current, attributeName);
+			for (EStructuralFeature feature : eclassAttributes) {
+				if (feature instanceof EAttribute) {
+					final String value = EFactory.eGetAsString(current, feature.getName());
 					if (value != null && value.length() < MAX_FEATURE_VALUE_LENGTH)
-						result.append(EFactory.eGetAsString(current, attributeName)).append(" "); //$NON-NLS-1$
+						result.append(value).append(" "); //$NON-NLS-1$
 				}
 			}
-
 		}
 		return result.toString();
 	}
@@ -129,7 +122,7 @@ public final class NameSimilarity {
 	@SuppressWarnings("unchecked")
 	public static EAttribute findNameFeature(EObject current) throws FactoryException {
 		final EClass eclass = current.eClass();
-		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass);
+		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName());
 
 		if (bestFeature == null) {
 			List<EAttribute> eClassAttributes = new LinkedList<EAttribute>();
@@ -148,7 +141,7 @@ public final class NameSimilarity {
 						bestFeature = attribute;
 					}
 				}
-				NAME_FEATURE_CACHE.put(eclass, bestFeature);
+				NAME_FEATURE_CACHE.put(eclass.getName(), bestFeature);
 			}
 		}
 		// now we should return the feature value
@@ -185,7 +178,7 @@ public final class NameSimilarity {
 				result = inter * 2d / union;
 				if (result > 1)
 					result = 1;
-				if (result == 1.0 && !string1.equals(string2))
+				if (result == 1.0 && !str1.equals(str2))
 					result = almostEquals;
 			}
 		}
@@ -208,10 +201,9 @@ public final class NameSimilarity {
 	public static List<String> pairs(String source) {
 		final List<String> result = new LinkedList<String>();
 		if (source != null) {
-			for (int i = 0; i < source.length() - 1; i++)
+			final int length = source.length();
+			for (int i = 0; i < length - 1; i++)
 				result.add(source.substring(i, i + 2));
-			if (source.length() % 2 == 1 && source.length() > 1)
-				result.add(source.substring(source.length() - 2, source.length() - 1));
 		}
 		return result;
 	}

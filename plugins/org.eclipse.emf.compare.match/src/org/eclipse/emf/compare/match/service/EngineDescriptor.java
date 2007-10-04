@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class EngineDescriptor implements Comparable {
+public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
@@ -65,13 +65,10 @@ public class EngineDescriptor implements Comparable {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(Object other) {
-		if (other instanceof EngineDescriptor) {
-			final int nombre1 = getPriorityValue(((EngineDescriptor)other).getPriority());
-			final int nombre2 = getPriorityValue(getPriority());
-			return nombre2 - nombre1;
-		}
-		return 1;
+	public int compareTo(EngineDescriptor other) {
+		final int nombre1 = getPriorityValue(other.getPriority());
+		final int nombre2 = getPriorityValue(getPriority());
+		return nombre2 - nombre1;
 	}
 
 	/**

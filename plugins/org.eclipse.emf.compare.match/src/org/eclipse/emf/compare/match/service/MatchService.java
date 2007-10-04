@@ -14,15 +14,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.match.MatchPlugin;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -30,22 +29,28 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class MatchService {
+public final class MatchService {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
+	
+	/** Name of the extension point to parse for engines. */
+	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
 
 	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_ENGINE = "engine"; //$NON-NLS-1$
+	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
 
 	/** Keeps track of all the engines parsed. */
-	private final Map<String, ArrayList<EngineDescriptor>> engines = new ConcurrentHashMap<String, ArrayList<EngineDescriptor>>(
-			512);
+	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new FastMap<String, ArrayList<EngineDescriptor>>();
+
+	static {
+		parseExtensionMetadata();
+	}
 
 	/**
-	 * Default constructor.
+	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
-	public MatchService() {
-		parseExtensionMetadata();
+	private MatchService() {
+		// prevents instantiation
 	}
 
 	/**
@@ -63,18 +68,18 @@ public class MatchService {
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor)
-			throws InterruptedException {
-		MatchModel result = null;
+	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			IProgressMonitor monitor) throws InterruptedException {
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
-		if (extension == null && rightRoot.eResource() != null)
+		else if (rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
+		else if (ancestor.eResource() != null)
+			extension = ancestor.eResource().getURI().fileExtension();
 		final EngineDescriptor desc = getBestDescriptor(extension);
 		final MatchEngine currentEngine = desc.getEngineInstance();
-		result = currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor);
-		return result;
+		return currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor);
 	}
 
 	/**
@@ -90,9 +95,8 @@ public class MatchService {
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
 	 */
-	public MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
+	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException {
-		MatchModel result = null;
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
@@ -100,8 +104,7 @@ public class MatchService {
 			extension = rightRoot.eResource().getURI().fileExtension();
 		final EngineDescriptor desc = getBestDescriptor(extension);
 		final MatchEngine currentEngine = desc.getEngineInstance();
-		result = currentEngine.modelMatch(leftRoot, rightRoot, monitor);
-		return result;
+		return currentEngine.modelMatch(leftRoot, rightRoot, monitor);
 	}
 
 	/**
@@ -111,7 +114,7 @@ public class MatchService {
 	 *            The extension of the file we need a {@link MatchEngine} for.
 	 * @return The best {@link MatchEngine} for the given file extension.
 	 */
-	public MatchEngine getBestMatchEngine(String extension) {
+	public static MatchEngine getBestMatchEngine(String extension) {
 		final EngineDescriptor desc = getBestDescriptor(extension);
 		return desc.getEngineInstance();
 	}
@@ -123,12 +126,12 @@ public class MatchService {
 	 *            The file extension we need a match engine for.
 	 * @return The best {@link EngineDescriptor}.
 	 */
-	private EngineDescriptor getBestDescriptor(String extension) {
+	private static EngineDescriptor getBestDescriptor(String extension) {
 		EngineDescriptor descriptor = null;
-		if (engines.containsKey(extension)) {
-			descriptor = getHighestDescriptor(engines.get(extension));
-		} else if (engines.containsKey(ALL_EXTENSIONS)) {
-			descriptor = getHighestDescriptor(engines.get(ALL_EXTENSIONS));
+		if (PARSED_ENGINES.containsKey(extension)) {
+			descriptor = getHighestDescriptor(PARSED_ENGINES.get(extension));
+		} else if (PARSED_ENGINES.containsKey(ALL_EXTENSIONS)) {
+			descriptor = getHighestDescriptor(PARSED_ENGINES.get(ALL_EXTENSIONS));
 		}
 		return descriptor;
 	}
@@ -140,7 +143,7 @@ public class MatchService {
 	 *            {@link List} of {@link EngineDescriptor} from which to find the highest one.
 	 * @return The highest {@link EngineDescriptor} from the given {@link List}.
 	 */
-	private EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
+	private static EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
 		Collections.sort(set, Collections.reverseOrder());
 		if (set.size() > 0)
 			return set.get(0);
@@ -156,7 +159,7 @@ public class MatchService {
 	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine,
 	 *         <code>null</code> otherwise.
 	 */
-	private EngineDescriptor parseEngine(IConfigurationElement configElement) {
+	private static EngineDescriptor parseEngine(IConfigurationElement configElement) {
 		if (!configElement.getName().equals(TAG_ENGINE))
 			return null;
 		final EngineDescriptor desc = new EngineDescriptor(configElement);
@@ -167,10 +170,9 @@ public class MatchService {
 	 * This will parse the currently running platform for extensions and store all the match engines that can
 	 * be found.
 	 */
-	private void parseExtensionMetadata() {
+	private static void parseExtensionMetadata() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				MatchPlugin.PLUGIN_ID, "engine") //$NON-NLS-1$
-				.getExtensions();
+				MATCH_ENGINES_EXTENSION_POINT).getExtensions();
 		for (int i = 0; i < extensions.length; i++) {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
@@ -187,11 +189,17 @@ public class MatchService {
 	 * @param desc
 	 *            Descriptor to be added to the list of all know descriptors.
 	 */
-	private void storeEngineDescriptor(EngineDescriptor desc) {
-		if (!engines.containsKey(desc.getFileExtension())) {
-			engines.put(desc.getFileExtension(), new ArrayList<EngineDescriptor>());
+	private static void storeEngineDescriptor(EngineDescriptor desc) {
+		if (desc.getFileExtension() == null)
+			return;
+
+		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
+		for (String engineExtension : extensions) {
+			if (!PARSED_ENGINES.containsKey(engineExtension)) {
+				PARSED_ENGINES.put(engineExtension, new ArrayList<EngineDescriptor>());
+			}
+			final List<EngineDescriptor> set = PARSED_ENGINES.get(engineExtension);
+			set.add(desc);
 		}
-		final List<EngineDescriptor> set = engines.get(desc.getFileExtension());
-		set.add(desc);
 	}
 }

@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
-
-<!--
- <copyright>
- </copyright>
-
- $Id: plugin.xml,v 1.6 2007/07/13 14:57:43 jmusset Exp $
--->
-
+<?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="engine" name="engine" schema="schema/engine.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.match.engine" name="org.eclipse.emf.compare.match.engine" schema="schema/org.eclipse.emf.compare.match.engine.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
@@ -20,7 +12,7 @@
   
   <extension
          point="org.eclipse.emf.compare.match.engine">
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.match.statistic.DifferencesServices"
             fileExtension="*"
             priority="low"/>

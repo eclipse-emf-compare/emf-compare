@@ -90,12 +90,12 @@ public final class StructureSimilarity {
 	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuffer result = new StringBuffer();
-		List<EReference> eObjectFeatures = new LinkedList<EReference>();
+		List<EStructuralFeature> eObjectFeatures = new LinkedList<EStructuralFeature>();
 		if (eclass instanceof EClass) {
 			if (filter != null)
 				eObjectFeatures = filter.getFilteredFeatures(current);
 			else
-				eObjectFeatures = ((EClass)eclass).getEAllReferences();
+				eObjectFeatures.addAll(((EClass)eclass).getEAllReferences());
 		}
 		for (EStructuralFeature feature : eObjectFeatures) {
 			if (feature instanceof EReference && !((EReference)feature).isDerived()) {

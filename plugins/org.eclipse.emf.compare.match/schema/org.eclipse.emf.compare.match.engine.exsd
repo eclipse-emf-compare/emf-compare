@@ -3,17 +3,17 @@
 <schema targetNamespace="org.eclipse.emf.compare.match">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.emf.compare.match" id="engine" name="engine"/>
+         <meta.schema plugin="org.eclipse.emf.compare.match" id="org.eclipse.emf.compare.match.engine" name="org.eclipse.emf.compare.match.engine"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point allows a plug-in to register a distinct match engine to adress specific comparison needs.
       </documentation>
    </annotation>
 
    <element name="extension">
       <complexType>
-         <sequence>
-            <element ref="engine"/>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="matchengine"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,12 +42,12 @@
       </complexType>
    </element>
 
-   <element name="engine">
+   <element name="matchengine">
       <complexType>
          <attribute name="fileExtension" type="string">
             <annotation>
                <documentation>
-                  The file extension the engine targets. * for any file extension
+                  Comma separated list of the extensions this engine targets. * for any file extension.
                </documentation>
             </annotation>
          </attribute>
@@ -57,7 +57,7 @@
                   The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.MatchEngine&lt;/code&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.match.MatchEngine"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.MatchEngine"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -90,7 +90,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         0.8
       </documentation>
    </annotation>
 
