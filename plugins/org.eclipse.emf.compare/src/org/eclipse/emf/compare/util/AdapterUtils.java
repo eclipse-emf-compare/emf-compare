@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.util;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,8 +29,7 @@ public final class AdapterUtils {
 	private static final String ADAPTER_FACTORY_EXTENSION_POINT = "org.eclipse.emf.edit.itemProviderAdapterFactories"; //$NON-NLS-1$
 
 	/** Keeps track of all the {@link AdapterFactory adapter factories} this plug-in knows of. */
-	private static final Map<String, AdapterFactoryDescriptor> FACTORIES = new ConcurrentHashMap<String, AdapterFactoryDescriptor>(
-			512);
+	private static final Map<String, AdapterFactoryDescriptor> FACTORIES = new FastMap<String, AdapterFactoryDescriptor>();
 
 	/**
 	 * This static initializer will parse the extension point to seek for factory classes and populate the
@@ -105,7 +103,6 @@ public final class AdapterUtils {
 				FACTORIES.put(desc.getNsURI(), desc);
 			}
 		}
-
 	}
 }
 

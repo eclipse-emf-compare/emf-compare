@@ -7,10 +7,19 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+04/10/2007 - UI package refactoring
+	org.eclipse.emf.compare.ui.contentmergeviewer.* => org.eclipse.emf.compare.ui.viewer.content.*
+	org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider => org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider
+	org.eclipse.emf.compare.ui.contentprovider.ModelStructureMergeContentProvider => org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeContentProvider
+	org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvider => org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider
+	org.eclipse.emf.compare.ui.structuremergeviewer.* => org.eclipse.emf.compare.ui.viewer.structure.*
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeViewerPart => org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeTreePart => org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergePropertyPart => org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart
 14/08/2007 - using functionnal ID through Ecore ID
-14/08/2007 diff extension API
-14/08/2007 export diff as API
-30/07/2007 (DRAFT) - export diff as... extension point
+14/08/2007 - diff extension API
+14/08/2007 - export diff as API
+30/07/2007 - (DRAFT) - export diff as... extension point
 30/07/2007 - 3 Way compare
 10/07/2007 - suppress unused code
 05/07/2007 - better browsing when using XMI_ID

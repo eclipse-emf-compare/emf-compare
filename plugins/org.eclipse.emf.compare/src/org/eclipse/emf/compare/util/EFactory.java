@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.Enumerator;
+//import org.eclipse.emf.common.util.Enumerator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.Messages;
 import org.eclipse.emf.ecore.EEnum;
@@ -94,18 +94,19 @@ public final class EFactory {
 		} catch (NullPointerException eCall) {
 			// Fails silently
 		}
-		if (result != null && result instanceof Enumerator) {
-			result = ((Enumerator)result).getName();
-		} else if (result != null && result instanceof EDataTypeUniqueEList) {
+//		if (result != null && result instanceof Enumerator) {
+//			result = ((Enumerator)result).getName();
+//		} else 
+		if (result != null && result instanceof EDataTypeUniqueEList) {
 			final List<Object> list = new ArrayList<Object>();
 			final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
 			while (enums.hasNext()) {
 				final Object next = enums.next();
-				if (next instanceof Enumerator) {
-					list.add(((Enumerator)next).getName());
-				} else {
+//				if (next instanceof Enumerator) {
+//					list.add(((Enumerator)next).getName());
+//				} else {
 					list.add(next);
-				}
+//				}
 			}
 			result = list;
 		}
@@ -129,6 +130,7 @@ public final class EFactory {
 	 * @throws FactoryException
 	 *             Thrown if the retrieval fails.
 	 */
+	// TODO see if we can use generics for return type
 	@SuppressWarnings("unchecked")
 	public static List eGetAsList(EObject object, String name) throws FactoryException {
 		List list = new ArrayList();

@@ -16,15 +16,8 @@ package org.eclipse.emf.compare;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EMFCompareException extends RuntimeException {
-	/** Serial number of this class. Used for checks upon unserialization. */
+	/** Serial used for unserialization checks. */
 	private static final long serialVersionUID = 5727212239745736313L;
-
-	/**
-	 * Constructs a new runtime exception with <code>null</code> as its detail message.
-	 */
-	public EMFCompareException() {
-		super();
-	}
 
 	/**
 	 * Constructs a new runtime exception with the specified detail message.
@@ -38,12 +31,12 @@ public class EMFCompareException extends RuntimeException {
 	}
 
 	/**
-	 * Constructs a new runtime exception wrapping another exception.
+	 * Constructs a new runtime exception wrapped around another exception.
 	 * 
-	 * @param e
-	 *            the cause exception.
+	 * @param exception
+	 *            Exception to wrapp within this new one.
 	 */
-	public EMFCompareException(Throwable e) {
-		super(e);
+	public EMFCompareException(Throwable exception) {
+		super(exception);
 	}
 }
