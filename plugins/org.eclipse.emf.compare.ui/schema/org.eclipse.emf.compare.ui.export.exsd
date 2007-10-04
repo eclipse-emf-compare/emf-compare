@@ -54,14 +54,14 @@
          <attribute name="fileExtension" type="string" use="default" value="*">
             <annotation>
                <documentation>
-                  
+                  Extension of the model files for which this action will be enabled.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The fully qualified name of an action implementing &lt;code&gt;org.eclipse.emf.compare.ui.export.IExportAction&lt;/code&gt;
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.ui.export.IExportAction"/>
@@ -89,7 +89,7 @@
          id=&quot;org.eclipse.emf.compare.contrib.exportashtml&quot;
          point=&quot;org.eclipse.emf.compare.ui.export&quot;&gt;
       &lt;action
-      	class=&quot;org.eclipse.emf.compare.contrib.xslt.action.ExportAsHTMLAction&quot;
+       class=&quot;org.eclipse.emf.compare.contrib.xslt.action.ExportAsHTMLAction&quot;
             id=&quot;org.eclipse.emf.compare.contrib.action.exportashtmlaction&quot;/&gt;
    &lt;/extension&gt;
       </documentation>

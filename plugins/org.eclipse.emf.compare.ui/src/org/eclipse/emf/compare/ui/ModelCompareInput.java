@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Input to be used for a 2 or 3-way comparison in a
- * {@link org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer ModelContentMergeViewer}.
+ * {@link org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer ModelContentMergeViewer}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */

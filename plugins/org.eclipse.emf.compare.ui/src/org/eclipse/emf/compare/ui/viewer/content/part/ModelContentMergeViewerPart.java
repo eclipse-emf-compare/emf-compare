@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.viewerpart;
+package org.eclipse.emf.compare.ui.viewer.content.part;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +29,13 @@ import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
-import org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer;
-import org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
+import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
+import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart;
+import org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider;
+import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,7 +62,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
-// TODO handle horizontal sync of viewer parts
 /**
  * Describes a part of a {@link ModelContentMergeViewer}.
  * 
@@ -257,6 +258,15 @@ public class ModelContentMergeViewerPart {
 		}
 		return width;
 	}
+	
+	/**
+	 * Returns the tree part of this viewer part.
+	 * 
+	 * @return The tree part of this viewer part.
+	 */
+	public ModelContentMergeTreePart getTreePart() {
+		return tree;
+	}
 
 	/**
 	 * Returns the first root of the tree.
@@ -392,6 +402,83 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
+	 * Returns the {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 * 
+	 * @param element
+	 *            Element we seek the {@link Match2Elements} for.
+	 * @return The {@link Match2Elements} containing the given {@link EObject} as its left or right element.
+	 */
+	protected Object findMatchFromElement(EObject element) {
+		Object theElement = null;
+		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
+
+		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext(); ) {
+			final Object object = iterator.next();
+
+			if (object instanceof Match2Elements) {
+				final Match2Elements matchElement = (Match2Elements)object;
+				if (matchElement.getLeftElement().equals(element)
+						|| matchElement.getRightElement().equals(element)) {
+					theElement = matchElement;
+				}
+			} else if (object instanceof UnMatchElement) {
+				final UnMatchElement matchElement = (UnMatchElement)object;
+				if (matchElement.getElement().equals(element)) {
+					theElement = matchElement;
+				}
+			}
+		}
+
+		return theElement;
+	}
+
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the tab
+	 * selection has been changed.
+	 */
+	protected void fireSelectedtabChanged() {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.selectedTabChanged(selectedTab);
+		}
+	}
+
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the user
+	 * selection has changed on the properties or tree tab.
+	 * 
+	 * @param event
+	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
+	 */
+	protected void fireSelectionChanged(SelectionChangedEvent event) {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.selectionChanged(event);
+		}
+	}
+
+	/**
+	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the
+	 * center part needs to be refreshed.
+	 */
+	protected void fireUpdateCenter() {
+		for (ICompareEditorPartListener listener : editorPartListeners) {
+			listener.updateCenter();
+		}
+	}
+
+	/**
+	 * This will resize the tabs displayed by this content merge viewer.
+	 */
+	protected void resizeBounds() {
+		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
+			tree.getTree().setBounds(tabFolder.getClientArea());
+		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
+			properties.getTable().setBounds(tabFolder.getClientArea());
+		} else {
+			throw new IllegalStateException(INVALID_TAB);
+		}
+	}
+
+	/**
 	 * Handles the creation of the properties tab of this viewer part given the parent {@link Composite} under
 	 * which to create it.
 	 * 
@@ -495,83 +582,6 @@ public class ModelContentMergeViewerPart {
 		});
 
 		return treePart;
-	}
-
-	/**
-	 * Returns the {@link Match2Elements} containing the given {@link EObject} as its left or right element.
-	 * 
-	 * @param element
-	 *            Element we seek the {@link Match2Elements} for.
-	 * @return The {@link Match2Elements} containing the given {@link EObject} as its left or right element.
-	 */
-	protected Object findMatchFromElement(EObject element) {
-		Object theElement = null;
-		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
-
-		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext(); ) {
-			final Object object = iterator.next();
-
-			if (object instanceof Match2Elements) {
-				final Match2Elements matchElement = (Match2Elements)object;
-				if (matchElement.getLeftElement().equals(element)
-						|| matchElement.getRightElement().equals(element)) {
-					theElement = matchElement;
-				}
-			} else if (object instanceof UnMatchElement) {
-				final UnMatchElement matchElement = (UnMatchElement)object;
-				if (matchElement.getElement().equals(element)) {
-					theElement = matchElement;
-				}
-			}
-		}
-
-		return theElement;
-	}
-
-	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the tab
-	 * selection has been changed.
-	 */
-	protected void fireSelectedtabChanged() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.selectedTabChanged(selectedTab);
-		}
-	}
-
-	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the user
-	 * selection has changed on the properties or tree tab.
-	 * 
-	 * @param event
-	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
-	 */
-	protected void fireSelectionChanged(SelectionChangedEvent event) {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.selectionChanged(event);
-		}
-	}
-
-	/**
-	 * Notifies All {@link ICompareEditorPartListener listeners} registered for this viewer part that the
-	 * center part needs to be refreshed.
-	 */
-	protected void fireUpdateCenter() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
-			listener.updateCenter();
-		}
-	}
-
-	/**
-	 * This will resize the tabs displayed by this content merge viewer.
-	 */
-	protected void resizeBounds() {
-		if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
-			tree.getTree().setBounds(tabFolder.getClientArea());
-		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
-			properties.getTable().setBounds(tabFolder.getClientArea());
-		} else {
-			throw new IllegalStateException(INVALID_TAB);
-		}
 	}
 
 	/**

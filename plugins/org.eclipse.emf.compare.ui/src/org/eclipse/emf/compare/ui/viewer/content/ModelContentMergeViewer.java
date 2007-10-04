@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.contentmergeviewer;
+package org.eclipse.emf.compare.ui.viewer.content;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -47,6 +46,7 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
@@ -55,10 +55,10 @@ import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
-import org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
-import org.eclipse.emf.compare.ui.viewerpart.ModelContentMergeViewerPart;
+import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart;
+import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -69,7 +69,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -79,6 +78,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -88,7 +89,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 
@@ -100,7 +103,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Name of the bundle resources property file. */
-	public static final String BUNDLE_NAME = "org.eclipse.emf.compare.ui.contentmergeviewer.ModelMergeViewerResources"; //$NON-NLS-1$
+	public static final String BUNDLE_NAME = "org.eclipse.emf.compare.ui.viewer.content.ModelMergeViewerResources"; //$NON-NLS-1$
 
 	/** Width to affect to the center area. */
 	public static final int CENTER_WIDTH = 34;
@@ -117,7 +120,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** ID of the Tree tab of the {@link ModelContentMergeViewerPart}. */
 	public static final int TREE_TAB = 0;
-	
+
 	/**
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
 	 * content provider.
@@ -531,22 +534,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			getCenterPart().redraw();
 	}
 
-	private DiffElement getNextVisibleDiff(List<DiffElement> diffs, DiffElement current) {
-		DiffElement theDiff = null;
-		Iterator<DiffElement> it = diffs.iterator();
-		if (current != null) {
-			while (theDiff != current && it.hasNext()) {
-				it.next();
-			}
-		}
-		while (theDiff == null && it.hasNext()) {
-			DiffElement elem = it.next();
-			if (!DiffAdapterFactory.shouldBeHidden(elem))
-				theDiff = elem;
-		}
-		return theDiff;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -625,6 +612,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		leftPart.addCompareEditorPartListener(partListener);
 		rightPart.addCompareEditorPartListener(partListener);
 		ancestorPart.addCompareEditorPartListener(partListener);
+		
+		// Synchronizes the left part with the two others
+		handleTreeHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
+		// Synchronizes the right part with the two others
+		handleTreeHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
+		// Synchronizes the ancestor part with the two others
+		handleTreeHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
 	}
 
 	/**
@@ -708,8 +702,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor);
+						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot.setDate(Calendar.getInstance().getTime());
 						snapshot.setDiff(diff);
@@ -719,19 +713,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			} else {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
-								ancestorModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
-
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
+						try {
+							final MatchModel match = MatchService.doMatch(leftModel, rightModel,
+									ancestorModel, monitor);
+							final DiffModel diff = DiffService.doDiff(match, isThreeWay);
+	
+							snapshot.setDate(Calendar.getInstance().getTime());
+							snapshot.setDiff(diff);
+							snapshot.setMatch(match);
+						} finally {
+							monitor.done();
+						}
 					}
 				});
 			}
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
+			System.out.println(end.getTime() - start.getTime() + "ms");
 
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
@@ -776,6 +775,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 
 		return contents;
+	}
+
+	/**
+	 * This will minimize the list of differences to the visible differences. Differences are considered
+	 * "visible" if {@link DiffAdapterFactory#shouldBeHidden(EObject)} returns false on it.
+	 * 
+	 * @return {@link List} of the visible differences for this comparison.
+	 */
+	protected List<DiffElement> getVisibleDiffs() {
+		final List<DiffElement> diffs = ((ModelCompareInput)getInput()).getDiffAsList();
+		final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(diffs.size());
+
+		for (int i = 0; i < diffs.size(); i++) {
+			if (!DiffAdapterFactory.shouldBeHidden(diffs.get(i)))
+				visibleDiffs.add(diffs.get(i));
+		}
+
+		return visibleDiffs;
 	}
 
 	/**
@@ -827,21 +844,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            previous.
 	 */
 	protected void navigate(boolean down) {
-		// TODOCBR : handle the "go to previous" case
-		final List<DiffElement> diffs = ((ModelCompareInput)getInput()).getDiffAsList();
+		final List<DiffElement> diffs = getVisibleDiffs();
 		if (diffs.size() != 0) {
-			DiffElement theDiff = getNextVisibleDiff(diffs, null);
-			if (currentDiff == null && theDiff != null) {
-				setSelection(theDiff);
-				return;
-			}
-//			final DiffElement theDiff;
-//			if (currentDiff == null && down)
-//				theDiff = diffs.get(diffs.size() - 1);
-//			else if (currentDiff == null && !down)
-//				theDiff = diffs.get(1);
-//			else
-			theDiff = currentDiff;
+			final DiffElement theDiff;
+			if (currentDiff != null)
+				theDiff = currentDiff;
+			else if (diffs.size() == 1)
+				theDiff = diffs.get(0);
+			else if (down)
+				theDiff = diffs.get(diffs.size() - 1);
+			else
+				theDiff = diffs.get(1);
 			for (int i = 0; i < diffs.size(); i++) {
 				if (diffs.get(i).equals(theDiff) && down) {
 					DiffElement next = diffs.get(0);
@@ -853,7 +866,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						break;
 					}
 				} else if (diffs.get(i).equals(theDiff) && !down) {
-					DiffElement previous = diffs.get(0);
+					DiffElement previous = diffs.get(diffs.size() - 1);
 					if (i > 0) {
 						previous = diffs.get(i - 1);
 					}
@@ -985,6 +998,47 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super.updateToolItems();
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
+	
+	/**
+	 * Allows synchronization of the viewports scrolling.
+	 * 
+	 * @param parts The other parts to synchronize with.
+	 */
+	private void handleTreeHSync(ModelContentMergeTreePart... parts) {
+		if (parts.length < 2)
+			throw new IllegalArgumentException(Messages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+		
+		// inspired from TreeMergeViewer#hsynchViewport
+		final Tree tree1 = parts[0].getTree();
+		final Tree tree2 = parts[1].getTree();
+		final Tree tree3;
+		if (parts.length > 2)
+			tree3 = parts[2].getTree();
+		else
+			tree3 = null;
+		final ScrollBar scrollBar1 = tree1.getHorizontalBar();
+		
+		scrollBar1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				final int max = scrollBar1.getMaximum() - scrollBar1.getThumb();
+				double v = 0.0;
+				if (max > 0)
+					v = (double)scrollBar1.getSelection() / (double)max;
+				if (tree2.isVisible()) {
+					final ScrollBar scrollBar2 = tree2.getHorizontalBar();
+					scrollBar2.setSelection((int)((scrollBar2.getMaximum() - scrollBar2.getThumb()) * v));
+				}
+				if (tree3 != null && tree3.isVisible()) {
+					final ScrollBar scrollBar3 = tree3.getHorizontalBar();
+					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
+				}
+				if (SWT.getPlatform().equals("carbon") && getControl() != null && !getControl().isDisposed()) { //$NON-NLS-1$
+					getControl().getDisplay().update();
+				}
+			}
+		});
+	}
 
 	/**
 	 * We want to avoid flickering as much as possible for our draw operations on the center part, yet we
@@ -994,7 +1048,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private abstract class AbstractBufferedCanvas extends Canvas {
 		/** Buffer used by this {@link Canvas} to smoothly paint its content. */
 		protected Image buffer;
-		
+
 		/**
 		 * This array is used to compute the curve to draw between left and right matching elements.
 		 */

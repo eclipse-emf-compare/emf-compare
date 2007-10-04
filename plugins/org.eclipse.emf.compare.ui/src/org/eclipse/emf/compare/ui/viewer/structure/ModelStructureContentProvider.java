@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.contentprovider;
+package org.eclipse.emf.compare.ui.viewer.structure;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,15 +24,15 @@ import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.ui.EMFCompareException;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.ModelUtils;
@@ -47,7 +47,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Structure viewer used by the
- * {@link org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer ModelStructureMergeViewer}.
+ * {@link org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer ModelStructureMergeViewer}.
  * Assumes that its input is a {@link DiffModel}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
@@ -208,8 +208,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor);
+						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 						snapshot.setDate(Calendar.getInstance().getTime());
@@ -220,9 +220,9 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			} else {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = new MatchService().doMatch(leftModel, rightModel,
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel,
 								ancestorModel, monitor);
-						final DiffModel diff = new DiffMaker().doDiff(match, isThreeWay);
+						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 						snapshot.setDate(Calendar.getInstance().getTime());
@@ -234,6 +234,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
+			System.out.println(end.getTime() - start.getTime() + "ms");
 
 			diffInput = snapshot.getDiff();
 		} catch (InterruptedException e) {

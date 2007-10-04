@@ -14,7 +14,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 
 /**
  * Listens for events sent by
- * {@link org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer ModelContentMergeViewers}.
+ * {@link org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer ModelContentMergeViewers}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */

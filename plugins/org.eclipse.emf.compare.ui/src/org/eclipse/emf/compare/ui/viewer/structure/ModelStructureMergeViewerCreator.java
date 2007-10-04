@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.contentmergeviewer;
+package org.eclipse.emf.compare.ui.viewer.structure;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IViewerCreator;
@@ -16,15 +16,15 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Required when creating a {@link ModelContentMergeViewerCreator} from a plugin.xml file.
+ * Required when creating a {@link ModelStructureMergeViewer} from a plugin.xml file.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class ModelContentMergeViewerCreator implements IViewerCreator {
+public class ModelStructureMergeViewerCreator implements IViewerCreator {
 	/**
 	 * {@inheritDoc}
 	 */
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
-		return new ModelContentMergeViewer(parent, config);
+		return new ModelStructureMergeViewer(parent, config);
 	}
 }

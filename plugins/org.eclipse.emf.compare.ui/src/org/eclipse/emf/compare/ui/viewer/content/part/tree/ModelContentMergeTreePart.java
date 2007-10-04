@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.viewerpart;
+package org.eclipse.emf.compare.ui.viewer.content.part.tree;
 
 import java.util.Arrays;
 import java.util.LinkedList;
