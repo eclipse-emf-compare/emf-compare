@@ -15,10 +15,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
-import org.eclipse.emf.compare.util.FactoryException;
+
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
@@ -26,30 +25,28 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
  * @generated
  */
-@SuppressWarnings("nls")
-public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class GenericDiffElementItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
-	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
+	 * This constructs an instance from a factory and a notifier.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public RemoteRemoveReferenceValueItemProvider(AdapterFactory adapterFactory) {
+	public GenericDiffElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
+	 * This returns the property descriptors for the adapted class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -59,40 +56,32 @@ public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeRight
 	}
 
 	/**
-	 * This returns RemoteRemoveReferenceValue.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns GenericDiffElement.gif.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteRemoveReferenceValue"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/GenericDiffElement"));
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated NOT
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
 	 */
-	@Override
 	public String getText(Object object) {
-		final RemoteRemoveReferenceValue removeOp = (RemoteRemoveReferenceValue)object;
-		try {
-			return getString(
-					"_UI_RemoteRemoveReferenceValue_type", new Object[] {NameSimilarity.findName(removeOp.getRightAddedTarget()), NameSimilarity.findName(removeOp.getReference()), //$NON-NLS-1$
-							NameSimilarity.findName(removeOp.getLeftElement()),});
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteRemoveReferenceValue_type"); //$NON-NLS-1$
-		}
+		return getString("_UI_GenericDiffElement_type");
 	}
 
 	/**
 	 * This handles model notifications by calling {@link #updateChildren} to update any cached
 	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -101,21 +90,20 @@ public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeRight
 	/**
 	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
 	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 
 	/**
 	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
