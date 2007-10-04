@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.examples.diff.extension;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.match.metamodel.provider.MatchEditPlugin;
+import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -27,6 +27,8 @@ import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Diff edit plugin.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 @SuppressWarnings("nls")
 public final class DiffExtensionPlugin extends EMFPlugin {
@@ -73,6 +75,9 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 	 * The actual implementation of the Eclipse <b>Plugin</b>.
 	 */
 	public static class Implementation extends EclipsePlugin {
+		/** TODOCBR comment. */
+		private Map<String, Object> imageMap = new FastMap<String, Object>();
+		
 		/**
 		 * Creates an instance.
 		 */
@@ -84,15 +89,23 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 			plugin = this;
 		}
 
-		private Map imageMap = new HashMap();
-
+		/**
+		 * TODOCBR comment.
+		 * @param path comment.
+		 * @return comment.
+		 */
 		public ImageDescriptor findImageDescriptor(String path) {
-			Bundle bundle = Platform.getBundle(getSymbolicName());
-			URL imagePath = bundle.getEntry(path);
+			final Bundle bundle = Platform.getBundle(getSymbolicName());
+			final URL imagePath = bundle.getEntry(path);
 
 			return ImageDescriptor.createFromURL(imagePath);
 		}
 
+		/**
+		 * TODOCBR comment.
+		 * @param path comment.
+		 * @return comment.
+		 */
 		public Object getBundleImage(String path) {
 			Object result = imageMap.get(path);
 			if (result == null) {
@@ -103,19 +116,28 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 		}
 
 		/**
-		 * @override
+		 * {@inheritDoc}
+		 *
+		 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 		 */
+		@Override
 		public void stop(BundleContext context) throws Exception {
 			super.stop(context);
 
-			Iterator imageIterator = imageMap.keySet().iterator();
+			// TODOCBR "keySet" instead of "values"?
+			final Iterator<String> imageIterator = imageMap.keySet().iterator();
 			while (imageIterator.hasNext()) {
-				Image image = (Image) imageMap.get(imageIterator.next());
+				final Image image = (Image)imageMap.get(imageIterator.next());
 				image.dispose();
 			}
 		}
 	}
 
+	/**
+	 * TODOCBR comment.
+	 * @param path comment.
+	 * @return comment.
+	 */
 	public Object getBundleImage(String path) {
 		return plugin.getBundleImage(path);
 	}
