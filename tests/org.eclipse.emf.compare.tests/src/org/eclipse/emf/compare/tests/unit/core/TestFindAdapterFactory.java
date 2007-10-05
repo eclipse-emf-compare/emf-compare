@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit;
+package org.eclipse.emf.compare.tests.unit.core;
 
 import java.io.IOException;
 
@@ -33,37 +33,36 @@ public class TestFindAdapterFactory extends EMFCompareTestCase {
 	 * Check the util finding the adapter factory.
 	 * 
 	 * @throws AssertionFailedError
-	 * 			Thrown if the adapterFactory hasn't been found.
+	 *             Thrown if the adapterFactory hasn't been found.
 	 */
 	public void testFindAdapterFactory() throws AssertionFailedError {
 		final String uri = "http://www.eclipse.org/emf/compare/diff/1.1"; //$NON-NLS-1$
 		final AdapterFactory factory = AdapterUtils.findAdapterFactory(uri);
 		assertNotNull(factory);
 	}
-	
-	/**
-	 * Find the adapter factory from an loaded file.
-	 * 
-	 * @throws AssertionFailedError
-	 * 			Thrown if the adapterFactory hasn't been found.
-	 * @throws IOException
-	 * 			If the file does not exist.
-	 */
-	public void testFindAdapterFactoryFromFile() throws AssertionFailedError, IOException {
-		final EObject model = ModelUtils.load(pluginFile("/data/result.diff"), new ResourceSetImpl()); //$NON-NLS-1$
-		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
-		assertNotNull(factory);
-	}
-	
-	
+
 	/**
 	 * Find the adapter factory from an eobject.
 	 * 
 	 * @throws AssertionFailedError
-	 * 			Thrown if the adapterFactory hasn't been found.
+	 *             Thrown if the adapterFactory hasn't been found.
 	 */
 	public void testFindAdapterFactoryFromEObject() throws AssertionFailedError {
 		final DiffModel model = DiffFactory.eINSTANCE.createDiffModel();
+		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
+		assertNotNull(factory);
+	}
+
+	/**
+	 * Find the adapter factory from an loaded file.
+	 * 
+	 * @throws AssertionFailedError
+	 *             Thrown if the adapterFactory hasn't been found.
+	 * @throws IOException
+	 *             If the file does not exist.
+	 */
+	public void testFindAdapterFactoryFromFile() throws AssertionFailedError, IOException {
+		final EObject model = ModelUtils.load(pluginFile("/data/result.diff"), new ResourceSetImpl()); //$NON-NLS-1$
 		final AdapterFactory factory = AdapterUtils.findAdapterFactory(model);
 		assertNotNull(factory);
 	}

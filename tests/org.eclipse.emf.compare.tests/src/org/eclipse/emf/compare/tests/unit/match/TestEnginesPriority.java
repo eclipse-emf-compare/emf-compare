@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit;
+package org.eclipse.emf.compare.tests.unit.match;
 
 import junit.framework.ComparisonFailure;
 
@@ -26,13 +26,13 @@ public class TestEnginesPriority extends EMFCompareTestCase {
 	 * Test the engine choosing with file extension.
 	 * 
 	 * @throws ComparisonFailure
-	 * 			Thrown when an assertEquals for String has failed.
+	 *             Thrown when an assertEquals for String has failed.
 	 */
 	public void testEngineFileExtension() throws ComparisonFailure {
 		MatchEngine engine = null;
-		engine = new MatchService().getBestMatchEngine("a"); //$NON-NLS-1$
+		engine = MatchService.getBestMatchEngine("a"); //$NON-NLS-1$
 		assertEquals("AEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
-		engine = new MatchService().getBestMatchEngine("b"); //$NON-NLS-1$
+		engine = MatchService.getBestMatchEngine("b"); //$NON-NLS-1$
 		assertEquals("BEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}
 
@@ -40,11 +40,11 @@ public class TestEnginesPriority extends EMFCompareTestCase {
 	 * Test the engine picking with priority.
 	 * 
 	 * @throws ComparisonFailure
-	 * 			Thrown when an assertEquals for String has failed.
+	 *             Thrown when an assertEquals for String has failed.
 	 */
 	public void testEnginePriority() throws ComparisonFailure {
 		MatchEngine engine = null;
-		engine = new MatchService().getBestMatchEngine("c"); //$NON-NLS-1$
+		engine = MatchService.getBestMatchEngine("c"); //$NON-NLS-1$
 		assertEquals("CHighEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}
 }

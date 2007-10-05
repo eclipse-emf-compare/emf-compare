@@ -26,25 +26,23 @@ public final class FileUtils {
 	private FileUtils() {
 		// prevents instantiation.
 	}
-	
+
 	/**
-	 * Lists all subdirectories contained within a given folder, with the exception
-	 * of directories starting with a "." or directories named "CVS".
+	 * Lists all subdirectories contained within a given folder, with the exception of directories starting
+	 * with a "." or directories named "CVS".
 	 * 
 	 * @param aDirectory
-	 * 			Directory from which we need to list subfolders.
-	 * @return
-	 * 			Array composed by all <code>aDirectory</code> subfolders.
+	 *            Directory from which we need to list subfolders.
+	 * @return Array composed by all <code>aDirectory</code> subfolders.
 	 */
 	public static File[] listDirectories(File aDirectory) {
 		File[] directories = null;
-		
+
 		if (aDirectory.exists() && aDirectory.isDirectory()) {
 			directories = aDirectory.listFiles(new FileFilter() {
 				public boolean accept(File file) {
-					return file.isDirectory() 
-						&& !file.getName().startsWith(".") //$NON-NLS-1$
-						&& !file.getName().equals("CVS"); //$NON-NLS-1$
+					return file.isDirectory() && !file.getName().startsWith(".") //$NON-NLS-1$
+							&& !file.getName().equals("CVS"); //$NON-NLS-1$
 				}
 			});
 		}

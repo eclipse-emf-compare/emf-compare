@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="root">
+  <eClassifiers xsi:type="ecore:EClass" name="Class1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="class1Attribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class1Clone">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="class1Attribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class1Altered" interface="true">
+    <eOperations name="class1Operation"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="class1Attribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="EString" instanceClassName="java.lang.String"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="Visibility">
+    <eLiterals name="public"/>
+    <eLiterals name="package" value="1"/>
+    <eLiterals name="protected" value="2"/>
+    <eLiterals name="private" value="3"/>
+    <eLiterals name="anonynner" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass"/>
+  <eSubpackages name="Package1"/>
+  <eSubpackages name="structureSimilarityTests">
+    <eSubpackages name="default">
+      <eClassifiers xsi:type="ecore:EClass" name="AClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="anAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aReference" eType="#//structureSimilarityTests/default/AnotherClass"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SecondClass"/>
+      <eClassifiers xsi:type="ecore:EClass" name="AnotherClass" eSuperTypes="#//structureSimilarityTests/default/AClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="itsAttrIsntTheSame"
+            eType="#//structureSimilarityTests/default/AndADataType"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EDataType" name="AndADataType" instanceClassName="java.lang.Object"/>
+      <eSubpackages name="ThisIsToAddSomethingToTheSurroundings"/>
+    </eSubpackages>
+    <eSubpackages name="similar">
+      <eClassifiers xsi:type="ecore:EClass" name="AClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="anAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aReference" eType="#//structureSimilarityTests/similar/AnotherClass"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SecondClass"/>
+      <eClassifiers xsi:type="ecore:EClass" name="AnotherClass" eSuperTypes="#//structureSimilarityTests/similar/AClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="istAttrIsntTheSame"
+            eType="#//structureSimilarityTests/similar/AndADataType"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EDataType" name="AndADataType" instanceClassName="java.lang.Object"/>
+      <eSubpackages name="ThisIsToAddSomethingToTheSurroundings"/>
+    </eSubpackages>
+    <eSubpackages name="slightlyDifferent">
+      <eClassifiers xsi:type="ecore:EClass" name="ASlightlyDifferentClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="anAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByte"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aReference" eType="#//structureSimilarityTests/slightlyDifferent/AnotherSlightlyDifferentClass"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ChangesSurroundings"/>
+      <eClassifiers xsi:type="ecore:EClass" name="ParameterizedTestClass">
+        <eTypeParameters name="T">
+          <eBounds eClassifier="#//structureSimilarityTests/slightlyDifferent/AnotherDataType"/>
+        </eTypeParameters>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="AnotherSlightlyDifferentClass" eSuperTypes="#//structureSimilarityTests/slightlyDifferent/ASlightlyDifferentClass">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="itsAttrStillDiffers"
+            eType="#//structureSimilarityTests/slightlyDifferent/AnotherDataType"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EDataType" name="AnotherDataType" instanceClassName="java.util.HashMap"/>
+      <eClassifiers xsi:type="ecore:EEnum" name="NewEnum">
+        <eLiterals name="this"/>
+        <eLiterals name="that" value="1"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="totallyDifferent">
+      <eAnnotations source="aRandomAnnotation">
+        <details key="key" value="value"/>
+      </eAnnotations>
+      <eAnnotations source="anotherRandomObject"/>
+      <eClassifiers xsi:type="ecore:EEnum" name="anEnum">
+        <eLiterals name="public" literal=""/>
+        <eLiterals name="package" value="1"/>
+        <eLiterals name="protected" value="2"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EDataType" name="DataTypeMap" instanceClassName="java.util.HashMap">
+        <eTypeParameters name="KeyClass">
+          <eBounds eClassifier="#//EString"/>
+        </eTypeParameters>
+        <eTypeParameters name="ValueClass">
+          <eBounds eClassifier="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+        </eTypeParameters>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EDataType" name="DataTypeInt" instanceClassName="java.lang.int"/>
+      <eClassifiers xsi:type="ecore:EClass" name="RootObject">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="someAttribute" eType="#//structureSimilarityTests/totallyDifferent/DataTypeInt"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="SomeRandomClass" eSuperTypes="#//structureSimilarityTests/totallyDifferent/RootObject">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"
+            eType="#//structureSimilarityTests/totallyDifferent/SomeRandomClass"/>
+      </eClassifiers>
+    </eSubpackages>
+  </eSubpackages>
+</ecore:EPackage>

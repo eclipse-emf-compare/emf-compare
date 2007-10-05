@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
+
 /**
  * A dummy match engine.
  * 
@@ -22,19 +23,23 @@ import org.eclipse.emf.ecore.EObject;
 public class BEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot, IProgressMonitor monitor) {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			IProgressMonitor monitor) {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor) {
+	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot, IProgressMonitor monitor) {
 		return null;
 	}
 }

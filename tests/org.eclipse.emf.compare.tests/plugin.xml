@@ -4,24 +4,24 @@
 
    <extension
          point="org.eclipse.emf.compare.match.engine">
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.tests.match.engines.AEngine"
             fileExtension="a"
             priority="low"/>
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.tests.match.engines.BEngine"
             fileExtension="b"
             priority="low"/>
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.tests.match.engines.CHighEngine"
             fileExtension="c"
             priority="high"/>
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.tests.match.engines.CLowEngine"
             fileExtension="c"
             priority="low"/>
             <!--
-      <engine
+      <matchengine
             engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.GenericHighestEngine"
             fileExtension="*"
             priority="highest"/>

@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.statistic.DifferencesServices;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -53,11 +53,12 @@ public final class ExampleLauncher {
 				// Loads the two models passed as arguments
 				final EObject model1 = ModelUtils.load(new File(args[0]), resourceSet);
 				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet);
-				
+
 				// Creates the match then the diff model for those two models
-				final MatchModel match = new DifferencesServices().modelMatch(model1, model2, new NullProgressMonitor());
-				final DiffModel diff = new DiffMaker().doDiff(match, false);
-				
+				final MatchModel match = MatchService.doMatch(model1, model2,
+						new NullProgressMonitor());
+				final DiffModel diff = DiffService.doDiff(match, false);
+
 				// Prints the results
 				try {
 					System.out.println(ModelUtils.serialize(match));
@@ -65,12 +66,12 @@ public final class ExampleLauncher {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
-//				System.out.println("saving diff as \"result.diff\"");
-//				ModelUtils.save(diff, "result.diff");
-//				System.out.println("saving match as \"result.match\"");
-//				ModelUtils.save(match, "result.match");
-				
+
+//				 System.out.println("saving diff as \"result.diff\"");
+//				 ModelUtils.save(diff, "result.diff");
+//				 System.out.println("saving match as \"result.match\"");
+//				 ModelUtils.save(match, "result.match");
+
 				// Serializes the result as "result.emfdiff" in the directory this class has been called from.
 				System.out.println("saving emfdiff as \"result.emfdiff\""); //$NON-NLS-1$
 				final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();

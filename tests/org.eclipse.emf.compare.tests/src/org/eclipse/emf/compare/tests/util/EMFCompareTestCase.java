@@ -17,7 +17,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 
 /**
@@ -26,50 +25,11 @@ import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class EMFCompareTestCase extends TestCase {
-	/** The plug-in ID. */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.tests.EMFCompareTestPlugin"; //$NON-NLS-1$
-
 	/** Class file for the tests. */
 	public static final String CLASS_FILE = ""; //$NON-NLS-1$
 
-	/**
-	 * Returns a file bundled inside a plugin knowing its path.
-	 * 
-	 * @param path
-	 *            Full path of the file resolvable from the plug-in's root.
-	 * @return A file bundled inside a plugin.
-	 */
-	public File pluginFile(final String path) {
-		return new File(getPluginDirectory() + path);
-	}
-
-	/**
-	 * Deletes a given file.
-	 * 
-	 * @param file
-	 *            {@link java.io.File File} to be deleted.
-	 */
-	public static void delete(final File file) {
-		if (file.isDirectory()) {
-			final File[] children = file.listFiles();
-			for (int i = 0; i < children.length; i++) {
-				delete(children[i]);
-			}
-		}
-
-		if (file.exists()) {
-			file.delete();
-		}
-	}
-
-	/**
-	 * Returns the plugin's shared instance.
-	 * 
-	 * @return The plugin's shared instance.
-	 */
-	public static Plugin getPlugin() {
-		return EMFCompareTestPlugin.getDefault();
-	}
+	/** The plug-in ID. */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.tests.EMFCompareTestPlugin"; //$NON-NLS-1$
 
 	/**
 	 * Returns this plugin's root directory.
@@ -79,7 +39,7 @@ public class EMFCompareTestCase extends TestCase {
 	public static String getPluginDirectory() {
 		String path = new String();
 		try {
-			return new File(FileLocator.toFileURL(getPlugin().getBundle().getEntry("/")).getFile()).toString(); //$NON-NLS-1$
+			return new File(FileLocator.toFileURL(EMFCompareTestPlugin.getDefault().getBundle().getEntry("/")).getFile()).toString(); //$NON-NLS-1$
 		} catch (IOException e) {
 			// No operation, thrown if the plugin cannot be resolved.
 		}
@@ -104,5 +64,16 @@ public class EMFCompareTestCase extends TestCase {
 		}
 
 		return path;
+	}
+
+	/**
+	 * Returns a file bundled inside a plugin knowing its path.
+	 * 
+	 * @param path
+	 *            Full path of the file resolvable from the plug-in's root.
+	 * @return A file bundled inside a plugin.
+	 */
+	public File pluginFile(final String path) {
+		return new File(getPluginDirectory() + path);
 	}
 }
