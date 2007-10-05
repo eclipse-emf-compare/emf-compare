@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.compare.util.FastMap;
 
-// TODO implement and test equals and hashCode
+// TODO test equals and hashCode
 /**
  * Tests the behavior of {@link FastMap#clear()}, {@link FastMap#clone()}, {@link FastMap#size()} and
  * {@link FastMap#isEmpty()} so that they behave the same as their {@link HashMap} counterparts.
