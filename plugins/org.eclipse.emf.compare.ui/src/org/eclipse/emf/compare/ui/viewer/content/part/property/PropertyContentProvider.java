@@ -15,12 +15,16 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
+import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -74,19 +78,30 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		}
 		if (input != null) {
 			final List<List<Object>> inputElements = new ArrayList<List<Object>>();
-
-			for (Object attObject : input.eClass().getEAllAttributes()) {
+			// This will fetch the property source of the input object
+			final AdapterFactory factory = AdapterUtils.findAdapterFactory(input);
+			final IItemPropertySource inputPropertySource = (IItemPropertySource)factory.adapt(input,
+					IItemPropertySource.class);
+			// Iterates through the property descriptor to display only the "property" features of the input
+			// object
+			for (IItemPropertyDescriptor descriptor : inputPropertySource.getPropertyDescriptors(input)) {
+				/*
+				 * Filtering out "advanced" properties can be done by hiding properties on which
+				 * Arrays.binarySearch(descriptor.getFilterFlags(input),
+				 * "org.eclipse.ui.views.properties.expert") returns an int > 0.
+				 */
+				final EStructuralFeature feature = (EStructuralFeature)descriptor.getFeature(input);
 				final List<Object> row = new ArrayList<Object>();
-				row.add(attObject);
-				row.add(input.eGet((EAttribute)attObject));
+				row.add(feature);
+				row.add(input.eGet(feature));
 				inputElements.add(row);
 			}
 
 			elements = inputElements.toArray();
 			Arrays.sort(elements, new Comparator<Object>() {
 				public int compare(Object first, Object second) {
-					final String name1 = ((EAttribute)((List)first).get(0)).getName();
-					final String name2 = ((EAttribute)((List)second).get(0)).getName();
+					final String name1 = ((EStructuralFeature)((List)first).get(0)).getName();
+					final String name2 = ((EStructuralFeature)((List)second).get(0)).getName();
 
 					return name1.compareTo(name2);
 				}
