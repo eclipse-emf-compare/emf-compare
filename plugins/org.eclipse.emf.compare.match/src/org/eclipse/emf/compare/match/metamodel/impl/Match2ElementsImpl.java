@@ -223,5 +223,37 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 		}
 		return super.eIsSet(featureID);
 	}
+	
+	/**
+	 * TODO this is a test
+	 *
+	 * @see java.lang.Object#hashCode()
+	 * @generated NOT
+	 */
+	@Override
+	public int hashCode() {
+		return leftElement.hashCode() + rightElement.hashCode();
+	}
 
+	/**
+	 * TODO this is a test
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @generated NOT
+	 */
+	public boolean equals(Object another) {
+		boolean result = false;
+		if (another == this) {
+			result = true;
+		} else if (another instanceof Match2Elements) {
+			final Match2Elements other = (Match2Elements)another;
+			if (leftElement == null) {
+				if (rightElement == null)
+					result = other.getLeftElement() == null && other.getRightElement() == null;
+				else
+					result = other.getLeftElement() == null && rightElement.equals(other.getRightElement());
+			}
+		}
+		return result;
+	}
 } // Match2ElementsImpl
