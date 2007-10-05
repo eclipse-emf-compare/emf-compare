@@ -44,7 +44,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	protected static final int DEFAULT_INITIAL_CAPACITY = 31;
 
 	/** The load factor used when none specified in constructor. * */
-	protected static final float DEFAULT_LOAD_FACTOR = 0.7f;
+	protected static final float DEFAULT_LOAD_FACTOR = 0.6f;
 
 	/**
 	 * Primes that will be used one after the other when using an initial capacity of 31. This lists extends
@@ -56,7 +56,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 	/** Object used as key for the "removed" entries of this Map. */
 	protected static final Object REMOVED_ENTRY = new Object();
-	
+
 	/** Minimal allowed load factor for the map. */
 	protected static final float MINIMUM_LOAD_FACTOR = 0.05f;
 
@@ -79,8 +79,8 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/** Load factor of this Map. */
 	protected float loadFactor = DEFAULT_LOAD_FACTOR;
 
-	/** Maximum number of buckets in this Map. */
-	protected int maxCapacity;
+	/** Threshold for resizing. */
+	protected int threshold;
 
 	/** Index of the next prime in the primes list. */
 	protected int nextPrimeIndex;
@@ -98,7 +98,8 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	public FastMap() {
 		// We know the initial capacity will be a prime equal to DEFAULT_INITIAL_CAPACITY
 		nextPrimeIndex++;
-		changeCapacity(DEFAULT_INITIAL_CAPACITY);
+		threshold = (int)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR - 1);
+		freeSlots = threshold;
 		keys = (K[])new Object[DEFAULT_INITIAL_CAPACITY];
 		values = (V[])new Object[DEFAULT_INITIAL_CAPACITY];
 	}
@@ -132,7 +133,8 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			throw new IllegalArgumentException(Messages.getString("FastMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
 
 		loadFactor = theLoadFactor;
-		final int newCapacity = getNearestPrime((int)(initialCapacity / Math.max(MINIMUM_LOAD_FACTOR, loadFactor)));
+		final int newCapacity = getNearestPrime((int)(initialCapacity / Math.max(MINIMUM_LOAD_FACTOR,
+				loadFactor)));
 		changeCapacity(newCapacity);
 		keys = (K[])new Object[newCapacity];
 		values = (V[])new Object[newCapacity];
@@ -173,8 +175,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	public Object clone() {
 		try {
 			final FastMap<K, V> map = (FastMap<K, V>)super.clone();
-			map.keys = keys.clone();
-			map.values = values.clone();
+			map.putAll(this);
 			return map;
 		} catch (CloneNotSupportedException e) {
 			// should be supported
@@ -218,6 +219,27 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		}
 		return result;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object another) {
+		boolean result = false;
+		if (another == this) {
+			result = true;
+		} else if (another instanceof Map && ((Map)another).size() == size()) {
+			for (Map.Entry<K, V> entry : entrySet()) {
+				if (((Map)another).containsKey(entry.getKey())) {
+					final Object otherValue = ((Map)another).get(entry.getKey());
+					result = otherValue == entry.getValue() || (entry.getValue() != null && entry.getValue().equals(otherValue));
+				}
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -240,6 +262,19 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		if (index < 0)
 			return null;
 		return values[index];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for (Map.Entry<K, V> entry : entrySet())
+			hash += entry.hashCode();
+		return hash;
 	}
 
 	/**
@@ -387,10 +422,10 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 *            Capacity from which to compute the maximum capacity and the new number of free slots.
 	 */
 	protected void changeCapacity(int newCapacity) {
-		maxCapacity = newCapacity - 1;
+		threshold = newCapacity - 1;
 		final int candidate = (int)Math.floor(newCapacity * loadFactor);
-		if (candidate < maxCapacity)
-			maxCapacity = candidate;
+		if (candidate < threshold)
+			threshold = candidate;
 		freeSlots = newCapacity - usedSlots;
 	}
 
@@ -402,7 +437,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 *            Desired number of additional elements.
 	 */
 	protected void checkCapacity(int desiredSlots) {
-		if (desiredSlots > (maxCapacity - size())) {
+		if (desiredSlots > (threshold - size())) {
 			resize(getNearestPrime((int)Math.ceil(desiredSlots + size() / loadFactor) + 1));
 		}
 	}
@@ -542,7 +577,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	protected int insertionIndexFor(K key) {
 		// Key cannot be null here, it is either an object or NULL_KEY
-		
+
 		// inspired from sun's HashMap
 		final int mask = 0x7fffffff;
 		final int hash = key.hashCode() & mask;
@@ -598,12 +633,8 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		usedSlots++;
 
 		// If there isn't any space left in the table, expand table.
-		if (usedSlots > maxCapacity || freeSlots == 0) {
-			final int newCapacity;
-			if (usedSlots > maxCapacity)
-				newCapacity = getNearestPrime(capacity() << 1);
-			else
-				newCapacity = capacity();
+		if (usedSlots > threshold || freeSlots == 0) {
+			final int newCapacity = getNearestPrime(capacity() << 1);
 			resize(newCapacity);
 		}
 	}
@@ -799,7 +830,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 				if (entry instanceof Map.Entry)
 					retainedKeys[indx++] = ((Map.Entry)entry).getKey();
 			}
-				
+
 			final Iterator<?> e = iterator();
 			while (e.hasNext()) {
 				final Object entry = e.next();
@@ -857,8 +888,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		public AbstractHashIterator() {
 			expectedSize = usedSlots;
-			while (nextIndex < keys.length
-					&& (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
 				nextIndex++;
 		}
 
@@ -901,8 +931,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			currentEntry = new Entry(currentKey, currentValue, nextIndex);
 
 			nextIndex++;
-			while (nextIndex < keys.length
-					&& (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
 				nextIndex++;
 		}
 	}
