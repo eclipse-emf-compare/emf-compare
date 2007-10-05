@@ -15,8 +15,10 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.TableViewer;
@@ -76,15 +78,25 @@ public class ModelContentMergePropertyPart extends TableViewer {
 	/**
 	 * Returns the widget representing the given {@link DiffElement} in the table.
 	 * 
+	 * @param inputEObject
+	 *            Object which properties are currently displayed.
 	 * @param diff
 	 *            {@link DiffElement} to seek in the table.
 	 * @return The widget representing the given {@link DiffElement}.
 	 * @see org.eclipse.jface.viewers.StructuredViewer#findItem(Object)
 	 */
-	public TableItem find(DiffElement diff) {
+	public TableItem find(EObject inputEObject, DiffElement diff) {
 		TableItem item = null;
 		if (diff instanceof AttributeChange) {
-			item = (TableItem)findItem(((AttributeChange)diff).getAttribute());
+			final AttributeChange theDiff = (AttributeChange)diff;
+			if (theDiff.getLeftElement() == inputEObject ||
+					theDiff.getRightElement() == inputEObject)
+				item = (TableItem)findItem(theDiff.getAttribute());
+		} else if (diff instanceof ReferenceChange) {
+			final ReferenceChange theDiff = (ReferenceChange)diff;
+			if (theDiff.getLeftElement() == inputEObject ||
+					theDiff.getRightElement() == inputEObject)
+				item = (TableItem)findItem(theDiff.getReference());
 		}
 		return item;
 	}
@@ -101,11 +113,13 @@ public class ModelContentMergePropertyPart extends TableViewer {
 	/**
 	 * Ensures that the given diff is visible in the table.
 	 * 
+	 * @param inputEObject
+	 *            Object which properties are currently displayed.
 	 * @param diff
 	 *            {@link DiffElement} to make visible.
 	 */
-	public void showItem(DiffElement diff) {
-		final TableItem elementItem = find(diff);
+	public void showItem(EObject inputEObject, DiffElement diff) {
+		final TableItem elementItem = find(inputEObject, diff);
 		if (elementItem != null) {
 			getTable().setSelection(elementItem);
 		}

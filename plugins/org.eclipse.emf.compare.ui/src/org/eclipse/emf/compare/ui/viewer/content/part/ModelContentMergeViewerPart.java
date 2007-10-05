@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
@@ -204,7 +205,7 @@ public class ModelContentMergeViewerPart {
 					widget = find(element.eContainer());
 			} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
 				if (element instanceof DiffElement)
-					widget = properties.find((DiffElement)element);
+					widget = properties.find(((PropertyContentProvider)properties.getContentProvider()).getInputEObject(), (DiffElement)element);
 			} else {
 				throw new IllegalStateException(Messages.getString(INVALID_TAB, selectedTab));
 			}
@@ -338,7 +339,7 @@ public class ModelContentMergeViewerPart {
 			properties.setInput(findMatchFromElement(target));
 		} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
 			properties.setInput(findMatchFromElement(target));
-			properties.showItem(diff);
+			properties.showItem(((PropertyContentProvider)properties.getContentProvider()).getInputEObject(), diff);
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
 		}
@@ -596,7 +597,7 @@ public class ModelContentMergeViewerPart {
 		 */
 		public void paintControl(PaintEvent event) {
 			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (diff instanceof AttributeChange && find(diff) != null
+				if ((diff instanceof AttributeChange || diff instanceof ReferenceChange) && find(diff) != null
 						&& partSide == EMFCompareConstants.RIGHT) {
 					drawLine(event, (TableItem)parentViewer.getLeftItem(diff));
 				}

@@ -34,6 +34,9 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class PropertyContentProvider implements IStructuredContentProvider {
+	/** EObject which properties are provided by this content provider. */
+	private EObject inputEObject;
+	
 	/**
 	 * This <code>int</code> represents the side of the viewer part this content provider feeds. Must be one
 	 * of
@@ -61,39 +64,38 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 	 */
 	public Object[] getElements(Object inputElement) {
 		Object[] elements = new Object[] {};
-		EObject input = null;
 
 		if (inputElement instanceof Match2Elements) {
 			final Match2Elements match = (Match2Elements)inputElement;
 
 			if (partSide == EMFCompareConstants.RIGHT) {
-				input = match.getLeftElement();
+				inputEObject = match.getLeftElement();
 			} else if (partSide == EMFCompareConstants.LEFT) {
-				input = match.getRightElement();
+				inputEObject = match.getRightElement();
 			} else if (inputElement instanceof Match3Element) {
-				input = ((Match3Element)match).getOriginElement();
+				inputEObject = ((Match3Element)match).getOriginElement();
 			}
 		} else if (inputElement instanceof UnMatchElement) {
-			input = ((UnMatchElement)inputElement).getElement();
+			inputEObject = ((UnMatchElement)inputElement).getElement();
 		}
-		if (input != null) {
+		if (inputEObject != null) {
 			final List<List<Object>> inputElements = new ArrayList<List<Object>>();
 			// This will fetch the property source of the input object
-			final AdapterFactory factory = AdapterUtils.findAdapterFactory(input);
-			final IItemPropertySource inputPropertySource = (IItemPropertySource)factory.adapt(input,
+			final AdapterFactory factory = AdapterUtils.findAdapterFactory(inputEObject);
+			final IItemPropertySource inputPropertySource = (IItemPropertySource)factory.adapt(inputEObject,
 					IItemPropertySource.class);
 			// Iterates through the property descriptor to display only the "property" features of the input
 			// object
-			for (IItemPropertyDescriptor descriptor : inputPropertySource.getPropertyDescriptors(input)) {
+			for (IItemPropertyDescriptor descriptor : inputPropertySource.getPropertyDescriptors(inputEObject)) {
 				/*
 				 * Filtering out "advanced" properties can be done by hiding properties on which
 				 * Arrays.binarySearch(descriptor.getFilterFlags(input),
 				 * "org.eclipse.ui.views.properties.expert") returns an int > 0.
 				 */
-				final EStructuralFeature feature = (EStructuralFeature)descriptor.getFeature(input);
+				final EStructuralFeature feature = (EStructuralFeature)descriptor.getFeature(inputEObject);
 				final List<Object> row = new ArrayList<Object>();
 				row.add(feature);
-				row.add(input.eGet(feature));
+				row.add(inputEObject.eGet(feature));
 				inputElements.add(row);
 			}
 
@@ -108,6 +110,10 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 			});
 		}
 		return elements;
+	}
+	
+	public EObject getInputEObject() {
+		return inputEObject;
 	}
 
 	/**

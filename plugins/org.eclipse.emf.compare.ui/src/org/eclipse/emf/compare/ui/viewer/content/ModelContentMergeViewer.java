@@ -372,11 +372,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return The item representing the left element of the given {@link DiffElement}.
 	 */
 	public Item getLeftItem(DiffElement diff) {
-		EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
-		EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
+		EObject leftElement;
+		EObject rightElement;
 		if (selectedTab == PROPERTIES_TAB) {
 			leftElement = diff;
 			rightElement = diff;
+		} else {
+			leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
+			rightElement = EMFCompareEObjectUtils.getRightElement(diff);
 		}
 		Item leftItem = (Item)leftPart.find(leftElement);
 		final Item rightItem = (Item)rightPart.find(rightElement);
