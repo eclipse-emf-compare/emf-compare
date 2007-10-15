@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.examples.diff.extension.extensions;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -20,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.examples.diff.extension.DiffExtensionPlugin;
 import org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EObject;
 
 /**

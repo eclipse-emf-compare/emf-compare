@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: UMLAssociationDiffImpl.java,v 1.1 2007/08/29 07:20:03 cbrun Exp $
+ * $Id: UMLAssociationDiffImpl.java,v 1.2 2007/10/15 14:51:15 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -276,7 +276,7 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isNavigable: ");
 		result.append(isNavigable);
 		result.append(')');
