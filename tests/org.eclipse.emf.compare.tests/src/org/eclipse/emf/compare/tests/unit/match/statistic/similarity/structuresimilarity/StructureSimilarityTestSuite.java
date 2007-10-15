@@ -8,23 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.suite;
+package org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
-import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
-
 /**
- * Launches all the JUnit tests for EMF compare.
+ * Launches all the JUnit tests for the {@link StructureSimilarity}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 @SuppressWarnings("nls")
-public class AllTests extends TestCase {
+public class StructureSimilarityTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -38,14 +35,14 @@ public class AllTests extends TestCase {
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return The testsuite containing all the tests
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite("EMF Compare test suite");
-		suite.addTest(CoreTestSuite.suite());
-		suite.addTest(MatchTestSuite.suite());
-		// Non regression
-		// suite.addTestSuite(TestNonRegressionModels.class);
+		final TestSuite suite = new TestSuite("Tests for the StructureSimilarity behavior");
+		suite.addTestSuite(TestRelationsSimilarityDistinct.class);
+		suite.addTestSuite(TestRelationsSimilarityBehavior.class);
+		suite.addTestSuite(TestRelationsSimilaritySimilar.class);
+		suite.addTestSuite(TestTypeSimilarityBehavior.class);
 		return suite;
 	}
 }

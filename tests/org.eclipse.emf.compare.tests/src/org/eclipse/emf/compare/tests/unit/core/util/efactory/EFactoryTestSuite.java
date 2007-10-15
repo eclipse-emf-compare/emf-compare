@@ -8,23 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.suite;
+package org.eclipse.emf.compare.tests.unit.core.util.efactory;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
-import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
-
 /**
- * Launches all the JUnit tests for EMF compare.
+ * Launches all the JUnit tests for the {@link EFactory}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 @SuppressWarnings("nls")
-public class AllTests extends TestCase {
+public class EFactoryTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -38,14 +35,15 @@ public class AllTests extends TestCase {
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return The testsuite containing all the tests
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite("EMF Compare test suite");
-		suite.addTest(CoreTestSuite.suite());
-		suite.addTest(MatchTestSuite.suite());
-		// Non regression
-		// suite.addTestSuite(TestNonRegressionModels.class);
+		final TestSuite suite = new TestSuite("Tests for the EFactory behavior");
+		suite.addTestSuite(TestEAdd.class);
+		suite.addTestSuite(TestEGet.class);
+		suite.addTestSuite(TestEGetAsList.class);
+		suite.addTestSuite(TestERemove.class);
+		suite.addTestSuite(TestESet.class);
 		return suite;
 	}
 }

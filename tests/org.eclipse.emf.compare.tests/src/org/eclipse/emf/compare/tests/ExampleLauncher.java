@@ -55,8 +55,7 @@ public final class ExampleLauncher {
 				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet);
 
 				// Creates the match then the diff model for those two models
-				final MatchModel match = MatchService.doMatch(model1, model2,
-						new NullProgressMonitor());
+				final MatchModel match = MatchService.doMatch(model1, model2, new NullProgressMonitor());
 				final DiffModel diff = DiffService.doDiff(match, false);
 
 				// Prints the results
@@ -67,10 +66,10 @@ public final class ExampleLauncher {
 					e.printStackTrace();
 				}
 
-//				 System.out.println("saving diff as \"result.diff\"");
-//				 ModelUtils.save(diff, "result.diff");
-//				 System.out.println("saving match as \"result.match\"");
-//				 ModelUtils.save(match, "result.match");
+				// System.out.println("saving diff as \"result.diff\"");
+				// ModelUtils.save(diff, "result.diff");
+				// System.out.println("saving match as \"result.match\"");
+				// ModelUtils.save(match, "result.match");
 
 				// Serializes the result as "result.emfdiff" in the directory this class has been called from.
 				System.out.println("saving emfdiff as \"result.emfdiff\""); //$NON-NLS-1$

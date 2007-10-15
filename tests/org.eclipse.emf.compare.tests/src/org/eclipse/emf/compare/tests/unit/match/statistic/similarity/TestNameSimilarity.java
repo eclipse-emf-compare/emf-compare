@@ -8,21 +8,21 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.match;
+package org.eclipse.emf.compare.tests.unit.match.statistic.similarity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
-import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -40,35 +40,21 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 @SuppressWarnings("nls")
-public class TestNameSimilarity extends EMFCompareTestCase {
+public class TestNameSimilarity extends TestCase {
 	/** Full path to the model containing this test's input. */
 	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
 
 	/** String displayed for a <code>null</code> result where it shouldn't be. */
 	private static final String MESSAGE_NULL_RESULT = "returned a null result.";
 
-	/** Name of the currently tested method for the error messages. */
-	private String testedMethod;
+	/** Filter that will be used to detect the relevant features of an {@link EObject}. */
+	private MetamodelFilter filter;
 
 	/** Model that contains the test's input. */
 	private EObject inputModel;
 
-	/** Filter that will be used to detect the relevant features of an {@link EObject}. */
-	private MetamodelFilter filter;
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		final File modelFile = new File(FileLocator.toFileURL(
-				EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_MODEL_PATH)).getFile());
-		inputModel = ModelUtils.load(modelFile, new ResourceSetImpl());
-		filter = new MetamodelFilter();
-		filter.analyseModel(inputModel);
-	}
+	/** Name of the currently tested method for the error messages. */
+	private String testedMethod;
 
 	/**
 	 * Tests {@link NameSimilarity#contentValue(EObject, MetamodelFilter)}.
@@ -105,59 +91,6 @@ public class TestNameSimilarity extends EMFCompareTestCase {
 
 		// the expected "false " comes from the "interface" attribute of EClass
 		assertEquals(testedMethod + ' ' + "didn't return the expected result.", new String("false "),
-				class1Content);
-		assertEquals(testedMethod + ' ' + "returned a distinct result for two identical objects.",
-				class1Content, class1ClonedFromModelContent);
-		assertEquals(testedMethod + ' ' + "returned a distinct result for two clones.", class1Content,
-				class1ClonedFromCodeContent);
-
-		// Class1 and Class1Altered are distinct in that Class1Altered has its "interface" flag set as "true"
-		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.", class1Content
-				.equals(class1AlteredContent));
-	}
-
-	/**
-	 * Tests {@link NameSimilarity#contentValue(EObject, MetamodelFilter)}.
-	 * <p>
-	 * Expected results (assumed from the model data/testInput) :
-	 * <ul>
-	 * <li>Class1 =&gt; concatenation of all attributes</li>
-	 * <li>Class1 and Class1Clone =&gt; equal result</li>
-	 * <li>Class1 and Class1.clone() =&gt; equal result</li>
-	 * <li>Class1 and Class1Altered =&gt; distinct result</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @throws FactoryException
-	 *             Thrown if the similarity couldn't be computed. Considered a failed test.
-	 */
-	public void testUnFilteredContentValue() throws FactoryException {
-		testedMethod = "NameSimilarity#contentValue(EObject, MetaModelFilter)";
-
-		final EObject class1 = inputModel.eContents().get(0);
-		final EObject class1ClonedFromModel = inputModel.eContents().get(1);
-		final EObject class1ClonedFromCode = EcoreUtil.copy(class1);
-		final EObject class1Altered = inputModel.eContents().get(2);
-
-		// Computes the expected result for class1
-		final StringBuffer buffer = new StringBuffer();
-		final List<EAttribute> classAttrib = new ArrayList<EAttribute>(class1.eClass().getEAllAttributes());
-		classAttrib.remove(NameSimilarity.findNameFeature(class1));
-		for (EAttribute attribute : classAttrib) {
-			if (attribute != null && EFactory.eGet(class1, attribute.getName()) != null) {
-				buffer.append(EFactory.eGetAsString(class1, attribute.getName())).append(" ");
-			}
-		}
-
-		final String expectedClass1Content = buffer.toString();
-		final String class1Content = NameSimilarity.contentValue(class1, null);
-		final String class1ClonedFromModelContent = NameSimilarity.contentValue(class1ClonedFromModel, null);
-		final String class1ClonedFromCodeContent = NameSimilarity.contentValue(class1ClonedFromCode, null);
-		final String class1AlteredContent = NameSimilarity.contentValue(class1Altered, null);
-
-		assertNotNull(testedMethod + ' ' + MESSAGE_NULL_RESULT, class1Content);
-
-		assertEquals(testedMethod + ' ' + "didn't return the expected result.", expectedClass1Content,
 				class1Content);
 		assertEquals(testedMethod + ' ' + "returned a distinct result for two identical objects.",
 				class1Content, class1ClonedFromModelContent);
@@ -279,14 +212,20 @@ public class TestNameSimilarity extends EMFCompareTestCase {
 	 * <td>&quot;reference&quot;</td>
 	 * <td><code>0</code></td>
 	 * </tr>
+	 * <tr>
+	 * <td>&quot;aa&quot;</td>
+	 * <td>&quot;aaaa&quot;</td>
+	 * <td><code>2/4</code></td>
+	 * </tr>
 	 * </table>
 	 * </p>
 	 */
 	public void testNameSimilarityMetric() {
-		final String[] data = new String[] {null, null, null, "string", "string", null, "ceString", "ceString", "classe", "Classe",
-				"Classe", "UneClasse", "package", "packagedeux", "", "MaClasse", "package",
-				"packageASupprimer", "attribut", "reference", };
-		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d, 6d / 11d, 0d, };
+		final String[] data = new String[] {null, null, null, "string", "string", null, "ceString",
+				"ceString", "classe", "Classe", "Classe", "UneClasse", "package", "packagedeux", "",
+				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", };
+		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d,
+				6d / 11d, 0d, 1d / 2d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of nameSimilarityMetric for str1 = " + data[i] + " and str2 = "
 					+ data[i + 1], similarities[i / 2], NameSimilarity.nameSimilarityMetric(data[i],
@@ -300,17 +239,17 @@ public class TestNameSimilarity extends EMFCompareTestCase {
 	 * <ul>
 	 * Assertions :
 	 * <li>Result isn't <code>null</code>.</li>
-	 * <li>Result is instance of {@link LinkedList}.</li>
+	 * <li>Result is instance of {@link ArrayList}.</li>
 	 * <li>Result's size is equal to source's length - 1 if length &gt; 1, <code>0</code> otherwise.</li>
 	 * <li>All {@link String}s contained within the result are 2-character long.</li>
 	 * </ul>
 	 * <ul>
 	 * Expected results :
-	 * <li><code>null</code> =&gt; empty {@link LinkedList}</li>
+	 * <li><code>null</code> =&gt; empty {@link ArrayList}</li>
 	 * <li>&quot;anEvenSizeString&quot; =&gt; [an, nE, Ev, ve, en, nS, Si, iz, ze, eS, St, tr, ri, in, ng]</li>
 	 * <li>&quot;anOddSizeString&quot; =&gt; [an, nO, Od, dd, dS, Si, iz, ze, eS, St, tr, ri, in, ng]</li>
-	 * <li>&quot;&quot; =&gt; empty {@link LinkedList}</li>
-	 * <li>&quot;!&quot; =&gt; empty {@link LinkedList}</li>
+	 * <li>&quot;&quot; =&gt; empty {@link ArrayList}</li>
+	 * <li>&quot;!&quot; =&gt; empty {@link ArrayList}</li>
 	 * <li>&quot;-&amp;;+&quot; =&gt; [-&amp;, &amp;;, ;+]</li>
 	 * </ul>
 	 * </p>
@@ -321,8 +260,7 @@ public class TestNameSimilarity extends EMFCompareTestCase {
 		for (int i = 0; i < data.length; i++) {
 			final List<String> result = NameSimilarity.pairs(data[i]);
 			assertNotNull("Method pairs() returned null result.", result);
-			assertTrue("Method pairs()'s result isn't an instance of LinkedList.",
-					result instanceof LinkedList);
+			assertTrue("Method pairs()'s result isn't an instance of ArrayList.", result instanceof ArrayList);
 
 			// Special case for null and 1-char long input
 			if (data[i] == null || data[i].length() < 2) {
@@ -338,5 +276,72 @@ public class TestNameSimilarity extends EMFCompareTestCase {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Tests {@link NameSimilarity#contentValue(EObject, MetamodelFilter)}.
+	 * <p>
+	 * Expected results (assumed from the model data/testInput) :
+	 * <ul>
+	 * <li>Class1 =&gt; concatenation of all attributes</li>
+	 * <li>Class1 and Class1Clone =&gt; equal result</li>
+	 * <li>Class1 and Class1.clone() =&gt; equal result</li>
+	 * <li>Class1 and Class1Altered =&gt; distinct result</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the similarity couldn't be computed. Considered a failed test.
+	 */
+	public void testUnFilteredContentValue() throws FactoryException {
+		testedMethod = "NameSimilarity#contentValue(EObject, MetaModelFilter)";
+
+		final EObject class1 = inputModel.eContents().get(0);
+		final EObject class1ClonedFromModel = inputModel.eContents().get(1);
+		final EObject class1ClonedFromCode = EcoreUtil.copy(class1);
+		final EObject class1Altered = inputModel.eContents().get(2);
+
+		// Computes the expected result for class1
+		final StringBuilder buffer = new StringBuilder();
+		final List<EAttribute> classAttrib = new ArrayList<EAttribute>(class1.eClass().getEAllAttributes());
+		classAttrib.remove(NameSimilarity.findNameFeature(class1));
+		for (EAttribute attribute : classAttrib) {
+			if (attribute != null && EFactory.eGet(class1, attribute.getName()) != null) {
+				buffer.append(EFactory.eGetAsString(class1, attribute.getName())).append(" ");
+			}
+		}
+
+		final String expectedClass1Content = buffer.toString();
+		final String class1Content = NameSimilarity.contentValue(class1, null);
+		final String class1ClonedFromModelContent = NameSimilarity.contentValue(class1ClonedFromModel, null);
+		final String class1ClonedFromCodeContent = NameSimilarity.contentValue(class1ClonedFromCode, null);
+		final String class1AlteredContent = NameSimilarity.contentValue(class1Altered, null);
+
+		assertNotNull(testedMethod + ' ' + MESSAGE_NULL_RESULT, class1Content);
+
+		assertEquals(testedMethod + ' ' + "didn't return the expected result.", expectedClass1Content,
+				class1Content);
+		assertEquals(testedMethod + ' ' + "returned a distinct result for two identical objects.",
+				class1Content, class1ClonedFromModelContent);
+		assertEquals(testedMethod + ' ' + "returned a distinct result for two clones.", class1Content,
+				class1ClonedFromCodeContent);
+
+		// Class1 and Class1Altered are distinct in that Class1Altered has its "interface" flag set as "true"
+		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.", class1Content
+				.equals(class1AlteredContent));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		final File modelFile = new File(FileLocator.toFileURL(
+				EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_MODEL_PATH)).getFile());
+		inputModel = ModelUtils.load(modelFile, new ResourceSetImpl());
+		filter = new MetamodelFilter();
+		filter.analyseModel(inputModel);
 	}
 }

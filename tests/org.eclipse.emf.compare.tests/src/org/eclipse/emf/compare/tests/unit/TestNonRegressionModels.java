@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -24,18 +26,18 @@ import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
-import org.eclipse.emf.compare.tests.util.EMFCompareTestCase;
 import org.eclipse.emf.compare.tests.util.FileUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 
+// TODO This has to be updated with the metamodels' new versions
 /**
  * Test the results models are still the same as expected.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 @SuppressWarnings("nls")
-public class TestNonRegressionModels extends EMFCompareTestCase {
+public class TestNonRegressionModels extends TestCase {
 	/**
 	 * The input directory is the hierarchical root of the folder where we expect to find the models to
 	 * compare.
@@ -87,6 +89,16 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		setInputDirectory("/inputs");
+	}
+
+	/**
 	 * Compares the snapshot of a given folder with its expected folder snapshot.
 	 * 
 	 * @param directory
@@ -111,8 +123,8 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir);
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
-				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels
-						.get(1), new NullProgressMonitor());
+				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels.get(1),
+						new NullProgressMonitor());
 				final DiffModel inputDiff = DiffService.doDiff(inputMatch, false);
 
 				// Serializes current and expected match and diff as Strings
@@ -141,20 +153,10 @@ public class TestNonRegressionModels extends EMFCompareTestCase {
 	 */
 	private String suppressPathReferences(String aFile) {
 		final String[] fragments = aFile.split("\n");
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < fragments.length; i++) {
 			buffer.append(fragments[i].replaceAll("href=\".*#", "href=\"#"));
 		}
 		return buffer.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		setInputDirectory("/inputs");
 	}
 }

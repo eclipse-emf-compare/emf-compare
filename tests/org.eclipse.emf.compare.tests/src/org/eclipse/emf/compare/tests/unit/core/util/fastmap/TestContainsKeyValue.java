@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
 
 import java.util.HashSet;
 
@@ -66,8 +66,7 @@ public class TestContainsKeyValue extends TestCase {
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 			for (int j = i + 1; j < KEY_SET.length; j++) {
-				assertFalse("ContainsKey returns true for uncontained keys.", map
-						.containsKey(KEY_SET[j]));
+				assertFalse("ContainsKey returns true for uncontained keys.", map.containsKey(KEY_SET[j]));
 			}
 		}
 	}
@@ -97,8 +96,7 @@ public class TestContainsKeyValue extends TestCase {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 		}
 		for (int i = 0; i < KEY_SET.length; i++) {
-			assertTrue("ContainsKey returns false for contained keys.", map
-					.containsKey(KEY_SET[i]));
+			assertTrue("ContainsKey returns false for contained keys.", map.containsKey(KEY_SET[i]));
 		}
 	}
 
@@ -112,8 +110,7 @@ public class TestContainsKeyValue extends TestCase {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 		}
 		for (int i = 0; i < VALUE_SET.length; i++) {
-			assertTrue("ContainsValue returns false for contained values.", map
-					.containsValue(VALUE_SET[i]));
+			assertTrue("ContainsValue returns false for contained values.", map.containsValue(VALUE_SET[i]));
 		}
 	}
 }

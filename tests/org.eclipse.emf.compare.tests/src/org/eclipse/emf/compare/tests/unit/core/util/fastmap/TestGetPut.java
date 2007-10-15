@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
 
 import java.util.HashSet;
 
@@ -115,8 +115,8 @@ public class TestGetPut extends TestCase {
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 			for (int j = 0; j <= i; j++) {
-				assertEquals("Method get(Object) returns inaccurate value for key " + KEY_SET[j], VALUE_SET[j],
-						map.get(KEY_SET[j]));
+				assertEquals("Method get(Object) returns inaccurate value for key " + KEY_SET[j],
+						VALUE_SET[j], map.get(KEY_SET[j]));
 			}
 		}
 	}

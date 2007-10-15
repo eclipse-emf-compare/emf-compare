@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -16,9 +16,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 /**
- * Launches all the JUnit tests for EMF compare.
+ * Launches all the JUnit tests for the {@link FastMap}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 @SuppressWarnings("nls")
 public class FastMapTestSuite extends TestCase {
@@ -35,13 +35,14 @@ public class FastMapTestSuite extends TestCase {
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return The testsuite containing all the tests
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the FastMap behavior");
 		suite.addTestSuite(TestConstructors.class);
 		suite.addTestSuite(TestContainsKeyValue.class);
 		suite.addTestSuite(TestEntrySet.class);
+		suite.addTestSuite(TestEquals.class);
 		suite.addTestSuite(TestGetPut.class);
 		suite.addTestSuite(TestKeySet.class);
 		suite.addTestSuite(TestMethods.class);

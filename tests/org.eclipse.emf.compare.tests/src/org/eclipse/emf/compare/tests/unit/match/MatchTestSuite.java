@@ -15,6 +15,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.TestNameSimilarity;
+import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity.StructureSimilarityTestSuite;
+
 /**
  * Tests for the match plugin.
  * 
@@ -40,7 +43,7 @@ public class MatchTestSuite extends TestCase {
 		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
 		suite.addTestSuite(TestEnginesPriority.class);
 		suite.addTestSuite(TestNameSimilarity.class);
-		suite.addTestSuite(TestStructureSimilarity.class);
+		suite.addTest(StructureSimilarityTestSuite.suite());
 		return suite;
 	}
 }

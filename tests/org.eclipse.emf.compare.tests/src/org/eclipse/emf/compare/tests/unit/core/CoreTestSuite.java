@@ -14,7 +14,10 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.core.fastmap.FastMapTestSuite;
+import org.eclipse.emf.compare.tests.unit.core.util.TestAdapterUtils;
+import org.eclipse.emf.compare.tests.unit.core.util.efactory.EFactoryTestSuite;
+import org.eclipse.emf.compare.tests.unit.core.util.fastmap.FastMapTestSuite;
+import org.eclipse.emf.compare.tests.unit.core.util.modelutils.ModelUtilsTestSuite;
 
 /**
  * Tests for the core org.eclipse.emf.compare plugin.
@@ -29,7 +32,7 @@ public final class CoreTestSuite {
 	private CoreTestSuite() {
 		// prevents instantiation
 	}
-	
+
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -47,8 +50,14 @@ public final class CoreTestSuite {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the core plugin.");
+		// package org.eclipse.emf.compare
+		suite.addTestSuite(TestEMFComparePlugin.class);
+		suite.addTestSuite(TestMessages.class);
+		// package org.eclipse.emf.compare.util
+		suite.addTest(EFactoryTestSuite.suite());
 		suite.addTest(FastMapTestSuite.suite());
-		suite.addTestSuite(TestFindAdapterFactory.class);
+		suite.addTest(ModelUtilsTestSuite.suite());
+		suite.addTestSuite(TestAdapterUtils.class);
 		return suite;
 	}
 }

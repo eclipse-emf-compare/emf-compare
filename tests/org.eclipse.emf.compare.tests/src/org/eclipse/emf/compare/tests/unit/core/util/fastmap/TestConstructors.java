@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
 
 import java.util.HashSet;
 
@@ -113,12 +113,12 @@ public class TestConstructors extends TestCase {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 
 			testMap = new FastMap(map);
-			assertEquals(MESSAGE_CONSTRUCTOR_NAME + "(map)" + ' ' + "created map with wrong size.",
-					i + 1, testMap.size());
+			assertEquals(MESSAGE_CONSTRUCTOR_NAME + "(map)" + ' ' + "created map with wrong size.", i + 1,
+					testMap.size());
 
 			for (int j = 0; j < i; j++) {
-				assertEquals("FastMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j],
-						testMap.get(KEY_SET[j]));
+				assertEquals("FastMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j], testMap
+						.get(KEY_SET[j]));
 			}
 		}
 	}

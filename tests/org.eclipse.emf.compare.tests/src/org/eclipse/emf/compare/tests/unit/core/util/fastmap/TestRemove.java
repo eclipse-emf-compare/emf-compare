@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
 
 import java.util.HashSet;
 
