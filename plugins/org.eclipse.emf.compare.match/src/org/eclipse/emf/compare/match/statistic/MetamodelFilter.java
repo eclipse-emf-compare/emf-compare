@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -126,7 +126,7 @@ public class MetamodelFilter {
 		final Iterator featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (featIt.hasNext()) {
 			final EStructuralFeature feat = (EStructuralFeature)featIt.next();
-			final StringBuffer key = new StringBuffer();
+			final StringBuilder key = new StringBuilder();
 			key.append(feat.hashCode());
 			key.append(eObj.eClass().getName());
 			if (!featuresToInformation.containsKey(key.toString())) {

@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.Messages;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
@@ -32,7 +33,6 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ETools;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -110,7 +110,7 @@ public class DifferencesServices implements MatchEngine {
 	/**
 	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
 	 */
-	private final Map<EObject, EObject> matchedByID = new FastMap<EObject, EObject>();
+	private final Map<String, EObject> matchedByID = new FastMap<String, EObject>();
 
 	/**
 	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
@@ -258,13 +258,13 @@ public class DifferencesServices implements MatchEngine {
 		filter.analyseModel(root2);
 		// end of filtering
 
-		final Resource leftResource = root1.eResource();
-		final Resource rightResource = root2.eResource();
-		if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
-			matchByID((XMIResource)leftResource, (XMIResource)rightResource);
-
 		// navigate through both models at the same time and realize mappings..
 		try {
+			final Resource leftResource = root1.eResource();
+			final Resource rightResource = root2.eResource();
+			if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
+				matchByID((XMIResource)leftResource, (XMIResource)rightResource);
+			
 			monitor.subTask(Messages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(root1.eResource().getContents(), root2
 					.eResource().getContents(), getSearchWindow(), monitor);
@@ -830,7 +830,11 @@ public class DifferencesServices implements MatchEngine {
 		// then iterate over the 2 lists and compare the elements
 		while (it1.hasNext() && notFoundList2.size() > 0) {
 			final EObject obj1 = (EObject)it1.next();
-			EObject obj2 = matchedByID.get(obj1);
+			
+			final StringBuilder obj1Key = new StringBuilder();
+			obj1Key.append(NameSimilarity.findName(obj1));
+			obj1Key.append(obj1.hashCode());
+			EObject obj2 = matchedByID.get(obj1Key.toString());
 
 			if (obj2 == null) {
 				// subtracts the difference between the notfound and the
@@ -881,8 +885,10 @@ public class DifferencesServices implements MatchEngine {
 	 *            First of the two {@link XMIResource resources} to visit.
 	 * @param right
 	 *            Second of the {@link XMIResource resources} to visit.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't compute a key to store the items in cache.
 	 */
-	private void matchByID(XMIResource left, XMIResource right) {
+	private void matchByID(XMIResource left, XMIResource right) throws FactoryException {
 		matchedByID.clear();
 		final Iterator leftIterator = left.getAllContents();
 
@@ -892,7 +898,10 @@ public class DifferencesServices implements MatchEngine {
 			if (item1ID != null) {
 				final EObject item2 = right.getEObject(item1ID);
 				if (item2 != null) {
-					matchedByID.put(item1, item2);
+					final StringBuilder item1Key = new StringBuilder();
+					item1Key.append(NameSimilarity.findName(item1));
+					item1Key.append(item1.hashCode());
+					matchedByID.put(item1Key.toString(), item2);
 				}
 			}
 		}

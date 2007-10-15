@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class EngineDescriptor implements Comparable<EngineDescriptor> {
+/* package */ class EngineDescriptor implements Comparable<EngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 

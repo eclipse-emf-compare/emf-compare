@@ -217,7 +217,7 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (similarity: "); //$NON-NLS-1$
 		result.append(similarity);
 		result.append(')');

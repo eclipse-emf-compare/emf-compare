@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.statistic.similarity;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -59,8 +59,8 @@ public final class NameSimilarity {
 	@SuppressWarnings("unchecked")
 	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
-		final StringBuffer result = new StringBuffer();
-		List<EStructuralFeature> eclassAttributes = new LinkedList<EStructuralFeature>();
+		final StringBuilder result = new StringBuilder();
+		List<EStructuralFeature> eclassAttributes = new ArrayList<EStructuralFeature>();
 		if (filter != null) {
 			if (eclass instanceof EClass) {
 				eclassAttributes = filter.getFilteredFeatures(current);
@@ -125,7 +125,7 @@ public final class NameSimilarity {
 		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName());
 
 		if (bestFeature == null) {
-			List<EAttribute> eClassAttributes = new LinkedList<EAttribute>();
+			List<EAttribute> eClassAttributes = new ArrayList<EAttribute>();
 			eClassAttributes = eclass.getEAllAttributes();
 			if (eClassAttributes.size() > 0) {
 				bestFeature = eClassAttributes.get(0);
@@ -199,7 +199,7 @@ public final class NameSimilarity {
 	 * @return A {@link List} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
 	public static List<String> pairs(String source) {
-		final List<String> result = new LinkedList<String>();
+		final List<String> result = new ArrayList<String>();
 		if (source != null) {
 			final int length = source.length();
 			for (int i = 0; i < length - 1; i++)

@@ -11,13 +11,11 @@
 package org.eclipse.emf.compare.match.statistic.similarity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
-import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -72,7 +70,15 @@ public final class StructureSimilarity {
 	 *             Thrown if we cannot compute the similarity.
 	 */
 	public static double typeSimilarityMetric(EObject obj1, EObject obj2) throws FactoryException {
-		return NameSimilarity.nameSimilarityMetric(typeValue(obj1), typeValue(obj2));
+		final int attributesCount = obj1.eClass().getEAllAttributes().size() + obj2.eClass().getEAllAttributes().size();
+		final int referencesCount = obj1.eClass().getEAllReferences().size() + obj2.eClass().getEAllReferences().size();
+		final double attributesSimilarity = NameSimilarity.nameSimilarityMetric(attributeTypeValue(obj1), attributeTypeValue(obj2));
+		final double referencesSimilarity = NameSimilarity.nameSimilarityMetric(referenceTypeValue(obj1), referenceTypeValue(obj2));
+		
+		double similarity = attributesSimilarity * attributesCount + referencesSimilarity * referencesCount;
+		similarity /= attributesCount + referencesCount;
+		
+		return similarity;
 	}
 
 	/**
@@ -86,11 +92,30 @@ public final class StructureSimilarity {
 	 * @throws FactoryException
 	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
 	 */
-	@SuppressWarnings("unchecked")
 	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
+		final StringBuilder result = new StringBuilder();
+		result.append(childrenValue(current, filter));
+		final EObject container = current.eContainer();
+		if (container != null)
+			result.append(NameSimilarity.findName(container));
+
+		return result.toString();
+	}
+	
+	/**
+	 * Returns a String composed of the names of all the {@link EObject}'s children.
+	 * @param current
+	 *            {@link EObject} we need the children value of.
+	 * @param filter
+	 *            Allows filtering of the pertinent features.
+	 * @return String composed of the names of all the {@link EObject}'s children.
+	 * @throws FactoryException
+	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
+	 */
+	private static String childrenValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
-		final StringBuffer result = new StringBuffer();
-		List<EStructuralFeature> eObjectFeatures = new LinkedList<EStructuralFeature>();
+		final StringBuilder result = new StringBuilder();
+		List<EStructuralFeature> eObjectFeatures = new ArrayList<EStructuralFeature>();
 		if (eclass instanceof EClass) {
 			if (filter != null)
 				eObjectFeatures = filter.getFilteredFeatures(current);
@@ -101,8 +126,7 @@ public final class StructureSimilarity {
 			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
 				final Object value = current.eGet(feature);
 				if (value instanceof List) {
-					for (final Iterator valueIterator = ((List)value).iterator(); valueIterator.hasNext(); ) {
-						final Object next = valueIterator.next();
+					for (Object next : (List)value) {
 						if (next instanceof EObject) {
 							final String objName = NameSimilarity.findName((EObject)next);
 							result.append(objName);
@@ -114,75 +138,44 @@ public final class StructureSimilarity {
 				}
 			}
 		}
-		if (current.eContainer() != null)
-			result.append(NameSimilarity.findName(current.eContainer())).append("\n"); //$NON-NLS-1$
-
 		return result.toString();
 	}
-
+	
 	/**
-	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s type.
+	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s attributes type.
 	 * 
 	 * @param current
-	 *            {@link EObject} we need the type of.
-	 * @return A {@link String} with content corresponding to the {@link EObject}'s type.
+	 *            {@link EObject} we need the attributes' type value of.
+	 * @return A {@link String} with content corresponding to the {@link EObject}'s attributes type.
 	 * @throws FactoryException
-	 *             Thrown if we cannot retrieve <code>current</code>'s name.
+	 *             Thrown if we cannot retrieve one of <code>current</code>'s attributes name.
 	 */
-	private static String typeValue(EObject current) throws FactoryException {
-		final List<StringBuffer> values = typeValueList(current);
-		final StringBuffer result = new StringBuffer();
-		final Iterator<StringBuffer> it = values.iterator();
-		while (it.hasNext())
-			result.append(it.next());
+	private static String attributeTypeValue(EObject current) throws FactoryException {
+		final StringBuilder result = new StringBuilder();
+		
+		final List<EAttribute> attributes = current.eClass().getEAllAttributes();
+		for (EAttribute attribute : attributes)
+			result.append(attribute.eClass().getName()).append(NameSimilarity.findName(attribute));
+			
 		return result.toString();
 	}
-
+	
 	/**
-	 * Returns a {@link List} containing {@link StringBuffer}s representing the Types' names of the given
-	 * {@link EObject}.
+	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s references type.
 	 * 
 	 * @param current
-	 *            {@link EObject} we need to get the types of.
-	 * @return A {@link List} containing {@link StringBuffer}s representing the Types' names of the eobject.
+	 *            {@link EObject} we need the references' type value of.
+	 * @return A {@link String} with content corresponding to the {@link EObject}'s references type.
 	 * @throws FactoryException
-	 *             Thrown if we cannot get the {@link EObject}'s types' names.
+	 *             Thrown if we cannot retrieve one of <code>current</code>'s references name.
 	 */
-	private static List<StringBuffer> typeValueList(EObject current) throws FactoryException {
-		final EObject eclass = current.eClass();
-		final List<StringBuffer> result = new ArrayList<StringBuffer>();
-		List eclassAttributes = new LinkedList();
-		if (eclass instanceof EClass)
-			eclassAttributes = ((EClass)eclass).getEAllAttributes();
-
-		if (eclassAttributes.size() > 0) {
-			result.add(new StringBuffer("type:").append(current.eClass().getName())); //$NON-NLS-1$
-			Iterator it = eclassAttributes.iterator();
-			while (it.hasNext()) {
-				final Object next = it.next();
-				if (next instanceof EObject) {
-					final EObject obj = (EObject)next;
-					final String attributeName = EFactory.eGetAsString(obj, "name"); //$NON-NLS-1$
-					// get the feature name and the feature value
-					result.add(new StringBuffer("attr:").append(obj.eClass().getName()).append(":").append(//$NON-NLS-1$ //$NON-NLS-2$
-							attributeName));
-				}
-			}
-			// get children's name
-			if (eclass instanceof EClass)
-				eclassAttributes = ((EClass)eclass).getEAllReferences();
-			it = eclassAttributes.iterator();
-			while (it.hasNext()) {
-				final Object next = it.next();
-				if (next instanceof EObject) {
-					final EObject obj = (EObject)next;
-					final String attributeName = EFactory.eGetAsString(obj, "name"); //$NON-NLS-1$
-					// get the feature name and the feature value
-					result.add(new StringBuffer("ref:").append(obj.eClass().getName()).append(":").append(//$NON-NLS-1$ //$NON-NLS-2$
-							attributeName));
-				}
-			}
-		}
-		return result;
+	private static String referenceTypeValue(EObject current) throws FactoryException {
+		final StringBuilder result = new StringBuilder();
+		
+		final List<EReference> references = current.eClass().getEAllReferences();
+		for (EReference reference : references)
+			result.append(reference.eClass().getName()).append(NameSimilarity.findName(reference));
+			
+		return result.toString();
 	}
 }
