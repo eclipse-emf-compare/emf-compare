@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.Messages;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
@@ -49,7 +50,6 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;

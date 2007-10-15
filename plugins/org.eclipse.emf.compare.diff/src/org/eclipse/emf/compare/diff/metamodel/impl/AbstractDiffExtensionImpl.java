@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.3 2007/10/04 13:25:11 lgoubet Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.4 2007/10/15 14:51:54 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -245,7 +245,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isCollapsed: ");
 		result.append(isCollapsed);
 		result.append(')');

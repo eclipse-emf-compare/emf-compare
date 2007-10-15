@@ -11,9 +11,9 @@
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FactoryException;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 

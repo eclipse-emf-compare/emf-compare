@@ -308,7 +308,7 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (date: ");
 		result.append(date);
 		result.append(')');
