@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ui;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.compare.ITypedElement;
@@ -98,7 +97,7 @@ public class ModelCompareInput implements ICompareInput {
 	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
 		if (element instanceof DiffGroup) {
-			final List<DiffElement> subDiffList = new LinkedList<DiffElement>(((DiffGroup)element)
+			final List<DiffElement> subDiffList = new ArrayList<DiffElement>(((DiffGroup)element)
 					.getSubDiffElements());
 			for (DiffElement subDiff : subDiffList) {
 				if (subDiff instanceof DiffGroup)
@@ -143,11 +142,11 @@ public class ModelCompareInput implements ICompareInput {
 	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
 	public List<DiffElement> getDiffAsList() {
-		final List<DiffElement> diffs = new LinkedList<DiffElement>();
+		final List<DiffElement> diffList = new ArrayList<DiffElement>();
 		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
-		final List<ModelElementChange> modelElementDiffs = new LinkedList<ModelElementChange>();
-		final List<AttributeChange> attributeChangeDiffs = new LinkedList<AttributeChange>();
-		final List<ReferenceChange> referenceChangeDiffs = new LinkedList<ReferenceChange>();
+		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
+		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
+		final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
 		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (aDiff instanceof ModelElementChange)
@@ -156,14 +155,18 @@ public class ModelCompareInput implements ICompareInput {
 				attributeChangeDiffs.add((AttributeChange)aDiff);
 			else if (aDiff instanceof ReferenceChange)
 				referenceChangeDiffs.add((ReferenceChange)aDiff);
+			// fallthrough
+			else if (!(aDiff instanceof DiffGroup))
+				diffList.add(aDiff);
 		}
-		diffs.addAll(modelElementDiffs);
-		diffs.addAll(attributeChangeDiffs);
-		diffs.addAll(referenceChangeDiffs);
+		diffList.addAll(modelElementDiffs);
+		diffList.addAll(attributeChangeDiffs);
+		diffList.addAll(referenceChangeDiffs);
 		modelElementDiffs.clear();
 		attributeChangeDiffs.clear();
 		referenceChangeDiffs.clear();
-		return diffs;
+		
+		return diffList;
 	}
 
 	/**

@@ -120,6 +120,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** ID of the Tree tab of the {@link ModelContentMergeViewerPart}. */
 	public static final int TREE_TAB = 0;
+	
+	/** Error message displayed when an invalid tab is selected. */
+	/* package */ static final String MESSAGE_ILLEGAL_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
 
 	/**
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
@@ -310,13 +313,18 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			canvas = new AbstractBufferedCanvas((Composite)getControl()) {
 				@Override
 				public void doPaint(GC gc) {
-					// Draw lines on the left and right edges
-					gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-					gc.drawLine(0, 0, 0, getBounds().height);
-					gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
-
+					final List<DiffElement> diffList = ((ModelCompareInput)getInput()).getDiffAsList();
+					if (selectedTab == TREE_TAB) {
+						final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(diffList.size());
+						for (TreeItem item : leftPart.getTreePart().getVisibleElements())
+							visibleDiffs.add(leftPart.findDiffForTreeItem(item));
+						for (TreeItem item : rightPart.getTreePart().getVisibleElements())
+							visibleDiffs.add(rightPart.findDiffForTreeItem(item));
+						diffList.retainAll(visibleDiffs);
+					}
+					
 					if (getInput() != null) {
-						for (final DiffElement diff : ((ModelCompareInput)getInput()).getDiffAsList()) {
+						for (final DiffElement diff : diffList) {
 							drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
 						}
 					}
@@ -372,44 +380,108 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return The item representing the left element of the given {@link DiffElement}.
 	 */
 	public Item getLeftItem(DiffElement diff) {
-		EObject leftElement;
-		EObject rightElement;
 		if (selectedTab == PROPERTIES_TAB) {
-			leftElement = diff;
-			rightElement = diff;
-		} else {
-			leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
-			rightElement = EMFCompareEObjectUtils.getRightElement(diff);
+			return getLeftVisibleTableItem(diff);
+		} else if (selectedTab == TREE_TAB) {
+			return getLeftVisibleTreeItem(diff);
 		}
-		Item leftItem = (Item)leftPart.find(leftElement);
-		final Item rightItem = (Item)rightPart.find(rightElement);
-
-		if (leftItem == null && selectedTab == TREE_TAB) {
+		throw new IllegalStateException(MESSAGE_ILLEGAL_TAB);
+	}
+	
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TreeItem getLeftVisibleTreeItem(DiffElement diff) {
+		EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
+		final EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
+		TreeItem leftItem = (TreeItem)leftPart.find(leftData);
+		final Item rightItem = (Item)rightPart.find(rightData);
+		
+		if (leftItem == null) {
 			leftItem = leftPart.getTreeRoot();
-			// might still be null!
 			if (leftItem != null)
-				leftElement = (EObject)leftItem.getData();
+				leftData = (EObject)leftItem.getData();
 		}
-
-		final boolean notVisibleTreeItemForDiff = leftItem != null
-				&& (!leftItem.getData().equals(leftElement) || diff instanceof ModelElementChangeRightTarget);
-		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
-			// keeps compiler happy, we cannot be here if leftItem is null
-			assert leftItem != null;
-			if (rightItem != null && rightItem.getData().equals(rightElement)
-					&& rightItem.getData() instanceof EObject
+		
+		if (leftItem != null && (!leftItem.getData().equals(leftData) || diff instanceof ModelElementChangeRightTarget)) {
+			if (rightItem != null && rightItem.getData().equals(rightData)
 					&& ((EObject)rightItem.getData()).eContainer() != null) {
 				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
 						rightItem.getData());
-				final EList leftList = ((EObject)leftItem.getData()).eContents();
+				final EList<EObject> leftList = ((EObject)leftItem.getData()).eContents();
 				// Ensures we cannot trigger ArrayOutOfBounds exeptions
 				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
 				if (leftIndex > 0)
-					leftItem = (TreeItem)leftPart.find((EObject)leftList.get(leftIndex));
+					leftItem = (TreeItem)leftPart.find(leftList.get(leftIndex));
 			}
 		}
-
+		
 		return leftItem;
+	}
+	
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TableItem getLeftVisibleTableItem(DiffElement diff) {
+		return (TableItem)leftPart.find(diff);
+	}
+	
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TreeItem getRightVisibleTreeItem(DiffElement diff) {
+		EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
+		final EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
+		TreeItem rightItem = (TreeItem)rightPart.find(rightData);
+		final Item leftItem = (Item)leftPart.find(leftData);
+		
+		if (rightItem == null) {
+			rightItem = leftPart.getTreeRoot();
+			if (rightItem != null)
+				rightData = (EObject)rightItem.getData();
+		}
+		
+		if (rightItem != null && (!rightItem.getData().equals(rightData) || diff instanceof ModelElementChangeLeftTarget)) {
+			if (leftItem != null && leftItem.getData().equals(leftData)
+					&& ((EObject)leftItem.getData()).eContainer() != null) {
+				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
+						leftItem.getData());
+				final EList<EObject> rightList = ((EObject)rightItem.getData()).eContents();
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
+				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
+				if (rightIndex > 0)
+					rightItem = (TreeItem)rightPart.find(rightList.get(rightIndex));
+			}
+		}
+		
+		return rightItem;
+	}
+	
+	/**
+	 * Returns the {@link TableItem} representing the right element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the right item for.
+	 * @return The item representing the right element of the given {@link DiffElement}.
+	 */
+	/* package */ TableItem getRightVisibleTableItem(DiffElement diff) {
+		return (TableItem)rightPart.find(diff);
 	}
 
 	/**
@@ -430,41 +502,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return The item representing the right element of the given {@link DiffElement}.
 	 */
 	public Item getRightItem(DiffElement diff) {
-		EObject leftElement = EMFCompareEObjectUtils.getLeftElement(diff);
-		EObject rightElement = EMFCompareEObjectUtils.getRightElement(diff);
 		if (selectedTab == PROPERTIES_TAB) {
-			leftElement = diff;
-			rightElement = diff;
+			return getRightVisibleTableItem(diff);
+		} else if (selectedTab == TREE_TAB) {
+			return getRightVisibleTreeItem(diff);
 		}
-		final Item leftItem = (Item)leftPart.find(leftElement);
-		Item rightItem = (Item)rightPart.find(rightElement);
-
-		if (rightItem == null && selectedTab == TREE_TAB) {
-			rightItem = rightPart.getTreeRoot();
-			// might still be null
-			if (rightItem != null)
-				rightElement = (EObject)rightItem.getData();
-		}
-
-		final boolean notVisibleTreeItemForDiff = rightItem != null
-				&& (!rightItem.getData().equals(rightElement) || diff instanceof ModelElementChangeLeftTarget);
-		if (selectedTab == TREE_TAB && notVisibleTreeItemForDiff) {
-			// keeps compiler happy, we cannot be here if rightItem is null
-			assert rightItem != null;
-			if (leftItem != null && leftItem.getData().equals(leftElement)
-					&& leftItem.getData() instanceof EObject
-					&& ((EObject)leftItem.getData()).eContainer() != null) {
-				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
-						leftItem.getData());
-				final EList rightList = ((EObject)rightItem.getData()).eContents();
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
-				if (rightIndex > 0)
-					rightItem = (TreeItem)rightPart.find((EObject)rightList.get(rightIndex));
-			}
-		}
-
-		return rightItem;
+		throw new IllegalStateException(MESSAGE_ILLEGAL_TAB);
 	}
 
 	/**
@@ -733,6 +776,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
+			// TODO debug purposes only. remove this
 			System.out.println(end.getTime() - start.getTime() + "ms");
 
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
@@ -1147,6 +1191,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		 *            {@link DiffElement} providing the left and right datas to connect.
 		 */
 		protected void drawLine(GC gc, Item leftItem, Item rightItem, DiffElement diff) {
+			// Draw lines on the left and right edges
+			gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+			gc.drawLine(0, 0, 0, getBounds().height);
+			gc.drawLine(getBounds().width - 1, 0, getBounds().width - 1, getBounds().height);
+			
 			if (leftItem == null || rightItem == null || DiffAdapterFactory.shouldBeHidden(diff))
 				return;
 
@@ -1162,7 +1211,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					leftBounds = ((TableItem)leftItem).getBounds();
 					rightBounds = ((TableItem)rightItem).getBounds();
 				} else {
-					throw new IllegalStateException(Messages.getString("IllegalTab")); //$NON-NLS-1$
+					throw new IllegalStateException(MESSAGE_ILLEGAL_TAB);
 				}
 
 				// Defines the circling Color

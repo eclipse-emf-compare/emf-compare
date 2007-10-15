@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ui.viewer.content.part;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
@@ -37,6 +38,7 @@ import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider;
 import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
+import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -87,12 +89,18 @@ public class ModelContentMergeViewerPart {
 
 	/** This is the content of the properties tab for this viewer part. */
 	protected ModelContentMergePropertyPart properties;
-
+	
 	/** This is the view displayed by this viewer part. */
 	protected CTabFolder tabFolder;
 
 	/** This is the content of the tree tab for this viewer part. */
 	protected ModelContentMergeTreePart tree;
+	
+	/** Indicates that the tree has been expanded since last time we mapped the TreeItems. */
+	/* package */ boolean expanded = true;
+	
+	/** This Map will allow us to avoid iteration through all diffs for each paint operation. */
+	private final Map<String, DiffElement> treeItemToDiff = new FastMap<String, DiffElement>(101);
 
 	/** This contains all the listeners registered for this viewer part. */
 	private final List<ICompareEditorPartListener> editorPartListeners = new ArrayList<ICompareEditorPartListener>();
@@ -201,8 +209,6 @@ public class ModelContentMergeViewerPart {
 		if (element != null) {
 			if (selectedTab == ModelContentMergeViewer.TREE_TAB) {
 				widget = tree.find(element);
-				if (!isVisible((TreeItem)widget) && element.eContainer() != null)
-					widget = find(element.eContainer());
 			} else if (selectedTab == ModelContentMergeViewer.PROPERTIES_TAB) {
 				if (element instanceof DiffElement)
 					widget = properties.find(((PropertyContentProvider)properties.getContentProvider()).getInputEObject(), (DiffElement)element);
@@ -345,6 +351,8 @@ public class ModelContentMergeViewerPart {
 		}
 		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION, diff);
 		parentViewer.updateCenter();
+		// We'll assume the tree has been expanded or collapsed during the process
+		expanded = true;
 	}
 
 	/**
@@ -400,6 +408,47 @@ public class ModelContentMergeViewerPart {
 		selectedTab = index;
 		tabFolder.setSelection(selectedTab);
 		resizeBounds();
+	}
+	
+	/**
+	 * This will return the {@link DiffElement} for a given {@link Item} or <code>null</code> if that particular item doesn't map to a difference.
+	 * @param item
+	 * {@link Item} we seek the {@link DiffElement} for.
+	 * @return
+	 * The {@link DiffElement} for a given {@link Item} or <code>null</code> if that particular item doesn't map to a difference.
+	 */
+	public DiffElement findDiffForTreeItem(Item item) {
+		final StringBuilder itemKey = new StringBuilder();
+		itemKey.append(partSide).append(item.getText()).append(item.hashCode());
+		
+		if (expanded)
+			mapTreeItemToDiff();
+		
+		return treeItemToDiff.get(itemKey.toString());
+	}
+	
+	/**
+	 * Maps TreeItems to DiffElements. Called each time a {@link TreeItem} is expanded.
+	 */
+	protected void mapTreeItemToDiff() {
+		final List<DiffElement> diffList = ((ModelCompareInput)parentViewer.getInput()).getDiffAsList();
+		treeItemToDiff.clear();
+		
+		for (final DiffElement diff : diffList) {
+			final Item storedItem;
+			if (partSide == EMFCompareConstants.RIGHT)
+				storedItem = parentViewer.getLeftItem(diff);
+			else if (partSide == EMFCompareConstants.LEFT)
+				storedItem = parentViewer.getRightItem(diff);
+			else
+				storedItem = parentViewer.getAncestorItem(diff);
+			
+			final StringBuilder diffItemKey = new StringBuilder();
+			diffItemKey.append(partSide).append(storedItem.getText()).append(storedItem.hashCode());
+			treeItemToDiff.put(diffItemKey.toString(), diff);
+		}
+		
+		expanded = false;
 	}
 
 	/**
@@ -546,12 +595,14 @@ public class ModelContentMergeViewerPart {
 				((TreeItem)e.item).setExpanded(false);
 				e.doit = false;
 				parentViewer.update();
+				expanded = true;
 			}
 
 			public void treeExpanded(TreeEvent e) {
 				((TreeItem)e.item).setExpanded(true);
 				e.doit = false;
 				parentViewer.update();
+				expanded = true;
 			}
 		});
 
@@ -639,19 +690,10 @@ public class ModelContentMergeViewerPart {
 			// This will avoid strange random resize behavior on linux OS
 			if (tree.getTree().getBounds() != tabFolder.getClientArea())
 				resizeBounds();
-			for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput()).getDiffAsList()) {
-				if (partSide == EMFCompareConstants.RIGHT) {
-					final TreeItem leftItem = (TreeItem)parentViewer.getLeftItem(diff);
-					drawRectangle(event, leftItem, diff);
-				} else if (partSide == EMFCompareConstants.LEFT) {
-					final TreeItem rightItem = (TreeItem)parentViewer.getRightItem(diff);
-					drawRectangle(event, rightItem, diff);
-				} else if (partSide == EMFCompareConstants.ANCESTOR
-						&& diff.eContainer() instanceof ConflictingDiffElement) {
-					final TreeItem ancestorItem = (TreeItem)parentViewer.getAncestorItem((DiffElement)diff
-							.eContainer());
-					drawRectangle(event, ancestorItem, (DiffElement)diff.eContainer());
-				}
+			for (TreeItem item : tree.getVisibleElements()) {
+				final DiffElement element = findDiffForTreeItem(item);
+				if (element != null)
+					drawRectangle(event, item, element);
 			}
 		}
 
