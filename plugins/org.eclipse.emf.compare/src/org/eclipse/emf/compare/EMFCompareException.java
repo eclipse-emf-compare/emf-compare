@@ -34,7 +34,7 @@ public class EMFCompareException extends RuntimeException {
 	 * Constructs a new runtime exception wrapped around another exception.
 	 * 
 	 * @param exception
-	 *            Exception to wrapp within this new one.
+	 *            Exception to wrap within this new one.
 	 */
 	public EMFCompareException(Throwable exception) {
 		super(exception);

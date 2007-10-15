@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Messages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -65,9 +65,8 @@ public final class ModelUtils {
 	public static List<EObject> getModelsFrom(File directory) throws IOException {
 		final List<EObject> models = new ArrayList<EObject>();
 
-		if (directory.exists() && directory.isDirectory()) {
+		if (directory.exists() && directory.isDirectory() && directory.listFiles() != null) {
 			final File[] files = directory.listFiles();
-			Arrays.sort(files);
 			for (int i = 0; i < files.length; i++) {
 				final File aFile = files[i];
 
@@ -151,10 +150,14 @@ public final class ModelUtils {
 	@SuppressWarnings("unchecked")
 	public static EObject load(InputStream stream, String fileName, ResourceSet resourceSet)
 			throws IOException {
+		if (stream == null)
+			throw new NullPointerException(Messages.getString("ModelUtils.NullInputStream")); //$NON-NLS-1$
+		
 		EObject result = null;
 
 		String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1); //$NON-NLS-1$
-		if (fileExtension == null || fileExtension.length() == 0) {
+		// fileExtension cannot be null
+		if (fileExtension.length() == 0) {
 			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
 		}
 
@@ -241,6 +244,9 @@ public final class ModelUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void save(EObject root, String path) throws IOException {
+		if (root == null)
+			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
+		
 		final URI modelURI = URI.createFileURI(path);
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
@@ -263,6 +269,9 @@ public final class ModelUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static String serialize(EObject root) throws IOException {
+		if (root == null)
+			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
+		
 		final XMIResourceImpl newResource = new XMIResourceImpl();
 		final StringWriter writer = new StringWriter();
 		newResource.getContents().add(root);

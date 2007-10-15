@@ -11,10 +11,8 @@
 package org.eclipse.emf.compare.util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -37,46 +35,10 @@ public final class ETools {
 	}
 
 	/**
-	 * Search a classifier recursively in a package.
-	 * <p>
-	 * Remarks :
-	 * <ul>
-	 * <li>Never returns classifier java.resources.Folder if name = "File"</li>
-	 * <li>Never returns classifier java.resources.Folder if name = "older"</li>
-	 * <li>Returns classifier java.resources.Folder for "Folder" or "resources.Folder"</li>
-	 * </ul>
-	 * 
-	 * @param ePackage
-	 *            The package from where we seek the given classifier.
-	 * @param classifierName
-	 *            The classifier identifier.
-	 * @return The classifier or <code>null</code> if it cannot be found.
-	 */
-	public static EClassifier getEClassifier(EPackage ePackage, String classifierName) {
-		final String name = classifierName.trim();
-		EClassifier get = null;
-		final Iterator classifiers = ePackage.getEClassifiers().iterator();
-		while (get == null && classifiers.hasNext()) {
-			final EClassifier classifier = (EClassifier)classifiers.next();
-			final String instanceClassName = SEPARATOR + getEClassifierPath(classifier);
-			final String endsWith = SEPARATOR + name;
-			if (instanceClassName.endsWith(endsWith)) {
-				get = classifier;
-			}
-		}
-		final Iterator packages = ePackage.getESubpackages().iterator();
-		while (get == null && packages.hasNext()) {
-			final EClassifier classifier = getEClassifier((EPackage)packages.next(), name);
-			if (classifier != null)
-				get = classifier;
-		}
-		return get;
-	}
-
-	/**
 	 * Returns the full path of the classifier.
 	 * <p>
-	 * Sample : "java.resources.JavaFile" is the full path for the classifier java.resources.JavaFile
+	 * Sample : "java.resources.JavaFile" is the full path for the classifier java.resources.JavaFile.
+	 * </p>
 	 * 
 	 * @param eClassifier
 	 *            The classifier we need the full path of.
@@ -118,7 +80,7 @@ public final class ETools {
 		if (object.eResource() != null)
 			return object.eResource().getURIFragment(object);
 		// inspired from EMF sources
-		final StringBuffer result = new StringBuffer("//"); //$NON-NLS-1$
+		final StringBuilder result = new StringBuilder("//"); //$NON-NLS-1$
 		final List<String> uriFragmentPath = new ArrayList<String>();
 		for (EObject container = object.eContainer(); container != null; container = object.eContainer()) {
 			uriFragmentPath.add(((InternalEObject)container).eURIFragmentSegment(
@@ -127,68 +89,12 @@ public final class ETools {
 		}
 		final int size = uriFragmentPath.size();
 		if (size > 0) {
-			for (int i = size - 1;; --i) {
+			for (int i = size - 1; i >= 0; --i) {
 				result.append(uriFragmentPath.get(i));
-				if (i == 0)
-					break;
-				result.append('/');
+				if (i > 0)
+					result.append('/');
 			}
 		}
 		return result.toString();
 	}
-
-	/**
-	 * Indicates if the type corresponds to the name of the classifier.
-	 * 
-	 * @param classifier
-	 *            The classifier to test.
-	 * @param type
-	 *            Type to test against <code>classifier</code> name.
-	 * @return <code>True</code> if the type corresponds to the name of the classifier, <code>False</code>
-	 *         otherwise.
-	 */
-	public static boolean ofClass(EClassifier classifier, String type) {
-		final String path = ETools.getEClassifierPath(classifier);
-		return (SEPARATOR + path).endsWith(SEPARATOR + type);
-	}
-
-	/**
-	 * Indicates if an instance of the class is an instance of the type.
-	 * 
-	 * @param eClass
-	 *            Class to test agaisnt <code>type</code>.
-	 * @param type
-	 *            Name of the type to test.
-	 * @return <code>True</code> if an instance of the class is an instance of the type, <code>False</code>
-	 *         otherwise.
-	 */
-	public static boolean ofType(EClass eClass, String type) {
-		boolean isOfType = false;
-		if (ofClass(eClass, type))
-			isOfType = true;
-		final Iterator superTypes = eClass.getESuperTypes().iterator();
-		while (superTypes.hasNext() && !isOfType) {
-			final EClassifier superType = (EClassifier)superTypes.next();
-			if (ofType(superType, type))
-				isOfType = true;
-		}
-		return isOfType;
-	}
-
-	/**
-	 * Indicates if an instance of the classifier is an instance of the type.
-	 * 
-	 * @param classifier
-	 *            Classifier to test against the instances of <code>type</code>.
-	 * @param type
-	 *            Type to test.
-	 * @return <code>True</code> if an instance of the classifier is an instance of the type,
-	 *         <code>False</code> otherwise.
-	 */
-	public static boolean ofType(EClassifier classifier, String type) {
-		if (classifier instanceof EClass)
-			return ofType((EClass)classifier, type);
-		return ofClass(classifier, type);
-	}
-
 }

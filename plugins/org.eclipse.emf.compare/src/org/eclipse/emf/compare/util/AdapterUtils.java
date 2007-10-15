@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.util;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
@@ -103,58 +102,5 @@ public final class AdapterUtils {
 				FACTORIES.put(desc.getNsURI(), desc);
 			}
 		}
-	}
-}
-
-/**
- * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code>
- * and the {@link IConfigurationElement} it's been created from.
- * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
- */
-final class AdapterFactoryDescriptor {
-	/** Keeps a reference to the configuration element that describes the {@link AdapterFactory factory}. */
-	private final IConfigurationElement element;
-
-	/** This descriptor's wrapped factory. */
-	private AdapterFactory factory;
-
-	/** Name space URI of the wrapped {@link AdapterFactory}. */
-	private final String nsURI;
-
-	/**
-	 * Constructs a new descriptor from an IConfigurationElement.
-	 * 
-	 * @param configElements
-	 *            Configuration of the {@link AdapterFactory}.
-	 */
-	public AdapterFactoryDescriptor(IConfigurationElement configElements) {
-		element = configElements;
-		this.nsURI = element.getAttribute("uri"); //$NON-NLS-1$
-	}
-
-	/**
-	 * Returns the enclosed {@link AdapterFactory}'s instance.
-	 * 
-	 * @return The corresponding {@link AdapterFactory} instance.
-	 */
-	public AdapterFactory getAdapterInstance() {
-		if (factory == null) {
-			try {
-				factory = (AdapterFactory)element.createExecutableExtension("class"); //$NON-NLS-1$
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		return factory;
-	}
-
-	/**
-	 * Returns the {@link AdapterFactory} <code>nsURI</code>.
-	 * 
-	 * @return The {@link AdapterFactory} <code>nsURI</code>.
-	 */
-	public String getNsURI() {
-		return nsURI;
 	}
 }

@@ -13,17 +13,15 @@ package org.eclipse.emf.compare.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
-//import org.eclipse.emf.common.util.Enumerator;
-import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.Messages;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
 /**
  * This is a factory for an ecore metamodel. There is a factory by package. Each factory is used to create
@@ -90,26 +88,30 @@ public final class EFactory {
 				result = eCall(object, name);
 			} catch (FactoryException eCall) {
 				throw eGet;
+			} catch (NullPointerException e) {
+				// Thrown if "name" is null
+				throw eGet;
 			}
-		} catch (NullPointerException eCall) {
-			// Fails silently
 		}
+		/* Following code is only meaningful if we desire a specific hanfling of
+		 * enumerations. This isn't the case in EMF Compare.
+		 */
 //		if (result != null && result instanceof Enumerator) {
 //			result = ((Enumerator)result).getName();
 //		} else 
-		if (result != null && result instanceof EDataTypeUniqueEList) {
-			final List<Object> list = new ArrayList<Object>();
-			final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
-			while (enums.hasNext()) {
-				final Object next = enums.next();
+//		if (result != null && result instanceof EDataTypeUniqueEList) {
+//			final List<Object> list = new ArrayList<Object>();
+//			final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
+//			while (enums.hasNext()) {
+//				final Object next = enums.next();
 //				if (next instanceof Enumerator) {
 //					list.add(((Enumerator)next).getName());
 //				} else {
-					list.add(next);
+//					list.add(next);
 //				}
-			}
-			result = list;
-		}
+//			}
+//			result = list;
+//		}
 		return result;
 	}
 
@@ -130,7 +132,6 @@ public final class EFactory {
 	 * @throws FactoryException
 	 *             Thrown if the retrieval fails.
 	 */
-	// TODO see if we can use generics for return type
 	@SuppressWarnings("unchecked")
 	public static List eGetAsList(EObject object, String name) throws FactoryException {
 		List list = new ArrayList();
@@ -166,7 +167,7 @@ public final class EFactory {
 
 	/**
 	 * Removes the value of the given feature of the object. If the structural feature isn't a list, it
-	 * behaves like eSet(object, name, null).
+	 * behaves like eSet(object, name, null) and resets the feature even if specified value isn't equal to the actual feature's value.
 	 * 
 	 * @param object
 	 *            Object on which we want to remove from the feature values list.
@@ -179,9 +180,9 @@ public final class EFactory {
 	 */
 	public static void eRemove(EObject object, String name, Object arg) throws FactoryException {
 		final Object list = object.eGet(eStructuralFeature(object, name));
-		if (list != null && list instanceof List) {
+		if (list instanceof List) {
 			if (arg != null) {
-				((List)list).remove(arg);
+				((List<?>)list).remove(arg);
 			}
 		} else {
 			eSet(object, name, null);
@@ -202,23 +203,31 @@ public final class EFactory {
 	 */
 	public static void eSet(EObject object, String name, Object arg) throws FactoryException {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
-		if (feature != null && feature.getEType() instanceof EEnum && arg instanceof String) {
+		if (!feature.isChangeable())
+			throw new FactoryException(Messages.getString("EFactory.UnSettableFeature", name)); //$NON-NLS-1$
+		
+		if (feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
-				final Class c = Class.forName(ETools.getEClassifierPath(feature.getEType()));
+				final Class<?> c = object.getClass().getClassLoader().loadClass(ETools.getEClassifierPath(feature.getEType()));
 				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
 			} catch (ClassNotFoundException e) {
-				EMFComparePlugin.log(e, false);
+				throw new FactoryException(e);
 			} catch (NoSuchMethodException e) {
-				EMFComparePlugin.log(e, false);
+				throw new FactoryException(e);
 			} catch (IllegalAccessException e) {
-				EMFComparePlugin.log(e, false);
+				throw new FactoryException(e);
 			} catch (InvocationTargetException e) {
-				EMFComparePlugin.log(e, false);
+				throw new FactoryException(e);
 			}
 		} else {
-			object.eSet(feature, arg);
+			if (arg == null && feature.isMany())
+				object.eSet(feature, Collections.EMPTY_LIST);
+			else if (arg == null)
+				object.eSet(feature, feature.getDefaultValue());
+			else
+				object.eSet(feature, arg);
 		}
 	}
 
@@ -260,16 +269,13 @@ public final class EFactory {
 		try {
 			final Class<? extends Object>[] methodParams;
 			final Object[] invocationParams;
-			if (arg != null) {
-				methodParams = new Class[arg.length];
-				for (int i = 0; i < arg.length; i++) {
-					methodParams[i] = arg[i].getClass();
-				}
-				invocationParams = arg;
-			} else {
-				methodParams = new Class[0];
-				invocationParams = new Object[0];
+			
+			methodParams = new Class[arg.length];
+			for (int i = 0; i < arg.length; i++) {
+				methodParams[i] = arg[i].getClass();
 			}
+			invocationParams = arg;
+			
 			final Method method = object.getClass().getMethod(name, methodParams);
 			return method.invoke(object, invocationParams);
 		} catch (NoSuchMethodException e) {

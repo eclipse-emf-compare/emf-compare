@@ -56,9 +56,7 @@ public class EMFComparePlugin extends Plugin {
 	public static void log(Exception e, boolean blocker) {
 		e.printStackTrace();
 		if (e instanceof CoreException) {
-			final IStatus status = ((CoreException)e).getStatus();
-			log(new Status(status.getSeverity(), PLUGIN_ID, status.getCode(), status.getMessage(), status
-					.getException()));
+			log(((CoreException)e).getStatus());
 		} else if (e instanceof NullPointerException) {
 			int severity = IStatus.WARNING;
 			if (blocker)
@@ -81,6 +79,11 @@ public class EMFComparePlugin extends Plugin {
 	 *            Error Status.
 	 */
 	public static void log(IStatus status) {
+		// Eclipse platform displays NullPointer on standard error instead of throwing it.
+		// We'll handle this by throwing it ourselves.
+		if (status == null)
+			throw new NullPointerException(Messages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
+		
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
 		} else {
@@ -94,17 +97,17 @@ public class EMFComparePlugin extends Plugin {
 	 * @param message
 	 *            The message to put in the error log view.
 	 * @param blocker
-	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it
+	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it
 	 *            as a warning.
 	 */
 	public static void log(String message, boolean blocker) {
 		int severity = IStatus.WARNING;
 		if (blocker)
 			severity = IStatus.ERROR;
-		String errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$
-		if (message != null)
-			errorMessage = message.trim().replaceFirst("\n", ";\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		log(new Status(severity, PLUGIN_ID, severity, errorMessage, null));
+		String errorMessage = message;
+		if (errorMessage == null || errorMessage.equals("")) //$NON-NLS-1$
+			errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
+		log(new Status(severity, PLUGIN_ID, errorMessage));
 	}
 
 	/**

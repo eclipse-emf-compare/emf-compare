@@ -231,10 +231,13 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		if (another == this) {
 			result = true;
 		} else if (another instanceof Map && ((Map)another).size() == size()) {
+			// Two empty maps are considered equal regardless of the implementation
+			if (size() == 0)
+				result = true;
 			for (Map.Entry<K, V> entry : entrySet()) {
 				if (((Map)another).containsKey(entry.getKey())) {
 					final Object otherValue = ((Map)another).get(entry.getKey());
-					result = otherValue == entry.getValue() || (entry.getValue() != null && entry.getValue().equals(otherValue));
+					result = equal(otherValue, entry.getValue());
 				}
 			}
 		}
@@ -380,7 +383,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 		buf.append("{"); //$NON-NLS-1$
 
 		final Iterator<Map.Entry<K, V>> i = entrySet().iterator();
@@ -543,7 +546,6 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		if (key == null)
 			effectiveKey = NULL_KEY;
 
-		// inspired from sun's HashMap
 		final int mask = 0x7fffffff;
 		final int hash = effectiveKey.hashCode() & mask;
 		final int length = keys.length;
@@ -578,7 +580,6 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	protected int insertionIndexFor(K key) {
 		// Key cannot be null here, it is either an object or NULL_KEY
 
-		// inspired from sun's HashMap
 		final int mask = 0x7fffffff;
 		final int hash = key.hashCode() & mask;
 		final int length = keys.length;
@@ -1166,6 +1167,41 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 			return oldValue;
 		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public final boolean equals(Object another) {
+			boolean result = false;
+			if (another == this) {
+				result = true;
+			} else if (another instanceof Map.Entry) {
+	            final Map.Entry other = (Map.Entry)another;
+	            if (equal(key, other.getKey()) && equal(value, other.getValue())) {
+	                    result = true;
+	            }
+			}
+            return result;
+        }
+
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+        public final int hashCode() {
+			int keyHash = 0;
+			int valueHash = 0;
+			if (key != null)
+				keyHash = key.hashCode();
+			if (value != null)
+				valueHash = value.hashCode();
+            return keyHash ^ valueHash;
+        }
 
 		/**
 		 * Returns a String representation of this entry.
@@ -1176,7 +1212,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		public String toString() {
 			// Note that we cannot have entries with key == FREE_ENTRY or key == REMOVED_ENTRY
 			// (see AbstractHashIterator#nextEntry)
-			final StringBuffer result = new StringBuffer();
+			final StringBuilder result = new StringBuilder();
 			if (key == NULL_KEY)
 				result.append("null"); //$NON-NLS-1$
 			else

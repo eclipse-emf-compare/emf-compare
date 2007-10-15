@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.util;
+package org.eclipse.emf.compare;
 
 /**
  * Factory Exception, indicates that an error occured during an {@link EFactory} operation.
@@ -20,12 +20,22 @@ public class FactoryException extends Exception {
 	private static final long serialVersionUID = 51499898584684757L;
 
 	/**
-	 * Instantiates a {@link FactoryException} given its error message.
+	 * Instantiates a FactoryException given its error message.
 	 * 
 	 * @param message
 	 *            Message associated to the exception.
 	 */
 	public FactoryException(String message) {
 		super(message);
+	}
+	
+	/**
+	 * Instantiates a FactoryException wrapped around another exception.
+	 * 
+	 * @param exception
+	 *            Exception to wrap within this new one.
+	 */
+	public FactoryException(Throwable exception) {
+		super(exception);
 	}
 }
