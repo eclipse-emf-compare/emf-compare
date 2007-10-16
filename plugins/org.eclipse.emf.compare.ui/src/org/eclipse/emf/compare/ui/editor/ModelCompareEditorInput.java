@@ -44,7 +44,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 * the view.
 	 */
 	protected ModelStructureMergeViewer structureMergeViewer;
-	
+
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
 

@@ -165,7 +165,7 @@ public class ModelCompareInput implements ICompareInput {
 		modelElementDiffs.clear();
 		attributeChangeDiffs.clear();
 		referenceChangeDiffs.clear();
-		
+
 		return diffList;
 	}
 

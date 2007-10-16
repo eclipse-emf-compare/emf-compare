@@ -56,20 +56,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-	 *      java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
 	 */
-	public void inputChanged(Viewer v, Object o1, Object o2) {
-		// we don't need this
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorLabel(java.lang.Object)
-	 */
-	public String getAncestorLabel(Object element) {
-		return configuration.getAncestorLabel(element);
+	public Object getAncestorContent(Object element) {
+		if (element instanceof ICompareInput)
+			return ((ICompareInput)element).getAncestor();
+		return null;
 	}
 
 	/**
@@ -84,41 +76,10 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorLabel(java.lang.Object)
 	 */
-	public Object getAncestorContent(Object element) {
-		if (element instanceof ICompareInput)
-			return ((ICompareInput)element).getAncestor();
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#showAncestor(java.lang.Object)
-	 */
-	public boolean showAncestor(Object element) {
-		if (element instanceof ICompareInput)
-			return true;
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftLabel(java.lang.Object)
-	 */
-	public String getLeftLabel(Object element) {
-		return configuration.getLeftLabel(element);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftImage(java.lang.Object)
-	 */
-	public Image getLeftImage(Object element) {
-		return configuration.getLeftImage(element);
+	public String getAncestorLabel(Object element) {
+		return configuration.getAncestorLabel(element);
 	}
 
 	/**
@@ -135,10 +96,76 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftImage(java.lang.Object)
+	 */
+	public Image getLeftImage(Object element) {
+		return configuration.getLeftImage(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftLabel(java.lang.Object)
+	 */
+	public String getLeftLabel(Object element) {
+		return configuration.getLeftLabel(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
+	 */
+	public Object getRightContent(Object element) {
+		if (element instanceof ICompareInput)
+			return ((ICompareInput)element).getRight();
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightImage(java.lang.Object)
+	 */
+	public Image getRightImage(Object element) {
+		return configuration.getRightImage(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightLabel(java.lang.Object)
+	 */
+	public String getRightLabel(Object element) {
+		return configuration.getRightLabel(element);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+	 *      java.lang.Object, java.lang.Object)
+	 */
+	public void inputChanged(Viewer v, Object o1, Object o2) {
+		// we don't need this
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isLeftEditable(java.lang.Object)
 	 */
 	public boolean isLeftEditable(Object element) {
 		return configuration.isLeftEditable();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isRightEditable(java.lang.Object)
+	 */
+	public boolean isRightEditable(Object element) {
+		return configuration.isRightEditable();
 	}
 
 	/**
@@ -164,44 +191,6 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightLabel(java.lang.Object)
-	 */
-	public String getRightLabel(Object element) {
-		return configuration.getRightLabel(element);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightImage(java.lang.Object)
-	 */
-	public Image getRightImage(Object element) {
-		return configuration.getRightImage(element);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
-	 */
-	public Object getRightContent(Object element) {
-		if (element instanceof ICompareInput)
-			return ((ICompareInput)element).getRight();
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#isRightEditable(java.lang.Object)
-	 */
-	public boolean isRightEditable(Object element) {
-		return configuration.isRightEditable();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#saveRightContent(java.lang.Object,
 	 *      byte[])
 	 */
@@ -217,5 +206,16 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 				}
 			}
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#showAncestor(java.lang.Object)
+	 */
+	public boolean showAncestor(Object element) {
+		if (element instanceof ICompareInput)
+			return true;
+		return false;
 	}
 }

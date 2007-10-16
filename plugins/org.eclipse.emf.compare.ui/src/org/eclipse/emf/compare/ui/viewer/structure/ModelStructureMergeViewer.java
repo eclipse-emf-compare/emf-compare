@@ -89,45 +89,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * initializer of this structure merge viewer. It sets the {@link LabelProvider label} and content
-	 * provider for the tree and creates the different needed listeners.
-	 * 
-	 * @param compareConfiguration
-	 *            Configuration of the underlying comparison.
-	 */
-	private void initialize(CompareConfiguration compareConfiguration) {
-		configuration = compareConfiguration;
-		setLabelProvider(new ModelStructureLabelProvider());
-		setUseHashlookup(true);
-		setContentProvider(new ModelStructureContentProvider(compareConfiguration));
-
-		final Control tree = getControl();
-		tree.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
-		addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION, event
-						.getSelection());
-			}
-		});
-
-		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_SELECTION)) {
-					expandAll();
-					final TreeItem item = (TreeItem)find(event.getNewValue());
-					collapseAll();
-					if (item != null) {
-						setSelection(new StructuredSelection(item.getData()), true);
-						expandToLevel(item.getData(), 0);
-					}
-				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED)) {
-					setInput(event.getNewValue());
-				}
-			}
-		});
-	}
-
-	/**
 	 * This will initialize the "save as emfdiff" action and put its icon in the {@link CompareViewerPane}
 	 * toolbar.
 	 */
@@ -217,6 +178,45 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
+	 * initializer of this structure merge viewer. It sets the {@link LabelProvider label} and content
+	 * provider for the tree and creates the different needed listeners.
+	 * 
+	 * @param compareConfiguration
+	 *            Configuration of the underlying comparison.
+	 */
+	private void initialize(CompareConfiguration compareConfiguration) {
+		configuration = compareConfiguration;
+		setLabelProvider(new ModelStructureLabelProvider());
+		setUseHashlookup(true);
+		setContentProvider(new ModelStructureContentProvider(compareConfiguration));
+
+		final Control tree = getControl();
+		tree.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
+		addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION, event
+						.getSelection());
+			}
+		});
+
+		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_SELECTION)) {
+					expandAll();
+					final TreeItem item = (TreeItem)find(event.getNewValue());
+					collapseAll();
+					if (item != null) {
+						setSelection(new StructuredSelection(item.getData()), true);
+						expandToLevel(item.getData(), 0);
+					}
+				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED)) {
+					setInput(event.getNewValue());
+				}
+			}
+		});
+	}
+
+	/**
 	 * {@link LabelProvider} of this viewer.
 	 */
 	private class ModelStructureLabelProvider extends LabelProvider {
@@ -224,7 +224,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		 * We uses this generic label provider, but we want to customize some aspects that's why we choose to
 		 * aggregate it.
 		 */
-		/*package*/AdapterFactoryLabelProvider adapterProvider;
+		/* package */AdapterFactoryLabelProvider adapterProvider;
 
 		/**
 		 * Default constructor.

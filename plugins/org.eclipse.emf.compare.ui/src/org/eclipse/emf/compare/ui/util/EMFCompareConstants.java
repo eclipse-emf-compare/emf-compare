@@ -64,9 +64,17 @@ public interface EMFCompareConstants {
 	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = Messages
 			.getString("EMFCompareConstants.preferences.conflictingColorLabel") + ':'; //$NON-NLS-1$
 
+	/** Preferences description for the boolean indicating that the differences markers have to be drawn. */
+	String PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES = Messages
+			.getString("EMFCompareConstants.preferences.drawDifferencesLabel"); //$NON-NLS-1$
+
 	/** Preferences description for the highlight color. */
 	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = Messages
 			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
+
+	/** Preferences description for the boolean indicating that the comparison should ignore XMI IDs. */
+	String PREFERENCES_DESCRIPTION_IGNORE_XMIID = Messages
+			.getString("EMFCompareConstants.preferences.ignoreXMIIDLabel"); //$NON-NLS-1$
 
 	/** Preferences description for the removed element color. */
 	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = Messages
@@ -85,8 +93,14 @@ public interface EMFCompareConstants {
 	/** Preferences key for the circling color of a changed element. */
 	String PREFERENCES_KEY_CONFLICTING_COLOR = "conflicting.color"; //$NON-NLS-1$
 
+	/** Preferences key for the boolean indicating that the differences markers have to be drawn. */
+	String PREFERENCES_KEY_DRAW_DIFFERENCES = "viewer.draw.differences"; //$NON-NLS-1$
+
 	/** Preferences key for the highlight color. */
 	String PREFERENCES_KEY_HIGHLIGHT_COLOR = "highlight.color"; //$NON-NLS-1$
+
+	/** Preferences key for the boolean indicating that the comparison should ignore XMI IDs. */
+	String PREFERENCES_KEY_IGNORE_XMIID = "emfcompare.ignore.XMIID"; //$NON-NLS-1$
 
 	/** Preferences key for the circling color of a removed element. */
 	String PREFERENCES_KEY_REMOVED_COLOR = "removed.color"; //$NON-NLS-1$

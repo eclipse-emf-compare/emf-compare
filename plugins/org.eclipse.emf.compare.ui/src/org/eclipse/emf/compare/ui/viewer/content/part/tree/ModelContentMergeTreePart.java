@@ -58,11 +58,11 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 * @see org.eclipse.jface.viewers.StructuredViewer#findItem(Object)
 	 */
 	public Widget find(Object element) {
-//		Widget result = null;
-//		for (TreeItem item : getVisibleElements())
-//			if (item.getData().equals(element))
-//				result = item;
-//		return result;
+		// Widget result = null;
+		// for (TreeItem item : getVisibleElements())
+		// if (item.getData().equals(element))
+		// result = item;
+		// return result;
 		Widget res = super.findItem(element);
 		if (res == null && element instanceof EObject) {
 			if (((EObject)element).eContainer() != null) {
@@ -91,18 +91,18 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 * @return List containing all the {@link Tree tree}'s visible elements.
 	 */
 	public List<TreeItem> getVisibleElements() {
-//		final List<TreeItem> result = new ArrayList<TreeItem>();
-//		if (getTree().getItemCount() != 0) {
-//			for (TreeItem item : getTree().getItems()) {
-//				getVisibleElements(item, result);
-//			}
-//		}
-//		return result;
+		// final List<TreeItem> result = new ArrayList<TreeItem>();
+		// if (getTree().getItemCount() != 0) {
+		// for (TreeItem item : getTree().getItems()) {
+		// getVisibleElements(item, result);
+		// }
+		// }
+		// return result;
 		final TreeItem topItem = getTree().getTopItem();
 		final int treeHeight = getTree().getClientArea().height;
 		final int itemHeight = topItem.getBounds().height;
 		final List<TreeItem> visibleItems = new ArrayList<TreeItem>(treeHeight / itemHeight + 1);
-		
+
 		visibleItems.add(topItem);
 		for (int i = topItem.getBounds().y + itemHeight; i < treeHeight; i += itemHeight) {
 			final TreeItem next = getTree().getItem(new Point(topItem.getBounds().x, i));
@@ -111,7 +111,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			else
 				break;
 		}
-		
+
 		return visibleItems;
 	}
 
@@ -183,7 +183,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	/**
 	 * Label provider used by the tree control of this part.
 	 * 
-	 *  @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
 	 */
 	private class TreeLabelProvider extends AdapterFactoryLabelProvider {
 		/**

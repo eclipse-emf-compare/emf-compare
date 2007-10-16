@@ -53,6 +53,9 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
 				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
+		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
+				EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID,
+				getPreferenceStore().getBoolean(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID));
 	}
 
 	/**

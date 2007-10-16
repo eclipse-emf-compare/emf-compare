@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
@@ -60,6 +61,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 */
 	@Override
 	public void createFieldEditors() {
+		// Search window field
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
 				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
@@ -67,6 +69,15 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 		addField(searchWindowEditor);
 
+		// ignore XMI ID field
+		addField(new BooleanFieldEditor(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_XMIID, getFieldEditorParent()));
+
+		// draw differences field
+		addField(new BooleanFieldEditor(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES, getFieldEditorParent()));
+
+		// color fields group
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
 		colorGroup.setText(Messages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
 		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
@@ -89,13 +100,27 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	public void init(IWorkbench workbench) {
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW)) {
-					EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-							EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
-							getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
+				if (event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW)
+						|| event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID)) {
+					reflectOnCore();
 				}
 			}
 		});
+	}
+
+	/**
+	 * Reflects the modifications to the search window and to the "ignore XMI ID" booleans to
+	 * org.eclipse.emf.compare.EMFComparePlugin preferences store.
+	 */
+	protected void reflectOnCore() {
+		// Search window
+		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
+				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
+		// XMI ID
+		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
+				EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID,
+				getPreferenceStore().getBoolean(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID));
 	}
 
 	/**
@@ -173,25 +198,6 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		}
 
 		/**
-		 * Creates and return the help icon to show in our label.
-		 * 
-		 * @return The help icon to show in our label.
-		 */
-		private Image getHelpIcon() {
-			Image helpIcon = null;
-			try {
-				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator
-						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
-								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
-				helpIcon = descriptor.createImage();
-			} catch (IOException e) {
-				// this try catch keeps the compiler happy, we should never be here
-				assert false;
-			}
-			return helpIcon;
-		}
-
-		/**
 		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.jface.preference.StringFieldEditor#adjustForNumColumns(int)
@@ -235,6 +241,25 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			gd.horizontalAlignment = GridData.FILL;
 			gd.grabExcessHorizontalSpace = true;
 			getCLabelControl(parent).setLayoutData(gd);
+		}
+
+		/**
+		 * Creates and return the help icon to show in our label.
+		 * 
+		 * @return The help icon to show in our label.
+		 */
+		private Image getHelpIcon() {
+			Image helpIcon = null;
+			try {
+				final ImageDescriptor descriptor = ImageDescriptor.createFromURL(FileLocator
+						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
+								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
+				helpIcon = descriptor.createImage();
+			} catch (IOException e) {
+				// this try/catch block only keeps the compiler happy, we should never be here
+				assert false;
+			}
+			return helpIcon;
 		}
 	}
 }

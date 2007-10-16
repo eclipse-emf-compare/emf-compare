@@ -36,7 +36,7 @@ import org.eclipse.jface.viewers.Viewer;
 public class PropertyContentProvider implements IStructuredContentProvider {
 	/** EObject which properties are provided by this content provider. */
 	private EObject inputEObject;
-	
+
 	/**
 	 * This <code>int</code> represents the side of the viewer part this content provider feeds. Must be one
 	 * of
@@ -86,7 +86,8 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 					IItemPropertySource.class);
 			// Iterates through the property descriptor to display only the "property" features of the input
 			// object
-			for (IItemPropertyDescriptor descriptor : inputPropertySource.getPropertyDescriptors(inputEObject)) {
+			for (IItemPropertyDescriptor descriptor : inputPropertySource
+					.getPropertyDescriptors(inputEObject)) {
 				/*
 				 * Filtering out "advanced" properties can be done by hiding properties on which
 				 * Arrays.binarySearch(descriptor.getFilterFlags(input),
@@ -111,7 +112,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		}
 		return elements;
 	}
-	
+
 	public EObject getInputEObject() {
 		return inputEObject;
 	}

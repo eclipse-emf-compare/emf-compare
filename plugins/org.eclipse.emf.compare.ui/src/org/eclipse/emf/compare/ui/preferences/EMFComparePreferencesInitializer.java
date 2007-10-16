@@ -30,8 +30,14 @@ public class EMFComparePreferencesInitializer extends AbstractPreferenceInitiali
 	@Override
 	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = EMFCompareUIPlugin.getDefault().getPreferenceStore();
+		// Default search window
 		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
+		// The "ignore XMI ID" boolean doesn't need a default : initialized to false
+		// Default value for the "draw differences" boolean
+		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES, false);
+
+		// Default colors
 		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
 				EMFCompareConstants.PREFERENCES_DEFAULT_HIGHLIGHT_COLOR);
 		PreferenceConverter.setDefault(store, EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,

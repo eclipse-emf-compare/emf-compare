@@ -99,7 +99,7 @@ import org.eclipse.ui.PlatformUI;
  * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
  * getKind
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Name of the bundle resources property file. */
@@ -107,13 +107,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** Width to affect to the center area. */
 	public static final int CENTER_WIDTH = 34;
-
-	/**
-	 * Threshold for a change in the drawing comportment. If the number of {@link DiffElement}s is &lt; to
-	 * this threshold, we will draw each of the center lines. Otherwise we'll only draw the lines for the
-	 * visible elements as well as the line for the currently selected diff.
-	 */
-	public static final int MAX_DIFF_THRESHOLD = 30;
 
 	/** ID of the Properties tab of the {@link ModelContentMergeViewerPart}. */
 	public static final int PROPERTIES_TAB = 1;
@@ -168,6 +161,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** Color used to circle and draw the lines between conflicting elements. */
 	/* package */RGB conflictingColor;
+	
+	/** Indicates that the diff markers should be drawn. This allows defining a threshold to avoid too long drawing times. */
+	/* package */boolean drawDiffMarkers;
 
 	/** Color used to highlight the selected elements. */
 	/* package */RGB highlightColor;
@@ -240,7 +236,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super(SWT.NONE, ResourceBundle.getBundle(BUNDLE_NAME), config);
 		configuration = config;
 		buildControl(parent);
-		updateColors();
+		updatePreferences();
 		setContentProvider(new ModelContentMergeContentProvider(config));
 
 		// disables diff copy from either side
@@ -265,8 +261,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		preferenceListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().endsWith("color")) { //$NON-NLS-1$
-					updateColors();
+				if (event.getProperty().matches(".*(color|differences)")) { //$NON-NLS-1$
+					updatePreferences();
 				}
 			}
 		};
@@ -323,7 +319,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 						diffList.retainAll(visibleDiffs);
 					}
 					
-					if (getInput() != null) {
+					if (drawDiffMarkers && getInput() != null) {
 						for (final DiffElement diff : diffList) {
 							drawLine(gc, getLeftItem(diff), getRightItem(diff), diff);
 						}
@@ -389,102 +385,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 	
 	/**
-	 * Returns the {@link TreeItem} representing the left element of the
-	 * given {@link DiffElement}.
-	 * 
-	 * @param diff
-	 *            Diff we need to find the left item for.
-	 * @return The item representing the left element of the given {@link DiffElement}.
-	 */
-	/* package */ TreeItem getLeftVisibleTreeItem(DiffElement diff) {
-		EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
-		final EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
-		TreeItem leftItem = (TreeItem)leftPart.find(leftData);
-		final Item rightItem = (Item)rightPart.find(rightData);
-		
-		if (leftItem == null) {
-			leftItem = leftPart.getTreeRoot();
-			if (leftItem != null)
-				leftData = (EObject)leftItem.getData();
-		}
-		
-		if (leftItem != null && (!leftItem.getData().equals(leftData) || diff instanceof ModelElementChangeRightTarget)) {
-			if (rightItem != null && rightItem.getData().equals(rightData)
-					&& ((EObject)rightItem.getData()).eContainer() != null) {
-				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
-						rightItem.getData());
-				final EList<EObject> leftList = ((EObject)leftItem.getData()).eContents();
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
-				if (leftIndex > 0)
-					leftItem = (TreeItem)leftPart.find(leftList.get(leftIndex));
-			}
-		}
-		
-		return leftItem;
-	}
-	
-	/**
-	 * Returns the {@link TreeItem} representing the left element of the
-	 * given {@link DiffElement}.
-	 * 
-	 * @param diff
-	 *            Diff we need to find the left item for.
-	 * @return The item representing the left element of the given {@link DiffElement}.
-	 */
-	/* package */ TableItem getLeftVisibleTableItem(DiffElement diff) {
-		return (TableItem)leftPart.find(diff);
-	}
-	
-	/**
-	 * Returns the {@link TreeItem} representing the left element of the
-	 * given {@link DiffElement}.
-	 * 
-	 * @param diff
-	 *            Diff we need to find the left item for.
-	 * @return The item representing the left element of the given {@link DiffElement}.
-	 */
-	/* package */ TreeItem getRightVisibleTreeItem(DiffElement diff) {
-		EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
-		final EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
-		TreeItem rightItem = (TreeItem)rightPart.find(rightData);
-		final Item leftItem = (Item)leftPart.find(leftData);
-		
-		if (rightItem == null) {
-			rightItem = leftPart.getTreeRoot();
-			if (rightItem != null)
-				rightData = (EObject)rightItem.getData();
-		}
-		
-		if (rightItem != null && (!rightItem.getData().equals(rightData) || diff instanceof ModelElementChangeLeftTarget)) {
-			if (leftItem != null && leftItem.getData().equals(leftData)
-					&& ((EObject)leftItem.getData()).eContainer() != null) {
-				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
-						leftItem.getData());
-				final EList<EObject> rightList = ((EObject)rightItem.getData()).eContents();
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
-				if (rightIndex > 0)
-					rightItem = (TreeItem)rightPart.find(rightList.get(rightIndex));
-			}
-		}
-		
-		return rightItem;
-	}
-	
-	/**
-	 * Returns the {@link TableItem} representing the right element of the
-	 * given {@link DiffElement}.
-	 * 
-	 * @param diff
-	 *            Diff we need to find the right item for.
-	 * @return The item representing the right element of the given {@link DiffElement}.
-	 */
-	/* package */ TableItem getRightVisibleTableItem(DiffElement diff) {
-		return (TableItem)rightPart.find(diff);
-	}
-
-	/**
 	 * Returns the removed element color.
 	 * 
 	 * @return The removed element color.
@@ -492,7 +392,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public RGB getRemovedColor() {
 		return removedColor;
 	}
-
+	
 	/**
 	 * Returns the item (either {@link TableItem} or {@link TreeItem}) representing the right element of the
 	 * given {@link DiffElement}.
@@ -509,7 +409,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		throw new IllegalStateException(MESSAGE_ILLEGAL_TAB);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -542,7 +442,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			doCompare();
 		}
 	}
-
+	
 	/**
 	 * Sets the parts' tree selection given the {@link DiffElement} to select and the identifier of the side
 	 * which triggered the selection change.
@@ -562,6 +462,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
+	 * Returns <code>True</code> if the trees and center have to draw markers over the differences.
+	 * @return <code>True</code> if the trees and center have to draw markers over the differences, <code>False</code> otherwise.
+	 */
+	public boolean shouldDrawDiffMarkers() {
+		return drawDiffMarkers;
+	}
+
+	/**
 	 * Redraws this viewer.
 	 */
 	public void update() {
@@ -571,7 +479,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		updateCenter();
 		updateToolItems();
 	}
-
+	
 	/**
 	 * Redraws the center Control.
 	 */
@@ -724,17 +632,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final ActionContributionItem previousDiffContribution = new ActionContributionItem(previousDiff);
 		previousDiffContribution.setVisible(true);
 		tbm.appendToGroup("navigation", previousDiffContribution); //$NON-NLS-1$
-	}
-
-	/**
-	 * Checks if there are too much {@link DiffElement} in the current {@link DiffModel input} for the drawing
-	 * to be readable.
-	 * 
-	 * @return <code>True</code> if too much {@link DiffElement}s need painting, <code>False</code>
-	 *         otherwise.
-	 */
-	protected boolean diffThresholdOverstepped() {
-		return ((ModelCompareInput)getInput()).getDiffAsList().size() > MAX_DIFF_THRESHOLD;
 	}
 
 	/**
@@ -991,23 +888,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Updates the value of the colors as they are changed on the preference page.
-	 */
-	protected void updateColors() {
-		final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
-		highlightColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR);
-		changedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
-		conflictingColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR);
-		addedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
-		removedColor = PreferenceConverter.getColor(comparePreferences,
-				EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see ContentMergeViewer#updateContent(Object, Object, Object)
@@ -1036,6 +916,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
+	 * Updates the values of all the variables using preferences values.
+	 */
+	protected void updatePreferences() {
+		final IPreferenceStore comparePreferences = EMFCompareUIPlugin.getDefault().getPreferenceStore();
+		updateColors(comparePreferences);
+		updateDiffThreshold(comparePreferences);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#updateToolItems()
@@ -1045,7 +934,103 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super.updateToolItems();
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
+
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TableItem getLeftVisibleTableItem(DiffElement diff) {
+		return (TableItem)leftPart.find(diff);
+	}
 	
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TreeItem getLeftVisibleTreeItem(DiffElement diff) {
+		EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
+		final EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
+		TreeItem leftItem = (TreeItem)leftPart.find(leftData);
+		final Item rightItem = (Item)rightPart.find(rightData);
+		
+		if (leftItem == null) {
+			leftItem = leftPart.getTreeRoot();
+			if (leftItem != null)
+				leftData = (EObject)leftItem.getData();
+		}
+		
+		if (leftItem != null && (!leftItem.getData().equals(leftData) || diff instanceof ModelElementChangeRightTarget)) {
+			if (rightItem != null && rightItem.getData().equals(rightData)
+					&& ((EObject)rightItem.getData()).eContainer() != null) {
+				final int rightIndex = ((EObject)rightItem.getData()).eContainer().eContents().indexOf(
+						rightItem.getData());
+				final EList<EObject> leftList = ((EObject)leftItem.getData()).eContents();
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
+				final int leftIndex = Math.min(rightIndex - 1, leftList.size() - 1);
+				if (leftIndex > 0)
+					leftItem = (TreeItem)leftPart.find(leftList.get(leftIndex));
+			}
+		}
+		
+		return leftItem;
+	}
+	
+	/**
+	 * Returns the {@link TableItem} representing the right element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the right item for.
+	 * @return The item representing the right element of the given {@link DiffElement}.
+	 */
+	/* package */ TableItem getRightVisibleTableItem(DiffElement diff) {
+		return (TableItem)rightPart.find(diff);
+	}
+
+	/**
+	 * Returns the {@link TreeItem} representing the left element of the
+	 * given {@link DiffElement}.
+	 * 
+	 * @param diff
+	 *            Diff we need to find the left item for.
+	 * @return The item representing the left element of the given {@link DiffElement}.
+	 */
+	/* package */ TreeItem getRightVisibleTreeItem(DiffElement diff) {
+		EObject rightData = EMFCompareEObjectUtils.getRightElement(diff);
+		final EObject leftData = EMFCompareEObjectUtils.getLeftElement(diff);
+		TreeItem rightItem = (TreeItem)rightPart.find(rightData);
+		final Item leftItem = (Item)leftPart.find(leftData);
+		
+		if (rightItem == null) {
+			rightItem = leftPart.getTreeRoot();
+			if (rightItem != null)
+				rightData = (EObject)rightItem.getData();
+		}
+		
+		if (rightItem != null && (!rightItem.getData().equals(rightData) || diff instanceof ModelElementChangeLeftTarget)) {
+			if (leftItem != null && leftItem.getData().equals(leftData)
+					&& ((EObject)leftItem.getData()).eContainer() != null) {
+				final int leftIndex = ((EObject)leftItem.getData()).eContainer().eContents().indexOf(
+						leftItem.getData());
+				final EList<EObject> rightList = ((EObject)rightItem.getData()).eContents();
+				// Ensures we cannot trigger ArrayOutOfBounds exeptions
+				final int rightIndex = Math.min(leftIndex - 1, rightList.size() - 1);
+				if (rightIndex > 0)
+					rightItem = (TreeItem)rightPart.find(rightList.get(rightIndex));
+			}
+		}
+		
+		return rightItem;
+	}
+
 	/**
 	 * Allows synchronization of the viewports scrolling.
 	 * 
@@ -1085,6 +1070,33 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Updates the value of the colors as they are changed on the preference page.
+	 * @param comparePreferences
+	 * Preference store where to retrieve our values.
+	 */
+	private void updateColors(IPreferenceStore comparePreferences) {
+		highlightColor = PreferenceConverter.getColor(comparePreferences,
+				EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR);
+		changedColor = PreferenceConverter.getColor(comparePreferences,
+				EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR);
+		conflictingColor = PreferenceConverter.getColor(comparePreferences,
+				EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR);
+		addedColor = PreferenceConverter.getColor(comparePreferences,
+				EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR);
+		removedColor = PreferenceConverter.getColor(comparePreferences,
+				EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR);
+	}
+	
+	/**
+	 * Updates the value of the maximum diff count as it is changed on the preference page.
+	 * @param comparePreferences
+	 * Preference store where to retrieve our values.
+	 */
+	private void updateDiffThreshold(IPreferenceStore comparePreferences) {
+		drawDiffMarkers = comparePreferences.getBoolean(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES);
 	}
 
 	/**
@@ -1137,48 +1149,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		public abstract void doPaint(GC gc);
 
 		/**
-		 * Computes the points needed to draw a curve of the given width.
-		 * 
-		 * @param width
-		 *            This is the width of the curve to build.
-		 */
-		private void buildBaseCenterCurve(int width) {
-			final double doubleWidth = width;
-			baseCenterCurve = new double[CENTER_WIDTH];
-			for (int i = 0; i < CENTER_WIDTH; i++) {
-				final double r = i / doubleWidth;
-				baseCenterCurve[i] = Math.cos(Math.PI * r);
-			}
-		}
-
-		/**
-		 * Computes the points to connect for the curve between the two items to connect.
-		 * 
-		 * @param startx
-		 *            X coordinate of the starting point.
-		 * @param starty
-		 *            Y coordinate of the starting point.
-		 * @param endx
-		 *            X coordinate of the ending point.
-		 * @param endy
-		 *            Y coordinate of the ending point.
-		 * @return The points to connect to draw the curve between the two items to connect.
-		 */
-		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
-			if (baseCenterCurve == null) {
-				buildBaseCenterCurve(endx - startx);
-			}
-			double height = endy - starty;
-			height = height / 2;
-			final int width = endx - startx;
-			final int[] points = new int[width];
-			for (int i = 0; i < width; i++) {
-				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
-			}
-			return points;
-		}
-
-		/**
 		 * Draws a line connecting the given right and left items.
 		 * 
 		 * @param gc
@@ -1199,7 +1169,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (leftItem == null || rightItem == null || DiffAdapterFactory.shouldBeHidden(diff))
 				return;
 
-			if (!diffThresholdOverstepped() || diff.equals(currentDiff) || leftPart.isVisible(leftItem)
+			if (diff.equals(currentDiff) || leftPart.isVisible(leftItem)
 					|| rightPart.isVisible(rightItem)) {
 				final Rectangle centerbounds = getCenterPart().getBounds();
 				Rectangle leftBounds = null;
@@ -1295,6 +1265,48 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 
 			dest.drawImage(buffer, 0, 0);
+		}
+
+		/**
+		 * Computes the points needed to draw a curve of the given width.
+		 * 
+		 * @param width
+		 *            This is the width of the curve to build.
+		 */
+		private void buildBaseCenterCurve(int width) {
+			final double doubleWidth = width;
+			baseCenterCurve = new double[CENTER_WIDTH];
+			for (int i = 0; i < CENTER_WIDTH; i++) {
+				final double r = i / doubleWidth;
+				baseCenterCurve[i] = Math.cos(Math.PI * r);
+			}
+		}
+
+		/**
+		 * Computes the points to connect for the curve between the two items to connect.
+		 * 
+		 * @param startx
+		 *            X coordinate of the starting point.
+		 * @param starty
+		 *            Y coordinate of the starting point.
+		 * @param endx
+		 *            X coordinate of the ending point.
+		 * @param endy
+		 *            Y coordinate of the ending point.
+		 * @return The points to connect to draw the curve between the two items to connect.
+		 */
+		private int[] getCenterCurvePoints(int startx, int starty, int endx, int endy) {
+			if (baseCenterCurve == null) {
+				buildBaseCenterCurve(endx - startx);
+			}
+			double height = endy - starty;
+			height = height / 2;
+			final int width = endx - startx;
+			final int[] points = new int[width];
+			for (int i = 0; i < width; i++) {
+				points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
+			}
+			return points;
 		}
 	}
 

@@ -89,13 +89,11 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		TableItem item = null;
 		if (diff instanceof AttributeChange) {
 			final AttributeChange theDiff = (AttributeChange)diff;
-			if (theDiff.getLeftElement() == inputEObject ||
-					theDiff.getRightElement() == inputEObject)
+			if (theDiff.getLeftElement() == inputEObject || theDiff.getRightElement() == inputEObject)
 				item = (TableItem)findItem(theDiff.getAttribute());
 		} else if (diff instanceof ReferenceChange) {
 			final ReferenceChange theDiff = (ReferenceChange)diff;
-			if (theDiff.getLeftElement() == inputEObject ||
-					theDiff.getRightElement() == inputEObject)
+			if (theDiff.getLeftElement() == inputEObject || theDiff.getRightElement() == inputEObject)
 				item = (TableItem)findItem(theDiff.getReference());
 		}
 		return item;

@@ -53,7 +53,7 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 
 	/** Name of the extension point to parse for actions. */
 	private static final String EXPORT_ACTIONS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.export"; //$NON-NLS-1$
-	
+
 	/** Control under which the menu must be created. */
 	protected final Control parentControl;
 
