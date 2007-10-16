@@ -113,7 +113,7 @@ public class TestMethods extends TestCase {
 			// yet we try to reduce the probability of this happening.
 			assertNotSame("Two distinct maps' hashCode() shouldn't produce the same result.",
 					map1.hashCode(), map2.hashCode());
-			
+
 			map2.put(KEY_SET[i], VALUE_SET[i]);
 			assertTrue("Unexpected behavior of put().", map1.equals(map2));
 			assertEquals("Two identical maps' hashCode() didn't produce the same result.", map1.hashCode(),

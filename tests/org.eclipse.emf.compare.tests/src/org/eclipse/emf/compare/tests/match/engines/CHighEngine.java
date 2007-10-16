@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.match.engines;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -40,6 +42,29 @@ public class CHighEngine implements MatchEngine {
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot, IProgressMonitor monitor) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
+			Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			IProgressMonitor monitor, Map<String, Object> optionMap) {
 		return null;
 	}
 }

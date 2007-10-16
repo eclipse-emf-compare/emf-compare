@@ -164,7 +164,8 @@ public class TestEquals extends TestCase {
 					.equals(invalidTestObjects[i]));
 		for (int i = 0; i < validTestObjects.length; i++) {
 			assertTrue("Unexpected result of equals() with equal objects.", map.equals(validTestObjects[i]));
-			assertEquals("Equal maps should return the same hashCode.", map.hashCode(), validTestObjects[i].hashCode());
+			assertEquals("Equal maps should return the same hashCode.", map.hashCode(), validTestObjects[i]
+					.hashCode());
 		}
 	}
 }
