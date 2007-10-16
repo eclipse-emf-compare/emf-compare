@@ -44,7 +44,7 @@ public final class AdapterUtils {
 	private AdapterUtils() {
 		// prevents instantiation.
 	}
-
+	
 	/**
 	 * Returns the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
 	 * 

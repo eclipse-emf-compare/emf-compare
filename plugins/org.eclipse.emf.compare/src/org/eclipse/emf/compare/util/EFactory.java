@@ -93,25 +93,26 @@ public final class EFactory {
 				throw eGet;
 			}
 		}
-		/* Following code is only meaningful if we desire a specific hanfling of
-		 * enumerations. This isn't the case in EMF Compare.
+		/*
+		 * Following code is only meaningful if we desire a specific hanfling of enumerations. This isn't the
+		 * case in EMF Compare.
 		 */
-//		if (result != null && result instanceof Enumerator) {
-//			result = ((Enumerator)result).getName();
-//		} else 
-//		if (result != null && result instanceof EDataTypeUniqueEList) {
-//			final List<Object> list = new ArrayList<Object>();
-//			final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
-//			while (enums.hasNext()) {
-//				final Object next = enums.next();
-//				if (next instanceof Enumerator) {
-//					list.add(((Enumerator)next).getName());
-//				} else {
-//					list.add(next);
-//				}
-//			}
-//			result = list;
-//		}
+		// if (result != null && result instanceof Enumerator) {
+		// result = ((Enumerator)result).getName();
+		// } else
+		// if (result != null && result instanceof EDataTypeUniqueEList) {
+		// final List<Object> list = new ArrayList<Object>();
+		// final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
+		// while (enums.hasNext()) {
+		// final Object next = enums.next();
+		// if (next instanceof Enumerator) {
+		// list.add(((Enumerator)next).getName());
+		// } else {
+		// list.add(next);
+		// }
+		// }
+		// result = list;
+		// }
 		return result;
 	}
 
@@ -167,7 +168,8 @@ public final class EFactory {
 
 	/**
 	 * Removes the value of the given feature of the object. If the structural feature isn't a list, it
-	 * behaves like eSet(object, name, null) and resets the feature even if specified value isn't equal to the actual feature's value.
+	 * behaves like eSet(object, name, null) and resets the feature even if specified value isn't equal to the
+	 * actual feature's value.
 	 * 
 	 * @param object
 	 *            Object on which we want to remove from the feature values list.
@@ -205,10 +207,11 @@ public final class EFactory {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (!feature.isChangeable())
 			throw new FactoryException(Messages.getString("EFactory.UnSettableFeature", name)); //$NON-NLS-1$
-		
+
 		if (feature.getEType() instanceof EEnum && arg instanceof String) {
 			try {
-				final Class<?> c = object.getClass().getClassLoader().loadClass(ETools.getEClassifierPath(feature.getEType()));
+				final Class<?> c = object.getClass().getClassLoader().loadClass(
+						ETools.getEClassifierPath(feature.getEType()));
 				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
 				final Object value = m.invoke(c, new Object[] {arg});
 				object.eSet(feature, value);
@@ -269,13 +272,13 @@ public final class EFactory {
 		try {
 			final Class<? extends Object>[] methodParams;
 			final Object[] invocationParams;
-			
+
 			methodParams = new Class[arg.length];
 			for (int i = 0; i < arg.length; i++) {
 				methodParams[i] = arg[i].getClass();
 			}
 			invocationParams = arg;
-			
+
 			final Method method = object.getClass().getMethod(name, methodParams);
 			return method.invoke(object, invocationParams);
 		} catch (NoSuchMethodException e) {

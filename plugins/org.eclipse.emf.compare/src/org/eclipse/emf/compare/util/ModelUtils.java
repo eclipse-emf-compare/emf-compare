@@ -38,13 +38,14 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ModelUtils {
+	/** Will determine if the URIs must be encoded depending on the current system. */
+	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS = System
+			.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null && //$NON-NLS-1$
+			!System
+					.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	/** Constant for the file encoding system property. */
 	private static final String ENCODING_PROPERTY = "file.encoding"; //$NON-NLS-1$
-	
-	/** Will determine if the URIs must be encoded depending on the current system. */
-	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS =
-	    System.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null && //$NON-NLS-1$
-	    !System.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
@@ -125,12 +126,13 @@ public final class ModelUtils {
 					new XMIResourceFactoryImpl());
 		}
 
-		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), ENCODE_PLATFORM_RESOURCE_URIS));
+		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file
+				.getFullPath().toOSString(), ENCODE_PLATFORM_RESOURCE_URIS));
 		final Map<String, String> options = new FastMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
 		if (modelResource.getContents().size() > 0)
-			result = (EObject)modelResource.getContents().get(0);
+			result = modelResource.getContents().get(0);
 		return result;
 	}
 
@@ -152,7 +154,7 @@ public final class ModelUtils {
 			throws IOException {
 		if (stream == null)
 			throw new NullPointerException(Messages.getString("ModelUtils.NullInputStream")); //$NON-NLS-1$
-		
+
 		EObject result = null;
 
 		String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1); //$NON-NLS-1$
@@ -174,7 +176,7 @@ public final class ModelUtils {
 		final Resource modelResource = resourceSet.createResource(URI.createURI(fileName));
 		modelResource.load(stream, Collections.EMPTY_MAP);
 		if (modelResource.getContents().size() > 0)
-			result = (EObject)modelResource.getContents().get(0);
+			result = modelResource.getContents().get(0);
 		return result;
 	}
 
@@ -228,7 +230,7 @@ public final class ModelUtils {
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
 		if (modelResource.getContents().size() > 0)
-			result = (EObject)modelResource.getContents().get(0);
+			result = modelResource.getContents().get(0);
 		return result;
 	}
 
@@ -246,7 +248,7 @@ public final class ModelUtils {
 	public static void save(EObject root, String path) throws IOException {
 		if (root == null)
 			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
-		
+
 		final URI modelURI = URI.createFileURI(path);
 		final ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
@@ -271,7 +273,7 @@ public final class ModelUtils {
 	public static String serialize(EObject root) throws IOException {
 		if (root == null)
 			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
-		
+
 		final XMIResourceImpl newResource = new XMIResourceImpl();
 		final StringWriter writer = new StringWriter();
 		newResource.getContents().add(root);

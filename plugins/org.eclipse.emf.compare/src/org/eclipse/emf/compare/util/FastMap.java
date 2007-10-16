@@ -54,14 +54,14 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			8963, 17929, 35863, 71741, 143483, 286973, 573953, 1147921, 2295859, 4591721, 9183457, 18366923,
 			36733847, 73467739, 146935499, 293871013, 587742049, 1175484103, Integer.MAX_VALUE, };
 
-	/** Object used as key for the "removed" entries of this Map. */
-	protected static final Object REMOVED_ENTRY = new Object();
-
 	/** Minimal allowed load factor for the map. */
 	protected static final float MINIMUM_LOAD_FACTOR = 0.05f;
 
 	/** Object used as key for the <code>null</code> key. */
 	protected static final Object NULL_KEY = new Object();
+
+	/** Object used as key for the "removed" entries of this Map. */
+	protected static final Object REMOVED_ENTRY = new Object();
 
 	/** First hundred primes. Used to compute the next prime. */
 	private static final int[] FIRST_PRIMES = new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
@@ -79,11 +79,11 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/** Load factor of this Map. */
 	protected float loadFactor = DEFAULT_LOAD_FACTOR;
 
-	/** Threshold for resizing. */
-	protected int threshold;
-
 	/** Index of the next prime in the primes list. */
 	protected int nextPrimeIndex;
+
+	/** Threshold for resizing. */
+	protected int threshold;
 
 	/** Current number of non-empty slots. */
 	protected transient int usedSlots;
@@ -219,10 +219,19 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
+	 * @see java.util.Map#entrySet()
+	 */
+	public Set<Map.Entry<K, V>> entrySet() {
+		return new EntrySet();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -245,15 +254,6 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set<Map.Entry<K, V>> entrySet() {
-		return new EntrySet();
-	}
-
-	/**
 	 * Retrieves the value to which the specified key is mapped.
 	 * 
 	 * @param key
@@ -269,7 +269,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -699,6 +699,205 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
+	 * Represents a mapping key => value for this Map.
+	 * 
+	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 */
+	/* package */class Entry implements Map.Entry<K, V> {
+		/** Index of this entry. */
+		private final int index;
+
+		/** Key of this Map entry. */
+		private final K key;
+
+		/** Value of this mapping. */
+		private V value;
+
+		/**
+		 * Creates a mapping.
+		 * 
+		 * @param entryKey
+		 *            The key for this mapping.
+		 * @param entryValue
+		 *            The value for this Map entry.
+		 * @param entryIndex
+		 *            The index of this entry.
+		 */
+		public Entry(K entryKey, V entryValue, int entryIndex) {
+			key = entryKey;
+			value = entryValue;
+			index = entryIndex;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public final boolean equals(Object another) {
+			boolean result = false;
+			if (another == this) {
+				result = true;
+			} else if (another instanceof Map.Entry) {
+				final Map.Entry other = (Map.Entry)another;
+				if (equal(key, other.getKey()) && equal(value, other.getValue())) {
+					result = true;
+				}
+			}
+			return result;
+		}
+
+		/**
+		 * Returns the key corresponding to this entry.
+		 * 
+		 * @return The key corresponding to this entry.
+		 */
+		public K getKey() {
+			return key;
+		}
+
+		/**
+		 * Returns the value corresponding to this entry.
+		 * 
+		 * @return The value corresponding to this entry.
+		 */
+		public V getValue() {
+			return value;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public final int hashCode() {
+			int keyHash = 0;
+			int valueHash = 0;
+			if (key != null)
+				keyHash = key.hashCode();
+			if (value != null)
+				valueHash = value.hashCode();
+			return keyHash ^ valueHash;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Map$Entry#setValue(java.lang.Object)
+		 */
+		public V setValue(V newValue) {
+			if (FastMap.this.values[index] != value)
+				throw new ConcurrentModificationException();
+
+			final V oldValue = value;
+			FastMap.this.values[index] = newValue;
+			value = newValue;
+
+			return oldValue;
+		}
+
+		/**
+		 * Returns a String representation of this entry.
+		 * 
+		 * @return A String representation of this entry.
+		 */
+		@Override
+		public String toString() {
+			// Note that we cannot have entries with key == FREE_ENTRY or key == REMOVED_ENTRY
+			// (see AbstractHashIterator#nextEntry)
+			final StringBuilder result = new StringBuilder();
+			if (key == NULL_KEY)
+				result.append("null"); //$NON-NLS-1$
+			else
+				result.append(key.toString());
+			result.append('=');
+			if (value == null)
+				result.append("null"); //$NON-NLS-1$
+			else
+				result.append(value.toString());
+			return result.toString();
+		}
+	}
+
+	/**
+	 * This iterator allows traversing keys and values of this Map.
+	 * 
+	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @param <E>
+	 *            Defines the class of this iterator's contents.
+	 */
+	private abstract class AbstractHashIterator<E> implements Iterator<E> {
+		/** Current entry. */
+		protected Entry currentEntry;
+
+		/** Current key. */
+		protected K currentKey;
+
+		/** Current value. */
+		protected V currentValue;
+
+		/** Expected number of entries for this iterator to traverse. */
+		private int expectedSize;
+
+		/** Index of the next entry. */
+		private int nextIndex;
+
+		/**
+		 * Constructs an HashIterator over the entries of this Map.
+		 */
+		public AbstractHashIterator() {
+			expectedSize = usedSlots;
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+				nextIndex++;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Iterator#hasNext()
+		 */
+		public boolean hasNext() {
+			return nextIndex < keys.length;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see java.util.Iterator#remove()
+		 */
+		public void remove() {
+			if (currentKey == null)
+				throw new IllegalStateException();
+			if (expectedSize != usedSlots)
+				throw new ConcurrentModificationException();
+
+			FastMap.this.remove(currentKey);
+			currentEntry = null;
+			currentKey = null;
+			currentValue = null;
+			expectedSize = usedSlots;
+		}
+
+		/**
+		 * Advances this iterator to the next non removed, non <code>null</code> entry of the Map.
+		 */
+		protected void nextEntry() {
+			if (expectedSize != usedSlots)
+				throw new ConcurrentModificationException();
+
+			currentKey = keys[nextIndex];
+			currentValue = values[nextIndex];
+			currentEntry = new Entry(currentKey, currentValue, nextIndex);
+
+			nextIndex++;
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+				nextIndex++;
+		}
+	}
+
+	/**
 	 * Allows iteration over the entries of this Map.
 	 * 
 	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
@@ -858,82 +1057,6 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		@Override
 		public int size() {
 			return FastMap.this.size();
-		}
-	}
-
-	/**
-	 * This iterator allows traversing keys and values of this Map.
-	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
-	 * @param <E>
-	 *            Defines the class of this iterator's contents.
-	 */
-	private abstract class AbstractHashIterator<E> implements Iterator<E> {
-		/** Current entry. */
-		protected Entry currentEntry;
-
-		/** Current key. */
-		protected K currentKey;
-
-		/** Current value. */
-		protected V currentValue;
-
-		/** Expected number of entries for this iterator to traverse. */
-		private int expectedSize;
-
-		/** Index of the next entry. */
-		private int nextIndex;
-
-		/**
-		 * Constructs an HashIterator over the entries of this Map.
-		 */
-		public AbstractHashIterator() {
-			expectedSize = usedSlots;
-			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
-				nextIndex++;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Iterator#hasNext()
-		 */
-		public boolean hasNext() {
-			return nextIndex < keys.length;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Iterator#remove()
-		 */
-		public void remove() {
-			if (currentKey == null)
-				throw new IllegalStateException();
-			if (expectedSize != usedSlots)
-				throw new ConcurrentModificationException();
-
-			FastMap.this.remove(currentKey);
-			currentEntry = null;
-			currentKey = null;
-			currentValue = null;
-			expectedSize = usedSlots;
-		}
-
-		/**
-		 * Advances this iterator to the next non removed, non <code>null</code> entry of the Map.
-		 */
-		protected void nextEntry() {
-			if (expectedSize != usedSlots)
-				throw new ConcurrentModificationException();
-
-			currentKey = keys[nextIndex];
-			currentValue = values[nextIndex];
-			currentEntry = new Entry(currentKey, currentValue, nextIndex);
-
-			nextIndex++;
-			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
-				nextIndex++;
 		}
 	}
 
@@ -1100,129 +1223,6 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		@Override
 		public int size() {
 			return FastMap.this.size();
-		}
-	}
-
-	/**
-	 * Represents a mapping key => value for this Map.
-	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
-	 */
-	/* package */class Entry implements Map.Entry<K, V> {
-		/** Index of this entry. */
-		private final int index;
-
-		/** Key of this Map entry. */
-		private final K key;
-
-		/** Value of this mapping. */
-		private V value;
-
-		/**
-		 * Creates a mapping.
-		 * 
-		 * @param entryKey
-		 *            The key for this mapping.
-		 * @param entryValue
-		 *            The value for this Map entry.
-		 * @param entryIndex
-		 *            The index of this entry.
-		 */
-		public Entry(K entryKey, V entryValue, int entryIndex) {
-			key = entryKey;
-			value = entryValue;
-			index = entryIndex;
-		}
-
-		/**
-		 * Returns the key corresponding to this entry.
-		 * 
-		 * @return The key corresponding to this entry.
-		 */
-		public K getKey() {
-			return key;
-		}
-
-		/**
-		 * Returns the value corresponding to this entry.
-		 * 
-		 * @return The value corresponding to this entry.
-		 */
-		public V getValue() {
-			return value;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see java.util.Map$Entry#setValue(java.lang.Object)
-		 */
-		public V setValue(V newValue) {
-			if (FastMap.this.values[index] != value)
-				throw new ConcurrentModificationException();
-
-			final V oldValue = value;
-			FastMap.this.values[index] = newValue;
-			value = newValue;
-
-			return oldValue;
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 *
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public final boolean equals(Object another) {
-			boolean result = false;
-			if (another == this) {
-				result = true;
-			} else if (another instanceof Map.Entry) {
-	            final Map.Entry other = (Map.Entry)another;
-	            if (equal(key, other.getKey()) && equal(value, other.getValue())) {
-	                    result = true;
-	            }
-			}
-            return result;
-        }
-
-		/**
-		 * {@inheritDoc}
-		 *
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-        public final int hashCode() {
-			int keyHash = 0;
-			int valueHash = 0;
-			if (key != null)
-				keyHash = key.hashCode();
-			if (value != null)
-				valueHash = value.hashCode();
-            return keyHash ^ valueHash;
-        }
-
-		/**
-		 * Returns a String representation of this entry.
-		 * 
-		 * @return A String representation of this entry.
-		 */
-		@Override
-		public String toString() {
-			// Note that we cannot have entries with key == FREE_ENTRY or key == REMOVED_ENTRY
-			// (see AbstractHashIterator#nextEntry)
-			final StringBuilder result = new StringBuilder();
-			if (key == NULL_KEY)
-				result.append("null"); //$NON-NLS-1$
-			else
-				result.append(key.toString());
-			result.append('=');
-			if (value == null)
-				result.append("null"); //$NON-NLS-1$
-			else
-				result.append(value.toString());
-			return result.toString();
 		}
 	}
 }

@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
 public class EMFComparePlugin extends Plugin {
 	/** The plugin ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare"; //$NON-NLS-1$
-	
+
 	/** Plug-in's shared instance. */
 	private static EMFComparePlugin plugin;
 
@@ -83,7 +83,7 @@ public class EMFComparePlugin extends Plugin {
 		// We'll handle this by throwing it ourselves.
 		if (status == null)
 			throw new NullPointerException(Messages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
-		
+
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
 		} else {
