@@ -34,21 +34,21 @@ import org.eclipse.emf.compare.util.FastMap;
 public final class DiffService {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
-	
+
 	/** Name of the extension point to parse for engines. */
 	private static final String DIFF_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.diff.engine"; //$NON-NLS-1$
-
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_DIFF_EXTENSION = "diff_extension"; //$NON-NLS-1$
-
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_ENGINE = "diffengine"; //$NON-NLS-1$
 
 	/** Keeps track of all the diff extensions we've parsed. */
 	private static final Map<String, ArrayList<DiffExtensionDescriptor>> PARSED_DIFF_EXTENSIONS = new FastMap<String, ArrayList<DiffExtensionDescriptor>>();
 
 	/** Keeps track of all the engines we've parsed. */
 	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new FastMap<String, ArrayList<EngineDescriptor>>();
+
+	/** Externalized here to avoid too many distinct usages. */
+	private static final String TAG_DIFF_EXTENSION = "diff_extension"; //$NON-NLS-1$
+
+	/** Externalized here to avoid too many distinct usages. */
+	private static final String TAG_ENGINE = "diffengine"; //$NON-NLS-1$
 
 	static {
 		parseExtensionMetadata();
@@ -60,7 +60,7 @@ public final class DiffService {
 	private DiffService() {
 		// prevents instantiation
 	}
-	
+
 	/**
 	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 
@@ -71,7 +71,7 @@ public final class DiffService {
 	public static DiffModel doDiff(MatchModel match) {
 		return doDiff(match, false);
 	}
-	
+
 	/**
 	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 
@@ -214,7 +214,7 @@ public final class DiffService {
 			}
 		}
 	}
-	
+
 	/**
 	 * Stores the given descriptor in the {@link List} of known {@link DiffExtensionDescriptor}s.
 	 * 
@@ -234,7 +234,7 @@ public final class DiffService {
 			set.add(desc);
 		}
 	}
-	
+
 	/**
 	 * Stores the given descriptor in the {@link List} of known {@link EngineDescriptor}s.
 	 * 

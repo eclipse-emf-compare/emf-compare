@@ -56,13 +56,34 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	/**
-	 * Creates the default factory implementation.
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DiffFactoryImpl() {
+		super();
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @deprecated
+	 * @generated
+	 */
+	@Deprecated
+	public static DiffPackage getPackage() {
+		return DiffPackage.eINSTANCE;
+	}
+
+	/**
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static DiffFactory init() {
@@ -79,16 +100,32 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	}
 
 	/**
-	 * Creates an instance of the factory.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public DiffFactoryImpl() {
-		super();
+	public String convertAbstractMergerToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case DiffPackage.ABSTRACT_MERGER:
+				return convertAbstractMergerToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName()
+						+ "' is not a valid classifier");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -170,6 +207,106 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AbstractMerger createAbstractMergerFromString(EDataType eDataType, String initialValue) {
+		return (AbstractMerger)super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AddAttribute createAddAttribute() {
+		AddAttributeImpl addAttribute = new AddAttributeImpl();
+		return addAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AddModelElement createAddModelElement() {
+		AddModelElementImpl addModelElement = new AddModelElementImpl();
+		return addModelElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AddReferenceValue createAddReferenceValue() {
+		AddReferenceValueImpl addReferenceValue = new AddReferenceValueImpl();
+		return addReferenceValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AttributeChange createAttributeChange() {
+		AttributeChangeImpl attributeChange = new AttributeChangeImpl();
+		return attributeChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
+		AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
+		return attributeChangeLeftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
+		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
+		return attributeChangeRightTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ConflictingDiffElement createConflictingDiffElement() {
+		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
+		return conflictingDiffElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DiffGroup createDiffGroup() {
+		DiffGroupImpl diffGroup = new DiffGroupImpl();
+		return diffGroup;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DiffModel createDiffModel() {
+		DiffModelImpl diffModel = new DiffModelImpl();
+		return diffModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Object createFromString(EDataType eDataType, String initialValue) {
@@ -184,30 +321,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertToString(EDataType eDataType, Object instanceValue) {
-		switch (eDataType.getClassifierID()) {
-			case DiffPackage.ABSTRACT_MERGER:
-				return convertAbstractMergerToString(eDataType, instanceValue);
-			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-						+ "' is not a valid classifier");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiffModel createDiffModel() {
-		DiffModelImpl diffModel = new DiffModelImpl();
-		return diffModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public GenericDiffElement createGenericDiffElement() {
@@ -217,69 +331,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DiffGroup createDiffGroup() {
-		DiffGroupImpl diffGroup = new DiffGroupImpl();
-		return diffGroup;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AttributeChange createAttributeChange() {
-		AttributeChangeImpl attributeChange = new AttributeChangeImpl();
-		return attributeChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
-		AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
-		return attributeChangeLeftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
-		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
-		return attributeChangeRightTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ReferenceChange createReferenceChange() {
-		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
-		return referenceChange;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
-		ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
-		return referenceChangeLeftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
-		ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
-		return referenceChangeRightTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ModelElementChange createModelElementChange() {
@@ -289,6 +341,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ModelElementChangeLeftTarget createModelElementChangeLeftTarget() {
@@ -298,6 +351,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ModelElementChangeRightTarget createModelElementChangeRightTarget() {
@@ -307,105 +361,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AddModelElement createAddModelElement() {
-		AddModelElementImpl addModelElement = new AddModelElementImpl();
-		return addModelElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RemoveModelElement createRemoveModelElement() {
-		RemoveModelElementImpl removeModelElement = new RemoveModelElementImpl();
-		return removeModelElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UpdateModelElement createUpdateModelElement() {
-		UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
-		return updateModelElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MoveModelElement createMoveModelElement() {
-		MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
-		return moveModelElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AddAttribute createAddAttribute() {
-		AddAttributeImpl addAttribute = new AddAttributeImpl();
-		return addAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RemoveAttribute createRemoveAttribute() {
-		RemoveAttributeImpl removeAttribute = new RemoveAttributeImpl();
-		return removeAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UpdateAttribute createUpdateAttribute() {
-		UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
-		return updateAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AddReferenceValue createAddReferenceValue() {
-		AddReferenceValueImpl addReferenceValue = new AddReferenceValueImpl();
-		return addReferenceValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RemoveReferenceValue createRemoveReferenceValue() {
-		RemoveReferenceValueImpl removeReferenceValue = new RemoveReferenceValueImpl();
-		return removeReferenceValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UpdateReference createUpdateReference() {
-		UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
-		return updateReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UpdateUniqueReferenceValue createUpdateUniqueReferenceValue() {
-		UpdateUniqueReferenceValueImpl updateUniqueReferenceValue = new UpdateUniqueReferenceValueImpl();
-		return updateUniqueReferenceValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public ModelInputSnapshot createModelInputSnapshot() {
@@ -415,42 +371,47 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public ConflictingDiffElement createConflictingDiffElement() {
-		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
-		return conflictingDiffElement;
+	public MoveModelElement createMoveModelElement() {
+		MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
+		return moveModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public RemoteAddModelElement createRemoteAddModelElement() {
-		RemoteAddModelElementImpl remoteAddModelElement = new RemoteAddModelElementImpl();
-		return remoteAddModelElement;
+	public ReferenceChange createReferenceChange() {
+		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
+		return referenceChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public RemoteRemoveModelElement createRemoteRemoveModelElement() {
-		RemoteRemoveModelElementImpl remoteRemoveModelElement = new RemoteRemoveModelElementImpl();
-		return remoteRemoveModelElement;
+	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
+		ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
+		return referenceChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public RemoteMoveModelElement createRemoteMoveModelElement() {
-		RemoteMoveModelElementImpl remoteMoveModelElement = new RemoteMoveModelElementImpl();
-		return remoteMoveModelElement;
+	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
+		ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
+		return referenceChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RemoteAddAttribute createRemoteAddAttribute() {
@@ -460,24 +421,17 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public RemoteRemoveAttribute createRemoteRemoveAttribute() {
-		RemoteRemoveAttributeImpl remoteRemoveAttribute = new RemoteRemoveAttributeImpl();
-		return remoteRemoveAttribute;
+	public RemoteAddModelElement createRemoteAddModelElement() {
+		RemoteAddModelElementImpl remoteAddModelElement = new RemoteAddModelElementImpl();
+		return remoteAddModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RemoteUpdateAttribute createRemoteUpdateAttribute() {
-		RemoteUpdateAttributeImpl remoteUpdateAttribute = new RemoteUpdateAttributeImpl();
-		return remoteUpdateAttribute;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RemoteAddReferenceValue createRemoteAddReferenceValue() {
@@ -487,6 +441,37 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoteMoveModelElement createRemoteMoveModelElement() {
+		RemoteMoveModelElementImpl remoteMoveModelElement = new RemoteMoveModelElementImpl();
+		return remoteMoveModelElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoteRemoveAttribute createRemoteRemoveAttribute() {
+		RemoteRemoveAttributeImpl remoteRemoveAttribute = new RemoteRemoveAttributeImpl();
+		return remoteRemoveAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoteRemoveModelElement createRemoteRemoveModelElement() {
+		RemoteRemoveModelElementImpl remoteRemoveModelElement = new RemoteRemoveModelElementImpl();
+		return remoteRemoveModelElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RemoteRemoveReferenceValue createRemoteRemoveReferenceValue() {
@@ -496,6 +481,17 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoteUpdateAttribute createRemoteUpdateAttribute() {
+		RemoteUpdateAttributeImpl remoteUpdateAttribute = new RemoteUpdateAttributeImpl();
+		return remoteUpdateAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue() {
@@ -505,36 +501,81 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public AbstractMerger createAbstractMergerFromString(EDataType eDataType, String initialValue) {
-		return (AbstractMerger)super.createFromString(eDataType, initialValue);
+	public RemoveAttribute createRemoveAttribute() {
+		RemoveAttributeImpl removeAttribute = new RemoveAttributeImpl();
+		return removeAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public String convertAbstractMergerToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
+	public RemoveModelElement createRemoveModelElement() {
+		RemoveModelElementImpl removeModelElement = new RemoveModelElementImpl();
+		return removeModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoveReferenceValue createRemoveReferenceValue() {
+		RemoveReferenceValueImpl removeReferenceValue = new RemoveReferenceValueImpl();
+		return removeReferenceValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UpdateAttribute createUpdateAttribute() {
+		UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
+		return updateAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UpdateModelElement createUpdateModelElement() {
+		UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
+		return updateModelElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UpdateReference createUpdateReference() {
+		UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
+		return updateReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UpdateUniqueReferenceValue createUpdateUniqueReferenceValue() {
+		UpdateUniqueReferenceValueImpl updateUniqueReferenceValue = new UpdateUniqueReferenceValueImpl();
+		return updateUniqueReferenceValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public DiffPackage getDiffPackage() {
 		return (DiffPackage)getEPackage();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @deprecated
-	 * @generated
-	 */
-	@Deprecated
-	public static DiffPackage getPackage() {
-		return DiffPackage.eINSTANCE;
 	}
 
 } // DiffFactoryImpl

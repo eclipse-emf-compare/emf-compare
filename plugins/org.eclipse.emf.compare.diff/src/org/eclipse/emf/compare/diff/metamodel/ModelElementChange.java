@@ -13,8 +13,7 @@ package org.eclipse.emf.compare.diff.metamodel;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Element Change</b></em>'.
  * <!-- end-user-doc -->
- *
- *
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelElementChange()
  * @model
  * @generated

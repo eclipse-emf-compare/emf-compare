@@ -24,10 +24,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implements AttributeChangeLeftTarget {
@@ -43,6 +43,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeLeftTargetImpl() {
@@ -51,15 +52,76 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.ATTRIBUTE_CHANGE_LEFT_TARGET;
+	public EObject basicGetLeftTarget() {
+		return leftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+				if (resolve)
+					return getLeftTarget();
+				return basicGetLeftTarget();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+				return leftTarget != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+				setLeftTarget((EObject)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
+				setLeftTarget((EObject)null);
+				return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -77,14 +139,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetLeftTarget() {
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
@@ -97,58 +152,12 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				if (resolve)
-					return getLeftTarget();
-				return basicGetLeftTarget();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
-		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				return leftTarget != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.ATTRIBUTE_CHANGE_LEFT_TARGET;
 	}
 
 } // AttributeChangeLeftTargetImpl

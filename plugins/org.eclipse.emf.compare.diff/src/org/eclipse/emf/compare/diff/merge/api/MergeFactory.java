@@ -42,8 +42,8 @@ import org.eclipse.emf.compare.util.FastMap;
  */
 public final class MergeFactory {
 	/**
-	 * This map keeps a bridge between a given {@link DiffElement}'s class and the
-	 * most accurate merger's class for that particular {@link DiffElement}.
+	 * This map keeps a bridge between a given {@link DiffElement}'s class and the most accurate merger's
+	 * class for that particular {@link DiffElement}.
 	 */
 	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new FastMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
 

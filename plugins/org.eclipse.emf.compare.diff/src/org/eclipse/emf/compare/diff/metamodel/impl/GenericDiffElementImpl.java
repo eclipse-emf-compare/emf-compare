@@ -16,18 +16,17 @@ import org.eclipse.emf.compare.diff.metamodel.GenericDiffElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Generic Diff Element</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Generic Diff Element</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class GenericDiffElementImpl extends DiffElementImpl implements GenericDiffElement {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected GenericDiffElementImpl() {
@@ -35,12 +34,12 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.GENERIC_DIFF_ELEMENT;
 	}
 
-} //GenericDiffElementImpl
+} // GenericDiffElementImpl

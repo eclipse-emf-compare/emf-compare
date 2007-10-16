@@ -28,7 +28,7 @@ public class FactoryDescriptor implements Comparable {
 
 	/** Class name of this factory. */
 	protected final String factoryClassName;
-	
+
 	/**
 	 * Priority of this descriptor. Should be one of
 	 * <ul>
@@ -40,7 +40,7 @@ public class FactoryDescriptor implements Comparable {
 	 * </ul>
 	 */
 	protected final String priority;
-	
+
 	/** {@link MergeFactory} this descriptor describes. */
 	private MergeFactory factory;
 

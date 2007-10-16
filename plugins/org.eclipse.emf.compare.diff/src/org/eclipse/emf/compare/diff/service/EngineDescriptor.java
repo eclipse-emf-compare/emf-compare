@@ -22,13 +22,13 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-/* package */ class EngineDescriptor implements Comparable<EngineDescriptor> {
+/* package */class EngineDescriptor implements Comparable<EngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
 	/** Class name of this engine. */
 	protected final String engineClassName;
-	
+
 	/** File extensions this engine takes into account. */
 	protected final String fileExtension;
 
@@ -117,7 +117,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		}
 		return engine;
 	}
-	
+
 	/**
 	 * Returns the file extension this engine should handle.
 	 * 
@@ -158,14 +158,15 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the attribute hasn't been set, we'll
-	 * return <code>defaultValue</code> instead.
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
+	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
 	 * 
 	 * @param name
 	 *            Name of the attribute we seek the value of.
 	 * @param defaultValue
 	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
+	 *         set.
 	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);
@@ -177,7 +178,8 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according to <code>priorityString</code> value :
+	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values
+	 * according to <code>priorityString</code> value :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>

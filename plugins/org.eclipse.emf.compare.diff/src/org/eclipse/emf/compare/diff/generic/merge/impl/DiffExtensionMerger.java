@@ -25,19 +25,20 @@ public class DiffExtensionMerger extends DefaultMerger {
 	@Override
 	public void applyInOrigin() {
 		// TODO code diff extension merger
-//		final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
-//		if (!extension.providesMerger()) {
-//			/*
-//			 * No merger is provided so we'll browse the hidden elements and merge them..
-//			 */
-//			for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator(); iterator.hasNext(); ) {
-//				final DiffElement hidden = iterator.next();
-//				final AbstractMerger merger = MergeFactory.createMerger(hidden);
-//				merger.applyInOrigin();
-//			}
-//		} else {
-//			extension.getMerger().applyInOrigin();
-//		}
+		// final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
+		// if (!extension.providesMerger()) {
+		// /*
+		// * No merger is provided so we'll browse the hidden elements and merge them..
+		// */
+		// for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator();
+		// iterator.hasNext(); ) {
+		// final DiffElement hidden = iterator.next();
+		// final AbstractMerger merger = MergeFactory.createMerger(hidden);
+		// merger.applyInOrigin();
+		// }
+		// } else {
+		// extension.getMerger().applyInOrigin();
+		// }
 	}
 
 	/**
@@ -48,18 +49,19 @@ public class DiffExtensionMerger extends DefaultMerger {
 	@Override
 	public void undoInTarget() {
 		// TODO code diff extension merger
-//		final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
-//		if (!extension.providesMerger()) {
-//			/*
-//			 * No merger is provided so we'll browse the hidden elements and merge them..
-//			 */
-//			for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator(); iterator.hasNext(); ) {
-//				final DiffElement hidden = iterator.next();
-//				final AbstractMerger merger = MergeFactory.createMerger(hidden);
-//				merger.undoInTarget();
-//			}
-//		} else {
-//			extension.getMerger().undoInTarget();
-//		}
+		// final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
+		// if (!extension.providesMerger()) {
+		// /*
+		// * No merger is provided so we'll browse the hidden elements and merge them..
+		// */
+		// for (final Iterator<DiffElement> iterator = extension.getHideElements().iterator();
+		// iterator.hasNext(); ) {
+		// final DiffElement hidden = iterator.next();
+		// final AbstractMerger merger = MergeFactory.createMerger(hidden);
+		// merger.undoInTarget();
+		// }
+		// } else {
+		// extension.getMerger().undoInTarget();
+		// }
 	}
 }

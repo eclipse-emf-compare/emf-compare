@@ -24,17 +24,18 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftRemovedTarget <em>Left Removed Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightRemovedTarget <em>Right Removed Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftRemovedTarget <em>Left Removed Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightRemovedTarget <em>Right Removed Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implements ReferenceChangeLeftTarget {
 	/**
 	 * The cached value of the '{@link #getLeftRemovedTarget() <em>Left Removed Target</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftRemovedTarget()
 	 * @generated
 	 * @ordered
@@ -44,6 +45,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	/**
 	 * The cached value of the '{@link #getRightRemovedTarget() <em>Right Removed Target</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightRemovedTarget()
 	 * @generated
 	 * @ordered
@@ -52,6 +54,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeLeftTargetImpl() {
@@ -60,33 +63,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftRemovedTarget() {
-		if (leftRemovedTarget != null && leftRemovedTarget.eIsProxy()) {
-			InternalEObject oldLeftRemovedTarget = (InternalEObject)leftRemovedTarget;
-			leftRemovedTarget = eResolveProxy(oldLeftRemovedTarget);
-			if (leftRemovedTarget != oldLeftRemovedTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET,
-							oldLeftRemovedTarget, leftRemovedTarget));
-			}
-		}
-		return leftRemovedTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftRemovedTarget() {
@@ -95,37 +72,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftRemovedTarget(EObject newLeftRemovedTarget) {
-		EObject oldLeftRemovedTarget = leftRemovedTarget;
-		leftRemovedTarget = newLeftRemovedTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET, oldLeftRemovedTarget,
-					leftRemovedTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightRemovedTarget() {
-		if (rightRemovedTarget != null && rightRemovedTarget.eIsProxy()) {
-			InternalEObject oldRightRemovedTarget = (InternalEObject)rightRemovedTarget;
-			rightRemovedTarget = eResolveProxy(oldRightRemovedTarget);
-			if (rightRemovedTarget != oldRightRemovedTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET,
-							oldRightRemovedTarget, rightRemovedTarget));
-			}
-		}
-		return rightRemovedTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightRemovedTarget() {
@@ -134,19 +81,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightRemovedTarget(EObject newRightRemovedTarget) {
-		EObject oldRightRemovedTarget = rightRemovedTarget;
-		rightRemovedTarget = newRightRemovedTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET, oldRightRemovedTarget,
-					rightRemovedTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -166,6 +101,23 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET:
+				return leftRemovedTarget != null;
+			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET:
+				return rightRemovedTarget != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -183,6 +135,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -200,17 +153,78 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftRemovedTarget() {
+		if (leftRemovedTarget != null && leftRemovedTarget.eIsProxy()) {
+			InternalEObject oldLeftRemovedTarget = (InternalEObject)leftRemovedTarget;
+			leftRemovedTarget = eResolveProxy(oldLeftRemovedTarget);
+			if (leftRemovedTarget != oldLeftRemovedTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET,
+							oldLeftRemovedTarget, leftRemovedTarget));
+			}
+		}
+		return leftRemovedTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightRemovedTarget() {
+		if (rightRemovedTarget != null && rightRemovedTarget.eIsProxy()) {
+			InternalEObject oldRightRemovedTarget = (InternalEObject)rightRemovedTarget;
+			rightRemovedTarget = eResolveProxy(oldRightRemovedTarget);
+			if (rightRemovedTarget != oldRightRemovedTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET,
+							oldRightRemovedTarget, rightRemovedTarget));
+			}
+		}
+		return rightRemovedTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftRemovedTarget(EObject newLeftRemovedTarget) {
+		EObject oldLeftRemovedTarget = leftRemovedTarget;
+		leftRemovedTarget = newLeftRemovedTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET, oldLeftRemovedTarget,
+					leftRemovedTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightRemovedTarget(EObject newRightRemovedTarget) {
+		EObject oldRightRemovedTarget = rightRemovedTarget;
+		rightRemovedTarget = newRightRemovedTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET, oldRightRemovedTarget,
+					rightRemovedTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET:
-				return leftRemovedTarget != null;
-			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET:
-				return rightRemovedTarget != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET;
 	}
 
 } // ReferenceChangeLeftTargetImpl

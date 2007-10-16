@@ -24,25 +24,15 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getRightElement <em>Right Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getRightElement <em>Right Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class UpdateModelElementImpl extends ModelElementChangeImpl implements UpdateModelElement {
-	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightElement;
-
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -54,7 +44,18 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	protected EObject leftElement;
 
 	/**
+	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightElement;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateModelElementImpl() {
@@ -63,69 +64,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.UPDATE_MODEL_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightElement() {
-		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
-			rightElement = eResolveProxy(oldRightElement);
-			if (rightElement != oldRightElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
-			}
-		}
-		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetRightElement() {
-		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightElement(EObject newRightElement) {
-		EObject oldRightElement = rightElement;
-		rightElement = newRightElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftElement() {
-		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
-			leftElement = eResolveProxy(oldLeftElement);
-			if (leftElement != oldLeftElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
-			}
-		}
-		return leftElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -134,18 +73,16 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public void setLeftElement(EObject newLeftElement) {
-		EObject oldLeftElement = leftElement;
-		leftElement = newLeftElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
+	public EObject basicGetRightElement() {
+		return rightElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -165,6 +102,23 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
+				return rightElement != null;
+			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
+				return leftElement != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -182,6 +136,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -199,17 +154,74 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftElement() {
+		if (leftElement != null && leftElement.eIsProxy()) {
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			leftElement = eResolveProxy(oldLeftElement);
+			if (leftElement != oldLeftElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
+			}
+		}
+		return leftElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightElement() {
+		if (rightElement != null && rightElement.eIsProxy()) {
+			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			rightElement = eResolveProxy(oldRightElement);
+			if (rightElement != oldRightElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
+			}
+		}
+		return rightElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftElement(EObject newLeftElement) {
+		EObject oldLeftElement = leftElement;
+		leftElement = newLeftElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, oldLeftElement, leftElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightElement(EObject newRightElement) {
+		EObject oldRightElement = rightElement;
+		rightElement = newRightElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, oldRightElement, rightElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT:
-				return rightElement != null;
-			case DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT:
-				return leftElement != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.UPDATE_MODEL_ELEMENT;
 	}
 
 } // UpdateModelElementImpl

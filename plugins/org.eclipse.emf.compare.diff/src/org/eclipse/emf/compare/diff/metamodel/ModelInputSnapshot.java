@@ -18,16 +18,15 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Input Snapshot</b></em>'.
  * <!-- end-user-doc -->
- *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate <em>Date</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff <em>Diff</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch <em>Match</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate <em>Date</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff <em>Diff</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch <em>Match</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelInputSnapshot()
  * @model
  * @generated
@@ -35,13 +34,13 @@ import org.eclipse.emf.ecore.EObject;
 @SuppressWarnings("nls")
 public interface ModelInputSnapshot extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Date</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Date</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Date</em>' attribute.
 	 * @see #setDate(Date)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelInputSnapshot_Date()
@@ -51,22 +50,13 @@ public interface ModelInputSnapshot extends EObject {
 	Date getDate();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate <em>Date</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Date</em>' attribute.
-	 * @see #getDate()
-	 * @generated
-	 */
-	void setDate(Date value);
-
-	/**
-	 * Returns the value of the '<em><b>Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Diff</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Diff</em>' containment reference isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Diff</em>' containment reference.
 	 * @see #setDiff(DiffModel)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelInputSnapshot_Diff()
@@ -76,22 +66,13 @@ public interface ModelInputSnapshot extends EObject {
 	DiffModel getDiff();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff <em>Diff</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Diff</em>' containment reference.
-	 * @see #getDiff()
-	 * @generated
-	 */
-	void setDiff(DiffModel value);
-
-	/**
-	 * Returns the value of the '<em><b>Match</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Match</b></em>' containment reference. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Match</em>' containment reference isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Match</em>' containment reference.
 	 * @see #setMatch(MatchModel)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelInputSnapshot_Match()
@@ -101,9 +82,33 @@ public interface ModelInputSnapshot extends EObject {
 	MatchModel getMatch();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch <em>Match</em>}' containment reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Match</em>' containment reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate <em>Date</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Date</em>' attribute.
+	 * @see #getDate()
+	 * @generated
+	 */
+	void setDate(Date value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff <em>Diff</em>}'
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Diff</em>' containment reference.
+	 * @see #getDiff()
+	 * @generated
+	 */
+	void setDiff(DiffModel value);
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch <em>Match</em>}'
+	 * containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Match</em>' containment reference.
 	 * @see #getMatch()
 	 * @generated
 	 */

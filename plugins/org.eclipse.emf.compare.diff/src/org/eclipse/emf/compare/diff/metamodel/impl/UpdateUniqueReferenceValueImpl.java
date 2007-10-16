@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
@@ -55,6 +55,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateUniqueReferenceValueImpl() {
@@ -63,32 +64,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.UPDATE_UNIQUE_REFERENCE_VALUE;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftTarget() {
-		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
-			leftTarget = eResolveProxy(oldLeftTarget);
-			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
-			}
-		}
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -97,36 +73,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
-		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightTarget() {
-		if (rightTarget != null && rightTarget.eIsProxy()) {
-			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
-			rightTarget = eResolveProxy(oldRightTarget);
-			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget,
-							rightTarget));
-			}
-		}
-		return rightTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -135,18 +82,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightTarget(EObject newRightTarget) {
-		EObject oldRightTarget = rightTarget;
-		rightTarget = newRightTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -166,6 +102,23 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
+				return leftTarget != null;
+			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET:
+				return rightTarget != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -183,6 +136,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -200,17 +154,75 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftTarget() {
+		if (leftTarget != null && leftTarget.eIsProxy()) {
+			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			leftTarget = eResolveProxy(oldLeftTarget);
+			if (leftTarget != oldLeftTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
+			}
+		}
+		return leftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightTarget() {
+		if (rightTarget != null && rightTarget.eIsProxy()) {
+			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			rightTarget = eResolveProxy(oldRightTarget);
+			if (rightTarget != oldRightTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget,
+							rightTarget));
+			}
+		}
+		return rightTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftTarget(EObject newLeftTarget) {
+		EObject oldLeftTarget = leftTarget;
+		leftTarget = newLeftTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, oldLeftTarget, leftTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightTarget(EObject newRightTarget) {
+		EObject oldRightTarget = rightTarget;
+		rightTarget = newRightTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET:
-				return leftTarget != null;
-			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET:
-				return rightTarget != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.UPDATE_UNIQUE_REFERENCE_VALUE;
 	}
 
 } // UpdateUniqueReferenceValueImpl

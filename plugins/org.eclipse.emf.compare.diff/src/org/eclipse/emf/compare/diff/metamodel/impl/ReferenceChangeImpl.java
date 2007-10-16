@@ -25,20 +25,30 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getReference <em>Reference</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getRightElement <em>Right Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getReference <em>Reference</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getRightElement <em>Right Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceChange {
 	/**
-	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLeftElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject leftElement;
+
+	/**
+	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getReference()
 	 * @generated
 	 * @ordered
@@ -56,17 +66,8 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	protected EObject rightElement;
 
 	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject leftElement;
-
-	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeImpl() {
@@ -75,106 +76,7 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.REFERENCE_CHANGE;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getReference() {
-		if (reference != null && reference.eIsProxy()) {
-			InternalEObject oldReference = (InternalEObject)reference;
-			reference = (EReference)eResolveProxy(oldReference);
-			if (reference != oldReference) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REFERENCE_CHANGE__REFERENCE, oldReference, reference));
-			}
-		}
-		return reference;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference basicGetReference() {
-		return reference;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setReference(EReference newReference) {
-		EReference oldReference = reference;
-		reference = newReference;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__REFERENCE,
-					oldReference, reference));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightElement() {
-		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
-			rightElement = eResolveProxy(oldRightElement);
-			if (rightElement != oldRightElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
-			}
-		}
-		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetRightElement() {
-		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightElement(EObject newRightElement) {
-		EObject oldRightElement = rightElement;
-		rightElement = newRightElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftElement() {
-		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
-			leftElement = eResolveProxy(oldLeftElement);
-			if (leftElement != oldLeftElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
-			}
-		}
-		return leftElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -183,18 +85,25 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public void setLeftElement(EObject newLeftElement) {
-		EObject oldLeftElement = leftElement;
-		leftElement = newLeftElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT,
-					oldLeftElement, leftElement));
+	public EReference basicGetReference() {
+		return reference;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject basicGetRightElement() {
+		return rightElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -218,6 +127,25 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
+				return reference != null;
+			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
+				return rightElement != null;
+			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
+				return leftElement != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -238,6 +166,7 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -258,19 +187,105 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftElement() {
+		if (leftElement != null && leftElement.eIsProxy()) {
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			leftElement = eResolveProxy(oldLeftElement);
+			if (leftElement != oldLeftElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT, oldLeftElement, leftElement));
+			}
+		}
+		return leftElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getReference() {
+		if (reference != null && reference.eIsProxy()) {
+			InternalEObject oldReference = (InternalEObject)reference;
+			reference = (EReference)eResolveProxy(oldReference);
+			if (reference != oldReference) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__REFERENCE, oldReference, reference));
+			}
+		}
+		return reference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightElement() {
+		if (rightElement != null && rightElement.eIsProxy()) {
+			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			rightElement = eResolveProxy(oldRightElement);
+			if (rightElement != oldRightElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+			}
+		}
+		return rightElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftElement(EObject newLeftElement) {
+		EObject oldLeftElement = leftElement;
+		leftElement = newLeftElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT,
+					oldLeftElement, leftElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setReference(EReference newReference) {
+		EReference oldReference = reference;
+		reference = newReference;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.REFERENCE_CHANGE__REFERENCE,
+					oldReference, reference));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightElement(EObject newRightElement) {
+		EObject oldRightElement = rightElement;
+		rightElement = newRightElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT, oldRightElement, rightElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.REFERENCE_CHANGE__REFERENCE:
-				return reference != null;
-			case DiffPackage.REFERENCE_CHANGE__RIGHT_ELEMENT:
-				return rightElement != null;
-			case DiffPackage.REFERENCE_CHANGE__LEFT_ELEMENT:
-				return leftElement != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.REFERENCE_CHANGE;
 	}
 
 } // ReferenceChangeImpl

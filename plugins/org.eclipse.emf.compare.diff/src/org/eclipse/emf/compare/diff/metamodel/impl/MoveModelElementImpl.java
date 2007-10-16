@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
@@ -55,6 +55,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected MoveModelElementImpl() {
@@ -63,32 +64,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.MOVE_MODEL_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftTarget() {
-		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
-			leftTarget = eResolveProxy(oldLeftTarget);
-			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
-			}
-		}
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -97,35 +73,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
-		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightTarget() {
-		if (rightTarget != null && rightTarget.eIsProxy()) {
-			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
-			rightTarget = eResolveProxy(oldRightTarget);
-			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
-			}
-		}
-		return rightTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -134,18 +82,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightTarget(EObject newRightTarget) {
-		EObject oldRightTarget = rightTarget;
-		rightTarget = newRightTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -165,6 +102,23 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
+				return leftTarget != null;
+			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
+				return rightTarget != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -182,6 +136,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -199,17 +154,74 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftTarget() {
+		if (leftTarget != null && leftTarget.eIsProxy()) {
+			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			leftTarget = eResolveProxy(oldLeftTarget);
+			if (leftTarget != oldLeftTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
+			}
+		}
+		return leftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightTarget() {
+		if (rightTarget != null && rightTarget.eIsProxy()) {
+			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			rightTarget = eResolveProxy(oldRightTarget);
+			if (rightTarget != oldRightTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+			}
+		}
+		return rightTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftTarget(EObject newLeftTarget) {
+		EObject oldLeftTarget = leftTarget;
+		leftTarget = newLeftTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightTarget(EObject newRightTarget) {
+		EObject oldRightTarget = rightTarget;
+		rightTarget = newRightTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET:
-				return leftTarget != null;
-			case DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET:
-				return rightTarget != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.MOVE_MODEL_ELEMENT;
 	}
 
 } // MoveModelElementImpl

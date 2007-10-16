@@ -24,12 +24,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
@@ -45,16 +45,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject leftParent;
 
 	/**
-	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightParent;
-
-	/**
 	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -65,7 +55,18 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject originElement;
 
 	/**
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightParent;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ConflictingDiffElementImpl() {
@@ -74,32 +75,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getLeftParent() {
-		if (leftParent != null && leftParent.eIsProxy()) {
-			InternalEObject oldLeftParent = (InternalEObject)leftParent;
-			leftParent = eResolveProxy(oldLeftParent);
-			if (leftParent != oldLeftParent) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
-			}
-		}
-		return leftParent;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -108,73 +84,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftParent(EObject newLeftParent) {
-		EObject oldLeftParent = leftParent;
-		leftParent = newLeftParent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getRightParent() {
-		if (rightParent != null && rightParent.eIsProxy()) {
-			InternalEObject oldRightParent = (InternalEObject)rightParent;
-			rightParent = eResolveProxy(oldRightParent);
-			if (rightParent != oldRightParent) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
-			}
-		}
-		return rightParent;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetRightParent() {
-		return rightParent;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightParent(EObject newRightParent) {
-		EObject oldRightParent = rightParent;
-		rightParent = newRightParent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getOriginElement() {
-		if (originElement != null && originElement.eIsProxy()) {
-			InternalEObject oldOriginElement = (InternalEObject)originElement;
-			originElement = eResolveProxy(oldOriginElement);
-			if (originElement != oldOriginElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement,
-							originElement));
-			}
-		}
-		return originElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -183,18 +93,16 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public void setOriginElement(EObject newOriginElement) {
-		EObject oldOriginElement = originElement;
-		originElement = newOriginElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+	public EObject basicGetRightParent() {
+		return rightParent;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -218,6 +126,25 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT:
+				return leftParent != null;
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT:
+				return rightParent != null;
+			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
+				return originElement != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -238,6 +165,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -258,19 +186,106 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getLeftParent() {
+		if (leftParent != null && leftParent.eIsProxy()) {
+			InternalEObject oldLeftParent = (InternalEObject)leftParent;
+			leftParent = eResolveProxy(oldLeftParent);
+			if (leftParent != oldLeftParent) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
+			}
+		}
+		return leftParent;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getOriginElement() {
+		if (originElement != null && originElement.eIsProxy()) {
+			InternalEObject oldOriginElement = (InternalEObject)originElement;
+			originElement = eResolveProxy(oldOriginElement);
+			if (originElement != oldOriginElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement,
+							originElement));
+			}
+		}
+		return originElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightParent() {
+		if (rightParent != null && rightParent.eIsProxy()) {
+			InternalEObject oldRightParent = (InternalEObject)rightParent;
+			rightParent = eResolveProxy(oldRightParent);
+			if (rightParent != oldRightParent) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
+			}
+		}
+		return rightParent;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftParent(EObject newLeftParent) {
+		EObject oldLeftParent = leftParent;
+		leftParent = newLeftParent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, oldLeftParent, leftParent));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setOriginElement(EObject newOriginElement) {
+		EObject oldOriginElement = originElement;
+		originElement = newOriginElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightParent(EObject newRightParent) {
+		EObject oldRightParent = rightParent;
+		rightParent = newRightParent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT:
-				return leftParent != null;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT:
-				return rightParent != null;
-			case DiffPackage.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT:
-				return originElement != null;
-		}
-		return super.eIsSet(featureID);
+	protected EClass eStaticClass() {
+		return DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT;
 	}
 
 } // ConflictingDiffElementImpl

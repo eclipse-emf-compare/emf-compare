@@ -19,13 +19,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class ModelElementChangeImpl extends DiffElementImpl implements ModelElementChange {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ModelElementChangeImpl() {
@@ -34,6 +35,7 @@ public class ModelElementChangeImpl extends DiffElementImpl implements ModelElem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

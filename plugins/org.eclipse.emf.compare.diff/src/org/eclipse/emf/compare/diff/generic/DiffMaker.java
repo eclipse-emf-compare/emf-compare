@@ -143,99 +143,6 @@ public class DiffMaker implements DiffEngine {
 	}
 
 	/**
-	 * The diff computing for three way comparisons is handled here. We'll compute the diff model from the
-	 * given match model.
-	 * 
-	 * @param match
-	 *            {@link MatchModel match model} we'll be using to compute the differences.
-	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
-	 */
-	protected DiffGroup doDiffThreeWay(MatchModel match) {
-		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
-
-		// we have to browse the model and create the corresponding operations
-		final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
-		final Resource leftModel = matchRoot.getLeftElement().eResource();
-
-		doDiffDelegate(diffRoot, matchRoot);
-
-		final Iterator unMatched = match.getUnMatchedElements().iterator();
-		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
-			boolean isChild = false;
-			boolean isAncestor = false;
-			for (Object object : match.getUnMatchedElements()) {
-				if (unMatchElement != ((UnMatchElement)object)) {
-					if (EcoreUtil.isAncestor(unMatchElement.getElement(), ((UnMatchElement)object)
-							.getElement())) {
-						isAncestor = true;
-					}
-					if (EcoreUtil.isAncestor(((UnMatchElement)object).getElement(), unMatchElement
-							.getElement())) {
-						isChild = true;
-					}
-				}
-				if (isChild || isAncestor)
-					break;
-			}
-			if (!isChild)
-				unMatchedElements.put(unMatchElement, isAncestor);
-		}
-		processUnMatchedElements(diffRoot, leftModel);
-		return diffRoot;
-	}
-
-	/**
-	 * The diff computing for two way comparisons is handled here. We'll compute the diff model from the given
-	 * match model.
-	 * 
-	 * @param match
-	 *            {@link MatchModel match model} we'll be using to compute the differences.
-	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
-	 */
-	protected DiffGroup doDiffTwoWay(MatchModel match) {
-		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
-
-		// we have to browse the model and create the corresponding operations
-		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
-		final Resource leftModel = matchRoot.getLeftElement().eResource();
-		final Resource rightModel = matchRoot.getRightElement().eResource();
-
-		// browsing the match model
-		doDiffDelegate(diffRoot, matchRoot);
-		// iterate over the unmached elements end determine if they have been
-		// added or removed.
-		final Iterator unMatched = match.getUnMatchedElements().iterator();
-		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
-			if (unMatchElement.getElement().eResource() == leftModel) {
-				// add RemoveModelElement
-				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
-				operation.setLeftElement(unMatchElement.getElement());
-				// Container will be null if we're adding a root
-				if (unMatchElement.getElement().eContainer() != null)
-					operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
-			}
-			if (unMatchElement.getElement().eResource() == rightModel) {
-				// add AddModelElement
-				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
-				operation.setRightElement(unMatchElement.getElement());
-				// Container will be null if we're adding a root
-				if (unMatchElement.getElement().eContainer() != null) {
-					operation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-					addInContainerPackage(diffRoot, operation, getMatchedEObject(unMatchElement.getElement()
-							.eContainer()));
-				} else {
-					addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
-				}
-			}
-		}
-
-		return diffRoot;
-	}
-
-	/**
 	 * This will iterate through all the attributes of the <code>mapping</code>'s two elements to check if
 	 * any of them has been modified.
 	 * 
@@ -511,6 +418,99 @@ public class DiffMaker implements DiffEngine {
 				}
 			}
 		}
+	}
+
+	/**
+	 * The diff computing for three way comparisons is handled here. We'll compute the diff model from the
+	 * given match model.
+	 * 
+	 * @param match
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
+	 */
+	protected DiffGroup doDiffThreeWay(MatchModel match) {
+		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+
+		// we have to browse the model and create the corresponding operations
+		final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
+		final Resource leftModel = matchRoot.getLeftElement().eResource();
+
+		doDiffDelegate(diffRoot, matchRoot);
+
+		final Iterator unMatched = match.getUnMatchedElements().iterator();
+		while (unMatched.hasNext()) {
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
+			boolean isChild = false;
+			boolean isAncestor = false;
+			for (Object object : match.getUnMatchedElements()) {
+				if (unMatchElement != ((UnMatchElement)object)) {
+					if (EcoreUtil.isAncestor(unMatchElement.getElement(), ((UnMatchElement)object)
+							.getElement())) {
+						isAncestor = true;
+					}
+					if (EcoreUtil.isAncestor(((UnMatchElement)object).getElement(), unMatchElement
+							.getElement())) {
+						isChild = true;
+					}
+				}
+				if (isChild || isAncestor)
+					break;
+			}
+			if (!isChild)
+				unMatchedElements.put(unMatchElement, isAncestor);
+		}
+		processUnMatchedElements(diffRoot, leftModel);
+		return diffRoot;
+	}
+
+	/**
+	 * The diff computing for two way comparisons is handled here. We'll compute the diff model from the given
+	 * match model.
+	 * 
+	 * @param match
+	 *            {@link MatchModel match model} we'll be using to compute the differences.
+	 * @return {@link DiffGroup root} of the {@link DiffModel} computed from the given {@link MatchModel}.
+	 */
+	protected DiffGroup doDiffTwoWay(MatchModel match) {
+		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+
+		// we have to browse the model and create the corresponding operations
+		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
+		final Resource leftModel = matchRoot.getLeftElement().eResource();
+		final Resource rightModel = matchRoot.getRightElement().eResource();
+
+		// browsing the match model
+		doDiffDelegate(diffRoot, matchRoot);
+		// iterate over the unmached elements end determine if they have been
+		// added or removed.
+		final Iterator unMatched = match.getUnMatchedElements().iterator();
+		while (unMatched.hasNext()) {
+			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
+			if (unMatchElement.getElement().eResource() == leftModel) {
+				// add RemoveModelElement
+				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+				operation.setLeftElement(unMatchElement.getElement());
+				// Container will be null if we're adding a root
+				if (unMatchElement.getElement().eContainer() != null)
+					operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
+			}
+			if (unMatchElement.getElement().eResource() == rightModel) {
+				// add AddModelElement
+				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
+				operation.setRightElement(unMatchElement.getElement());
+				// Container will be null if we're adding a root
+				if (unMatchElement.getElement().eContainer() != null) {
+					operation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
+					addInContainerPackage(diffRoot, operation, getMatchedEObject(unMatchElement.getElement()
+							.eContainer()));
+				} else {
+					addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
+				}
+			}
+		}
+
+		return diffRoot;
 	}
 
 	/**
