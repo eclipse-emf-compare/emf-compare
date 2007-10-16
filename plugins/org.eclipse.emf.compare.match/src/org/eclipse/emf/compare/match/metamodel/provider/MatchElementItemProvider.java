@@ -48,6 +48,24 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
+	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
+	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Collection getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
+		}
+		return childrenFeatures;
+	}
+
+	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
@@ -64,39 +82,14 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
-	 * This adds a property descriptor for the Similarity feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addSimilarityPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchElement_similarity_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature", "_UI_MatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true, false, false,
-						ItemPropertyDescriptor.REAL_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
-	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
-	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Collection getChildrenFeatures(Object object) {
-		if (childrenFeatures == null) {
-			super.getChildrenFeatures(object);
-			childrenFeatures.add(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
-		}
-		return childrenFeatures;
+	public ResourceLocator getResourceLocator() {
+		return MatchEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -135,6 +128,24 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
+	 * This adds a property descriptor for the Similarity feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addSimilarityPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchElement_similarity_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchElement_similarity_feature", "_UI_MatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH_ELEMENT__SIMILARITY, true, false, false,
+						ItemPropertyDescriptor.REAL_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
 	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -150,17 +161,6 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 
 		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS,
 				MatchFactory.eINSTANCE.createMatch3Element()));
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
 	}
 
 }

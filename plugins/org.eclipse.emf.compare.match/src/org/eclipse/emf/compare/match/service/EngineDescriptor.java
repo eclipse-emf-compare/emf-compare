@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-/* package */ class EngineDescriptor implements Comparable<EngineDescriptor> {
+/* package */class EngineDescriptor implements Comparable<EngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 
 	/** File extensions this engine takes into account. */
 	protected final String fileExtension;
-	
+
 	/**
 	 * Priority of this descriptor. Should be one of
 	 * <ul>
@@ -43,7 +43,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * </ul>
 	 */
 	protected String priority;
-	
+
 	/** {@link MatchEngine} this descriptor describes. */
 	private MatchEngine engine;
 

@@ -33,18 +33,18 @@ import org.eclipse.emf.ecore.EReference;
 @SuppressWarnings("nls")
 public interface MatchPackage extends EPackage {
 	/**
+	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	MatchPackage eINSTANCE = org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl.init();
+
+	/**
 	 * The package name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	String eNAME = "match"; //$NON-NLS-1$
-
-	/**
-	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.1"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -54,75 +54,11 @@ public interface MatchPackage extends EPackage {
 	String eNS_PREFIX = "match"; //$NON-NLS-1$
 
 	/**
-	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	MatchPackage eINSTANCE = org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl.init();
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl <em>Model</em>}'
-	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl
-	 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getMatchModel()
-	 * @generated
-	 */
-	int MATCH_MODEL = 0;
-
-	/**
-	 * The feature id for the '<em><b>Left Model</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL__LEFT_MODEL = 0;
-
-	/**
-	 * The feature id for the '<em><b>Right Model</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL__RIGHT_MODEL = 1;
-
-	/**
-	 * The feature id for the '<em><b>Origin Model</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL__ORIGIN_MODEL = 2;
-
-	/**
-	 * The feature id for the '<em><b>Matched Elements</b></em>' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL__MATCHED_ELEMENTS = 3;
-
-	/**
-	 * The feature id for the '<em><b>Un Matched Elements</b></em>' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL__UN_MATCHED_ELEMENTS = 4;
-
-	/**
-	 * The number of structural features of the '<em>Model</em>' class. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH_MODEL_FEATURE_COUNT = 5;
+	String eNS_URI = "http://www.eclipse.org/emf/compare/match/1.1"; //$NON-NLS-1$
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl <em>Element</em>}'
@@ -162,6 +98,70 @@ public interface MatchPackage extends EPackage {
 	int MATCH_ELEMENT_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl <em>Model</em>}'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl
+	 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getMatchModel()
+	 * @generated
+	 */
+	int MATCH_MODEL = 0;
+
+	/**
+	 * The feature id for the '<em><b>Left Model</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL__LEFT_MODEL = 0;
+
+	/**
+	 * The feature id for the '<em><b>Matched Elements</b></em>' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL__MATCHED_ELEMENTS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Origin Model</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL__ORIGIN_MODEL = 2;
+
+	/**
+	 * The feature id for the '<em><b>Right Model</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL__RIGHT_MODEL = 1;
+
+	/**
+	 * The feature id for the '<em><b>Un Matched Elements</b></em>' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL__UN_MATCHED_ELEMENTS = 4;
+
+	/**
+	 * The number of structural features of the '<em>Model</em>' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH_MODEL_FEATURE_COUNT = 5;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl <em>Match2 Elements</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -170,24 +170,6 @@ public interface MatchPackage extends EPackage {
 	 * @generated
 	 */
 	int MATCH2_ELEMENTS = 2;
-
-	/**
-	 * The feature id for the '<em><b>Similarity</b></em>' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH2_ELEMENTS__SIMILARITY = MATCH_ELEMENT__SIMILARITY;
-
-	/**
-	 * The feature id for the '<em><b>Sub Match Elements</b></em>' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH2_ELEMENTS__SUB_MATCH_ELEMENTS = MATCH_ELEMENT__SUB_MATCH_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference. <!-- begin-user-doc --> <!--
@@ -206,6 +188,24 @@ public interface MatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int MATCH2_ELEMENTS__RIGHT_ELEMENT = MATCH_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Similarity</b></em>' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH2_ELEMENTS__SIMILARITY = MATCH_ELEMENT__SIMILARITY;
+
+	/**
+	 * The feature id for the '<em><b>Sub Match Elements</b></em>' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH2_ELEMENTS__SUB_MATCH_ELEMENTS = MATCH_ELEMENT__SUB_MATCH_ELEMENTS;
 
 	/**
 	 * The number of structural features of the '<em>Match2 Elements</em>' class. <!-- begin-user-doc -->
@@ -227,6 +227,33 @@ public interface MatchPackage extends EPackage {
 	int MATCH3_ELEMENT = 3;
 
 	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH3_ELEMENT__LEFT_ELEMENT = MATCH2_ELEMENTS__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Origin Element</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH3_ELEMENT__ORIGIN_ELEMENT = MATCH2_ELEMENTS_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MATCH3_ELEMENT__RIGHT_ELEMENT = MATCH2_ELEMENTS__RIGHT_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Similarity</b></em>' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -243,33 +270,6 @@ public interface MatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int MATCH3_ELEMENT__SUB_MATCH_ELEMENTS = MATCH2_ELEMENTS__SUB_MATCH_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH3_ELEMENT__LEFT_ELEMENT = MATCH2_ELEMENTS__LEFT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH3_ELEMENT__RIGHT_ELEMENT = MATCH2_ELEMENTS__RIGHT_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Origin Element</b></em>' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MATCH3_ELEMENT__ORIGIN_ELEMENT = MATCH2_ELEMENTS_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Match3 Element</em>' class. <!-- begin-user-doc -->
@@ -307,7 +307,7 @@ public interface MatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int UN_MATCH_ELEMENT_FEATURE_COUNT = 1;
-
+	
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl <em>Remote Un Match Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -335,103 +335,6 @@ public interface MatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOTE_UN_MATCH_ELEMENT_FEATURE_COUNT = UN_MATCH_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Model</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
-	 * @generated
-	 */
-	EClass getMatchModel();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel <em>Left Model</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Left Model</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel()
-	 * @see #getMatchModel()
-	 * @generated
-	 */
-	EAttribute getMatchModel_LeftModel();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel <em>Right Model</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Right Model</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel()
-	 * @see #getMatchModel()
-	 * @generated
-	 */
-	EAttribute getMatchModel_RightModel();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel <em>Origin Model</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Origin Model</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel()
-	 * @see #getMatchModel()
-	 * @generated
-	 */
-	EAttribute getMatchModel_OriginModel();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements <em>Matched Elements</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the containment reference list '<em>Matched Elements</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements()
-	 * @see #getMatchModel()
-	 * @generated
-	 */
-	EReference getMatchModel_MatchedElements();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getUnMatchedElements <em>Un Matched Elements</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the containment reference list '<em>Un Matched Elements</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getUnMatchedElements()
-	 * @see #getMatchModel()
-	 * @generated
-	 */
-	EReference getMatchModel_UnMatchedElements();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Element</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
-	 * @generated
-	 */
-	EClass getMatchElement();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchElement#getSimilarity <em>Similarity</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the attribute '<em>Similarity</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement#getSimilarity()
-	 * @see #getMatchElement()
-	 * @generated
-	 */
-	EAttribute getMatchElement_Similarity();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchElement#getSubMatchElements <em>Sub Match Elements</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for the containment reference list '<em>Sub Match Elements</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement#getSubMatchElements()
-	 * @see #getMatchElement()
-	 * @generated
-	 */
-	EReference getMatchElement_SubMatchElements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.Match2Elements <em>Match2 Elements</em>}'.
@@ -487,6 +390,122 @@ public interface MatchPackage extends EPackage {
 	EReference getMatch3Element_OriginElement();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Element</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
+	 * @generated
+	 */
+	EClass getMatchElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchElement#getSimilarity <em>Similarity</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Similarity</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement#getSimilarity()
+	 * @see #getMatchElement()
+	 * @generated
+	 */
+	EAttribute getMatchElement_Similarity();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchElement#getSubMatchElements <em>Sub Match Elements</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Sub Match Elements</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement#getSubMatchElements()
+	 * @see #getMatchElement()
+	 * @generated
+	 */
+	EReference getMatchElement_SubMatchElements();
+
+	/**
+	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the factory that creates the instances of the model.
+	 * @generated
+	 */
+	MatchFactory getMatchFactory();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Model</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
+	 * @generated
+	 */
+	EClass getMatchModel();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel <em>Left Model</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Left Model</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel()
+	 * @see #getMatchModel()
+	 * @generated
+	 */
+	EAttribute getMatchModel_LeftModel();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements <em>Matched Elements</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Matched Elements</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements()
+	 * @see #getMatchModel()
+	 * @generated
+	 */
+	EReference getMatchModel_MatchedElements();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel <em>Origin Model</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Origin Model</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel()
+	 * @see #getMatchModel()
+	 * @generated
+	 */
+	EAttribute getMatchModel_OriginModel();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel <em>Right Model</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Right Model</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel()
+	 * @see #getMatchModel()
+	 * @generated
+	 */
+	EAttribute getMatchModel_RightModel();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getUnMatchedElements <em>Un Matched Elements</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '<em>Un Matched Elements</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel#getUnMatchedElements()
+	 * @see #getMatchModel()
+	 * @generated
+	 */
+	EReference getMatchModel_UnMatchedElements();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement <em>Remote Un Match Element</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Remote Un Match Element</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement
+	 * @generated
+	 */
+	EClass getRemoteUnMatchElement();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.UnMatchElement <em>Un Match Element</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -508,25 +527,6 @@ public interface MatchPackage extends EPackage {
 	EReference getUnMatchElement_Element();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement <em>Remote Un Match Element</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @return the meta object for class '<em>Remote Un Match Element</em>'.
-	 * @see org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement
-	 * @generated
-	 */
-	EClass getRemoteUnMatchElement();
-
-	/**
-	 * Returns the factory that creates the instances of the model. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return the factory that creates the instances of the model.
-	 * @generated
-	 */
-	MatchFactory getMatchFactory();
-
-	/**
 	 * <!-- begin-user-doc --> Defines literals for the meta objects that represent
 	 * <ul>
 	 * <li>each class,</li>
@@ -539,56 +539,6 @@ public interface MatchPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
-		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl <em>Model</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl
-		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getMatchModel()
-		 * @generated
-		 */
-		EClass MATCH_MODEL = eINSTANCE.getMatchModel();
-
-		/**
-		 * The meta object literal for the '<em><b>Left Model</b></em>' attribute feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EAttribute MATCH_MODEL__LEFT_MODEL = eINSTANCE.getMatchModel_LeftModel();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Model</b></em>' attribute feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EAttribute MATCH_MODEL__RIGHT_MODEL = eINSTANCE.getMatchModel_RightModel();
-
-		/**
-		 * The meta object literal for the '<em><b>Origin Model</b></em>' attribute feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EAttribute MATCH_MODEL__ORIGIN_MODEL = eINSTANCE.getMatchModel_OriginModel();
-
-		/**
-		 * The meta object literal for the '<em><b>Matched Elements</b></em>' containment reference list
-		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference MATCH_MODEL__MATCHED_ELEMENTS = eINSTANCE.getMatchModel_MatchedElements();
-
-		/**
-		 * The meta object literal for the '<em><b>Un Matched Elements</b></em>' containment reference
-		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference MATCH_MODEL__UN_MATCHED_ELEMENTS = eINSTANCE.getMatchModel_UnMatchedElements();
-
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchElementImpl <em>Element</em>}'
 		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -614,6 +564,56 @@ public interface MatchPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MATCH_ELEMENT__SUB_MATCH_ELEMENTS = eINSTANCE.getMatchElement_SubMatchElements();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl <em>Model</em>}'
+		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl
+		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getMatchModel()
+		 * @generated
+		 */
+		EClass MATCH_MODEL = eINSTANCE.getMatchModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Model</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MATCH_MODEL__LEFT_MODEL = eINSTANCE.getMatchModel_LeftModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Matched Elements</b></em>' containment reference list
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MATCH_MODEL__MATCHED_ELEMENTS = eINSTANCE.getMatchModel_MatchedElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Origin Model</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MATCH_MODEL__ORIGIN_MODEL = eINSTANCE.getMatchModel_OriginModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Model</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MATCH_MODEL__RIGHT_MODEL = eINSTANCE.getMatchModel_RightModel();
+
+		/**
+		 * The meta object literal for the '<em><b>Un Matched Elements</b></em>' containment reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MATCH_MODEL__UN_MATCHED_ELEMENTS = eINSTANCE.getMatchModel_UnMatchedElements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl <em>Match2 Elements</em>}'
@@ -660,6 +660,16 @@ public interface MatchPackage extends EPackage {
 		EReference MATCH3_ELEMENT__ORIGIN_ELEMENT = eINSTANCE.getMatch3Element_OriginElement();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl <em>Remote Un Match Element</em>}'
+		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl
+		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getRemoteUnMatchElement()
+		 * @generated
+		 */
+		EClass REMOTE_UN_MATCH_ELEMENT = eINSTANCE.getRemoteUnMatchElement();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl <em>Un Match Element</em>}'
 		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
@@ -676,16 +686,6 @@ public interface MatchPackage extends EPackage {
 		 * @generated
 		 */
 		EReference UN_MATCH_ELEMENT__ELEMENT = eINSTANCE.getUnMatchElement_Element();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl <em>Remote Un Match Element</em>}'
-		 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @see org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl
-		 * @see org.eclipse.emf.compare.match.metamodel.impl.MatchPackageImpl#getRemoteUnMatchElement()
-		 * @generated
-		 */
-		EClass REMOTE_UN_MATCH_ELEMENT = eINSTANCE.getRemoteUnMatchElement();
 
 	}
 

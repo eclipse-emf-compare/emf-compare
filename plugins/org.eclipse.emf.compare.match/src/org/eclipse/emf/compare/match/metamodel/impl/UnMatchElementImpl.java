@@ -57,49 +57,8 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 * 
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
-		return MatchPackage.Literals.UN_MATCH_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EObject getElement() {
-		if (element != null && element.eIsProxy()) {
-			InternalEObject oldElement = (InternalEObject)element;
-			element = eResolveProxy(oldElement);
-			if (element != oldElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
-			}
-		}
-		return element;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public EObject basicGetElement() {
 		return element;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setElement(EObject newElement) {
-		EObject oldElement = element;
-		element = newElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT,
-					oldElement, element));
 	}
 
 	/**
@@ -116,6 +75,20 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 				return basicGetElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
+				return element != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -153,13 +126,40 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	 * 
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case MatchPackage.UN_MATCH_ELEMENT__ELEMENT:
-				return element != null;
+	public EObject getElement() {
+		if (element != null && element.eIsProxy()) {
+			InternalEObject oldElement = (InternalEObject)element;
+			element = eResolveProxy(oldElement);
+			if (element != oldElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.UN_MATCH_ELEMENT__ELEMENT, oldElement, element));
+			}
 		}
-		return super.eIsSet(featureID);
+		return element;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setElement(EObject newElement) {
+		EObject oldElement = element;
+		element = newElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UN_MATCH_ELEMENT__ELEMENT,
+					oldElement, element));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return MatchPackage.Literals.UN_MATCH_ELEMENT;
 	}
 
 } // UnMatchElementImpl

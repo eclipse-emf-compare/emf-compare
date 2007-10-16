@@ -84,43 +84,14 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 * @generated
 	 */
 	@Override
-	protected EClass eStaticClass() {
-		return MatchPackage.Literals.MATCH_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public double getSimilarity() {
-		return similarity;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setSimilarity(double newSimilarity) {
-		double oldSimilarity = similarity;
-		similarity = newSimilarity;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY,
-					oldSimilarity, similarity));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EList getSubMatchElements() {
-		if (subMatchElements == null) {
-			subMatchElements = new EObjectContainmentEList(MatchElement.class, this,
-					MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
+				return new Double(getSimilarity());
+			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
+				return getSubMatchElements();
 		}
-		return subMatchElements;
+		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
@@ -143,14 +114,14 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 * @generated
 	 */
 	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-				return new Double(getSimilarity());
+				return similarity != SIMILARITY_EDEFAULT;
 			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-				return getSubMatchElements();
+				return subMatchElements != null && !subMatchElements.isEmpty();
 		}
-		return super.eGet(featureID, resolve, coreType);
+		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -196,15 +167,34 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 * 
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case MatchPackage.MATCH_ELEMENT__SIMILARITY:
-				return similarity != SIMILARITY_EDEFAULT;
-			case MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS:
-				return subMatchElements != null && !subMatchElements.isEmpty();
+	public double getSimilarity() {
+		return similarity;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EList getSubMatchElements() {
+		if (subMatchElements == null) {
+			subMatchElements = new EObjectContainmentEList(MatchElement.class, this,
+					MatchPackage.MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
 		}
-		return super.eIsSet(featureID);
+		return subMatchElements;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setSimilarity(double newSimilarity) {
+		double oldSimilarity = similarity;
+		similarity = newSimilarity;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH_ELEMENT__SIMILARITY,
+					oldSimilarity, similarity));
 	}
 
 	/**
@@ -222,6 +212,16 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 		result.append(similarity);
 		result.append(')');
 		return result.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return MatchPackage.Literals.MATCH_ELEMENT;
 	}
 
 } // MatchElementImpl

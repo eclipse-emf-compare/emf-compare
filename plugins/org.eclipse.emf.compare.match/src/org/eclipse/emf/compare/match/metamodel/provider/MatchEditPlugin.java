@@ -25,14 +25,14 @@ public final class MatchEditPlugin extends EMFPlugin {
 	 * 
 	 * @generated
 	 */
-	public static final MatchEditPlugin INSTANCE = new MatchEditPlugin();
+	/* package */static Implementation plugin;
 
 	/**
 	 * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	/* package */static Implementation plugin;
+	public static final MatchEditPlugin INSTANCE = new MatchEditPlugin();
 
 	/**
 	 * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -49,8 +49,7 @@ public final class MatchEditPlugin extends EMFPlugin {
 	 * @return the singleton instance.
 	 * @generated
 	 */
-	@Override
-	public ResourceLocator getPluginResourceLocator() {
+	public static Implementation getPlugin() {
 		return plugin;
 	}
 
@@ -60,7 +59,8 @@ public final class MatchEditPlugin extends EMFPlugin {
 	 * @return the singleton instance.
 	 * @generated
 	 */
-	public static Implementation getPlugin() {
+	@Override
+	public ResourceLocator getPluginResourceLocator() {
 		return plugin;
 	}
 

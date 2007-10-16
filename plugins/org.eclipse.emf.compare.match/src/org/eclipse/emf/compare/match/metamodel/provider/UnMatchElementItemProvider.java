@@ -44,6 +44,16 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
+	 * This returns UnMatchElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnMatchElement")); //$NON-NLS-1$
+	}
+
+	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
@@ -60,29 +70,14 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
-	 * This adds a property descriptor for the Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UnMatchElement_element_feature"), getString("_UI_PropertyDescriptor_description", "_UI_UnMatchElement_element_feature", "_UI_UnMatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.UN_MATCH_ELEMENT__ELEMENT, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This returns UnMatchElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnMatchElement")); //$NON-NLS-1$
+	public ResourceLocator getResourceLocator() {
+		return MatchEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -109,6 +104,22 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
+	 * This adds a property descriptor for the Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addElementPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_UnMatchElement_element_feature"), getString("_UI_PropertyDescriptor_description", "_UI_UnMatchElement_element_feature", "_UI_UnMatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.UN_MATCH_ELEMENT__ELEMENT, true, false, true, null, null, null));
+	}
+
+	/**
 	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
 	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -117,17 +128,6 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
 	}
 
 }

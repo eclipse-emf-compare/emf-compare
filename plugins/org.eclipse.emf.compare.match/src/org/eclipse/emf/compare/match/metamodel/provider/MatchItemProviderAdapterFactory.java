@@ -40,14 +40,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 @SuppressWarnings("nls")
 public class MatchItemProviderAdapterFactory extends MatchAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
-	 * This keeps track of the root adapter factory that delegates to this adapter factory. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ComposedAdapterFactory parentAdapterFactory;
-
-	/**
 	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
 	 * 
@@ -56,12 +48,65 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 	protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.match.metamodel.Match2Elements} instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected Match2ElementsItemProvider match2ElementsItemProvider;
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.match.metamodel.Match3Element} instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected Match3ElementItemProvider match3ElementItemProvider;
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.match.metamodel.MatchModel} instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected MatchModelItemProvider matchModelItemProvider;
+
+	/**
+	 * This keeps track of the root adapter factory that delegates to this adapter factory. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ComposedAdapterFactory parentAdapterFactory;
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement} instances. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected RemoteUnMatchElementItemProvider remoteUnMatchElementItemProvider;
+
+	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	protected Collection supportedTypes = new ArrayList();
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement} instances. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected UnMatchElementItemProvider unMatchElementItemProvider;
 
 	/**
 	 * This constructs an instance. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -75,156 +120,6 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 		supportedTypes.add(ITreeItemContentProvider.class);
 		supportedTypes.add(IItemLabelProvider.class);
 		supportedTypes.add(IItemPropertySource.class);
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.match.metamodel.MatchModel} instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected MatchModelItemProvider matchModelItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchModel}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createMatchModelAdapter() {
-		if (matchModelItemProvider == null) {
-			matchModelItemProvider = new MatchModelItemProvider(this);
-		}
-
-		return matchModelItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.match.metamodel.Match2Elements} instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected Match2ElementsItemProvider match2ElementsItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createMatch2ElementsAdapter() {
-		if (match2ElementsItemProvider == null) {
-			match2ElementsItemProvider = new Match2ElementsItemProvider(this);
-		}
-
-		return match2ElementsItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.match.metamodel.Match3Element} instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected Match3ElementItemProvider match3ElementItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createMatch3ElementAdapter() {
-		if (match3ElementItemProvider == null) {
-			match3ElementItemProvider = new Match3ElementItemProvider(this);
-		}
-
-		return match3ElementItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement} instances. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected UnMatchElementItemProvider unMatchElementItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createUnMatchElementAdapter() {
-		if (unMatchElementItemProvider == null) {
-			unMatchElementItemProvider = new UnMatchElementItemProvider(this);
-		}
-
-		return unMatchElementItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement} instances. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected RemoteUnMatchElementItemProvider remoteUnMatchElementItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteUnMatchElementAdapter() {
-		if (remoteUnMatchElementItemProvider == null) {
-			remoteUnMatchElementItemProvider = new RemoteUnMatchElementItemProvider(this);
-		}
-
-		return remoteUnMatchElementItemProvider;
-	}
-
-	/**
-	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-	}
-
-	/**
-	 * This sets the composed adapter factory that contains this factory. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-		this.parentAdapterFactory = parentAdapterFactory;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public boolean isFactoryForType(Object type) {
-		return supportedTypes.contains(type) || super.isFactoryForType(type);
 	}
 
 	/**
@@ -265,26 +160,78 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 	}
 
 	/**
-	 * This removes a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public void removeListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.removeListener(notifyChangedListener);
+	@Override
+	public Adapter createMatch2ElementsAdapter() {
+		if (match2ElementsItemProvider == null) {
+			match2ElementsItemProvider = new Match2ElementsItemProvider(this);
+		}
+
+		return match2ElementsItemProvider;
 	}
 
 	/**
-	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match3Element}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public void fireNotifyChanged(Notification notification) {
-		changeNotifier.fireNotifyChanged(notification);
-
-		if (parentAdapterFactory != null) {
-			parentAdapterFactory.fireNotifyChanged(notification);
+	@Override
+	public Adapter createMatch3ElementAdapter() {
+		if (match3ElementItemProvider == null) {
+			match3ElementItemProvider = new Match3ElementItemProvider(this);
 		}
+
+		return match3ElementItemProvider;
+	}
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchModel}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createMatchModelAdapter() {
+		if (matchModelItemProvider == null) {
+			matchModelItemProvider = new MatchModelItemProvider(this);
+		}
+
+		return matchModelItemProvider;
+	}
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createRemoteUnMatchElementAdapter() {
+		if (remoteUnMatchElementItemProvider == null) {
+			remoteUnMatchElementItemProvider = new RemoteUnMatchElementItemProvider(this);
+		}
+
+		return remoteUnMatchElementItemProvider;
+	}
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createUnMatchElementAdapter() {
+		if (unMatchElementItemProvider == null) {
+			unMatchElementItemProvider = new UnMatchElementItemProvider(this);
+		}
+
+		return unMatchElementItemProvider;
 	}
 
 	/**
@@ -304,6 +251,59 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 			unMatchElementItemProvider.dispose();
 		if (remoteUnMatchElementItemProvider != null)
 			remoteUnMatchElementItemProvider.dispose();
+	}
+
+	/**
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void fireNotifyChanged(Notification notification) {
+		changeNotifier.fireNotifyChanged(notification);
+
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
+
+	/**
+	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ComposeableAdapterFactory getRootAdapterFactory() {
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean isFactoryForType(Object type) {
+		return supportedTypes.contains(type) || super.isFactoryForType(type);
+	}
+
+	/**
+	 * This removes a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void removeListener(INotifyChangedListener notifyChangedListener) {
+		changeNotifier.removeListener(notifyChangedListener);
+	}
+
+	/**
+	 * This sets the composed adapter factory that contains this factory. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
+		this.parentAdapterFactory = parentAdapterFactory;
 	}
 
 }

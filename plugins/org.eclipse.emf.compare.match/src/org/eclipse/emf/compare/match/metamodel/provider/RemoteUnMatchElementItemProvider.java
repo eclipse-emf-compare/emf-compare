@@ -42,6 +42,16 @@ public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider
 	}
 
 	/**
+	 * This returns RemoteUnMatchElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteUnMatchElement")); //$NON-NLS-1$
+	}
+
+	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
@@ -57,13 +67,14 @@ public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider
 	}
 
 	/**
-	 * This returns RemoteUnMatchElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteUnMatchElement")); //$NON-NLS-1$
+	public ResourceLocator getResourceLocator() {
+		return MatchEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -98,17 +109,6 @@ public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
 	}
 
 }

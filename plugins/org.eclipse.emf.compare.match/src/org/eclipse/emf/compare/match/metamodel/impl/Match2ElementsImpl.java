@@ -67,34 +67,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	 * 
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
-		return MatchPackage.Literals.MATCH2_ELEMENTS;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EObject getLeftElement() {
-		if (leftElement != null && leftElement.eIsProxy()) {
-			InternalEObject oldLeftElement = (InternalEObject)leftElement;
-			leftElement = eResolveProxy(oldLeftElement);
-			if (leftElement != oldLeftElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
-			}
-		}
-		return leftElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public EObject basicGetLeftElement() {
 		return leftElement;
 	}
@@ -104,52 +76,8 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	 * 
 	 * @generated
 	 */
-	public void setLeftElement(EObject newLeftElement) {
-		EObject oldLeftElement = leftElement;
-		leftElement = newLeftElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT,
-					oldLeftElement, leftElement));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EObject getRightElement() {
-		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
-			rightElement = eResolveProxy(oldRightElement);
-			if (rightElement != oldRightElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
-			}
-		}
-		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public EObject basicGetRightElement() {
 		return rightElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setRightElement(EObject newRightElement) {
-		EObject oldRightElement = rightElement;
-		rightElement = newRightElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
 	}
 
 	/**
@@ -170,6 +98,22 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 				return basicGetRightElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
+				return leftElement != null;
+			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
+				return rightElement != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -213,14 +157,70 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	 * 
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT:
-				return leftElement != null;
-			case MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT:
-				return rightElement != null;
+	public EObject getLeftElement() {
+		if (leftElement != null && leftElement.eIsProxy()) {
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			leftElement = eResolveProxy(oldLeftElement);
+			if (leftElement != oldLeftElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT, oldLeftElement, leftElement));
+			}
 		}
-		return super.eIsSet(featureID);
+		return leftElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EObject getRightElement() {
+		if (rightElement != null && rightElement.eIsProxy()) {
+			InternalEObject oldRightElement = (InternalEObject)rightElement;
+			rightElement = eResolveProxy(oldRightElement);
+			if (rightElement != oldRightElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
+			}
+		}
+		return rightElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftElement(EObject newLeftElement) {
+		EObject oldLeftElement = leftElement;
+		leftElement = newLeftElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT,
+					oldLeftElement, leftElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightElement(EObject newRightElement) {
+		EObject oldRightElement = rightElement;
+		rightElement = newRightElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT, oldRightElement, rightElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return MatchPackage.Literals.MATCH2_ELEMENTS;
 	}
 } // Match2ElementsImpl

@@ -52,6 +52,118 @@ public class MatchSwitch {
 	}
 
 	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Match2 Elements</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Match2 Elements</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMatch2Elements(@SuppressWarnings("unused")
+	Match2Elements object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Match3 Element</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Match3 Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMatch3Element(@SuppressWarnings("unused")
+	Match3Element object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Element</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMatchElement(@SuppressWarnings("unused")
+	MatchElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Model</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Model</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseMatchModel(@SuppressWarnings("unused")
+	MatchModel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseRemoteUnMatchElement(@SuppressWarnings("unused")
+	RemoteUnMatchElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>Un Match Element</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>Un Match Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public Object caseUnMatchElement(@SuppressWarnings("unused")
+	UnMatchElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpretting the object as an instance of '<em>EObject</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch, but this is the last case anyway. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpretting the object as an instance of '<em>EObject</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
+	 * @generated
+	 */
+	public Object defaultCase(@SuppressWarnings("unused")
+	EObject object) {
+		return null;
+	}
+
+	/**
 	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
 	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -140,118 +252,6 @@ public class MatchSwitch {
 			default:
 				return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Model</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Model</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseMatchModel(@SuppressWarnings("unused")
-	MatchModel object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Element</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseMatchElement(@SuppressWarnings("unused")
-	MatchElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Match2 Elements</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Match2 Elements</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseMatch2Elements(@SuppressWarnings("unused")
-	Match2Elements object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Match3 Element</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Match3 Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseMatch3Element(@SuppressWarnings("unused")
-	Match3Element object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Un Match Element</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Un Match Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseUnMatchElement(@SuppressWarnings("unused")
-	UnMatchElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
-	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
-	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Remote Un Match Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public Object caseRemoteUnMatchElement(@SuppressWarnings("unused")
-	RemoteUnMatchElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpretting the object as an instance of '<em>EObject</em>'. <!--
-	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
-	 * switch, but this is the last case anyway. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>EObject</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
-	 * @generated
-	 */
-	public Object defaultCase(@SuppressWarnings("unused")
-	EObject object) {
-		return null;
 	}
 
 } // MatchSwitch

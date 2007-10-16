@@ -70,40 +70,44 @@ public final class StructureSimilarity {
 	 *             Thrown if we cannot compute the similarity.
 	 */
 	public static double typeSimilarityMetric(EObject obj1, EObject obj2) throws FactoryException {
-		final int attributesCount = obj1.eClass().getEAllAttributes().size() + obj2.eClass().getEAllAttributes().size();
-		final int referencesCount = obj1.eClass().getEAllReferences().size() + obj2.eClass().getEAllReferences().size();
-		final double attributesSimilarity = NameSimilarity.nameSimilarityMetric(attributeTypeValue(obj1), attributeTypeValue(obj2));
-		final double referencesSimilarity = NameSimilarity.nameSimilarityMetric(referenceTypeValue(obj1), referenceTypeValue(obj2));
-		
+		final int attributesCount = obj1.eClass().getEAllAttributes().size()
+				+ obj2.eClass().getEAllAttributes().size();
+		final int referencesCount = obj1.eClass().getEAllReferences().size()
+				+ obj2.eClass().getEAllReferences().size();
+		final double attributesSimilarity = NameSimilarity.nameSimilarityMetric(attributeTypeValue(obj1),
+				attributeTypeValue(obj2));
+		final double referencesSimilarity = NameSimilarity.nameSimilarityMetric(referenceTypeValue(obj1),
+				referenceTypeValue(obj2));
+
 		double similarity = attributesSimilarity * attributesCount + referencesSimilarity * referencesCount;
 		similarity /= attributesCount + referencesCount;
-		
+
 		return similarity;
 	}
 
 	/**
-	 * This method returns a {@link String} representing the {@link EObject} attributes' values.
+	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s
+	 * attributes type.
 	 * 
 	 * @param current
-	 *            {@link EObject} we need the attributes' values of.
-	 * @param filter
-	 *            Allows filtering of the pertinent features.
-	 * @return A {@link String} representing the {@link EObject} attributes' values.
+	 *            {@link EObject} we need the attributes' type value of.
+	 * @return A {@link String} with content corresponding to the {@link EObject}'s attributes type.
 	 * @throws FactoryException
-	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
+	 *             Thrown if we cannot retrieve one of <code>current</code>'s attributes name.
 	 */
-	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
+	private static String attributeTypeValue(EObject current) throws FactoryException {
 		final StringBuilder result = new StringBuilder();
-		result.append(childrenValue(current, filter));
-		final EObject container = current.eContainer();
-		if (container != null)
-			result.append(NameSimilarity.findName(container));
+
+		final List<EAttribute> attributes = current.eClass().getEAllAttributes();
+		for (EAttribute attribute : attributes)
+			result.append(attribute.eClass().getName()).append(NameSimilarity.findName(attribute));
 
 		return result.toString();
 	}
-	
+
 	/**
 	 * Returns a String composed of the names of all the {@link EObject}'s children.
+	 * 
 	 * @param current
 	 *            {@link EObject} we need the children value of.
 	 * @param filter
@@ -140,28 +144,10 @@ public final class StructureSimilarity {
 		}
 		return result.toString();
 	}
-	
+
 	/**
-	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s attributes type.
-	 * 
-	 * @param current
-	 *            {@link EObject} we need the attributes' type value of.
-	 * @return A {@link String} with content corresponding to the {@link EObject}'s attributes type.
-	 * @throws FactoryException
-	 *             Thrown if we cannot retrieve one of <code>current</code>'s attributes name.
-	 */
-	private static String attributeTypeValue(EObject current) throws FactoryException {
-		final StringBuilder result = new StringBuilder();
-		
-		final List<EAttribute> attributes = current.eClass().getEAllAttributes();
-		for (EAttribute attribute : attributes)
-			result.append(attribute.eClass().getName()).append(NameSimilarity.findName(attribute));
-			
-		return result.toString();
-	}
-	
-	/**
-	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s references type.
+	 * This method returns a {@link String} with content corresponding to the given {@link EObject}'s
+	 * references type.
 	 * 
 	 * @param current
 	 *            {@link EObject} we need the references' type value of.
@@ -171,11 +157,32 @@ public final class StructureSimilarity {
 	 */
 	private static String referenceTypeValue(EObject current) throws FactoryException {
 		final StringBuilder result = new StringBuilder();
-		
+
 		final List<EReference> references = current.eClass().getEAllReferences();
 		for (EReference reference : references)
 			result.append(reference.eClass().getName()).append(NameSimilarity.findName(reference));
-			
+
+		return result.toString();
+	}
+
+	/**
+	 * This method returns a {@link String} representing the {@link EObject} attributes' values.
+	 * 
+	 * @param current
+	 *            {@link EObject} we need the attributes' values of.
+	 * @param filter
+	 *            Allows filtering of the pertinent features.
+	 * @return A {@link String} representing the {@link EObject} attributes' values.
+	 * @throws FactoryException
+	 *             Thrown if we cannot retrieve the {@link EObject} features or their values.
+	 */
+	private static String relationsValue(EObject current, MetamodelFilter filter) throws FactoryException {
+		final StringBuilder result = new StringBuilder();
+		result.append(childrenValue(current, filter));
+		final EObject container = current.eContainer();
+		if (container != null)
+			result.append(NameSimilarity.findName(container));
+
 		return result.toString();
 	}
 }

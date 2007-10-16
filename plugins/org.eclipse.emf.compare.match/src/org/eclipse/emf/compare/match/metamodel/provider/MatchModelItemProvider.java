@@ -49,78 +49,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public List getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
-
-			addLeftModelPropertyDescriptor(object);
-			addRightModelPropertyDescriptor(object);
-			addOriginModelPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftModelPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_leftModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightModelPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_rightModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Origin Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addOriginModelPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_originModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
 	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
 	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
 	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
@@ -140,19 +68,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	protected EStructuralFeature getChildFeature(Object object, Object child) {
-		// Check the type of the specified child object and return the proper feature to use for
-		// adding (see {@link AddCommand}) it as a child.
-
-		return super.getChildFeature(object, child);
-	}
-
-	/**
 	 * This returns MatchModel.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -160,6 +75,35 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	@Override
 	public Object getImage(Object object) {
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/MatchModel")); //$NON-NLS-1$
+	}
+
+	/**
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public List getPropertyDescriptors(Object object) {
+		if (itemPropertyDescriptors == null) {
+			super.getPropertyDescriptors(object);
+
+			addLeftModelPropertyDescriptor(object);
+			addRightModelPropertyDescriptor(object);
+			addOriginModelPropertyDescriptor(object);
+		}
+		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return MatchEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -201,6 +145,60 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
+	 * This adds a property descriptor for the Left Model feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addLeftModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_leftModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Origin Model feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addOriginModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_originModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Model feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addRightModelPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_rightModel_feature"), getString("_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
 	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -225,14 +223,16 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 }

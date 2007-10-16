@@ -31,6 +31,26 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 @SuppressWarnings("nls")
 public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	/**
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public MatchFactoryImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @deprecated
+	 * @generated
+	 */
+	@Deprecated
+	public static MatchPackage getPackage() {
+		return MatchPackage.eINSTANCE;
+	}
+
+	/**
 	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -46,15 +66,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new MatchFactoryImpl();
-	}
-
-	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public MatchFactoryImpl() {
-		super();
 	}
 
 	/**
@@ -86,16 +97,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * 
 	 * @generated
 	 */
-	public MatchModel createMatchModel() {
-		MatchModelImpl matchModel = new MatchModelImpl();
-		return matchModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public Match2Elements createMatch2Elements() {
 		Match2ElementsImpl match2Elements = new Match2ElementsImpl();
 		return match2Elements;
@@ -116,9 +117,9 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * 
 	 * @generated
 	 */
-	public UnMatchElement createUnMatchElement() {
-		UnMatchElementImpl unMatchElement = new UnMatchElementImpl();
-		return unMatchElement;
+	public MatchModel createMatchModel() {
+		MatchModelImpl matchModel = new MatchModelImpl();
+		return matchModel;
 	}
 
 	/**
@@ -136,19 +137,18 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * 
 	 * @generated
 	 */
-	public MatchPackage getMatchPackage() {
-		return (MatchPackage)getEPackage();
+	public UnMatchElement createUnMatchElement() {
+		UnMatchElementImpl unMatchElement = new UnMatchElementImpl();
+		return unMatchElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @deprecated
 	 * @generated
 	 */
-	@Deprecated
-	public static MatchPackage getPackage() {
-		return MatchPackage.eINSTANCE;
+	public MatchPackage getMatchPackage() {
+		return (MatchPackage)getEPackage();
 	}
 
 } // MatchFactoryImpl

@@ -32,15 +32,15 @@ import org.eclipse.emf.ecore.EObject;
 public final class MatchService {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
-	
+
 	/** Name of the extension point to parse for engines. */
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
 
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
-
 	/** Keeps track of all the engines parsed. */
 	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new FastMap<String, ArrayList<EngineDescriptor>>();
+
+	/** Externalized here to avoid too many distinct usages. */
+	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
 
 	static {
 		parseExtensionMetadata();

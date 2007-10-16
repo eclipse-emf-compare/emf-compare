@@ -36,14 +36,21 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	private EClass matchModelEClass = null;
+	private static boolean isInited = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	private EClass matchElementEClass = null;
+	private boolean isCreated = false;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private boolean isInitialized = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -64,7 +71,14 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	private EClass unMatchElementEClass = null;
+	private EClass matchElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass matchModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -72,6 +86,13 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * @generated
 	 */
 	private EClass remoteUnMatchElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass unMatchElementEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -89,13 +110,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	private MatchPackageImpl() {
 		super(eNS_URI, MatchFactory.eINSTANCE);
 	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	private static boolean isInited = false;
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which
@@ -140,84 +154,39 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
+	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public EClass getMatchModel() {
-		return matchModelEClass;
-	}
+	public void createPackageContents() {
+		if (isCreated)
+			return;
+		isCreated = true;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EAttribute getMatchModel_LeftModel() {
-		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(0);
-	}
+		// Create classes and their features
+		matchModelEClass = createEClass(MATCH_MODEL);
+		createEAttribute(matchModelEClass, MATCH_MODEL__LEFT_MODEL);
+		createEAttribute(matchModelEClass, MATCH_MODEL__RIGHT_MODEL);
+		createEAttribute(matchModelEClass, MATCH_MODEL__ORIGIN_MODEL);
+		createEReference(matchModelEClass, MATCH_MODEL__MATCHED_ELEMENTS);
+		createEReference(matchModelEClass, MATCH_MODEL__UN_MATCHED_ELEMENTS);
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EAttribute getMatchModel_RightModel() {
-		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(1);
-	}
+		matchElementEClass = createEClass(MATCH_ELEMENT);
+		createEAttribute(matchElementEClass, MATCH_ELEMENT__SIMILARITY);
+		createEReference(matchElementEClass, MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EAttribute getMatchModel_OriginModel() {
-		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(2);
-	}
+		match2ElementsEClass = createEClass(MATCH2_ELEMENTS);
+		createEReference(match2ElementsEClass, MATCH2_ELEMENTS__LEFT_ELEMENT);
+		createEReference(match2ElementsEClass, MATCH2_ELEMENTS__RIGHT_ELEMENT);
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EReference getMatchModel_MatchedElements() {
-		return (EReference)matchModelEClass.getEStructuralFeatures().get(3);
-	}
+		match3ElementEClass = createEClass(MATCH3_ELEMENT);
+		createEReference(match3ElementEClass, MATCH3_ELEMENT__ORIGIN_ELEMENT);
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EReference getMatchModel_UnMatchedElements() {
-		return (EReference)matchModelEClass.getEStructuralFeatures().get(4);
-	}
+		unMatchElementEClass = createEClass(UN_MATCH_ELEMENT);
+		createEReference(unMatchElementEClass, UN_MATCH_ELEMENT__ELEMENT);
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EClass getMatchElement() {
-		return matchElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EAttribute getMatchElement_Similarity() {
-		return (EAttribute)matchElementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EReference getMatchElement_SubMatchElements() {
-		return (EReference)matchElementEClass.getEStructuralFeatures().get(1);
+		remoteUnMatchElementEClass = createEClass(REMOTE_UN_MATCH_ELEMENT);
 	}
 
 	/**
@@ -270,8 +239,8 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	public EClass getUnMatchElement() {
-		return unMatchElementEClass;
+	public EClass getMatchElement() {
+		return matchElementEClass;
 	}
 
 	/**
@@ -279,8 +248,8 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	public EReference getUnMatchElement_Element() {
-		return (EReference)unMatchElementEClass.getEStructuralFeatures().get(0);
+	public EAttribute getMatchElement_Similarity() {
+		return (EAttribute)matchElementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -288,8 +257,8 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	public EClass getRemoteUnMatchElement() {
-		return remoteUnMatchElementEClass;
+	public EReference getMatchElement_SubMatchElements() {
+		return (EReference)matchElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -306,42 +275,8 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	private boolean isCreated = false;
-
-	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void createPackageContents() {
-		if (isCreated)
-			return;
-		isCreated = true;
-
-		// Create classes and their features
-		matchModelEClass = createEClass(MATCH_MODEL);
-		createEAttribute(matchModelEClass, MATCH_MODEL__LEFT_MODEL);
-		createEAttribute(matchModelEClass, MATCH_MODEL__RIGHT_MODEL);
-		createEAttribute(matchModelEClass, MATCH_MODEL__ORIGIN_MODEL);
-		createEReference(matchModelEClass, MATCH_MODEL__MATCHED_ELEMENTS);
-		createEReference(matchModelEClass, MATCH_MODEL__UN_MATCHED_ELEMENTS);
-
-		matchElementEClass = createEClass(MATCH_ELEMENT);
-		createEAttribute(matchElementEClass, MATCH_ELEMENT__SIMILARITY);
-		createEReference(matchElementEClass, MATCH_ELEMENT__SUB_MATCH_ELEMENTS);
-
-		match2ElementsEClass = createEClass(MATCH2_ELEMENTS);
-		createEReference(match2ElementsEClass, MATCH2_ELEMENTS__LEFT_ELEMENT);
-		createEReference(match2ElementsEClass, MATCH2_ELEMENTS__RIGHT_ELEMENT);
-
-		match3ElementEClass = createEClass(MATCH3_ELEMENT);
-		createEReference(match3ElementEClass, MATCH3_ELEMENT__ORIGIN_ELEMENT);
-
-		unMatchElementEClass = createEClass(UN_MATCH_ELEMENT);
-		createEReference(unMatchElementEClass, UN_MATCH_ELEMENT__ELEMENT);
-
-		remoteUnMatchElementEClass = createEClass(REMOTE_UN_MATCH_ELEMENT);
+	public EClass getMatchModel() {
+		return matchModelEClass;
 	}
 
 	/**
@@ -349,7 +284,72 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	private boolean isInitialized = false;
+	public EAttribute getMatchModel_LeftModel() {
+		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getMatchModel_MatchedElements() {
+		return (EReference)matchModelEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getMatchModel_OriginModel() {
+		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getMatchModel_RightModel() {
+		return (EAttribute)matchModelEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getMatchModel_UnMatchedElements() {
+		return (EReference)matchModelEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getRemoteUnMatchElement() {
+		return remoteUnMatchElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getUnMatchElement() {
+		return unMatchElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getUnMatchElement_Element() {
+		return (EReference)unMatchElementEClass.getEStructuralFeatures().get(0);
+	}
 
 	/**
 	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect

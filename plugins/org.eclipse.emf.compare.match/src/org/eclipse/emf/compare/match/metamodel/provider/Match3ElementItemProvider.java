@@ -44,6 +44,16 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
+	 * This returns Match3Element.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match3Element")); //$NON-NLS-1$
+	}
+
+	/**
 	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
@@ -60,31 +70,14 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addOriginElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_Match3Element_originElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match3Element_originElement_feature", "_UI_Match3Element_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null,
-						null));
-	}
-
-	/**
-	 * This returns Match3Element.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/Match3Element")); //$NON-NLS-1$
+	public ResourceLocator getResourceLocator() {
+		return MatchEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -112,6 +105,24 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	}
 
 	/**
+	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addOriginElementPropertyDescriptor(@SuppressWarnings("unused")
+	Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_Match3Element_originElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match3Element_originElement_feature", "_UI_Match3Element_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						MatchPackage.Literals.MATCH3_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null,
+						null));
+	}
+
+	/**
 	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
 	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -120,17 +131,6 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
 	}
 
 }

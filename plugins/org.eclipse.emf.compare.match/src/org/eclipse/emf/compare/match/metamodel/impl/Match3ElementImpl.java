@@ -56,49 +56,8 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 	 * 
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
-		return MatchPackage.Literals.MATCH3_ELEMENT;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EObject getOriginElement() {
-		if (originElement != null && originElement.eIsProxy()) {
-			InternalEObject oldOriginElement = (InternalEObject)originElement;
-			originElement = eResolveProxy(oldOriginElement);
-			if (originElement != oldOriginElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
-			}
-		}
-		return originElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	public EObject basicGetOriginElement() {
 		return originElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setOriginElement(EObject newOriginElement) {
-		EObject oldOriginElement = originElement;
-		originElement = newOriginElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
 	}
 
 	/**
@@ -115,6 +74,20 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 				return basicGetOriginElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
+				return originElement != null;
+		}
+		return super.eIsSet(featureID);
 	}
 
 	/**
@@ -152,13 +125,40 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 	 * 
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT:
-				return originElement != null;
+	public EObject getOriginElement() {
+		if (originElement != null && originElement.eIsProxy()) {
+			InternalEObject oldOriginElement = (InternalEObject)originElement;
+			originElement = eResolveProxy(oldOriginElement);
+			if (originElement != oldOriginElement) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+			}
 		}
-		return super.eIsSet(featureID);
+		return originElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setOriginElement(EObject newOriginElement) {
+		EObject oldOriginElement = originElement;
+		originElement = newOriginElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					MatchPackage.MATCH3_ELEMENT__ORIGIN_ELEMENT, oldOriginElement, originElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return MatchPackage.Literals.MATCH3_ELEMENT;
 	}
 
 } // Match3ElementImpl

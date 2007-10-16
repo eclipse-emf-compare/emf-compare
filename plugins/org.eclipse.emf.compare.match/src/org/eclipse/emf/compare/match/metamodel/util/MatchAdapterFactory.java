@@ -39,52 +39,12 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	protected static MatchPackage modelPackage;
 
 	/**
-	 * Creates an instance of the adapter factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public MatchAdapterFactory() {
-		if (modelPackage == null) {
-			modelPackage = MatchPackage.eINSTANCE;
-		}
-	}
-
-	/**
-	 * Returns whether this factory is applicable for the type of the object. <!-- begin-user-doc --> This
-	 * implementation returns <code>true</code> if the object is either the model's package or is an
-	 * instance object of the model. <!-- end-user-doc -->
-	 * 
-	 * @return whether this factory is applicable for the type of the object.
-	 * @generated
-	 */
-	@Override
-	public boolean isFactoryForType(Object object) {
-		if (object == modelPackage) {
-			return true;
-		}
-		if (object instanceof EObject) {
-			return ((EObject)object).eClass().getEPackage() == modelPackage;
-		}
-		return false;
-	}
-
-	/**
 	 * The switch the delegates to the <code>createXXX</code> methods. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	protected MatchSwitch modelSwitch = new MatchSwitch() {
-		@Override
-		public Object caseMatchModel(MatchModel object) {
-			return createMatchModelAdapter();
-		}
-
-		@Override
-		public Object caseMatchElement(MatchElement object) {
-			return createMatchElementAdapter();
-		}
-
 		@Override
 		public Object caseMatch2Elements(Match2Elements object) {
 			return createMatch2ElementsAdapter();
@@ -96,8 +56,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Object caseUnMatchElement(UnMatchElement object) {
-			return createUnMatchElementAdapter();
+		public Object caseMatchElement(MatchElement object) {
+			return createMatchElementAdapter();
+		}
+
+		@Override
+		public Object caseMatchModel(MatchModel object) {
+			return createMatchModelAdapter();
 		}
 
 		@Override
@@ -106,10 +71,26 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Object caseUnMatchElement(UnMatchElement object) {
+			return createUnMatchElementAdapter();
+		}
+
+		@Override
 		public Object defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
 	};
+
+	/**
+	 * Creates an instance of the adapter factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public MatchAdapterFactory() {
+		if (modelPackage == null) {
+			modelPackage = MatchPackage.eINSTANCE;
+		}
+	}
 
 	/**
 	 * Creates an adapter for the <code>target</code>. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -125,28 +106,13 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
-	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * Creates a new adapter for the default case. <!-- begin-user-doc --> This default implementation returns
+	 * null. <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
 	 * @generated
 	 */
-	public Adapter createMatchModelAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
-	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
-	 * @generated
-	 */
-	public Adapter createMatchElementAdapter() {
+	public Adapter createEObjectAdapter() {
 		return null;
 	}
 
@@ -177,15 +143,28 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.UnMatchElement <em>Un Match Element</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.metamodel.UnMatchElement
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
 	 * @generated
 	 */
-	public Adapter createUnMatchElementAdapter() {
+	public Adapter createMatchElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
+	 * @generated
+	 */
+	public Adapter createMatchModelAdapter() {
 		return null;
 	}
 
@@ -203,14 +182,35 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for the default case. <!-- begin-user-doc --> This default implementation returns
-	 * null. <!-- end-user-doc -->
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.UnMatchElement <em>Un Match Element</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.match.metamodel.UnMatchElement
 	 * @generated
 	 */
-	public Adapter createEObjectAdapter() {
+	public Adapter createUnMatchElementAdapter() {
 		return null;
+	}
+
+	/**
+	 * Returns whether this factory is applicable for the type of the object. <!-- begin-user-doc --> This
+	 * implementation returns <code>true</code> if the object is either the model's package or is an
+	 * instance object of the model. <!-- end-user-doc -->
+	 * 
+	 * @return whether this factory is applicable for the type of the object.
+	 * @generated
+	 */
+	@Override
+	public boolean isFactoryForType(Object object) {
+		if (object == modelPackage) {
+			return true;
+		}
+		if (object instanceof EObject) {
+			return ((EObject)object).eClass().getEPackage() == modelPackage;
+		}
+		return false;
 	}
 
 } // MatchAdapterFactory
