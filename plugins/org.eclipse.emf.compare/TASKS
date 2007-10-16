@@ -7,6 +7,7 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+16/10/2007 - modified match to allow an options map to be passed as argument
 04/10/2007 - UI package refactoring
 	org.eclipse.emf.compare.ui.contentmergeviewer.* => org.eclipse.emf.compare.ui.viewer.content.*
 	org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider => org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider
