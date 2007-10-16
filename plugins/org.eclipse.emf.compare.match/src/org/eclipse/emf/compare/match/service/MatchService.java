@@ -70,6 +70,29 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor) throws InterruptedException {
+		return doMatch(leftRoot, rightRoot, ancestor, monitor, Collections.<String, Object> emptyMap());
+	}
+
+	/**
+	 * Matches three models and returns the corresponding matching model.
+	 * 
+	 * @param leftRoot
+	 *            Left model of this comparison.
+	 * @param rightRoot
+	 *            Right model of this comparison.
+	 * @param ancestor
+	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
+	 * @param monitor
+	 *            Progress monitor to display for long operations.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return Matching model result of the comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
+	 */
+	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			IProgressMonitor monitor, Map<String, Object> options) throws InterruptedException {
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
@@ -79,7 +102,7 @@ public final class MatchService {
 			extension = ancestor.eResource().getURI().fileExtension();
 		final EngineDescriptor desc = getBestDescriptor(extension);
 		final MatchEngine currentEngine = desc.getEngineInstance();
-		return currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor);
+		return currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor, options);
 	}
 
 	/**
@@ -97,6 +120,27 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException {
+		return doMatch(leftRoot, rightRoot, monitor, Collections.<String, Object> emptyMap());
+	}
+
+	/**
+	 * Matches two models and returns the corresponding matching model.
+	 * 
+	 * @param leftRoot
+	 *            Left model of the comparison.
+	 * @param rightRoot
+	 *            Right model of the comparison.
+	 * @param monitor
+	 *            Progress monitor to display for long operations.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return Matching model result of these two models' comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
+	 */
+	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
+			Map<String, Object> options) throws InterruptedException {
 		String extension = "ecore"; //$NON-NLS-1$
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
@@ -104,7 +148,7 @@ public final class MatchService {
 			extension = rightRoot.eResource().getURI().fileExtension();
 		final EngineDescriptor desc = getBestDescriptor(extension);
 		final MatchEngine currentEngine = desc.getEngineInstance();
-		return currentEngine.modelMatch(leftRoot, rightRoot, monitor);
+		return currentEngine.modelMatch(leftRoot, rightRoot, monitor, options);
 	}
 
 	/**
