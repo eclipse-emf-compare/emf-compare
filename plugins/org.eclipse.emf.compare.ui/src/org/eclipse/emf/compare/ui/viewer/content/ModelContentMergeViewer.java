@@ -58,6 +58,7 @@ import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart;
+import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -90,6 +91,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -574,10 +576,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		// Synchronizes the left part with the two others
 		handleTreeHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
+		handlePropertyHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart.getPropertyPart());
 		// Synchronizes the right part with the two others
 		handleTreeHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
+		handlePropertyHSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart.getPropertyPart());
 		// Synchronizes the ancestor part with the two others
 		handleTreeHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
+		handlePropertyHSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart.getPropertyPart());
 	}
 
 	/**
@@ -678,6 +683,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
+			// TODO debug purposes only. remove this
+			System.out.println(end.getTime() - start.getTime() + "ms");
 
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
@@ -1031,9 +1038,51 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		return rightItem;
 	}
+	
+	/**
+	 * Allows synchronization of the properties viewports horizontal scrolling.
+	 * 
+	 * @param parts
+	 *            The other parts to synchronize with.
+	 */
+	private void handlePropertyHSync(ModelContentMergePropertyPart... parts) {
+		if (parts.length < 2)
+			throw new IllegalArgumentException(Messages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+
+		// inspired from TreeMergeViewer#hsynchViewport
+		final Table table1 = parts[0].getTable();
+		final Table table2 = parts[1].getTable();
+		final Table table3;
+		if (parts.length > 2)
+			table3 = parts[2].getTable();
+		else
+			table3 = null;
+		final ScrollBar scrollBar1 = table1.getHorizontalBar();
+
+		scrollBar1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				final int max = scrollBar1.getMaximum() - scrollBar1.getThumb();
+				double v = 0.0;
+				if (max > 0)
+					v = (double)scrollBar1.getSelection() / (double)max;
+				if (table2.isVisible()) {
+					final ScrollBar scrollBar2 = table2.getHorizontalBar();
+					scrollBar2.setSelection((int)((scrollBar2.getMaximum() - scrollBar2.getThumb()) * v));
+				}
+				if (table3 != null && table3.isVisible()) {
+					final ScrollBar scrollBar3 = table3.getHorizontalBar();
+					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
+				}
+				if (SWT.getPlatform().equals("carbon") && getControl() != null && !getControl().isDisposed()) { //$NON-NLS-1$
+					getControl().getDisplay().update();
+				}
+			}
+		});
+	}
 
 	/**
-	 * Allows synchronization of the viewports scrolling.
+	 * Allows synchronization of the tree viewports horizontal scrolling.
 	 * 
 	 * @param parts
 	 *            The other parts to synchronize with.

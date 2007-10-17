@@ -238,6 +238,15 @@ public class ModelContentMergeViewerPart {
 
 		return treeItemToDiff.get(itemKey.toString());
 	}
+	
+	/**
+	 * Returns the properties part of this viewer part.
+	 * 
+	 * @return The properties part of this viewer part.
+	 */
+	public ModelContentMergePropertyPart getPropertyPart() {
+		return properties;
+	}
 
 	/**
 	 * Returns the height of the tab control's header.
