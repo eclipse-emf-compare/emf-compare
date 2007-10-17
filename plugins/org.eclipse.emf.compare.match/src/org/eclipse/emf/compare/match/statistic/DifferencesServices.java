@@ -434,7 +434,9 @@ public class DifferencesServices implements MatchEngine {
 
 		final double nameSimilarity = nameSimilarity(obj1, obj2);
 		final boolean hasSameUri = hasSameUri(obj1, obj2);
-		if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID) && haveDistinctXMIID(obj1, obj2)) {
+		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) && obj1.eClass() != obj2.eClass()) {
+			similar = false;
+		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID) && haveDistinctXMIID(obj1, obj2)) {
 			similar = false;
 		} else if (nameSimilarity == 1 && hasSameUri) {
 			similar = true;
@@ -821,6 +823,7 @@ public class DifferencesServices implements MatchEngine {
 		final Map<String, Object> optionMap = new FastMap<String, Object>(17);
 		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getDefaultSearchWindow());
 		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getDefaultIgnoreXMIID());
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
 		return optionMap;
 	}
 

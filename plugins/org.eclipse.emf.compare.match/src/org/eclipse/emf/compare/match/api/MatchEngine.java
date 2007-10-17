@@ -44,24 +44,7 @@ public interface MatchEngine {
 	/**
 	 * This method returns a 2 models match with the specified options.
 	 * <p>
-	 * Options than can be specified are defined within the interface {@link MatchOptions}. <table>
-	 * <tr>
-	 * <td>Option</td>
-	 * <td>effect</td>
-	 * <td>value</td>
-	 * </tr>
-	 * <tr>
-	 * <td>{@link MatchOptions#OPTION_SEARCH_WINDOW}</td>
-	 * <td>Specifies the number of siblings the match procedure will consider to find similar objects. Higher
-	 * values increase comparison time, lower values decrease comparison accuracy.</td>
-	 * <td>Positive integer, defaults to <code>100</code></td>
-	 * </tr>
-	 * <tr>
-	 * <td>{@link MatchOptions#OPTION_IGNORE_XMI_ID}</td>
-	 * <td>Specifies whether we should ignore XMI IDs when matching.</td>
-	 * <td>Boolean, default to <code>False</code></td>
-	 * </tr>
-	 * </table>
+	 * Options than can be specified are defined within the interface {@link MatchOptions}.
 	 * </p>
 	 * 
 	 * @param leftRoot
@@ -78,6 +61,7 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
+	 * @see MatchOptions
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException;
@@ -101,24 +85,7 @@ public interface MatchEngine {
 	/**
 	 * This method returns a 2 models match with the specified options.
 	 * <p>
-	 * Options than can be specified are defined within the interface {@link MatchOptions}. <table>
-	 * <tr>
-	 * <td>Option</td>
-	 * <td>effect</td>
-	 * <td>value</td>
-	 * </tr>
-	 * <tr>
-	 * <td>{@link MatchOptions#OPTION_SEARCH_WINDOW}</td>
-	 * <td>Specifies the number of siblings the match procedure will consider to find similar objects. Higher
-	 * values increase comparison time, lower values decrease comparison accuracy.</td>
-	 * <td>Positive integer, defaults to <code>100</code></td>
-	 * </tr>
-	 * <tr>
-	 * <td>{@link MatchOptions#OPTION_IGNORE_XMI_ID}</td>
-	 * <td>Specifies whether we should ignore XMI IDs when matching.</td>
-	 * <td>Boolean, default to <code>False</code></td>
-	 * </tr>
-	 * </table>
+	 * Options than can be specified are defined within the interface {@link MatchOptions}.
 	 * </p>
 	 * 
 	 * @param leftRoot
@@ -133,6 +100,7 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
+	 * @see MatchOptions
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException;

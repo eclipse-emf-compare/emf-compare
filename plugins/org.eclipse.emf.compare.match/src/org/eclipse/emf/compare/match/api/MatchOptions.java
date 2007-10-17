@@ -12,6 +12,32 @@ package org.eclipse.emf.compare.match.api;
 
 /**
  * Defines constants for the different options available to tweak the matching process.
+ * <p>
+ * Available options include : <table>
+ * <tr>
+ * <td>Option</td>
+ * <td>effect</td>
+ * <td>value</td>
+ * </tr>
+ * <tr>
+ * <td>{@link #OPTION_SEARCH_WINDOW}</td>
+ * <td>Specifies the number of siblings the match procedure will consider to find similar objects. Higher
+ * values increase comparison time, lower values decrease comparison accuracy.</td>
+ * <td>Positive integer, defaults to <code>100</code></td>
+ * </tr>
+ * <tr>
+ * <td>{@link #OPTION_IGNORE_XMI_ID}</td>
+ * <td>Specifies whether we should ignore XMI IDs when matching.</td>
+ * <td>Boolean, defaults to <code>False</code></td>
+ * </tr>
+ * <tr>
+ * <td>{@link #OPTION_DISTINCT_METAMODEL}</td>
+ * <td>Specifies whether the models to compare are of the same meta-model. This mainly impact performance by
+ * allowing faster check to match elements (no use trying to match an interface and a class).</td>
+ * <td>Boolean, defaults to <code>True</code></td>
+ * </tr>
+ * </table>
+ * </p>
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -20,6 +46,9 @@ public interface MatchOptions {
 	 * Default value for the search window.
 	 */
 	int DEFAULT_SEARCH_WINDOW = 100;
+
+	/** Key for the option specifying whether the compared models are of distinct meta-models. */
+	String OPTION_DISTINCT_METAMODELS = "match.distinct.metamodels"; //$NON-NLS-1$
 
 	/** Key for the option specifying whether we should ignore XMI ID when comparing. */
 	String OPTION_IGNORE_XMI_ID = "match.ignore.xmi.id"; //$NON-NLS-1$
