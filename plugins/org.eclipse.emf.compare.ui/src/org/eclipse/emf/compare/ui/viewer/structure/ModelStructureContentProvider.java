@@ -67,7 +67,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 
 	/** Keeps track of the comparison result. */
 	/* package */ModelInputSnapshot snapshot;
-	
+
 	/**
 	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
 	 * one used to created this compare editor.
@@ -220,8 +220,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			} else {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel,
-								ancestorModel, monitor);
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, ancestorModel,
+								monitor);
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
