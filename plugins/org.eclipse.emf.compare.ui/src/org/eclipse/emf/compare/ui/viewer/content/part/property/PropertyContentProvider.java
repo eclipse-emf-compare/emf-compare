@@ -78,7 +78,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		} else if (inputElement instanceof UnMatchElement) {
 			inputEObject = ((UnMatchElement)inputElement).getElement();
 		}
-		if (inputEObject != null) {
+		if (inputEObject != null && AdapterUtils.findAdapterFactory(inputEObject) != null) {
 			final List<List<Object>> inputElements = new ArrayList<List<Object>>();
 			// This will fetch the property source of the input object
 			final AdapterFactory factory = AdapterUtils.findAdapterFactory(inputEObject);
