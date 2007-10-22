@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.core;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
 import java.util.HashSet;
 
 import junit.framework.TestCase;
@@ -40,7 +40,8 @@ public class TestMessages extends TestCase {
 	private final Object[] messageParameters = {null, "", "Foehn", -1, new Long(10), '\u0043', new HashSet(), };
 
 	/** These two are valid, parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
-	private final String[] parameterisableKeys = {"EFactory.FeatureNotFound", "EMFCompareMap.IllegalLoadFactor", };
+	private final String[] parameterisableKeys = {"EFactory.FeatureNotFound",
+			"EMFCompareMap.IllegalLoadFactor", };
 
 	/** These are valid, un-parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
 	private final String[] validKeys = {"EMFComparePlugin.ElementNotFound", "EMFComparePlugin.JavaException",
@@ -58,7 +59,7 @@ public class TestMessages extends TestCase {
 	public void testFormattedGetStringInvalidKey() {
 		for (int i = 0; i < messageParameters.length; i++) {
 			for (int j = i; j < messageParameters.length; j++) {
-				final Object[] parameters = Arrays.copyOfRange(messageParameters, i, j);
+				final Object[] parameters = partialArrayCopy(messageParameters, i, j);
 				for (String invalidKey : invalidKeys)
 					assertEquals("Unexpected result of getString() with an invalid key.",
 							'!' + invalidKey + '!', Messages.getString(invalidKey, parameters));
@@ -73,7 +74,7 @@ public class TestMessages extends TestCase {
 	public void testFormattedGetStringNullKey() {
 		for (int i = 0; i < messageParameters.length; i++) {
 			for (int j = i; j < messageParameters.length; j++) {
-				final Object[] parameters = Arrays.copyOfRange(messageParameters, i, j);
+				final Object[] parameters = partialArrayCopy(messageParameters, i, j);
 				try {
 					Messages.getString(null, parameters);
 					fail("Calling getString() with null key did not throw NullPointerException.");
@@ -92,7 +93,7 @@ public class TestMessages extends TestCase {
 	public void testFormattedGetStringValidKey() {
 		for (int i = 0; i < messageParameters.length; i++) {
 			for (int j = i; j < messageParameters.length; j++) {
-				final Object[] parameters = Arrays.copyOfRange(messageParameters, i, j);
+				final Object[] parameters = partialArrayCopy(messageParameters, i, j);
 				for (int k = 0; k < parameterisableKeys.length; k++) {
 					String expectedResult = expectedForParameterisable[k];
 					int parameterCount = 0;
@@ -160,5 +161,26 @@ public class TestMessages extends TestCase {
 			assertEquals("Unexpected String returned by getString(String).", expectedForValidKeys[i],
 					Messages.getString(validKeys[i]));
 		}
+	}
+	/**
+	 * This will return a partial copy of an array.
+	 * 
+	 * @param <T>
+	 *            Type of the copied array.
+	 * @param original
+	 *            Array to be copied.
+	 * @param start
+	 *            starting index of the copy.
+	 * @param end
+	 *            end index of the copy.
+	 * @return Array containing a copy of the given range from <code>original</code>.
+	 */
+	private <T> T[] partialArrayCopy(T[] original, int start, int end) {
+		final int range = end - start;
+		if (range < 0)
+			throw new IllegalArgumentException("Illegal copy range.");
+		final T[] copy = (T[])Array.newInstance(original.getClass().getComponentType(), range);
+		System.arraycopy(original, start, copy, 0, Math.min(original.length - start, range));
+		return copy;
 	}
 }
