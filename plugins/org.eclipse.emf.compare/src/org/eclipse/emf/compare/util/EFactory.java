@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.Messages;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
@@ -209,21 +210,23 @@ public final class EFactory {
 			throw new FactoryException(Messages.getString("EFactory.UnSettableFeature", name)); //$NON-NLS-1$
 
 		if (feature.getEType() instanceof EEnum && arg instanceof String) {
-			try {
-				final Class<?> c = object.getClass().getClassLoader().loadClass(
-						ETools.getEClassifierPath(feature.getEType()));
-				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
-				final Object value = m.invoke(c, new Object[] {arg});
-				object.eSet(feature, value);
-			} catch (ClassNotFoundException e) {
-				throw new FactoryException(e);
-			} catch (NoSuchMethodException e) {
-				throw new FactoryException(e);
-			} catch (IllegalAccessException e) {
-				throw new FactoryException(e);
-			} catch (InvocationTargetException e) {
-				throw new FactoryException(e);
-			}
+			final EEnumLiteral literal = ((EEnum)feature.getEType()).getEEnumLiteral((String)arg);
+			object.eSet(feature, literal);
+//			try {
+//				final Class<?> c = object.getClass().getClassLoader().loadClass(
+//						ETools.getEClassifierPath(feature.getEType()));
+//				final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
+//				final Object value = m.invoke(c, new Object[] {arg});
+//				object.eSet(feature, value);
+//			} catch (ClassNotFoundException e) {
+//				throw new FactoryException(e);
+//			} catch (NoSuchMethodException e) {
+//				throw new FactoryException(e);
+//			} catch (IllegalAccessException e) {
+//				throw new FactoryException(e);
+//			} catch (InvocationTargetException e) {
+//				throw new FactoryException(e);
+//			}
 		} else {
 			if (arg == null && feature.isMany())
 				object.eSet(feature, Collections.EMPTY_LIST);

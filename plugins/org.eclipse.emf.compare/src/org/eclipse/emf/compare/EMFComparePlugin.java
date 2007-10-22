@@ -54,8 +54,10 @@ public class EMFComparePlugin extends Plugin {
 	 *            as a warning.
 	 */
 	public static void log(Exception e, boolean blocker) {
-		e.printStackTrace();
-		if (e instanceof CoreException) {
+		if (plugin == null) {
+			// We are out of eclipse. Prints the stack trace on standard error.
+			e.printStackTrace();
+		} else if (e instanceof CoreException) {
 			log(((CoreException)e).getStatus());
 		} else if (e instanceof NullPointerException) {
 			int severity = IStatus.WARNING;
@@ -83,7 +85,7 @@ public class EMFComparePlugin extends Plugin {
 		// We'll handle this by throwing it ourselves.
 		if (status == null)
 			throw new NullPointerException(Messages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
-
+				
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
 		} else {
@@ -101,13 +103,40 @@ public class EMFComparePlugin extends Plugin {
 	 *            as a warning.
 	 */
 	public static void log(String message, boolean blocker) {
-		int severity = IStatus.WARNING;
-		if (blocker)
-			severity = IStatus.ERROR;
-		String errorMessage = message;
-		if (errorMessage == null || errorMessage.equals("")) //$NON-NLS-1$
-			errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
-		log(new Status(severity, PLUGIN_ID, errorMessage));
+		if (plugin == null) {
+			// We are out of eclipse. Prints the message on standard error.
+			System.err.println(message);
+		} else {
+			int severity = IStatus.WARNING;
+			if (blocker)
+				severity = IStatus.ERROR;
+			String errorMessage = message;
+			if (errorMessage == null || errorMessage.equals("")) //$NON-NLS-1$
+				errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
+			log(new Status(severity, PLUGIN_ID, errorMessage));
+		}
+	}
+
+	/**
+	 * Returns the current value of the boolean-valued preference with the given key.
+	 * 
+	 * @param preferenceKey
+	 *            Name of the property which value is to be retrieved.
+	 * @return Current value of the boolean-valued preference with the given key.
+	 */
+	public boolean getBoolean(String preferenceKey) {
+		return plugin.getPluginPreferences().getBoolean(preferenceKey);
+	}
+
+	/**
+	 * Returns the current value of the integer-valued preference with the given key.
+	 * 
+	 * @param preferenceKey
+	 *            Name of the property which value is to be retrieved.
+	 * @return Current value of the integer-valued preference with the given key.
+	 */
+	public int getInt(String preferenceKey) {
+		return plugin.getPluginPreferences().getInt(preferenceKey);
 	}
 
 	/**

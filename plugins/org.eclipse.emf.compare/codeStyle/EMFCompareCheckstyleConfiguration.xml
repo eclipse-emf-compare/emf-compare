@@ -308,7 +308,7 @@
         <module name="RequiredRegexp">
             <metadata name="com.atlassw.tools.eclipse.checkstyle.customMessage" value="Le copyright doit figurer dans le fichier sous la forme &quot;Copyright (c) 2006, 2007 Obeo.&quot;"/>
             <property name="severity" value="error"/>
-            <property name="format" value="Copyright\s\(c\)\s(20[0-9]{2},?\s)+Obeo."/>
+            <property name="format" value="Copyright\s\(c\)\s(20[0-9]{2},?\s)+Obeo\."/>
         </module>
         <module name="GenericIllegalRegexp">
             <metadata name="com.atlassw.tools.eclipse.checkstyle.customMessage" value="Caractères susceptibles de poser problème (encoding)"/>

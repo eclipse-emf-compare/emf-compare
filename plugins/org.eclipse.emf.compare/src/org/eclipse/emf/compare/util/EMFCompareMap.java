@@ -39,7 +39,7 @@ import org.eclipse.emf.compare.Messages;
  *            Specifies the values' class for this Map.
  */
 @SuppressWarnings("unchecked")
-public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
+public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/** Default value used as the initial capacity for a Map. */
 	protected static final int DEFAULT_INITIAL_CAPACITY = 31;
 
@@ -92,10 +92,10 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	protected transient V[] values;
 
 	/**
-	 * Constructs an empty <code>FastMap</code> with the default initial capacity (31) and the default load
+	 * Constructs an empty <code>EMFCompareMap</code> with the default initial capacity (31) and the default load
 	 * factor (0.75).
 	 */
-	public FastMap() {
+	public EMFCompareMap() {
 		// We know the initial capacity will be a prime equal to DEFAULT_INITIAL_CAPACITY
 		nextPrimeIndex++;
 		threshold = (int)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR - 1);
@@ -105,19 +105,19 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructs an empty <code>FastMap</code> with the specified initial capacity and the default load
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and the default load
 	 * factor (0.75). This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as
 	 * the Map's initial capacity if <code>initialCapacity</code> is lower.
 	 * 
 	 * @param initialCapacity
 	 *            Initial capacity of the Map.
 	 */
-	public FastMap(int initialCapacity) {
+	public EMFCompareMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_LOAD_FACTOR);
 	}
 
 	/**
-	 * Constructs an empty <code>FastMap</code> with the specified initial capacity and load factor.This
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and load factor.This
 	 * class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the Map's initial
 	 * capacity if <code>initialCapacity</code> is lower.
 	 * 
@@ -126,11 +126,11 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 * @param theLoadFactor
 	 *            Load factor to apply to this Map.
 	 */
-	public FastMap(int initialCapacity, float theLoadFactor) {
+	public EMFCompareMap(int initialCapacity, float theLoadFactor) {
 		if (initialCapacity < 0)
-			throw new IllegalArgumentException(Messages.getString("FastMap.NegativeCapacity")); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("EMFCompareMap.NegativeCapacity")); //$NON-NLS-1$
 		if (theLoadFactor <= 0 || Float.isNaN(theLoadFactor))
-			throw new IllegalArgumentException(Messages.getString("FastMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
+			throw new IllegalArgumentException(Messages.getString("EMFCompareMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
 
 		loadFactor = theLoadFactor;
 		final int newCapacity = getNearestPrime((int)(initialCapacity / Math.max(MINIMUM_LOAD_FACTOR,
@@ -141,12 +141,12 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Construcs a <code>FastMap</code> populated by the entries of <code>map</code>.
+	 * Construcs a <code>EMFCompareMap</code> populated by the entries of <code>map</code>.
 	 * 
 	 * @param map
 	 *            The map whose mappings are to be placed in this map.
 	 */
-	public FastMap(Map<K, V> map) {
+	public EMFCompareMap(Map<K, V> map) {
 		this(map.size());
 		putAll(map);
 	}
@@ -174,7 +174,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	@Override
 	public Object clone() {
 		try {
-			final FastMap<K, V> map = (FastMap<K, V>)super.clone();
+			final EMFCompareMap<K, V> map = (EMFCompareMap<K, V>)super.clone();
 			map.putAll(this);
 			return map;
 		} catch (CloneNotSupportedException e) {
@@ -788,11 +788,11 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 * @see java.util.Map$Entry#setValue(java.lang.Object)
 		 */
 		public V setValue(V newValue) {
-			if (FastMap.this.values[index] != value)
+			if (EMFCompareMap.this.values[index] != value)
 				throw new ConcurrentModificationException();
 
 			final V oldValue = value;
-			FastMap.this.values[index] = newValue;
+			EMFCompareMap.this.values[index] = newValue;
 			value = newValue;
 
 			return oldValue;
@@ -873,7 +873,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			if (expectedSize != usedSlots)
 				throw new ConcurrentModificationException();
 
-			FastMap.this.remove(currentKey);
+			EMFCompareMap.this.remove(currentKey);
 			currentEntry = null;
 			currentKey = null;
 			currentValue = null;
@@ -941,7 +941,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public void clear() {
-			FastMap.this.clear();
+			EMFCompareMap.this.clear();
 		}
 
 		/**
@@ -956,8 +956,8 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 				return false;
 
 			final Map.Entry<K, V> entry = (Map.Entry<K, V>)e;
-			if (FastMap.this.containsKey(entry.getKey())) {
-				final V candidate = FastMap.this.get(entry.getKey());
+			if (EMFCompareMap.this.containsKey(entry.getKey())) {
+				final V candidate = EMFCompareMap.this.get(entry.getKey());
 				if (candidate == null)
 					result = entry.getValue() == null;
 				else
@@ -984,7 +984,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public boolean remove(Object e) {
-			return FastMap.this.removeEntry(e) != null;
+			return EMFCompareMap.this.removeEntry(e) != null;
 		}
 
 		/**
@@ -1056,7 +1056,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public int size() {
-			return FastMap.this.size();
+			return EMFCompareMap.this.size();
 		}
 	}
 
@@ -1104,7 +1104,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public void clear() {
-			FastMap.this.clear();
+			EMFCompareMap.this.clear();
 		}
 
 		/**
@@ -1114,7 +1114,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public boolean contains(Object o) {
-			return FastMap.this.containsKey(o);
+			return EMFCompareMap.this.containsKey(o);
 		}
 
 		/**
@@ -1134,7 +1134,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public boolean remove(Object o) {
-			return FastMap.this.remove(o) != null;
+			return EMFCompareMap.this.remove(o) != null;
 		}
 
 		/**
@@ -1144,7 +1144,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public int size() {
-			return FastMap.this.size();
+			return EMFCompareMap.this.size();
 		}
 	}
 
@@ -1192,7 +1192,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public void clear() {
-			FastMap.this.clear();
+			EMFCompareMap.this.clear();
 		}
 
 		/**
@@ -1202,7 +1202,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public boolean contains(Object o) {
-			return FastMap.this.containsValue(o);
+			return EMFCompareMap.this.containsValue(o);
 		}
 
 		/**
@@ -1222,7 +1222,7 @@ public class FastMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		@Override
 		public int size() {
-			return FastMap.this.size();
+			return EMFCompareMap.this.size();
 		}
 	}
 }
