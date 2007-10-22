@@ -17,9 +17,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
 import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 
 /**
  * Launches all the JUnit tests for EMF compare.
@@ -27,7 +28,7 @@ import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 @SuppressWarnings("nls")
-public class AllTests extends TestCase implements IPlatformRunnable {
+public class AllTests extends TestCase implements IApplication {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -51,13 +52,23 @@ public class AllTests extends TestCase implements IPlatformRunnable {
 		// suite.addTestSuite(TestNonRegressionModels.class);
 		return suite;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
-	public Object run(Object args) throws Exception {
+	public Object start(IApplicationContext context) throws Exception {
 		TestRunner.run(suite());
-		return Arrays
-				.asList(new String[] { "Please see raw test suite output for details." }); //$NON-NLS-1$
+		return Arrays.asList(new String[] {"Please see raw test suite output for details."}); //$NON-NLS-1$
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.equinox.app.IApplication#stop()
+	 */
+	public void stop() {
+		// implements org.eclipse.equinox.app.IApplication#stop(). No action.
 	}
 }
