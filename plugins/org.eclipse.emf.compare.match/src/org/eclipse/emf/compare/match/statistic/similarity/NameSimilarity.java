@@ -17,7 +17,7 @@ import java.util.Map;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -36,7 +36,7 @@ public final class NameSimilarity {
 	private static final int MAX_FEATURE_VALUE_LENGTH = 50;
 
 	/** This map associates an {@link EClass} with the {@link EAttribute} that is assumed to hold its name. */
-	private static final Map<String, EAttribute> NAME_FEATURE_CACHE = new FastMap<String, EAttribute>();
+	private static final Map<String, EAttribute> NAME_FEATURE_CACHE = new EMFCompareMap<String, EAttribute>();
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
@@ -134,7 +134,7 @@ public final class NameSimilarity {
 			if (eClassAttributes.size() > 0) {
 				double max = 0d;
 				for (EAttribute attribute : eClassAttributes) {
-					final String attributeName = EFactory.eGetAsString(attribute, EOBJECT_NAME_FEATURE);
+					final String attributeName = attribute.getName();
 					// if the attributeName is more similar with "name" than the other one
 					if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
 						max = nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE);

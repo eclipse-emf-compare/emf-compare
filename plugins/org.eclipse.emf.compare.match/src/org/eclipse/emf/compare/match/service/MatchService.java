@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -37,7 +37,7 @@ public final class MatchService {
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
 
 	/** Keeps track of all the engines parsed. */
-	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new FastMap<String, ArrayList<EngineDescriptor>>();
+	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new EMFCompareMap<String, ArrayList<EngineDescriptor>>();
 
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
@@ -67,7 +67,9 @@ public final class MatchService {
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
+	 * @deprecated Use {@link #doMatch(EObject, EObject, EObject, IProgressMonitor, Map)} instead.
 	 */
+	@Deprecated
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor) throws InterruptedException {
 		return doMatch(leftRoot, rightRoot, ancestor, monitor, Collections.<String, Object> emptyMap());
@@ -117,7 +119,9 @@ public final class MatchService {
 	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
+	 * @deprecated Use {@link #doMatch(EObject, EObject, IProgressMonitor, Map)} instead.
 	 */
+	@Deprecated
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException {
 		return doMatch(leftRoot, rightRoot, monitor, Collections.<String, Object> emptyMap());

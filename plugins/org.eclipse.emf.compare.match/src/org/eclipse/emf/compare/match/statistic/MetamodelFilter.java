@@ -19,7 +19,7 @@ import java.util.Map;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -97,7 +97,7 @@ class FeatureInformation {
  */
 public class MetamodelFilter {
 	/** Keeps track of all the informations of the features. */
-	protected final Map<String, FeatureInformation> featuresToInformation = new FastMap<String, FeatureInformation>();
+	protected final Map<String, FeatureInformation> featuresToInformation = new EMFCompareMap<String, FeatureInformation>();
 
 	/** List of the unused features' informations. */
 	protected List<EStructuralFeature> unusedFeatures;
@@ -106,7 +106,7 @@ public class MetamodelFilter {
 	 * This map will keep track of all the used {@link EStructuralFeature features} for a given
 	 * {@link EClass class}.
 	 */
-	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new FastMap<EClass, List<EStructuralFeature>>();
+	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new EMFCompareMap<EClass, List<EStructuralFeature>>();
 
 	/**
 	 * Analyses a model and changes the stats using this model.

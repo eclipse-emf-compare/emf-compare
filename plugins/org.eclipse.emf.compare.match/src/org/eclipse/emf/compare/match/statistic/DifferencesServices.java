@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.internal.runtime.CompareProgressMonitor;
 import org.eclipse.emf.compare.match.Messages;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.api.MatchOptions;
@@ -34,8 +35,8 @@ import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.ETools;
-import org.eclipse.emf.compare.util.FastMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -85,13 +86,13 @@ public class DifferencesServices implements MatchEngine {
 	/**
 	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
 	 */
-	private final Map<String, EObject> matchedByID = new FastMap<String, EObject>();
+	private final Map<String, EObject> matchedByID = new EMFCompareMap<String, EObject>();
 
 	/**
 	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
 	 * valueSimilarity, relationSimilarity, TypeSimilarity].
 	 */
-	private final Map<String, Double> metricsCache = new FastMap<String, Double>();
+	private final Map<String, Double> metricsCache = new EMFCompareMap<String, Double>();
 
 	/**
 	 * This list allows us to memorize the unMatched elements for a three-way comparison.<br/>
@@ -121,10 +122,14 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, IProgressMonitor, Map)} instead. This will be
+	 *             deleted before 1.0.
 	 */
+	@Deprecated
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor) throws InterruptedException {
-		return modelMatch(leftRoot, rightRoot, ancestor, monitor, Collections.<String, Object> emptyMap());
+		return modelMatch(leftRoot, rightRoot, ancestor, new CompareProgressMonitor(monitor), Collections
+				.<String, Object> emptyMap());
 	}
 
 	/**
@@ -132,84 +137,29 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 *      org.eclipse.core.runtime.CompareProgressMonitor, java.util.Map)
 	 */
-	@SuppressWarnings("unchecked")
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor, Map<String, Object> optionMap) throws InterruptedException {
-		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftRoot, rightRoot, ancestor);
-		final MatchModel root1AncestorMatch = modelMatch(leftRoot, ancestor, monitor, optionMap);
-		final MatchModel root2AncestorMatch = modelMatch(rightRoot, ancestor, monitor, optionMap);
+		return modelMatch(leftRoot, rightRoot, ancestor, new CompareProgressMonitor(monitor), optionMap);
+	}
 
-		final List<Match2Elements> root1MatchedElements = new ArrayList<Match2Elements>(root1AncestorMatch
-				.getMatchedElements());
-		final List<Match2Elements> root2MatchedElements = new ArrayList<Match2Elements>(root2AncestorMatch
-				.getMatchedElements());
-
-		// populates the unmatched elements list for later use
-		for (Object unMatch : root1AncestorMatch.getUnMatchedElements())
-			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
-		for (Object unMatch : root2AncestorMatch.getUnMatchedElements())
-			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
-
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			Map<String, Object> optionMap) {
+		MatchModel result = null;
 		try {
-			final Match2Elements root1Match = root1MatchedElements.get(0);
-			final Match2Elements root2Match = root2MatchedElements.get(0);
-			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
-
-			subMatchRoot.setSimilarity(absoluteMetric(root1Match.getLeftElement(), root2Match
-					.getLeftElement(), root2Match.getRightElement()));
-			subMatchRoot.setLeftElement(root1Match.getLeftElement());
-			subMatchRoot.setRightElement(root2Match.getLeftElement());
-			subMatchRoot.setOriginElement(root2Match.getRightElement());
-			redirectedAdd(root, "matchedElements", subMatchRoot); //$NON-NLS-1$
-			createSub3Match(root, subMatchRoot, root1Match, root2Match);
-
-			// We will now check through the unmatched object for matches. This
-			// will allow for a more accurate detection
-			// for models with multiple roots.
-			processUnmatchedElements(root, subMatchRoot);
-
-			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
-			// Match2Elements) will have updated "remainingUnMatchedElements"
-			final Set<EObject> remainingLeft = new HashSet<EObject>();
-			final Set<EObject> remainingRight = new HashSet<EObject>();
-			for (EObject unMatched : remainingUnMatchedElements) {
-				if (unMatched.eResource() == leftRoot.eResource()) {
-					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
-						remainingLeft.add(iterator.next());
-				} else if (unMatched.eResource() == rightRoot.eResource()) {
-					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
-						remainingRight.add(iterator.next());
-				}
-			}
-			stillToFindFromModel1.clear();
-			stillToFindFromModel2.clear();
-			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-					new ArrayList<EObject>(remainingRight), this
-							.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
-			for (Match2Elements map : mappings) {
-				final Match3Element subMatch = MatchFactory.eINSTANCE.createMatch3Element();
-				subMatch.setLeftElement(map.getLeftElement());
-				subMatch.setRightElement(map.getRightElement());
-				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
-			}
-			final Map<EObject, Boolean> unMatchedElements = new FastMap<EObject, Boolean>();
-			for (EObject remoteUnMatch : stillToFindFromModel1) {
-				unMatchedElements.put(remoteUnMatch, true);
-			}
-			for (EObject unMatch : stillToFindFromModel2) {
-				unMatchedElements.put(unMatch, false);
-			}
-			createThreeWayUnMatchElements(root, unMatchedElements);
-		} catch (FactoryException e) {
-			EMFComparePlugin.log(e, false);
+			result = modelMatch(leftRoot, rightRoot, ancestor, new CompareProgressMonitor(), optionMap);
+		} catch (InterruptedException e) {
+			// cannot be thrown
+			assert false;
 		}
-
-		return root;
+		return result;
 	}
 
 	/**
@@ -227,108 +177,48 @@ public class DifferencesServices implements MatchEngine {
 	 * @param rightRoot
 	 *            Right model of the comparison.
 	 * @param monitor
-	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 *            {@link CompareProgressMonitor Progress monitor} to display while the comparison lasts. Might
+	 *            be <code>null</code>, in which case we won't monitor progress.
 	 * @return Mapping model of the two given models.
 	 * @throws InterruptedException
 	 *             Thrown if the matching process is interrupted somehow.
 	 * @see MatchEngine#modelMatch(EObject, EObject, IProgressMonitor)
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, IProgressMonitor, Map)} instead. This will be
+	 *             deleted before 1.0.
 	 */
+	@Deprecated
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException {
-		return modelMatch(leftRoot, rightRoot, monitor, Collections.<String, Object> emptyMap());
+		return modelMatch(leftRoot, rightRoot, new CompareProgressMonitor(monitor), Collections
+				.<String, Object> emptyMap());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.CompareProgressMonitor, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0)
-			loadOptionMap(optionMap);
+		return modelMatch(leftRoot, rightRoot, new CompareProgressMonitor(monitor), optionMap);
+	}
 
-		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftRoot, rightRoot);
-		launchMonitor(monitor, leftRoot);
-
-		// filtering unused features
-		filter.analyseModel(leftRoot);
-		filter.analyseModel(rightRoot);
-		// end of filtering
-
-		// navigate through both models at the same time and realize mappings..
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
+		MatchModel result = null;
 		try {
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)) {
-				final Resource leftResource = leftRoot.eResource();
-				final Resource rightResource = rightRoot.eResource();
-				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
-					matchByID((XMIResource)leftResource, (XMIResource)rightResource);
-			}
-
-			monitor.subTask(Messages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
-			final List<Match2Elements> matchedRoots = mapLists(leftRoot.eResource().getContents(), rightRoot
-					.eResource().getContents(), this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW),
-					monitor);
-			stillToFindFromModel1.clear();
-			stillToFindFromModel2.clear();
-			final List<EObject> unMatchedLeftRoots = new ArrayList<EObject>(leftRoot.eResource()
-					.getContents());
-			final List<EObject> unMatchedRightRoots = new ArrayList<EObject>(rightRoot.eResource()
-					.getContents());
-			// These sets will help us in keeping track of the yet to be found
-			// elements
-			final Set<EObject> still1 = new HashSet<EObject>();
-			final Set<EObject> still2 = new HashSet<EObject>();
-
-			Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
-			// We haven't found any similar roots, we then consider the firsts
-			// to be similar
-			if (matchedRoots.size() == 0) {
-				final Match2Elements rootMapping = MatchFactory.eINSTANCE.createMatch2Elements();
-				rootMapping.setLeftElement(leftRoot);
-				rootMapping.setRightElement(findMostSimilar(leftRoot, unMatchedRightRoots));
-				matchedRoots.add(rootMapping);
-			}
-			for (Match2Elements matchedRoot : matchedRoots) {
-				monitor.subTask(Messages.getString("DifferencesServices.monitor.rootsContents")); //$NON-NLS-1$
-				final Match2Elements rootMapping = recursiveMappings(matchedRoot.getLeftElement(),
-						matchedRoot.getRightElement(), monitor);
-				// this is the first passage
-				if (matchModelRoot.getLeftElement() == null) {
-					matchModelRoot = rootMapping;
-					redirectedAdd(root, "matchedElements", matchModelRoot); //$NON-NLS-1$
-				} else {
-					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
-				}
-
-				// Synchronizes the two lists to avoid multiple elements
-				still1.removeAll(stillToFindFromModel1);
-				still2.removeAll(stillToFindFromModel2);
-				// checks for matches within the yet to found elements lists
-				createSubMatchElements(rootMapping, new ArrayList<EObject>(stillToFindFromModel1),
-						new ArrayList<EObject>(stillToFindFromModel2), monitor);
-				// Adds all unfound elements to the sets
-				still1.addAll(stillToFindFromModel1);
-				still2.addAll(stillToFindFromModel2);
-
-				unMatchedLeftRoots.remove(matchedRoot.getLeftElement());
-				unMatchedRightRoots.remove(matchedRoot.getRightElement());
-			}
-			// We'll iterate through the unMatchedRoots all contents
-			monitor.subTask(Messages.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
-			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
-
-			// Now takes care of remaining unfound elements
-			still1.addAll(stillToFindFromModel1);
-			still2.addAll(stillToFindFromModel2);
-			createUnMatchElements(root, still1);
-			createUnMatchElements(root, still2);
-		} catch (FactoryException e) {
-			EMFComparePlugin.log(e, false);
+			result = modelMatch(leftRoot, rightRoot, new CompareProgressMonitor(), optionMap);
+		} catch (InterruptedException e) {
+			// cannot be thrown
+			assert false;
 		}
-		return root;
+		return result;
 	}
 
 	/**
@@ -359,15 +249,20 @@ public class DifferencesServices implements MatchEngine {
 
 	/**
 	 * This will return the value associated to the given key in the options map.
+	 * <p>
+	 * NOTE : Misuses of this method will easily throw {@link ClassCastException}s.
+	 * </p>
 	 * 
 	 * @param <T>
-	 *            Type of the value associated to <code>key</code>.
+	 *            Expected type of the value associated to <code>key</code>.
 	 * @param key
 	 *            Key of the value to retrieve.
 	 * @return Value associated to the given key in the options map.
+	 * @throws ClassCastException
+	 *             If the value isn't assignment compatible with the expected type.
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T> T getOption(String key) {
+	protected <T> T getOption(String key) throws ClassCastException {
 		return (T)options.get(key);
 	}
 
@@ -434,9 +329,11 @@ public class DifferencesServices implements MatchEngine {
 
 		final double nameSimilarity = nameSimilarity(obj1, obj2);
 		final boolean hasSameUri = hasSameUri(obj1, obj2);
-		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) && obj1.eClass() != obj2.eClass()) {
+		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
+				&& obj1.eClass() != obj2.eClass()) {
 			similar = false;
-		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID) && haveDistinctXMIID(obj1, obj2)) {
+		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)
+				&& haveDistinctXMIID(obj1, obj2)) {
 			similar = false;
 		} else if (nameSimilarity == 1 && hasSameUri) {
 			similar = true;
@@ -630,7 +527,8 @@ public class DifferencesServices implements MatchEngine {
 	 * @param list2
 	 *            Second of the lists used to compute mapping.
 	 * @param monitor
-	 *            {@link IProgressMonitor progress monitor} to display while the comparison lasts.
+	 *            {@link CompareProgressMonitor progress monitor} to display while the comparison lasts. Might
+	 *            be <code>null</code>, in which case we won't monitor progress.
 	 * @throws FactoryException
 	 *             Thrown if we cannot match the elements of the two lists or add submatch elements to
 	 *             <code>root</code>.
@@ -638,7 +536,7 @@ public class DifferencesServices implements MatchEngine {
 	 *             Thrown if the operation is cancelled or fails somehow.
 	 */
 	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2,
-			IProgressMonitor monitor) throws FactoryException, InterruptedException {
+			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
 		final List<Match2Elements> mappings = mapLists(list1, list2, this
@@ -736,8 +634,15 @@ public class DifferencesServices implements MatchEngine {
 	 * @return <code>True</code> if we should ignore XMI ID, <code>False</code> otherwise.
 	 */
 	private boolean getDefaultIgnoreXMIID() {
-		if (EMFComparePlugin.getDefault() != null)
-			return EMFComparePlugin.getDefault().getPluginPreferences().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
+		// This will allow the match engine to work without eclipse
+		// TODO clean this up
+		try {
+			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
+			if (EMFComparePlugin.getDefault() != null)
+				return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
+		} catch (ClassNotFoundException e) {
+			// No action taken, we ARE outside of eclipse
+		}
 		return false;
 	}
 
@@ -749,10 +654,16 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private int getDefaultSearchWindow() {
 		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
-		if (EMFComparePlugin.getDefault() != null
-				&& EMFComparePlugin.getDefault().getPluginPreferences().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
-			searchWindow = EMFComparePlugin.getDefault().getPluginPreferences().getInt(
-					"emfcompare.search.window"); //$NON-NLS-1$
+		// This will allow the match engine to work without eclipse
+		// TODO clean this up
+		try {
+			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
+			if (EMFComparePlugin.getDefault() != null
+					&& EMFComparePlugin.getDefault().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
+				searchWindow = EMFComparePlugin.getDefault().getInt("emfcompare.search.window"); //$NON-NLS-1$
+		} catch (ClassNotFoundException e) {
+			// No action taken, we ARE outside of eclipse
+		}
 		return searchWindow;
 	}
 
@@ -795,14 +706,14 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * Sizes the given {@link IProgressMonitor monitor} and launches its main task for model comparison.
+	 * Sizes the given {@link CompareProgressMonitor monitor} and launches its main task for model comparison.
 	 * 
 	 * @param monitor
 	 *            Progress monitor to display while the operation lasts.
 	 * @param root
 	 *            Root of the first model on which the comparison will be launched.
 	 */
-	private void launchMonitor(IProgressMonitor monitor, EObject root) {
+	private void launchMonitor(CompareProgressMonitor monitor, EObject root) {
 		int size = 1;
 		final Iterator sizeit = root.eAllContents();
 		while (sizeit.hasNext()) {
@@ -820,7 +731,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @return Map containing all the needed options with their default values.
 	 */
 	private Map<String, Object> loadDefaultOptionMap() {
-		final Map<String, Object> optionMap = new FastMap<String, Object>(17);
+		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
 		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getDefaultSearchWindow());
 		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getDefaultIgnoreXMIID());
 		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
@@ -828,8 +739,7 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * This adds to the given map's options the needed options it doesn't contain loaded with their default
-	 * values.
+	 * This replaces the contents of the defaults options map with the options overriden by the given map.
 	 * 
 	 * @param map
 	 *            Map containing the option given to the match procedure. cannot be <code>null</code>.
@@ -848,7 +758,8 @@ public class DifferencesServices implements MatchEngine {
 	 * @param window
 	 *            Number of siblings to consider for the matching.
 	 * @param monitor
-	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 *            {@link CompareProgressMonitor Progress monitor} to display while the comparison lasts. Might
+	 *            be <code>null</code>, in which case we won't monitor progress.
 	 * @return A {@link List} containing mappings of the nodes of both given {@link List}s.
 	 * @throws FactoryException
 	 *             Thrown if the metrics cannot be computed.
@@ -856,7 +767,7 @@ public class DifferencesServices implements MatchEngine {
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
 	private List<Match2Elements> mapLists(List<EObject> list1, List<EObject> list2, int window,
-			IProgressMonitor monitor) throws FactoryException, InterruptedException {
+			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
 		final List<Match2Elements> result = new ArrayList<Match2Elements>();
 		int curIndex = 0 - window / 2;
 		final List<EObject> notFoundList1 = new ArrayList<EObject>(list1);
@@ -935,12 +846,215 @@ public class DifferencesServices implements MatchEngine {
 				final EObject item2 = right.getEObject(item1ID);
 				if (item2 != null) {
 					final StringBuilder item1Key = new StringBuilder();
-					item1Key.append(NameSimilarity.findName(item1));
+					try {
+						item1Key.append(NameSimilarity.findName(item1));
+					} catch (FactoryException e) {
+						System.out.println(item1);
+					}
 					item1Key.append(item1.hashCode());
 					matchedByID.put(item1Key.toString(), item2);
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method handles the creation and returning of a two way model match.
+	 * 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param monitor
+	 *            Progress monitor to display while the comparison lasts.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return The corresponding {@link MatchModel}.
+	 * @throws InterruptedException
+	 *             Thrown if the comparison is interrupted somehow.
+	 */
+	private MatchModel modelMatch(EObject leftRoot, EObject rightRoot, CompareProgressMonitor monitor,
+			Map<String, Object> optionMap) throws InterruptedException {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+
+		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
+		setModelURIs(root, leftRoot, rightRoot);
+		launchMonitor(monitor, leftRoot);
+
+		// filtering unused features
+		filter.analyseModel(leftRoot);
+		filter.analyseModel(rightRoot);
+		// end of filtering
+
+		// navigate through both models at the same time and realize mappings..
+		try {
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)) {
+				final Resource leftResource = leftRoot.eResource();
+				final Resource rightResource = rightRoot.eResource();
+				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
+					matchByID((XMIResource)leftResource, (XMIResource)rightResource);
+			}
+
+			monitor.subTask(Messages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
+			final List<Match2Elements> matchedRoots = mapLists(leftRoot.eResource().getContents(), rightRoot
+					.eResource().getContents(), this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW),
+					monitor);
+			stillToFindFromModel1.clear();
+			stillToFindFromModel2.clear();
+			final List<EObject> unMatchedLeftRoots = new ArrayList<EObject>(leftRoot.eResource()
+					.getContents());
+			final List<EObject> unMatchedRightRoots = new ArrayList<EObject>(rightRoot.eResource()
+					.getContents());
+			// These sets will help us in keeping track of the yet to be found
+			// elements
+			final Set<EObject> still1 = new HashSet<EObject>();
+			final Set<EObject> still2 = new HashSet<EObject>();
+
+			Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
+			// We haven't found any similar roots, we then consider the firsts
+			// to be similar
+			if (matchedRoots.size() == 0) {
+				final Match2Elements rootMapping = MatchFactory.eINSTANCE.createMatch2Elements();
+				rootMapping.setLeftElement(leftRoot);
+				rootMapping.setRightElement(findMostSimilar(leftRoot, unMatchedRightRoots));
+				matchedRoots.add(rootMapping);
+			}
+			monitor.subTask(Messages.getString("DifferencesServices.monitor.rootsContents")); //$NON-NLS-1$
+			for (Match2Elements matchedRoot : matchedRoots) {
+				final Match2Elements rootMapping = recursiveMappings(matchedRoot.getLeftElement(),
+						matchedRoot.getRightElement(), monitor);
+				// this is the first passage
+				if (matchModelRoot.getLeftElement() == null) {
+					matchModelRoot = rootMapping;
+					redirectedAdd(root, "matchedElements", matchModelRoot); //$NON-NLS-1$
+				} else {
+					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
+				}
+
+				// Synchronizes the two lists to avoid multiple elements
+				still1.removeAll(stillToFindFromModel1);
+				still2.removeAll(stillToFindFromModel2);
+				// checks for matches within the yet to found elements lists
+				createSubMatchElements(rootMapping, new ArrayList<EObject>(stillToFindFromModel1),
+						new ArrayList<EObject>(stillToFindFromModel2), monitor);
+				// Adds all unfound elements to the sets
+				still1.addAll(stillToFindFromModel1);
+				still2.addAll(stillToFindFromModel2);
+
+				unMatchedLeftRoots.remove(matchedRoot.getLeftElement());
+				unMatchedRightRoots.remove(matchedRoot.getRightElement());
+			}
+			// We'll iterate through the unMatchedRoots all contents
+			monitor.subTask(Messages.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
+			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
+
+			// Now takes care of remaining unfound elements
+			still1.addAll(stillToFindFromModel1);
+			still2.addAll(stillToFindFromModel2);
+			createUnMatchElements(root, still1);
+			createUnMatchElements(root, still2);
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		}
+		return root;
+	}
+
+	/**
+	 * This method handles the creation and returning of a three way model match.
+	 * 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param ancestor
+	 *            Common ancestor of the right and left models.
+	 * @param monitor
+	 *            Progress monitor to display while the comparison lasts.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return The corresponding {@link MatchModel}.
+	 * @throws InterruptedException
+	 *             Thrown if the comparison is interrupted somehow.
+	 */
+	@SuppressWarnings("unchecked")
+	private MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			CompareProgressMonitor monitor, Map<String, Object> optionMap) throws InterruptedException {
+		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
+		setModelURIs(root, leftRoot, rightRoot, ancestor);
+		final MatchModel root1AncestorMatch = modelMatch(leftRoot, ancestor, monitor, optionMap);
+		final MatchModel root2AncestorMatch = modelMatch(rightRoot, ancestor, monitor, optionMap);
+
+		final List<Match2Elements> root1MatchedElements = new ArrayList<Match2Elements>(root1AncestorMatch
+				.getMatchedElements());
+		final List<Match2Elements> root2MatchedElements = new ArrayList<Match2Elements>(root2AncestorMatch
+				.getMatchedElements());
+
+		// populates the unmatched elements list for later use
+		for (Object unMatch : root1AncestorMatch.getUnMatchedElements())
+			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
+		for (Object unMatch : root2AncestorMatch.getUnMatchedElements())
+			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
+
+		try {
+			final Match2Elements root1Match = root1MatchedElements.get(0);
+			final Match2Elements root2Match = root2MatchedElements.get(0);
+			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
+
+			subMatchRoot.setSimilarity(absoluteMetric(root1Match.getLeftElement(), root2Match
+					.getLeftElement(), root2Match.getRightElement()));
+			subMatchRoot.setLeftElement(root1Match.getLeftElement());
+			subMatchRoot.setRightElement(root2Match.getLeftElement());
+			subMatchRoot.setOriginElement(root2Match.getRightElement());
+			redirectedAdd(root, "matchedElements", subMatchRoot); //$NON-NLS-1$
+			createSub3Match(root, subMatchRoot, root1Match, root2Match);
+
+			// We will now check through the unmatched object for matches. This
+			// will allow for a more accurate detection
+			// for models with multiple roots.
+			processUnmatchedElements(root, subMatchRoot);
+
+			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
+			// Match2Elements) will have updated "remainingUnMatchedElements"
+			final Set<EObject> remainingLeft = new HashSet<EObject>();
+			final Set<EObject> remainingRight = new HashSet<EObject>();
+			for (EObject unMatched : remainingUnMatchedElements) {
+				if (unMatched.eResource() == leftRoot.eResource()) {
+					remainingLeft.add(unMatched);
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+						remainingLeft.add(iterator.next());
+				} else if (unMatched.eResource() == rightRoot.eResource()) {
+					remainingRight.add(unMatched);
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+						remainingRight.add(iterator.next());
+				}
+			}
+			stillToFindFromModel1.clear();
+			stillToFindFromModel2.clear();
+			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
+					new ArrayList<EObject>(remainingRight), this
+							.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+			for (Match2Elements map : mappings) {
+				final Match3Element subMatch = MatchFactory.eINSTANCE.createMatch3Element();
+				subMatch.setLeftElement(map.getLeftElement());
+				subMatch.setRightElement(map.getRightElement());
+				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+			}
+			final Map<EObject, Boolean> unMatchedElements = new EMFCompareMap<EObject, Boolean>();
+			for (EObject remoteUnMatch : stillToFindFromModel1) {
+				unMatchedElements.put(remoteUnMatch, true);
+			}
+			for (EObject unMatch : stillToFindFromModel2) {
+				unMatchedElements.put(unMatch, false);
+			}
+			createThreeWayUnMatchElements(root, unMatchedElements);
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		}
+
+		return root;
 	}
 
 	/**
@@ -1068,7 +1182,8 @@ public class DifferencesServices implements MatchEngine {
 	 * @param current2
 	 *            Second of the two elements mapping.
 	 * @param monitor
-	 *            {@link IProgressMonitor Progress monitor} to display while the comparison lasts.
+	 *            {@link CompareProgressMonitor Progress monitor} to display while the comparison lasts. Might
+	 *            be <code>null</code>, in which case we won't monitor progress.
 	 * @return The mapping for <code>current1</code> and <code>current2</code> and their content.
 	 * @throws FactoryException
 	 *             Thrown when the metrics cannot be computed for <code>current1</code> and
@@ -1077,8 +1192,8 @@ public class DifferencesServices implements MatchEngine {
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
 	@SuppressWarnings("unchecked")
-	private Match2Elements recursiveMappings(EObject current1, EObject current2, IProgressMonitor monitor)
-			throws FactoryException, InterruptedException {
+	private Match2Elements recursiveMappings(EObject current1, EObject current2,
+			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;
 		mapping = MatchFactory.eINSTANCE.createMatch2Elements();
 		mapping.setLeftElement(current1);

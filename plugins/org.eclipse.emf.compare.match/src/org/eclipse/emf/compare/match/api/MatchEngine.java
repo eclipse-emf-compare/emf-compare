@@ -37,12 +37,14 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, EObject, IProgressMonitor, Map)} instead. This will be deleted before 1.0.
 	 */
+	@Deprecated
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor)
 			throws InterruptedException;
 
 	/**
-	 * This method returns a 2 models match with the specified options.
+	 * This method returns a 3 models match with the specified options.
 	 * <p>
 	 * Options than can be specified are defined within the interface {@link MatchOptions}.
 	 * </p>
@@ -67,6 +69,22 @@ public interface MatchEngine {
 			Map<String, Object> optionMap) throws InterruptedException;
 
 	/**
+	 * This method returns a 3 models match with no progress monitor.
+	 * 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param ancestor
+	 *            Common ancestor of the right and left models.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return The corresponding {@link MatchModel}.
+	 */
+	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, Map<String, Object> optionMap);
+
+	/**
 	 * This method returns a 2 models match.
 	 * 
 	 * @param leftRoot
@@ -78,7 +96,9 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, IProgressMonitor, Map)} instead. This will be deleted before 1.0.
 	 */
+	@Deprecated
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
 			throws InterruptedException;
 
@@ -104,4 +124,18 @@ public interface MatchEngine {
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException;
+
+	/**
+	 * This method returns a 2 models match with no progress monitor.
+	 * 
+	 * @param leftRoot
+	 *            Left model for the comparison.
+	 * @param rightRoot
+	 *            Right model for the comparison.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return The corresponding {@link MatchModel}.
+	 */
+	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap);
 }
