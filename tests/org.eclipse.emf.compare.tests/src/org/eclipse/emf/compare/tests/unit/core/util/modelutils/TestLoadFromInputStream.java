@@ -117,12 +117,6 @@ public class TestLoadFromInputStream extends TestCase {
 	 */
 	public void testLoadModelFromValidInputInvalidExtension() throws IOException {
 		for (File model : models) {
-			/*
-			 * TODO for now, we'll avoid gmfgen since we cannot load gmfgen1.0 models without exceptions.
-			 * migrate to 2.0 to avoid this.
-			 */
-			if (model.getName().endsWith("gmfgen"))
-				continue;
 			try {
 				for (String invalidFileName : INVALID_FILENAMES) {
 					final FileInputStream fsInput = new FileInputStream(model);
