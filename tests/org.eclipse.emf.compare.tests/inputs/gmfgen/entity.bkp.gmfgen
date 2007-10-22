@@ -2,14 +2,14 @@
 <gmfgen:GenEditorGenerator xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gmfgen="http://www.eclipse.org/gmf/2005/GenModel">
+    xmlns:gmfgen="http://www.eclipse.org/gmf/2006/GenModel">
   <diagram
       visualID="79"
       editPartClassName="RootEditPart"
       itemSemanticEditPolicyClassName="RootItemSemanticEditPolicy"
       notationViewFactoryClassName="RootViewFactory"
-      iconProviderPriority="Low"
-      canonicalEditPolicyClassName="RootCanonicalEditPolicy">
+      canonicalEditPolicyClassName="RootCanonicalEditPolicy"
+      iconProviderPriority="Low">
     <diagramRunTimeClass
         href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Diagram"/>
     <elementType
@@ -68,7 +68,7 @@
             figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel"/>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet">
-          <metaFeature
+          <metaFeatures
               href="../../../plugin/fr.obeo.dsl.environment/model/environment.genmodel#//environment/Type/name"/>
         </modelFacet>
       </labels>
@@ -105,6 +105,7 @@
         <modelElementInitializer
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
               body="1">
             <feature
                 href="entity.genmodel#//entity/Property/upperBound"/>
@@ -115,7 +116,7 @@
           xsi:type="gmfgen:FeatureLabelModelFacet"
           viewPattern="{0}"
           editPattern="{0}">
-        <metaFeature
+        <metaFeatures
             href="entity.genmodel#//entity/Property/name"/>
       </labelModelFacet>
     </childNodes>
@@ -166,7 +167,7 @@
             figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel"/>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet">
-          <metaFeature
+          <metaFeatures
               href="entity.genmodel#//entity/Block/name"/>
         </modelFacet>
       </labels>
@@ -216,7 +217,7 @@
             figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel"/>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet">
-          <metaFeature
+          <metaFeatures
               href="entity.genmodel#//entity/Block/name"/>
         </modelFacet>
       </labels>
@@ -274,6 +275,7 @@
         <modelElementInitializer
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
               body="false">
             <feature
                 href="entity.genmodel#//entity/Reference/isComposite"/>
@@ -306,7 +308,7 @@
             xsi:type="gmfgen:FeatureLabelModelFacet"
             viewPattern=""
             editPattern="">
-          <metaFeature
+          <metaFeatures
               href="entity.genmodel#//entity/Property/name"/>
         </modelFacet>
       </labels>
@@ -342,6 +344,7 @@
         <modelElementInitializer
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
               body="true">
             <feature
                 href="entity.genmodel#//entity/Reference/isComposite"/>
@@ -372,7 +375,7 @@
         </viewmap>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet">
-          <metaFeature
+          <metaFeatures
               href="entity.genmodel#//entity/Property/name"/>
         </modelFacet>
       </labels>
@@ -382,8 +385,8 @@
         editPartClassName="BlockClassifiersCompartmentEditPart"
         itemSemanticEditPolicyClassName="BlockClassifiersCompartmentItemSemanticEditPolicy"
         notationViewFactoryClassName="BlockClassifiersCompartmentViewFactory"
-        childNodes="//@diagram/@childNodes.0 //@diagram/@childNodes.2"
         canonicalEditPolicyClassName="BlockClassifiersCompartmentCanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.0 //@diagram/@childNodes.2"
         title="ClassifiersCompartment"
         canCollapse="false"
         needsTitle="false"
@@ -403,8 +406,8 @@
         editPartClassName="EntityAttributesCompartmentEditPart"
         itemSemanticEditPolicyClassName="EntityAttributesCompartmentItemSemanticEditPolicy"
         notationViewFactoryClassName="EntityAttributesCompartmentViewFactory"
-        childNodes="//@diagram/@childNodes.1"
         canonicalEditPolicyClassName="EntityAttributesCompartmentCanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.1"
         title="AttributesCompartment"
         canCollapse="false"
         needsTitle="false"
@@ -423,8 +426,8 @@
         editPartClassName="BlockClassifiersCompartment2EditPart"
         itemSemanticEditPolicyClassName="BlockClassifiersCompartment2ItemSemanticEditPolicy"
         notationViewFactoryClassName="BlockClassifiersCompartment2ViewFactory"
-        childNodes="//@diagram/@childNodes.0 //@diagram/@childNodes.2"
         canonicalEditPolicyClassName="BlockClassifiersCompartment2CanonicalEditPolicy"
+        childNodes="//@diagram/@childNodes.0 //@diagram/@childNodes.2"
         title="ClassifiersCompartment"
         canCollapse="false"
         needsTitle="false"
@@ -482,16 +485,16 @@
     </palette>
   </diagram>
   <plugin
-      provider="Obeo.fr"/>
+      provider="Obeo.fr">
+    <requiredPlugins>org.eclipse.emf.ocl</requiredPlugins>
+    <requiredPlugins>org.eclipse.emf.query.ocl</requiredPlugins>
+  </plugin>
   <editor/>
   <domainGenModel
       href="entity.genmodel#/"/>
   <expressionProviders>
     <providers
         xsi:type="gmfgen:GenExpressionInterpreter"
-        expressions="//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer/@initializers.0 //@diagram/@links.1/@modelFacet/@modelElementSelector //@diagram/@links.1/@modelFacet/@modelElementInitializer/@initializers.0 //@diagram/@links.2/@modelFacet/@modelElementSelector //@diagram/@links.2/@modelFacet/@modelElementInitializer/@initializers.0">
-      <requiredPluginIDs>org.eclipse.emf.ocl</requiredPluginIDs>
-      <requiredPluginIDs>org.eclipse.emf.query.ocl</requiredPluginIDs>
-    </providers>
+        expressions="//@diagram/@childNodes.1/@modelFacet/@modelElementInitializer/@initializers.0 //@diagram/@links.1/@modelFacet/@modelElementSelector //@diagram/@links.1/@modelFacet/@modelElementInitializer/@initializers.0 //@diagram/@links.2/@modelFacet/@modelElementSelector //@diagram/@links.2/@modelFacet/@modelElementInitializer/@initializers.0"/>
   </expressionProviders>
 </gmfgen:GenEditorGenerator>
