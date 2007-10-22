@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -133,9 +134,7 @@ public class DiffMaker implements DiffEngine {
 		if (extension == null && rightRoot != null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
 		// This will allow the diff engine to work without eclipse
-		// TODO clean this up
-		try {
-			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			final Collection<AbstractDiffExtension> extensions = DiffService
 					.getCorrespondingDiffExtensions(extension);
 			if (extensions != null)
@@ -143,8 +142,6 @@ public class DiffMaker implements DiffEngine {
 					if (ext != null)
 						ext.visit(result);
 				}
-		} catch (ClassNotFoundException e) {
-			// No action taken, we ARE outside of eclipse
 		}
 		return result;
 	}
