@@ -8,13 +8,13 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
  * Tests the behavior of the map's constructors.
@@ -61,19 +61,19 @@ public class TestConstructors extends TestCase {
 	 * Checks that the default constructor creates an empty map.
 	 */
 	public void testDefaultConstructor() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		assertTrue(MESSAGE_CONSTRUCTOR_NAME + "()" + ' ' + MESSAGE_NON_EMPTY_MAP, map.isEmpty());
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(int, float)} with illegal initial capacities and valid
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with illegal initial capacities and valid
 	 * load factors. Expects an {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testIllegalCapacityValidLoadFactorConstructor() {
 		for (int invalidCapacity : INVALID_CAPACITY) {
 			for (float validLoadFactor : VALID_LOAD) {
 				try {
-					new FastMap(invalidCapacity, validLoadFactor);
+					new EMFCompareMap(invalidCapacity, validLoadFactor);
 					fail(MESSAGE_CONSTRUCTOR_NAME + '(' + invalidCapacity + ',' + ' ' + validLoadFactor + ')'
 							+ ' ' + MESSAGE_ILLEGAL_ARGUMENT);
 				} catch (IllegalArgumentException e) {
@@ -84,13 +84,13 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(int)} with invalid initial capacities. Expects an
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with invalid initial capacities. Expects an
 	 * {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testIllegalInitialCapacityConstructor() {
 		for (int invalidCapacity : INVALID_CAPACITY) {
 			try {
-				new FastMap(invalidCapacity);
+				new EMFCompareMap(invalidCapacity);
 				fail(MESSAGE_CONSTRUCTOR_NAME + '(' + invalidCapacity + ')' + ' ' + MESSAGE_ILLEGAL_ARGUMENT);
 			} catch (IllegalArgumentException e) {
 				// We expected this
@@ -99,37 +99,37 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(Map)} with a non-<code>null</code> map. Expects the
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a non-<code>null</code> map. Expects the
 	 * creation of a new map containing all the mappings from the given map.
 	 */
 	public void testMapConstructor() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 
-		FastMap testMap = new FastMap(map);
-		assertTrue(MESSAGE_CONSTRUCTOR_NAME + "(new FastMap())" + ' ' + MESSAGE_NON_EMPTY_MAP, testMap
+		EMFCompareMap testMap = new EMFCompareMap(map);
+		assertTrue(MESSAGE_CONSTRUCTOR_NAME + "(new EMFCompareMap())" + ' ' + MESSAGE_NON_EMPTY_MAP, testMap
 				.isEmpty());
 
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 
-			testMap = new FastMap(map);
+			testMap = new EMFCompareMap(map);
 			assertEquals(MESSAGE_CONSTRUCTOR_NAME + "(map)" + ' ' + "created map with wrong size.", i + 1,
 					testMap.size());
 
 			for (int j = 0; j < i; j++) {
-				assertEquals("FastMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j], testMap
+				assertEquals("EMFCompareMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j], testMap
 						.get(KEY_SET[j]));
 			}
 		}
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(Map)} with a <code>null</code> map. Expects a
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a <code>null</code> map. Expects a
 	 * {@link NullPointerException} to be thrown.
 	 */
 	public void testNullMapConstructor() {
 		try {
-			new FastMap(null);
+			new EMFCompareMap(null);
 			fail(MESSAGE_CONSTRUCTOR_NAME + "(null)" + ' ' + "did not throw NullPointerException exception.");
 		} catch (NullPointerException e) {
 			// We expected this
@@ -137,14 +137,14 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(int, float)} with valid initial capacities and invalid
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and invalid
 	 * load factors. Expects an {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testValidCapacityInvalidLoadFactorConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
 			for (float invalidLoadFactor : INVALID_LOAD) {
 				try {
-					new FastMap(validCapacity, invalidLoadFactor);
+					new EMFCompareMap(validCapacity, invalidLoadFactor);
 					fail(MESSAGE_CONSTRUCTOR_NAME + '(' + validCapacity + ',' + ' ' + invalidLoadFactor + ')'
 							+ ' ' + MESSAGE_ILLEGAL_ARGUMENT);
 				} catch (IllegalArgumentException e) {
@@ -155,13 +155,13 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(int, float)} with valid initial capacities and load
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and load
 	 * factors. Expects an empty map to be created.
 	 */
 	public void testValidCapacityValidLoadFactorConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
 			for (float validLoadFactor : VALID_LOAD) {
-				final FastMap map = new FastMap(validCapacity, validLoadFactor);
+				final EMFCompareMap map = new EMFCompareMap(validCapacity, validLoadFactor);
 				assertTrue(MESSAGE_CONSTRUCTOR_NAME + '(' + validCapacity + ',' + ' ' + validLoadFactor + ')'
 						+ ' ' + MESSAGE_NON_EMPTY_MAP, map.isEmpty());
 			}
@@ -169,12 +169,12 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link FastMap#FastMap(int)} with valid initial capacities. Expects an empty map
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with valid initial capacities. Expects an empty map
 	 * to be created.
 	 */
 	public void testValidInitialCapacityConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
-			final FastMap map = new FastMap(validCapacity);
+			final EMFCompareMap map = new EMFCompareMap(validCapacity);
 			assertTrue(MESSAGE_CONSTRUCTOR_NAME + '(' + validCapacity + ')' + ' ' + MESSAGE_NON_EMPTY_MAP,
 					map.isEmpty());
 		}

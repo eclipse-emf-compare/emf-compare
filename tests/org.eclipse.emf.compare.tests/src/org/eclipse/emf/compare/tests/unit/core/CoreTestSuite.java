@@ -16,7 +16,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.tests.unit.core.util.TestAdapterUtils;
 import org.eclipse.emf.compare.tests.unit.core.util.efactory.EFactoryTestSuite;
-import org.eclipse.emf.compare.tests.unit.core.util.fastmap.FastMapTestSuite;
+import org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap.EMFCompareMapTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.modelutils.ModelUtilsTestSuite;
 
 /**
@@ -55,7 +55,7 @@ public final class CoreTestSuite {
 		suite.addTestSuite(TestMessages.class);
 		// package org.eclipse.emf.compare.util
 		suite.addTest(EFactoryTestSuite.suite());
-		suite.addTest(FastMapTestSuite.suite());
+		suite.addTest(EMFCompareMapTestSuite.suite());
 		suite.addTest(ModelUtilsTestSuite.suite());
 		suite.addTestSuite(TestAdapterUtils.class);
 		return suite;

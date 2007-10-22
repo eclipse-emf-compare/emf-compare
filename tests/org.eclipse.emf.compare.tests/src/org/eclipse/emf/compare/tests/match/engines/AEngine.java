@@ -30,6 +30,7 @@ public class AEngine implements MatchEngine {
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Deprecated
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor) {
 		return null;
@@ -39,27 +40,54 @@ public class AEngine implements MatchEngine {
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			IProgressMonitor monitor, Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Deprecated
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor) {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor, Map<String, Object> optionMap) {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
+			Map<String, Object> optionMap) {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor, Map<String, Object> optionMap) {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
 		return null;
 	}
 }

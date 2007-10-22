@@ -8,16 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link FastMap#equals(Object)}. Two maps are equal if and only if they have the same
+ * Tests the behavior of {@link EMFCompareMap#equals(Object)}. Two maps are equal if and only if they have the same
  * size and contain the same mappings. A map cannot be considered equal to anything that isn't an instance of
  * Map itself.
  * 
@@ -38,7 +38,7 @@ public class TestEquals extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link FastMap#equals(Object)}.
+	 * Tests {@link EMFCompareMap#equals(Object)}.
 	 * <p>
 	 * Expected results : <table>
 	 * <tr>
@@ -75,14 +75,14 @@ public class TestEquals extends TestCase {
 	 * </p>
 	 */
 	public void testEqualsEmptyMap() {
-		final FastMap map = new FastMap();
-		final FastMap testMap = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
+		final EMFCompareMap testMap = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++)
 			testMap.put(KEY_SET[i], VALUE_SET[i]);
 
 		final Object[] invalidTestObjects = {null, "", "Suroit", new Long(10), new HashSet(), 25f, '\u00aa',
 				testMap, };
-		final Object[] validTestObjects = {new FastMap(), map, };
+		final Object[] validTestObjects = {new EMFCompareMap(), map, };
 
 		for (int i = 0; i < invalidTestObjects.length; i++)
 			assertFalse("Unexpected result of equals() with non-equal objects.", map
@@ -92,7 +92,7 @@ public class TestEquals extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#equals(Object)}.
+	 * Tests {@link EMFCompareMap#equals(Object)}.
 	 * <p>
 	 * Expected results : <table>
 	 * <tr>
@@ -142,10 +142,10 @@ public class TestEquals extends TestCase {
 	 * </p>
 	 */
 	public void testEqualsNonEmptyMap() {
-		final FastMap map = new FastMap();
-		final FastMap differentSize = new FastMap();
-		final FastMap sameSizeDifferentMappings = new FastMap();
-		final FastMap sameMappings = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
+		final EMFCompareMap differentSize = new EMFCompareMap();
+		final EMFCompareMap sameSizeDifferentMappings = new EMFCompareMap();
+		final EMFCompareMap sameMappings = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++)
 			map.put(KEY_SET[i], VALUE_SET[i]);
 		for (int i = 0; i < KEY_SET.length >> 1; i++)

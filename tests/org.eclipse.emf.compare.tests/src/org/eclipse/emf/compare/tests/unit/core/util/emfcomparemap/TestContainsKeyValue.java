@@ -8,16 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link FastMap#containsKey(Object)} and {@link FastMap#containsValue(Object)} so that
+ * Tests the behavior of {@link EMFCompareMap#containsKey(Object)} and {@link EMFCompareMap#containsValue(Object)} so that
  * they behave the same as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
@@ -37,32 +37,32 @@ public class TestContainsKeyValue extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link FastMap#containsKey(Object)} on an empty map. Expects <code>False</code> to be returned.
+	 * Tests {@link EMFCompareMap#containsKey(Object)} on an empty map. Expects <code>False</code> to be returned.
 	 */
 	public void testContainsKeyEmptyMap() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++) {
 			assertFalse("Empty maps shouldn't contain mappings.", map.containsKey(KEY_SET[i]));
 		}
 	}
 
 	/**
-	 * Tests {@link FastMap#containsValue(Object)} on an empty map. Expects <code>False</code> to be
+	 * Tests {@link EMFCompareMap#containsValue(Object)} on an empty map. Expects <code>False</code> to be
 	 * returned.
 	 */
 	public void testContainsValueEmptyMap() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < VALUE_SET.length; i++) {
 			assertFalse("Empty maps shouldn't contain mappings." + i, map.containsValue(VALUE_SET[i]));
 		}
 	}
 
 	/**
-	 * Tests {@link FastMap#containsKey(Object)} on a non-empty map with not contained keys. Expects
+	 * Tests {@link EMFCompareMap#containsKey(Object)} on a non-empty map with not contained keys. Expects
 	 * <code>False</code> to be returned.
 	 */
 	public void testNotFoundKey() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 			for (int j = i + 1; j < KEY_SET.length; j++) {
@@ -72,11 +72,11 @@ public class TestContainsKeyValue extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#containsValue(Object)} on a non-empty map with not contained values. Expects
+	 * Tests {@link EMFCompareMap#containsValue(Object)} on a non-empty map with not contained values. Expects
 	 * <code>False</code> to be returned.
 	 */
 	public void testNotFoundValue() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 			for (int j = i + 1; j < KEY_SET.length; j++) {
@@ -87,11 +87,11 @@ public class TestContainsKeyValue extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#containsKey(Object)} on a non-empty map with contained keys. Expects
+	 * Tests {@link EMFCompareMap#containsKey(Object)} on a non-empty map with contained keys. Expects
 	 * <code>True</code> to be returned.
 	 */
 	public void testValidKey() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < KEY_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 		}
@@ -101,11 +101,11 @@ public class TestContainsKeyValue extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#containsValue(Object)} on a non-empty map with contained values. Expects
+	 * Tests {@link EMFCompareMap#containsValue(Object)} on a non-empty map with contained values. Expects
 	 * <code>True</code> to be returned.
 	 */
 	public void testValidValue() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		for (int i = 0; i < VALUE_SET.length; i++) {
 			map.put(KEY_SET[i], VALUE_SET[i]);
 		}

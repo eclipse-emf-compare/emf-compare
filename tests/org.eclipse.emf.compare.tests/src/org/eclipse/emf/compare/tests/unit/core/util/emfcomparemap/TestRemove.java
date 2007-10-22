@@ -8,16 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link FastMap#remove(Object)} so that it behaves the same as its {@link HashMap}
+ * Tests the behavior of {@link EMFCompareMap#remove(Object)} so that it behaves the same as its {@link HashMap}
  * counterpart.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
@@ -40,10 +40,10 @@ public class TestRemove extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link FastMap#remove(Object)} on an empty map. Expects <code>null</code> to be returned.
+	 * Tests {@link EMFCompareMap#remove(Object)} on an empty map. Expects <code>null</code> to be returned.
 	 */
 	public void testRemoveFromEmptyMap() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 
 		for (int i = 0; i < KEY_SET.length; i++) {
 			try {
@@ -56,12 +56,12 @@ public class TestRemove extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#remove(Object)} on a non-empty map. Expects it to return the old value if present.
+	 * Tests {@link EMFCompareMap#remove(Object)} on a non-empty map. Expects it to return the old value if present.
 	 */
 	public void testRemoveIfPresent() {
 		for (int i = 0; i < KEY_SET.length; i++) {
 			for (int j = 0; j < KEY_SET.length; j++) {
-				final FastMap map = new FastMap();
+				final EMFCompareMap map = new EMFCompareMap();
 
 				// We'll progressively add more and more mappings to the tested map
 				for (int k = 0; k <= i; k++) {

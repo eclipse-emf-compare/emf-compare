@@ -40,7 +40,7 @@ public class TestMessages extends TestCase {
 	private final Object[] messageParameters = {null, "", "Foehn", -1, new Long(10), '\u0043', new HashSet(), };
 
 	/** These two are valid, parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
-	private final String[] parameterisableKeys = {"EFactory.FeatureNotFound", "FastMap.IllegalLoadFactor", };
+	private final String[] parameterisableKeys = {"EFactory.FeatureNotFound", "EMFCompareMap.IllegalLoadFactor", };
 
 	/** These are valid, un-parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
 	private final String[] validKeys = {"EMFComparePlugin.ElementNotFound", "EMFComparePlugin.JavaException",

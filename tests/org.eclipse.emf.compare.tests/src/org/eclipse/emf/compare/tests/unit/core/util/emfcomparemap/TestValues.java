@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -19,10 +19,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of the {@link FastMap}'s values collection and its iterator so that they behave the
+ * Tests the behavior of the {@link EMFCompareMap}'s values collection and its iterator so that they behave the
  * same as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
@@ -48,13 +48,13 @@ public class TestValues extends TestCase {
 			false, };
 
 	/** Map that will be used for all these tests. */
-	private final FastMap testedMap = new FastMap();
+	private final EMFCompareMap testedMap = new EMFCompareMap();
 
 	/** Name of the currently tested method for the error messages. */
 	private String testedMethod;
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection is expected to support the clear()
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected to support the clear()
 	 * operation and it effectively empties the map.
 	 */
 	public void testClear() {
@@ -69,7 +69,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the creation of the {@link FastMap}'s values collection.
+	 * Tests the creation of the {@link EMFCompareMap}'s values collection.
 	 * <p>
 	 * <ul>
 	 * Assertions :
@@ -95,7 +95,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection's iterator is expected to throw a
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection's iterator is expected to throw a
 	 * {@link ConcurrentModificationException} if its original map is structurally modified via the clear()
 	 * method.
 	 */
@@ -115,7 +115,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection's iterator is expected to throw a
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection's iterator is expected to throw a
 	 * {@link ConcurrentModificationException} if its original map is structurally modified via the
 	 * put(Object) method.
 	 */
@@ -136,13 +136,13 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection's iterator is expected to throw a
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection's iterator is expected to throw a
 	 * {@link ConcurrentModificationException} if its original map is structurally modified via the
 	 * putAll(Collection) method.
 	 */
 	public void testConcurrentPutAll() {
 		testedMethod = "PutAll(Collection)";
-		final FastMap anotherMap = new FastMap();
+		final EMFCompareMap anotherMap = new EMFCompareMap();
 		final Iterator valueIterator = anotherMap.values().iterator();
 		anotherMap.putAll(testedMap);
 
@@ -157,7 +157,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection's iterator is expected to throw a
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection's iterator is expected to throw a
 	 * {@link ConcurrentModificationException} if its original map is structurally modified via the
 	 * remove(Object) method.
 	 */
@@ -178,11 +178,11 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection is expected not to support the add()
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected not to support the add()
 	 * operation.
 	 */
 	public void testNoAddThroughCollection() {
-		final FastMap map = new FastMap();
+		final EMFCompareMap map = new EMFCompareMap();
 		final Collection col = map.values();
 		try {
 			col.add(KEY_SET[5]);
@@ -193,7 +193,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection is expected to support the
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected to support the
 	 * removeAll(Collection) operation and it effectively removes all the map's element contained within the
 	 * given collection.
 	 */
@@ -236,7 +236,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection is expected to support the
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected to support the
 	 * remove(Object) operation and this method is expected to effectively remove the given object from the
 	 * map. Size of the map afterward should have decreased by 1.
 	 */
@@ -262,7 +262,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection's iterator. The iterator is expected to support the
+	 * Tests the {@link EMFCompareMap}'s values collection's iterator. The iterator is expected to support the
 	 * remove(Object) operation and this method is expected to effectively remove the given object from the
 	 * map. Size of the map afterward should have decreased by 1.
 	 */
@@ -286,7 +286,7 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link FastMap}'s values collection. The collection is expected to support the
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected to support the
 	 * retainAll(Collection) operation and it effectively removes all the map's element not contained within
 	 * the given collection.
 	 */

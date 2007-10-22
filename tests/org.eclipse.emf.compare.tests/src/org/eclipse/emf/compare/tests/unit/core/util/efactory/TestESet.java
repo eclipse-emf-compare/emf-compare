@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.core.util.efactory;
 
-// import java.io.File;
-// import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,11 +21,14 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.util.EFactory;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.uml2.uml.UMLFactory;
-import org.eclipse.uml2.uml.VisibilityKind;
 
 /**
  * Tests the behavior of {@link EFactory#eSet(EObject, String, Object)}.
@@ -105,16 +106,58 @@ public class TestESet extends TestCase {
 	 */
 	public void testESetValidEObjectEEnumFeature() {
 		try {
-			final EObject clazz = UMLFactory.eINSTANCE.createClass();
-			// eenum feature is named "visibility"
-			final EStructuralFeature eEnumAttribute = EFactory.eStructuralFeature(clazz, "visibility");
-			EFactory.eSet(clazz, eEnumAttribute.getName(), "private");
+			final EPackage packaje = EcoreFactory.eINSTANCE.createEPackage();
+			packaje.setName("aPackage");
+			
+			final EEnum visibility = createEEnum();
+			packaje.getEClassifiers().add(visibility);
+			
+			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
+			final EAttribute enumAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+			enumAttribute.setName("anEnumAttribute");
+			enumAttribute.setEType(visibility);
+			enumAttribute.setDefaultValue(visibility.getEEnumLiteral(0));
+			clazz.getEStructuralFeatures().add(enumAttribute);
+			packaje.getEClassifiers().add(clazz);
+			
+			final EObject testObject = packaje.getEFactoryInstance().create(clazz);
+			final String newLiteral = "package";
+			
+			EFactory.eSet(testObject, enumAttribute.getName(), newLiteral);
 
 			assertEquals("eSet() didn't set correct value for EEnum type attribute.",
-					VisibilityKind.PRIVATE_LITERAL, clazz.eGet(eEnumAttribute));
+					visibility.getEEnumLiteral(newLiteral), testObject.eGet(enumAttribute));
 		} catch (FactoryException e) {
+			e.printStackTrace();
 			fail("Unexpected FactoryException has been thrown by eSet() called on an EEnum.");
 		}
+	}
+	
+	/**
+	 * Creates an enumeration called "visibility" with the following values.
+	 * <ul><li>private = 0</li><li>protected = 1</li><li>package = 2</li><li>public = 3</li></ul>
+	 * @return The created enumeration.
+	 */
+	private EEnum createEEnum() {
+		final EEnum visibility = EcoreFactory.eINSTANCE.createEEnum();
+		visibility.setName("visibility");
+		final EEnumLiteral privateLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		privateLiteral.setName("private");
+		privateLiteral.setValue(0);
+		final EEnumLiteral protectedLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		protectedLiteral.setName("protected");
+		protectedLiteral.setValue(1);
+		final EEnumLiteral packageLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		packageLiteral.setName("package");
+		packageLiteral.setValue(2);
+		final EEnumLiteral publicLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		publicLiteral.setName("public");
+		publicLiteral.setValue(3);
+		visibility.getELiterals().add(privateLiteral);
+		visibility.getELiterals().add(protectedLiteral);
+		visibility.getELiterals().add(packageLiteral);
+		visibility.getELiterals().add(publicLiteral);
+		return visibility;
 	}
 
 	/**

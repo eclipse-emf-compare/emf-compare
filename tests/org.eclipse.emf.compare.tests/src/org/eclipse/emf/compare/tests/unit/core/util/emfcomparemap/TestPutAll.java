@@ -8,16 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link FastMap#putAll(Collection)} so that it behaves the same as its {@link HashMap}
+ * Tests the behavior of {@link EMFCompareMap#putAll(Collection)} so that it behaves the same as its {@link HashMap}
  * counterpart.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
@@ -43,13 +43,13 @@ public class TestPutAll extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link FastMap#putAll(Collection)} on a non-empty map with a non-empty collection with some keys
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection with some keys
 	 * intersecting. Expects that all mappings from the source will be inserted in the target, replacing the
 	 * existing mapping if any.
 	 */
 	public void testPutAllIntersects() {
-		final FastMap map1 = new FastMap();
-		final FastMap map2 = new FastMap();
+		final EMFCompareMap map1 = new EMFCompareMap();
+		final EMFCompareMap map2 = new EMFCompareMap();
 
 		for (int i = 0; i < (KEY_SET.length >> 1) + 3; i++) {
 			map1.put(KEY_SET[i], VALUE_SET[i]);
@@ -92,12 +92,12 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#putAll(Collection)} on a non-empty map with a non-empty collection without any key
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection without any key
 	 * intersection. Expects that all mappings from the source will be inserted in the target.
 	 */
 	public void testPutAllNoIntersects() {
-		final FastMap map1 = new FastMap();
-		final FastMap map2 = new FastMap();
+		final EMFCompareMap map1 = new EMFCompareMap();
+		final EMFCompareMap map2 = new EMFCompareMap();
 
 		for (int i = 0; i < KEY_SET.length >> 1; i++) {
 			map1.put(KEY_SET[i], VALUE_SET[i]);
@@ -123,12 +123,12 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#putAll(Collection)} on an empty map with an empty collection. Expects the size to
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with an empty collection. Expects the size to
 	 * stay <code>0</code>.
 	 */
 	public void testPutEmptyInEmpty() {
-		final FastMap target = new FastMap();
-		final FastMap source = new FastMap();
+		final EMFCompareMap target = new EMFCompareMap();
+		final EMFCompareMap source = new EMFCompareMap();
 
 		try {
 			target.putAll(source);
@@ -142,12 +142,12 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#putAll(Collection)} on a non-empty map with an empty collection. Expects the size
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with an empty collection. Expects the size
 	 * and the mappings not to be altered.
 	 */
 	public void testPutEmptyInNonEmpty() {
-		final FastMap target = new FastMap();
-		final FastMap source = new FastMap();
+		final EMFCompareMap target = new EMFCompareMap();
+		final EMFCompareMap source = new EMFCompareMap();
 
 		for (int i = 0; i < KEY_SET.length; i++) {
 			target.put(KEY_SET[i], VALUE_SET[i]);
@@ -170,12 +170,12 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#putAll(Collection)} on an empty map with a non-empty collection. Expects the size
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with a non-empty collection. Expects the size
 	 * and the mappings of the target to be equal to the source's.
 	 */
 	public void testPutNonEmptyInEmpty() {
-		final FastMap target = new FastMap();
-		final FastMap source = new FastMap();
+		final EMFCompareMap target = new EMFCompareMap();
+		final EMFCompareMap source = new EMFCompareMap();
 
 		for (int i = 0; i < KEY_SET.length; i++) {
 			source.put(KEY_SET[i], VALUE_SET[i]);

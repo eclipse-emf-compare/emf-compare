@@ -8,17 +8,17 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core.util.fastmap;
+package org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap;
 
 import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link FastMap#clear()}, {@link FastMap#clone()}, {@link FastMap#size()} and
- * {@link FastMap#isEmpty()} so that they behave the same as their {@link HashMap} counterparts.
+ * Tests the behavior of {@link EMFCompareMap#clear()}, {@link EMFCompareMap#clone()}, {@link EMFCompareMap#size()} and
+ * {@link EMFCompareMap#isEmpty()} so that they behave the same as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -40,10 +40,10 @@ public class TestMethods extends TestCase {
 			false, };
 
 	/** Map that will be used for all these tests. */
-	private final FastMap testedMap = new FastMap();
+	private final EMFCompareMap testedMap = new EMFCompareMap();
 
 	/**
-	 * Tests {@link FastMap#clear()} with sizes growing from 0 to 12 elements. Expects the size to be reverted
+	 * Tests {@link EMFCompareMap#clear()} with sizes growing from 0 to 12 elements. Expects the size to be reverted
 	 * back to 0 after each execution of clear().
 	 */
 	public void testClear() {
@@ -64,23 +64,23 @@ public class TestMethods extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#clone()} and {@link FastMap#size()}.
+	 * Tests {@link EMFCompareMap#clone()} and {@link EMFCompareMap#size()}.
 	 * <p>
 	 * <ul>
 	 * Assertions :
 	 * <li>Clone() returns non-null map.</li>
-	 * <li>Clone() returns an instance of {@link FastMap}.</li>
+	 * <li>Clone() returns an instance of {@link EMFCompareMap}.</li>
 	 * <li>Original and cloned map both have the same size.</li>
 	 * <li>Original and cloned map contain the same mappings.</li>
 	 * </ul>
 	 * </p>
 	 */
 	public void testCloneSize() {
-		FastMap clonedMap = null;
+		EMFCompareMap clonedMap = null;
 		try {
-			clonedMap = (FastMap)(testedMap.clone());
+			clonedMap = (EMFCompareMap)(testedMap.clone());
 		} catch (ClassCastException e) {
-			fail("Result of clone() was not an instance of FastMap.");
+			fail("Result of clone() was not an instance of EMFCompareMap.");
 		}
 
 		assertNotNull("Result of clone() was null.", clonedMap);
@@ -98,12 +98,12 @@ public class TestMethods extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#hashCode()} to ensure it always produces the same hash code for two maps that have
+	 * Tests {@link EMFCompareMap#hashCode()} to ensure it always produces the same hash code for two maps that have
 	 * the same size and contain the same mappings.
 	 */
 	public void testHashCode() {
-		final FastMap map1 = new FastMap();
-		final FastMap map2 = new FastMap();
+		final EMFCompareMap map1 = new EMFCompareMap();
+		final EMFCompareMap map2 = new EMFCompareMap();
 		assertEquals("Two empty maps should have the same hash code.", map1.hashCode(), map2.hashCode());
 
 		// progressively add mappings to both maps
@@ -140,7 +140,7 @@ public class TestMethods extends TestCase {
 	}
 
 	/**
-	 * Tests {@link FastMap#isEmpty()}.
+	 * Tests {@link EMFCompareMap#isEmpty()}.
 	 * <p>
 	 * <ul>
 	 * Assertions :
@@ -151,7 +151,7 @@ public class TestMethods extends TestCase {
 	 * </p>
 	 */
 	public void testIsEmpty() {
-		assertTrue("Method isEmpty() returns false on new map.", new FastMap().isEmpty());
+		assertTrue("Method isEmpty() returns false on new map.", new EMFCompareMap().isEmpty());
 		assertFalse("Method isEmpty() returns true on non-empty map.", testedMap.isEmpty());
 		testedMap.clear();
 		assertTrue("Unexpected result of isEmpty() on cleared map.", testedMap.isEmpty());
@@ -163,7 +163,7 @@ public class TestMethods extends TestCase {
 	 */
 	public void testToString() {
 		for (int i = 0; i < KEY_SET.length; i++) {
-			final FastMap map = new FastMap();
+			final EMFCompareMap map = new EMFCompareMap();
 			for (int j = 0; j < i; j++) {
 				map.put(KEY_SET[j], VALUE_SET[j]);
 			}
