@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -655,7 +656,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor);
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor, Collections.<String, Object> emptyMap());
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot.setDate(Calendar.getInstance().getTime());
@@ -668,7 +669,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
 						try {
 							final MatchModel match = MatchService.doMatch(leftModel, rightModel,
-									ancestorModel, monitor);
+									ancestorModel, monitor, Collections.<String, Object> emptyMap());
 							final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 							snapshot.setDate(Calendar.getInstance().getTime());

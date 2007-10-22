@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -208,7 +209,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor);
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor, Collections.<String, Object> emptyMap());
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
@@ -221,7 +222,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
 						final MatchModel match = MatchService.doMatch(leftModel, rightModel, ancestorModel,
-								monitor);
+								monitor, Collections.<String, Object> emptyMap());
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();

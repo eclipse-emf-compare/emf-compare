@@ -38,7 +38,7 @@ import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider;
 import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -112,7 +112,7 @@ public class ModelContentMergeViewerPart {
 	private int selectedTab;
 
 	/** This Map will allow us to avoid iteration through all diffs for each paint operation. */
-	private final Map<String, DiffElement> treeItemToDiff = new FastMap<String, DiffElement>(101);
+	private final Map<String, DiffElement> treeItemToDiff = new EMFCompareMap<String, DiffElement>(101);
 
 	/**
 	 * Instantiates a {@link ModelContentMergeViewerPart} given its parent {@link Composite} and its side.
