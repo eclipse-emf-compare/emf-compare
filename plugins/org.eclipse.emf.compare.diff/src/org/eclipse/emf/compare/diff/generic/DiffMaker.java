@@ -50,7 +50,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.util.EFactory;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -74,12 +74,12 @@ public class DiffMaker implements DiffEngine {
 	private static final int RIGHT_OBJECT = 2;
 
 	/** This map is useful to find the Match from any EObject instance. */
-	private final Map<EObject, Match2Elements> eObjectToMatch = new FastMap<EObject, Match2Elements>();
+	private final Map<EObject, Match2Elements> eObjectToMatch = new EMFCompareMap<EObject, Match2Elements>();
 
 	/**
 	 * This map will keep track of the top level unmatched elements, as well as whether they are conflicting.
 	 */
-	private final Map<UnMatchElement, Boolean> unMatchedElements = new FastMap<UnMatchElement, Boolean>();
+	private final Map<UnMatchElement, Boolean> unMatchedElements = new EMFCompareMap<UnMatchElement, Boolean>();
 
 	/**
 	 * {@inheritDoc}
@@ -132,13 +132,20 @@ public class DiffMaker implements DiffEngine {
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot != null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		final Collection<AbstractDiffExtension> extensions = DiffService
-				.getCorrespondingDiffExtensions(extension);
-		if (extensions != null)
-			for (AbstractDiffExtension ext : extensions) {
-				if (ext != null)
-					ext.visit(result);
-			}
+		// This will allow the diff engine to work without eclipse
+		// TODO clean this up
+		try {
+			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
+			final Collection<AbstractDiffExtension> extensions = DiffService
+					.getCorrespondingDiffExtensions(extension);
+			if (extensions != null)
+				for (AbstractDiffExtension ext : extensions) {
+					if (ext != null)
+						ext.visit(result);
+				}
+		} catch (ClassNotFoundException e) {
+			// No action taken, we ARE outside of eclipse
+		}
 		return result;
 	}
 

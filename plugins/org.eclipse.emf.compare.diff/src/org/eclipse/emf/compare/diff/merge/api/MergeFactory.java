@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.
@@ -45,7 +45,7 @@ public final class MergeFactory {
 	 * This map keeps a bridge between a given {@link DiffElement}'s class and the most accurate merger's
 	 * class for that particular {@link DiffElement}.
 	 */
-	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new FastMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
+	private static final Map<Class<? extends DiffElement>, Class<? extends AbstractMerger>> MERGER_TYPES = new EMFCompareMap<Class<? extends DiffElement>, Class<? extends AbstractMerger>>();
 
 	/**
 	 * Associates basic {@link DiffElement}s with generic merger implementations.

@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
  * Parses extension meta data to fetch the diff engine to use.
@@ -39,10 +39,10 @@ public final class DiffService {
 	private static final String DIFF_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.diff.engine"; //$NON-NLS-1$
 
 	/** Keeps track of all the diff extensions we've parsed. */
-	private static final Map<String, ArrayList<DiffExtensionDescriptor>> PARSED_DIFF_EXTENSIONS = new FastMap<String, ArrayList<DiffExtensionDescriptor>>();
+	private static final Map<String, ArrayList<DiffExtensionDescriptor>> PARSED_DIFF_EXTENSIONS = new EMFCompareMap<String, ArrayList<DiffExtensionDescriptor>>();
 
 	/** Keeps track of all the engines we've parsed. */
-	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new FastMap<String, ArrayList<EngineDescriptor>>();
+	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new EMFCompareMap<String, ArrayList<EngineDescriptor>>();
 
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_DIFF_EXTENSION = "diff_extension"; //$NON-NLS-1$
