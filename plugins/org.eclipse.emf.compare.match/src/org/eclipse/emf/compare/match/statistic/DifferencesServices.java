@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -634,15 +635,8 @@ public class DifferencesServices implements MatchEngine {
 	 * @return <code>True</code> if we should ignore XMI ID, <code>False</code> otherwise.
 	 */
 	private boolean getDefaultIgnoreXMIID() {
-		// This will allow the match engine to work without eclipse
-		// TODO clean this up
-		try {
-			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
-			if (EMFComparePlugin.getDefault() != null)
-				return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
-		} catch (ClassNotFoundException e) {
-			// No action taken, we ARE outside of eclipse
-		}
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
+			return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
 		return false;
 	}
 
@@ -654,16 +648,9 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private int getDefaultSearchWindow() {
 		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
-		// This will allow the match engine to work without eclipse
-		// TODO clean this up
-		try {
-			Class.forName("org.osgi.framework.BundleActivator"); //$NON-NLS-1$
-			if (EMFComparePlugin.getDefault() != null
-					&& EMFComparePlugin.getDefault().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
-				searchWindow = EMFComparePlugin.getDefault().getInt("emfcompare.search.window"); //$NON-NLS-1$
-		} catch (ClassNotFoundException e) {
-			// No action taken, we ARE outside of eclipse
-		}
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null
+				&& EMFComparePlugin.getDefault().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
+			searchWindow = EMFComparePlugin.getDefault().getInt("emfcompare.search.window"); //$NON-NLS-1$
 		return searchWindow;
 	}
 

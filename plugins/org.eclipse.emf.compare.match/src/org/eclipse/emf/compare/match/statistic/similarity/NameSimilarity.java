@@ -116,13 +116,11 @@ public final class NameSimilarity {
 	 * @param current
 	 *            {@link EObject} we seek the name feature of.
 	 * @return The feature which seems to be the name of the given {@link EObject}.
-	 * @throws FactoryException
-	 *             Thrown if an operation on <code>current</code> fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static EAttribute findNameFeature(EObject current) throws FactoryException {
+	public static EAttribute findNameFeature(EObject current) {
 		final EClass eclass = current.eClass();
-		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName());
+		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName() + eclass.hashCode());
 
 		if (bestFeature == null) {
 			List<EAttribute> eClassAttributes = new ArrayList<EAttribute>();
@@ -141,7 +139,7 @@ public final class NameSimilarity {
 						bestFeature = attribute;
 					}
 				}
-				NAME_FEATURE_CACHE.put(eclass.getName(), bestFeature);
+				NAME_FEATURE_CACHE.put(eclass.getName() + eclass.hashCode(), bestFeature);
 			}
 		}
 		// now we should return the feature value
