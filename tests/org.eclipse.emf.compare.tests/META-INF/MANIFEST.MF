@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.jface.text,
  org.eclipse.ui,
- org.junit;bundle-version="[3.8.1,4.0.0)"
+ org.junit;bundle-version="[3.8.1,4.0.0)",
+ org.eclipse.equinox.launcher
 Bundle-Activator: org.eclipse.emf.compare.tests.EMFCompareTestPlugin
 Eclipse-LazyStart: true
