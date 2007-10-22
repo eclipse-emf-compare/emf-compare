@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.match.metamodel.provider.MatchEditPlugin;
-import org.eclipse.emf.compare.util.FastMap;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -76,7 +76,7 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 	 */
 	public static class Implementation extends EclipsePlugin {
 		/** TODOCBR comment. */
-		private Map<String, Object> imageMap = new FastMap<String, Object>();
+		private Map<String, Object> imageMap = new EMFCompareMap<String, Object>();
 		
 		/**
 		 * Creates an instance.
