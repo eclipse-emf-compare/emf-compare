@@ -846,11 +846,7 @@ public class DifferencesServices implements MatchEngine {
 				final EObject item2 = right.getEObject(item1ID);
 				if (item2 != null) {
 					final StringBuilder item1Key = new StringBuilder();
-					try {
-						item1Key.append(NameSimilarity.findName(item1));
-					} catch (FactoryException e) {
-						System.out.println(item1);
-					}
+					item1Key.append(NameSimilarity.findName(item1));
 					item1Key.append(item1.hashCode());
 					matchedByID.put(item1Key.toString(), item2);
 				}
