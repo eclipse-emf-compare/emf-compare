@@ -24,13 +24,83 @@ import org.eclipse.emf.compare.util.ClassUtils;
  */
 @SuppressWarnings("nls")
 public class TestClassUtils extends TestCase {
+	/** These are all the primitive classes. */
+	private static final Class<?>[] PRIMITIVES = {short.class, int.class, long.class, byte.class, char.class,
+			boolean.class, float.class, double.class, void.class, };
+
 	/** These are all the wrapper classes for primitive types. */
 	private static final Class<?>[] WRAPPERS = {Short.class, Integer.class, Long.class, Byte.class,
 			Character.class, Boolean.class, Float.class, Double.class, Void.class, };
 
-	/** These are all the primitive classes. */
-	private static final Class<?>[] PRIMITIVES = {short.class, int.class, long.class, byte.class, char.class,
-			boolean.class, float.class, double.class, void.class, };
+	/**
+	 * Tests
+	 * {@link ClassUtils#classEquals(Class, Class) with classes assumed non-equal. Expects <code>False</code> to be returned. 
+	 */
+	public void testClassEqualsDistinctClasses() {
+		for (int i = 0; i < WRAPPERS.length; i++) {
+			// Special case when we are right at the middle of the input
+			if ((WRAPPERS.length & 1) == 1 && i == (WRAPPERS.length >> 1))
+				assertFalse("Distinct classes shouldn't be considered equal.", ClassUtils.classEquals(
+						WRAPPERS[i], Object.class));
+			else
+				assertFalse("Distinct classes shouldn't be considered equal." + i, ClassUtils.classEquals(
+						WRAPPERS[i], PRIMITIVES[PRIMITIVES.length - i - 1]));
+		}
+	}
+
+	/**
+	 * Tests
+	 * {@link ClassUtils#classEquals(Class, Class) with classes assumed equal. Expects <code>True</code> to be returned. 
+	 */
+	public void testClassEqualsEqualClasses() {
+		for (Class<?> clazz : WRAPPERS) {
+			assertTrue("Class considered different than itself.", ClassUtils.classEquals(clazz, clazz));
+		}
+		for (Class<?> clazz : PRIMITIVES) {
+			assertTrue("Class considered different than itself.", ClassUtils.classEquals(clazz, clazz));
+		}
+		for (int i = 0; i < WRAPPERS.length; i++) {
+			assertTrue("A primitive should be considered equal to its wrapper.", ClassUtils.classEquals(
+					WRAPPERS[i], PRIMITIVES[i]));
+		}
+	}
+
+	/**
+	 * Tests
+	 * {@link ClassUtils#classEquals(Class, Class) with <code>null</code> as one of the tested classes. Expects a {@link NullPointerException}
+	 * to be thrown.
+	 */
+	public void testClassEqualsNullClass() {
+		try {
+			ClassUtils.classEquals(null, String.class);
+			fail("Expected IllegalArgumentException hasn't been thrown by classEquals.");
+		} catch (IllegalArgumentException e) {
+			// We were expectin this
+		}
+		try {
+			ClassUtils.classEquals(String.class, null);
+			fail("Expected IllegalArgumentException hasn't been thrown by classEquals.");
+		} catch (IllegalArgumentException e) {
+			// We were expectin this
+		}
+	}
+
+	/**
+	 * Tests {@link ClassUtils#hasMethod(Class, String, Class...)} with a method name and parameters known to
+	 * be invalid for the receiver. Expects <code>False</code> to be returned.
+	 */
+	public void testHasMethodInvalidMethod() {
+		for (Method method : Object.class.getDeclaredMethods()) {
+			if (Modifier.isPublic(method.getModifiers())) {
+				assertFalse("Object declared an unknown method for hasMethod.", ClassUtils.hasMethod(
+						Object.class, new StringBuilder(method.getName()).reverse().toString(), method
+								.getParameterTypes()));
+			} else {
+				assertFalse("Method hasMethod should return false when seeking a non-public method.",
+						ClassUtils.hasMethod(Object.class, method.getName(), method.getParameterTypes()));
+			}
+		}
+	}
 
 	/**
 	 * Tests {@link ClassUtils#hasMethod(Class, String, Class...)} with <code>null</code> as the receiver
@@ -57,20 +127,17 @@ public class TestClassUtils extends TestCase {
 	}
 
 	/**
-	 * Tests {@link ClassUtils#hasMethod(Class, String, Class...)} with a method name and parameters known to
-	 * be invalid for the receiver. Expects <code>False</code> to be returned.
+	 * Tests {@link ClassUtils#invokeMethod(Object, String, Object...)} with a method name and parameters
+	 * known to be invalid for the receiver. Expects <code>null</code> to be returned.
 	 */
-	public void testHasMethodInvalidMethod() {
-		for (Method method : Object.class.getDeclaredMethods()) {
-			if (Modifier.isPublic(method.getModifiers())) {
-				assertFalse("Object declared an unknown method for hasMethod.", ClassUtils.hasMethod(
-						Object.class, new StringBuilder(method.getName()).reverse().toString(), method
-								.getParameterTypes()));
-			} else {
-				assertFalse("Method hasMethod should return false when seeking a non-public method.",
-						ClassUtils.hasMethod(Object.class, method.getName(), method.getParameterTypes()));
-			}
-		}
+	public void testInvokeMethodInvalidMethod() {
+		final String testObject = "This shall be the tested String";
+		assertNull("Invocation of an inexistant method returned non-null value.", ClassUtils.invokeMethod(
+				testObject, "doesNotExistOnString"));
+		assertNull("Invocation of an inexistant method returned non-null value.", ClassUtils.invokeMethod(
+				testObject, "gnirtsbus", 5, new Integer(10)));
+		assertNull("Invocation of an inexistant method returned successfully.", ClassUtils.invokeMethod(
+				testObject, "", new Object()));
 	}
 
 	/**
@@ -115,73 +182,6 @@ public class TestClassUtils extends TestCase {
 		} catch (ClassCastException e) {
 			e.printStackTrace();
 			fail("Invocation via invokeMethod returned a result of an unexpected type.");
-		}
-	}
-
-	/**
-	 * Tests {@link ClassUtils#invokeMethod(Object, String, Object...)} with a method name and parameters
-	 * known to be invalid for the receiver. Expects <code>null</code> to be returned.
-	 */
-	public void testInvokeMethodInvalidMethod() {
-		final String testObject = "This shall be the tested String";
-		assertNull("Invocation of an inexistant method returned non-null value.", ClassUtils.invokeMethod(
-				testObject, "doesNotExistOnString"));
-		assertNull("Invocation of an inexistant method returned non-null value.", ClassUtils.invokeMethod(
-				testObject, "gnirtsbus", 5, new Integer(10)));
-		assertNull("Invocation of an inexistant method returned successfully.", ClassUtils.invokeMethod(
-				testObject, "", new Object()));
-	}
-
-	/**
-	 * Tests
-	 * {@link ClassUtils#classEquals(Class, Class) with <code>null</code> as one of the tested classes. Expects a {@link NullPointerException}
-	 * to be thrown.
-	 */
-	public void testClassEqualsNullClass() {
-		try {
-			ClassUtils.classEquals(null, String.class);
-			fail("Expected IllegalArgumentException hasn't been thrown by classEquals.");
-		} catch (IllegalArgumentException e) {
-			// We were expectin this
-		}
-		try {
-			ClassUtils.classEquals(String.class, null);
-			fail("Expected IllegalArgumentException hasn't been thrown by classEquals.");
-		} catch (IllegalArgumentException e) {
-			// We were expectin this
-		}
-	}
-
-	/**
-	 * Tests
-	 * {@link ClassUtils#classEquals(Class, Class) with classes assumed equal. Expects <code>True</code> to be returned. 
-	 */
-	public void testClassEqualsEqualClasses() {
-		for (Class<?> clazz : WRAPPERS) {
-			assertTrue("Class considered different than itself.", ClassUtils.classEquals(clazz, clazz));
-		}
-		for (Class<?> clazz : PRIMITIVES) {
-			assertTrue("Class considered different than itself.", ClassUtils.classEquals(clazz, clazz));
-		}
-		for (int i = 0; i < WRAPPERS.length; i++) {
-			assertTrue("A primitive should be considered equal to its wrapper.", ClassUtils.classEquals(
-					WRAPPERS[i], PRIMITIVES[i]));
-		}
-	}
-
-	/**
-	 * Tests
-	 * {@link ClassUtils#classEquals(Class, Class) with classes assumed non-equal. Expects <code>False</code> to be returned. 
-	 */
-	public void testClassEqualsDistinctClasses() {
-		for (int i = 0; i < WRAPPERS.length; i++) {
-			// Special case when we are right at the middle of the input
-			if ((WRAPPERS.length & 1) == 1 && i == (WRAPPERS.length >> 1))
-				assertFalse("Distinct classes shouldn't be considered equal.", ClassUtils.classEquals(
-						WRAPPERS[i], Object.class));
-			else
-				assertFalse("Distinct classes shouldn't be considered equal." + i, ClassUtils.classEquals(
-						WRAPPERS[i], PRIMITIVES[PRIMITIVES.length - i - 1]));
 		}
 	}
 }
