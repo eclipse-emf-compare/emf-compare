@@ -20,23 +20,28 @@ import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * Preference page used for <b>EMFCompare</b>, it allows the user to define which files to compare with
@@ -61,12 +66,23 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 */
 	@Override
 	public void createFieldEditors() {
+		// Link to the content types page
+		final PreferenceLinkArea link = new PreferenceLinkArea(getFieldEditorParent(), SWT.NONE,
+				"org.eclipse.ui.preferencePages.ContentTypes", //$NON-NLS-1$
+				Messages.getString("EMFComparePreferencesPage.contentTypesLink"), //$NON-NLS-1$
+				(IWorkbenchPreferenceContainer)getContainer(), null);
+		GridData gd = new GridData();
+		gd.horizontalSpan = 3;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalAlignment = GridData.FILL;
+		link.getControl().setLayoutData(gd);
+
 		// Search window field
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
 				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
-		searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(
-				Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
+		// searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(
+		// Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 		addField(searchWindowEditor);
 
 		// ignore XMI ID field
@@ -90,6 +106,11 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_ADDED_COLOR, colorGroup));
 		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_REMOVED_COLOR, colorGroup));
+		gd = new GridData();
+		gd.horizontalSpan = 3;
+		gd.grabExcessHorizontalSpace = false;
+		gd.horizontalAlignment = GridData.FILL;
+		colorGroup.setLayoutData(gd);
 	}
 
 	/**
@@ -124,18 +145,23 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	/**
-	 * Creates an {@link IntegerFieldEditor} showing a {@link CLabel} with text and image instead of the
-	 * default {@link Label}.
+	 * Creates an {@link StringFieldEditor} showing an image, a text field and a label, accepts only integers.
 	 */
-	private final class ImageIntegerFieldEditor extends IntegerFieldEditor {
-		/** maximum number of characters this field accepts. */
-		private static final int TEXT_LIMIT = 10;
+	private final class ImageIntegerFieldEditor extends FieldEditor {
+		/** This is the actual editor for the value. */
+		protected Text textField;
 
-		/** Label that will be used to display the image and text of this {@link FieldEditor}. */
-		protected CLabel cLabel;
+		/** This label will display an help icon. */
+		protected Label image;
+
+		/** Keeps track of the changes. */
+		protected Integer oldValue;
+		
+		/** Defines whether this editor contains a valid value. */
+		protected boolean isValid;
 
 		/**
-		 * Creates an integer field editor.
+		 * Creates a new field editor.
 		 * 
 		 * @param name
 		 *            The name of the preference this field editor works on.
@@ -145,57 +171,19 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		 *            The parent of the field editor's control.
 		 */
 		public ImageIntegerFieldEditor(String name, String labelText, Composite parent) {
-			super(name, labelText, parent, TEXT_LIMIT);
+			init(name, labelText);
+			createControl(parent);
 		}
-
-		/**
-		 * Allows us to show an image after the {@link Text} field.
-		 * 
-		 * @param parent
-		 *            Parent control of the label.
-		 * @return The {@link CLabel} to show.
-		 */
-		public CLabel getCLabelControl(Composite parent) {
-			if (cLabel == null) {
-				cLabel = new CLabel(parent, SWT.RIGHT);
-				final Image icon = getHelpIcon();
-				if (icon != null) {
-					cLabel.setImage(icon);
-				}
-				cLabel.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent event) {
-						cLabel = null;
-					}
-				});
-			}
-			return cLabel;
-		}
-
+		
 		/**
 		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
+		 *
+		 * @see org.eclipse.jface.preference.FieldEditor#isValid()
 		 */
 		@Override
-		public int getNumberOfControls() {
-			return 3;
-		}
-
-		/**
-		 * Overrides {@link StringFieldEditor#setEnabled(boolean, Composite)} to enable our {@link CLabel}
-		 * instead of the old {@link Label}.
-		 * 
-		 * @param enabled
-		 *            <code>True</code> if we should enable the edition of the {@link CLabel label},
-		 *            <code>False</code> otherwise.
-		 * @param parent
-		 *            parent {@link Composite} of the {@link CLabel label}.
-		 * @see StringFieldEditor#setEnabled(boolean, Composite)
-		 */
-		@Override
-		public void setEnabled(boolean enabled, Composite parent) {
-			getCLabelControl(parent).setEnabled(enabled);
-		}
+		public boolean isValid() {
+	        return isValid;
+	    }
 
 		/**
 		 * {@inheritDoc}
@@ -204,44 +192,139 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		 */
 		@Override
 		protected void adjustForNumColumns(int numColumns) {
-			final GridData gd = (GridData)getTextControl().getLayoutData();
+			final GridData gd = (GridData)image.getLayoutData();
 			gd.horizontalSpan = numColumns - 2;
-			// We only grab excess space if we have to
-			// If another field editor has more columns then
-			// we assume it is setting the width.
-			gd.grabExcessHorizontalSpace = gd.horizontalSpan == 1;
 		}
 
 		/**
-		 * Overrides {@link StringFieldEditor#doFillIntoGrid(Composite, int)} for our {@link CLabel} instead
-		 * of the old {@link Label}.
+		 * Creates this field editor's text control.
 		 * 
 		 * @param parent
-		 *            Parent {@link Composite} of the editor.
-		 * @param numColumns
-		 *            Number of widgets to display horizontaly.
-		 * @see StringFieldEditor#doFillIntoGrid(Composite, int)
+		 *            The parent for this control.
+		 * @return The created Text control.
+		 */
+		private Text createTextControl(Composite parent) {
+			if (textField == null) {
+				textField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+				textField.setFont(parent.getFont());
+				textField.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent event) {
+						valueChanged();
+					}
+				});
+				textField.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent event) {
+						textField = null;
+					}
+				});
+			}
+			return textField;
+		}
+
+		/**
+		 * Indicates that this field editor's value has been modified.
+		 */
+		protected void valueChanged() {
+			final boolean oldState = isValid;
+			refreshValidState();
+			
+			if (isValid != oldState) {
+				fireStateChanged(IS_VALID, oldState, isValid);
+			}
+			
+			if (isValid) {
+				final int newValue = Integer.parseInt(textField.getText());
+				if (newValue != oldValue) {
+					fireValueChanged(VALUE, oldValue, newValue);
+					oldValue = Integer.parseInt(textField.getText());
+				}
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.StringFieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+		 *      int)
 		 */
 		@Override
 		protected void doFillIntoGrid(Composite parent, int numColumns) {
 			getLabelControl(parent);
+			createTextControl(parent);
 
 			GridData gd = new GridData();
-			gd.horizontalSpan = numColumns - 2;
-			final GC gc = new GC(getTextControl(parent));
-			try {
-				final Point extent = gc.textExtent("W"); //$NON-NLS-1$
-				gd.widthHint = TEXT_LIMIT * extent.x;
-			} finally {
-				gc.dispose();
-			}
-			getTextControl(parent).setLayoutData(gd);
+			final int charCount = 5;
+			final GC gc = new GC(textField);
+			final Point extent = gc.textExtent("W"); //$NON-NLS-1$
+			gc.dispose();
+			gd.widthHint = charCount * extent.x;
+			textField.setLayoutData(gd);
 
+			image = new Label(parent, SWT.NONE);
+			image.setImage(getHelpIcon());
+			image.setToolTipText(Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 			gd = new GridData();
-			gd.horizontalAlignment = GridData.FILL;
-			gd.grabExcessHorizontalSpace = true;
-			getCLabelControl(parent).setLayoutData(gd);
+			gd.horizontalSpan = numColumns - 1;
+			image.setLayoutData(gd);
 		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
+		 */
+		@Override
+		protected void doLoad() {
+			if (textField != null) {
+				oldValue = getPreferenceStore().getInt(getPreferenceName());
+				textField.setText(Integer.toString(oldValue));
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
+		 */
+		@Override
+		protected void doLoadDefault() {
+			if (textField != null) {
+				final int value = getPreferenceStore().getDefaultInt(getPreferenceName());
+				textField.setText(Integer.toString(value));
+			}
+			valueChanged();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doStore()
+		 */
+		@Override
+		protected void doStore() {
+			if (textField != null) {
+				final int newValue = Integer.valueOf(textField.getText());
+				getPreferenceStore().setValue(getPreferenceName(), newValue);
+			}
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 *
+		 * @see org.eclipse.jface.preference.FieldEditor#refreshValidState()
+		 */
+		@Override
+		protected void refreshValidState() {
+			clearErrorMessage();
+			try {
+				Integer.parseInt(textField.getText());
+				isValid = true;
+			} catch (NumberFormatException e) {
+				isValid = false;
+				showErrorMessage("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput"); //$NON-NLS-1$
+			}
+	    }
 
 		/**
 		 * Creates and return the help icon to show in our label.
@@ -260,6 +343,16 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				assert false;
 			}
 			return helpIcon;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
+		 */
+		@Override
+		public int getNumberOfControls() {
+			return 3;
 		}
 	}
 }
