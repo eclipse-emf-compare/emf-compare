@@ -35,14 +35,11 @@ public class TestERemove extends TestCase {
 	/** Path to an ecore model to use for those tests. */
 	private static final String INPUT_MODEL_ECORE = "/inputs/attribute/volatile/v2.ecore";
 
-	/** Path to an UML model to use for those tests. */
-	private static final String INPUT_MODEL_UML = "/inputs/attribute/uml/mm.uml13";
-
 	/** Contains invalid feature names whatever the target. */
 	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature", };
 
 	/** UML and ecore models that will be used for the tests. Loaded from {@link #setUp()}. */
-	private EObject[] models = new EObject[2];
+	private EObject[] models = new EObject[1];
 
 	/**
 	 * Tests {@link EFactory#eRemove(EObject, String, Object)} with <code>null</code> as its first
@@ -201,10 +198,7 @@ public class TestERemove extends TestCase {
 		try {
 			final File ecoreFile = new File(FileLocator.toFileURL(
 					EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_MODEL_ECORE)).getFile());
-			final File umlFile = new File(FileLocator.toFileURL(
-					EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_MODEL_UML)).getFile());
 			models[0] = ModelUtils.load(ecoreFile, new ResourceSetImpl());
-			models[1] = ModelUtils.load(umlFile, new ResourceSetImpl());
 		} catch (IOException e) {
 			fail("Test setUp failed to load input models.");
 		}
