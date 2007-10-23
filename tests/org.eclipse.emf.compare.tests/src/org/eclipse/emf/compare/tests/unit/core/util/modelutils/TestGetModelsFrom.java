@@ -158,7 +158,8 @@ public class TestGetModelsFrom extends TestCase {
 		if (subFolders.length != 0) {
 			invalidDirectories.add(folder);
 			for (File aSubFolder : subFolders) {
-				scanForModels(aSubFolder);
+				if (!aSubFolder.getName().contains("nonstd"))
+					scanForModels(aSubFolder);
 			}
 		} else if (folder.exists() && folder.isDirectory()) {
 			final File[] files = folder.listFiles();

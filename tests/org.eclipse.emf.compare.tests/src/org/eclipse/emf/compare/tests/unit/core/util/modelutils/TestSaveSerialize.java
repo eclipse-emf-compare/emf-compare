@@ -169,7 +169,8 @@ public class TestSaveSerialize extends TestCase {
 		final File[] subFolders = FileUtils.listDirectories(folder);
 		if (subFolders.length != 0) {
 			for (File aSubFolder : subFolders) {
-				scanForModels(aSubFolder);
+				if (!aSubFolder.getName().contains("nonstd"))
+					scanForModels(aSubFolder);
 			}
 		} else if (folder.exists() && folder.isDirectory()) {
 			final File[] files = folder.listFiles();

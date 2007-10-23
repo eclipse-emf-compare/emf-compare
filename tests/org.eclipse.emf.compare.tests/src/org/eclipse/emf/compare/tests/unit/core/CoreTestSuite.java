@@ -58,6 +58,7 @@ public final class CoreTestSuite {
 		suite.addTest(EMFCompareMapTestSuite.suite());
 		suite.addTest(ModelUtilsTestSuite.suite());
 		suite.addTestSuite(TestAdapterUtils.class);
+		suite.addTestSuite(TestClassUtils.class);
 		return suite;
 	}
 }
