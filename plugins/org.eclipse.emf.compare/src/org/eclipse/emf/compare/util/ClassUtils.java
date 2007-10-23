@@ -54,7 +54,7 @@ public final class ClassUtils {
 	}
 
 	/**
-	 * Convenience method to reflectively invoke a given method on the given object with the given parameters.
+	 * Convenience method to reflectively invoke a given method on the given object with the given parameters. This implementation takes care of checking if the method exists beforehand and will return <code>null</code> if it does not.
 	 * 
 	 * @param object
 	 *            Invocation target.
@@ -62,7 +62,7 @@ public final class ClassUtils {
 	 *            Name of the method to invoke.
 	 * @param parameters
 	 *            Parameters with which to invoke the method.
-	 * @return Result of the invocation.
+	 * @return Result of the invocation or <code>null</code> if the method does not exist according to {@link #hasMethod(Class, String, Class...)}.
 	 */
 	public static Object invokeMethod(Object object, String methodName, Object... parameters) {
 		Object result = null;
