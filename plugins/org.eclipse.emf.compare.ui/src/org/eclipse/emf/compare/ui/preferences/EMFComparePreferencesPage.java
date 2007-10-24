@@ -34,7 +34,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -81,8 +83,6 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
 				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
-		// searchWindowEditor.getCLabelControl(getFieldEditorParent()).setToolTipText(
-		// Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 		addField(searchWindowEditor);
 
 		// ignore XMI ID field
@@ -96,20 +96,19 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		// color fields group
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
 		colorGroup.setText(Messages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
+		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
+		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_CHANGED_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR,
+		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_CONFLICTING_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR,
+		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_ADDED_COLOR, colorGroup));
-		addField(new ColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
+		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_REMOVED_COLOR, colorGroup));
 		gd = new GridData();
 		gd.horizontalSpan = 3;
-		gd.grabExcessHorizontalSpace = false;
-		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
 		colorGroup.setLayoutData(gd);
 	}
 
@@ -145,20 +144,67 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	/**
-	 * Creates an {@link StringFieldEditor} showing an image, a text field and a label, accepts only integers.
+	 * Creates an {@link ColorFieldEditor} and forces it to span two columns.
+	 */
+	private final class CompareColorFieldEditor extends ColorFieldEditor {
+		/**
+		 * Constructs a new field editor given the <code>label</code> to display, the <code>name</code> of
+		 * the preference it is affected to and its <code>parent</code> composite.
+		 * 
+		 * @param name
+		 *            Key of the preference to affect this editor to.
+		 * @param label
+		 *            Description to display for the field editor.
+		 * @param parent
+		 *            Parent composite of this editor.
+		 */
+		public CompareColorFieldEditor(String name, String label, Composite parent) {
+			super(name, label, parent);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.ColorFieldEditor#adjustForNumColumns(int)
+		 */
+		@Override
+		protected void adjustForNumColumns(int numColumns) {
+			((GridData)getColorSelector().getButton().getLayoutData()).horizontalSpan = 1;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.ColorFieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+		 *      int)
+		 */
+		@Override
+		protected void doFillIntoGrid(Composite parent, int numColumns) {
+			final Control control = getLabelControl(parent);
+			final GridData gd = new GridData();
+			gd.horizontalSpan = 1;
+			control.setLayoutData(gd);
+
+			final Button colorButton = getChangeControl(parent);
+			colorButton.setLayoutData(new GridData());
+		}
+	}
+
+	/**
+	 * Creates an {@link FieldEditor} showing an image, a text field and a label, accepts only integers.
 	 */
 	private final class ImageIntegerFieldEditor extends FieldEditor {
-		/** This is the actual editor for the value. */
-		protected Text textField;
-
 		/** This label will display an help icon. */
 		protected Label image;
 
-		/** Keeps track of the changes. */
-		protected Integer oldValue;
-		
 		/** Defines whether this editor contains a valid value. */
 		protected boolean isValid;
+
+		/** Keeps track of the changes. */
+		protected Integer oldValue;
+
+		/** This is the actual editor for the value. */
+		protected Text textField;
 
 		/**
 		 * Creates a new field editor.
@@ -174,16 +220,26 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			init(name, labelText);
 			createControl(parent);
 		}
-		
+
 		/**
 		 * {@inheritDoc}
-		 *
+		 * 
+		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
+		 */
+		@Override
+		public int getNumberOfControls() {
+			return 3;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
 		 * @see org.eclipse.jface.preference.FieldEditor#isValid()
 		 */
 		@Override
 		public boolean isValid() {
-	        return isValid;
-	    }
+			return isValid;
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -194,52 +250,6 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		protected void adjustForNumColumns(int numColumns) {
 			final GridData gd = (GridData)image.getLayoutData();
 			gd.horizontalSpan = numColumns - 2;
-		}
-
-		/**
-		 * Creates this field editor's text control.
-		 * 
-		 * @param parent
-		 *            The parent for this control.
-		 * @return The created Text control.
-		 */
-		private Text createTextControl(Composite parent) {
-			if (textField == null) {
-				textField = new Text(parent, SWT.SINGLE | SWT.BORDER);
-				textField.setFont(parent.getFont());
-				textField.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyReleased(KeyEvent event) {
-						valueChanged();
-					}
-				});
-				textField.addDisposeListener(new DisposeListener() {
-					public void widgetDisposed(DisposeEvent event) {
-						textField = null;
-					}
-				});
-			}
-			return textField;
-		}
-
-		/**
-		 * Indicates that this field editor's value has been modified.
-		 */
-		protected void valueChanged() {
-			final boolean oldState = isValid;
-			refreshValidState();
-			
-			if (isValid != oldState) {
-				fireStateChanged(IS_VALID, oldState, isValid);
-			}
-			
-			if (isValid) {
-				final int newValue = Integer.parseInt(textField.getText());
-				if (newValue != oldValue) {
-					fireValueChanged(VALUE, oldValue, newValue);
-					oldValue = Integer.parseInt(textField.getText());
-				}
-			}
 		}
 
 		/**
@@ -308,10 +318,10 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				getPreferenceStore().setValue(getPreferenceName(), newValue);
 			}
 		}
-		
+
 		/**
 		 * {@inheritDoc}
-		 *
+		 * 
 		 * @see org.eclipse.jface.preference.FieldEditor#refreshValidState()
 		 */
 		@Override
@@ -322,9 +332,56 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				isValid = true;
 			} catch (NumberFormatException e) {
 				isValid = false;
-				showErrorMessage("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput"); //$NON-NLS-1$
+				showErrorMessage(Messages
+						.getString("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput")); //$NON-NLS-1$
 			}
-	    }
+		}
+
+		/**
+		 * Indicates that this field editor's value has been modified.
+		 */
+		protected void valueChanged() {
+			final boolean oldState = isValid;
+			refreshValidState();
+
+			if (isValid != oldState) {
+				fireStateChanged(IS_VALID, oldState, isValid);
+			}
+
+			if (isValid) {
+				final int newValue = Integer.parseInt(textField.getText());
+				if (newValue != oldValue) {
+					fireValueChanged(VALUE, oldValue, newValue);
+					oldValue = Integer.parseInt(textField.getText());
+				}
+			}
+		}
+
+		/**
+		 * Creates this field editor's text control.
+		 * 
+		 * @param parent
+		 *            The parent for this control.
+		 * @return The created Text control.
+		 */
+		private Text createTextControl(Composite parent) {
+			if (textField == null) {
+				textField = new Text(parent, SWT.SINGLE | SWT.BORDER);
+				textField.setFont(parent.getFont());
+				textField.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent event) {
+						valueChanged();
+					}
+				});
+				textField.addDisposeListener(new DisposeListener() {
+					public void widgetDisposed(DisposeEvent event) {
+						textField = null;
+					}
+				});
+			}
+			return textField;
+		}
 
 		/**
 		 * Creates and return the help icon to show in our label.
@@ -343,16 +400,6 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				assert false;
 			}
 			return helpIcon;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.jface.preference.StringFieldEditor#getNumberOfControls()
-		 */
-		@Override
-		public int getNumberOfControls() {
-			return 3;
 		}
 	}
 }
