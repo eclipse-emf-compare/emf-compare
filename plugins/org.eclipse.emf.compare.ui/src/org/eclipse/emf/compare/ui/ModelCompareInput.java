@@ -17,8 +17,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.compare.diff.merge.api.AbstractMerger;
-import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
+import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -78,11 +77,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#copy(boolean)
 	 */
 	public void copy(boolean leftToRight) {
-		for (final DiffElement aDiff : getDiffAsList()) {
-			// we might remove the diff from the list before merging it (eOpposite reference)
-			if (aDiff.eContainer() != null)
-				doCopy(aDiff, leftToRight);
-		}
+		doCopy(getDiffAsList(), leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -94,20 +89,25 @@ public class ModelCompareInput implements ICompareInput {
 	 * @param leftToRight
 	 *            Direction of the copy.
 	 */
-	@SuppressWarnings("unchecked")
 	public void copy(DiffElement element, boolean leftToRight) {
 		if (element instanceof DiffGroup) {
-			final List<DiffElement> subDiffList = new ArrayList<DiffElement>(((DiffGroup)element)
-					.getSubDiffElements());
-			for (DiffElement subDiff : subDiffList) {
-				if (subDiff instanceof DiffGroup)
-					copy(subDiff, leftToRight);
-				else
-					doCopy(subDiff, leftToRight);
-			}
+			doCopy(getContainedDifferences((DiffGroup)element), leftToRight);
 		} else {
 			doCopy(element, leftToRight);
 		}
+		fireCompareInputChanged();
+	}
+	
+	/**
+	 * Copies a list of {@link DiffElement}s or {@link DiffGroup}s in the given direction.
+	 * 
+	 * @param elements
+	 *            {@link DiffElement Element}s to copy.
+	 * @param leftToRight
+	 *            Direction of the copy.
+	 */
+	public void copy(List<DiffElement> elements, boolean leftToRight) {
+		doCopy(elements, leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -143,6 +143,7 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public List<DiffElement> getDiffAsList() {
 		final List<DiffElement> diffList = new ArrayList<DiffElement>();
+		// TODO Is ordering still needed? check for perfs
 		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
 		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
@@ -271,12 +272,38 @@ public class ModelCompareInput implements ICompareInput {
 	 *            <code>False</code> otherwise.
 	 */
 	protected void doCopy(DiffElement element, boolean leftToRight) {
-		final AbstractMerger merger = MergeFactory.createMerger(element);
-		if (leftToRight && merger.canUndoInTarget()) {
-			merger.undoInTarget();
-		} else if (!leftToRight && merger.canApplyInOrigin()) {
-			merger.applyInOrigin();
+		new MergeService().merge(element, leftToRight);
+	}
+	
+	/**
+	 * Applies the changes implied by a list of {@link DiffElement} in the direction specified by
+	 * <code>leftToRight</code>.
+	 * 
+	 * @param elements
+	 *            {@link DiffElement}s containing the copy information.
+	 * @param leftToRight
+	 *            <code>True</code> if the changes must be applied from the left to the right model,
+	 *            <code>False</code> otherwise.
+	 */
+	protected void doCopy(List<DiffElement> elements, boolean leftToRight) {
+		new MergeService().merge(elements, leftToRight);
+	}
+	
+	/**
+	 * Returns all the differences contained by a given {@link DiffGroup}.
+	 * @param group
+	 * DiffGroup which we seek the subDifferences of.
+	 * @return List of all the differences contained by <code>group</code>.
+	 */
+	protected List<DiffElement> getContainedDifferences(DiffGroup group) {
+		final List<DiffElement> result = new ArrayList<DiffElement>();
+		for (Object subDiff : group.getSubDiffElements()) {
+			if (subDiff instanceof DiffGroup)
+				result.addAll(getContainedDifferences((DiffGroup)subDiff));
+			else
+				result.add((DiffElement)subDiff);
 		}
+		return result;
 	}
 
 	/**

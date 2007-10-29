@@ -73,7 +73,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -128,9 +127,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** Ancestor part of the three possible parts of this content viewer. */
 	protected ModelContentMergeViewerPart ancestorPart;
-
-	/** Keeps track of the currently selected {@link DiffElement}. */
-	protected DiffElement currentDiff;
+	
+	/** Keeps track of the current diff Selection. */
+	protected List<DiffElement> currentSelection;
 
 	/** Indicates that this is a three way comparison. */
 	protected boolean isThreeWay;
@@ -251,15 +250,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		structureSelectionListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION)) {
-					Object selected = null;
-					if (event.getNewValue() instanceof IStructuredSelection) {
-						selected = ((IStructuredSelection)event.getNewValue()).getFirstElement();
+					final List<?> elements = (List<?>)event.getNewValue();
+					// We'll remove all diffgroups without subDiffs from the selection
+					final List<DiffElement> selectedDiffs = new ArrayList<DiffElement>();
+					for (int i = 0; i < elements.size(); i++) {
+						if (elements.get(i) instanceof DiffElement && !(elements.get(i) instanceof DiffGroup && ((DiffGroup)elements.get(i)).getSubDiffElements().size() == 0))
+							selectedDiffs.add((DiffElement)elements.get(i));
 					}
-					if (selected instanceof DiffElement
-							&& !(selected instanceof DiffGroup && ((DiffGroup)selected).getSubDiffElements()
-									.size() == 0)) {
-						setSelection((DiffElement)selected);
-					}
+					setSelection(selectedDiffs);
 				}
 			}
 		};
@@ -450,21 +448,34 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Sets the parts' tree selection given the {@link DiffElement} to select and the identifier of the side
-	 * which triggered the selection change.
+	 * Sets the parts' tree selection given the {@link DiffElement} to select.
 	 * 
 	 * @param diff
 	 *            {@link DiffElement} backing the current selection.
 	 */
 	public void setSelection(DiffElement diff) {
-		currentDiff = diff;
-		if (leftPart != null)
-			leftPart.navigateToDiff(currentDiff);
-		if (rightPart != null)
-			rightPart.navigateToDiff(currentDiff);
-		if (ancestorPart != null && currentDiff.eContainer() instanceof ConflictingDiffElement)
-			ancestorPart.navigateToDiff(currentDiff);
-		switchCopyState(true);
+		final List<DiffElement> diffs = new ArrayList<DiffElement>();
+		diffs.add(diff);
+		setSelection(diffs);
+	}
+	
+	/**
+	 * Sets the parts' tree selection given the list of {@link DiffElement}s to select.
+	 * 
+	 * @param diffs
+	 *            {@link DiffElement} backing the current selection.
+	 */
+	public void setSelection(List<DiffElement> diffs) {
+		if (diffs.size() > 0) {
+			currentSelection = diffs;
+			if (leftPart != null)
+				leftPart.navigateToDiff(diffs);
+			if (rightPart != null)
+				rightPart.navigateToDiff(diffs);
+			if (ancestorPart != null && diffs.get(0).eContainer() instanceof ConflictingDiffElement)
+				ancestorPart.navigateToDiff(diffs.get(0));
+			switchCopyState(true);
+		}
 	}
 
 	/**
@@ -538,24 +549,49 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			update();
 		}
 	}
+	
+	/**
+	 * Copies a list of {@link DiffElement}s or {@link DiffGroup}s in the given direction, then updates the
+	 * toolbar items states as well as the dirty state of both the left and the right models.
+	 * 
+	 * @param diffs
+	 *            {@link DiffElement Element}s to copy.
+	 * @param leftToRight
+	 *            Direction of the copy.
+	 * @see ModelCompareInput#copy(List, boolean)
+	 */
+	protected void copy(List<DiffElement> diffs, boolean leftToRight) {
+		if (diffs.size() > 0) {
+			((ModelCompareInput)getInput()).copy(diffs, leftToRight);
+			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
+			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
+			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			leftDirty = leftDirty || (leftToRight && configuration.isLeftEditable());
+			rightDirty = rightDirty || (!leftToRight && configuration.isRightEditable());
+			setRightDirty(leftDirty);
+			setLeftDirty(rightDirty);
+			update();
+		}
+	}
 
 	/**
-	 * Undoes the changed implied by the currently selected {@link DiffElement diff}.
+	 * Undoes the changes implied by the currently selected {@link DiffElement diff}.
 	 */
 	protected void copyDiffLeftToRight() {
-		if (currentDiff != null)
-			copy(currentDiff, true);
-		currentDiff = null;
+		if (currentSelection != null)
+			copy(currentSelection, true);
+		currentSelection = null;
 		switchCopyState(false);
 	}
 
 	/**
-	 * Applies the changed implied by the currently selected {@link DiffElement diff}.
+	 * Applies the changes implied by the currently selected {@link DiffElement diff}.
 	 */
 	protected void copyDiffRightToLeft() {
-		if (currentDiff != null)
-			copy(currentDiff, false);
-		currentDiff = null;
+		if (currentSelection != null)
+			copy(currentSelection, false);
+		currentSelection = null;
 		switchCopyState(false);
 	}
 
@@ -566,8 +602,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void createControls(Composite composite) {
-		leftPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.RIGHT);
-		rightPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.LEFT);
+		leftPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.LEFT);
+		rightPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.RIGHT);
 		ancestorPart = new ModelContentMergeViewerPart(this, composite, EMFCompareConstants.ANCESTOR);
 
 		final EditorPartListener partListener = new EditorPartListener(leftPart, rightPart, ancestorPart);
@@ -577,13 +613,16 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		// Synchronizes the left part with the two others
 		handleTreeHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
-		handlePropertyHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart.getPropertyPart());
+		handlePropertyHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
 		// Synchronizes the right part with the two others
 		handleTreeHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
-		handlePropertyHSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart.getPropertyPart());
+		handlePropertyHSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
 		// Synchronizes the ancestor part with the two others
 		handleTreeHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
-		handlePropertyHSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart.getPropertyPart());
+		handlePropertyHSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart
+				.getPropertyPart());
 	}
 
 	/**
@@ -656,7 +695,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor, Collections.<String, Object> emptyMap());
+						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor,
+								Collections.<String, Object> emptyMap());
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot.setDate(Calendar.getInstance().getTime());
@@ -684,8 +724,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
-			// TODO debug purposes only. remove this
-			System.out.println(end.getTime() - start.getTime() + "ms");
 
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
@@ -802,8 +840,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final List<DiffElement> diffs = getVisibleDiffs();
 		if (diffs.size() != 0) {
 			final DiffElement theDiff;
-			if (currentDiff != null)
-				theDiff = currentDiff;
+			if (currentSelection != null)
+				theDiff = currentSelection.get(0);
 			else if (diffs.size() == 1)
 				theDiff = diffs.get(0);
 			else if (down)
@@ -1039,7 +1077,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		return rightItem;
 	}
-	
+
 	/**
 	 * Allows synchronization of the properties viewports horizontal scrolling.
 	 * 
@@ -1248,8 +1286,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final int leftRectangleHeight = leftBounds.height - 1;
 			final int rightRectangleHeight = rightBounds.height - 1;
 
-			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder
-					+ leftPart.getHeaderHeight();
+			int leftY = leftBounds.y + leftRectangleHeight / 2 + treeTabBorder + leftPart.getHeaderHeight();
 			int rightY = rightBounds.y + rightRectangleHeight / 2 + treeTabBorder
 					+ rightPart.getHeaderHeight();
 			if (selectedTab == TREE_TAB
@@ -1264,7 +1301,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 
 			int lineWidth = 1;
-			if (selectedTab == PROPERTIES_TAB || diff == currentDiff) {
+			if (selectedTab == PROPERTIES_TAB || (currentSelection != null && diff == currentSelection.get(0))) {
 				lineWidth = 2;
 			}
 

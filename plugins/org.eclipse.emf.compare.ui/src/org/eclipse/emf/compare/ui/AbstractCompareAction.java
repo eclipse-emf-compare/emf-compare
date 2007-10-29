@@ -48,6 +48,14 @@ public abstract class AbstractCompareAction extends Action {
 
 	/**
 	 * Creates and initializes an action given its {@link ResourceBundle} and its keys prefix.
+	 * <p>
+	 * Expects keys are of the form
+	 * <ul>
+	 * <li>displayed label : <code>keyPrefix</code>label (ex: compare.label)</li>
+	 * <li>action tooltip : <code>keyPrefix</code>tooltip (ex: compare.tooltip)</li>
+	 * <li>action icon : <code>keyPrefix</code>image (ex: compare.image)</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param bundle
 	 *            The bundle from which to read the keys.

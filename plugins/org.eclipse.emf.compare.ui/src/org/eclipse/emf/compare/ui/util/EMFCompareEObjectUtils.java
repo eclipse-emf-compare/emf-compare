@@ -94,11 +94,9 @@ public final class EMFCompareEObjectUtils {
 	public static EObject getLeftElement(EObject object) {
 		EObject leftElement = null;
 
-		if (ClassUtils.hasMethod(object.getClass(), "getLeftElement")) { //$NON-NLS-1$
-			leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftElement"); //$NON-NLS-1$
-		} else if (ClassUtils.hasMethod(object.getClass(), "getLeftParent")) { //$NON-NLS-1$
+		leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftElement"); //$NON-NLS-1$
+		if (leftElement == null)
 			leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftParent"); //$NON-NLS-1$
-		}
 
 		return leftElement;
 	}
@@ -116,11 +114,9 @@ public final class EMFCompareEObjectUtils {
 	public static EObject getRightElement(EObject object) {
 		EObject rightElement = null;
 
-		if (ClassUtils.hasMethod(object.getClass(), "getRightElement")) { //$NON-NLS-1$
-			rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightElement"); //$NON-NLS-1$
-		} else if (ClassUtils.hasMethod(object.getClass(), "getRightParent")) { //$NON-NLS-1$
+		rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightElement"); //$NON-NLS-1$
+		if (rightElement == null)
 			rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightParent"); //$NON-NLS-1$
-		}
 
 		return rightElement;
 	}

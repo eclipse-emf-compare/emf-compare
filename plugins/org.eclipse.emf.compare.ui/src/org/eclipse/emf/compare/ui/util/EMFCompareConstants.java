@@ -130,7 +130,7 @@ public interface EMFCompareConstants {
 	String PROPERTY_LEFT_IS_REMOTE = "comparison.left.remote"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property associated with a double click in the structure merge viewer.
+	 * Key of the property associated with a selection in the structure merge viewer.
 	 */
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 

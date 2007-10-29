@@ -68,9 +68,9 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		if (inputElement instanceof Match2Elements) {
 			final Match2Elements match = (Match2Elements)inputElement;
 
-			if (partSide == EMFCompareConstants.RIGHT) {
+			if (partSide == EMFCompareConstants.LEFT) {
 				inputEObject = match.getLeftElement();
-			} else if (partSide == EMFCompareConstants.LEFT) {
+			} else if (partSide == EMFCompareConstants.RIGHT) {
 				inputEObject = match.getRightElement();
 			} else if (inputElement instanceof Match3Element) {
 				inputEObject = ((Match3Element)match).getOriginElement();

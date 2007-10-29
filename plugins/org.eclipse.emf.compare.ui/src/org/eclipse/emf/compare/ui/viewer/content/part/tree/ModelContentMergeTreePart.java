@@ -43,7 +43,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 *            The parent {@link Composite} for this tree viewer.
 	 */
 	public ModelContentMergeTreePart(Composite parent) {
-		super(new Tree(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL));
+		super(new Tree(parent, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));
 
 		setUseHashlookup(true);
 		setLabelProvider(new TreeLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
@@ -164,6 +164,16 @@ public class ModelContentMergeTreePart extends TreeViewer {
 				super.showItem((TreeItem)item);
 			}
 			setSelection(new StructuredSelection(item), true);
+		}
+	}
+	
+	/**
+	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's selection to this list.
+	 * @param items Items to make visible.
+	 */
+	public void showItem(List<EObject> items) {
+		if (items.size() > 0) {
+			setSelection(new StructuredSelection(items), true);
 		}
 	}
 

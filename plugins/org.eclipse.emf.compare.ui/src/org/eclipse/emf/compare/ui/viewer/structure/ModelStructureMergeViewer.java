@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.structure;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
@@ -26,17 +30,17 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.ISharedImages;
@@ -53,6 +57,12 @@ public class ModelStructureMergeViewer extends TreeViewer {
 
 	/** This is the action displaying the "export diff as..." menu. */
 	protected ExportMenu exportMenu;
+
+	/**
+	 * Allows us to ignore a selection event in the content viewer if it is one caused by a selection event in
+	 * the structure viewer.
+	 */
+	/* package */boolean ignoreContentSelection;
 
 	/**
 	 * Creates a new model structure merge viewer and intializes it.
@@ -190,34 +200,77 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		setUseHashlookup(true);
 		setContentProvider(new ModelStructureContentProvider(compareConfiguration));
 
-		final Control tree = getControl();
+		final Tree tree = getTree();
 		tree.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
-		addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION, event
-						.getSelection());
+		tree.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// Nothing to do here
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				final List<DiffElement> selectedElements = new ArrayList<DiffElement>(getTree()
+						.getSelection().length);
+				for (TreeItem item : getTree().getSelection())
+					if (item.getData() instanceof DiffElement)
+						selectedElements.add((DiffElement)item.getData());
+				ignoreContentSelection = true;
+				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION, selectedElements);
 			}
 		});
 
-		configuration.addPropertyChangeListener(new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_SELECTION)) {
-					expandAll();
-					final TreeItem item = (TreeItem)find(event.getNewValue());
-					collapseAll();
+		configuration.addPropertyChangeListener(new ConfigurationPropertyListener());
+	}
+
+	/**
+	 * Listens to property change events on the compare configuration. Typically responds to selection change
+	 * events in the content viewer and preferences change.
+	 * 
+	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 */
+	private class ConfigurationPropertyListener implements IPropertyChangeListener {
+		/**
+		 * Default constructor. Implemented to increase its visibility.
+		 */
+		public ConfigurationPropertyListener() {
+			// no action is to be taken here
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+		 */
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_SELECTION)) {
+				if (ignoreContentSelection)
+					ignoreContentSelection = false;
+				else {
+					TreeItem item = (TreeItem)find(event.getNewValue());
+					/*
+					 * if we could not find the item, we need to expand the whole tree to try and get it. This
+					 * is due to the lazy loading of the tree content.
+					 */
+					if (item == null) {
+						final Object[] expandedElements = getExpandedElements();
+						expandAll();
+						item = (TreeItem)find(event.getNewValue());
+						setExpandedElements(expandedElements);
+					}
 					if (item != null) {
 						setSelection(new StructuredSelection(item.getData()), true);
 						expandToLevel(item.getData(), 0);
 					}
-				} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED)) {
-					setInput(event.getNewValue());
 				}
+			} else if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED)) {
+				setInput(event.getNewValue());
 			}
-		});
+		}
 	}
 
 	/**
 	 * {@link LabelProvider} of this viewer.
+	 * 
+	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
 	 */
 	private class ModelStructureLabelProvider extends LabelProvider {
 		/**
