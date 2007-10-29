@@ -5,7 +5,7 @@
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
-       uri = "http://www.eclipse.org/emf/compare/match/1.0" 
+       uri = "http://www.eclipse.org/emf/compare/match/1.1" 
        class = "org.eclipse.emf.compare.match.metamodel.MatchPackage"
        genModel = "model/match.genmodel" /> 
   </extension>
@@ -15,7 +15,7 @@
       <matchengine
             engineClass="org.eclipse.emf.compare.match.statistic.DifferencesServices"
             fileExtension="*"
-            priority="low"/>
+            priority="lowest"/>
    </extension>
 
  
