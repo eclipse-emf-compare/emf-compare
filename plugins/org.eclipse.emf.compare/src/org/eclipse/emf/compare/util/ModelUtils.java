@@ -76,8 +76,9 @@ public final class ModelUtils {
 	 */
 	public static Resource createResource(URI modelURI, ResourceSet resourceSet) {
 		String fileExtension = modelURI.fileExtension();
-		if (fileExtension.indexOf('.') > 0)
-			fileExtension = fileExtension.substring(fileExtension.indexOf('.') + 1);
+		if (fileExtension == null || fileExtension.length() == 0) {
+			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
+		}
 
 		final Resource.Factory.Registry registry = Resource.Factory.Registry.INSTANCE;
 		final Object resourceFactory = registry.getExtensionToFactoryMap().get(fileExtension);
