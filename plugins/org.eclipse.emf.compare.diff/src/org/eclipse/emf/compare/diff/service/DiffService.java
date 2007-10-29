@@ -172,7 +172,7 @@ public final class DiffService {
 
 	/**
 	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
-	 * for it if it describes and engine.
+	 * for it if it describes an engine.
 	 * 
 	 * @param configElement
 	 *            Configuration element to parse.

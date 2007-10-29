@@ -8,7 +8,7 @@
   <genPackages prefix="Diff" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       interfacePackageSuffix="metamodel" metaDataPackageSuffix="metamodel" classPackageSuffix="metamodel.impl"
       utilityPackageSuffix="metamodel.util" ecorePackage="diff.ecore#/">
-    <genDataTypes ecoreDataType="diff.ecore#//AbstractMerger"/>
+    <genDataTypes ecoreDataType="diff.ecore#//IMerger"/>
     <genClasses ecoreClass="diff.ecore#//DiffModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/origin"/>
@@ -18,6 +18,10 @@
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/isHiddenBy"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//GenericDiffElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//GenericDiffElement/leftElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//GenericDiffElement/rightElement"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//ConflictingDiffElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ConflictingDiffElement/leftParent"/>
@@ -98,13 +102,12 @@
     <genClasses image="false" ecoreClass="diff.ecore#//AbstractDiffExtension">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AbstractDiffExtension/hideElements"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//AbstractDiffExtension/isCollapsed"/>
-      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/providesMerger"/>
       <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/visit">
         <genParameters ecoreParameter="diff.ecore#//AbstractDiffExtension/visit/diffModel"/>
       </genOperations>
-      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getMerger"/>
       <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getText"/>
       <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getImage"/>
+      <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/provideMerger"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

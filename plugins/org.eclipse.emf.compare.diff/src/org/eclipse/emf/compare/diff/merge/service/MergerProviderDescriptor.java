@@ -14,20 +14,24 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.Messages;
-import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
+import org.eclipse.emf.compare.diff.merge.api.IMergerProvider;
 import org.eclipse.emf.compare.util.EngineConstants;
 
 /**
- * Descriptor class for {@link MergeFactory} contribution.
+ * This descriptor represents a merger provider contribution via the extension point
+ * <code>org.eclipse.emf.compare.diff.mergerprovider</code>.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public class FactoryDescriptor implements Comparable {
+/* package */class MergerProviderDescriptor implements Comparable<MergerProviderDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
-	/** Class name of this factory. */
-	protected final String factoryClassName;
+	/** File extensions this merger takes into account. */
+	protected final String fileExtension;
+
+	/** Class name of the described merger provider. */
+	protected final String mergerProviderClassName;
 
 	/**
 	 * Priority of this descriptor. Should be one of
@@ -41,19 +45,20 @@ public class FactoryDescriptor implements Comparable {
 	 */
 	protected final String priority;
 
-	/** {@link MergeFactory} this descriptor describes. */
-	private MergeFactory factory;
+	/** {@link IMergerProvider} this descriptor describes. */
+	private IMergerProvider mergerProvider;
 
 	/**
-	 * Creates a descriptor given its its configuration.
+	 * Instantiate the descriptor given its configuration.
 	 * 
 	 * @param configuration
-	 *            {@link IConfigurationElement configuration element} of this descriptor.
+	 *            {@link IConfigurationElement Configuration element} of this descriptor.
 	 */
-	public FactoryDescriptor(IConfigurationElement configuration) {
+	public MergerProviderDescriptor(IConfigurationElement configuration) {
 		element = configuration;
+		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
-		factoryClassName = getAttribute("class", null); //$NON-NLS-1$
+		mergerProviderClassName = getAttribute("mergerProviderClass", null); //$NON-NLS-1$
 	}
 
 	/**
@@ -61,13 +66,10 @@ public class FactoryDescriptor implements Comparable {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(Object other) {
-		if (other instanceof FactoryDescriptor) {
-			final int nombre1 = getPriorityValue(((FactoryDescriptor)other).getPriority());
-			final int nombre2 = getPriorityValue(getPriority());
-			return nombre2 - nombre1;
-		}
-		return 1;
+	public int compareTo(MergerProviderDescriptor other) {
+		final int nombre1 = other.getPriorityValue(other.getPriority());
+		final int nombre2 = getPriorityValue(getPriority());
+		return nombre2 - nombre1;
 	}
 
 	/**
@@ -82,41 +84,56 @@ public class FactoryDescriptor implements Comparable {
 			isEqual = true;
 		} else if (obj == null || getClass() != obj.getClass()) {
 			isEqual = false;
-		} else {
-			final FactoryDescriptor other = (FactoryDescriptor)obj;
-			if (factoryClassName == null && other.factoryClassName != null) {
+		} else if (obj instanceof MergerProviderDescriptor) {
+			final MergerProviderDescriptor other = (MergerProviderDescriptor)obj;
+			if (mergerProviderClassName == null && other.mergerProviderClassName != null) {
 				isEqual = false;
-			} else if (!factoryClassName.equals(other.factoryClassName)) {
+			} else if (!mergerProviderClassName.equals(other.mergerProviderClassName)) {
+				isEqual = false;
+			} else if (fileExtension == null && other.fileExtension != null) {
+				isEqual = false;
+			} else if (!fileExtension.equals(other.fileExtension)) {
 				isEqual = false;
 			} else if (priority == null && other.priority != null) {
 				isEqual = false;
 			} else if (!priority.equals(other.priority)) {
 				isEqual = false;
 			}
+		} else {
+			isEqual = false;
 		}
 		return isEqual;
 	}
 
 	/**
-	 * Returns the factory instance.
+	 * Returns the file extension this engine should handle.
 	 * 
-	 * @return The factory instance.
+	 * @return The file extension this engine should handle.
 	 */
-	public MergeFactory getEngineInstance() {
-		if (factory == null) {
+	public String getFileExtension() {
+		return fileExtension;
+	}
+
+	/**
+	 * Returns the engine instance.
+	 * 
+	 * @return The engine instance.
+	 */
+	public IMergerProvider getMergerProviderInstance() {
+		if (mergerProvider == null) {
 			try {
-				factory = (MergeFactory)element.createExecutableExtension("class"); //$NON-NLS-1$
+				mergerProvider = (IMergerProvider)element.createExecutableExtension("mergerProviderClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}
 		}
-		return factory;
+		return mergerProvider;
 	}
 
 	/**
-	 * Returns the factory priority.
+	 * Returns the engine priority.
 	 * 
-	 * @return The factory priority.
+	 * @return The engine priority.
 	 */
 	public String getPriority() {
 		return priority.toLowerCase();
@@ -131,13 +148,16 @@ public class FactoryDescriptor implements Comparable {
 	public int hashCode() {
 		final int prime = 31;
 		int classNameHash = 0;
-		if (factoryClassName != null)
-			classNameHash = factoryClassName.hashCode();
+		if (mergerProviderClassName != null)
+			classNameHash = mergerProviderClassName.hashCode();
+		int extensionHash = 0;
+		if (fileExtension != null)
+			extensionHash = fileExtension.hashCode();
 		int priorityHash = 0;
 		if (priority != null)
 			priorityHash = priority.hashCode();
 
-		return (prime + classNameHash) * prime + priorityHash;
+		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
 	}
 
 	/**
@@ -160,6 +180,10 @@ public class FactoryDescriptor implements Comparable {
 		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
+	/*
+	 * (non-javadoc)
+	 * created as package visibility method to allow access from MergeFactory
+	 */
 	/**
 	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values
 	 * according to <code>priorityString</code> value :
@@ -175,7 +199,7 @@ public class FactoryDescriptor implements Comparable {
 	 *            {@link String} value of the priority we seek.
 	 * @return <code>int</code> corresponding to the given priority {@link String}.
 	 */
-	private int getPriorityValue(String priorityString) {
+	/* package */int getPriorityValue(String priorityString) {
 		if (priorityString == null)
 			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;

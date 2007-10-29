@@ -5,16 +5,17 @@
  <copyright>
  </copyright>
 
- $Id: plugin.xml,v 1.6 2007/10/04 13:25:11 lgoubet Exp $
+ $Id: plugin.xml,v 1.7 2007/10/29 13:42:49 lgoubet Exp $
 -->
 
 <plugin>
    <extension-point id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine" schema="schema/org.eclipse.emf.compare.diff.engine.exsd"/>
    <extension-point id="diff_extension" name="diff_extension" schema="schema/diff_extension.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.diff.mergerprovider" name="org.eclipse.emf.compare.diff.mergerprovider" schema="schema/org.eclipse.emf.compare.diff.mergerprovider.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
-       uri = "http://www.eclipse.org/emf/compare/diff/1.0" 
+       uri = "http://www.eclipse.org/emf/compare/diff/1.1" 
        class = "org.eclipse.emf.compare.diff.metamodel.DiffPackage"
        genModel = "model/diff.genmodel" /> 
   </extension>
@@ -22,8 +23,16 @@
          point="org.eclipse.emf.compare.diff.engine">
       <diffengine
             engineClass="org.eclipse.emf.compare.diff.generic.DiffMaker"
-            priority="low"/>
+            priority="lowest"/>
    </extension>
+  <extension
+        point="org.eclipse.emf.compare.diff.mergerprovider">
+     <mergerprovider
+           fileExtension="*"
+           mergerProviderClass="org.eclipse.emf.compare.diff.generic.merge.DefaultMergerProvider"
+           priority="lowest">
+     </mergerprovider>
+  </extension>
    
    
 

@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.5 2007/10/16 11:27:50 lgoubet Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.6 2007/10/29 13:42:48 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -13,8 +13,8 @@ import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.generic.DiffMaker;
-import org.eclipse.emf.compare.diff.merge.api.AbstractMerger;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -35,24 +35,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements AbstractDiffExtension {
-	/**
-	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #isIsCollapsed()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
-
 	/**
 	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -62,6 +52,16 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * @ordered
 	 */
 	protected EList hideElements;
+
+	/**
+	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isIsCollapsed()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
 	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
@@ -75,7 +75,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AbstractDiffExtensionImpl() {
@@ -84,7 +83,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
@@ -99,7 +97,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -112,7 +109,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -125,7 +121,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean eIsSet(int featureID) {
@@ -140,7 +135,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void eSet(int featureID, Object newValue) {
@@ -158,7 +152,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void eUnset(int featureID) {
@@ -175,7 +168,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList getHideElements() {
@@ -198,6 +190,17 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public IMerger provideMerger() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * <!-- begin-user-doc --> Should return the text used to represent the {@link AbstractDiffExtension};
 	 * <!-- end-user-doc -->
 	 * 
@@ -209,7 +212,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -218,7 +220,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
@@ -231,14 +232,13 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String toString() {
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuilder result = new StringBuilder(super.toString());
+		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (isCollapsed: ");
 		result.append(isCollapsed);
 		result.append(')');
@@ -257,7 +257,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EClass eStaticClass() {

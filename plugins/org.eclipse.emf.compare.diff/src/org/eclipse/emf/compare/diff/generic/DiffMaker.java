@@ -54,6 +54,7 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -171,7 +172,15 @@ public class DiffMaker implements DiffEngine {
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
 				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
 
-				if (leftValue != null && !leftValue.equals(rightValue)) {
+				if (leftValue instanceof EEnumLiteral && rightValue instanceof EEnumLiteral) {
+					final StringBuilder value1 = new StringBuilder();
+					value1.append(((EEnumLiteral)leftValue).getLiteral()).append(((EEnumLiteral)leftValue).getValue());
+					final StringBuilder value2 = new StringBuilder();
+					value2.append(((EEnumLiteral)rightValue).getLiteral()).append(((EEnumLiteral)rightValue).getValue());
+					if (!value1.toString().equals(value2.toString()))
+						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
+								.getRightElement());
+				} else if (leftValue != null && !leftValue.equals(rightValue)) {
 					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
 							.getRightElement());
 				}

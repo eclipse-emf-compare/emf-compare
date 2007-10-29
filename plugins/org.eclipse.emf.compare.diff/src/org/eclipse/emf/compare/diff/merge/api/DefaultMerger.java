@@ -29,49 +29,59 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
- * Abstract class for every merger implementation.
+ * Basic implementation of an {@link IMerger}. Clients can extend this class instead of implementing IMerger
+ * to avoid reimplementing all methods.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public abstract class AbstractMerger {
+public class DefaultMerger implements IMerger {
 	/** {@link DiffElement} to be merged by this merger. */
 	protected DiffElement diff;
 
 	/**
-	 * Applies the modification in the original (left) model.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#applyInOrigin()
 	 */
-	public abstract void applyInOrigin();
+	public void applyInOrigin() {
+		removeFromContainer(diff);
+	}
 
 	/**
-	 * Returns <code>True</code> if the merger is allowed to apply changes in the origin (left) model.
+	 * {@inheritDoc}
 	 * 
-	 * @return <code>True</code> if the merger is allowed to apply changes in the origin (left) model,
-	 *         <code>False</code> otherwise.
+	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#canApplyInOrigin()
 	 */
-	public abstract boolean canApplyInOrigin();
+	public boolean canApplyInOrigin() {
+		return true;
+	}
 
 	/**
-	 * Returns <code>True</code> if the merger is allowed to undo changes in the target (right) model.
+	 * {@inheritDoc}
 	 * 
-	 * @return <code>True</code> if the merger is allowed to undo changes in the target (right) model,
-	 *         <code>False</code> otherwise.
+	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#canUndoInTarget()
 	 */
-	public abstract boolean canUndoInTarget();
+	public boolean canUndoInTarget() {
+		return true;
+	}
 
 	/**
-	 * Sets the {@link DiffElement} to be merged.
+	 * {@inheritDoc}
 	 * 
-	 * @param element
-	 *            The {@link DiffElement} to be merged.
+	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#setDiffElement(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
-	public void setElement(DiffElement element) {
+	public void setDiffElement(DiffElement element) {
 		diff = element;
 	}
 
 	/**
-	 * Cancels the modification in the target (right) model.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#undoInTarget()
 	 */
-	public abstract void undoInTarget();
+	public void undoInTarget() {
+		removeFromContainer(diff);
+	}
 
 	/**
 	 * Removes the given {@link DiffGroup} from its container if it was its last child, also calls for the
@@ -107,7 +117,7 @@ public abstract class AbstractMerger {
 			// Recursively copy XMI ID of the object's children.
 			// Assumes EObject#eContents() preserves order
 			for (int i = 0; i < original.eContents().size(); i++) {
-				copyXMIID((EObject)original.eContents().get(i), (EObject)copy.eContents().get(i));
+				copyXMIID(original.eContents().get(i), copy.eContents().get(i));
 			}
 		}
 	}

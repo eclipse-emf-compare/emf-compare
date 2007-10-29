@@ -19,14 +19,13 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateReference {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UpdateReferenceImpl() {
@@ -35,7 +34,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

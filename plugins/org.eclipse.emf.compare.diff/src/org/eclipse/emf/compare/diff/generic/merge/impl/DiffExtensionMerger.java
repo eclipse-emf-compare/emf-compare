@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.generic.merge.impl;
 
+import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
+
 /**
  * Merger for an {@link DiffExtension} operation.<br/>
  * 

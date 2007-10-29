@@ -11,14 +11,12 @@
 package org.eclipse.emf.compare.diff.merge.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.compare.diff.DiffPlugin;
-import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
+import org.eclipse.emf.compare.diff.merge.api.IMergeListener;
+import org.eclipse.emf.compare.diff.merge.api.IMerger;
+import org.eclipse.emf.compare.diff.merge.api.MergeEvent;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 
 /**
  * Services for model merging.
@@ -26,85 +24,146 @@ import org.eclipse.emf.compare.diff.merge.api.MergeFactory;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class MergeService {
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_FACTORY = "factory"; //$NON-NLS-1$
-
-	/** Keeps track of all the engines parsed. */
-	private final List<FactoryDescriptor> engines = new ArrayList<FactoryDescriptor>();
+	/** Holds a list of all the merge listeners registered for notifications on merge operations. */
+	private final List<IMergeListener> listeners = new ArrayList<IMergeListener>();
 
 	/**
-	 * Default constructor.
-	 */
-	public MergeService() {
-		parseExtensionMetadata();
-	}
-
-	/**
-	 * Returns the best {@link MergeFactory} from a file extension.
+	 * Registers a new merge listener for notifications about merge operations. Has no effect if the listener
+	 * is already registered.
 	 * 
-	 * @param extension
-	 *            The extension of the file we need a {@link MergeFactory} for.
-	 * @return The best {@link MergeFactory} for the given file extension.
+	 * @param listener
+	 *            New Listener to register for notifications.
 	 */
-	public MergeFactory getBestDiffEngine(@SuppressWarnings("unused")
-	String extension) {
-		final FactoryDescriptor desc = getBestDescriptor();
-		return desc.getEngineInstance();
+	public void addMergeListener(IMergeListener listener) {
+		listeners.add(listener);
 	}
 
 	/**
-	 * Returns the best {@link FactoryDescriptor}.
+	 * Merges a single DiffElement in the direction specified by <code>leftToRight</code>.
+	 * <p>
+	 * Will notify the list of its merge listeners before, and after the operation.
+	 * </p>
 	 * 
-	 * @return The best {@link FactoryDescriptor}.
+	 * @param element
+	 *            {@link DiffElement} containing the information to merge.
+	 * @param leftToRight
+	 *            <code>True</code> if the changes must be applied from the left to the right model,
+	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	private FactoryDescriptor getBestDescriptor() {
-		return getHighestDescriptor(engines);
+	public void merge(DiffElement element, boolean leftToRight) {
+		fireMergeOperationStart(element);
+		doMerge(element, leftToRight);
+		fireMergeOperationEnd(element);
 	}
 
 	/**
-	 * Returns the highest {@link FactoryDescriptor} from the given {@link List}.
+	 * Merges a list of DiffElements in the direction specified by <code>leftToRight</code>.
+	 * <p>
+	 * Will notify the list of its merge listeners before, and after the operation.
+	 * </p>
 	 * 
-	 * @param set
-	 *            {@link List} of {@link FactoryDescriptor} from which to find the highest one.
-	 * @return The highest {@link FactoryDescriptor} from the given {@link List}.
+	 * @param elements
+	 *            {@link DiffElement}s containing the information to merge.
+	 * @param leftToRight
+	 *            <code>True</code> if the changes must be applied from the left to the right model,
+	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	private FactoryDescriptor getHighestDescriptor(List<FactoryDescriptor> set) {
-		Collections.sort(set, Collections.reverseOrder());
-		if (set.size() > 0)
-			return set.get(0);
-		return null;
+	public void merge(List<DiffElement> elements, boolean leftToRight) {
+		fireMergeOperationStart(elements);
+		for (DiffElement element : elements)
+			// we might remove the diff from the list before merging it (eOpposite reference)
+			if (element.eContainer() != null)
+				doMerge(element, leftToRight);
+		fireMergeOperationEnd(elements);
 	}
 
 	/**
-	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
-	 * for it if it describes and engine.
+	 * Applies the changes implied by a given {@link DiffElement} in the direction specified by
+	 * <code>leftToRight</code>.
+	 * <p>
+	 * Will notify the list of its merge listeners before, and after the merge.
+	 * </p>
 	 * 
-	 * @param configElement
-	 *            Configuration element to parse.
-	 * @return {@link FactoryDescriptor} wrapped around <code>configElement</code> if it describes an
-	 *         engine, <code>null</code> otherwise.
+	 * @param element
+	 *            {@link DiffElement} containing the information to merge.
+	 * @param leftToRight
+	 *            <code>True</code> if the changes must be applied from the left to the right model,
+	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	private FactoryDescriptor parseEngine(IConfigurationElement configElement) {
-		if (!configElement.getName().equals(TAG_FACTORY))
-			return null;
-		final FactoryDescriptor desc = new FactoryDescriptor(configElement);
-		return desc;
-	}
-
-	/**
-	 * This will parse the currently running platform for extensions and store all the merge engines that can
-	 * be found.
-	 */
-	private void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				DiffPlugin.PLUGIN_ID, "mergeFactory") //$NON-NLS-1$
-				.getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final FactoryDescriptor desc = parseEngine(configElements[j]);
-				engines.add(desc);
-			}
+	protected void doMerge(DiffElement element, boolean leftToRight) {
+		fireMergeDiffStart(element);
+		final IMerger merger = MergeFactory.createMerger(element);
+		if (leftToRight && merger.canUndoInTarget()) {
+			merger.undoInTarget();
+		} else if (!leftToRight && merger.canApplyInOrigin()) {
+			merger.applyInOrigin();
 		}
+		fireMergeDiffEnd(element);
+	}
+
+	/**
+	 * Notifies all registered listeners that a {@link DiffElement} has just been merged.
+	 * 
+	 * @param diff
+	 *            {@link DiffElement} which has just been merged.
+	 */
+	protected void fireMergeDiffEnd(DiffElement diff) {
+		for (IMergeListener listener : listeners)
+			listener.mergeDiffEnd(new MergeEvent(diff));
+	}
+
+	/**
+	 * Notifies all registered listeners that a DiffElement is about to be merged.
+	 * 
+	 * @param diff
+	 *            {@link DiffElement} which is about to be merged.
+	 */
+	protected void fireMergeDiffStart(DiffElement diff) {
+		for (IMergeListener listener : listeners)
+			listener.mergeDiffStart(new MergeEvent(diff));
+	}
+
+	/**
+	 * Notifies all registered listeners that a merge operation on a single diff just ended.
+	 * 
+	 * @param diff
+	 *            {@link DiffElement} which has just been merged.
+	 */
+	protected void fireMergeOperationEnd(DiffElement diff) {
+		for (IMergeListener listener : listeners)
+			listener.mergeOperationEnd(new MergeEvent(diff));
+	}
+
+	/**
+	 * Notifies all registered listeners that a merge operation has ended for a list of differences.
+	 * 
+	 * @param diffs
+	 *            {@link DiffElement}s which have been merged.
+	 */
+	protected void fireMergeOperationEnd(List<DiffElement> diffs) {
+		for (IMergeListener listener : listeners)
+			listener.mergeOperationEnd(new MergeEvent(diffs));
+	}
+
+	/**
+	 * Notifies all registered listeners that a merge operation is about to start for a single diff.
+	 * 
+	 * @param diff
+	 *            {@link DiffElement} which is about to be merged.
+	 */
+	protected void fireMergeOperationStart(DiffElement diff) {
+		for (IMergeListener listener : listeners)
+			listener.mergeOperationStart(new MergeEvent(diff));
+	}
+
+	/**
+	 * Notifies all registered listeners that a merge operation is about to start for a list of differences.
+	 * 
+	 * @param diffs
+	 *            {@link DiffElement}s which are about to be merged.
+	 */
+	protected void fireMergeOperationStart(List<DiffElement> diffs) {
+		for (IMergeListener listener : listeners)
+			listener.mergeOperationStart(new MergeEvent(diffs));
 	}
 }

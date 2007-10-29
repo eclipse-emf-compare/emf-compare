@@ -24,18 +24,17 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftRemovedTarget <em>Left Removed Target</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightRemovedTarget <em>Right Removed Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftRemovedTarget <em>Left Removed Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightRemovedTarget <em>Right Removed Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implements ReferenceChangeLeftTarget {
 	/**
 	 * The cached value of the '{@link #getLeftRemovedTarget() <em>Left Removed Target</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftRemovedTarget()
 	 * @generated
 	 * @ordered
@@ -45,7 +44,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	/**
 	 * The cached value of the '{@link #getRightRemovedTarget() <em>Right Removed Target</em>}' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getRightRemovedTarget()
 	 * @generated
 	 * @ordered
@@ -54,7 +52,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeLeftTargetImpl() {
@@ -63,7 +60,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftRemovedTarget() {
@@ -72,7 +68,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightRemovedTarget() {
@@ -81,7 +76,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,7 +95,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -117,7 +110,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -135,7 +127,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,7 +144,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftRemovedTarget() {
@@ -172,7 +162,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightRemovedTarget() {
@@ -191,7 +180,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftRemovedTarget(EObject newLeftRemovedTarget) {
@@ -205,7 +193,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightRemovedTarget(EObject newRightRemovedTarget) {
@@ -219,7 +206,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

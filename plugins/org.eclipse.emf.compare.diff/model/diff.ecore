@@ -105,10 +105,11 @@
     </eOperations>
     <eOperations name="getText" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     <eOperations name="getImage" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+    <eOperations name="provideMerger" eType="#//IMerger"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hideElements" upperBound="-1"
         eType="#//DiffElement" eOpposite="#//DiffElement/isHiddenBy"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isCollapsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="AbstractMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.AbstractMerger"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.IMerger"/>
 </ecore:EPackage>

@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;

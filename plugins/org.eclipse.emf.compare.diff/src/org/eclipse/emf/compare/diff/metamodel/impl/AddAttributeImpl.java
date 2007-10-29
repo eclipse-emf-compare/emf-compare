@@ -19,14 +19,13 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 @SuppressWarnings("nls")
 public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements AddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AddAttributeImpl() {
@@ -35,7 +34,6 @@ public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
