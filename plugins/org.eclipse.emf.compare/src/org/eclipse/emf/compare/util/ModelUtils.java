@@ -55,6 +55,44 @@ public final class ModelUtils {
 	}
 
 	/**
+	 * This will create a {@link Resource} given the model extension it is intended for.
+	 * 
+	 * @param modelURI
+	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
+	 * @return The {@link Resource} given the model extension it is intended for.
+	 */
+	public static Resource createResource(URI modelURI) {
+		return createResource(modelURI, new ResourceSetImpl());
+	}
+
+	/**
+	 * This will create a {@link Resource} given the model extension it is intended for and a ResourceSet.
+	 * 
+	 * @param modelURI
+	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The {@link Resource} given the model extension it is intended for.
+	 */
+	public static Resource createResource(URI modelURI, ResourceSet resourceSet) {
+		String fileExtension = modelURI.fileExtension();
+		if (fileExtension.indexOf('.') > 0)
+			fileExtension = fileExtension.substring(fileExtension.indexOf('.') + 1);
+
+		final Resource.Factory.Registry registry = Resource.Factory.Registry.INSTANCE;
+		final Object resourceFactory = registry.getExtensionToFactoryMap().get(fileExtension);
+		if (resourceFactory != null) {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					resourceFactory);
+		} else {
+			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+					new XMIResourceFactoryImpl());
+		}
+
+		return resourceSet.createResource(modelURI);
+	}
+
+	/**
 	 * Loads the models contained by the given directory.
 	 * 
 	 * @param directory
@@ -111,23 +149,8 @@ public final class ModelUtils {
 	public static EObject load(IFile file, ResourceSet resourceSet) throws IOException {
 		EObject result = null;
 
-		String fileExtension = file.getFileExtension();
-		if (fileExtension == null || fileExtension.length() == 0) {
-			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
-		}
-
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
-		if (resourceFactory != null) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					resourceFactory);
-		} else {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					new XMIResourceFactoryImpl());
-		}
-
-		final Resource modelResource = resourceSet.createResource(URI.createPlatformResourceURI(file
-				.getFullPath().toOSString(), ENCODE_PLATFORM_RESOURCE_URIS));
+		final Resource modelResource = createResource(URI.createPlatformResourceURI(file.getFullPath()
+				.toOSString(), ENCODE_PLATFORM_RESOURCE_URIS), resourceSet);
 		final Map<String, String> options = new EMFCompareMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
@@ -154,27 +177,12 @@ public final class ModelUtils {
 			throws IOException {
 		if (stream == null)
 			throw new NullPointerException(Messages.getString("ModelUtils.NullInputStream")); //$NON-NLS-1$
-
 		EObject result = null;
 
-		String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1); //$NON-NLS-1$
-		// fileExtension cannot be null
-		if (fileExtension.length() == 0) {
-			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
-		}
-
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
-		if (resourceFactory != null) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					resourceFactory);
-		} else {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					new XMIResourceFactoryImpl());
-		}
-
-		final Resource modelResource = resourceSet.createResource(URI.createURI(fileName));
-		modelResource.load(stream, Collections.EMPTY_MAP);
+		final Resource modelResource = createResource(URI.createURI(fileName), resourceSet);
+		final Map<String, String> options = new EMFCompareMap<String, String>();
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
+		modelResource.load(stream, options);
 		if (modelResource.getContents().size() > 0)
 			result = modelResource.getContents().get(0);
 		return result;
@@ -210,22 +218,7 @@ public final class ModelUtils {
 	public static EObject load(URI modelURI, ResourceSet resourceSet) throws IOException {
 		EObject result = null;
 
-		String fileExtension = modelURI.fileExtension();
-		if (fileExtension == null || fileExtension.length() == 0) {
-			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
-		}
-
-		final Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-		final Object resourceFactory = reg.getExtensionToFactoryMap().get(fileExtension);
-		if (resourceFactory != null) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					resourceFactory);
-		} else {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					new XMIResourceFactoryImpl());
-		}
-
-		final Resource modelResource = resourceSet.createResource(modelURI);
+		final Resource modelResource = createResource(modelURI, resourceSet);
 		final Map<String, String> options = new EMFCompareMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
@@ -249,11 +242,7 @@ public final class ModelUtils {
 		if (root == null)
 			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
 
-		final URI modelURI = URI.createFileURI(path);
-		final ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-				Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
-		final Resource newModelResource = resourceSet.createResource(modelURI);
+		final Resource newModelResource = createResource(URI.createFileURI(path));
 		newModelResource.getContents().add(root);
 		final Map<String, String> options = new EMFCompareMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));

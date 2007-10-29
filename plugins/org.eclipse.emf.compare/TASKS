@@ -7,6 +7,18 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+29/10/2007 - Merger API greatly modified. A new extension point appears to provide a list of merger associated to DiffElements.
+	- org.eclipse.emf.compare.diff.merge.service.MergeService has been modified and is now the main mean of merging.
+	- Events are now fired before and after 1) a merge operation (merging of one or more diffs) and 2) a diff merge (for each difference).
+		Clients can register listeners for these event via MergeService#addMergeListener(IMergeListener).
+	- org.eclipse.emf.compare.diff.merge.service.MergeFactory has been modified and will now parse registered extensions to check for provided mergers.
+	- about MergerProviders and priorities, priority takes precedence over file extension :
+		- plugin A provides mergers for its own DiffElements (DiffB, DiffC) and overrides the behavior of core DiffElement (DiffA), all with "normal" priority and targeted to uml extensions (.uml)
+		- plugin B provides mergers overriding the behavior of core DiffElements (DiffA) with priority "high" and target to all file extensions (*)
+		- for an uml model (model.uml) the merger used for DiffB and DiffC will be the ones provided by plugin A, whereas  DiffA will be merged with the merger provided by plugin B
+		- when two plugins provide distinct mergers for the same DiffElement with the same priority, file extension takes precedence
+26/10/2007 - priorities of all contributed extensions (match engine, diff engine, ...) is now "lowest"
+18/10/2007 - created preferences to ignore XMI ID when comparing and to supress drawing of differences markers
 16/10/2007 - modified match to allow an options map to be passed as argument
 04/10/2007 - UI package refactoring
 	org.eclipse.emf.compare.ui.contentmergeviewer.* => org.eclipse.emf.compare.ui.viewer.content.*
