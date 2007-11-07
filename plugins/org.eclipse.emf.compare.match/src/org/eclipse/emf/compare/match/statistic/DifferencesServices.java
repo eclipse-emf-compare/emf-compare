@@ -37,7 +37,6 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.compare.util.ETools;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -689,7 +688,7 @@ public class DifferencesServices implements MatchEngine {
 	 * @return <code>True</code> if the {@link EObject}s have the same URI, <code>False</code> otherwise.
 	 */
 	private boolean hasSameUri(EObject obj1, EObject obj2) {
-		return ETools.getURI(obj1).equals(ETools.getURI(obj2));
+		return obj1.eResource().getURIFragment(obj1).equals(obj2.eResource().getURIFragment(obj2));
 	}
 
 	/**

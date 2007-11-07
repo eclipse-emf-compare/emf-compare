@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.statistic.DifferencesServices;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 
@@ -102,9 +104,8 @@ public final class MatchService {
 			extension = rightRoot.eResource().getURI().fileExtension();
 		else if (ancestor.eResource() != null)
 			extension = ancestor.eResource().getURI().fileExtension();
-		final EngineDescriptor desc = getBestDescriptor(extension);
-		final MatchEngine currentEngine = desc.getEngineInstance();
-		return currentEngine.modelMatch(leftRoot, rightRoot, ancestor, monitor, options);
+		final MatchEngine engine = getBestMatchEngine(extension);
+		return engine.modelMatch(leftRoot, rightRoot, ancestor, monitor, options);
 	}
 
 	/**
@@ -150,9 +151,8 @@ public final class MatchService {
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		final EngineDescriptor desc = getBestDescriptor(extension);
-		final MatchEngine currentEngine = desc.getEngineInstance();
-		return currentEngine.modelMatch(leftRoot, rightRoot, monitor, options);
+		final MatchEngine engine = getBestMatchEngine(extension);
+		return engine.modelMatch(leftRoot, rightRoot, monitor, options);
 	}
 
 	/**
@@ -163,8 +163,11 @@ public final class MatchService {
 	 * @return The best {@link MatchEngine} for the given file extension.
 	 */
 	public static MatchEngine getBestMatchEngine(String extension) {
-		final EngineDescriptor desc = getBestDescriptor(extension);
-		return desc.getEngineInstance();
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			final EngineDescriptor desc = getBestDescriptor(extension);
+			return desc.getEngineInstance();
+		}
+		return new DifferencesServices();
 	}
 
 	/**
@@ -219,16 +222,17 @@ public final class MatchService {
 	 * be found.
 	 */
 	private static void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				MATCH_ENGINES_EXTENSION_POINT).getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final EngineDescriptor desc = parseEngine(configElements[j]);
-				storeEngineDescriptor(desc);
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+					MATCH_ENGINES_EXTENSION_POINT).getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < configElements.length; j++) {
+					final EngineDescriptor desc = parseEngine(configElements[j]);
+					storeEngineDescriptor(desc);
+				}
 			}
 		}
-
 	}
 
 	/**

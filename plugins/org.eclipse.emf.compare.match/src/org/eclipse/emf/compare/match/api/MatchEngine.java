@@ -64,6 +64,7 @@ public interface MatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 * @see MatchOptions
+	 * @since 0.8.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException;
@@ -121,6 +122,7 @@ public interface MatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 * @see MatchOptions
+	 * @since 0.8.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
 			Map<String, Object> optionMap) throws InterruptedException;
