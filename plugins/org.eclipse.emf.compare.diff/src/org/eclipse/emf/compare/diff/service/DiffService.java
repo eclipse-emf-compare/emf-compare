@@ -19,8 +19,10 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.diff.DiffPlugin;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
+import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -84,9 +86,8 @@ public final class DiffService {
 	 */
 	public static DiffModel doDiff(MatchModel match, boolean threeWay) {
 		final String extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf(".") + 1); //$NON-NLS-1$
-		final EngineDescriptor desc = getBestDescriptor(extension);
-		final DiffEngine currentEngine = desc.getEngineInstance();
-		return currentEngine.doDiff(match, threeWay);
+		final DiffEngine engine = getBestDiffEngine(extension);
+		return engine.doDiff(match, threeWay);
 	}
 
 	/**
@@ -97,8 +98,11 @@ public final class DiffService {
 	 * @return The best {@link DiffEngine} for the given file extension.
 	 */
 	public static DiffEngine getBestDiffEngine(String extension) {
-		final EngineDescriptor desc = getBestDescriptor(extension);
-		return desc.getEngineInstance();
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			final EngineDescriptor desc = getBestDescriptor(extension);
+			return desc.getEngineInstance();
+		}
+		return new DiffMaker();
 	}
 
 	/**
@@ -110,16 +114,19 @@ public final class DiffService {
 	 */
 	public static Collection<AbstractDiffExtension> getCorrespondingDiffExtensions(String extension) {
 		final Collection<AbstractDiffExtension> result = new ArrayList<AbstractDiffExtension>();
-		if (PARSED_DIFF_EXTENSIONS.containsKey(ALL_EXTENSIONS)) {
-			for (DiffExtensionDescriptor extensionDesc : PARSED_DIFF_EXTENSIONS.get(ALL_EXTENSIONS)) {
-				result.add(extensionDesc.getDiffExtensionInstance());
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			if (PARSED_DIFF_EXTENSIONS.containsKey(ALL_EXTENSIONS)) {
+				for (DiffExtensionDescriptor extensionDesc : PARSED_DIFF_EXTENSIONS.get(ALL_EXTENSIONS)) {
+					result.add(extensionDesc.getDiffExtensionInstance());
+				}
+			}
+			final Collection<DiffExtensionDescriptor> descs = PARSED_DIFF_EXTENSIONS.get(extension);
+			if (descs != null) {
+				for (DiffExtensionDescriptor desc : descs) {
+					result.add(desc.getDiffExtensionInstance());
+				}
 			}
 		}
-		final Collection<DiffExtensionDescriptor> descs = PARSED_DIFF_EXTENSIONS.get(extension);
-		if (descs != null)
-			for (DiffExtensionDescriptor desc : descs) {
-				result.add(desc.getDiffExtensionInstance());
-			}
 		return result;
 	}
 
@@ -191,26 +198,28 @@ public final class DiffService {
 	 * extensions that can be found.
 	 */
 	private static void parseExtensionMetadata() {
-		IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				DIFF_ENGINES_EXTENSION_POINT).getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final EngineDescriptor desc = parseEngine(configElements[j]);
-				storeEngineDescriptor(desc);
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+					DIFF_ENGINES_EXTENSION_POINT).getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < configElements.length; j++) {
+					final EngineDescriptor desc = parseEngine(configElements[j]);
+					storeEngineDescriptor(desc);
+				}
 			}
-		}
-
-		/*
-		 * Now parsing the diff extension extension point
-		 */
-		extensions = Platform.getExtensionRegistry().getExtensionPoint(DiffPlugin.PLUGIN_ID,
-				TAG_DIFF_EXTENSION).getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final DiffExtensionDescriptor desc = parseDiffExtension(configElements[j]);
-				storeDiffExtensionDescriptor(desc);
+	
+			/*
+			 * Now parsing the diff extension extension point
+			 */
+			extensions = Platform.getExtensionRegistry().getExtensionPoint(DiffPlugin.PLUGIN_ID,
+					TAG_DIFF_EXTENSION).getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < configElements.length; j++) {
+					final DiffExtensionDescriptor desc = parseDiffExtension(configElements[j]);
+					storeDiffExtensionDescriptor(desc);
+				}
 			}
 		}
 	}

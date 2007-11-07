@@ -16,11 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.Messages;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.api.DiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
@@ -134,15 +133,12 @@ public class DiffMaker implements DiffEngine {
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot != null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		// This will allow the diff engine to work without eclipse
-		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			final Collection<AbstractDiffExtension> extensions = DiffService
-					.getCorrespondingDiffExtensions(extension);
-			if (extensions != null)
-				for (AbstractDiffExtension ext : extensions) {
-					if (ext != null)
-						ext.visit(result);
-				}
+		final Collection<AbstractDiffExtension> extensions = DiffService
+				.getCorrespondingDiffExtensions(extension);
+		for (AbstractDiffExtension ext : extensions) {
+			// TODOCBR can this really be null?
+			if (ext != null)
+				ext.visit(result);
 		}
 		return result;
 	}
@@ -180,7 +176,7 @@ public class DiffMaker implements DiffEngine {
 					if (!value1.toString().equals(value2.toString()))
 						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
 								.getRightElement());
-				} else if (leftValue != null && !leftValue.equals(rightValue)) {
+				} else if ((leftValue != null && !leftValue.equals(rightValue)) || (leftValue == null && leftValue != rightValue)) {
 					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
 							.getRightElement());
 				}
@@ -1303,7 +1299,7 @@ public class DiffMaker implements DiffEngine {
 	 */
 	private EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
 		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
-			throw new IllegalArgumentException(Messages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareDiffMessages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null) {

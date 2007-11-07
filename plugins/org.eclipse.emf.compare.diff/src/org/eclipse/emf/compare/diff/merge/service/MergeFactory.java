@@ -18,7 +18,9 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.generic.merge.DefaultMergerProvider;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -108,7 +110,13 @@ public final class MergeFactory {
 
 		if (resourceFileExtension == null)
 			resourceFileExtension = ALL_EXTENSIONS;
-		final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergersMap = getMergerTypes(resourceFileExtension);
+		
+		final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergersMap;
+		if (EMFPlugin.IS_ECLIPSE_RUNNING)
+			mergersMap = getMergerTypes(resourceFileExtension);
+		else
+			mergersMap = MERGER_TYPES;
+		
 		// If we know the merger for this class, we return it
 		if (mergersMap.containsKey(element.getClass())) {
 			mergerClass = mergersMap.get(element.getClass());
@@ -176,14 +184,18 @@ public final class MergeFactory {
 	 * extensions that can be found.
 	 */
 	private static void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				MERGER_PROVIDER_EXTENSION_POINT).getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final MergerProviderDescriptor desc = parseProvider(configElements[j]);
-				storeProviderDescriptor(desc);
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+					MERGER_PROVIDER_EXTENSION_POINT).getExtensions();
+			for (int i = 0; i < extensions.length; i++) {
+				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+				for (int j = 0; j < configElements.length; j++) {
+					final MergerProviderDescriptor desc = parseProvider(configElements[j]);
+					storeProviderDescriptor(desc);
+				}
 			}
+		} else {
+			MERGER_TYPES.putAll(new DefaultMergerProvider().getMergers());
 		}
 	}
 

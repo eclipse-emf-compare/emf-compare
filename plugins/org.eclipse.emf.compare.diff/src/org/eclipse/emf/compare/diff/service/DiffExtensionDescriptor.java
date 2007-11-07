@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.diff.service;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.Messages;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 
 /**
@@ -97,7 +97,7 @@ public class DiffExtensionDescriptor {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
+		throw new IllegalArgumentException(EMFCompareDiffMessages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 }
