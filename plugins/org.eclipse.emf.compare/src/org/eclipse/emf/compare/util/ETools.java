@@ -22,7 +22,9 @@ import org.eclipse.emf.ecore.InternalEObject;
  * This contains general utility methods for ecore browsing support.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @deprecated This unused class will be deleted before 1.0 is released.
  */
+@Deprecated
 public final class ETools {
 	/** Externalized here to avoid redondant {@link String} uses. */
 	private static final String SEPARATOR = "."; //$NON-NLS-1$

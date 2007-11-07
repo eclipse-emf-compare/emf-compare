@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.Messages;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -38,12 +38,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ModelUtils {
-	/** Will determine if the URIs must be encoded depending on the current system. */
-	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS = System
-			.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null && //$NON-NLS-1$
-			!System
-					.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs").equalsIgnoreCase("false"); //$NON-NLS-1$ //$NON-NLS-2$
-
 	/** Constant for the file encoding system property. */
 	private static final String ENCODING_PROPERTY = "file.encoding"; //$NON-NLS-1$
 
@@ -151,7 +145,7 @@ public final class ModelUtils {
 		EObject result = null;
 
 		final Resource modelResource = createResource(URI.createPlatformResourceURI(file.getFullPath()
-				.toOSString(), ENCODE_PLATFORM_RESOURCE_URIS), resourceSet);
+				.toOSString(), true), resourceSet);
 		final Map<String, String> options = new EMFCompareMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		modelResource.load(options);
@@ -177,7 +171,7 @@ public final class ModelUtils {
 	public static EObject load(InputStream stream, String fileName, ResourceSet resourceSet)
 			throws IOException {
 		if (stream == null)
-			throw new NullPointerException(Messages.getString("ModelUtils.NullInputStream")); //$NON-NLS-1$
+			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullInputStream")); //$NON-NLS-1$
 		EObject result = null;
 
 		final Resource modelResource = createResource(URI.createURI(fileName), resourceSet);
@@ -241,7 +235,7 @@ public final class ModelUtils {
 	@SuppressWarnings("unchecked")
 	public static void save(EObject root, String path) throws IOException {
 		if (root == null)
-			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
+			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
 
 		final Resource newModelResource = createResource(URI.createFileURI(path));
 		newModelResource.getContents().add(root);
@@ -262,7 +256,7 @@ public final class ModelUtils {
 	@SuppressWarnings("unchecked")
 	public static String serialize(EObject root) throws IOException {
 		if (root == null)
-			throw new NullPointerException(Messages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
+			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
 
 		final XMIResourceImpl newResource = new XMIResourceImpl();
 		final StringWriter writer = new StringWriter();

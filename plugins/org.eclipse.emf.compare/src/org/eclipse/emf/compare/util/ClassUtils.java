@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.eclipse.emf.compare.Messages;
+import org.eclipse.emf.compare.EMFCompareMessages;
 
 /**
  * Provides utility methods to get information on {@link Class} objects.
@@ -100,7 +100,7 @@ public final class ClassUtils {
 	 */
 	public static boolean classEquals(Class<?> class1, Class<?> class2) {
 		if (class1 == null || class2 == null)
-			throw new IllegalArgumentException(Messages.getString("ClassUtils.NullArguments")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("ClassUtils.NullArguments")); //$NON-NLS-1$
 		
 		boolean result = false;
 		if (class1 != class2 && !class1.equals(class2)) {

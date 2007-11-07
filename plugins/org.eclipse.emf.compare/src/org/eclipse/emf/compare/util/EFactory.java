@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.Messages;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
@@ -207,7 +207,7 @@ public final class EFactory {
 	public static void eSet(EObject object, String name, Object arg) throws FactoryException {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (!feature.isChangeable())
-			throw new FactoryException(Messages.getString("EFactory.UnSettableFeature", name)); //$NON-NLS-1$
+			throw new FactoryException(EMFCompareMessages.getString("EFactory.UnSettableFeature", name)); //$NON-NLS-1$
 
 		if (feature.getEType() instanceof EEnum && arg instanceof String) {
 			final EEnumLiteral literal = ((EEnum)feature.getEType()).getEEnumLiteral((String)arg);
@@ -252,7 +252,7 @@ public final class EFactory {
 		final EStructuralFeature structuralFeature = object.eClass().getEStructuralFeature(name);
 		if (structuralFeature != null)
 			return structuralFeature;
-		throw new FactoryException(Messages.getString(
+		throw new FactoryException(EMFCompareMessages.getString(
 				"EFactory.FeatureNotFound", name, object.eClass().getName())); //$NON-NLS-1$
 	}
 

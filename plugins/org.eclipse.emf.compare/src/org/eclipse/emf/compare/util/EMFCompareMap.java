@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.compare.Messages;
+import org.eclipse.emf.compare.EMFCompareMessages;
 
 /**
  * Implementation of a map that stores its content using an hash table.
@@ -128,9 +128,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	public EMFCompareMap(int initialCapacity, float theLoadFactor) {
 		if (initialCapacity < 0)
-			throw new IllegalArgumentException(Messages.getString("EMFCompareMap.NegativeCapacity")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("EMFCompareMap.NegativeCapacity")); //$NON-NLS-1$
 		if (theLoadFactor <= 0 || Float.isNaN(theLoadFactor))
-			throw new IllegalArgumentException(Messages.getString("EMFCompareMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString("EMFCompareMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
 
 		loadFactor = theLoadFactor;
 		final int newCapacity = getNearestPrime((int)(initialCapacity / Math.max(MINIMUM_LOAD_FACTOR,

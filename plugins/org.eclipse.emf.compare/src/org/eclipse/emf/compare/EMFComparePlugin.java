@@ -55,7 +55,7 @@ public class EMFComparePlugin extends Plugin {
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null)
-			throw new NullPointerException(Messages.getString("EMFComparePlugin.LogNullException")); //$NON-NLS-1$
+			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullException")); //$NON-NLS-1$
 		
 		if (plugin == null) {
 			// We are out of eclipse. Prints the stack trace on standard error.
@@ -66,13 +66,13 @@ public class EMFComparePlugin extends Plugin {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, Messages
+			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
 					.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker)
 				severity = IStatus.ERROR;
-			log(new Status(severity, PLUGIN_ID, severity, Messages
+			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
 					.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
 		}
 	}
@@ -87,7 +87,7 @@ public class EMFComparePlugin extends Plugin {
 		// Eclipse platform displays NullPointer on standard error instead of throwing it.
 		// We'll handle this by throwing it ourselves.
 		if (status == null)
-			throw new NullPointerException(Messages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
+			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
 				
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
@@ -115,7 +115,7 @@ public class EMFComparePlugin extends Plugin {
 				severity = IStatus.ERROR;
 			String errorMessage = message;
 			if (errorMessage == null || errorMessage.equals("")) //$NON-NLS-1$
-				errorMessage = Messages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
+				errorMessage = EMFCompareMessages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}
 	}
