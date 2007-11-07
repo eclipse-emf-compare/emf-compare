@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
-import org.eclipse.emf.compare.ui.Messages;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -95,7 +95,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * @see CompareUI#COMPARE_VIEWER_TITLE
 	 */
 	public String getTitle() {
-		return Messages.getString("ModelStructureMergeViewer.viewerTitle"); //$NON-NLS-1$
+		return EMFCompareUIMessages.getString("ModelStructureMergeViewer.viewerTitle"); //$NON-NLS-1$
 	}
 
 	/**

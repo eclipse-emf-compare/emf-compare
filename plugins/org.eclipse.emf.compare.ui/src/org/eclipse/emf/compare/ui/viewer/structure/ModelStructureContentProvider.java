@@ -34,7 +34,7 @@ import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.ui.Messages;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -131,7 +131,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			try {
 				elements = diffInput.getOwnedElements().toArray();
 			} catch (NullPointerException e) {
-				throw new EMFCompareException(Messages
+				throw new EMFCompareException(EMFCompareUIMessages
 						.getString("ModelStructureContentProvider.inputException")); //$NON-NLS-1$
 			}
 		}

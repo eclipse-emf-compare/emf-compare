@@ -28,8 +28,8 @@ import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
-import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -72,7 +72,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class ModelContentMergeViewerPart {
 	/** This {@link String} is used as an error message when an unexisting tab is accessed. */
-	private static final String INVALID_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
+	private static final String INVALID_TAB = EMFCompareUIMessages.getString("IllegalTab"); //$NON-NLS-1$
 
 	/** This keeps track of the parent viewer of this viewer part. */
 	protected final ModelContentMergeViewer parentViewer;
@@ -130,7 +130,7 @@ public class ModelContentMergeViewerPart {
 	public ModelContentMergeViewerPart(ModelContentMergeViewer viewer, Composite composite, int side) {
 		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
 				&& side != EMFCompareConstants.ANCESTOR)
-			throw new IllegalArgumentException(Messages.getString("IllegalSide", side)); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareUIMessages.getString("IllegalSide", side)); //$NON-NLS-1$
 
 		parentViewer = viewer;
 		selectedTab = ModelContentMergeViewer.TREE_TAB;
@@ -158,10 +158,10 @@ public class ModelContentMergeViewerPart {
 	public void createContents(Composite composite) {
 		tabFolder = new CTabFolder(composite, SWT.BOTTOM);
 		final CTabItem treeTab = new CTabItem(tabFolder, SWT.NONE);
-		treeTab.setText(Messages.getString("ModelContentMergeViewerPart.tab1.name")); //$NON-NLS-1$
+		treeTab.setText(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.tab1.name")); //$NON-NLS-1$
 
 		final CTabItem propertiesTab = new CTabItem(tabFolder, SWT.NONE);
-		propertiesTab.setText(Messages.getString("ModelContentMergeViewerPart.tab2.name")); //$NON-NLS-1$
+		propertiesTab.setText(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.tab2.name")); //$NON-NLS-1$
 
 		final Composite treePanel = new Composite(tabFolder, SWT.NONE);
 		treePanel.setLayout(new GridLayout());
@@ -214,7 +214,7 @@ public class ModelContentMergeViewerPart {
 					widget = properties.find(((PropertyContentProvider)properties.getContentProvider())
 							.getInputEObject(), (DiffElement)element);
 			} else {
-				throw new IllegalStateException(Messages.getString(INVALID_TAB, selectedTab));
+				throw new IllegalStateException(EMFCompareUIMessages.getString(INVALID_TAB, selectedTab));
 			}
 		}
 		return widget;

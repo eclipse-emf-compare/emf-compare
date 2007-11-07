@@ -19,9 +19,9 @@ import java.util.ResourceBundle;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public final class Messages {
+public final class EMFCompareUIMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ui.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.ui.emfcompareuimessages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -29,7 +29,7 @@ public final class Messages {
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
-	private Messages() {
+	private EMFCompareUIMessages() {
 		// prevents instantiation
 	}
 

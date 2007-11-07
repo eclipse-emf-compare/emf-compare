@@ -16,7 +16,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
-import org.eclipse.emf.compare.ui.Messages;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -67,10 +67,10 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		gc.dispose();
 
 		final TableColumn nameColumn = new TableColumn(getTable(), SWT.LEFT);
-		nameColumn.setText(Messages.getString("ModelContentMergePropertyPart.column1.name")); //$NON-NLS-1$
+		nameColumn.setText(EMFCompareUIMessages.getString("ModelContentMergePropertyPart.column1.name")); //$NON-NLS-1$
 		nameColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics, nameColumn.getText().length() * 3));
 		final TableColumn weightsColumn = new TableColumn(getTable(), SWT.RIGHT);
-		weightsColumn.setText(Messages.getString("ModelContentMergePropertyPart.column2.name")); //$NON-NLS-1$
+		weightsColumn.setText(EMFCompareUIMessages.getString("ModelContentMergePropertyPart.column2.name")); //$NON-NLS-1$
 		weightsColumn.setWidth(Dialog.convertWidthInCharsToPixels(metrics,
 				weightsColumn.getText().length() * 3));
 	}

@@ -51,9 +51,9 @@ import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
-import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -117,7 +117,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public static final int TREE_TAB = 0;
 
 	/** Error message displayed when an invalid tab is selected. */
-	/* package */static final String MESSAGE_ILLEGAL_TAB = Messages.getString("IllegalTab"); //$NON-NLS-1$
+	/* package */static final String MESSAGE_ILLEGAL_TAB = EMFCompareUIMessages.getString("IllegalTab"); //$NON-NLS-1$
 
 	/**
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
@@ -1086,7 +1086,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	private void handlePropertyHSync(ModelContentMergePropertyPart... parts) {
 		if (parts.length < 2)
-			throw new IllegalArgumentException(Messages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
 
 		// inspired from TreeMergeViewer#hsynchViewport
 		final Table table1 = parts[0].getTable();
@@ -1128,7 +1128,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	private void handleTreeHSync(ModelContentMergeTreePart... parts) {
 		if (parts.length < 2)
-			throw new IllegalArgumentException(Messages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
 
 		// inspired from TreeMergeViewer#hsynchViewport
 		final Tree tree1 = parts[0].getTree();

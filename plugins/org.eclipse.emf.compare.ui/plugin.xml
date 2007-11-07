@@ -25,7 +25,7 @@
          point="org.eclipse.ui.editors">
       <editor
             default="true"
-            extensions="emfdiff"
+            extensions="emfdiff,*"
             icon="icons/full/editorIcon.gif"
             id="org.eclipse.emf.compare.ui.editor"
             launcher="org.eclipse.emf.compare.ui.editor.ModelCompareEditorLauncher"
@@ -43,12 +43,12 @@
       <initializer class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesInitializer"/>
    </extension>
    <extension
-         point="org.eclipse.core.contenttype.contentTypes">
+         point="org.eclipse.core.runtime.contentTypes">
       <content-type
+            file-extensions="emfdiff,uml,ecore"
             id="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
             name="Model File"
-            priority="normal"
-            file-extensions="emfdiff, uml, ecore">
+            priority="normal">
       </content-type>
    </extension>
 </plugin>

@@ -15,8 +15,8 @@ import java.io.IOException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
-import org.eclipse.emf.compare.ui.Messages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -58,7 +58,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	public EMFComparePreferencesPage() {
 		super(GRID);
 		setPreferenceStore(EMFCompareUIPlugin.getDefault().getPreferenceStore());
-		setDescription(Messages.getString("EMFComparePreferencesPage.description")); //$NON-NLS-1$
+		setDescription(EMFCompareUIMessages.getString("EMFComparePreferencesPage.description")); //$NON-NLS-1$
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		// Link to the content types page
 		final PreferenceLinkArea link = new PreferenceLinkArea(getFieldEditorParent(), SWT.NONE,
 				"org.eclipse.ui.preferencePages.ContentTypes", //$NON-NLS-1$
-				Messages.getString("EMFComparePreferencesPage.contentTypesLink"), //$NON-NLS-1$
+				EMFCompareUIMessages.getString("EMFComparePreferencesPage.contentTypesLink"), //$NON-NLS-1$
 				(IWorkbenchPreferenceContainer)getContainer(), null);
 		GridData gd = new GridData();
 		gd.horizontalSpan = 3;
@@ -95,7 +95,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 
 		// color fields group
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
-		colorGroup.setText(Messages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
+		colorGroup.setText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
 		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
 		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
@@ -273,7 +273,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 
 			image = new Label(parent, SWT.NONE);
 			image.setImage(getHelpIcon());
-			image.setToolTipText(Messages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
+			image.setToolTipText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 			gd = new GridData();
 			gd.horizontalSpan = numColumns - 1;
 			image.setLayoutData(gd);
@@ -332,7 +332,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				isValid = true;
 			} catch (NumberFormatException e) {
 				isValid = false;
-				showErrorMessage(Messages
+				showErrorMessage(EMFCompareUIMessages
 						.getString("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput")); //$NON-NLS-1$
 			}
 		}

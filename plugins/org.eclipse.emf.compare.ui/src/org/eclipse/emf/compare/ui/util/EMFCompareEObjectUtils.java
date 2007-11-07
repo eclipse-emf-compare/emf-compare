@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.ui.util;
 
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
-import org.eclipse.emf.compare.ui.Messages;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.util.ClassUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -55,7 +55,7 @@ public final class EMFCompareEObjectUtils {
 	public static String computeObjectName(EObject eObject) {
 		String objectName = getLabelProvider().getText(eObject);
 		if (objectName == null || objectName.equals(new String()))
-			objectName = Messages.getString("EMFCompareEObjectUtils.undefinedName"); //$NON-NLS-1$
+			objectName = EMFCompareUIMessages.getString("EMFCompareEObjectUtils.undefinedName"); //$NON-NLS-1$
 		return objectName;
 	}
 

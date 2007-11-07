@@ -64,9 +64,9 @@ public abstract class AbstractCompareAction extends Action {
 	 */
 	public AbstractCompareAction(ResourceBundle bundle, String keyPrefix) {
 		if (keyPrefix == null || keyPrefix.length() <= 0) {
-			throw new IllegalArgumentException(Messages.getString("AbstractCompareAction.IllegalKey")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareUIMessages.getString("AbstractCompareAction.IllegalKey")); //$NON-NLS-1$
 		} else if (bundle == null) {
-			throw new IllegalArgumentException(Messages.getString("AbstractCompareAction.IllegalBundle")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareUIMessages.getString("AbstractCompareAction.IllegalBundle")); //$NON-NLS-1$
 		}
 		final String labelKey = keyPrefix + "label"; //$NON-NLS-1$
 		final String tooltipKey = keyPrefix + "tooltip"; //$NON-NLS-1$

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.util;
 
-import org.eclipse.emf.compare.ui.Messages;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -53,35 +53,35 @@ public interface EMFCompareConstants {
 	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
 
 	/** Preferences description for the added element color. */
-	String PREFERENCES_DESCRIPTION_ADDED_COLOR = Messages
+	String PREFERENCES_DESCRIPTION_ADDED_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.addedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the changed element color. */
-	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = Messages
+	String PREFERENCES_DESCRIPTION_CHANGED_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.changedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the conflicting element color. */
-	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = Messages
+	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.conflictingColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the boolean indicating that the differences markers have to be drawn. */
-	String PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES = Messages
+	String PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.drawDifferencesLabel"); //$NON-NLS-1$
 
 	/** Preferences description for the highlight color. */
-	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = Messages
+	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the boolean indicating that the comparison should ignore XMI IDs. */
-	String PREFERENCES_DESCRIPTION_IGNORE_XMIID = Messages
+	String PREFERENCES_DESCRIPTION_IGNORE_XMIID = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.ignoreXMIIDLabel"); //$NON-NLS-1$
 
 	/** Preferences description for the removed element color. */
-	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = Messages
+	String PREFERENCES_DESCRIPTION_REMOVED_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.removedColorLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences description for the siblings search window. */
-	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = Messages
+	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences key for the circling color of an added element. */
