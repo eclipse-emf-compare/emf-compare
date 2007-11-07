@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.core;
+package org.eclipse.emf.compare.tests.unit.core.util;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -37,14 +37,14 @@ public class TestClassUtils extends TestCase {
 	 * {@link ClassUtils#classEquals(Class, Class) with classes assumed non-equal. Expects <code>False</code> to be returned. 
 	 */
 	public void testClassEqualsDistinctClasses() {
-		for (int i = 0; i < WRAPPERS.length; i++) {
+		for (int i = 0; i < PRIMITIVES.length; i++) {
 			// Special case when we are right at the middle of the input
-			if ((WRAPPERS.length & 1) == 1 && i == (WRAPPERS.length >> 1))
+			if ((PRIMITIVES.length & 1) == 1 && i == (PRIMITIVES.length >> 1))
 				assertFalse("Distinct classes shouldn't be considered equal.", ClassUtils.classEquals(
-						WRAPPERS[i], Object.class));
+						PRIMITIVES[i], Object.class));
 			else
 				assertFalse("Distinct classes shouldn't be considered equal." + i, ClassUtils.classEquals(
-						WRAPPERS[i], PRIMITIVES[PRIMITIVES.length - i - 1]));
+						PRIMITIVES[i], WRAPPERS[WRAPPERS.length - i - 1]));
 		}
 	}
 

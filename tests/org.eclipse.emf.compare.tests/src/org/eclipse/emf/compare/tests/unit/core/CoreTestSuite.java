@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.tests.unit.core.util.TestAdapterUtils;
+import org.eclipse.emf.compare.tests.unit.core.util.TestClassUtils;
 import org.eclipse.emf.compare.tests.unit.core.util.efactory.EFactoryTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap.EMFCompareMapTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.modelutils.ModelUtilsTestSuite;

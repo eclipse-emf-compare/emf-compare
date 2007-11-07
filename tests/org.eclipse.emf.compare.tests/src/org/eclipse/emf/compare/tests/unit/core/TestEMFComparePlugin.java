@@ -65,7 +65,7 @@ public class TestEMFComparePlugin extends TestCase {
 			EMFComparePlugin.log(new IllegalArgumentException(message), blocker);
 			System.setErr(systemErr);
 
-			final String expectedMessage = org.eclipse.emf.compare.Messages
+			final String expectedMessage = org.eclipse.emf.compare.EMFCompareMessages
 					.getString("EMFComparePlugin.JavaException");
 			final int expectedSeverity;
 			if (blocker)
@@ -136,7 +136,7 @@ public class TestEMFComparePlugin extends TestCase {
 			EMFComparePlugin.log(new NullPointerException(message), blocker);
 			System.setErr(systemErr);
 
-			final String expectedMessage = org.eclipse.emf.compare.Messages
+			final String expectedMessage = org.eclipse.emf.compare.EMFCompareMessages
 					.getString("EMFComparePlugin.ElementNotFound");
 			final int expectedSeverity;
 			if (blocker)
@@ -169,7 +169,7 @@ public class TestEMFComparePlugin extends TestCase {
 			EMFComparePlugin.log((String)null, blocker);
 			System.setErr(systemErr);
 
-			final String expectedMessage = org.eclipse.emf.compare.Messages
+			final String expectedMessage = org.eclipse.emf.compare.EMFCompareMessages
 					.getString("EMFComparePlugin.UnexpectedException");
 			final int expectedSeverity;
 			if (blocker)

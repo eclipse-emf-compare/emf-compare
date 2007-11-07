@@ -108,10 +108,10 @@ public class TestESet extends TestCase {
 		try {
 			final EPackage packaje = EcoreFactory.eINSTANCE.createEPackage();
 			packaje.setName("aPackage");
-			
+
 			final EEnum visibility = createEEnum();
 			packaje.getEClassifiers().add(visibility);
-			
+
 			final EClass clazz = EcoreFactory.eINSTANCE.createEClass();
 			final EAttribute enumAttribute = EcoreFactory.eINSTANCE.createEAttribute();
 			enumAttribute.setName("anEnumAttribute");
@@ -119,45 +119,18 @@ public class TestESet extends TestCase {
 			enumAttribute.setDefaultValue(visibility.getEEnumLiteral(0));
 			clazz.getEStructuralFeatures().add(enumAttribute);
 			packaje.getEClassifiers().add(clazz);
-			
+
 			final EObject testObject = packaje.getEFactoryInstance().create(clazz);
 			final String newLiteral = "package";
-			
+
 			EFactory.eSet(testObject, enumAttribute.getName(), newLiteral);
 
-			assertEquals("eSet() didn't set correct value for EEnum type attribute.",
-					visibility.getEEnumLiteral(newLiteral), testObject.eGet(enumAttribute));
+			assertEquals("eSet() didn't set correct value for EEnum type attribute.", visibility
+					.getEEnumLiteral(newLiteral), testObject.eGet(enumAttribute));
 		} catch (FactoryException e) {
 			e.printStackTrace();
 			fail("Unexpected FactoryException has been thrown by eSet() called on an EEnum.");
 		}
-	}
-	
-	/**
-	 * Creates an enumeration called "visibility" with the following values.
-	 * <ul><li>private = 0</li><li>protected = 1</li><li>package = 2</li><li>public = 3</li></ul>
-	 * @return The created enumeration.
-	 */
-	private EEnum createEEnum() {
-		final EEnum visibility = EcoreFactory.eINSTANCE.createEEnum();
-		visibility.setName("visibility");
-		final EEnumLiteral privateLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
-		privateLiteral.setName("private");
-		privateLiteral.setValue(0);
-		final EEnumLiteral protectedLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
-		protectedLiteral.setName("protected");
-		protectedLiteral.setValue(1);
-		final EEnumLiteral packageLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
-		packageLiteral.setName("package");
-		packageLiteral.setValue(2);
-		final EEnumLiteral publicLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
-		publicLiteral.setName("public");
-		publicLiteral.setValue(3);
-		visibility.getELiterals().add(privateLiteral);
-		visibility.getELiterals().add(protectedLiteral);
-		visibility.getELiterals().add(packageLiteral);
-		visibility.getELiterals().add(publicLiteral);
-		return visibility;
 	}
 
 	/**
@@ -240,6 +213,39 @@ public class TestESet extends TestCase {
 		testEObjects[2] = MatchFactory.eINSTANCE.createMatch2Elements();
 		testEObjects[3] = EcoreFactory.eINSTANCE.createEClass();
 		testEObjects[4] = EcoreFactory.eINSTANCE.createEPackage();
+	}
+
+	/**
+	 * Creates an enumeration called "visibility" with the following values.
+	 * <ul>
+	 * <li>private = 0</li>
+	 * <li>protected = 1</li>
+	 * <li>package = 2</li>
+	 * <li>public = 3</li>
+	 * </ul>
+	 * 
+	 * @return The created enumeration.
+	 */
+	private EEnum createEEnum() {
+		final EEnum visibility = EcoreFactory.eINSTANCE.createEEnum();
+		visibility.setName("visibility");
+		final EEnumLiteral privateLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		privateLiteral.setName("private");
+		privateLiteral.setValue(0);
+		final EEnumLiteral protectedLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		protectedLiteral.setName("protected");
+		protectedLiteral.setValue(1);
+		final EEnumLiteral packageLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		packageLiteral.setName("package");
+		packageLiteral.setValue(2);
+		final EEnumLiteral publicLiteral = EcoreFactory.eINSTANCE.createEEnumLiteral();
+		publicLiteral.setName("public");
+		publicLiteral.setValue(3);
+		visibility.getELiterals().add(privateLiteral);
+		visibility.getELiterals().add(protectedLiteral);
+		visibility.getELiterals().add(packageLiteral);
+		visibility.getELiterals().add(publicLiteral);
+		return visibility;
 	}
 
 	/**
