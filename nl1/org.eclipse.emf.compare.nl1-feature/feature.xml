@@ -220,6 +220,10 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
+   <requires>
+      <import feature="org.eclipse.emf.compare" version="0.8.0.qualifier"/>
+   </requires>
+
    <plugin
          id="org.eclipse.emf.compare.diff.edit.nl1"
          download-size="0"
