@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: EMF Compare UI internationalized messages
+Bundle-SymbolicName: org.eclipse.emf.compare.ui.nl1
+Bundle-Version: 1.0.0
+Fragment-Host: org.eclipse.emf.compare.ui;bundle-version="0.8.0"
+Bundle-Vendor: Eclipse.org
