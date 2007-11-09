@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.match.service;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.match.Messages;
+import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.util.EngineConstants;
 
@@ -174,7 +174,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException(Messages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
+		throw new IllegalArgumentException(EMFCompareMatchMessages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -194,7 +194,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 */
 	private int getPriorityValue(String priorityString) {
 		if (priorityString == null)
-			throw new IllegalArgumentException(Messages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMatchMessages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
 		if (priorityString.equals("lowest")) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;

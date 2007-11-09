@@ -15,13 +15,13 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Contains all externalized {@link String}s needed by this plug-in.
+ * Utility class to access externalized Strings for EMF Compare's match.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public final class Messages {
+public final class EMFCompareMatchMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */
-	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.match.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.emf.compare.match.emfcomparematchmessages"; //$NON-NLS-1$
 
 	/** Contains the locale specific {@link String}s needed by this plug-in. */
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -29,7 +29,7 @@ public final class Messages {
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
-	private Messages() {
+	private EMFCompareMatchMessages() {
 		// prevents instantiation
 	}
 

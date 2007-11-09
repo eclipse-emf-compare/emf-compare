@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.internal.runtime.CompareProgressMonitor;
-import org.eclipse.emf.compare.match.Messages;
+import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
@@ -707,8 +707,8 @@ public class DifferencesServices implements MatchEngine {
 			size++;
 		}
 
-		monitor.beginTask(Messages.getString("DifferencesServices.monitor.task"), size); //$NON-NLS-1$
-		monitor.subTask(Messages.getString("DifferencesServices.monitor.browsing")); //$NON-NLS-1$
+		monitor.beginTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.task"), size); //$NON-NLS-1$
+		monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.browsing")); //$NON-NLS-1$
 	}
 
 	/**
@@ -879,7 +879,7 @@ public class DifferencesServices implements MatchEngine {
 					matchByID((XMIResource)leftResource, (XMIResource)rightResource);
 			}
 
-			monitor.subTask(Messages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
+			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(leftRoot.eResource().getContents(), rightRoot
 					.eResource().getContents(), this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW),
 					monitor);
@@ -903,7 +903,7 @@ public class DifferencesServices implements MatchEngine {
 				rootMapping.setRightElement(findMostSimilar(leftRoot, unMatchedRightRoots));
 				matchedRoots.add(rootMapping);
 			}
-			monitor.subTask(Messages.getString("DifferencesServices.monitor.rootsContents")); //$NON-NLS-1$
+			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.rootsContents")); //$NON-NLS-1$
 			for (Match2Elements matchedRoot : matchedRoots) {
 				final Match2Elements rootMapping = recursiveMappings(matchedRoot.getLeftElement(),
 						matchedRoot.getRightElement(), monitor);
@@ -929,7 +929,7 @@ public class DifferencesServices implements MatchEngine {
 				unMatchedRightRoots.remove(matchedRoot.getRightElement());
 			}
 			// We'll iterate through the unMatchedRoots all contents
-			monitor.subTask(Messages.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
+			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
 			createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
 
 			// Now takes care of remaining unfound elements
@@ -1086,7 +1086,7 @@ public class DifferencesServices implements MatchEngine {
 			hash.append(similarityKind).append(obj1.hashCode()).append(obj2.hashCode());
 			return hash.toString();
 		}
-		throw new IllegalArgumentException(Messages.getString(
+		throw new IllegalArgumentException(EMFCompareMatchMessages.getString(
 				"DifferencesServices.illegalSimilarityKind", similarityKind)); //$NON-NLS-1$
 	}
 
