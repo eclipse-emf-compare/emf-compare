@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
-
-<!--
- <copyright>
- </copyright>
-
- $Id: plugin.xml,v 1.7 2007/10/29 13:42:49 lgoubet Exp $
--->
-
 <plugin>
    <extension-point id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine" schema="schema/org.eclipse.emf.compare.diff.engine.exsd"/>
    <extension-point id="diff_extension" name="diff_extension" schema="schema/diff_extension.exsd"/>
@@ -33,8 +25,5 @@
            priority="lowest">
      </mergerprovider>
   </extension>
-   
-   
-
 </plugin>
 

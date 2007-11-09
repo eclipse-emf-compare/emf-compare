@@ -1271,7 +1271,7 @@ public class DiffMaker implements DiffEngine {
 	 *            The original {@link EObject}.
 	 * @return The matched {@link EObject}.
 	 */
-	private EObject getMatchedEObject(EObject from) {
+	protected EObject getMatchedEObject(EObject from) {
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null && from.equals(matchElem.getRightElement()))
@@ -1297,7 +1297,7 @@ public class DiffMaker implements DiffEngine {
 	 * @throws IllegalArgumentException
 	 *             Thrown if <code>side</code> is invalid.
 	 */
-	private EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
+	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
 		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
 			throw new IllegalArgumentException(EMFCompareDiffMessages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
 		EObject matchedEObject = null;
