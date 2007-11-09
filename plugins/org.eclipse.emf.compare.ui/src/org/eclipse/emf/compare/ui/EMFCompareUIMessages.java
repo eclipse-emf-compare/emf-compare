@@ -15,9 +15,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Contains all externalized {@link String}s needed by this plug-in.
+ * Utility class to access externalized Strings for EMF Compare's UI.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public final class EMFCompareUIMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */

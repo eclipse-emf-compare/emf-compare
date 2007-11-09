@@ -87,7 +87,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public List<TreeItem> getVisibleElements() {
 		final TreeItem topItem = getTree().getTopItem();
-		// We won't go further down that the visible height of the tree, 
+		// We won't go further down that the visible height of the tree,
 		// yet we will take the whole width into account when searching for elements.
 		final int treeHeight = getTree().getClientArea().height;
 		final int treeWidth = getTree().getBounds().width;
@@ -96,7 +96,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 		final List<TreeItem> visibleItems = new ArrayList<TreeItem>(treeHeight / itemHeight + 1);
 
 		visibleItems.add(topItem);
-		
+
 		// The loop will start at the element directly following the "top" one
 		final int loopStart = topItem.getBounds().y + itemHeight;
 		final int loopEnd = treeHeight;
@@ -166,10 +166,13 @@ public class ModelContentMergeTreePart extends TreeViewer {
 			setSelection(new StructuredSelection(item), true);
 		}
 	}
-	
+
 	/**
-	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's selection to this list.
-	 * @param items Items to make visible.
+	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's
+	 * selection to this list.
+	 * 
+	 * @param items
+	 *            Items to make visible.
 	 */
 	public void showItem(List<EObject> items) {
 		if (items.size() > 0) {

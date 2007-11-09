@@ -119,6 +119,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Error message displayed when an invalid tab is selected. */
 	/* package */static final String MESSAGE_ILLEGAL_TAB = EMFCompareUIMessages.getString("IllegalTab"); //$NON-NLS-1$
 
+	/** Name of the SWT platform for MAC. Allows us to avoid a mac specific bug. */
+	private static final String MAC_SWT_PLATFORM = "carbon"; //$NON-NLS-1$
+
 	/**
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
 	 * content provider.
@@ -127,7 +130,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** Ancestor part of the three possible parts of this content viewer. */
 	protected ModelContentMergeViewerPart ancestorPart;
-	
+
 	/** Keeps track of the current diff Selection. */
 	protected List<DiffElement> currentSelection;
 
@@ -254,7 +257,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					// We'll remove all diffgroups without subDiffs from the selection
 					final List<DiffElement> selectedDiffs = new ArrayList<DiffElement>();
 					for (int i = 0; i < elements.size(); i++) {
-						if (elements.get(i) instanceof DiffElement && !(elements.get(i) instanceof DiffGroup && ((DiffGroup)elements.get(i)).getSubDiffElements().size() == 0))
+						if (elements.get(i) instanceof DiffElement
+								&& !(elements.get(i) instanceof DiffGroup && ((DiffGroup)elements.get(i))
+										.getSubDiffElements().size() == 0))
 							selectedDiffs.add((DiffElement)elements.get(i));
 					}
 					setSelection(selectedDiffs);
@@ -288,19 +293,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * 
 	 * @param diff
 	 *            Diff we need to find the ancestor item for.
-	 * @return The item representing the ancestor element of the given {@link DiffElement}.
+	 * @return The item representing the ancestor element of the given {@link DiffElement}, <code>null</code>
+	 *         if the comparison is not a three-way comparison.
 	 */
 	public Item getAncestorItem(DiffElement diff) {
-		EObject ancestorElement = diff;
+		if (!isThreeWay) {
+			EObject ancestorElement = diff;
 
-		if (selectedTab == TREE_TAB && diff instanceof ConflictingDiffElement) {
-			ancestorElement = ((ConflictingDiffElement)diff).getOriginElement();
+			if (selectedTab == TREE_TAB && diff instanceof ConflictingDiffElement) {
+				ancestorElement = ((ConflictingDiffElement)diff).getOriginElement();
+			}
+			Item ancestorItem = (Item)ancestorPart.find(ancestorElement);
+			if (ancestorItem == null)
+				ancestorItem = ancestorPart.getTreeRoot();
+			return ancestorItem;
 		}
-		Item ancestorItem = (Item)ancestorPart.find(ancestorElement);
-		if (ancestorItem == null)
-			ancestorItem = ancestorPart.getTreeRoot();
-
-		return ancestorItem;
+		return null;
 	}
 
 	/**
@@ -458,7 +466,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		diffs.add(diff);
 		setSelection(diffs);
 	}
-	
+
 	/**
 	 * Sets the parts' tree selection given the list of {@link DiffElement}s to select.
 	 * 
@@ -472,7 +480,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				leftPart.navigateToDiff(diffs);
 			if (rightPart != null)
 				rightPart.navigateToDiff(diffs);
-			if (ancestorPart != null && diffs.get(0).eContainer() instanceof ConflictingDiffElement)
+			if (isThreeWay && diffs.get(0).eContainer() instanceof ConflictingDiffElement)
 				ancestorPart.navigateToDiff(diffs.get(0));
 			switchCopyState(true);
 		}
@@ -492,7 +500,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws this viewer.
 	 */
 	public void update() {
-		ancestorPart.layout();
+		if (isThreeWay)
+			ancestorPart.layout();
 		rightPart.layout();
 		leftPart.layout();
 		updateCenter();
@@ -549,7 +558,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			update();
 		}
 	}
-	
+
 	/**
 	 * Copies a list of {@link DiffElement}s or {@link DiffGroup}s in the given direction, then updates the
 	 * toolbar items states as well as the dirty state of both the left and the right models.
@@ -611,18 +620,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		rightPart.addCompareEditorPartListener(partListener);
 		ancestorPart.addCompareEditorPartListener(partListener);
 
-		// Synchronizes the left part with the two others
-		handleTreeHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
-		handlePropertyHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart
+		createPropertiesSyncHandlers(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart
 				.getPropertyPart());
-		// Synchronizes the right part with the two others
-		handleTreeHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
-		handlePropertyHSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart
-				.getPropertyPart());
-		// Synchronizes the ancestor part with the two others
-		handleTreeHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
-		handlePropertyHSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart
-				.getPropertyPart());
+		createTreeSyncHandlers(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
 	}
 
 	/**
@@ -1079,15 +1079,55 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
+	 * Takes care of the creation of the synchronization handlers for the properties tab of our viewer parts.
+	 * 
+	 * @param parts
+	 *            The other parts to synchronize with.
+	 */
+	private void createPropertiesSyncHandlers(ModelContentMergePropertyPart... parts) {
+		if (parts.length < 2)
+			throw new IllegalArgumentException(EMFCompareUIMessages
+					.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+
+		// horizontal synchronization
+		handlePropertyHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
+		handlePropertyHSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart
+				.getPropertyPart());
+		handlePropertyHSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
+		// Vertical synchronization
+		handlePropertyVSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
+		handlePropertyVSync(rightPart.getPropertyPart(), leftPart.getPropertyPart(), ancestorPart
+				.getPropertyPart());
+		handlePropertyVSync(ancestorPart.getPropertyPart(), rightPart.getPropertyPart(), leftPart
+				.getPropertyPart());
+	}
+
+	/**
+	 * Takes care of the creation of the synchronization handlers for the tree tab of our viewer parts.
+	 * 
+	 * @param parts
+	 *            The other parts to synchronize with.
+	 */
+	private void createTreeSyncHandlers(ModelContentMergeTreePart... parts) {
+		if (parts.length < 2)
+			throw new IllegalArgumentException(EMFCompareUIMessages
+					.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
+
+		handleTreeHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
+		handleTreeHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
+		handleTreeHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
+	}
+
+	/**
 	 * Allows synchronization of the properties viewports horizontal scrolling.
 	 * 
 	 * @param parts
 	 *            The other parts to synchronize with.
 	 */
 	private void handlePropertyHSync(ModelContentMergePropertyPart... parts) {
-		if (parts.length < 2)
-			throw new IllegalArgumentException(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
-
 		// inspired from TreeMergeViewer#hsynchViewport
 		final Table table1 = parts[0].getTable();
 		final Table table2 = parts[1].getTable();
@@ -1113,7 +1153,46 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = table3.getHorizontalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals("carbon") && getControl() != null && !getControl().isDisposed()) { //$NON-NLS-1$
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
+					getControl().getDisplay().update();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Allows synchronization of the properties viewports vertical scrolling.
+	 * 
+	 * @param parts
+	 *            The other parts to synchronize with.
+	 */
+	private void handlePropertyVSync(ModelContentMergePropertyPart... parts) {
+		// inspired from TreeMergeViewer#hsynchViewport
+		final Table table1 = parts[0].getTable();
+		final Table table2 = parts[1].getTable();
+		final Table table3;
+		if (parts.length > 2)
+			table3 = parts[2].getTable();
+		else
+			table3 = null;
+		final ScrollBar scrollBar1 = table1.getVerticalBar();
+
+		scrollBar1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				final int max = scrollBar1.getMaximum() - scrollBar1.getThumb();
+				double v = 0.0;
+				if (max > 0)
+					v = (double)scrollBar1.getSelection() / (double)max;
+				if (table2.isVisible()) {
+					final ScrollBar scrollBar2 = table2.getVerticalBar();
+					scrollBar2.setSelection((int)((scrollBar2.getMaximum() - scrollBar2.getThumb()) * v));
+				}
+				if (table3 != null && table3.isVisible()) {
+					final ScrollBar scrollBar3 = table3.getVerticalBar();
+					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
+				}
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
 			}
@@ -1127,9 +1206,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            The other parts to synchronize with.
 	 */
 	private void handleTreeHSync(ModelContentMergeTreePart... parts) {
-		if (parts.length < 2)
-			throw new IllegalArgumentException(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.illegalSync")); //$NON-NLS-1$
-
 		// inspired from TreeMergeViewer#hsynchViewport
 		final Tree tree1 = parts[0].getTree();
 		final Tree tree2 = parts[1].getTree();
@@ -1155,7 +1231,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = tree3.getHorizontalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals("carbon") && getControl() != null && !getControl().isDisposed()) { //$NON-NLS-1$
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
 			}
@@ -1301,7 +1377,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			}
 
 			int lineWidth = 1;
-			if (selectedTab == PROPERTIES_TAB || (currentSelection != null && diff == currentSelection.get(0))) {
+			if (selectedTab == PROPERTIES_TAB
+					|| (currentSelection != null && diff == currentSelection.get(0))) {
 				lineWidth = 2;
 			}
 

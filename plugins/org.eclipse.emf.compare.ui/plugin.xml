@@ -29,14 +29,14 @@
             icon="icons/full/editorIcon.gif"
             id="org.eclipse.emf.compare.ui.editor"
             launcher="org.eclipse.emf.compare.ui.editor.ModelCompareEditorLauncher"
-            name="emfdiff editor"/>
+            name="%emfdiffEditorName"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
             id="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
-            name="EMFCompare"/>
+            name="%preferencePageName"/>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
@@ -47,7 +47,7 @@
       <content-type
             file-extensions="emfdiff,uml,ecore"
             id="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
-            name="Model File"
+            name="%modelContentTypeName"
             priority="normal">
       </content-type>
    </extension>
