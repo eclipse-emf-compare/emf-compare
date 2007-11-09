@@ -7,6 +7,8 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+07/11/2007 - DiffService, MatchService and MergeService modified to allow full standalone usage
+05/11/2007 - Enabled internationalization
 29/10/2007 - Merger API greatly modified. A new extension point appears to provide a list of merger associated to DiffElements.
 	- org.eclipse.emf.compare.diff.merge.service.MergeService has been modified and is now the main mean of merging.
 	- Events are now fired before and after 1) a merge operation (merging of one or more diffs) and 2) a diff merge (for each difference).
