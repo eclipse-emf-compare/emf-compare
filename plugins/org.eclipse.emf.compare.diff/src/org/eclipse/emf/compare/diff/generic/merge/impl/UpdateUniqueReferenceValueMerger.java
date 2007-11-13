@@ -30,6 +30,11 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
+		/* FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should
+		 * merge its corresponding AddModelElement (or RemoteDeleteModelElement)
+		 * beforehand.
+		 * In the current state, we're doing a hard-link between the two models.
+		 */
 		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
 		final EObject element = theDiff.getLeftElement();
 		final EObject leftTarget = theDiff.getLeftTarget();
@@ -48,6 +53,11 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
+		/* FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should
+		 * merge its corresponding DeletedModelElement (or RemoteAddModelElement)
+		 * beforehand.
+		 * In the current state, we're doing a hard-link between the two models.
+		 */
 		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject rightTarget = theDiff.getRightTarget();
