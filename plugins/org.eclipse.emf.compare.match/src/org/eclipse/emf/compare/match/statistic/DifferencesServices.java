@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -81,7 +83,7 @@ public class DifferencesServices implements MatchEngine {
 	protected final MetamodelFilter filter = new MetamodelFilter();
 
 	/** Contains the options given to the match procedure. */
-	protected final Map<String, Object> options = loadDefaultOptionMap();
+	protected final Map<String, Object> options = loadPreferenceOptionMap();
 
 	/**
 	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
@@ -116,6 +118,24 @@ public class DifferencesServices implements MatchEngine {
 	 * right model.
 	 */
 	private final List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
+
+	/**
+	 * This initializer allows us to place a listener on the core preferences store.
+	 * <p>
+	 * This listener will be used to keep the search window and ignore XMI ID boolean up-to-date with user
+	 * modifications.
+	 * </p>
+	 */
+	{
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null) {
+			EMFComparePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
+					new IPropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent event) {
+							options.putAll(DifferencesServices.this.loadPreferenceOptionMap());
+						}
+					});
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -395,6 +415,22 @@ public class DifferencesServices implements MatchEngine {
 		return similarity;
 	}
 
+	/*
+	 * created as package visibility method to allow access from initializer's listener
+	 */
+	/**
+	 * This will load all the needed options with their default values.
+	 * 
+	 * @return Map containing all the needed options with their default values.
+	 */
+	/* package */Map<String, Object> loadPreferenceOptionMap() {
+		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
+		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
+		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
+		return optionMap;
+	}
+
 	/**
 	 * Returns an absolute comparison metric between the two given {@link EObject}s.
 	 * 
@@ -633,7 +669,7 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @return <code>True</code> if we should ignore XMI ID, <code>False</code> otherwise.
 	 */
-	private boolean getDefaultIgnoreXMIID() {
+	private boolean getPreferenceIgnoreXMIID() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
 			return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
 		return false;
@@ -645,7 +681,7 @@ public class DifferencesServices implements MatchEngine {
 	 * 
 	 * @return An <code>int</code> representing the number of siblings to consider for matching.
 	 */
-	private int getDefaultSearchWindow() {
+	private int getPreferenceSearchWindow() {
 		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null
 				&& EMFComparePlugin.getDefault().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
@@ -712,20 +748,7 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
-	 * This will load all the needed options with their default values.
-	 * 
-	 * @return Map containing all the needed options with their default values.
-	 */
-	private Map<String, Object> loadDefaultOptionMap() {
-		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
-		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getDefaultSearchWindow());
-		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getDefaultIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
-		return optionMap;
-	}
-
-	/**
-	 * This replaces the contents of the defaults options map with the options overriden by the given map.
+	 * This replaces the contents of the defaults options map with the options overridden by the given map.
 	 * 
 	 * @param map
 	 *            Map containing the option given to the match procedure. cannot be <code>null</code>.
