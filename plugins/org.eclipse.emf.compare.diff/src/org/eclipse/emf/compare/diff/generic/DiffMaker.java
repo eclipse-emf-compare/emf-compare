@@ -142,6 +142,35 @@ public class DiffMaker implements DiffEngine {
 		}
 		return result;
 	}
+	
+	/**
+	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none
+	 * exists, create one where the operation belongs to.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffModel}.
+	 * @param operation
+	 *            Operation to add to the {@link DiffModel}.
+	 * @param targetParent
+	 *            Parent {@link EObject} for the operation.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
+		if (targetParent == null) {
+			root.getSubDiffElements().add(operation);
+			return;
+		}
+		DiffGroup targetGroup = findExistingGroup(root, targetParent);
+		if (targetGroup == null) {
+			// Searches for a DiffGroup with the matched parent
+			targetGroup = findExistingGroup(root, getMatchedEObject(targetParent));
+			if (targetGroup == null) {
+				// we have to create the group
+				targetGroup = buildHierarchyGroup(targetParent, root);
+			}
+		}
+		targetGroup.getSubDiffElements().add(operation);
+	}
 
 	/**
 	 * This will iterate through all the attributes of the <code>mapping</code>'s two elements to check if
@@ -471,7 +500,8 @@ public class DiffMaker implements DiffEngine {
 			if (!isChild)
 				unMatchedElements.put(unMatchElement, isAncestor);
 		}
-		processUnMatchedElements(diffRoot, leftModel);
+		if (unMatchedElements.size() > 0) 
+			processUnMatchedElements(diffRoot, leftModel, unMatchedElements);
 		return diffRoot;
 	}
 
@@ -493,35 +523,12 @@ public class DiffMaker implements DiffEngine {
 
 		// browsing the match model
 		doDiffDelegate(diffRoot, matchRoot);
-		// iterate over the unmached elements end determine if they have been
+		// iterate over the unmatched elements end determine if they have been
 		// added or removed.
-		final Iterator unMatched = match.getUnMatchedElements().iterator();
-		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
-			if (unMatchElement.getElement().eResource() == leftModel) {
-				// add RemoveModelElement
-				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
-				operation.setLeftElement(unMatchElement.getElement());
-				// Container will be null if we're adding a root
-				if (unMatchElement.getElement().eContainer() != null)
-					operation.setRightParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-				addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
-			}
-			if (unMatchElement.getElement().eResource() == rightModel) {
-				// add AddModelElement
-				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
-				operation.setRightElement(unMatchElement.getElement());
-				// Container will be null if we're adding a root
-				if (unMatchElement.getElement().eContainer() != null) {
-					operation.setLeftParent(getMatchedEObject(unMatchElement.getElement().eContainer()));
-					addInContainerPackage(diffRoot, operation, getMatchedEObject(unMatchElement.getElement()
-							.eContainer()));
-				} else {
-					addInContainerPackage(diffRoot, operation, unMatchElement.getElement().eContainer());
-				}
-			}
-		}
-
+		final List<UnMatchElement> unMatched = new ArrayList<UnMatchElement>();
+		for (Object anUnMatched : match.getUnMatchedElements())
+			unMatched.add((UnMatchElement)anUnMatched);
+		processUnMatchedElements(diffRoot, leftModel, unMatched);
 		return diffRoot;
 	}
 
@@ -579,28 +586,71 @@ public class DiffMaker implements DiffEngine {
 	/**
 	 * This will process the {@link #unMatchedElements unmatched elements} list and create the appropriate
 	 * {@link DiffElement}s.
+	 * <p>
+	 * This is called for two-way comparison. Clients can override this to alter the checks or add their own.
+	 * </p>
 	 * 
 	 * @param diffRoot
 	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
 	 * @param leftModel
 	 *            {@link Resource} representing the left model.
+	 * @param unMatched
+	 * The MatchModel's {@link UnMatchElement}s.
 	 */
-	@SuppressWarnings("unchecked")
-	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel) {
-		for (UnMatchElement unMatchElement : unMatchedElements.keySet()) {
-			final boolean isConflicting = unMatchedElements.get(unMatchElement);
+	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel, List<UnMatchElement> unMatched) {
+		for (UnMatchElement unMatchElement : unMatched) {
+			final EObject element = unMatchElement.getElement();
+			if (element.eResource() == leftModel) {
+				// add RemoveModelElement
+				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+				operation.setLeftElement(element);
+				// Container will be null if we're adding a root
+				if (element.eContainer() != null)
+					operation.setRightParent(getMatchedEObject(element.eContainer()));
+				addInContainerPackage(diffRoot, operation, element.eContainer());
+			} else {
+				// add AddModelElement
+				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
+				operation.setRightElement(element);
+				// Container will be null if we're adding a root
+				if (element.eContainer() != null) {
+					operation.setLeftParent(getMatchedEObject(element.eContainer()));
+					addInContainerPackage(diffRoot, operation, getMatchedEObject(element.eContainer()));
+				} else {
+					addInContainerPackage(diffRoot, operation, element.eContainer());
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will process the {@link #unMatchedElements unmatched elements} list and create the appropriate
+	 * {@link DiffElement}s.
+	 * <p>
+	 * This is called for three-way comparison. Clients can override this to alter the checks or add their own.
+	 * </p>
+	 * 
+	 * @param diffRoot
+	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
+	 * @param leftModel
+	 *            {@link Resource} representing the left model.
+	 * @param unMatched
+	 * The MatchModel's {@link UnMatchElement}s.
+	 */
+	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel, Map<UnMatchElement, Boolean> unMatched) {
+		for (UnMatchElement unMatchElement : unMatched.keySet()) {
+			final boolean isConflicting = unMatched.get(unMatchElement);
 
 			final EObject element = unMatchElement.getElement();
 			final EObject matchedParent = getMatchedEObject(element.eContainer());
 			final EObject matchedAncestor = getMatchedEObject(element, ANCESTOR_OBJECT);
 
-			if (unMatchElement instanceof RemoteUnMatchElement
-					&& unMatchElement.getElement().eResource() == leftModel) {
+			if (unMatchElement instanceof RemoteUnMatchElement && element.eResource() == leftModel) {
 				final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE
 						.createRemoteAddModelElement();
 				addOperation.setLeftElement(element);
 				addOperation.setRightParent(matchedParent);
-				addInContainerPackage(diffRoot, addOperation, unMatchElement.getElement().eContainer());
+				addInContainerPackage(diffRoot, addOperation, element.eContainer());
 			} else if (unMatchElement instanceof RemoteUnMatchElement) {
 				final DiffElement operation;
 				if (isConflicting) {
@@ -622,7 +672,7 @@ public class DiffMaker implements DiffEngine {
 				}
 
 				addInContainerPackage(diffRoot, operation, matchedParent);
-			} else if (unMatchElement.getElement().eResource() == leftModel) {
+			} else if (element.eResource() == leftModel) {
 				final DiffElement operation;
 				if (isConflicting) {
 					operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
@@ -677,32 +727,6 @@ public class DiffMaker implements DiffEngine {
 		ignore |= reference.isTransient();
 		ignore |= reference.isContainer();
 		return ignore;
-	}
-
-	/**
-	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none
-	 * exists, create one where the operation belongs to.
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffModel}.
-	 * @param operation
-	 *            Operation to add to the {@link DiffModel}.
-	 * @param targetParent
-	 *            Parent {@link EObject} for the operation.
-	 */
-	@SuppressWarnings("unchecked")
-	private void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
-		if (targetParent == null) {
-			root.getSubDiffElements().add(operation);
-			return;
-		}
-		final DiffGroup targetGroup = findExistingGroup(root, targetParent);
-		if (targetGroup == null) {
-			// we have to create the group
-			buildHierarchyGroup(targetParent, root).getSubDiffElements().add(operation);
-		} else {
-			targetGroup.getSubDiffElements().add(operation);
-		}
 	}
 
 	/**

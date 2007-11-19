@@ -181,7 +181,6 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/*
-	 * (non-javadoc)
 	 * created as package visibility method to allow access from MergeFactory
 	 */
 	/**
