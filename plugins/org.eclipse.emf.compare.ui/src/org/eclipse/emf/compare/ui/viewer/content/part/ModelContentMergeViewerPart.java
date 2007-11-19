@@ -804,7 +804,7 @@ public class ModelContentMergeViewerPart {
 				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
 						|| diff instanceof AddModelElement || diff instanceof RemoteRemoveModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width, rectangleY
+					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width + treeBounds.x, rectangleY
 							+ rectangleHeight);
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
@@ -812,7 +812,7 @@ public class ModelContentMergeViewerPart {
 							rectangleArcWidth, rectangleArcHeight);
 					event.gc.setLineStyle(SWT.LINE_SOLID);
 					event.gc.drawLine(rectangleX + rectangleWidth, rectangleY + rectangleHeight / 2,
-							treeBounds.width, rectangleY + rectangleHeight / 2);
+							treeBounds.width + treeBounds.x, rectangleY + rectangleHeight / 2);
 				}
 			} else if (partSide == EMFCompareConstants.RIGHT) {
 				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))
