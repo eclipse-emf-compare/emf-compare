@@ -268,6 +268,34 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
+	 * This will iterate through the given {@link List} and return its element which is most similar (as given
+	 * by {@link #absoluteMetric(EObject, EObject)}) to the given {@link EObject}.
+	 * 
+	 * @param eObj
+	 *            {@link EObject} we're searching a similar item for in the list.
+	 * @param list
+	 *            {@link List} in which we are to find an object similar to <code>eObj</code>.
+	 * @return The element from <code>list</code> which is the most similar to <code>eObj</code>.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the {@link #absoluteMetric(EObject, EObject) absolute metric}
+	 *             between <code>eObj</code> and one of the list's objects.
+	 */
+	protected EObject findMostSimilar(EObject eObj, List list) throws FactoryException {
+		double max = 0d;
+		EObject resultObject = null;
+		final Iterator it = list.iterator();
+		while (it.hasNext()) {
+			final EObject next = (EObject)it.next();
+			final double similarity = absoluteMetric(eObj, next);
+			if (similarity > max) {
+				max = similarity;
+				resultObject = next;
+			}
+		}
+		return resultObject;
+	}
+
+	/**
 	 * This will return the value associated to the given key in the options map.
 	 * <p>
 	 * NOTE : Misuses of this method will easily throw {@link ClassCastException}s.
@@ -634,34 +662,6 @@ public class DifferencesServices implements MatchEngine {
 			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
 		}
 		unMatchedElements.clear();
-	}
-
-	/**
-	 * This will iterate through the given {@link List} and return its element which is most similar (as given
-	 * by {@link #absoluteMetric(EObject, EObject)}) to the given {@link EObject}.
-	 * 
-	 * @param eObj
-	 *            {@link EObject} we're searching a similar item for in the list.
-	 * @param list
-	 *            {@link List} in which we are to find an object similar to <code>eObj</code>.
-	 * @return The element from <code>list</code> which is the most similar to <code>eObj</code>.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the {@link #absoluteMetric(EObject, EObject) absolute metric}
-	 *             between <code>eObj</code> and one of the list's objects.
-	 */
-	private EObject findMostSimilar(EObject eObj, List list) throws FactoryException {
-		double max = 0d;
-		EObject resultObject = null;
-		final Iterator it = list.iterator();
-		while (it.hasNext()) {
-			final EObject next = (EObject)it.next();
-			final double similarity = absoluteMetric(eObj, next);
-			if (similarity > max) {
-				max = similarity;
-				resultObject = next;
-			}
-		}
-		return resultObject;
 	}
 
 	/**
