@@ -7,6 +7,7 @@ ___ TODO ___
  - weight annotations for metamodels
  
 ___ DONE ___
+27/11/2007 - API broken for match engines : added method in interface org.eclipse.emf.compare.match.api.MatchEngine for content comparison.
 07/11/2007 - DiffService, MatchService and MergeService modified to allow full standalone usage
 05/11/2007 - Enabled internationalization
 29/10/2007 - Merger API greatly modified. A new extension point appears to provide a list of merger associated to DiffElements.

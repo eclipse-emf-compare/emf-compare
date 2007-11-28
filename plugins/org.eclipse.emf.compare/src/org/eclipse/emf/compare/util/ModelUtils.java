@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -88,31 +87,65 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads the models contained by the given directory.
-	 * 
-	 * @param directory
-	 *            The directory from which to load the models.
-	 * @return The models contained by the given directory.
-	 * @throws IOException
-	 *             Thrown if an I/O operation has failed or been interrupted.
-	 */
-	public static List<EObject> getModelsFrom(File directory) throws IOException {
-		final List<EObject> models = new ArrayList<EObject>();
+     * Loads the models contained by the given directory.
+     * 
+     * @param directory
+     *            The directory from which to load the models.
+     * @return The models contained by the given directory.
+     * @throws IOException
+     *             Thrown if an I/O operation has failed or been interrupted.
+     */
+    public static List<EObject> getModelsFrom(File directory) throws IOException {
+        return getModelsFrom(directory, null);
+    }
 
-		if (directory.exists() && directory.isDirectory() && directory.listFiles() != null) {
-			final File[] files = directory.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				final File aFile = files[i];
+    // TODO unit test this
+    /**
+     * Loads the files with the given extension contained by the given directory
+     * as EObjects.
+     * <p>
+     * The argument <code>extension</code> is in fact the needed suffix for
+     * its name in order for a file to be loaded. If it is equal to
+     * &quot;rd&quot;, a file named &quot;model.aird&quot; will be loaded, but
+     * so would be a file named &quot;Shepherd&quot;.
+     * </p>
+     * <p>
+     * The empty String or <code>null</code> will result in all the files of
+     * the given directory to be loaded, and would then be equivalent to
+     * {@link #getModelsFrom(File)}.
+     * </p>
+     * 
+     * @param directory
+     *            The directory from which to load the models.
+     * @param extension
+     *            File extension of the files to load. If <code>null</code>,
+     *            will consider all extensions.
+     * @return The models contained by the given directory.
+     * @throws IOException
+     *             Thrown if an I/O operation has failed or been interrupted.
+     */
+    public static List<EObject> getModelsFrom(File directory, String extension) throws IOException {
+        final List<EObject> models = new ArrayList<EObject>();
+        final String fileExtension;
+        if (extension != null)
+        	fileExtension = extension;
+        else
+        	fileExtension = ""; //$NON-NLS-1$
 
-				final ResourceSet resourceSet = new ResourceSetImpl();
-				if (!aFile.isDirectory() && !aFile.getName().startsWith(".")) { //$NON-NLS-1$
-					models.add(load(aFile, resourceSet));
-				}
-			}
-		}
+        if (directory.exists() && directory.isDirectory() && directory.listFiles() != null) {
+            final File[] files = directory.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                final File aFile = files[i];
 
-		return models;
-	}
+                final ResourceSet resourceSet = new ResourceSetImpl();
+                if (!aFile.isDirectory() && aFile.getName().matches("[^.].*?\\Q" + fileExtension + "\\E")) { //$NON-NLS-1$ //$NON-NLS-2$
+                    models.add(load(aFile, resourceSet));
+                }
+            }
+        }
+
+        return models;
+    }
 
 	/**
 	 * Loads a model from a {@link java.io.File File} in a given {@link ResourceSet}.
@@ -261,7 +294,9 @@ public final class ModelUtils {
 		final XMIResourceImpl newResource = new XMIResourceImpl();
 		final StringWriter writer = new StringWriter();
 		newResource.getContents().add(root);
-		newResource.save(writer, Collections.EMPTY_MAP);
+		final Map<String, String> options = new EMFCompareMap<String, String>();
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
+		newResource.save(writer, options);
 		return writer.toString();
 	}
 }
