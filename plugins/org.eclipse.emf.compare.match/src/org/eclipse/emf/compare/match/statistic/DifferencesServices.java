@@ -55,6 +55,9 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private static final double GENERAL_THRESHOLD = 0.96d;
 
+	/** Containmnent reference for the matched elements root. */
+	private static final String MATCH_ELEMENT_NAME = "matchedElements"; //$NON-NLS-1$
+
 	/** Minimal number of attributes an element must have for content comparison. */
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
@@ -135,6 +138,141 @@ public class DifferencesServices implements MatchEngine {
 						}
 					});
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	@SuppressWarnings("unchecked")
+	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
+			Map<String, Object> optionMap) {
+		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
+		setModelURIs(root, leftObject, rightObject, ancestor);
+		final CompareProgressMonitor monitor = new CompareProgressMonitor();
+		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
+		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
+
+		final List<Match2Elements> leftObjectMatchedElements = new ArrayList<Match2Elements>(
+				leftObjectAncestorMatch.getMatchedElements());
+		final List<Match2Elements> rightObjectMatchedElements = new ArrayList<Match2Elements>(
+				rightObjectAncestorMatch.getMatchedElements());
+
+		// populates the unmatched elements list for later use
+		for (Object unMatch : leftObjectAncestorMatch.getUnMatchedElements())
+			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
+		for (Object unMatch : rightObjectAncestorMatch.getUnMatchedElements())
+			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
+
+		try {
+			final Match2Elements leftObjectMatchRoot = leftObjectMatchedElements.get(0);
+			final Match2Elements rightObjectMatchRoot = rightObjectMatchedElements.get(0);
+			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
+
+			subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
+					rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
+			subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
+			subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
+			subMatchRoot.setOriginElement(rightObjectMatchRoot.getRightElement());
+			redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
+			createSub3Match(root, subMatchRoot, leftObjectMatchRoot, rightObjectMatchRoot);
+
+			// We will now check through the unmatched object for matches.
+			processUnmatchedElements(root, subMatchRoot);
+
+			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
+			// Match2Elements) will have updated "remainingUnMatchedElements"
+			final Set<EObject> remainingLeft = new HashSet<EObject>();
+			final Set<EObject> remainingRight = new HashSet<EObject>();
+			for (EObject unMatched : remainingUnMatchedElements) {
+				if (unMatched.eResource() == leftObject.eResource()) {
+					remainingLeft.add(unMatched);
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+						remainingLeft.add(iterator.next());
+				} else if (unMatched.eResource() == rightObject.eResource()) {
+					remainingRight.add(unMatched);
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+						remainingRight.add(iterator.next());
+				}
+			}
+			stillToFindFromModel1.clear();
+			stillToFindFromModel2.clear();
+			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
+					new ArrayList<EObject>(remainingRight), this
+							.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+			for (Match2Elements map : mappings) {
+				final Match3Element subMatch = MatchFactory.eINSTANCE.createMatch3Element();
+				subMatch.setLeftElement(map.getLeftElement());
+				subMatch.setRightElement(map.getRightElement());
+				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+			}
+			final Map<EObject, Boolean> unMatchedElements = new EMFCompareMap<EObject, Boolean>();
+			for (EObject remoteUnMatch : stillToFindFromModel1) {
+				unMatchedElements.put(remoteUnMatch, true);
+			}
+			for (EObject unMatch : stillToFindFromModel2) {
+				unMatchedElements.put(unMatch, false);
+			}
+			createThreeWayUnMatchElements(root, unMatchedElements);
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (InterruptedException e) {
+			// Cannot be thrown since we have no monitor
+		}
+
+		return root;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+
+		final CompareProgressMonitor monitor = new CompareProgressMonitor();
+
+		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
+		setModelURIs(root, leftObject, rightObject);
+
+		/*
+		 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots of
+		 * a resource), we cannot filter the model.
+		 */
+
+		final Set<EObject> still1 = new HashSet<EObject>();
+		final Set<EObject> still2 = new HashSet<EObject>();
+
+		// navigate through both objects at the same time and realize mappings..
+		try {
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID))
+				matchByID(leftObject, rightObject);
+			if (isSimilar(leftObject, rightObject)) {
+				final Match2Elements matchModelRoot = recursiveMappings(leftObject, rightObject, monitor);
+				redirectedAdd(root, MATCH_ELEMENT_NAME, matchModelRoot);
+				createSubMatchElements(matchModelRoot, new ArrayList<EObject>(stillToFindFromModel1),
+						new ArrayList<EObject>(stillToFindFromModel2), monitor);
+				still1.addAll(stillToFindFromModel1);
+				still2.addAll(stillToFindFromModel2);
+				createUnMatchElements(root, still1);
+				createUnMatchElements(root, still2);
+			} else {
+				// The two objects passed as this method's parameters are not similar. Creates unmatch root.
+				still1.add(leftObject);
+				still1.add(rightObject);
+				createUnMatchElements(root, still1);
+			}
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (InterruptedException e) {
+			// Cannot be thrown since we have no monitor
+		}
+		return root;
 	}
 
 	/**
@@ -834,6 +972,44 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/**
+	 * Iterates through both of the given EObjects to find all of their children that can be matched by their
+	 * XMI ID, then populates {@link #matchedByID} with those mappings.
+	 * <p>
+	 * Note that this method will perform a check to ensure the two objects' resources are indeed
+	 * XMIResources.
+	 * </p>
+	 * 
+	 * @param obj1
+	 *            First of the two EObjects to visit.
+	 * @param obj2
+	 *            Second of the EObjects to visit.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't compute a key to store the items in cache.
+	 */
+	private void matchByID(EObject obj1, EObject obj2) throws FactoryException {
+		matchedByID.clear();
+		if (obj1 != null && obj2 != null && obj1.eResource() instanceof XMIResource
+				&& obj2.eResource() instanceof XMIResource) {
+			final XMIResource left = (XMIResource)obj1.eResource();
+			final XMIResource right = (XMIResource)obj2.eResource();
+			final Iterator iterator = obj1.eAllContents();
+			while (iterator.hasNext()) {
+				final EObject item1 = (EObject)iterator.next();
+				final String item1ID = left.getID(item1);
+				if (item1ID != null) {
+					final EObject item2 = right.getEObject(item1ID);
+					if (item2 != null) {
+						final StringBuilder item1Key = new StringBuilder();
+						item1Key.append(NameSimilarity.findName(item1));
+						item1Key.append(item1.hashCode());
+						matchedByID.put(item1Key.toString(), item2);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Iterates through both of the given {@link XMIResource resources} to find all the elements that can be
 	 * matched by their XMI ID, then populates {@link #matchedByID} with those mappings.
 	 * 
@@ -933,7 +1109,7 @@ public class DifferencesServices implements MatchEngine {
 				// this is the first passage
 				if (matchModelRoot.getLeftElement() == null) {
 					matchModelRoot = rootMapping;
-					redirectedAdd(root, "matchedElements", matchModelRoot); //$NON-NLS-1$
+					redirectedAdd(root, MATCH_ELEMENT_NAME, matchModelRoot);
 				} else {
 					redirectedAdd(matchModelRoot, SUBMATCH_ELEMENT_NAME, rootMapping);
 				}
@@ -1013,7 +1189,7 @@ public class DifferencesServices implements MatchEngine {
 			subMatchRoot.setLeftElement(root1Match.getLeftElement());
 			subMatchRoot.setRightElement(root2Match.getLeftElement());
 			subMatchRoot.setOriginElement(root2Match.getRightElement());
-			redirectedAdd(root, "matchedElements", subMatchRoot); //$NON-NLS-1$
+			redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
 			createSub3Match(root, subMatchRoot, root1Match, root2Match);
 
 			// We will now check through the unmatched object for matches. This

@@ -24,6 +24,43 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface MatchEngine {
 	/**
+	 * This method will compare three {@link EObject}s and their direct content, ignoring the given objects'
+	 * siblings and parents for the match.
+	 * 
+	 * @param leftObject
+	 *            Left of the three objects to get compared.
+	 * @param rightObject
+	 *            Right of the three objects to compare.
+	 * @param ancestor
+	 *            Common ancestor of the two others.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return {@link MatchModel} for these three objects' comparison.
+	 * @see MatchOptions
+	 * @since 0.8.0
+	 */
+	MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
+			Map<String, Object> optionMap);
+
+	/**
+	 * This method will compare two {@link EObject}s and their direct content, ignoring the given objects'
+	 * siblings and parents for the match.
+	 * 
+	 * @param leftObject
+	 *            Left of the two objects to get compared.
+	 * @param rightRoot
+	 *            Right of the two objects to compare.
+	 * @param optionMap
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return {@link MatchModel} for these two objects' comparison.
+	 * @see MatchOptions
+	 * @since 0.8.0
+	 */
+	MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap);
+
+	/**
 	 * This method returns a 3 models match.
 	 * 
 	 * @param leftRoot
@@ -37,7 +74,8 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
-	 * @deprecated Use {@link #modelMatch(EObject, EObject, EObject, IProgressMonitor, Map)} instead. This will be deleted before 1.0.
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, EObject, IProgressMonitor, Map)} instead. This
+	 *             will be deleted before 1.0.
 	 */
 	@Deprecated
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, IProgressMonitor monitor)
@@ -82,6 +120,8 @@ public interface MatchEngine {
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
+	 * @see MatchOptions
+	 * @since 0.8.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, Map<String, Object> optionMap);
 
@@ -97,7 +137,8 @@ public interface MatchEngine {
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
-	 * @deprecated Use {@link #modelMatch(EObject, EObject, IProgressMonitor, Map)} instead. This will be deleted before 1.0.
+	 * @deprecated Use {@link #modelMatch(EObject, EObject, IProgressMonitor, Map)} instead. This will be
+	 *             deleted before 1.0.
 	 */
 	@Deprecated
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
@@ -138,6 +179,8 @@ public interface MatchEngine {
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
+	 * @see MatchOptions
+	 * @since 0.8.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap);
 }

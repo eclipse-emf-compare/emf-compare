@@ -35,6 +35,9 @@ public final class MatchService {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
+	/** Default extension for EObjects not attached to a resource. */
+	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
+
 	/** Name of the extension point to parse for engines. */
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
 
@@ -53,6 +56,62 @@ public final class MatchService {
 	 */
 	private MatchService() {
 		// prevents instantiation
+	}
+
+	/**
+	 * Matches three objects along with their content, then return the corresponding match model.
+	 * 
+	 * @param leftObject
+	 *            Left of the three objects to get compared.
+	 * @param rightObject
+	 *            Right of the three objects to compare.
+	 * @param ancestor
+	 *            Common ancestor of the two others.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return {@link MatchModel} for these three objects' comparison.
+	 * @see MatchOptions
+	 * @see MatchEngine#contentMatch(EObject, EObject, EObject, Map)
+	 * @since 0.8.0
+	 */
+	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
+			Map<String, Object> options) {
+		String extension = DEFAULT_EXTENSION;
+		if (leftObject.eResource().getURI() != null)
+			extension = leftObject.eResource().getURI().fileExtension();
+		else if (rightObject.eResource() != null)
+			extension = rightObject.eResource().getURI().fileExtension();
+		else if (ancestor.eResource() != null)
+			extension = ancestor.eResource().getURI().fileExtension();
+		final MatchEngine engine = getBestMatchEngine(extension);
+		return engine.contentMatch(leftObject, rightObject, ancestor, options);
+	}
+
+	/**
+	 * Matches two objects along with their content, then return the corresponding match model.
+	 * 
+	 * @param leftObject
+	 *            Left of the two objects to get compared.
+	 * @param rightObject
+	 *            Right of the two objects to compare.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return {@link MatchModel} for these two objects' comparison.
+	 * @see MatchOptions
+	 * @see MatchEngine#contentMatch(EObject, EObject, Map)
+	 * @since 0.8.0
+	 */
+	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
+			Map<String, Object> options) {
+		String extension = DEFAULT_EXTENSION;
+		if (leftObject.eResource().getURI() != null)
+			extension = leftObject.eResource().getURI().fileExtension();
+		else if (rightObject.eResource() != null)
+			extension = rightObject.eResource().getURI().fileExtension();
+		final MatchEngine engine = getBestMatchEngine(extension);
+		return engine.contentMatch(leftObject, rightObject, options);
 	}
 
 	/**
@@ -94,10 +153,11 @@ public final class MatchService {
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
+	 * @see MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			IProgressMonitor monitor, Map<String, Object> options) throws InterruptedException {
-		String extension = "ecore"; //$NON-NLS-1$
+		String extension = DEFAULT_EXTENSION;
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
 		else if (rightRoot.eResource() != null)
@@ -143,10 +203,11 @@ public final class MatchService {
 	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
+	 * @see MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
 			Map<String, Object> options) throws InterruptedException {
-		String extension = "ecore"; //$NON-NLS-1$
+		String extension = DEFAULT_EXTENSION;
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot.eResource() != null)
