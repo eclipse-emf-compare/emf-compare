@@ -31,9 +31,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class EFactory {
-	/** Prefix for all getter methods. Externalized to avoid to many distinct uses. */
-	private static final String GETTER_PREFIX = "get"; //$NON-NLS-1$
-
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
