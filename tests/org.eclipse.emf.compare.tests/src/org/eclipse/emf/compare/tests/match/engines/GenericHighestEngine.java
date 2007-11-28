@@ -26,6 +26,27 @@ public class GenericHighestEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
+			Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	public MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.core.runtime.IProgressMonitor)

@@ -8,23 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.match;
+package org.eclipse.emf.compare.tests.unit.match.statistic.differencesservice;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.match.statistic.differencesservice.DifferencesServiceTestSuite;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.TestNameSimilarity;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity.StructureSimilarityTestSuite;
-
 /**
- * Tests for the match plugin.
+ * Launches all the JUnit tests for the {@link DifferencesService}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public class MatchTestSuite extends TestCase {
+@SuppressWarnings("nls")
+public class DifferencesServiceTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -38,14 +35,13 @@ public class MatchTestSuite extends TestCase {
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return The testsuite containing all the tests
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
-		suite.addTestSuite(TestEnginesPriority.class);
-		suite.addTestSuite(TestNameSimilarity.class);
-		suite.addTest(DifferencesServiceTestSuite.suite());
-		suite.addTest(StructureSimilarityTestSuite.suite());
+		final TestSuite suite = new TestSuite("Tests for the DifferencesService behavior");
+		suite.addTestSuite(TestThreeWayModelMatch.class);
+		suite.addTestSuite(TestTwoWayModelMatch.class);
+		suite.addTestSuite(TestTwoWayContentMatch.class);
 		return suite;
 	}
 }
