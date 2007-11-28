@@ -42,6 +42,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -89,9 +90,14 @@ public class DifferencesServices implements MatchEngine {
 	protected final Map<String, Object> options = loadPreferenceOptionMap();
 
 	/**
-	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
+	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their functional ID.
 	 */
 	private final Map<String, EObject> matchedByID = new EMFCompareMap<String, EObject>();
+
+	/**
+	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
+	 */
+	private final Map<String, EObject> matchedByXMIID = new EMFCompareMap<String, EObject>();
 
 	/**
 	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
@@ -251,6 +257,8 @@ public class DifferencesServices implements MatchEngine {
 		// navigate through both objects at the same time and realize mappings..
 		try {
 			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID))
+				matchByXMIID(leftObject, rightObject);
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID))
 				matchByID(leftObject, rightObject);
 			if (isSimilar(leftObject, rightObject)) {
 				final Match2Elements matchModelRoot = recursiveMappings(leftObject, rightObject, monitor);
@@ -582,7 +590,8 @@ public class DifferencesServices implements MatchEngine {
 	}
 
 	/*
-	 * created as package visibility method to allow access from initializer's listener
+	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
+	 * opened.
 	 */
 	/**
 	 * This will load all the needed options with their default values.
@@ -592,8 +601,10 @@ public class DifferencesServices implements MatchEngine {
 	/* package */Map<String, Object> loadPreferenceOptionMap() {
 		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
 		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
+		// FIXME create preference for this one
+		optionMap.put(MatchOptions.OPTION_IGNORE_ID, MatchOptions.DEFAULT_IGNORE_ID);
 		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, MatchOptions.DEFAULT_DISTINCT_METAMODEL);
 		return optionMap;
 	}
 
@@ -810,7 +821,7 @@ public class DifferencesServices implements MatchEngine {
 	private boolean getPreferenceIgnoreXMIID() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
 			return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
-		return false;
+		return MatchOptions.DEFAULT_IGNORE_XMI_ID;
 	}
 
 	/**
@@ -973,7 +984,7 @@ public class DifferencesServices implements MatchEngine {
 
 	/**
 	 * Iterates through both of the given EObjects to find all of their children that can be matched by their
-	 * XMI ID, then populates {@link #matchedByID} with those mappings.
+	 * functional ID, then populates {@link #matchedByID} with those mappings.
 	 * <p>
 	 * Note that this method will perform a check to ensure the two objects' resources are indeed
 	 * XMIResources.
@@ -988,21 +999,21 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void matchByID(EObject obj1, EObject obj2) throws FactoryException {
 		matchedByID.clear();
-		if (obj1 != null && obj2 != null && obj1.eResource() instanceof XMIResource
-				&& obj2.eResource() instanceof XMIResource) {
-			final XMIResource left = (XMIResource)obj1.eResource();
-			final XMIResource right = (XMIResource)obj2.eResource();
-			final Iterator iterator = obj1.eAllContents();
-			while (iterator.hasNext()) {
-				final EObject item1 = (EObject)iterator.next();
-				final String item1ID = left.getID(item1);
-				if (item1ID != null) {
-					final EObject item2 = right.getEObject(item1ID);
-					if (item2 != null) {
+		final Iterator iterator1 = obj1.eAllContents();
+		while (iterator1.hasNext()) {
+			final EObject item1 = (EObject)iterator1.next();
+			final String item1ID = EcoreUtil.getID(item1);
+			if (item1ID != null) {
+				final Iterator iterator2 = obj2.eAllContents();
+				while (iterator2.hasNext()) {
+					final EObject item2 = (EObject)iterator2.next();
+					final String item2ID = EcoreUtil.getID(item2);
+					if (item2 != null && item1ID.equals(item2ID)) {
 						final StringBuilder item1Key = new StringBuilder();
 						item1Key.append(NameSimilarity.findName(item1));
 						item1Key.append(item1.hashCode());
 						matchedByID.put(item1Key.toString(), item2);
+						break;
 					}
 				}
 			}
@@ -1020,8 +1031,80 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws FactoryException
 	 *             Thrown if we couldn't compute a key to store the items in cache.
 	 */
-	private void matchByID(XMIResource left, XMIResource right) throws FactoryException {
+	private void matchByID(Resource left, Resource right) throws FactoryException {
 		matchedByID.clear();
+		final Iterator leftIterator = left.getAllContents();
+		while (leftIterator.hasNext()) {
+			final EObject item1 = (EObject)leftIterator.next();
+			final String item1ID = EcoreUtil.getID(item1);
+			if (item1ID != null) {
+				final Iterator rightIterator = right.getAllContents();
+				while (rightIterator.hasNext()) {
+					final EObject item2 = (EObject)rightIterator.next();
+					final String item2ID = EcoreUtil.getID(item2);
+					if (item2 != null && item1ID.equals(item2ID)) {
+						final StringBuilder item1Key = new StringBuilder();
+						item1Key.append(NameSimilarity.findName(item1));
+						item1Key.append(item1.hashCode());
+						matchedByID.put(item1Key.toString(), item2);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Iterates through both of the given EObjects to find all of their children that can be matched by their
+	 * XMI ID, then populates {@link #matchedByXMIID} with those mappings.
+	 * <p>
+	 * Note that this method will perform a check to ensure the two objects' resources are indeed
+	 * XMIResources.
+	 * </p>
+	 * 
+	 * @param obj1
+	 *            First of the two EObjects to visit.
+	 * @param obj2
+	 *            Second of the EObjects to visit.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't compute a key to store the items in cache.
+	 */
+	private void matchByXMIID(EObject obj1, EObject obj2) throws FactoryException {
+		matchedByXMIID.clear();
+		if (obj1 != null && obj2 != null && obj1.eResource() instanceof XMIResource
+				&& obj2.eResource() instanceof XMIResource) {
+			final XMIResource left = (XMIResource)obj1.eResource();
+			final XMIResource right = (XMIResource)obj2.eResource();
+			final Iterator iterator = obj1.eAllContents();
+			while (iterator.hasNext()) {
+				final EObject item1 = (EObject)iterator.next();
+				final String item1ID = left.getID(item1);
+				if (item1ID != null) {
+					final EObject item2 = right.getEObject(item1ID);
+					if (item2 != null) {
+						final StringBuilder item1Key = new StringBuilder();
+						item1Key.append(NameSimilarity.findName(item1));
+						item1Key.append(item1.hashCode());
+						matchedByXMIID.put(item1Key.toString(), item2);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Iterates through both of the given {@link XMIResource resources} to find all the elements that can be
+	 * matched by their XMI ID, then populates {@link #matchedByXMIID} with those mappings.
+	 * 
+	 * @param left
+	 *            First of the two {@link XMIResource resources} to visit.
+	 * @param right
+	 *            Second of the {@link XMIResource resources} to visit.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't compute a key to store the items in cache.
+	 */
+	private void matchByXMIID(XMIResource left, XMIResource right) throws FactoryException {
+		matchedByXMIID.clear();
 		final Iterator leftIterator = left.getAllContents();
 
 		while (leftIterator.hasNext()) {
@@ -1033,7 +1116,7 @@ public class DifferencesServices implements MatchEngine {
 					final StringBuilder item1Key = new StringBuilder();
 					item1Key.append(NameSimilarity.findName(item1));
 					item1Key.append(item1.hashCode());
-					matchedByID.put(item1Key.toString(), item2);
+					matchedByXMIID.put(item1Key.toString(), item2);
 				}
 			}
 		}
@@ -1071,12 +1154,13 @@ public class DifferencesServices implements MatchEngine {
 
 		// navigate through both models at the same time and realize mappings..
 		try {
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)) {
-				final Resource leftResource = leftRoot.eResource();
-				final Resource rightResource = rightRoot.eResource();
+			final Resource leftResource = leftRoot.eResource();
+			final Resource rightResource = rightRoot.eResource();
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID))
 				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
-					matchByID((XMIResource)leftResource, (XMIResource)rightResource);
-			}
+					matchByXMIID((XMIResource)leftResource, (XMIResource)rightResource);
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID))
+				matchByID(leftResource, rightResource);
 
 			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(leftRoot.eResource().getContents(), rightRoot
