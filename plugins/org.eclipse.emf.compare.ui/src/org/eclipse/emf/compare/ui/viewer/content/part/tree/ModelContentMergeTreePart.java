@@ -87,7 +87,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public List<TreeItem> getVisibleElements() {
 		final TreeItem topItem = getTree().getTopItem();
-		// We won't go further down that the visible height of the tree,
+		// We won't go further down than the visible height of the tree,
 		// yet we will take the whole width into account when searching for elements.
 		final int treeHeight = getTree().getClientArea().height;
 		final int treeWidth = getTree().getBounds().width;
