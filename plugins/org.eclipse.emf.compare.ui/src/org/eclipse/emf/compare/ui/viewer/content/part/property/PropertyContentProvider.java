@@ -113,6 +113,11 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 		return elements;
 	}
 
+	/**
+	 * Returns the EObject which properties are currently displayed in the properties tab.
+	 * 
+	 * @return The EObject which properties are currently displayed in the properties tab.
+	 */
 	public EObject getInputEObject() {
 		return inputEObject;
 	}
