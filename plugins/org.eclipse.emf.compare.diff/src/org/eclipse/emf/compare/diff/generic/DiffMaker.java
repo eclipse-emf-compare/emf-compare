@@ -519,7 +519,6 @@ public class DiffMaker implements DiffEngine {
 		// we have to browse the model and create the corresponding operations
 		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
 		final Resource leftModel = matchRoot.getLeftElement().eResource();
-		final Resource rightModel = matchRoot.getRightElement().eResource();
 
 		// browsing the match model
 		doDiffDelegate(diffRoot, matchRoot);
