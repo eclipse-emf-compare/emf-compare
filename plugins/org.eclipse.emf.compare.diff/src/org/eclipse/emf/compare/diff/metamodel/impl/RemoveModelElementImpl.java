@@ -19,13 +19,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
 public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoveModelElementImpl() {
@@ -34,6 +35,7 @@ public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl imp
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

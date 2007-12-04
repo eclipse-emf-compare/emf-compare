@@ -33,9 +33,10 @@ public class MoveModelElementMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		/* FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
-		 * there's a good chance references (for a moved classifier) or attributes (for a
-		 * moved datatype) are lost. This needs to be double-checked.
+		/*
+		 * FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
+		 * there's a good chance references (for a moved classifier) or attributes (for a moved datatype) are
+		 * lost. This needs to be double-checked.
 		 */
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject leftTarget = theDiff.getLeftTarget();
@@ -66,9 +67,10 @@ public class MoveModelElementMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/* FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
-		 * there's a good chance references (for a moved classifier) or attributes (for a
-		 * moved datatype) are lost. This needs to be double-checked.
+		/*
+		 * FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
+		 * there's a good chance references (for a moved classifier) or attributes (for a moved datatype) are
+		 * lost. This needs to be double-checked.
 		 */
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject rightTarget = theDiff.getRightTarget();

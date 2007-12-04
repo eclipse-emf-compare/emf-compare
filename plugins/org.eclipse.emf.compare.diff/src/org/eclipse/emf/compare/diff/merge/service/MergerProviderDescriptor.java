@@ -160,26 +160,6 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
 	}
 
-	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
-	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
-	 * 
-	 * @param name
-	 *            Name of the attribute we seek the value of.
-	 * @param defaultValue
-	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
-	 *         set.
-	 */
-	private String getAttribute(String name, String defaultValue) {
-		final String value = element.getAttribute(name);
-		if (value != null)
-			return value;
-		if (defaultValue != null)
-			return defaultValue;
-		throw new IllegalArgumentException(EMFCompareDiffMessages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
-	}
-
 	/*
 	 * created as package visibility method to allow access from MergeFactory
 	 */
@@ -212,5 +192,26 @@ import org.eclipse.emf.compare.util.EngineConstants;
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;
+	}
+
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
+	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
+	 *         set.
+	 */
+	private String getAttribute(String name, String defaultValue) {
+		final String value = element.getAttribute(name);
+		if (value != null)
+			return value;
+		if (defaultValue != null)
+			return defaultValue;
+		throw new IllegalArgumentException(EMFCompareDiffMessages.getString(
+				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 }

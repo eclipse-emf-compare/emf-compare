@@ -142,7 +142,7 @@ public class DiffMaker implements DiffEngine {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none
 	 * exists, create one where the operation belongs to.
@@ -500,7 +500,7 @@ public class DiffMaker implements DiffEngine {
 			if (!isChild)
 				unMatchedElements.put(unMatchElement, isAncestor);
 		}
-		if (unMatchedElements.size() > 0) 
+		if (unMatchedElements.size() > 0)
 			processUnMatchedElements(diffRoot, leftModel, unMatchedElements);
 		return diffRoot;
 	}
@@ -594,9 +594,10 @@ public class DiffMaker implements DiffEngine {
 	 * @param leftModel
 	 *            {@link Resource} representing the left model.
 	 * @param unMatched
-	 * The MatchModel's {@link UnMatchElement}s.
+	 *            The MatchModel's {@link UnMatchElement}s.
 	 */
-	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel, List<UnMatchElement> unMatched) {
+	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel,
+			List<UnMatchElement> unMatched) {
 		for (UnMatchElement unMatchElement : unMatched) {
 			final EObject element = unMatchElement.getElement();
 			if (element.eResource() == leftModel) {
@@ -626,7 +627,8 @@ public class DiffMaker implements DiffEngine {
 	 * This will process the {@link #unMatchedElements unmatched elements} list and create the appropriate
 	 * {@link DiffElement}s.
 	 * <p>
-	 * This is called for three-way comparison. Clients can override this to alter the checks or add their own.
+	 * This is called for three-way comparison. Clients can override this to alter the checks or add their
+	 * own.
 	 * </p>
 	 * 
 	 * @param diffRoot
@@ -634,9 +636,10 @@ public class DiffMaker implements DiffEngine {
 	 * @param leftModel
 	 *            {@link Resource} representing the left model.
 	 * @param unMatched
-	 * The MatchModel's {@link UnMatchElement}s.
+	 *            The MatchModel's {@link UnMatchElement}s.
 	 */
-	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel, Map<UnMatchElement, Boolean> unMatched) {
+	protected void processUnMatchedElements(DiffGroup diffRoot, Resource leftModel,
+			Map<UnMatchElement, Boolean> unMatched) {
 		for (UnMatchElement unMatchElement : unMatched.keySet()) {
 			final boolean isConflicting = unMatched.get(unMatchElement);
 

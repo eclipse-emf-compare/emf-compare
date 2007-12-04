@@ -40,10 +40,11 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
-		/* FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely,
-		 * a deleted or remotely added datatype), we should merge its corresponding
-		 * DeleteModelElement (or RemoteAddModelElement) beforehand.
-		 * In the current state, we're doing a hard-link between the two models.
+		/*
+		 * FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely, a
+		 * deleted or remotely added datatype), we should merge its corresponding DeleteModelElement (or
+		 * RemoteAddModelElement) beforehand. In the current state, we're doing a hard-link between the two
+		 * models.
 		 */
 		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject origin = theDiff.getLeftElement();
@@ -64,10 +65,11 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/* FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely,
-		 * an added or remotely deleted datatype), we should merge its corresponding
-		 * AddModelElement (or RemoteDeleteModelElement) beforehand.
-		 * In the current state, we're doing a hard-link between the two models.
+		/*
+		 * FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely, an added
+		 * or remotely deleted datatype), we should merge its corresponding AddModelElement (or
+		 * RemoteDeleteModelElement) beforehand. In the current state, we're doing a hard-link between the two
+		 * models.
 		 */
 		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject target = theDiff.getRightElement();

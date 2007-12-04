@@ -42,9 +42,10 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/* FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an
-		 * EPackage containing an EDatatype T and an EClass with an attribute of type T),
-		 * hard-links are done between the two models.
+		/*
+		 * FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an EPackage
+		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
+		 * the two models.
 		 */
 		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
@@ -63,9 +64,10 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void undoInTarget() {
-		/* FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an
-		 * EPackage containing an EDatatype T and an EClass with an attribute of type T),
-		 * hard-links are done between the two models.
+		/*
+		 * FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an EPackage
+		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
+		 * the two models.
 		 */
 		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
 		// we should copy the element to the Origin one.

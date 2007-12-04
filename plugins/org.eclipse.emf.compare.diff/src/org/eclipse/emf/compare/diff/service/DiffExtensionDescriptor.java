@@ -97,7 +97,8 @@ public class DiffExtensionDescriptor {
 			return value;
 		if (defaultValue != null)
 			return defaultValue;
-		throw new IllegalArgumentException(EMFCompareDiffMessages.getString("Descriptor.MissingAttribute", name)); //$NON-NLS-1$
+		throw new IllegalArgumentException(EMFCompareDiffMessages.getString(
+				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 }

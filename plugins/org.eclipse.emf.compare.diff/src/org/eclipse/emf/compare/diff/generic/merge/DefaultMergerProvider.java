@@ -46,10 +46,10 @@ public class DefaultMergerProvider implements IMergerProvider {
 	 * class for that particular {@link DiffElement}.
 	 */
 	private Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergerTypes;
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.IMergerProvider#getMergers()
 	 */
 	public Map<Class<? extends DiffElement>, Class<? extends IMerger>> getMergers() {

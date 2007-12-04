@@ -208,7 +208,7 @@ public final class DiffService {
 					storeEngineDescriptor(desc);
 				}
 			}
-	
+
 			/*
 			 * Now parsing the diff extension extension point
 			 */

@@ -110,13 +110,13 @@ public final class MergeFactory {
 
 		if (resourceFileExtension == null)
 			resourceFileExtension = ALL_EXTENSIONS;
-		
+
 		final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergersMap;
 		if (EMFPlugin.IS_ECLIPSE_RUNNING)
 			mergersMap = getMergerTypes(resourceFileExtension);
 		else
 			mergersMap = MERGER_TYPES;
-		
+
 		// If we know the merger for this class, we return it
 		if (mergersMap.containsKey(element.getClass())) {
 			mergerClass = mergersMap.get(element.getClass());

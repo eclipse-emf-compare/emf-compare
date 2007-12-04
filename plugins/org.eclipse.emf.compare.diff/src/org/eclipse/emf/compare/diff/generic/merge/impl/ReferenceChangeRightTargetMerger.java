@@ -40,9 +40,10 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/* FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should
-		 * merge its corresponding AddModelElement (or RemoteDeleteModelElement) beforehand.
-		 * In the current state, we're doing a hard-link between the two models.
+		/*
+		 * FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should merge
+		 * its corresponding AddModelElement (or RemoteDeleteModelElement) beforehand. In the current state,
+		 * we're doing a hard-link between the two models.
 		 */
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
