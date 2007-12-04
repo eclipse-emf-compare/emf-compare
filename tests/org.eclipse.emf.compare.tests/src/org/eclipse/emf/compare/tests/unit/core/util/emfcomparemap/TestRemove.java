@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#remove(Object)} so that it behaves the same as its {@link HashMap}
- * counterpart.
+ * Tests the behavior of {@link EMFCompareMap#remove(Object)} so that it behaves the same as its
+ * {@link HashMap} counterpart.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -56,7 +56,8 @@ public class TestRemove extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#remove(Object)} on a non-empty map. Expects it to return the old value if present.
+	 * Tests {@link EMFCompareMap#remove(Object)} on a non-empty map. Expects it to return the old value if
+	 * present.
 	 */
 	public void testRemoveIfPresent() {
 		for (int i = 0; i < KEY_SET.length; i++) {

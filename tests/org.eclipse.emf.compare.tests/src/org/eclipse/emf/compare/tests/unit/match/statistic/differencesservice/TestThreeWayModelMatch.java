@@ -32,7 +32,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 // TODO testing : finish implementation of these tests
 /**
- * Tests the behavior of {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)} and {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}.
+ * Tests the behavior of
+ * {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
+ * and
+ * {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -46,7 +49,7 @@ public class TestThreeWayModelMatch extends TestCase {
 
 	/** This is the root of the ancestor model we'll use to test the matching process. */
 	private EObject testModel3;
-	
+
 	/**
 	 * Tests the behavior of
 	 * {@link DifferencesServices#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
@@ -137,7 +140,7 @@ public class TestThreeWayModelMatch extends TestCase {
 		testModel2 = null;
 		testModel3 = null;
 	}
-	
+
 	/**
 	 * This handles the modification of the given model.
 	 * <p>

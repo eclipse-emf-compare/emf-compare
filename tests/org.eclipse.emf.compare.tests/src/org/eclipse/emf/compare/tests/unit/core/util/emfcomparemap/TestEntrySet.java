@@ -16,13 +16,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of the {@link EMFCompareMap}'s entrySet and its iterator so that they behave the same as
- * their {@link HashMap} counterparts.
+ * Tests the behavior of the {@link EMFCompareMap}'s entrySet and its iterator so that they behave the same
+ * as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -53,8 +54,8 @@ public class TestEntrySet extends TestCase {
 	private String testedMethod;
 
 	/**
-	 * Tests the {@link EMFCompareMap}'s entry set. The set is expected to support the clear() operation and it
-	 * effectively empties the map.
+	 * Tests the {@link EMFCompareMap}'s entry set. The set is expected to support the clear() operation and
+	 * it effectively empties the map.
 	 */
 	public void testClear() {
 		testedMethod = "Clear()";
@@ -230,9 +231,9 @@ public class TestEntrySet extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link EMFCompareMap}'s entry set. The set is expected to support the remove(Object) operation and
-	 * this method is expected to effectively remove the given object from the map. Size of the map afterward
-	 * should have decreased by 1.
+	 * Tests the {@link EMFCompareMap}'s entry set. The set is expected to support the remove(Object)
+	 * operation and this method is expected to effectively remove the given object from the map. Size of the
+	 * map afterward should have decreased by 1.
 	 */
 	public void testRemoveViaSet() {
 		testedMethod = "Set's remove(Object)";

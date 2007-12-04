@@ -39,6 +39,7 @@ public class ModelUtilsTestSuite extends TestCase {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the ModelUtils behavior");
+		suite.addTestSuite(TestAttachResource.class);
 		suite.addTestSuite(TestGetModelsFrom.class);
 		suite.addTestSuite(TestLoadFromFile.class);
 		suite.addTestSuite(TestLoadFromInputStream.class);

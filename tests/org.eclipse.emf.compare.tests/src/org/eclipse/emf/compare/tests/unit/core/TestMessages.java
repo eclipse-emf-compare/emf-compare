@@ -87,9 +87,13 @@ public class TestMessages extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMessages#getString(String, Object...)} with valid keys.<p>If the System locale is configured for english language, expects the String associated to
-	 * the key in the properties file to be returned with all occurences of <code>&quot;{[0-9]*}&quot;</code>
-	 * replaced by the correct parameter if any. Otherwise, expects the key to have been found, and the parameters to be correctly substituted.</p>
+	 * Tests {@link EMFCompareMessages#getString(String, Object...)} with valid keys.
+	 * <p>
+	 * If the System locale is configured for english language, expects the String associated to the key in
+	 * the properties file to be returned with all occurences of <code>&quot;{[0-9]*}&quot;</code> replaced
+	 * by the correct parameter if any. Otherwise, expects the key to have been found, and the parameters to
+	 * be correctly substituted.
+	 * </p>
 	 */
 	public void testFormattedGetStringValidKey() {
 		for (int i = 0; i < messageParameters.length; i++) {
@@ -108,15 +112,20 @@ public class TestMessages extends TestCase {
 					}
 					if (Locale.getDefault().getLanguage().equalsIgnoreCase("en"))
 						assertEquals("Unexpected formatted String returned by getString(String, Object...).",
-								expectedResult, EMFCompareMessages.getString(parameterisableKeys[k], parameters));
+								expectedResult, EMFCompareMessages.getString(parameterisableKeys[k],
+										parameters));
 					else {
-						final String result = EMFCompareMessages.getString(parameterisableKeys[k], parameters);
-						assertFalse("Message class did not find an existing parameterisable key.", result.equals('!' + "parameterisableKeys[k]" + '!'));
+						final String result = EMFCompareMessages
+								.getString(parameterisableKeys[k], parameters);
+						assertFalse("Message class did not find an existing parameterisable key.", result
+								.equals('!' + "parameterisableKeys[k]" + '!'));
 						for (int l = 0; l < parameterCount; l++) {
 							if (parameters[l] != null)
-								assertTrue("Message class did not substitute the parameter in the result.", result.contains(parameters[l].toString()));
+								assertTrue("Message class did not substitute the parameter in the result.",
+										result.contains(parameters[l].toString()));
 							else
-								assertTrue("Message class did not substitute the parameter in the result.", result.contains("null"));
+								assertTrue("Message class did not substitute the parameter in the result.",
+										result.contains("null"));
 						}
 					}
 				}
@@ -125,14 +134,15 @@ public class TestMessages extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMessages#getString(String, Object...)} with valid keys and <code>null</code> as
-	 * formatting parameter. Expects the result to be the same as the {@link EMFCompareMessages#getString(String)}.
+	 * Tests {@link EMFCompareMessages#getString(String, Object...)} with valid keys and <code>null</code>
+	 * as formatting parameter. Expects the result to be the same as the
+	 * {@link EMFCompareMessages#getString(String)}.
 	 */
 	public void testFormattedGetStringValidKeyNullParameter() {
 		for (int i = 0; i < parameterisableKeys.length; i++) {
-			assertEquals("Unexpected formatted String returned by getString(String, Object...).", EMFCompareMessages
-					.getString(parameterisableKeys[i]), EMFCompareMessages.getString(parameterisableKeys[i],
-					(Object[])null));
+			assertEquals("Unexpected formatted String returned by getString(String, Object...).",
+					EMFCompareMessages.getString(parameterisableKeys[i]), EMFCompareMessages.getString(
+							parameterisableKeys[i], (Object[])null));
 		}
 	}
 
@@ -165,8 +175,8 @@ public class TestMessages extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMessages#getString(String)} with valid keys. Expects the String associated to the key in
-	 * the properties file to be returned.
+	 * Tests {@link EMFCompareMessages#getString(String)} with valid keys. Expects the String associated to
+	 * the key in the properties file to be returned.
 	 */
 	public void testUnFormattedGetStringValidKey() {
 		for (int i = 0; i < validKeys.length; i++) {
@@ -175,10 +185,12 @@ public class TestMessages extends TestCase {
 						EMFCompareMessages.getString(validKeys[i]));
 			else {
 				final String result = EMFCompareMessages.getString(validKeys[i]);
-				assertFalse("Message class did not find an existing parameterisable key.", result.equals('!' + "parameterisableKeys[k]" + '!'));
+				assertFalse("Message class did not find an existing parameterisable key.", result
+						.equals('!' + "parameterisableKeys[k]" + '!'));
 			}
 		}
 	}
+
 	/**
 	 * This will return a partial copy of an array.
 	 * 

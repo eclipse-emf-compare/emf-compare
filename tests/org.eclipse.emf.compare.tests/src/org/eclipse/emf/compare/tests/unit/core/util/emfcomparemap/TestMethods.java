@@ -17,8 +17,9 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#clear()}, {@link EMFCompareMap#clone()}, {@link EMFCompareMap#size()} and
- * {@link EMFCompareMap#isEmpty()} so that they behave the same as their {@link HashMap} counterparts.
+ * Tests the behavior of {@link EMFCompareMap#clear()}, {@link EMFCompareMap#clone()},
+ * {@link EMFCompareMap#size()} and {@link EMFCompareMap#isEmpty()} so that they behave the same as their
+ * {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -43,8 +44,8 @@ public class TestMethods extends TestCase {
 	private final EMFCompareMap testedMap = new EMFCompareMap();
 
 	/**
-	 * Tests {@link EMFCompareMap#clear()} with sizes growing from 0 to 12 elements. Expects the size to be reverted
-	 * back to 0 after each execution of clear().
+	 * Tests {@link EMFCompareMap#clear()} with sizes growing from 0 to 12 elements. Expects the size to be
+	 * reverted back to 0 after each execution of clear().
 	 */
 	public void testClear() {
 		try {
@@ -98,8 +99,8 @@ public class TestMethods extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#hashCode()} to ensure it always produces the same hash code for two maps that have
-	 * the same size and contain the same mappings.
+	 * Tests {@link EMFCompareMap#hashCode()} to ensure it always produces the same hash code for two maps
+	 * that have the same size and contain the same mappings.
 	 */
 	public void testHashCode() {
 		final EMFCompareMap map1 = new EMFCompareMap();

@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#get(Object)} and {@link EMFCompareMap#put(Object, Object)} so that they
- * behave the same as their {@link HashMap} counterparts.
+ * Tests the behavior of {@link EMFCompareMap#get(Object)} and {@link EMFCompareMap#put(Object, Object)} so
+ * that they behave the same as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -37,9 +37,10 @@ public class TestGetPut extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link EMFCompareMap#put(Object, Object)} on a non-empty map. Expects {@link EMFCompareMap#get(Object)} to
-	 * reflect the accurate mapping added and {@link EMFCompareMap#put(Object, Object)} to return the previous value
-	 * mapped to the given key or <code>null</code> if none.
+	 * Tests {@link EMFCompareMap#put(Object, Object)} on a non-empty map. Expects
+	 * {@link EMFCompareMap#get(Object)} to reflect the accurate mapping added and
+	 * {@link EMFCompareMap#put(Object, Object)} to return the previous value mapped to the given key or
+	 * <code>null</code> if none.
 	 */
 	public void testAlreadyStoredPut() {
 		EMFCompareMap map = null;
@@ -78,8 +79,9 @@ public class TestGetPut extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#put(Object, Object)} on an empty map. Expects {@link EMFCompareMap#get(Object)} to
-	 * reflect the accurate mapping added and {@link EMFCompareMap#put(Object, Object)} to return <code>null</code>.
+	 * Tests {@link EMFCompareMap#put(Object, Object)} on an empty map. Expects
+	 * {@link EMFCompareMap#get(Object)} to reflect the accurate mapping added and
+	 * {@link EMFCompareMap#put(Object, Object)} to return <code>null</code>.
 	 */
 	public void testEmptyMapPut() {
 		final EMFCompareMap map = new EMFCompareMap();
@@ -93,8 +95,8 @@ public class TestGetPut extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#get(Object)} on a non-empty map with not contained keys. Expects <code>null</code>
-	 * to be returned.
+	 * Tests {@link EMFCompareMap#get(Object)} on a non-empty map with not contained keys. Expects
+	 * <code>null</code> to be returned.
 	 */
 	public void testNotFoundGet() {
 		final EMFCompareMap map = new EMFCompareMap();
@@ -107,8 +109,8 @@ public class TestGetPut extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#get(Object)} on a non-empty map with valid keys. Expects the accurate value to be
-	 * returned.
+	 * Tests {@link EMFCompareMap#get(Object)} on a non-empty map with valid keys. Expects the accurate value
+	 * to be returned.
 	 */
 	public void testValidGet() {
 		final EMFCompareMap map = new EMFCompareMap();

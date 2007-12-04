@@ -220,7 +220,7 @@ public class TestLoadFromInputStream extends TestCase {
 		// Ignores the folder containing non-standard models (uml, gmfgen, ...)
 		if (folder.getName().contains("nonstd"))
 			return;
-		
+
 		final File[] subFolders = FileUtils.listDirectories(folder);
 		if (subFolders.length != 0) {
 			for (File aSubFolder : subFolders) {

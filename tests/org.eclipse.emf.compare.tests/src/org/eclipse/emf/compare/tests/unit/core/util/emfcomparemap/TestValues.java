@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of the {@link EMFCompareMap}'s values collection and its iterator so that they behave the
- * same as their {@link HashMap} counterparts.
+ * Tests the behavior of the {@link EMFCompareMap}'s values collection and its iterator so that they behave
+ * the same as their {@link HashMap} counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -178,8 +178,8 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected not to support the add()
-	 * operation.
+	 * Tests the {@link EMFCompareMap}'s values collection. The collection is expected not to support the
+	 * add() operation.
 	 */
 	public void testNoAddThroughCollection() {
 		final EMFCompareMap map = new EMFCompareMap();
@@ -262,9 +262,9 @@ public class TestValues extends TestCase {
 	}
 
 	/**
-	 * Tests the {@link EMFCompareMap}'s values collection's iterator. The iterator is expected to support the
-	 * remove(Object) operation and this method is expected to effectively remove the given object from the
-	 * map. Size of the map afterward should have decreased by 1.
+	 * Tests the {@link EMFCompareMap}'s values collection's iterator. The iterator is expected to support
+	 * the remove(Object) operation and this method is expected to effectively remove the given object from
+	 * the map. Size of the map afterward should have decreased by 1.
 	 */
 	public void testRemoveViaIterator() {
 		testedMethod = "Iterator's remove(Object)";

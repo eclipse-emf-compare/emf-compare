@@ -141,9 +141,8 @@ public class TestTwoWayContentMatch extends TestCase {
 				}
 
 				// Note : need to add 2 to the element count this none of the two roots has been counted yet
-				assertEquals(
-						"contentMatch() found shouldn't have found a match element.",
-						elementCount + 2, unmatchElementCount);
+				assertEquals("contentMatch() found shouldn't have found a match element.", elementCount + 2,
+						unmatchElementCount);
 
 				// We shouldn't find a single MatchElement
 				assertTrue("contentMatch() found a matched element in the compared objects", match

@@ -17,8 +17,9 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#containsKey(Object)} and {@link EMFCompareMap#containsValue(Object)} so that
- * they behave the same as their {@link HashMap} counterparts.
+ * Tests the behavior of {@link EMFCompareMap#containsKey(Object)} and
+ * {@link EMFCompareMap#containsValue(Object)} so that they behave the same as their {@link HashMap}
+ * counterparts.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -37,7 +38,8 @@ public class TestContainsKeyValue extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link EMFCompareMap#containsKey(Object)} on an empty map. Expects <code>False</code> to be returned.
+	 * Tests {@link EMFCompareMap#containsKey(Object)} on an empty map. Expects <code>False</code> to be
+	 * returned.
 	 */
 	public void testContainsKeyEmptyMap() {
 		final EMFCompareMap map = new EMFCompareMap();

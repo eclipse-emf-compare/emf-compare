@@ -17,9 +17,9 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#equals(Object)}. Two maps are equal if and only if they have the same
- * size and contain the same mappings. A map cannot be considered equal to anything that isn't an instance of
- * Map itself.
+ * Tests the behavior of {@link EMFCompareMap#equals(Object)}. Two maps are equal if and only if they have
+ * the same size and contain the same mappings. A map cannot be considered equal to anything that isn't an
+ * instance of Map itself.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */

@@ -121,7 +121,8 @@ public class TestNonRegressionModels extends TestCase {
 			final String testedDir = directory.getName().toUpperCase();
 			System.out.println(testedDir + "\n===============");
 			final List<EObject> inputModels = ModelUtils.getModelsFrom(directory, new ResourceSetImpl());
-			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir, new ResourceSetImpl());
+			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir,
+					new ResourceSetImpl());
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
 				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels.get(1),

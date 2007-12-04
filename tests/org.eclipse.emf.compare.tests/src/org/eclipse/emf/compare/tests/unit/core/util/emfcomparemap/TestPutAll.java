@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
- * Tests the behavior of {@link EMFCompareMap#putAll(Collection)} so that it behaves the same as its {@link HashMap}
- * counterpart.
+ * Tests the behavior of {@link EMFCompareMap#putAll(Collection)} so that it behaves the same as its
+ * {@link HashMap} counterpart.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -43,9 +43,9 @@ public class TestPutAll extends TestCase {
 			false, };
 
 	/**
-	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection with some keys
-	 * intersecting. Expects that all mappings from the source will be inserted in the target, replacing the
-	 * existing mapping if any.
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection with some
+	 * keys intersecting. Expects that all mappings from the source will be inserted in the target, replacing
+	 * the existing mapping if any.
 	 */
 	public void testPutAllIntersects() {
 		final EMFCompareMap map1 = new EMFCompareMap();
@@ -92,8 +92,8 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection without any key
-	 * intersection. Expects that all mappings from the source will be inserted in the target.
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with a non-empty collection without
+	 * any key intersection. Expects that all mappings from the source will be inserted in the target.
 	 */
 	public void testPutAllNoIntersects() {
 		final EMFCompareMap map1 = new EMFCompareMap();
@@ -123,8 +123,8 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with an empty collection. Expects the size to
-	 * stay <code>0</code>.
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with an empty collection. Expects the
+	 * size to stay <code>0</code>.
 	 */
 	public void testPutEmptyInEmpty() {
 		final EMFCompareMap target = new EMFCompareMap();
@@ -142,8 +142,8 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with an empty collection. Expects the size
-	 * and the mappings not to be altered.
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on a non-empty map with an empty collection. Expects the
+	 * size and the mappings not to be altered.
 	 */
 	public void testPutEmptyInNonEmpty() {
 		final EMFCompareMap target = new EMFCompareMap();
@@ -170,8 +170,8 @@ public class TestPutAll extends TestCase {
 	}
 
 	/**
-	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with a non-empty collection. Expects the size
-	 * and the mappings of the target to be equal to the source's.
+	 * Tests {@link EMFCompareMap#putAll(Collection)} on an empty map with a non-empty collection. Expects the
+	 * size and the mappings of the target to be equal to the source's.
 	 */
 	public void testPutNonEmptyInEmpty() {
 		final EMFCompareMap target = new EMFCompareMap();

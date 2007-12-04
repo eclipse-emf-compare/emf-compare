@@ -66,8 +66,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with illegal initial capacities and valid
-	 * load factors. Expects an {@link IllegalArgumentException} to be thrown.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with illegal initial capacities
+	 * and valid load factors. Expects an {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testIllegalCapacityValidLoadFactorConstructor() {
 		for (int invalidCapacity : INVALID_CAPACITY) {
@@ -84,8 +84,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with invalid initial capacities. Expects an
-	 * {@link IllegalArgumentException} to be thrown.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with invalid initial capacities. Expects
+	 * an {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testIllegalInitialCapacityConstructor() {
 		for (int invalidCapacity : INVALID_CAPACITY) {
@@ -99,8 +99,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a non-<code>null</code> map. Expects the
-	 * creation of a new map containing all the mappings from the given map.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a non-<code>null</code> map.
+	 * Expects the creation of a new map containing all the mappings from the given map.
 	 */
 	public void testMapConstructor() {
 		final EMFCompareMap map = new EMFCompareMap();
@@ -117,15 +117,15 @@ public class TestConstructors extends TestCase {
 					testMap.size());
 
 			for (int j = 0; j < i; j++) {
-				assertEquals("EMFCompareMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j], testMap
-						.get(KEY_SET[j]));
+				assertEquals("EMFCompareMap(Map)" + ' ' + "creates map with wrong mappings.", VALUE_SET[j],
+						testMap.get(KEY_SET[j]));
 			}
 		}
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a <code>null</code> map. Expects a
-	 * {@link NullPointerException} to be thrown.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(Map)} with a <code>null</code> map. Expects
+	 * a {@link NullPointerException} to be thrown.
 	 */
 	public void testNullMapConstructor() {
 		try {
@@ -137,8 +137,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and invalid
-	 * load factors. Expects an {@link IllegalArgumentException} to be thrown.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and
+	 * invalid load factors. Expects an {@link IllegalArgumentException} to be thrown.
 	 */
 	public void testValidCapacityInvalidLoadFactorConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
@@ -155,8 +155,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and load
-	 * factors. Expects an empty map to be created.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int, float)} with valid initial capacities and
+	 * load factors. Expects an empty map to be created.
 	 */
 	public void testValidCapacityValidLoadFactorConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
@@ -169,8 +169,8 @@ public class TestConstructors extends TestCase {
 	}
 
 	/**
-	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with valid initial capacities. Expects an empty map
-	 * to be created.
+	 * Tests the constructor {@link EMFCompareMap#EMFCompareMap(int)} with valid initial capacities. Expects
+	 * an empty map to be created.
 	 */
 	public void testValidInitialCapacityConstructor() {
 		for (int validCapacity : VALID_CAPACITY) {
