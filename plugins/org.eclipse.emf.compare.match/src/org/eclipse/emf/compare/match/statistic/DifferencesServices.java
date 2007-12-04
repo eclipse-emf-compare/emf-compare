@@ -261,6 +261,8 @@ public class DifferencesServices implements MatchEngine {
 			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID))
 				matchByID(leftObject, rightObject);
 			if (isSimilar(leftObject, rightObject)) {
+			    stillToFindFromModel1.clear();
+	            stillToFindFromModel2.clear();
 				final Match2Elements matchModelRoot = recursiveMappings(leftObject, rightObject, monitor);
 				redirectedAdd(root, MATCH_ELEMENT_NAME, matchModelRoot);
 				createSubMatchElements(matchModelRoot, new ArrayList<EObject>(stillToFindFromModel1),
@@ -459,42 +461,48 @@ public class DifferencesServices implements MatchEngine {
 	protected <T> T getOption(String key) throws ClassCastException {
 		return (T)options.get(key);
 	}
+	
+	/**
+     * This will lookup in the {@link #matchedByID} map and check if the two given objects have indeed been matched by their ID.
+     * 
+     * @param left
+     *            Left of the two objects to check.
+     * @param right
+     *            right of the two objects to check.
+     * @return <code>True</code> these objects haven't been matched by their ID,
+     *         <code>False</code> otherwise.
+     */
+    protected boolean haveDistinctID(EObject left, EObject right) throws FactoryException {
+        boolean result = false;
+        final StringBuilder leftKey = new StringBuilder();
+        leftKey.append(NameSimilarity.findName(left));
+        leftKey.append(left.hashCode());
+        final EObject matched = matchedByID.get(leftKey.toString());
+        // must be the same instance
+        if (matched != null)
+            result = matched != right;
+        return result;
+    }
 
 	/**
-	 * This will compare two objects to see if they have ID and in that case, if these IDs are distinct.
+	 * This will lookup in the {@link #matchedByXMIID} map and check if the two given objects have indeed been matched by their XMI ID.
 	 * 
 	 * @param left
-	 *            Left of the two objects to compare.
+	 *            Left of the two objects to check.
 	 * @param right
-	 *            right of the two objects to compare.
-	 * @return <code>True</code> if only one of the two objects has an ID or the two are distinct,
+	 *            right of the two objects to check.
+	 * @return <code>True</code> these objects haven't been matched by their XMI ID,
 	 *         <code>False</code> otherwise.
 	 */
-	protected boolean haveDistinctXMIID(EObject left, EObject right) {
+	protected boolean haveDistinctXMIID(EObject left, EObject right) throws FactoryException {
 		boolean result = false;
-		String item1ID = null;
-		String item2ID = null;
-		if (left.eResource() != null && left.eResource() instanceof XMIResource)
-			item1ID = ((XMIResource)left.eResource()).getID(left);
-		if (right.eResource() != null && right.eResource() instanceof XMIResource)
-			item2ID = ((XMIResource)right.eResource()).getID(right);
-		if (item1ID != null) {
-			result = !item1ID.equals(item2ID);
-		} else {
-			result = item2ID != null;
-		}
-		/*
-		 * Now checking the Ecore ID's
-		 */
-		if (left.eClass().getEIDAttribute() != null && right.eClass().getEIDAttribute() != null) {
-			final Object leftID = left.eGet(left.eClass().getEIDAttribute());
-			final Object rightID = right.eGet(right.eClass().getEIDAttribute());
-			if (leftID != null && rightID != null && leftID.equals(rightID))
-				result = false;
-			else
-				result = true;
-		}
-
+		final StringBuilder leftKey = new StringBuilder();
+		leftKey.append(NameSimilarity.findName(left));
+		leftKey.append(left.hashCode());
+		final EObject matched = matchedByXMIID.get(leftKey.toString());
+		// must be the same instance
+		if (matched != null)
+		    result = matched != right;
 		return result;
 	}
 
@@ -526,6 +534,8 @@ public class DifferencesServices implements MatchEngine {
 		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
 				&& obj1.eClass() != obj2.eClass()) {
 			similar = false;
+		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID) && haveDistinctID(obj1, obj2)) {
+		    similar = false;
 		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)
 				&& haveDistinctXMIID(obj1, obj2)) {
 			similar = false;
