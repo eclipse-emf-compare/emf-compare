@@ -52,7 +52,8 @@ public class XMIContentTypeDescriber implements ITextContentDescriber {
 				if (prefix[i] != xmlPrefixBytes[i])
 					result = INVALID;
 
-		// FIXME now need to look for xmi:version. char by char reading until 'x' is reached then tries to getBytes("xmi:version")?
+		// FIXME now need to look for xmi:version. char by char reading until 'x' is reached then tries to
+		// getBytes("xmi:version")?
 
 		return result;
 	}

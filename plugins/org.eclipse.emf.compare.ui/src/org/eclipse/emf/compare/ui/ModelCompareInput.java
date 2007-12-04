@@ -97,7 +97,7 @@ public class ModelCompareInput implements ICompareInput {
 		}
 		fireCompareInputChanged();
 	}
-	
+
 	/**
 	 * Copies a list of {@link DiffElement}s or {@link DiffGroup}s in the given direction.
 	 * 
@@ -274,7 +274,7 @@ public class ModelCompareInput implements ICompareInput {
 	protected void doCopy(DiffElement element, boolean leftToRight) {
 		new MergeService().merge(element, leftToRight);
 	}
-	
+
 	/**
 	 * Applies the changes implied by a list of {@link DiffElement} in the direction specified by
 	 * <code>leftToRight</code>.
@@ -288,11 +288,22 @@ public class ModelCompareInput implements ICompareInput {
 	protected void doCopy(List<DiffElement> elements, boolean leftToRight) {
 		new MergeService().merge(elements, leftToRight);
 	}
-	
+
+	/**
+	 * Notifies all {@link ICompareInputChangeListener listeners} registered for this
+	 * {@link ModelCompareInput input} that a change occured.
+	 */
+	protected void fireCompareInputChanged() {
+		for (ICompareInputChangeListener listener : inputChangeListeners) {
+			listener.compareInputChanged(this);
+		}
+	}
+
 	/**
 	 * Returns all the differences contained by a given {@link DiffGroup}.
+	 * 
 	 * @param group
-	 * DiffGroup which we seek the subDifferences of.
+	 *            DiffGroup which we seek the subDifferences of.
 	 * @return List of all the differences contained by <code>group</code>.
 	 */
 	protected List<DiffElement> getContainedDifferences(DiffGroup group) {
@@ -304,15 +315,5 @@ public class ModelCompareInput implements ICompareInput {
 				result.add((DiffElement)subDiff);
 		}
 		return result;
-	}
-
-	/**
-	 * Notifies all {@link ICompareInputChangeListener listeners} registered for this
-	 * {@link ModelCompareInput input} that a change occured.
-	 */
-	protected void fireCompareInputChanged() {
-		for (ICompareInputChangeListener listener : inputChangeListeners) {
-			listener.compareInputChanged(this);
-		}
 	}
 }

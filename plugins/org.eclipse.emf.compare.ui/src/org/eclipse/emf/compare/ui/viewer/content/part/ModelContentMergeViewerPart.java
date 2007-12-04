@@ -240,15 +240,6 @@ public class ModelContentMergeViewerPart {
 	}
 
 	/**
-	 * Returns the properties part of this viewer part.
-	 * 
-	 * @return The properties part of this viewer part.
-	 */
-	public ModelContentMergePropertyPart getPropertyPart() {
-		return properties;
-	}
-
-	/**
 	 * Returns the height of the tab control's header.
 	 * 
 	 * @return The height of the tab control's header.
@@ -263,6 +254,15 @@ public class ModelContentMergeViewerPart {
 			throw new IllegalStateException(INVALID_TAB);
 		}
 		return headerHeight;
+	}
+
+	/**
+	 * Returns the properties part of this viewer part.
+	 * 
+	 * @return The properties part of this viewer part.
+	 */
+	public ModelContentMergePropertyPart getPropertyPart() {
+		return properties;
 	}
 
 	/**
@@ -293,6 +293,33 @@ public class ModelContentMergeViewerPart {
 			}
 		}
 		return width;
+	}
+
+	/**
+	 * Retrieve the list of tree items data corresponding to the given {@link DiffElement}s.
+	 * 
+	 * @param diffs
+	 *            {@link DiffElement}s we seek the tree items for.
+	 * @return The list of tree items corresponding to the given {@link DiffElement}s.
+	 */
+	public List<EObject> getTreeItemsDataFor(List<DiffElement> diffs) {
+		final List<EObject> result = new ArrayList<EObject>(diffs.size());
+		for (DiffElement diff : diffs) {
+			if (partSide == EMFCompareConstants.RIGHT) {
+				final EObject data = EMFCompareEObjectUtils.getRightElement(diff);
+				if (data != null && !result.contains(data))
+					result.add(data);
+			} else if (partSide == EMFCompareConstants.LEFT) {
+				final EObject data = EMFCompareEObjectUtils.getLeftElement(diff);
+				if (data != null && !result.contains(data))
+					result.add(data);
+			} else if (partSide == EMFCompareConstants.ANCESTOR) {
+				final EObject data = EMFCompareEObjectUtils.getRightElement(diff);
+				if (data != null && !result.contains(data))
+					result.add(data);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -359,9 +386,10 @@ public class ModelContentMergeViewerPart {
 		diffs.add(diff);
 		navigateToDiff(diffs);
 	}
-	
+
 	/**
-	 * Ensures the first item of the given list of {@link DiffElement}s is visible, and sets the selection of the tree to all those items.
+	 * Ensures the first item of the given list of {@link DiffElement}s is visible, and sets the selection of
+	 * the tree to all those items.
 	 * 
 	 * @param diffs
 	 *            Items to select.
@@ -391,35 +419,11 @@ public class ModelContentMergeViewerPart {
 		} else {
 			throw new IllegalStateException(INVALID_TAB);
 		}
-		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION, diffs.get(0));
+		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
+				diffs.get(0));
 		parentViewer.updateCenter();
 		// We'll assume the tree has been expanded or collapsed during the process
 		expanded = true;
-	}
-	
-	/**
-	 * Retrieve the list of tree items data corresponding to the given {@link DiffElement}s.
-	 * @param diffs {@link DiffElement}s we seek the tree items for.
-	 * @return The list of tree items corresponding to the given {@link DiffElement}s.
-	 */
-	public List<EObject> getTreeItemsDataFor(List<DiffElement> diffs) {
-		final List<EObject> result = new ArrayList<EObject>(diffs.size());
-		for (DiffElement diff : diffs) {
-			if (partSide == EMFCompareConstants.RIGHT) {
-				final EObject data = EMFCompareEObjectUtils.getRightElement(diff);
-				if (data != null && !result.contains(data))
-					result.add(data);
-			} else if (partSide == EMFCompareConstants.LEFT) {
-				final EObject data = EMFCompareEObjectUtils.getLeftElement(diff);
-				if (data != null && !result.contains(data))
-					result.add(data);
-			} else if (partSide == EMFCompareConstants.ANCESTOR) {
-				final EObject data = EMFCompareEObjectUtils.getRightElement(diff);
-				if (data != null && !result.contains(data))
-					result.add(data);
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -804,8 +808,8 @@ public class ModelContentMergeViewerPart {
 				if (!treeItem.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))
 						|| diff instanceof AddModelElement || diff instanceof RemoteRemoveModelElement) {
 					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width + treeBounds.x, rectangleY
-							+ rectangleHeight);
+					event.gc.drawLine(rectangleX, rectangleY + rectangleHeight, treeBounds.width
+							+ treeBounds.x, rectangleY + rectangleHeight);
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
 					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,

@@ -273,7 +273,9 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 
 			image = new Label(parent, SWT.NONE);
 			image.setImage(getHelpIcon());
-			image.setToolTipText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
+			image
+					.setToolTipText(EMFCompareUIMessages
+							.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 			gd = new GridData();
 			gd.horizontalSpan = numColumns - 1;
 			image.setLayoutData(gd);

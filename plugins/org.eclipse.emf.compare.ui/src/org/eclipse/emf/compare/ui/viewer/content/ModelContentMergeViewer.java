@@ -1153,7 +1153,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = table3.getHorizontalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null
+						&& !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
 			}
@@ -1192,7 +1193,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = table3.getVerticalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null
+						&& !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
 			}
@@ -1231,7 +1233,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = tree3.getHorizontalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null && !getControl().isDisposed()) {
+				if (SWT.getPlatform().equals(MAC_SWT_PLATFORM) && getControl() != null
+						&& !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
 			}

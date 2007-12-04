@@ -234,7 +234,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		public ConfigurationPropertyListener() {
 			// no action is to be taken here
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 * 

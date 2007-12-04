@@ -153,6 +153,19 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	}
 
 	/**
+	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's
+	 * selection to this list.
+	 * 
+	 * @param items
+	 *            Items to make visible.
+	 */
+	public void showItem(List<EObject> items) {
+		if (items.size() > 0) {
+			setSelection(new StructuredSelection(items), true);
+		}
+	}
+
+	/**
 	 * Ensures that the given item is visible in the tree.
 	 * 
 	 * @param item
@@ -164,19 +177,6 @@ public class ModelContentMergeTreePart extends TreeViewer {
 				super.showItem((TreeItem)item);
 			}
 			setSelection(new StructuredSelection(item), true);
-		}
-	}
-
-	/**
-	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's
-	 * selection to this list.
-	 * 
-	 * @param items
-	 *            Items to make visible.
-	 */
-	public void showItem(List<EObject> items) {
-		if (items.size() > 0) {
-			setSelection(new StructuredSelection(items), true);
 		}
 	}
 
