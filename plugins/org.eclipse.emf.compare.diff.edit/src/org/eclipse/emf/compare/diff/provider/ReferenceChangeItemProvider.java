@@ -28,8 +28,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class ReferenceChangeItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -41,68 +42,6 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 */
 	public ReferenceChangeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-	}
-
-	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	public List getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
-
-			addReferencePropertyDescriptor(object);
-			addRightElementPropertyDescriptor(object);
-			addLeftElementPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Reference feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	protected void addReferencePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_reference_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE, true,
-				false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Element feature.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_rightElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT,
-				true, false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Element feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_leftElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT,
-				true, false, true, null, null, null));
 	}
 
 	/**
@@ -127,8 +66,35 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	public List getPropertyDescriptors(Object object) {
+		if (itemPropertyDescriptors == null) {
+			super.getPropertyDescriptors(object);
+
+			addReferencePropertyDescriptor(object);
+			addRightElementPropertyDescriptor(object);
+			addLeftElementPropertyDescriptor(object);
+		}
+		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
+	}
+
+	/**
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getText(Object object) {
@@ -136,10 +102,10 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void notifyChanged(Notification notification) {
@@ -148,23 +114,58 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Element feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addLeftElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_leftElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Reference feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addReferencePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_reference_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE, true,
+				false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRightElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ReferenceChange_rightElement_feature"), getString(
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature",
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }

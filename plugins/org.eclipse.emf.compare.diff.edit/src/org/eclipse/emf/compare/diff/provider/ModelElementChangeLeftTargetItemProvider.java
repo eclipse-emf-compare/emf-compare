@@ -25,9 +25,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
@@ -40,6 +41,16 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 */
 	public ModelElementChangeLeftTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * This returns ModelElementChangeLeftTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChangeLeftTarget"));
 	}
 
 	/**
@@ -60,21 +71,37 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ModelElementChangeLeftTarget_rightParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ModelElementChangeLeftTarget_rightParent_feature",
-						"_UI_ModelElementChangeLeftTarget_type"),
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, true, false, true, null,
-				null, null));
+	@Override
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
+	}
+
+	/**
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String getText(Object object) {
+		return getString("_UI_ModelElementChangeLeftTarget_type");
+	}
+
+	/**
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public void notifyChanged(Notification notification) {
+		updateChildren(notification);
+		super.notifyChanged(notification);
 	}
 
 	/**
@@ -96,58 +123,32 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	}
 
 	/**
-	 * This returns ModelElementChangeLeftTarget.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
-	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChangeLeftTarget"));
+	@SuppressWarnings("unchecked")
+	protected void addRightParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ModelElementChangeLeftTarget_rightParent_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_ModelElementChangeLeftTarget_rightParent_feature",
+						"_UI_ModelElementChangeLeftTarget_type"),
+				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, true, false, true, null,
+				null, null));
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getText(Object object) {
-		return getString("_UI_ModelElementChangeLeftTarget_type");
-	}
-
-	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
-		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }

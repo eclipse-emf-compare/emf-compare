@@ -28,8 +28,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateModelElementItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -41,57 +42,6 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 */
 	public UpdateModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
-	}
-
-	/**
-	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	public List getPropertyDescriptors(Object object) {
-		if (itemPropertyDescriptors == null) {
-			super.getPropertyDescriptors(object);
-
-			addRightElementPropertyDescriptor(object);
-			addLeftElementPropertyDescriptor(object);
-		}
-		return itemPropertyDescriptors;
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Element feature.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected void addRightElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UpdateModelElement_rightElement_feature"),
-						getString("_UI_PropertyDescriptor_description",
-								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
-						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
-						null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Element feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	protected void addLeftElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_UpdateModelElement_leftElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
-						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
-						null, null));
 	}
 
 	/**
@@ -116,8 +66,34 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	public List getPropertyDescriptors(Object object) {
+		if (itemPropertyDescriptors == null) {
+			super.getPropertyDescriptors(object);
+
+			addRightElementPropertyDescriptor(object);
+			addLeftElementPropertyDescriptor(object);
+		}
+		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
+	}
+
+	/**
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getText(Object object) {
@@ -125,10 +101,10 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void notifyChanged(Notification notification) {
@@ -137,23 +113,48 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Element feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addLeftElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(), getResourceLocator(),
+						getString("_UI_UpdateModelElement_leftElement_feature"), getString(
+								"_UI_PropertyDescriptor_description",
+								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
+						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
+						null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRightElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_UpdateModelElement_rightElement_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
+						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
+						null, null));
+	}
+
+	/**
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }

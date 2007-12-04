@@ -28,9 +28,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 @SuppressWarnings("nls")
@@ -43,6 +44,16 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 */
 	public ConflictingDiffElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * This returns ConflictingDiffElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object getImage(Object object) {
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictingDiffElement"));
 	}
 
 	/**
@@ -64,66 +75,14 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addLeftParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ConflictingDiffElement_leftParent_feature", "_UI_ConflictingDiffElement_type"),
-				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, true, false, true, null, null,
-				null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addRightParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ConflictingDiffElement_rightParent_feature", "_UI_ConflictingDiffElement_type"),
-				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, true, false, true, null, null,
-				null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Origin Element feature.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	protected void addOriginElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_ConflictingDiffElement_originElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_ConflictingDiffElement_originElement_feature",
-								"_UI_ConflictingDiffElement_type"),
-						DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true,
-						null, null, null));
-	}
-
-	/**
-	 * This returns ConflictingDiffElement.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
-	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictingDiffElement"));
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
 	}
 
 	/**
@@ -144,10 +103,10 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -157,25 +116,67 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addLeftParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_ConflictingDiffElement_leftParent_feature", "_UI_ConflictingDiffElement_type"),
+				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, true, false, true, null, null,
+				null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addOriginElementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(), getResourceLocator(),
+						getString("_UI_ConflictingDiffElement_originElement_feature"), getString(
+								"_UI_PropertyDescriptor_description",
+								"_UI_ConflictingDiffElement_originElement_feature",
+								"_UI_ConflictingDiffElement_type"),
+						DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true,
+						null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	protected void addRightParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString(
+						"_UI_PropertyDescriptor_description",
+						"_UI_ConflictingDiffElement_rightParent_feature", "_UI_ConflictingDiffElement_type"),
+				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, true, false, true, null, null,
+				null));
+	}
+
+	/**
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }

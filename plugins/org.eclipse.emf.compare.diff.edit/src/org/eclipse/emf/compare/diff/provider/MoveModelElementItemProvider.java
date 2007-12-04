@@ -31,8 +31,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -44,6 +45,27 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 */
 	public MoveModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * This returns MoveModelElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public Object getImage(Object object) {
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
+		if (labelImage != null) {
+			List images = new ArrayList(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement"));
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement");
+		}
+
+		return labelImage;
 	}
 
 	/**
@@ -60,6 +82,45 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 			addRightTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
+	}
+
+	/**
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public String getText(Object object) {
+		MoveModelElement moveOp = (MoveModelElement)object;
+		try {
+			return getString("_UI_MoveModelElement_type", new Object[] {
+					NameSimilarity.findName(moveOp.getLeftElement()),
+					NameSimilarity.findName(moveOp.getLeftTarget()),
+					NameSimilarity.findName(moveOp.getRightTarget())});
+		} catch (FactoryException e) {
+			return getString("_UI_MoveModelElement_type");
+		}
+	}
+
+	/**
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void notifyChanged(Notification notification) {
+		updateChildren(notification);
+		super.notifyChanged(notification);
 	}
 
 	/**
@@ -93,73 +154,13 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	}
 
 	/**
-	 * This returns MoveModelElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated NOT
-	 */
-	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
-
-		if (labelImage != null) {
-			List images = new ArrayList(2);
-			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement"));
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement");
-		}
-
-		return labelImage;
-	}
-
-	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated NOT
-	 */
-	public String getText(Object object) {
-		MoveModelElement moveOp = (MoveModelElement)object;
-		try {
-			return getString("_UI_MoveModelElement_type", new Object[] {
-					NameSimilarity.findName(moveOp.getLeftElement()),
-					NameSimilarity.findName(moveOp.getLeftTarget()),
-					NameSimilarity.findName(moveOp.getRightTarget())});
-		} catch (FactoryException e) {
-			return getString("_UI_MoveModelElement_type");
-		}
-	}
-
-	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
-		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }

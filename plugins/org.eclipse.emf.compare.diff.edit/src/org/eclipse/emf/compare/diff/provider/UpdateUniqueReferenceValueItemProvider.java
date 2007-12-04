@@ -33,9 +33,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -47,6 +48,27 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 */
 	public UpdateUniqueReferenceValueItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
+	}
+
+	/**
+	 * This returns UpdateUniqueReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public Object getImage(Object object) {
+		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
+				.getAttributeChange_Attribute(), adapterFactory.getClass());
+
+		if (labelImage != null) {
+			List images = new ArrayList(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue"));
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue");
+		}
+
+		return labelImage;
 	}
 
 	/**
@@ -63,6 +85,50 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 			addRightTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ResourceLocator getResourceLocator() {
+		return DiffEditPlugin.INSTANCE;
+	}
+
+	/**
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public String getText(Object object) {
+		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
+		try {
+			final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
+			final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
+			if (updateRef.eContainer() instanceof ConflictingDiffElement)
+				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {
+						NameSimilarity.findName(updateRef.getReference()),
+						NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
+			return getString(
+					"_UI_UpdateUniqueReferenceValue_type", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(updateRef.getLeftElement()), //$NON-NLS-1$
+							NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
+		} catch (FactoryException e) {
+			return getString("_UI_UpdateUniqueReferenceValue_type"); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void notifyChanged(Notification notification) {
+		updateChildren(notification);
+		super.notifyChanged(notification);
 	}
 
 	/**
@@ -100,78 +166,13 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This returns UpdateUniqueReferenceValue.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated NOT
-	 */
-	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
-
-		if (labelImage != null) {
-			List images = new ArrayList(2);
-			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue"));
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue");
-		}
-
-		return labelImage;
-	}
-
-	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated NOT
-	 */
-	public String getText(Object object) {
-		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
-		try {
-			final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
-			final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
-			if (updateRef.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {
-						NameSimilarity.findName(updateRef.getReference()),
-						NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
-			return getString(
-					"_UI_UpdateUniqueReferenceValue_type", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(updateRef.getLeftElement()), //$NON-NLS-1$
-							NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
-		} catch (FactoryException e) {
-			return getString("_UI_UpdateUniqueReferenceValue_type"); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void notifyChanged(Notification notification) {
-		updateChildren(notification);
-		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
-	}
-
-	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	public ResourceLocator getResourceLocator() {
-		return DiffEditPlugin.INSTANCE;
 	}
 
 }
