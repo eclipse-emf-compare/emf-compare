@@ -143,7 +143,7 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public List<DiffElement> getDiffAsList() {
 		final List<DiffElement> diffList = new ArrayList<DiffElement>();
-		// TODO Is ordering still needed? check for perfs
+		// ordering is needed in order to merge modelElement diffs before references change
 		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
 		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
