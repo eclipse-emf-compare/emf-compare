@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: UMLAssociationDiffImpl.java,v 1.2 2007/10/15 14:51:15 lgoubet Exp $
+ * $Id: UMLAssociationDiffImpl.java,v 1.3 2007/12/04 13:14:50 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -34,42 +34,31 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>UML Association Diff</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>UML Association Diff</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#getProperties <em>Properties</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#isIsNavigable <em>Is Navigable</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#getContainerPackage <em>Container Package</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#getProperties <em>Properties</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#isIsNavigable <em>Is Navigable</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.UMLAssociationDiffImpl#getContainerPackage <em>Container Package</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl implements UMLAssociationDiff {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final String copyright = "\n Copyright (c) 2006, 2007 Obeo.\n All rights reserved. This program and the accompanying materials\n are made available under the terms of the Eclipse Public License v1.0\n which accompanies this distribution, and is available at\n http://www.eclipse.org/legal/epl-v10.html\n \n Contributors:\n     Obeo - initial API and implementation\n";
 
 	/**
-	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getProperties()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<EObject> properties;
-
-	/**
-	 * The default value of the '{@link #isIsNavigable() <em>Is Navigable</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isIsNavigable() <em>Is Navigable</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isIsNavigable()
 	 * @generated
 	 * @ordered
@@ -77,19 +66,9 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	protected static final boolean IS_NAVIGABLE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsNavigable() <em>Is Navigable</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isIsNavigable()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean isNavigable = IS_NAVIGABLE_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getContainerPackage() <em>Container Package</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getContainerPackage() <em>Container Package</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getContainerPackage()
 	 * @generated
 	 * @ordered
@@ -97,8 +76,28 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	protected EObject containerPackage;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #isIsNavigable() <em>Is Navigable</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isIsNavigable()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean isNavigable = IS_NAVIGABLE_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getProperties() <em>Properties</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getProperties()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<EObject> properties;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UMLAssociationDiffImpl() {
@@ -106,68 +105,8 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return DiffExtensionPackage.Literals.UML_ASSOCIATION_DIFF;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<EObject> getProperties() {
-		if (properties == null) {
-			properties = new EObjectResolvingEList<EObject>(EObject.class, this, DiffExtensionPackage.UML_ASSOCIATION_DIFF__PROPERTIES);
-		}
-		return properties;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isIsNavigable() {
-		return isNavigable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setIsNavigable(boolean newIsNavigable) {
-		boolean oldIsNavigable = isNavigable;
-		isNavigable = newIsNavigable;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.UML_ASSOCIATION_DIFF__IS_NAVIGABLE, oldIsNavigable, isNavigable));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject getContainerPackage() {
-		if (containerPackage != null && containerPackage.eIsProxy()) {
-			InternalEObject oldContainerPackage = (InternalEObject)containerPackage;
-			containerPackage = eResolveProxy(oldContainerPackage);
-			if (containerPackage != oldContainerPackage) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE, oldContainerPackage, containerPackage));
-			}
-		}
-		return containerPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetContainerPackage() {
@@ -175,20 +114,8 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setContainerPackage(EObject newContainerPackage) {
-		EObject oldContainerPackage = containerPackage;
-		containerPackage = newContainerPackage;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE, oldContainerPackage, containerPackage));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -199,15 +126,34 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__IS_NAVIGABLE:
 				return isIsNavigable() ? Boolean.TRUE : Boolean.FALSE;
 			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE:
-				if (resolve) return getContainerPackage();
+				if (resolve)
+					return getContainerPackage();
 				return basicGetContainerPackage();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__PROPERTIES:
+				return properties != null && !properties.isEmpty();
+			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__IS_NAVIGABLE:
+				return isNavigable != IS_NAVIGABLE_EDEFAULT;
+			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE:
+				return containerPackage != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -229,8 +175,8 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -250,31 +196,82 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__PROPERTIES:
-				return properties != null && !properties.isEmpty();
-			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__IS_NAVIGABLE:
-				return isNavigable != IS_NAVIGABLE_EDEFAULT;
-			case DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE:
-				return containerPackage != null;
+	public EObject getContainerPackage() {
+		if (containerPackage != null && containerPackage.eIsProxy()) {
+			InternalEObject oldContainerPackage = (InternalEObject)containerPackage;
+			containerPackage = eResolveProxy(oldContainerPackage);
+			if (containerPackage != oldContainerPackage) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE,
+							oldContainerPackage, containerPackage));
+			}
 		}
-		return super.eIsSet(featureID);
+		return containerPackage;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EList<EObject> getProperties() {
+		if (properties == null) {
+			properties = new EObjectResolvingEList<EObject>(EObject.class, this,
+					DiffExtensionPackage.UML_ASSOCIATION_DIFF__PROPERTIES);
+		}
+		return properties;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isIsNavigable() {
+		return isNavigable;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setContainerPackage(EObject newContainerPackage) {
+		EObject oldContainerPackage = containerPackage;
+		containerPackage = newContainerPackage;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffExtensionPackage.UML_ASSOCIATION_DIFF__CONTAINER_PACKAGE, oldContainerPackage,
+					containerPackage));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setIsNavigable(boolean newIsNavigable) {
+		boolean oldIsNavigable = isNavigable;
+		isNavigable = newIsNavigable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DiffExtensionPackage.UML_ASSOCIATION_DIFF__IS_NAVIGABLE, oldIsNavigable, isNavigable));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (isNavigable: ");
@@ -283,4 +280,14 @@ public abstract class UMLAssociationDiffImpl extends AbstractDiffExtensionImpl i
 		return result.toString();
 	}
 
-} //UMLAssociationDiffImpl
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return DiffExtensionPackage.Literals.UML_ASSOCIATION_DIFF;
+	}
+
+} // UMLAssociationDiffImpl

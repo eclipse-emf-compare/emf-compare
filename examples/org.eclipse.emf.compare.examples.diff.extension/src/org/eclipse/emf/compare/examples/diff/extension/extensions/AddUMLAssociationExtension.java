@@ -36,7 +36,35 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getImage()
+	 */
+	@Override
+	public Object getImage() {
+		final Object result = DiffExtensionPlugin.INSTANCE.getBundleImage("icons/obj16/addAssociation.gif"); //$NON-NLS-1$
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getText()
+	 */
+	@Override
+	public String getText() {
+		String result = ""; //$NON-NLS-1$
+		if (isNavigable) {
+			// TODOCBR use Messages class in root package to externalize this
+			result += "Navigable UML Association has been added";
+		} else {
+			result += "UML Association has been added";
+		}
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#visit(org.eclipse.emf.compare.diff.metamodel.DiffModel)
 	 */
 	@Override
@@ -74,9 +102,10 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 							final Iterator diffIt = element.eContainer().eAllContents();
 							while (diffIt.hasNext()) {
 								final EObject childElem = (EObject)diffIt.next();
-								if (childElem instanceof AddModelElement && ((AddModelElement)childElem).getRightElement() == member)
+								if (childElem instanceof AddModelElement
+										&& ((AddModelElement)childElem).getRightElement() == member)
 									getHideElements().add(childElem);
-									getProperties().add(childElem);
+								getProperties().add(childElem);
 							}
 						}
 						if (isNavigable) {
@@ -99,7 +128,9 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 
 	/**
 	 * TODOCBR comment.
-	 * @param element comment.
+	 * 
+	 * @param element
+	 *            comment.
 	 */
 	private void copyAssociationData(AddModelElement element) {
 		setLeftParent(element.getLeftParent());
@@ -108,39 +139,13 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 
 	/**
 	 * TODOCBR comment.
-	 * @param rightElement comment.
+	 * 
+	 * @param rightElement
+	 *            comment.
 	 * @return comment.
 	 */
 	// TODOCBR name shadowing
 	private boolean isAssociation(EObject rightElement) {
 		return rightElement.eClass().getName().equals("Association"); //$NON-NLS-1$
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getImage()
-	 */
-	@Override
-	public Object getImage() {
-		final Object result = DiffExtensionPlugin.INSTANCE.getBundleImage("icons/obj16/addAssociation.gif"); //$NON-NLS-1$
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getText()
-	 */
-	@Override
-	public String getText() {
-		String result = ""; //$NON-NLS-1$
-		if (isNavigable) {
-			// TODOCBR use Messages class in root package to externalize this
-			result += "Navigable UML Association has been added";
-		} else {
-			result += "UML Association has been added";
-		}
-		return result;
 	}
 }

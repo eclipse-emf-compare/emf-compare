@@ -38,9 +38,7 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 	public static final DiffExtensionPlugin INSTANCE = new DiffExtensionPlugin();
 
 	/**
-	 * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
+	 * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 */
 	static Implementation plugin;
 
@@ -48,8 +46,27 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 	 * Create the instance.
 	 */
 	public DiffExtensionPlugin() {
-		super(new ResourceLocator[] { EcoreEditPlugin.INSTANCE,
-				MatchEditPlugin.INSTANCE, });
+		super(new ResourceLocator[] {EcoreEditPlugin.INSTANCE, MatchEditPlugin.INSTANCE, });
+	}
+
+	/**
+	 * Returns the singleton instance of the Eclipse plugin.
+	 * 
+	 * @return the singleton instance.
+	 */
+	public static Implementation getPlugin() {
+		return plugin;
+	}
+
+	/**
+	 * TODOCBR comment.
+	 * 
+	 * @param path
+	 *            comment.
+	 * @return comment.
+	 */
+	public Object getBundleImage(String path) {
+		return plugin.getBundleImage(path);
 	}
 
 	/**
@@ -63,21 +80,12 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 	}
 
 	/**
-	 * Returns the singleton instance of the Eclipse plugin.
-	 * 
-	 * @return the singleton instance.
-	 */
-	public static Implementation getPlugin() {
-		return plugin;
-	}
-
-	/**
 	 * The actual implementation of the Eclipse <b>Plugin</b>.
 	 */
 	public static class Implementation extends EclipsePlugin {
 		/** TODOCBR comment. */
 		private Map<String, Object> imageMap = new EMFCompareMap<String, Object>();
-		
+
 		/**
 		 * Creates an instance.
 		 */
@@ -91,7 +99,9 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 
 		/**
 		 * TODOCBR comment.
-		 * @param path comment.
+		 * 
+		 * @param path
+		 *            comment.
 		 * @return comment.
 		 */
 		public ImageDescriptor findImageDescriptor(String path) {
@@ -103,7 +113,9 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 
 		/**
 		 * TODOCBR comment.
-		 * @param path comment.
+		 * 
+		 * @param path
+		 *            comment.
 		 * @return comment.
 		 */
 		public Object getBundleImage(String path) {
@@ -117,7 +129,7 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 
 		/**
 		 * {@inheritDoc}
-		 *
+		 * 
 		 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 		 */
 		@Override
@@ -131,15 +143,6 @@ public final class DiffExtensionPlugin extends EMFPlugin {
 				image.dispose();
 			}
 		}
-	}
-
-	/**
-	 * TODOCBR comment.
-	 * @param path comment.
-	 * @return comment.
-	 */
-	public Object getBundleImage(String path) {
-		return plugin.getBundleImage(path);
 	}
 
 }
