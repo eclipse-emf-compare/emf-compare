@@ -92,8 +92,8 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	protected transient V[] values;
 
 	/**
-	 * Constructs an empty <code>EMFCompareMap</code> with the default initial capacity (31) and the default load
-	 * factor (0.75).
+	 * Constructs an empty <code>EMFCompareMap</code> with the default initial capacity (31) and the default
+	 * load factor (0.75).
 	 */
 	public EMFCompareMap() {
 		// We know the initial capacity will be a prime equal to DEFAULT_INITIAL_CAPACITY
@@ -105,9 +105,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and the default load
-	 * factor (0.75). This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as
-	 * the Map's initial capacity if <code>initialCapacity</code> is lower.
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and the default
+	 * load factor (0.75). This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code>
+	 * as the Map's initial capacity if <code>initialCapacity</code> is lower.
 	 * 
 	 * @param initialCapacity
 	 *            Initial capacity of the Map.
@@ -117,9 +117,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and load factor.This
-	 * class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the Map's initial
-	 * capacity if <code>initialCapacity</code> is lower.
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and load
+	 * factor.This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the Map's
+	 * initial capacity if <code>initialCapacity</code> is lower.
 	 * 
 	 * @param initialCapacity
 	 *            Initial capacity of the Map.
@@ -130,7 +130,8 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		if (initialCapacity < 0)
 			throw new IllegalArgumentException(EMFCompareMessages.getString("EMFCompareMap.NegativeCapacity")); //$NON-NLS-1$
 		if (theLoadFactor <= 0 || Float.isNaN(theLoadFactor))
-			throw new IllegalArgumentException(EMFCompareMessages.getString("EMFCompareMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
+			throw new IllegalArgumentException(EMFCompareMessages.getString(
+					"EMFCompareMap.IllegalLoadFactor", theLoadFactor)); //$NON-NLS-1$
 
 		loadFactor = theLoadFactor;
 		final int newCapacity = getNearestPrime((int)(initialCapacity / Math.max(MINIMUM_LOAD_FACTOR,

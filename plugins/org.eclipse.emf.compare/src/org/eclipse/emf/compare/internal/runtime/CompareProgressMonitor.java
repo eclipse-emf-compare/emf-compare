@@ -40,17 +40,6 @@ public class CompareProgressMonitor {
 	}
 
 	/**
-	 * Notifies the wrapped progress monitor that a subtask begins.
-	 * 
-	 * @param name
-	 *            Name of the beginning subtask.
-	 */
-	public void subTask(String name) {
-		if (progressMonitor != null)
-			ClassUtils.invokeMethod(progressMonitor, "subTask", name); //$NON-NLS-1$
-	}
-
-	/**
 	 * Notifies the wrapped progress monitor that a task begins.
 	 * 
 	 * @param name
@@ -64,17 +53,6 @@ public class CompareProgressMonitor {
 	}
 
 	/**
-	 * Notifies the wrapped progress monitor that a task has advanced.
-	 * 
-	 * @param work
-	 *            Number of work units just completed.
-	 */
-	public void worked(int work) {
-		if (progressMonitor != null)
-			ClassUtils.invokeMethod(progressMonitor, "worked", work); //$NON-NLS-1$
-	}
-
-	/**
 	 * Notifies the wrapped progress monitor that a task has been canceled.
 	 * 
 	 * @return <code>True</code> if cancellation has been requested, and <code>False</code> otherwise
@@ -83,5 +61,27 @@ public class CompareProgressMonitor {
 		if (progressMonitor != null)
 			return (Boolean)ClassUtils.invokeMethod(progressMonitor, "isCanceled"); //$NON-NLS-1$
 		return false;
+	}
+
+	/**
+	 * Notifies the wrapped progress monitor that a subtask begins.
+	 * 
+	 * @param name
+	 *            Name of the beginning subtask.
+	 */
+	public void subTask(String name) {
+		if (progressMonitor != null)
+			ClassUtils.invokeMethod(progressMonitor, "subTask", name); //$NON-NLS-1$
+	}
+
+	/**
+	 * Notifies the wrapped progress monitor that a task has advanced.
+	 * 
+	 * @param work
+	 *            Number of work units just completed.
+	 */
+	public void worked(int work) {
+		if (progressMonitor != null)
+			ClassUtils.invokeMethod(progressMonitor, "worked", work); //$NON-NLS-1$
 	}
 }

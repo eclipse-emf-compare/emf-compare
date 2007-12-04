@@ -74,6 +74,7 @@
         </module>
         <module name="AnonInnerLength">
             <property name="severity" value="error"/>
+            <property name="max" value="25"/>
         </module>
         <module name="ExecutableStatementCount">
             <property name="severity" value="error"/>

@@ -21,19 +21,57 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public final class ClassUtils {
-	/** These are all the wrapper classes for primitive types. */
-	private static final Class<?>[] WRAPPERS = {Short.class, Integer.class, Long.class, Byte.class,
-			Character.class, Boolean.class, Float.class, Double.class, Void.class, };
-
 	/** These are all the primitive classes. */
 	private static final Class<?>[] PRIMITIVES = {short.class, int.class, long.class, byte.class, char.class,
 			boolean.class, float.class, double.class, void.class, };
+
+	/** These are all the wrapper classes for primitive types. */
+	private static final Class<?>[] WRAPPERS = {Short.class, Integer.class, Long.class, Byte.class,
+			Character.class, Boolean.class, Float.class, Double.class, Void.class, };
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
 	private ClassUtils() {
 		// prevents instantiation
+	}
+
+	/**
+	 * This will test equality between two classes.
+	 * <p>
+	 * We'll assume that primitives types are equal to their wrappers so that
+	 * <code>parameterEquals(java.lang.Integer, int)</code> returns <code>True</code>.
+	 * </p>
+	 * 
+	 * @param class1
+	 *            First of the two classes to test for equality.
+	 * @param class2
+	 *            Second of the two classes to test for equality.
+	 * @return <code>True</code> if the two classes are considered equal, <code>False</code> otherwise.
+	 */
+	public static boolean classEquals(Class<?> class1, Class<?> class2) {
+		if (class1 == null || class2 == null)
+			throw new IllegalArgumentException(EMFCompareMessages.getString("ClassUtils.NullArguments")); //$NON-NLS-1$
+
+		boolean result = false;
+		if (class1 != class2 && !class1.equals(class2)) {
+			if (class1.isPrimitive()) {
+				for (int i = 0; i < PRIMITIVES.length; i++) {
+					if (class1.equals(PRIMITIVES[i])) {
+						result = class2.equals(WRAPPERS[i]);
+					}
+				}
+			} else if (class2.isPrimitive()) {
+				for (int i = 0; i < PRIMITIVES.length; i++) {
+					if (class2.equals(PRIMITIVES[i])) {
+						result = class1.equals(WRAPPERS[i]);
+					}
+				}
+			}
+		} else {
+			result = true;
+		}
+		return result;
 	}
 
 	/**
@@ -54,7 +92,9 @@ public final class ClassUtils {
 	}
 
 	/**
-	 * Convenience method to reflectively invoke a given method on the given object with the given parameters. This implementation takes care of checking if the method exists beforehand and will return <code>null</code> if it does not.
+	 * Convenience method to reflectively invoke a given method on the given object with the given parameters.
+	 * This implementation takes care of checking if the method exists beforehand and will return
+	 * <code>null</code> if it does not.
 	 * 
 	 * @param object
 	 *            Invocation target.
@@ -62,7 +102,8 @@ public final class ClassUtils {
 	 *            Name of the method to invoke.
 	 * @param parameters
 	 *            Parameters with which to invoke the method.
-	 * @return Result of the invocation or <code>null</code> if the method does not exist according to {@link #hasMethod(Class, String, Class...)}.
+	 * @return Result of the invocation or <code>null</code> if the method does not exist according to
+	 *         {@link #hasMethod(Class, String, Class...)}.
 	 */
 	public static Object invokeMethod(Object object, String methodName, Object... parameters) {
 		Object result = null;
@@ -85,44 +126,6 @@ public final class ClassUtils {
 		return result;
 	}
 
-	/**
-	 * This will test equality between two classes.
-	 * <p>
-	 * We'll assume that primitives types are equal to their wrappers so that
-	 * <code>parameterEquals(java.lang.Integer, int)</code> returns <code>True</code>.
-	 * </p>
-	 * 
-	 * @param class1
-	 *            First of the two classes to test for equality.
-	 * @param class2
-	 *            Second of the two classes to test for equality.
-	 * @return <code>True</code> if the two classes are considered equal, <code>False</code> otherwise.
-	 */
-	public static boolean classEquals(Class<?> class1, Class<?> class2) {
-		if (class1 == null || class2 == null)
-			throw new IllegalArgumentException(EMFCompareMessages.getString("ClassUtils.NullArguments")); //$NON-NLS-1$
-		
-		boolean result = false;
-		if (class1 != class2 && !class1.equals(class2)) {
-			if (class1.isPrimitive()) {
-				for (int i = 0; i < PRIMITIVES.length; i++) {
-					if (class1.equals(PRIMITIVES[i])) {
-						result = class2.equals(WRAPPERS[i]);
-					}
-				}
-			} else if (class2.isPrimitive()) {
-				for (int i = 0; i < PRIMITIVES.length; i++) {
-					if (class2.equals(PRIMITIVES[i])) {
-						result = class1.equals(WRAPPERS[i]);
-					}
-				}
-			}
-		} else {
-			result = true;
-		}
-		return result;
-	}
-	
 	/**
 	 * Iterates through a given {@link Class} public {@link Method}s to determine if it declares a method of
 	 * the given name and parameters and returns it if it does.

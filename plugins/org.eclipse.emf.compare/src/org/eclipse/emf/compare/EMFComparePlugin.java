@@ -56,7 +56,7 @@ public class EMFComparePlugin extends Plugin {
 	public static void log(Exception e, boolean blocker) {
 		if (e == null)
 			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullException")); //$NON-NLS-1$
-		
+
 		if (plugin == null) {
 			// We are out of eclipse. Prints the stack trace on standard error.
 			e.printStackTrace();
@@ -88,7 +88,7 @@ public class EMFComparePlugin extends Plugin {
 		// We'll handle this by throwing it ourselves.
 		if (status == null)
 			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
-				
+
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
 		} else {
