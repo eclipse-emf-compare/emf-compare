@@ -25,14 +25,14 @@ public final class MatchEditPlugin extends EMFPlugin {
 	 * 
 	 * @generated
 	 */
-	/* package */static Implementation plugin;
+	public static final MatchEditPlugin INSTANCE = new MatchEditPlugin();
 
 	/**
 	 * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public static final MatchEditPlugin INSTANCE = new MatchEditPlugin();
+	/* package */static Implementation plugin;
 
 	/**
 	 * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->

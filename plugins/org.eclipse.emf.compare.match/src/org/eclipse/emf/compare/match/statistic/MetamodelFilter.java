@@ -25,68 +25,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
- * Describes a feature.
- * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
- */
-class FeatureInformation {
-	/** Structure which information is computed here. */
-	private final EStructuralFeature feature;
-
-	/** Checks wether this feature's value is always the same. */
-	private boolean hasUniqueValue = true;
-
-	/** Counts the number of times this feature's information is accessed. */
-	private int timesUsed;
-
-	/** Value of this feature if it is never altered. */
-	private String uniqueValue;
-
-	/**
-	 * Creates a {@link FeatureInformation} from a feature.
-	 * 
-	 * @param feat
-	 *            The {@link EStructuralFeature feature} we want described.
-	 */
-	public FeatureInformation(EStructuralFeature feat) {
-		feature = feat;
-	}
-
-	/**
-	 * Returns the feature described by this {@link FeatureInformation}.
-	 * 
-	 * @return The feature described by this {@link FeatureInformation}.
-	 */
-	public EStructuralFeature getFeature() {
-		return feature;
-	}
-
-	/**
-	 * Indicates that this features always has the same value.
-	 * 
-	 * @return <code>True</code> if this feature always has the same value, <code>False</code> otherwise.
-	 */
-	public boolean hasUniqueValue() {
-		return hasUniqueValue;
-	}
-
-	/**
-	 * Adds this value in the calculus model.
-	 * 
-	 * @param value
-	 *            The value to add.
-	 */
-	public void processValue(String value) {
-		timesUsed += 1;
-		if (uniqueValue != null && !uniqueValue.equals(value)) {
-			hasUniqueValue = false;
-		} else if (uniqueValue == null) {
-			uniqueValue = value;
-		}
-	}
-}
-
-/**
  * This class determines the unused features in a metamodel using models.<br/>
  * <p>
  * A feature is considered &quot;unused&quot; if its value is never changed throughout all the model's
@@ -203,6 +141,68 @@ public class MetamodelFilter {
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e.getMessage(), false);
 			}
+		}
+	}
+}
+
+/**
+ * Describes a feature.
+ * 
+ * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ */
+class FeatureInformation {
+	/** Structure which information is computed here. */
+	private final EStructuralFeature feature;
+
+	/** Checks wether this feature's value is always the same. */
+	private boolean hasUniqueValue = true;
+
+	/** Counts the number of times this feature's information is accessed. */
+	private int timesUsed;
+
+	/** Value of this feature if it is never altered. */
+	private String uniqueValue;
+
+	/**
+	 * Creates a {@link FeatureInformation} from a feature.
+	 * 
+	 * @param feat
+	 *            The {@link EStructuralFeature feature} we want described.
+	 */
+	public FeatureInformation(EStructuralFeature feat) {
+		feature = feat;
+	}
+
+	/**
+	 * Returns the feature described by this {@link FeatureInformation}.
+	 * 
+	 * @return The feature described by this {@link FeatureInformation}.
+	 */
+	public EStructuralFeature getFeature() {
+		return feature;
+	}
+
+	/**
+	 * Indicates that this features always has the same value.
+	 * 
+	 * @return <code>True</code> if this feature always has the same value, <code>False</code> otherwise.
+	 */
+	public boolean hasUniqueValue() {
+		return hasUniqueValue;
+	}
+
+	/**
+	 * Adds this value in the calculus model.
+	 * 
+	 * @param value
+	 *            The value to add.
+	 */
+	public void processValue(String value) {
+		timesUsed += 1;
+		if (uniqueValue != null && !uniqueValue.equals(value)) {
+			hasUniqueValue = false;
+		} else if (uniqueValue == null) {
+			uniqueValue = value;
 		}
 	}
 }
