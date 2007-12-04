@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 import org.eclipse.emf.compare.tests.util.FileUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 // TODO This has to be updated with the metamodels' new versions
 /**
@@ -119,8 +120,8 @@ public class TestNonRegressionModels extends TestCase {
 
 			final String testedDir = directory.getName().toUpperCase();
 			System.out.println(testedDir + "\n===============");
-			final List<EObject> inputModels = ModelUtils.getModelsFrom(directory);
-			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir);
+			final List<EObject> inputModels = ModelUtils.getModelsFrom(directory, new ResourceSetImpl());
+			final List<EObject> expectedSnapshot = ModelUtils.getModelsFrom(expectedDir, new ResourceSetImpl());
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
 				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels.get(1),

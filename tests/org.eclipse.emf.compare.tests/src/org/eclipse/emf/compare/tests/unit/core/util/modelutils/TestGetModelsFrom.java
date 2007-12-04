@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 import org.eclipse.emf.compare.tests.util.FileUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
  * Tests the behavior of {@link ModelUtils#getModelsFrom(File)}.
@@ -51,7 +52,8 @@ public class TestGetModelsFrom extends TestCase {
 	/**
 	 * Default constructor. Scans for model files in {@link #INPUT_DIRECTORY}.
 	 */
-	public TestGetModelsFrom() {
+	@Override
+	protected void setUp() {
 		File inputDir = null;
 		try {
 			inputDir = new File(FileLocator.toFileURL(
@@ -77,7 +79,7 @@ public class TestGetModelsFrom extends TestCase {
 		for (File invalidDirectory : invalidDirectories) {
 			try {
 				assertEquals("Unexpected result of getModelsFrom() with invalid directory.",
-						new ArrayList<EObject>(), ModelUtils.getModelsFrom(invalidDirectory));
+						new ArrayList<EObject>(), ModelUtils.getModelsFrom(invalidDirectory, new ResourceSetImpl()));
 			} catch (IOException e) {
 				fail("Unexpected IOException thrown while loading models.");
 			}
@@ -90,7 +92,7 @@ public class TestGetModelsFrom extends TestCase {
 	 */
 	public void testGetModelsFromNullDirectory() {
 		try {
-			ModelUtils.getModelsFrom(null);
+			ModelUtils.getModelsFrom(null, new ResourceSetImpl());
 			fail("Expected NullPointerException hasn't been thrown.");
 		} catch (NullPointerException e) {
 			// We expected this
@@ -107,7 +109,7 @@ public class TestGetModelsFrom extends TestCase {
 		for (String unreadableDirectory : unreadableDirectories) {
 			try {
 				assertEquals("Unexpected result of getModelsFrom() with unreadable directory.",
-						new ArrayList<EObject>(), ModelUtils.getModelsFrom(new File(unreadableDirectory)));
+						new ArrayList<EObject>(), ModelUtils.getModelsFrom(new File(unreadableDirectory), new ResourceSetImpl()));
 			} catch (IOException e) {
 				fail("Unexpected IOException has been thrown.");
 			}
@@ -123,7 +125,7 @@ public class TestGetModelsFrom extends TestCase {
 		for (File modelDirectory : modelDirectories) {
 			List<EObject> result = null;
 			try {
-				result = ModelUtils.getModelsFrom(modelDirectory);
+				result = ModelUtils.getModelsFrom(modelDirectory, new ResourceSetImpl());
 			} catch (IOException e) {
 				fail("Unexpected IOException thrown while loading models.");
 			}
