@@ -148,7 +148,7 @@ public class ModelCompareInput implements ICompareInput {
 		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
 		final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
-		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext();) {
+		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (aDiff instanceof ModelElementChange)
 				modelElementDiffs.add((ModelElementChange)aDiff);
