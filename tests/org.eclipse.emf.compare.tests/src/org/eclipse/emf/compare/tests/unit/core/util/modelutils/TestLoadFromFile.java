@@ -43,7 +43,7 @@ public class TestLoadFromFile extends TestCase {
 
 	/** This array contains pathes to unreadable or inexistant files. */
 	private String[] invalidFiles = {"", "/etc/shadow", "/etc/sudoers", "\r\n",
-			File.listRoots()[0].getAbsolutePath() + "nofolder",};
+			File.listRoots()[0].getAbsolutePath() + "nofolder", };
 
 	/**
 	 * This array contains references to all the models contained by {@link INPUT_DIRECTORY} or its

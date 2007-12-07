@@ -257,10 +257,10 @@ public class TestTwoWayModelMatch extends TestCase {
 		assert match2 != null;
 
 		int elementCount = 0;
-		for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext();) {
+		for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
 			final EObject next = iterator.next();
 			boolean found1 = false;
-			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext();) {
+			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
@@ -271,7 +271,7 @@ public class TestTwoWayModelMatch extends TestCase {
 				}
 			}
 			boolean found2 = false;
-			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext();) {
+			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
 				final EObject nextMatch = matchIterator.next();
 				if ((nextMatch instanceof Match2Elements && ((Match2Elements)nextMatch).getLeftElement()
 						.equals(next))
@@ -287,12 +287,12 @@ public class TestTwoWayModelMatch extends TestCase {
 		}
 
 		int matchElementCount1 = 0;
-		for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext();) {
+		for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
 			if (matchIterator.next() instanceof Match2Elements)
 				matchElementCount1++;
 		}
 		int matchElementCount2 = 0;
-		for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext();) {
+		for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
 			if (matchIterator.next() instanceof Match2Elements)
 				matchElementCount2++;
 		}
@@ -331,11 +331,11 @@ public class TestTwoWayModelMatch extends TestCase {
 					Collections.<String, Object> emptyMap());
 
 			int elementCount = 0;
-			for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext();) {
+			for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
 				final EObject next = iterator.next();
 				boolean found1 = false;
 				for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator
-						.hasNext();) {
+						.hasNext(); ) {
 					final EObject nextMatch = matchIterator.next();
 					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
 						found1 = true;
@@ -344,7 +344,7 @@ public class TestTwoWayModelMatch extends TestCase {
 				}
 				boolean found2 = false;
 				for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator
-						.hasNext();) {
+						.hasNext(); ) {
 					final EObject nextMatch = matchIterator.next();
 					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
 						found2 = true;
@@ -357,12 +357,12 @@ public class TestTwoWayModelMatch extends TestCase {
 			}
 
 			int matchElementCount1 = 0;
-			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext();) {
+			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
 				matchIterator.next();
 				matchElementCount1++;
 			}
 			int matchElementCount2 = 0;
-			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext();) {
+			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
 				matchIterator.next();
 				matchElementCount2++;
 			}

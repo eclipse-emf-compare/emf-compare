@@ -24,29 +24,29 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestMessages extends TestCase {
 	/** Expected result of the parameterisable keys (only used if locale is en). */
 	private final String[] expectedForParameterisable = {"The feature {0} does not exist in {1}.",
-			"Illegal load factor for map: {0}.",};
+			"Illegal load factor for map: {0}.", };
 
 	/** Contains the expected results for the valid keys (only used if locale is en). */
 	private final String[] expectedForValidKeys = {"Required element not found.",
-			"A java exception has been thrown.", "Unknown EMF Compare problem.",};
+			"A java exception has been thrown.", "Unknown EMF Compare problem.", };
 
 	/** These will be used when testing message retrieval with invalid keys. */
-	private final String[] invalidKeys = {"invalidKey", "EMFComparePlugin.ElementNotFound1", "", "\u00ec",};
+	private final String[] invalidKeys = {"invalidKey", "EMFComparePlugin.ElementNotFound1", "", "\u00ec", };
 
 	/** Contains possible parameters for the messages. */
-	private final Object[] messageParameters = {null, "", "Foehn", -1, new Long(10), '\u0043', new HashSet(),};
+	private final Object[] messageParameters = {null, "", "Foehn", -1, new Long(10), '\u0043', new HashSet(), };
 
 	/** These two are valid, parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
 	private final String[] parameterisableKeys = {"EFactory.FeatureNotFound",
-			"EMFCompareMap.IllegalLoadFactor",};
+			"EMFCompareMap.IllegalLoadFactor", };
 
 	/** These are valid, un-parameterisable keys. See org.eclipse.emf.compare "messages.properties". */
 	private final String[] validKeys = {"EMFComparePlugin.ElementNotFound", "EMFComparePlugin.JavaException",
-			"EMFComparePlugin.UnexpectedException",};
+			"EMFComparePlugin.UnexpectedException", };
 
 	/**
 	 * Tests {@link EMFCompareMessages#getString(String, Object...)} with an invalid key. Expects the String

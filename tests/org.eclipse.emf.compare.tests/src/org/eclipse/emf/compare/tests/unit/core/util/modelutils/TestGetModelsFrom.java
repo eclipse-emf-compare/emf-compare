@@ -48,7 +48,7 @@ public class TestGetModelsFrom extends TestCase {
 	private ArrayList<File> modelDirectories = new ArrayList<File>();
 
 	/** Names of directories we shouldn't be able to read. */
-	private String[] unreadableDirectories = {"", "\r\n", "/lost+found/",};
+	private String[] unreadableDirectories = {"", "\r\n", "/lost+found/", };
 
 	/**
 	 * Tests {@link ModelUtils#getModelsFrom(File)} with invalid directories. Expects an empty list to be

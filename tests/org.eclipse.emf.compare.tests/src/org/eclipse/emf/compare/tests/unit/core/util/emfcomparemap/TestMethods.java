@@ -23,13 +23,13 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestMethods extends TestCase {
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true,};
+			true, };
 
 	/** String displayed when an unexpected {@link UnsupportedOperationException} is thrown. */
 	private static final String MESSAGE_UNSUPPORTED = "threw an unexpected UnsupportedOperationException.";
@@ -38,7 +38,7 @@ public class TestMethods extends TestCase {
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false,};
+			false, };
 
 	/** Map that will be used for all these tests. */
 	private final EMFCompareMap testedMap = new EMFCompareMap();

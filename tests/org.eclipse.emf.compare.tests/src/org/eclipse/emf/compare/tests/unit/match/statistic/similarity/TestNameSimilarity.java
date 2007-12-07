@@ -223,9 +223,9 @@ public class TestNameSimilarity extends TestCase {
 	public void testNameSimilarityMetric() {
 		final String[] data = new String[] {null, null, null, "string", "string", null, "ceString",
 				"ceString", "classe", "Classe", "Classe", "UneClasse", "package", "packagedeux", "",
-				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa",};
+				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", };
 		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d,
-				6d / 11d, 0d, 1d / 2d,};
+				6d / 11d, 0d, 1d / 2d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of nameSimilarityMetric for str1 = " + data[i] + " and str2 = "
 					+ data[i + 1], similarities[i / 2], NameSimilarity.nameSimilarityMetric(data[i],
@@ -256,7 +256,7 @@ public class TestNameSimilarity extends TestCase {
 	 */
 	public void testPairs() {
 		final String[] data = new String[] {null, "anEvenSizeString", "anOddSizeString", "", "!", "-&;+",
-				Calendar.getInstance().getTime().toString(),};
+				Calendar.getInstance().getTime().toString(), };
 		for (int i = 0; i < data.length; i++) {
 			final List<String> result = NameSimilarity.pairs(data[i]);
 			assertNotNull("Method pairs() returned null result.", result);

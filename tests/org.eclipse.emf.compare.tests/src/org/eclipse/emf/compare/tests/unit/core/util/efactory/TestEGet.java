@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EcoreFactory;
 @SuppressWarnings("nls")
 public class TestEGet extends TestCase {
 	/** Contains invalid feature names whatever the target. */
-	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature",};
+	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature", };
 
 	/** Objects used for all these tests. Will be reinitialised for each test via {@link #setUp()}. */
 	private EObject[] testEObjects = new EObject[5];

@@ -31,10 +31,10 @@ import org.eclipse.emf.ecore.EcoreFactory;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestEGetAsList extends TestCase {
 	/** Contains invalid feature names whatever the target. */
-	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature",};
+	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature", };
 
 	/** Objects used for all these tests. Will be reinitialised for each test via {@link #setUp()}. */
 	private EObject[] testEObjects = new EObject[5];

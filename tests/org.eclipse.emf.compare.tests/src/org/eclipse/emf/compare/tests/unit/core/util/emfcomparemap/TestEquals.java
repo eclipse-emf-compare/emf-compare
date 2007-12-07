@@ -23,19 +23,19 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestEquals extends TestCase {
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true,};
+			true, };
 
 	/** Input values for a set map. */
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false,};
+			false, };
 
 	/**
 	 * Tests {@link EMFCompareMap#equals(Object)}.
@@ -81,8 +81,8 @@ public class TestEquals extends TestCase {
 			testMap.put(KEY_SET[i], VALUE_SET[i]);
 
 		final Object[] invalidTestObjects = {null, "", "Suroit", new Long(10), new HashSet(), 25f, '\u00aa',
-				testMap,};
-		final Object[] validTestObjects = {new EMFCompareMap(), map,};
+				testMap, };
+		final Object[] validTestObjects = {new EMFCompareMap(), map, };
 
 		for (int i = 0; i < invalidTestObjects.length; i++)
 			assertFalse("Unexpected result of equals() with non-equal objects.", map
@@ -156,8 +156,8 @@ public class TestEquals extends TestCase {
 			sameMappings.put(KEY_SET[i], VALUE_SET[i]);
 
 		final Object[] invalidTestObjects = {null, "", "Foehn", new Long(10), new HashSet(), 25f, '\u00aa',
-				differentSize, sameSizeDifferentMappings,};
-		final Object[] validTestObjects = {sameMappings, map,};
+				differentSize, sameSizeDifferentMappings, };
+		final Object[] validTestObjects = {sameMappings, map, };
 
 		for (int i = 0; i < invalidTestObjects.length; i++)
 			assertFalse("Unexpected result of equals() with non-equal objects.", map

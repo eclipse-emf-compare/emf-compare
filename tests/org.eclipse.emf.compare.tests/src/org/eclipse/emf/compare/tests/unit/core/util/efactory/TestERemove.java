@@ -30,13 +30,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestERemove extends TestCase {
 	/** Path to an ecore model to use for those tests. */
 	private static final String INPUT_MODEL_ECORE = "/inputs/attribute/volatile/v2.ecore";
 
 	/** Contains invalid feature names whatever the target. */
-	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature",};
+	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature", };
 
 	/** UML and ecore models that will be used for the tests. Loaded from {@link #setUp()}. */
 	private EObject[] models = new EObject[1];

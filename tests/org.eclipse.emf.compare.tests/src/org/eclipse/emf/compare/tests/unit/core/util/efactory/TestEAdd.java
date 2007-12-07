@@ -27,10 +27,10 @@ import org.eclipse.emf.ecore.EcoreFactory;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestEAdd extends TestCase {
 	/** Contains invalid feature names whatever the target. */
-	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature",};
+	private String[] invalidFeatureNames = {null, "", "-1", "invalidFeature", };
 
 	/** Objects used for all these tests. Will be reinitialised for each test via {@link #setUp()}. */
 	private EObject[] testEObjects = new EObject[5];
@@ -141,7 +141,7 @@ public class TestEAdd extends TestCase {
 				if (!feature.isChangeable()) {
 					final Object oldValue = testEObjects[i].eGet(feature);
 					try {
-						EFactory.eAdd(testEObjects[i], feature.getName(), null);
+						EFactory.eAdd(testEObjects[i],            feature.getName(), null);
 						if (oldValue instanceof List)
 							assertEquals("eAdd changed the feature's values list.", oldValue, testEObjects[i]
 									.eGet(feature));
@@ -190,7 +190,7 @@ public class TestEAdd extends TestCase {
 				final String desiredClass = feature.getEType().getInstanceClassName();
 				if (desiredClass.matches("double")) {
 					newValues = new Object[] {(double)feature.getLowerBound(), Double.NaN, 0d,
-							Double.POSITIVE_INFINITY, (double)feature.getUpperBound(),};
+							Double.POSITIVE_INFINITY, (double)feature.getUpperBound(), };
 				} else if (desiredClass.equals("org.eclipse.emf.ecore.EObject")) {
 					newValues[0] = EcoreFactory.eINSTANCE.createEObject();
 				} else if (desiredClass.equals("org.eclipse.emf.compare.diff.metamodel.DiffElement")) {

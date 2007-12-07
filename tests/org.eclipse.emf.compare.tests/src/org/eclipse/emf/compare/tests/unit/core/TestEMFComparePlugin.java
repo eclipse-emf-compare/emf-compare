@@ -33,10 +33,10 @@ import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 public class TestEMFComparePlugin extends TestCase {
 	/** Error messages to use for these tests. */
 	private static final String[] ERROR_MESSAGES = {"NullPointerException has been thrown.",
-			"failed to build.", "Viewer's input was null.",};
+			"failed to build.", "Viewer's input was null.", };
 
 	/** Possible severities for an exception. */
-	private static final int[] ERROR_SEVERITIES = {IStatus.WARNING, IStatus.ERROR, IStatus.INFO,};
+	private static final int[] ERROR_SEVERITIES = {IStatus.WARNING, IStatus.ERROR, IStatus.INFO, };
 
 	/** This will keep track of the last {@link IStatus} that has been logged. */
 	protected IStatus loggedStatus;

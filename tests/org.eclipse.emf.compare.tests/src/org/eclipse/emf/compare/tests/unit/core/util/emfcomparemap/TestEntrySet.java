@@ -27,13 +27,13 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings( {"unchecked", "nls",})
+@SuppressWarnings({"unchecked", "nls", })
 public class TestEntrySet extends TestCase {
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true,};
+			true, };
 
 	/** String displayed when an expected {@link ConcurrentModificationException} isn't thrown. */
 	private static final String MESSAGE_CONCURRENT = "ConcurrentModificationException hasn't been thrown by the iterator after changing map via";
@@ -45,7 +45,7 @@ public class TestEntrySet extends TestCase {
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false,};
+			false, };
 
 	/** Map that will be used for all these tests. */
 	private final EMFCompareMap testedMap = new EMFCompareMap();
@@ -215,7 +215,7 @@ public class TestEntrySet extends TestCase {
 		testedMethod = "Iterator's remove(Object)";
 
 		int currentMapSize = testedMap.size();
-		for (final Iterator entryIterator = testedMap.entrySet().iterator(); entryIterator.hasNext();) {
+		for (final Iterator entryIterator = testedMap.entrySet().iterator(); entryIterator.hasNext(); ) {
 			final Map.Entry currentEntry = (Map.Entry)(entryIterator.next());
 			try {
 				entryIterator.remove();
@@ -320,7 +320,7 @@ public class TestEntrySet extends TestCase {
 		assertEquals("Created entry set hasn't got the same size as its original map.", testedMap.size(),
 				entrySet.size());
 
-		for (final Iterator entryIterator = entrySet.iterator(); entryIterator.hasNext();) {
+		for (final Iterator entryIterator = entrySet.iterator(); entryIterator.hasNext(); ) {
 			final Object currentEntry = entryIterator.next();
 
 			assertTrue("Iterator contains objects that aren't instances of Map.Entry.",
