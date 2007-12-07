@@ -192,7 +192,7 @@ public class DiffMaker implements DiffEngine {
 		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
 			final EAttribute next = (EAttribute)it.next();
-			if (!next.isDerived()) {
+			if (!shouldBeIgnored(next)) {
 				final String attributeName = next.getName();
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
 				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
@@ -240,7 +240,7 @@ public class DiffMaker implements DiffEngine {
 		final Iterator it = eclassAttributes.iterator();
 		while (it.hasNext()) {
 			final EAttribute next = (EAttribute)it.next();
-			if (!next.isDerived()) {
+			if (!shouldBeIgnored(next)) {
 				final String attributeName = next.getName();
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
 				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
@@ -413,7 +413,7 @@ public class DiffMaker implements DiffEngine {
 		final Iterator it = eclassReferences.iterator();
 		while (it.hasNext()) {
 			final EReference next = (EReference)it.next();
-			if (!next.isContainment() && !next.isDerived() && !next.isTransient()) {
+			if (!shouldBeIgnored(next)) {
 				final String referenceName = next.getName();
 				final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
 				final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
@@ -703,6 +703,29 @@ public class DiffMaker implements DiffEngine {
 			}
 		}
 	}
+	
+	/**
+     * Determines if we should ignore an attribute for diff detection.
+     * <p>
+     * Default is to ignore attributes marked either
+     * <ul>
+     * <li>Transient</li>
+     * <li>Derived</li>
+     * </ul>
+     * </p>
+     * <p>
+     * Clients should override this if they wish to ignore other attributes.
+     * </p>
+     * 
+     * @param attribute
+     *            Attribute to determine whether it should be ignored.
+     * @return <code>True</code> if attribute has to be ignored, <code>False</code> otherwise.
+     */
+    protected boolean shouldBeIgnored(EAttribute attribute) {
+        boolean ignore = attribute.isTransient();
+        ignore |= attribute.isDerived();
+        return ignore;
+    }
 
 	/**
 	 * Determines if we should ignore a reference for diff detection.
