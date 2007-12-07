@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.examples.diff.extension.extensions;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
@@ -87,7 +88,7 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 				 * it's some kind of "special" association, meaning "Navigable" for instance.
 				 */
 				try {
-					final Collection<EObject> members = EFactory.eGetAsList(assoc, "memberEnd");
+					final Collection<EObject> members = (List<EObject>)EFactory.eGetAsList(assoc, "memberEnd");
 					for (EObject member : members) {
 						/*
 						 * It's a navigable association then we should hide the property and the association
