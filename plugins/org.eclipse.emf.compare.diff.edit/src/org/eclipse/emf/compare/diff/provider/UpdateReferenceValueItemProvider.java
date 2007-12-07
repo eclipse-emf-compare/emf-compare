@@ -39,6 +39,7 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public UpdateReferenceValueItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -48,17 +49,18 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateReferenceValue"));
+			images.add(getResourceLocator().getImage("full/obj16/UpdateReferenceValue")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateReferenceValue");
+			labelImage = getResourceLocator().getImage("full/obj16/UpdateReferenceValue"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -70,6 +72,7 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -84,6 +87,7 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -93,8 +97,9 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_UpdateReferenceValue_type");
+		return getString("_UI_UpdateReferenceValue_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -104,6 +109,7 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -115,6 +121,7 @@ public class UpdateReferenceValueItemProvider extends ReferenceChangeItemProvide
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

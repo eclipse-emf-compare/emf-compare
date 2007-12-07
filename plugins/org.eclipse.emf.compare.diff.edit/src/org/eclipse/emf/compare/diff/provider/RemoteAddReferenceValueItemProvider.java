@@ -32,7 +32,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -40,6 +39,7 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteAddReferenceValueItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -51,7 +51,7 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteAddReferenceValue"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteAddReferenceValue")); //$NON-NLS-1$
 	}
 
 	/**

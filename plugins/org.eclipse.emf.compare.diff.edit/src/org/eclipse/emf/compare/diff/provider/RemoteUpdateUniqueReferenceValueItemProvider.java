@@ -32,7 +32,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteUpdateUniqueReferenceValueItemProvider extends UpdateUniqueReferenceValueItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -40,6 +39,7 @@ public class RemoteUpdateUniqueReferenceValueItemProvider extends UpdateUniqueRe
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteUpdateUniqueReferenceValueItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -52,7 +52,7 @@ public class RemoteUpdateUniqueReferenceValueItemProvider extends UpdateUniqueRe
 	@Override
 	public Object getImage(Object object) {
 		return overlayImage(object, getResourceLocator().getImage(
-				"full/obj16/RemoteUpdateUniqueReferenceValue"));
+				"full/obj16/RemoteUpdateUniqueReferenceValue")); //$NON-NLS-1$
 	}
 
 	/**

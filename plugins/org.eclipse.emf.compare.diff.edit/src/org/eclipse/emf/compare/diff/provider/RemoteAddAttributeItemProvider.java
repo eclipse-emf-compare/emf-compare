@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteAddAttributeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -50,7 +50,7 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteAddAttribute"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteAddAttribute")); //$NON-NLS-1$
 	}
 
 	/**

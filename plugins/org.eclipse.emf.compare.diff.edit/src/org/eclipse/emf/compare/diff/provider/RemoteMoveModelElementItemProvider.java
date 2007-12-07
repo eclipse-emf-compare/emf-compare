@@ -32,7 +32,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -40,6 +39,7 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteMoveModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -51,7 +51,7 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteMoveModelElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteMoveModelElement")); //$NON-NLS-1$
 	}
 
 	/**

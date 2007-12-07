@@ -43,6 +43,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public MoveModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -52,17 +53,18 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement"));
+			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement");
+			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -74,6 +76,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -90,6 +93,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -99,15 +103,16 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		MoveModelElement moveOp = (MoveModelElement)object;
 		try {
-			return getString("_UI_MoveModelElement_type", new Object[] {
+			return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
 					NameSimilarity.findName(moveOp.getLeftElement()),
-					NameSimilarity.findName(moveOp.getLeftTarget()),
-					NameSimilarity.findName(moveOp.getRightTarget())});
+							NameSimilarity.findName(moveOp.getLeftTarget()),
+							NameSimilarity.findName(moveOp.getRightTarget())});
 		} catch (FactoryException e) {
-			return getString("_UI_MoveModelElement_type");
+			return getString("_UI_MoveModelElement_type"); //$NON-NLS-1$
 		}
 	}
 
@@ -118,6 +123,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -129,12 +135,13 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addLeftTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_leftTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftTarget_feature",
-						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_TARGET,
+				getString("_UI_MoveModelElement_leftTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_leftTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__LEFT_TARGET, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -144,12 +151,13 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addRightTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_MoveModelElement_rightTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightTarget_feature",
-						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_TARGET,
+				getString("_UI_MoveModelElement_rightTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_MoveModelElement_rightTarget_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_MoveModelElement_type"), DiffPackage.Literals.MOVE_MODEL_ELEMENT__RIGHT_TARGET, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -159,6 +167,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

@@ -33,7 +33,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -41,6 +40,7 @@ public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRigh
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteRemoveModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -52,7 +52,7 @@ public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRigh
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteRemoveModelElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteRemoveModelElement")); //$NON-NLS-1$
 	}
 
 	/**
@@ -90,10 +90,10 @@ public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRigh
 	public String getText(Object object) {
 		final RemoteRemoveModelElement removeOp = (RemoteRemoveModelElement)object;
 		try {
-			final String target = NameSimilarity.findName(removeOp.getRightElement());
+			final String targetName = NameSimilarity.findName(removeOp.getRightElement());
 			if (removeOp.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_RemoteRemoveModelElement_conflicting", new Object[] {target}); //$NON-NLS-1$
-			return getString("_UI_RemoteRemoveModelElement_type", new Object[] {target}); //$NON-NLS-1$
+				return getString("_UI_RemoteRemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$
+			return getString("_UI_RemoteRemoveModelElement_type", new Object[] {targetName}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_RemoteRemoveModelElement_type"); //$NON-NLS-1$
 		}

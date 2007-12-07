@@ -45,6 +45,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ModelInputSnapshotItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -57,6 +58,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
@@ -71,8 +73,9 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelInputSnapshot"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelInputSnapshot")); //$NON-NLS-1$
 	}
 
 	/**
@@ -81,6 +84,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -96,6 +100,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -105,11 +110,12 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
 		Date labelValue = ((ModelInputSnapshot)object).getDate();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ? getString("_UI_ModelInputSnapshot_type")
-				: getString("_UI_ModelInputSnapshot_type") + " " + label;
+		return label == null || label.length() == 0 ? getString("_UI_ModelInputSnapshot_type") //$NON-NLS-1$
+				: getString("_UI_ModelInputSnapshot_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -119,6 +125,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
@@ -141,12 +148,13 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addDatePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ModelInputSnapshot_date_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature",
-						"_UI_ModelInputSnapshot_type"), DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE,
+				getString("_UI_ModelInputSnapshot_date_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ModelInputSnapshot_type"), DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE, //$NON-NLS-1$
 				true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -156,6 +164,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
@@ -171,6 +180,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected EStructuralFeature getChildFeature(Object object, Object child) {
 		// Check the type of the specified child object and return the proper feature to use for
 		// adding (see {@link AddCommand}) it as a child.

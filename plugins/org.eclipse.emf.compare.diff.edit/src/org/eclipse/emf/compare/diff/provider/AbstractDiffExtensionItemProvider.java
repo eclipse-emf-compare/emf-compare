@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: AbstractDiffExtensionItemProvider.java,v 1.4 2007/12/04 13:15:30 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
 import java.util.Collection;
@@ -38,6 +42,7 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public AbstractDiffExtensionItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -48,6 +53,7 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -64,6 +70,7 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -73,9 +80,10 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
 		AbstractDiffExtension abstractDiffExtension = (AbstractDiffExtension)object;
-		return getString("_UI_AbstractDiffExtension_type") + " " + abstractDiffExtension.isIsCollapsed();
+		return getString("_UI_AbstractDiffExtension_type") + " " + abstractDiffExtension.isIsCollapsed(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -85,6 +93,7 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
@@ -103,12 +112,13 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addHideElementsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AbstractDiffExtension_hideElements_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"),
+				getString("_UI_AbstractDiffExtension_hideElements_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$
 				DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS, true, false, true, null, null,
 				null));
 	}
@@ -119,12 +129,13 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addIsCollapsedPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AbstractDiffExtension_isCollapsed_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"),
+				getString("_UI_AbstractDiffExtension_isCollapsed_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$
 				DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED, true, false, false,
 				ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
@@ -135,6 +146,7 @@ public class AbstractDiffExtensionItemProvider extends ItemProviderAdapter imple
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

@@ -33,7 +33,7 @@ public final class DiffEditPlugin extends EMFPlugin {
 	 * 
 	 * @generated
 	 */
-	private static Implementation plugin;
+	protected static Implementation plugin;
 
 	/**
 	 * Create the instance. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -60,6 +60,7 @@ public final class DiffEditPlugin extends EMFPlugin {
 	 * @return the singleton instance.
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getPluginResourceLocator() {
 		return plugin;
 	}

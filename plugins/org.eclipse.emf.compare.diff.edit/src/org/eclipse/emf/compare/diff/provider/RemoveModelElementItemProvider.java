@@ -36,7 +36,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoveModelElementItemProvider extends ModelElementChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -44,6 +43,7 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoveModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -53,14 +53,13 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	 * 
 	 * @generated NOT
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getModelElementChangeLeftTarget_LeftElement(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/RemoveModelElement")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -106,10 +105,10 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	public String getText(Object object) {
 		RemoveModelElement removeOp = (RemoveModelElement)object;
 		try {
-			final String target = NameSimilarity.findName(removeOp.getLeftElement());
+			final String targetName = NameSimilarity.findName(removeOp.getLeftElement());
 			if (removeOp.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_RemoveModelElement_conflicting", new Object[] {target}); //$NON-NLS-1$
-			return getString("_UI_RemoveModelElement_type", new Object[] {target}); //$NON-NLS-1$
+				return getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$
+			return getString("_UI_RemoveModelElement_type", new Object[] {targetName}); //$NON-NLS-1$
 		} catch (FactoryException e) {
 			return getString("_UI_RemoveModelElement_type"); //$NON-NLS-1$
 		}

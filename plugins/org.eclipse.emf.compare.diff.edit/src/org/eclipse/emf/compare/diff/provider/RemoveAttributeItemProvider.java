@@ -35,7 +35,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -43,6 +42,7 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoveAttributeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -52,17 +52,18 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/RemoveAttribute"));
+			images.add(getResourceLocator().getImage("full/obj16/RemoveAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/RemoveAttribute");
+			labelImage = getResourceLocator().getImage("full/obj16/RemoveAttribute"); //$NON-NLS-1$
 		}
 
 		return labelImage;

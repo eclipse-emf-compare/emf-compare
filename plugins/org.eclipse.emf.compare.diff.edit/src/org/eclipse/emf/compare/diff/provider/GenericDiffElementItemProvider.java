@@ -39,6 +39,7 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public GenericDiffElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -48,8 +49,9 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/GenericDiffElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/GenericDiffElement")); //$NON-NLS-1$
 	}
 
 	/**
@@ -58,6 +60,7 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -74,6 +77,7 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -83,8 +87,9 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_GenericDiffElement_type");
+		return getString("_UI_GenericDiffElement_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -94,6 +99,7 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -105,13 +111,14 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_GenericDiffElement_leftElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_GenericDiffElement_leftElement_feature", "_UI_GenericDiffElement_type"),
+						getString("_UI_GenericDiffElement_leftElement_feature"), getString( //$NON-NLS-1$
+								"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+								"_UI_GenericDiffElement_leftElement_feature", "_UI_GenericDiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 						DiffPackage.Literals.GENERIC_DIFF_ELEMENT__LEFT_ELEMENT, true, false, true, null,
 						null, null));
 	}
@@ -122,14 +129,15 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addRightElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_GenericDiffElement_rightElement_feature"),
-						getString("_UI_PropertyDescriptor_description",
-								"_UI_GenericDiffElement_rightElement_feature", "_UI_GenericDiffElement_type"),
+						getString("_UI_GenericDiffElement_rightElement_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", //$NON-NLS-1$
+								"_UI_GenericDiffElement_rightElement_feature", "_UI_GenericDiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 						DiffPackage.Literals.GENERIC_DIFF_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
 						null, null));
 	}
@@ -140,6 +148,7 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

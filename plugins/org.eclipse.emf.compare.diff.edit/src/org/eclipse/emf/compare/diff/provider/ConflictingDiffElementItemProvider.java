@@ -34,7 +34,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class ConflictingDiffElementItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -42,6 +41,7 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ConflictingDiffElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -53,7 +53,7 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictingDiffElement"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ConflictingDiffElement")); //$NON-NLS-1$
 	}
 
 	/**
@@ -121,13 +121,13 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addLeftParentPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ConflictingDiffElement_leftParent_feature", "_UI_ConflictingDiffElement_type"),
+				getString("_UI_ConflictingDiffElement_leftParent_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ConflictingDiffElement_leftParent_feature", "_UI_ConflictingDiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__LEFT_PARENT, true, false, true, null, null,
 				null));
 	}
@@ -138,17 +138,16 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addOriginElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_ConflictingDiffElement_originElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_ConflictingDiffElement_originElement_feature",
-								"_UI_ConflictingDiffElement_type"),
-						DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true,
-						null, null, null));
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+				.getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ConflictingDiffElement_originElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ConflictingDiffElement_originElement_feature", //$NON-NLS-1$
+						"_UI_ConflictingDiffElement_type"), //$NON-NLS-1$
+				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__ORIGIN_ELEMENT, true, false, true, null, null,
+				null));
 	}
 
 	/**
@@ -157,13 +156,13 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addRightParentPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ConflictingDiffElement_rightParent_feature", "_UI_ConflictingDiffElement_type"),
+				getString("_UI_ConflictingDiffElement_rightParent_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ConflictingDiffElement_rightParent_feature", "_UI_ConflictingDiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 				DiffPackage.Literals.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, true, false, true, null, null,
 				null));
 	}

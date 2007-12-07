@@ -46,6 +46,7 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public UpdateUniqueReferenceValueItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -55,17 +56,18 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue"));
+			images.add(getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue");
+			labelImage = getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -77,6 +79,7 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -93,6 +96,7 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -102,15 +106,16 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
 		try {
 			final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
 			final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
 			if (updateRef.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {
+				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] { //$NON-NLS-1$
 						NameSimilarity.findName(updateRef.getReference()),
-						NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
+								NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
 			return getString(
 					"_UI_UpdateUniqueReferenceValue_type", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(updateRef.getLeftElement()), //$NON-NLS-1$
 							NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
@@ -126,6 +131,7 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -137,13 +143,14 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addLeftTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_UpdateUniqueReferenceValue_leftTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_UpdateUniqueReferenceValue_leftTarget_feature",
-						"_UI_UpdateUniqueReferenceValue_type"),
+				getString("_UI_UpdateUniqueReferenceValue_leftTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_UpdateUniqueReferenceValue_leftTarget_feature", //$NON-NLS-1$
+						"_UI_UpdateUniqueReferenceValue_type"), //$NON-NLS-1$
 				DiffPackage.Literals.UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET, true, false, true, null,
 				null, null));
 	}
@@ -154,13 +161,14 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addRightTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_UpdateUniqueReferenceValue_rightTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_UpdateUniqueReferenceValue_rightTarget_feature",
-						"_UI_UpdateUniqueReferenceValue_type"),
+				getString("_UI_UpdateUniqueReferenceValue_rightTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_UpdateUniqueReferenceValue_rightTarget_feature", //$NON-NLS-1$
+						"_UI_UpdateUniqueReferenceValue_type"), //$NON-NLS-1$
 				DiffPackage.Literals.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, true, false, true, null,
 				null, null));
 	}
@@ -171,6 +179,7 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

@@ -43,6 +43,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public UpdateAttributeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -52,17 +53,18 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateAttribute"));
+			images.add(getResourceLocator().getImage("full/obj16/UpdateAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateAttribute");
+			labelImage = getResourceLocator().getImage("full/obj16/UpdateAttribute"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -74,6 +76,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -88,6 +91,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -97,6 +101,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public String getText(Object object) {
 		UpdateAttribute updateOp = (UpdateAttribute)object;
 		try {
@@ -119,6 +124,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -130,6 +136,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

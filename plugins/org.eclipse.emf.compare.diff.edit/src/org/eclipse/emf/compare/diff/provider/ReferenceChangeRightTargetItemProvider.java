@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ReferenceChangeRightTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -50,7 +50,7 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReferenceChangeRightTarget"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReferenceChangeRightTarget")); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ReferenceChangeRightTarget_type");
+		return getString("_UI_ReferenceChangeRightTarget_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,14 +110,14 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addLeftAddedTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChangeRightTarget_leftAddedTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ReferenceChangeRightTarget_leftAddedTarget_feature",
-						"_UI_ReferenceChangeRightTarget_type"),
+				getString("_UI_ReferenceChangeRightTarget_leftAddedTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ReferenceChangeRightTarget_leftAddedTarget_feature", //$NON-NLS-1$
+						"_UI_ReferenceChangeRightTarget_type"), //$NON-NLS-1$
 				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET, true, false, true,
 				null, null, null));
 	}
@@ -128,14 +128,14 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addRightAddedTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChangeRightTarget_rightAddedTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ReferenceChangeRightTarget_rightAddedTarget_feature",
-						"_UI_ReferenceChangeRightTarget_type"),
+				getString("_UI_ReferenceChangeRightTarget_rightAddedTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ReferenceChangeRightTarget_rightAddedTarget_feature", //$NON-NLS-1$
+						"_UI_ReferenceChangeRightTarget_type"), //$NON-NLS-1$
 				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET, true, false, true,
 				null, null, null));
 	}

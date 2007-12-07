@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public AttributeChangeLeftTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -50,7 +50,7 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChangeLeftTarget"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChangeLeftTarget")); //$NON-NLS-1$
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_AttributeChangeLeftTarget_type");
+		return getString("_UI_AttributeChangeLeftTarget_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -109,14 +109,14 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addLeftTargetPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_AttributeChangeLeftTarget_leftTarget_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_AttributeChangeLeftTarget_leftTarget_feature",
-						"_UI_AttributeChangeLeftTarget_type"),
+				getString("_UI_AttributeChangeLeftTarget_leftTarget_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_AttributeChangeLeftTarget_leftTarget_feature", //$NON-NLS-1$
+						"_UI_AttributeChangeLeftTarget_type"), //$NON-NLS-1$
 				DiffPackage.Literals.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, true, false, true, null,
 				null, null));
 	}

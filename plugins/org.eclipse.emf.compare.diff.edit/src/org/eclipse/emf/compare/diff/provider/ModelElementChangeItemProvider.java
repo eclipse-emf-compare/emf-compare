@@ -35,6 +35,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ModelElementChangeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -44,8 +45,9 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChange"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChange")); //$NON-NLS-1$
 	}
 
 	/**
@@ -54,6 +56,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -68,6 +71,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -77,8 +81,9 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_ModelElementChange_type");
+		return getString("_UI_ModelElementChange_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,6 +93,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -99,6 +105,7 @@ public class ModelElementChangeItemProvider extends DiffElementItemProvider impl
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

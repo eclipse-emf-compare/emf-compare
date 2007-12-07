@@ -40,6 +40,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public UpdateModelElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -49,17 +50,18 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateModelElement"));
+			images.add(getResourceLocator().getImage("full/obj16/UpdateModelElement")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateModelElement");
+			labelImage = getResourceLocator().getImage("full/obj16/UpdateModelElement"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -71,6 +73,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -87,6 +90,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -96,8 +100,9 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_UpdateModelElement_type");
+		return getString("_UI_UpdateModelElement_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -107,6 +112,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -118,13 +124,14 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_UpdateModelElement_leftElement_feature"), getString(
-								"_UI_PropertyDescriptor_description",
-								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"),
+						getString("_UI_UpdateModelElement_leftElement_feature"), getString( //$NON-NLS-1$
+								"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
 						null, null));
 	}
@@ -135,14 +142,15 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addRightElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_UpdateModelElement_rightElement_feature"),
-						getString("_UI_PropertyDescriptor_description",
-								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"),
+						getString("_UI_UpdateModelElement_rightElement_feature"), //$NON-NLS-1$
+						getString("_UI_PropertyDescriptor_description", //$NON-NLS-1$
+								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
 						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
 						null, null));
 	}
@@ -153,6 +161,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

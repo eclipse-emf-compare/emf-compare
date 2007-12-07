@@ -387,6 +387,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter adapt(Notifier notifier, Object type) {
 		return super.adapt(notifier, this);
 	}
@@ -396,6 +397,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
 			Object adapter = super.adapt(object, type);
@@ -422,6 +424,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAddAttributeAdapter() {
 		if (addAttributeItemProvider == null) {
 			addAttributeItemProvider = new AddAttributeItemProvider(this);
@@ -436,6 +439,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAddModelElementAdapter() {
 		if (addModelElementItemProvider == null) {
 			addModelElementItemProvider = new AddModelElementItemProvider(this);
@@ -450,6 +454,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAddReferenceValueAdapter() {
 		if (addReferenceValueItemProvider == null) {
 			addReferenceValueItemProvider = new AddReferenceValueItemProvider(this);
@@ -464,6 +469,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAttributeChangeAdapter() {
 		if (attributeChangeItemProvider == null) {
 			attributeChangeItemProvider = new AttributeChangeItemProvider(this);
@@ -478,6 +484,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAttributeChangeLeftTargetAdapter() {
 		if (attributeChangeLeftTargetItemProvider == null) {
 			attributeChangeLeftTargetItemProvider = new AttributeChangeLeftTargetItemProvider(this);
@@ -492,6 +499,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createAttributeChangeRightTargetAdapter() {
 		if (attributeChangeRightTargetItemProvider == null) {
 			attributeChangeRightTargetItemProvider = new AttributeChangeRightTargetItemProvider(this);
@@ -506,6 +514,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createConflictingDiffElementAdapter() {
 		if (conflictingDiffElementItemProvider == null) {
 			conflictingDiffElementItemProvider = new ConflictingDiffElementItemProvider(this);
@@ -520,6 +529,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createDiffGroupAdapter() {
 		if (diffGroupItemProvider == null) {
 			diffGroupItemProvider = new DiffGroupItemProvider(this);
@@ -534,6 +544,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createDiffModelAdapter() {
 		if (diffModelItemProvider == null) {
 			diffModelItemProvider = new DiffModelItemProvider(this);
@@ -548,6 +559,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createGenericDiffElementAdapter() {
 		if (genericDiffElementItemProvider == null) {
 			genericDiffElementItemProvider = new GenericDiffElementItemProvider(this);
@@ -562,6 +574,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createModelElementChangeAdapter() {
 		if (modelElementChangeItemProvider == null) {
 			modelElementChangeItemProvider = new ModelElementChangeItemProvider(this);
@@ -577,6 +590,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createModelElementChangeLeftTargetAdapter() {
 		if (modelElementChangeLeftTargetItemProvider == null) {
 			modelElementChangeLeftTargetItemProvider = new ModelElementChangeLeftTargetItemProvider(this);
@@ -592,6 +606,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createModelElementChangeRightTargetAdapter() {
 		if (modelElementChangeRightTargetItemProvider == null) {
 			modelElementChangeRightTargetItemProvider = new ModelElementChangeRightTargetItemProvider(this);
@@ -606,6 +621,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createModelInputSnapshotAdapter() {
 		if (modelInputSnapshotItemProvider == null) {
 			modelInputSnapshotItemProvider = new ModelInputSnapshotItemProvider(this);
@@ -620,6 +636,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createMoveModelElementAdapter() {
 		if (moveModelElementItemProvider == null) {
 			moveModelElementItemProvider = new MoveModelElementItemProvider(this);
@@ -634,6 +651,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createReferenceChangeAdapter() {
 		if (referenceChangeItemProvider == null) {
 			referenceChangeItemProvider = new ReferenceChangeItemProvider(this);
@@ -648,6 +666,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createReferenceChangeLeftTargetAdapter() {
 		if (referenceChangeLeftTargetItemProvider == null) {
 			referenceChangeLeftTargetItemProvider = new ReferenceChangeLeftTargetItemProvider(this);
@@ -662,6 +681,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createReferenceChangeRightTargetAdapter() {
 		if (referenceChangeRightTargetItemProvider == null) {
 			referenceChangeRightTargetItemProvider = new ReferenceChangeRightTargetItemProvider(this);
@@ -676,6 +696,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteAddAttributeAdapter() {
 		if (remoteAddAttributeItemProvider == null) {
 			remoteAddAttributeItemProvider = new RemoteAddAttributeItemProvider(this);
@@ -690,6 +711,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteAddModelElementAdapter() {
 		if (remoteAddModelElementItemProvider == null) {
 			remoteAddModelElementItemProvider = new RemoteAddModelElementItemProvider(this);
@@ -704,6 +726,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteAddReferenceValueAdapter() {
 		if (remoteAddReferenceValueItemProvider == null) {
 			remoteAddReferenceValueItemProvider = new RemoteAddReferenceValueItemProvider(this);
@@ -718,6 +741,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteMoveModelElementAdapter() {
 		if (remoteMoveModelElementItemProvider == null) {
 			remoteMoveModelElementItemProvider = new RemoteMoveModelElementItemProvider(this);
@@ -732,6 +756,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteRemoveAttributeAdapter() {
 		if (remoteRemoveAttributeItemProvider == null) {
 			remoteRemoveAttributeItemProvider = new RemoteRemoveAttributeItemProvider(this);
@@ -746,6 +771,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteRemoveModelElementAdapter() {
 		if (remoteRemoveModelElementItemProvider == null) {
 			remoteRemoveModelElementItemProvider = new RemoteRemoveModelElementItemProvider(this);
@@ -760,6 +786,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteRemoveReferenceValueAdapter() {
 		if (remoteRemoveReferenceValueItemProvider == null) {
 			remoteRemoveReferenceValueItemProvider = new RemoteRemoveReferenceValueItemProvider(this);
@@ -774,6 +801,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteUpdateAttributeAdapter() {
 		if (remoteUpdateAttributeItemProvider == null) {
 			remoteUpdateAttributeItemProvider = new RemoteUpdateAttributeItemProvider(this);
@@ -789,6 +817,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoteUpdateUniqueReferenceValueAdapter() {
 		if (remoteUpdateUniqueReferenceValueItemProvider == null) {
 			remoteUpdateUniqueReferenceValueItemProvider = new RemoteUpdateUniqueReferenceValueItemProvider(
@@ -804,6 +833,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoveAttributeAdapter() {
 		if (removeAttributeItemProvider == null) {
 			removeAttributeItemProvider = new RemoveAttributeItemProvider(this);
@@ -818,6 +848,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoveModelElementAdapter() {
 		if (removeModelElementItemProvider == null) {
 			removeModelElementItemProvider = new RemoveModelElementItemProvider(this);
@@ -832,6 +863,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createRemoveReferenceValueAdapter() {
 		if (removeReferenceValueItemProvider == null) {
 			removeReferenceValueItemProvider = new RemoveReferenceValueItemProvider(this);
@@ -846,6 +878,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createUpdateAttributeAdapter() {
 		if (updateAttributeItemProvider == null) {
 			updateAttributeItemProvider = new UpdateAttributeItemProvider(this);
@@ -860,6 +893,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createUpdateModelElementAdapter() {
 		if (updateModelElementItemProvider == null) {
 			updateModelElementItemProvider = new UpdateModelElementItemProvider(this);
@@ -874,6 +908,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createUpdateReferenceAdapter() {
 		if (updateReferenceItemProvider == null) {
 			updateReferenceItemProvider = new UpdateReferenceItemProvider(this);
@@ -888,6 +923,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Adapter createUpdateUniqueReferenceValueAdapter() {
 		if (updateUniqueReferenceValueItemProvider == null) {
 			updateUniqueReferenceValueItemProvider = new UpdateUniqueReferenceValueItemProvider(this);
@@ -1002,6 +1038,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean isFactoryForType(Object type) {
 		return supportedTypes.contains(type) || super.isFactoryForType(type);
 	}
@@ -1021,6 +1058,7 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}

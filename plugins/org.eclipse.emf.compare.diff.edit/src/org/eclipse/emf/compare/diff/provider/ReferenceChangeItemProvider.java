@@ -40,6 +40,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ReferenceChangeItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -49,17 +50,18 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated NOT
 	 */
+	@Override
 	public Object getImage(Object object) {
 		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
 				.getAttributeChange_Attribute(), adapterFactory.getClass());
 
 		if (labelImage != null) {
-			List images = new ArrayList(2);
+			List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/ReferenceChange"));
+			images.add(getResourceLocator().getImage("full/obj16/ReferenceChange")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
 		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/ReferenceChange");
+			labelImage = getResourceLocator().getImage("full/obj16/ReferenceChange"); //$NON-NLS-1$
 		}
 
 		return labelImage;
@@ -71,6 +73,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@Override
 	public List getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
@@ -88,6 +91,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@Override
 	public ResourceLocator getResourceLocator() {
 		return DiffEditPlugin.INSTANCE;
 	}
@@ -97,8 +101,9 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String getText(Object object) {
-		return getString("_UI_ReferenceChange_type");
+		return getString("_UI_ReferenceChange_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -108,6 +113,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
@@ -119,12 +125,13 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_leftElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT,
+				getString("_UI_ReferenceChange_leftElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_leftElement_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -134,12 +141,13 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addReferencePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_reference_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE, true,
+				getString("_UI_ReferenceChange_reference_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_reference_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__REFERENCE, true, //$NON-NLS-1$
 				false, true, null, null, null));
 	}
 
@@ -149,12 +157,13 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	protected void addRightElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ReferenceChange_rightElement_feature"), getString(
-						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature",
-						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT,
+				getString("_UI_ReferenceChange_rightElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", "_UI_ReferenceChange_rightElement_feature", //$NON-NLS-1$ //$NON-NLS-2$
+						"_UI_ReferenceChange_type"), DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT, //$NON-NLS-1$
 				true, false, true, null, null, null));
 	}
 
@@ -164,6 +173,7 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}

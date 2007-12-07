@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class ModelElementChangeLeftTargetItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public ModelElementChangeLeftTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -50,7 +50,7 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChangeLeftTarget"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChangeLeftTarget")); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ModelElementChangeLeftTarget_type");
+		return getString("_UI_ModelElementChangeLeftTarget_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -110,14 +110,14 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ModelElementChangeLeftTarget_leftElement_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ModelElementChangeLeftTarget_leftElement_feature",
-						"_UI_ModelElementChangeLeftTarget_type"),
+				getString("_UI_ModelElementChangeLeftTarget_leftElement_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ModelElementChangeLeftTarget_leftElement_feature", //$NON-NLS-1$
+						"_UI_ModelElementChangeLeftTarget_type"), //$NON-NLS-1$
 				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, true, false, true, null,
 				null, null));
 	}
@@ -128,14 +128,14 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unused")
 	protected void addRightParentPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ModelElementChangeLeftTarget_rightParent_feature"), getString(
-						"_UI_PropertyDescriptor_description",
-						"_UI_ModelElementChangeLeftTarget_rightParent_feature",
-						"_UI_ModelElementChangeLeftTarget_type"),
+				getString("_UI_ModelElementChangeLeftTarget_rightParent_feature"), getString( //$NON-NLS-1$
+						"_UI_PropertyDescriptor_description", //$NON-NLS-1$
+						"_UI_ModelElementChangeLeftTarget_rightParent_feature", //$NON-NLS-1$
+						"_UI_ModelElementChangeLeftTarget_type"), //$NON-NLS-1$
 				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, true, false, true, null,
 				null, null));
 	}
