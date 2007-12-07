@@ -110,7 +110,6 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addOriginElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors

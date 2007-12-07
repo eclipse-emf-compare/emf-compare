@@ -128,7 +128,6 @@ public abstract class MatchElementImpl extends EObjectImpl implements MatchEleme
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

@@ -152,7 +152,6 @@ public class DifferencesServices implements MatchEngine {
 	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
-	@SuppressWarnings("unchecked")
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
@@ -195,11 +194,11 @@ public class DifferencesServices implements MatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftObject.eResource()) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightObject.eResource()) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
 						remainingRight.add(iterator.next());
 				}
 			}
@@ -428,12 +427,12 @@ public class DifferencesServices implements MatchEngine {
 	 *             Thrown if we cannot compute the {@link #absoluteMetric(EObject, EObject) absolute metric}
 	 *             between <code>eObj</code> and one of the list's objects.
 	 */
-	protected EObject findMostSimilar(EObject eObj, List list) throws FactoryException {
+	protected EObject findMostSimilar(EObject eObj, List<EObject> list) throws FactoryException {
 		double max = 0d;
 		EObject resultObject = null;
-		final Iterator it = list.iterator();
+		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext()) {
-			final EObject next = (EObject)it.next();
+			final EObject next = it.next();
 			final double similarity = absoluteMetric(eObj, next);
 			if (similarity > max) {
 				max = similarity;
@@ -705,7 +704,6 @@ public class DifferencesServices implements MatchEngine {
 	 *             elements or if we cannot add a {@link Match3Element} under the given
 	 *             <code>matchElementRoot</code>.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createSub3Match(MatchModel root, Match3Element matchElementRoot, Match2Elements left,
 			Match2Elements right) throws FactoryException {
 		final List<Match2Elements> leftSubMatches = left.getSubMatchElements();
@@ -902,7 +900,7 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void launchMonitor(CompareProgressMonitor monitor, EObject root) {
 		int size = 1;
-		final Iterator sizeit = root.eAllContents();
+		final Iterator<EObject> sizeit = root.eAllContents();
 		while (sizeit.hasNext()) {
 			sizeit.next();
 			size++;
@@ -947,10 +945,10 @@ public class DifferencesServices implements MatchEngine {
 		final List<EObject> notFoundList1 = new ArrayList<EObject>(list1);
 		final List<EObject> notFoundList2 = new ArrayList<EObject>(list2);
 
-		final Iterator it1 = list1.iterator();
+		final Iterator<EObject> it1 = list1.iterator();
 		// then iterate over the 2 lists and compare the elements
 		while (it1.hasNext() && notFoundList2.size() > 0) {
-			final EObject obj1 = (EObject)it1.next();
+			final EObject obj1 = it1.next();
 
 			final StringBuilder obj1Key = new StringBuilder();
 			obj1Key.append(NameSimilarity.findName(obj1));
@@ -1015,14 +1013,14 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void matchByID(EObject obj1, EObject obj2) throws FactoryException {
 		matchedByID.clear();
-		final Iterator iterator1 = obj1.eAllContents();
+		final Iterator<EObject> iterator1 = obj1.eAllContents();
 		while (iterator1.hasNext()) {
-			final EObject item1 = (EObject)iterator1.next();
+			final EObject item1 = iterator1.next();
 			final String item1ID = EcoreUtil.getID(item1);
 			if (item1ID != null) {
-				final Iterator iterator2 = obj2.eAllContents();
+				final Iterator<EObject> iterator2 = obj2.eAllContents();
 				while (iterator2.hasNext()) {
-					final EObject item2 = (EObject)iterator2.next();
+					final EObject item2 = iterator2.next();
 					final String item2ID = EcoreUtil.getID(item2);
 					if (item2 != null && item1ID.equals(item2ID)) {
 						final StringBuilder item1Key = new StringBuilder();
@@ -1049,14 +1047,14 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void matchByID(Resource left, Resource right) throws FactoryException {
 		matchedByID.clear();
-		final Iterator leftIterator = left.getAllContents();
+		final Iterator<EObject> leftIterator = left.getAllContents();
 		while (leftIterator.hasNext()) {
-			final EObject item1 = (EObject)leftIterator.next();
+			final EObject item1 = leftIterator.next();
 			final String item1ID = EcoreUtil.getID(item1);
 			if (item1ID != null) {
-				final Iterator rightIterator = right.getAllContents();
+				final Iterator<EObject> rightIterator = right.getAllContents();
 				while (rightIterator.hasNext()) {
-					final EObject item2 = (EObject)rightIterator.next();
+					final EObject item2 = rightIterator.next();
 					final String item2ID = EcoreUtil.getID(item2);
 					if (item2 != null && item1ID.equals(item2ID)) {
 						final StringBuilder item1Key = new StringBuilder();
@@ -1091,9 +1089,9 @@ public class DifferencesServices implements MatchEngine {
 				&& obj2.eResource() instanceof XMIResource) {
 			final XMIResource left = (XMIResource)obj1.eResource();
 			final XMIResource right = (XMIResource)obj2.eResource();
-			final Iterator iterator = obj1.eAllContents();
+			final Iterator<EObject> iterator = obj1.eAllContents();
 			while (iterator.hasNext()) {
-				final EObject item1 = (EObject)iterator.next();
+				final EObject item1 = iterator.next();
 				final String item1ID = left.getID(item1);
 				if (item1ID != null) {
 					final EObject item2 = right.getEObject(item1ID);
@@ -1121,10 +1119,10 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void matchByXMIID(XMIResource left, XMIResource right) throws FactoryException {
 		matchedByXMIID.clear();
-		final Iterator leftIterator = left.getAllContents();
+		final Iterator<EObject> leftIterator = left.getAllContents();
 
 		while (leftIterator.hasNext()) {
-			final EObject item1 = (EObject)leftIterator.next();
+			final EObject item1 = leftIterator.next();
 			final String item1ID = left.getID(item1);
 			if (item1ID != null) {
 				final EObject item2 = right.getEObject(item1ID);
@@ -1260,7 +1258,6 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	@SuppressWarnings("unchecked")
 	private MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			CompareProgressMonitor monitor, Map<String, Object> optionMap) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
@@ -1304,11 +1301,11 @@ public class DifferencesServices implements MatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftRoot.eResource()) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightRoot.eResource()) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
 						remainingRight.add(iterator.next());
 				}
 			}
@@ -1346,7 +1343,6 @@ public class DifferencesServices implements MatchEngine {
 	 *            {@link EObject} we need to count the empty features of.
 	 * @return The number of features initialized to <code>null</code> or the empty String.
 	 */
-	@SuppressWarnings("unchecked")
 	private int nonNullFeaturesCount(EObject eobj) {
 		int nonNullFeatures = 0;
 		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
@@ -1472,7 +1468,6 @@ public class DifferencesServices implements MatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
-	@SuppressWarnings("unchecked")
 	private Match2Elements recursiveMappings(EObject current1, EObject current2,
 			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;

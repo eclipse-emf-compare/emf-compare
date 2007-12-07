@@ -56,7 +56,6 @@ public final class NameSimilarity {
 	 * @throws FactoryException
 	 *             Thrown if one of the operation on {@link EObject} fails.
 	 */
-	@SuppressWarnings("unchecked")
 	public static String contentValue(EObject current, MetamodelFilter filter) throws FactoryException {
 		final EObject eclass = current.eClass();
 		final StringBuilder result = new StringBuilder();
@@ -117,7 +116,6 @@ public final class NameSimilarity {
 	 *            {@link EObject} we seek the name feature of.
 	 * @return The feature which seems to be the name of the given {@link EObject}.
 	 */
-	@SuppressWarnings("unchecked")
 	public static EAttribute findNameFeature(EObject current) {
 		final EClass eclass = current.eClass();
 		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName() + eclass.hashCode());

@@ -111,7 +111,6 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addLeftElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors

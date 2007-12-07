@@ -5,7 +5,7 @@
     editDirectory="/org.eclipse.emf.compare.match/src" editorDirectory="/org.eclipse.emf.compare.match.editor/src"
     modelPluginID="org.eclipse.emf.compare.match" modelName="Match" editPluginClass="org.eclipse.emf.compare.match.metamodel.provider.MatchEditPlugin"
     editorPluginClass="org.eclipse.emf.compare.match.presentation.MatchEditorPlugin"
-    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore">
+    nonNLSMarkers="true" codeFormatting="true" importerID="org.eclipse.emf.importer.ecore">
   <foreignModel>match.ecore</foreignModel>
   <genPackages prefix="Match" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       interfacePackageSuffix="metamodel" metaDataPackageSuffix="metamodel" classPackageSuffix="metamodel.impl"
