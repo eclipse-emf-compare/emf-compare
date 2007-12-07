@@ -130,7 +130,7 @@ public class DefaultMerger implements IMerger {
 	protected Resource findLeftResource() {
 		Resource leftResource = null;
 		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext();) {
 			final Match2Elements element = (Match2Elements)matchIterator.next();
 			if (element.getLeftElement() != null) {
 				leftResource = element.getLeftElement().eResource();
@@ -147,7 +147,7 @@ public class DefaultMerger implements IMerger {
 	protected Resource findRightResource() {
 		Resource rightResource = null;
 		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext();) {
 			final Match2Elements element = (Match2Elements)matchIterator.next();
 			if (element.getRightElement() != null) {
 				rightResource = element.getRightElement().eResource();
@@ -204,9 +204,9 @@ public class DefaultMerger implements IMerger {
 					return crossReferencedEObject.eResource() == null;
 				}
 			};
-			for (final Iterator i = referencer.entrySet().iterator(); i.hasNext(); ) {
+			for (final Iterator i = referencer.entrySet().iterator(); i.hasNext();) {
 				final Map.Entry entry = (Map.Entry)i.next();
-				for (final Iterator j = ((List)entry.getValue()).iterator(); j.hasNext(); ) {
+				for (final Iterator j = ((List)entry.getValue()).iterator(); j.hasNext();) {
 					EcoreUtil.remove((EStructuralFeature.Setting)j.next(), entry.getKey());
 				}
 			}

@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceChange {
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--

@@ -37,7 +37,6 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
 		/*

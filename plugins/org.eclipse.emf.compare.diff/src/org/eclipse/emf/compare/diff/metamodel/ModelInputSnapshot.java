@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface ModelInputSnapshot extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc -->

@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-@SuppressWarnings("nls")
 public interface DiffElement extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Is Hidden By</b></em>' reference list. The list contents are of

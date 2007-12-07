@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class RemoteUpdateAttributeImpl extends UpdateAttributeImpl implements RemoteUpdateAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

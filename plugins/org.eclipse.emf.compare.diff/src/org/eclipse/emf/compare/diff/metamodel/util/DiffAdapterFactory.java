@@ -61,7 +61,6 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage
  * @generated
  */
-@SuppressWarnings("nls")
 public class DiffAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -77,150 +76,187 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	protected DiffSwitch modelSwitch = new DiffSwitch() {
+		@Override
 		public Object caseAbstractDiffExtension(AbstractDiffExtension object) {
 			return createAbstractDiffExtensionAdapter();
 		}
 
+		@Override
 		public Object caseAddAttribute(AddAttribute object) {
 			return createAddAttributeAdapter();
 		}
 
+		@Override
 		public Object caseAddModelElement(AddModelElement object) {
 			return createAddModelElementAdapter();
 		}
 
+		@Override
 		public Object caseAddReferenceValue(AddReferenceValue object) {
 			return createAddReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseAttributeChange(AttributeChange object) {
 			return createAttributeChangeAdapter();
 		}
 
+		@Override
 		public Object caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
 			return createAttributeChangeLeftTargetAdapter();
 		}
 
+		@Override
 		public Object caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
 			return createAttributeChangeRightTargetAdapter();
 		}
 
+		@Override
 		public Object caseConflictingDiffElement(ConflictingDiffElement object) {
 			return createConflictingDiffElementAdapter();
 		}
 
+		@Override
 		public Object caseDiffElement(DiffElement object) {
 			return createDiffElementAdapter();
 		}
 
+		@Override
 		public Object caseDiffGroup(DiffGroup object) {
 			return createDiffGroupAdapter();
 		}
 
+		@Override
 		public Object caseDiffModel(DiffModel object) {
 			return createDiffModelAdapter();
 		}
 
+		@Override
 		public Object caseGenericDiffElement(GenericDiffElement object) {
 			return createGenericDiffElementAdapter();
 		}
 
+		@Override
 		public Object caseModelElementChange(ModelElementChange object) {
 			return createModelElementChangeAdapter();
 		}
 
+		@Override
 		public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
 			return createModelElementChangeLeftTargetAdapter();
 		}
 
+		@Override
 		public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
 			return createModelElementChangeRightTargetAdapter();
 		}
 
+		@Override
 		public Object caseModelInputSnapshot(ModelInputSnapshot object) {
 			return createModelInputSnapshotAdapter();
 		}
 
+		@Override
 		public Object caseMoveModelElement(MoveModelElement object) {
 			return createMoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseReferenceChange(ReferenceChange object) {
 			return createReferenceChangeAdapter();
 		}
 
+		@Override
 		public Object caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
 			return createReferenceChangeLeftTargetAdapter();
 		}
 
+		@Override
 		public Object caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
 			return createReferenceChangeRightTargetAdapter();
 		}
 
+		@Override
 		public Object caseRemoteAddAttribute(RemoteAddAttribute object) {
 			return createRemoteAddAttributeAdapter();
 		}
 
+		@Override
 		public Object caseRemoteAddModelElement(RemoteAddModelElement object) {
 			return createRemoteAddModelElementAdapter();
 		}
 
+		@Override
 		public Object caseRemoteAddReferenceValue(RemoteAddReferenceValue object) {
 			return createRemoteAddReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseRemoteMoveModelElement(RemoteMoveModelElement object) {
 			return createRemoteMoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseRemoteRemoveAttribute(RemoteRemoveAttribute object) {
 			return createRemoteRemoveAttributeAdapter();
 		}
 
+		@Override
 		public Object caseRemoteRemoveModelElement(RemoteRemoveModelElement object) {
 			return createRemoteRemoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseRemoteRemoveReferenceValue(RemoteRemoveReferenceValue object) {
 			return createRemoteRemoveReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseRemoteUpdateAttribute(RemoteUpdateAttribute object) {
 			return createRemoteUpdateAttributeAdapter();
 		}
 
+		@Override
 		public Object caseRemoteUpdateUniqueReferenceValue(RemoteUpdateUniqueReferenceValue object) {
 			return createRemoteUpdateUniqueReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseRemoveAttribute(RemoveAttribute object) {
 			return createRemoveAttributeAdapter();
 		}
 
+		@Override
 		public Object caseRemoveModelElement(RemoveModelElement object) {
 			return createRemoveModelElementAdapter();
 		}
 
+		@Override
 		public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
 			return createRemoveReferenceValueAdapter();
 		}
 
+		@Override
 		public Object caseUpdateAttribute(UpdateAttribute object) {
 			return createUpdateAttributeAdapter();
 		}
 
+		@Override
 		public Object caseUpdateModelElement(UpdateModelElement object) {
 			return createUpdateModelElementAdapter();
 		}
 
+		@Override
 		public Object caseUpdateReference(UpdateReference object) {
 			return createUpdateReferenceAdapter();
 		}
 
+		@Override
 		public Object caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
 			return createUpdateUniqueReferenceValueAdapter();
 		}
 
+		@Override
 		public Object defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}

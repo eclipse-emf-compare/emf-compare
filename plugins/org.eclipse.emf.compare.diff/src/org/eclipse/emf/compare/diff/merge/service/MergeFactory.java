@@ -151,7 +151,7 @@ public final class MergeFactory {
 			 */
 			final int[] priorities = {EngineConstants.PRIORITY_LOWEST, EngineConstants.PRIORITY_LOW,
 					EngineConstants.PRIORITY_NORMAL, EngineConstants.PRIORITY_HIGH,
-					EngineConstants.PRIORITY_HIGHEST, };
+					EngineConstants.PRIORITY_HIGHEST,};
 			for (int priority : priorities) {
 				final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergers = new EMFCompareMap<Class<? extends DiffElement>, Class<? extends IMerger>>();
 				// Iterates through the list of providers registered for all extensions

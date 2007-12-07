@@ -61,7 +61,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class DiffSwitch {
 	/**
 	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -92,6 +92,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAbstractDiffExtension(AbstractDiffExtension object) {
 		return null;
 	}
@@ -107,6 +108,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAddAttribute(AddAttribute object) {
 		return null;
 	}
@@ -122,6 +124,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAddModelElement(AddModelElement object) {
 		return null;
 	}
@@ -137,6 +140,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAddReferenceValue(AddReferenceValue object) {
 		return null;
 	}
@@ -152,6 +156,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAttributeChange(AttributeChange object) {
 		return null;
 	}
@@ -167,6 +172,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
 		return null;
 	}
@@ -182,6 +188,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
 		return null;
 	}
@@ -197,6 +204,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseConflictingDiffElement(ConflictingDiffElement object) {
 		return null;
 	}
@@ -212,6 +220,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseDiffElement(DiffElement object) {
 		return null;
 	}
@@ -227,6 +236,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseDiffGroup(DiffGroup object) {
 		return null;
 	}
@@ -242,6 +252,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseDiffModel(DiffModel object) {
 		return null;
 	}
@@ -257,6 +268,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseGenericDiffElement(GenericDiffElement object) {
 		return null;
 	}
@@ -272,6 +284,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseModelElementChange(ModelElementChange object) {
 		return null;
 	}
@@ -287,6 +300,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
 		return null;
 	}
@@ -302,6 +316,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
 		return null;
 	}
@@ -317,6 +332,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseModelInputSnapshot(ModelInputSnapshot object) {
 		return null;
 	}
@@ -332,6 +348,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseMoveModelElement(MoveModelElement object) {
 		return null;
 	}
@@ -347,6 +364,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseReferenceChange(ReferenceChange object) {
 		return null;
 	}
@@ -362,6 +380,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
 		return null;
 	}
@@ -377,6 +396,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
 		return null;
 	}
@@ -392,6 +412,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteAddAttribute(RemoteAddAttribute object) {
 		return null;
 	}
@@ -407,6 +428,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteAddModelElement(RemoteAddModelElement object) {
 		return null;
 	}
@@ -422,6 +444,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteAddReferenceValue(RemoteAddReferenceValue object) {
 		return null;
 	}
@@ -437,6 +460,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteMoveModelElement(RemoteMoveModelElement object) {
 		return null;
 	}
@@ -452,6 +476,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteRemoveAttribute(RemoteRemoveAttribute object) {
 		return null;
 	}
@@ -467,6 +492,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteRemoveModelElement(RemoteRemoveModelElement object) {
 		return null;
 	}
@@ -482,6 +508,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteRemoveReferenceValue(RemoteRemoveReferenceValue object) {
 		return null;
 	}
@@ -497,6 +524,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteUpdateAttribute(RemoteUpdateAttribute object) {
 		return null;
 	}
@@ -512,6 +540,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoteUpdateUniqueReferenceValue(RemoteUpdateUniqueReferenceValue object) {
 		return null;
 	}
@@ -527,6 +556,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoveAttribute(RemoveAttribute object) {
 		return null;
 	}
@@ -542,6 +572,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoveModelElement(RemoveModelElement object) {
 		return null;
 	}
@@ -557,6 +588,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
 		return null;
 	}
@@ -572,6 +604,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseUpdateAttribute(UpdateAttribute object) {
 		return null;
 	}
@@ -587,6 +620,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseUpdateModelElement(UpdateModelElement object) {
 		return null;
 	}
@@ -602,6 +636,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseUpdateReference(UpdateReference object) {
 		return null;
 	}
@@ -617,6 +652,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
 		return null;
 	}
@@ -632,6 +668,7 @@ public class DiffSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
+	@SuppressWarnings("unused")
 	public Object defaultCase(EObject object) {
 		return null;
 	}
@@ -657,11 +694,10 @@ public class DiffSwitch {
 	protected Object doSwitch(EClass theEClass, EObject theEObject) {
 		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		} else {
-			List eSuperTypes = theEClass.getESuperTypes();
-			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0),
-					theEObject);
 		}
+		List eSuperTypes = theEClass.getESuperTypes();
+		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0),
+				theEObject);
 	}
 
 	/**

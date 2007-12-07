@@ -1246,7 +1246,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	public void initializePackageContents() {
 		if (isInitialized)
 			return;

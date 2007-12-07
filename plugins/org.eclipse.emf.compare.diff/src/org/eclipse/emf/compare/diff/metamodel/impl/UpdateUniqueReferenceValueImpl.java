@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implements UpdateUniqueReferenceValue {
 	/**
 	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!--

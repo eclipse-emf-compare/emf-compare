@@ -18,7 +18,7 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
+
 public interface RemoteUpdateUniqueReferenceValue extends UpdateUniqueReferenceValue {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteUpdateUniqueReferenceValue

@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

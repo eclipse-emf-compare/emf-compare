@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class AttributeChangeImpl extends DiffElementImpl implements AttributeChange {
 	/**
 	 * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' reference. <!-- begin-user-doc

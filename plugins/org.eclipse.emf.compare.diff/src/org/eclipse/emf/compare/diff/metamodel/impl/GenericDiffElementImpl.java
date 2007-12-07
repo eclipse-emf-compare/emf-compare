@@ -85,6 +85,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.GENERIC_DIFF_ELEMENT__LEFT_ELEMENT:
@@ -104,6 +105,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.GENERIC_DIFF_ELEMENT__LEFT_ELEMENT:
@@ -119,6 +121,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.GENERIC_DIFF_ELEMENT__LEFT_ELEMENT:
@@ -136,6 +139,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.GENERIC_DIFF_ELEMENT__LEFT_ELEMENT:
@@ -215,6 +219,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.GENERIC_DIFF_ELEMENT;
 	}

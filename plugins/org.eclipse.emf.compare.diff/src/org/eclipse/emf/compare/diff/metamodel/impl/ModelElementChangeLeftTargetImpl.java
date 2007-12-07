@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl implements ModelElementChangeLeftTarget {
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--

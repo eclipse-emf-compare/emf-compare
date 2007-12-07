@@ -61,7 +61,6 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void undoInTarget() {
 		/*
@@ -86,7 +85,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			findRightResource().getContents().add(newOne);
 		}
 		// we should now have a look for RemovedReferencesLinks needing elements to apply
-		final Iterator siblings = getDiffModel().eAllContents();
+		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final Object op = siblings.next();
 			if (op instanceof ReferenceChangeLeftTarget) {

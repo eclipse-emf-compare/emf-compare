@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

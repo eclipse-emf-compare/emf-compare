@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-@SuppressWarnings("nls")
 public interface DiffPackage extends EPackage {
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl <em>Abstract Diff Extension</em>}'
@@ -216,7 +215,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIFF_MODEL_FEATURE_COUNT = 4;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl <em>Conflicting Diff Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -280,7 +279,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int CONFLICTING_DIFF_ELEMENT_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 3;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl <em>Attribute Change</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -490,7 +489,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 1;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -803,7 +802,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_FEATURE_COUNT + 2;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl <em>Add Model Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1132,7 +1131,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl <em>Add Reference Value</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2109,7 +2108,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_UNIQUE_REFERENCE_VALUE_FEATURE_COUNT = UPDATE_REFERENCE_FEATURE_COUNT + 2;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2182,7 +2181,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MOVE_MODEL_ELEMENT_FEATURE_COUNT = UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 2;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl <em>Remote Move Model Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2255,7 +2254,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOTE_MOVE_MODEL_ELEMENT_FEATURE_COUNT = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 0;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateAttributeImpl <em>Remote Update Attribute</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2319,7 +2318,7 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOTE_UPDATE_ATTRIBUTE_FEATURE_COUNT = UPDATE_ATTRIBUTE_FEATURE_COUNT + 0;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteUpdateUniqueReferenceValueImpl <em>Remote Update Unique Reference Value</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -3234,6 +3233,7 @@ public interface DiffPackage extends EPackage {
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	interface Literals {
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl <em>Abstract Diff Extension</em>}'

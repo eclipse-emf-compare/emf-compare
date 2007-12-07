@@ -41,7 +41,6 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
 		/*
@@ -65,7 +64,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 			findLeftResource().getContents().add(newOne);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator siblings = getDiffModel().eAllContents();
+		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof ReferenceChangeRightTarget) {

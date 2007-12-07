@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class RemoteRemoveModelElementImpl extends ModelElementChangeRightTargetImpl implements RemoteRemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

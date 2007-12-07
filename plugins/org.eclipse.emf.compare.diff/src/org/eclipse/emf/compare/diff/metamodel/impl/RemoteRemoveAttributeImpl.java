@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class RemoteRemoveAttributeImpl extends AttributeChangeRightTargetImpl implements RemoteRemoveAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

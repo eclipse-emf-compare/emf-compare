@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.EReference;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface ReferenceChange extends DiffElement {
 	/**
 	 * Returns the value of the '<em><b>Left Element</b></em>' reference. <!-- begin-user-doc -->

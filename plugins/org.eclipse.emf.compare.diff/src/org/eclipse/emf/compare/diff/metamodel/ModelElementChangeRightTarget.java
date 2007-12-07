@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface ModelElementChangeRightTarget extends ModelElementChange {
 	/**
 	 * Returns the value of the '<em><b>Left Parent</b></em>' reference. <!-- begin-user-doc -->

@@ -96,15 +96,16 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	public NotificationChain basicSetDiff(DiffModel newDiff, NotificationChain msgs) {
 		DiffModel oldDiff = diff;
 		diff = newDiff;
+		NotificationChain message = msgs;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MODEL_INPUT_SNAPSHOT__DIFF, oldDiff, newDiff);
-			if (msgs == null)
-				msgs = notification;
+			if (message == null)
+				message = notification;
 			else
-				msgs.add(notification);
+				message.add(notification);
 		}
-		return msgs;
+		return message;
 	}
 
 	/**
@@ -115,15 +116,16 @@ public class ModelInputSnapshotImpl extends EObjectImpl implements ModelInputSna
 	public NotificationChain basicSetMatch(MatchModel newMatch, NotificationChain msgs) {
 		MatchModel oldMatch = match;
 		match = newMatch;
+		NotificationChain message = msgs;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MODEL_INPUT_SNAPSHOT__MATCH, oldMatch, newMatch);
-			if (msgs == null)
-				msgs = notification;
+			if (message == null)
+				message = notification;
 			else
-				msgs.add(notification);
+				message.add(notification);
 		}
-		return msgs;
+		return message;
 	}
 
 	/**

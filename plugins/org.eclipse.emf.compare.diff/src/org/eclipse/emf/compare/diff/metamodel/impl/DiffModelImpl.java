@@ -180,7 +180,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

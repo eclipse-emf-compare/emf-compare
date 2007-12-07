@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoteAddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

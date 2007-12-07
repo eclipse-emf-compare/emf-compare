@@ -18,7 +18,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface RemoteMoveModelElement extends MoveModelElement {
 	// This class doesn't need any Overriding to be functionnal
 } // RemoteMoveModelElement

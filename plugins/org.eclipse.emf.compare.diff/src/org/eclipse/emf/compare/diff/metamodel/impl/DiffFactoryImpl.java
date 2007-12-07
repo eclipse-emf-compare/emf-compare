@@ -113,6 +113,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case DiffPackage.IMERGER:
@@ -300,6 +301,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
 			case DiffPackage.IMERGER:

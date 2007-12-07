@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
 	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list. <!--
@@ -89,6 +89,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
@@ -134,7 +135,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {

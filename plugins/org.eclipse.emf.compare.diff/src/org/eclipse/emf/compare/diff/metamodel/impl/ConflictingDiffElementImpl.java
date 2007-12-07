@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class ConflictingDiffElementImpl extends DiffElementImpl implements ConflictingDiffElement {
 	/**
 	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--

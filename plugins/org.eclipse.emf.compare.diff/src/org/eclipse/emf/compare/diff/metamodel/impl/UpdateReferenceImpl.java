@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateReference {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

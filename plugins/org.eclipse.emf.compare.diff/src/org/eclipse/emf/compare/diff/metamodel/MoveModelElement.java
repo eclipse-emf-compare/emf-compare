@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface MoveModelElement extends UpdateModelElement {
 	/**
 	 * Returns the value of the '<em><b>Left Target</b></em>' reference. <!-- begin-user-doc -->

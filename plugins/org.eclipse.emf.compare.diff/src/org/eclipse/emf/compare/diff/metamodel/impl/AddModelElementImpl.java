@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
+
 public class AddModelElementImpl extends ModelElementChangeRightTargetImpl implements AddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

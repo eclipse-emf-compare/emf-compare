@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-@SuppressWarnings("nls")
 public interface DiffModel extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Left</b></em>' attribute. <!-- begin-user-doc -->

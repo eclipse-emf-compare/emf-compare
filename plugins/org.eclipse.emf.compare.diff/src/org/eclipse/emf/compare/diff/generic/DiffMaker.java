@@ -97,7 +97,6 @@ public class DiffMaker implements DiffEngine {
 	 * @see org.eclipse.emf.compare.diff.api.DiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean)
 	 */
-	@SuppressWarnings("unchecked")
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
 		updateEObjectToMatch(match, threeWay);
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
@@ -154,7 +153,6 @@ public class DiffMaker implements DiffEngine {
 	 * @param targetParent
 	 *            Parent {@link EObject} for the operation.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addInContainerPackage(DiffGroup root, DiffElement operation, EObject targetParent) {
 		if (targetParent == null) {
 			root.getSubDiffElements().add(operation);
@@ -187,11 +185,11 @@ public class DiffMaker implements DiffEngine {
 	protected void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
 		final EClass eClass = mapping.getLeftElement().eClass();
 
-		final List eclassAttributes = eClass.getEAllAttributes();
+		final List<EAttribute> eclassAttributes = eClass.getEAllAttributes();
 		// for each feature, compare the value
-		final Iterator it = eclassAttributes.iterator();
+		final Iterator<EAttribute> it = eclassAttributes.iterator();
 		while (it.hasNext()) {
-			final EAttribute next = (EAttribute)it.next();
+			final EAttribute next = it.next();
 			if (!shouldBeIgnored(next)) {
 				final String attributeName = next.getName();
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
@@ -235,11 +233,11 @@ public class DiffMaker implements DiffEngine {
 			return;
 		final EClass eClass = mapping.getOriginElement().eClass();
 
-		final List eclassAttributes = eClass.getEAllAttributes();
+		final List<EAttribute> eclassAttributes = eClass.getEAllAttributes();
 		// for each feature, compare the value
-		final Iterator it = eclassAttributes.iterator();
+		final Iterator<EAttribute> it = eclassAttributes.iterator();
 		while (it.hasNext()) {
-			final EAttribute next = (EAttribute)it.next();
+			final EAttribute next = it.next();
 			if (!shouldBeIgnored(next)) {
 				final String attributeName = next.getName();
 				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
@@ -316,7 +314,6 @@ public class DiffMaker implements DiffEngine {
 	 * @param matchElement
 	 *            This contains the mapping information about the elements we need to check for a move.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void checkMoves(DiffGroup root, Match3Element matchElement) {
 		final EObject leftElement = matchElement.getLeftElement();
 		final EObject rightElement = matchElement.getRightElement();
@@ -374,11 +371,11 @@ public class DiffMaker implements DiffEngine {
 	 */
 	protected void checkReferencesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
 		final EClass eClass = mapping.getLeftElement().eClass();
-		final List eclassReferences = eClass.getEAllReferences();
+		final List<EReference> eclassReferences = eClass.getEAllReferences();
 
-		final Iterator it = eclassReferences.iterator();
+		final Iterator<EReference> it = eclassReferences.iterator();
 		while (it.hasNext()) {
-			final EReference next = (EReference)it.next();
+			final EReference next = it.next();
 			if (!shouldBeIgnored(next)) {
 				createNonConflictingReferencesUpdate(root, next, mapping.getLeftElement(), mapping
 						.getRightElement());
@@ -401,24 +398,23 @@ public class DiffMaker implements DiffEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch the references' values.
 	 */
-	@SuppressWarnings("unchecked")
 	protected void checkReferencesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
 		// Ignores matchElements when they don't have origin (no updates on
 		// these)
 		if (mapping.getOriginElement() == null)
 			return;
 		final EClass eClass = mapping.getOriginElement().eClass();
-		final List eclassReferences = eClass.getEAllReferences();
+		final List<EReference> eclassReferences = eClass.getEAllReferences();
 
-		final Iterator it = eclassReferences.iterator();
+		final Iterator<EReference> it = eclassReferences.iterator();
 		while (it.hasNext()) {
-			final EReference next = (EReference)it.next();
+			final EReference next = it.next();
 			if (!shouldBeIgnored(next)) {
 				final String referenceName = next.getName();
-				final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
-				final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
-				final List ancestorReferences = EFactory
-						.eGetAsList(mapping.getOriginElement(), referenceName);
+				final List<?> leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+				final List<?> rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+				final List<?> ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(),
+						referenceName);
 
 				// Checks if there're conflicts
 				if (isConflictual(next, leftReferences, rightReferences, ancestorReferences)) {
@@ -703,29 +699,29 @@ public class DiffMaker implements DiffEngine {
 			}
 		}
 	}
-	
+
 	/**
-     * Determines if we should ignore an attribute for diff detection.
-     * <p>
-     * Default is to ignore attributes marked either
-     * <ul>
-     * <li>Transient</li>
-     * <li>Derived</li>
-     * </ul>
-     * </p>
-     * <p>
-     * Clients should override this if they wish to ignore other attributes.
-     * </p>
-     * 
-     * @param attribute
-     *            Attribute to determine whether it should be ignored.
-     * @return <code>True</code> if attribute has to be ignored, <code>False</code> otherwise.
-     */
-    protected boolean shouldBeIgnored(EAttribute attribute) {
-        boolean ignore = attribute.isTransient();
-        ignore |= attribute.isDerived();
-        return ignore;
-    }
+	 * Determines if we should ignore an attribute for diff detection.
+	 * <p>
+	 * Default is to ignore attributes marked either
+	 * <ul>
+	 * <li>Transient</li>
+	 * <li>Derived</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * Clients should override this if they wish to ignore other attributes.
+	 * </p>
+	 * 
+	 * @param attribute
+	 *            Attribute to determine whether it should be ignored.
+	 * @return <code>True</code> if attribute has to be ignored, <code>False</code> otherwise.
+	 */
+	protected boolean shouldBeIgnored(EAttribute attribute) {
+		boolean ignore = attribute.isTransient();
+		ignore |= attribute.isDerived();
+		return ignore;
+	}
 
 	/**
 	 * Determines if we should ignore a reference for diff detection.
@@ -763,7 +759,6 @@ public class DiffMaker implements DiffEngine {
 	 *            {@link DiffGroup Root} of the {@link DiffModel}.
 	 * @return {@link DiffGroup} containing the full hierarchy needed for the <code>targetParent</code>.
 	 */
-	@SuppressWarnings("unchecked")
 	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
 		// if targetElement has a parent, we call buildgroup on it, else we add
 		// the current group to the root
@@ -798,21 +793,21 @@ public class DiffMaker implements DiffEngine {
 	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped
 	 *             elements.
 	 */
-	@SuppressWarnings("unchecked")
 	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
 		if (!attribute.isMany()) {
 			createConflictingAttributeChange(root, attribute, mapping);
 		} else {
-			final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
-			final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
-			final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attribute.getName());
+			final List<?> leftValue = EFactory.eGetAsList(mapping.getLeftElement(), attribute.getName());
+			final List<?> rightValue = EFactory.eGetAsList(mapping.getRightElement(), attribute.getName());
+			final List<?> ancestorValue = EFactory
+					.eGetAsList(mapping.getOriginElement(), attribute.getName());
 
-			for (Object aValue : (List)leftValue) {
+			for (Object aValue : leftValue) {
 				// If an object from the left is neither in the right nor in the
 				// origin, it's a remotely added
 				// attribute
-				if (!((List)rightValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+				if (!(rightValue).contains(aValue) && !(ancestorValue).contains(aValue)) {
 					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -822,7 +817,7 @@ public class DiffMaker implements DiffEngine {
 					// If the object from the left is not in the right values,
 					// it's been removed since last
 					// checkout
-				} else if (!((List)rightValue).contains(aValue)) {
+				} else if (!(rightValue).contains(aValue)) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -831,11 +826,11 @@ public class DiffMaker implements DiffEngine {
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List)rightValue) {
+			for (Object aValue : rightValue) {
 				// if an object from the right is neither in the left nor in the
 				// origin, it's been added since
 				// last checkout
-				if (!((List)leftValue).contains(aValue) && !((List)ancestorValue).contains(aValue)) {
+				if (!(leftValue).contains(aValue) && !(ancestorValue).contains(aValue)) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -845,7 +840,7 @@ public class DiffMaker implements DiffEngine {
 					// if the object from the right is not in the left values
 					// yet present in the origin, it's
 					// been removed remotely
-				} else if (!((List)leftValue).contains(aValue)) {
+				} else if (!(leftValue).contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
@@ -870,8 +865,7 @@ public class DiffMaker implements DiffEngine {
 	 * @return {@link List} of all the references that have been added in the right element since the left
 	 *         element.
 	 */
-	@SuppressWarnings("unchecked")
-	private List<EObject> computeAddedReferences(List leftReferences, List rightReferences) {
+	private List<EObject> computeAddedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
 
@@ -912,8 +906,7 @@ public class DiffMaker implements DiffEngine {
 	 * @return {@link List} of all the references that have been deleted from the right element since the left
 	 *         element.
 	 */
-	@SuppressWarnings("unchecked")
-	private List<EObject> computeDeletedReferences(List leftReferences, List rightReferences) {
+	private List<EObject> computeDeletedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
 
@@ -955,7 +948,6 @@ public class DiffMaker implements DiffEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s children.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
 		// We'll use this diffGroup to make use of
@@ -991,7 +983,6 @@ public class DiffMaker implements DiffEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot create the underlying {@link ReferenceChange}s.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createConflictingReferenceUpdate(DiffGroup root, EReference reference, Match3Element mapping)
 			throws FactoryException {
 		// We'll use this diffGroup to make use of
@@ -1024,7 +1015,6 @@ public class DiffMaker implements DiffEngine {
 	 *            Element that has been moved since the last (ancestor for three-way comparison, left for
 	 *            two-way comparison) version.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createMoveOperation(DiffGroup root, EObject left, EObject right) {
 		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 		operation.setRightElement(right);
@@ -1051,11 +1041,10 @@ public class DiffMaker implements DiffEngine {
 	 *            {@link List} of reference values that have been added in the <code>right</code> element
 	 *            since the <code>left</code> element.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createNewReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> addedReferences) {
 		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator
-				.hasNext(); ) {
+				.hasNext();) {
 			final EObject eobj = addedReferenceIterator.next();
 			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
 			addOperation.setRightElement(right);
@@ -1083,15 +1072,13 @@ public class DiffMaker implements DiffEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch the attribute's value for either one of the elements.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createNonConflictingAttributeChange(DiffGroup root, EAttribute attribute,
 			EObject leftElement, EObject rightElement) throws FactoryException {
-		final Object leftValue = EFactory.eGet(leftElement, attribute.getName());
-		final Object rightValue = EFactory.eGet(rightElement, attribute.getName());
-
 		if (attribute.isMany()) {
-			for (Object aValue : (List)leftValue) {
-				if (!((List)rightValue).contains(aValue) && aValue instanceof EObject) {
+			final List<?> leftValue = EFactory.eGetAsList(leftElement, attribute.getName());
+			final List<?> rightValue = EFactory.eGetAsList(rightElement, attribute.getName());
+			for (Object aValue : leftValue) {
+				if (!(rightValue).contains(aValue) && aValue instanceof EObject) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -1100,8 +1087,8 @@ public class DiffMaker implements DiffEngine {
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List)rightValue) {
-				if (!((List)leftValue).contains(aValue) && aValue instanceof EObject) {
+			for (Object aValue : rightValue) {
+				if (!(leftValue).contains(aValue) && aValue instanceof EObject) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -1139,8 +1126,10 @@ public class DiffMaker implements DiffEngine {
 	@SuppressWarnings("unchecked")
 	private void createNonConflictingReferencesUpdate(DiffGroup root, EReference reference,
 			EObject leftElement, EObject rightElement) throws FactoryException {
-		final List leftElementReferences = EFactory.eGetAsList(leftElement, reference.getName());
-		final List rightElementReferences = EFactory.eGetAsList(rightElement, reference.getName());
+		final List<EObject> leftElementReferences = (List<EObject>)EFactory.eGetAsList(leftElement, reference
+				.getName());
+		final List<EObject> rightElementReferences = (List<EObject>)EFactory.eGetAsList(rightElement,
+				reference.getName());
 
 		final List<EObject> deletedReferences = computeDeletedReferences(leftElementReferences,
 				rightElementReferences);
@@ -1190,18 +1179,16 @@ public class DiffMaker implements DiffEngine {
 	 * @throws FactoryException
 	 *             Thrown if we cannot fetch <code>attribute</code>'s left and right values.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createRemoteAttributeChange(DiffGroup root, EAttribute attribute, Match3Element mapping)
 			throws FactoryException {
-		final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attribute.getName());
-		final Object rightValue = EFactory.eGet(mapping.getRightElement(), attribute.getName());
-
 		if (attribute.isMany()) {
-			for (Object aValue : (List)leftValue) {
+			final List<?> leftValue = EFactory.eGetAsList(mapping.getLeftElement(), attribute.getName());
+			final List<?> rightValue = EFactory.eGetAsList(mapping.getRightElement(), attribute.getName());
+			for (Object aValue : leftValue) {
 				// if the value is present in the left (latest) but not in the
 				// right (working copy), it's been
 				// added remotely
-				if (!((List)rightValue).contains(aValue)) {
+				if (!(rightValue).contains(aValue)) {
 					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -1210,11 +1197,11 @@ public class DiffMaker implements DiffEngine {
 					root.getSubDiffElements().add(operation);
 				}
 			}
-			for (Object aValue : (List)rightValue) {
+			for (Object aValue : rightValue) {
 				// if the value is present in the right (working copy) but not
 				// in the left (latest), it's been
 				// removed remotely
-				if (!((List)leftValue).contains(aValue)) {
+				if (!(leftValue).contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
@@ -1245,7 +1232,6 @@ public class DiffMaker implements DiffEngine {
 	 * @param right
 	 *            Element of the right model corresponding to the left one.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createRemoteMoveOperation(DiffGroup root, EObject left, EObject right) {
 		final RemoteMoveModelElement operation = DiffFactory.eINSTANCE.createRemoteMoveModelElement();
 		operation.setRightElement(right);
@@ -1276,7 +1262,6 @@ public class DiffMaker implements DiffEngine {
 	 *            {@link List} of reference values that have been removed from the left model since the
 	 *            origin.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createRemoteReferencesUpdate(DiffGroup root, EReference reference, Match3Element mapping,
 			List<EObject> remotelyAdded, List<EObject> remotelyDeleted) {
 		if (!reference.isMany() && remotelyAdded.size() > 0 && remotelyDeleted.size() > 0) {
@@ -1300,7 +1285,7 @@ public class DiffMaker implements DiffEngine {
 			root.getSubDiffElements().add(operation);
 		} else {
 			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator(); addedReferenceIterator
-					.hasNext(); ) {
+					.hasNext();) {
 				final EObject eobj = addedReferenceIterator.next();
 				final RemoteAddReferenceValue addOperation = DiffFactory.eINSTANCE
 						.createRemoteAddReferenceValue();
@@ -1313,7 +1298,7 @@ public class DiffMaker implements DiffEngine {
 				root.getSubDiffElements().add(addOperation);
 			}
 			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator(); deletedReferenceIterator
-					.hasNext(); ) {
+					.hasNext();) {
 				final EObject eobj = deletedReferenceIterator.next();
 				final RemoteRemoveReferenceValue delOperation = DiffFactory.eINSTANCE
 						.createRemoteRemoveReferenceValue();
@@ -1345,11 +1330,10 @@ public class DiffMaker implements DiffEngine {
 	 *            {@link List} of reference values that have been removed in the <code>right</code> element
 	 *            since the <code>left</code> element.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createRemovedReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> deletedReferences) {
 		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator
-				.hasNext(); ) {
+				.hasNext();) {
 			final EObject eobj = deletedReferenceIterator.next();
 			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
 			delOperation.setRightElement(right);
@@ -1381,7 +1365,6 @@ public class DiffMaker implements DiffEngine {
 	 *            since the <code>left</code> element.
 	 * @return The {@link DiffElement} corresponding to an unique reference's value update
 	 */
-	@SuppressWarnings("unchecked")
 	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right,
 			EReference reference, List<EObject> addedReferences, List<EObject> deletedReferences) {
 		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
@@ -1456,9 +1439,9 @@ public class DiffMaker implements DiffEngine {
 	 * @return {@link DiffGroup} for the <code>targetParent</code>.
 	 */
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
-		final TreeIterator it = root.eAllContents();
+		final TreeIterator<EObject> it = root.eAllContents();
 		while (it.hasNext()) {
-			final EObject obj = (EObject)it.next();
+			final EObject obj = it.next();
 			if (obj instanceof DiffGroup) {
 				if (((DiffGroup)obj).getLeftParent() == targetParent) {
 					return (DiffGroup)obj;
@@ -1479,7 +1462,7 @@ public class DiffMaker implements DiffEngine {
 	 */
 	private List<EObject> getMatchedReferences(List<EObject> references) {
 		final List<EObject> matchedReferences = new ArrayList<EObject>();
-		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext(); ) {
+		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext();) {
 			final Object currentReference = refIterator.next();
 			if (currentReference != null) {
 				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
@@ -1505,8 +1488,8 @@ public class DiffMaker implements DiffEngine {
 	 * @return <code>True</code> if there's been a conflictual change for the given {@link EReference},
 	 *         <code>False</code> otherwise.
 	 */
-	private boolean isConflictual(EReference reference, List leftReferences, List rightReferences,
-			List ancestorReferences) {
+	private boolean isConflictual(EReference reference, List<?> leftReferences, List<?> rightReferences,
+			List<?> ancestorReferences) {
 		boolean isConflictual = false;
 		// There CAN be a conflict ONLY if the reference is unique
 		if (!reference.isMany()) {
@@ -1574,9 +1557,9 @@ public class DiffMaker implements DiffEngine {
 			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
 			throws FactoryException {
 		final String referenceName = reference.getName();
-		final List leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
-		final List rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
-		final List ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
+		final List<?> leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
+		final List<?> rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
+		final List<?> ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
 
 		// populates remotely added references list
 		for (Object left : leftReferences) {
@@ -1625,7 +1608,7 @@ public class DiffMaker implements DiffEngine {
 			eObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
 			if (threeWay)
 				eObjectToMatch.put(((Match3Element)matchRoot).getOriginElement(), matchRoot);
-			final TreeIterator matchElemIt = matchRoot.eAllContents();
+			final TreeIterator<EObject> matchElemIt = matchRoot.eAllContents();
 			while (matchElemIt.hasNext()) {
 				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
 				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);

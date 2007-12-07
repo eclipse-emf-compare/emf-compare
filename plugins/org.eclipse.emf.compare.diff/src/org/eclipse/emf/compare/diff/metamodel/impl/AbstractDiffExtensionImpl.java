@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.7 2007/12/04 13:16:19 lgoubet Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.8 2007/12/07 13:26:46 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -87,6 +87,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -102,6 +103,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -115,6 +117,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -128,6 +131,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -143,6 +147,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -161,6 +166,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
@@ -245,12 +251,13 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy())
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (isCollapsed: ");
+		result.append(" (isCollapsed: "); //$NON-NLS-1$
 		result.append(isCollapsed);
 		result.append(')');
 		return result.toString();
@@ -271,6 +278,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION;
 	}
