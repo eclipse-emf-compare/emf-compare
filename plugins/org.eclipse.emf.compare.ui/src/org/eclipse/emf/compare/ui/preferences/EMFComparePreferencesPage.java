@@ -14,10 +14,12 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -81,12 +83,16 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 
 		// Search window field
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
-				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
 		addField(searchWindowEditor);
+		
+		// ignore ID field
+		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_ID, getFieldEditorParent()));
 
 		// ignore XMI ID field
-		addField(new BooleanFieldEditor(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID,
+		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_XMIID, getFieldEditorParent()));
 
 		// draw differences field
@@ -120,8 +126,9 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	public void init(IWorkbench workbench) {
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW)
-						|| event.getProperty().equals(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID)) {
+				if (event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW)
+						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID)
+						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID)) {
 					reflectOnCore();
 				}
 			}
@@ -129,18 +136,22 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	/**
-	 * Reflects the modifications to the search window and to the "ignore XMI ID" booleans to
+	 * Reflects the modifications to the search window and to the ignore booleans to
 	 * org.eclipse.emf.compare.EMFComparePlugin preferences store.
 	 */
 	protected void reflectOnCore() {
+		final Preferences corePreferences = EMFComparePlugin.getDefault().getPluginPreferences();
 		// Search window
-		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-				EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW,
-				getPreferenceStore().getInt(EMFCompareConstants.PREFERENCES_KEY_SEARCH_WINDOW));
+		corePreferences.setValue(
+				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
+				getPreferenceStore().getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW));
+		// ID
+		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
+				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID));
 		// XMI ID
-		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-				EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID,
-				getPreferenceStore().getBoolean(EMFCompareConstants.PREFERENCES_KEY_IGNORE_XMIID));
+		corePreferences.setValue(
+				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
+				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
 	}
 
 	/**

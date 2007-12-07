@@ -14,9 +14,9 @@ import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * Defines constants used for the editor parts.
+ * Defines constants used throughout EMF Compare's UI.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public interface EMFCompareConstants {
 	/** Three-way change constant (value 3) indicating the ancestor. */
@@ -71,6 +71,10 @@ public interface EMFCompareConstants {
 	/** Preferences description for the highlight color. */
 	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
+	
+	/** Preferences description for the boolean indicating that the comparison should ignore IDs. */
+	String PREFERENCES_DESCRIPTION_IGNORE_ID = EMFCompareUIMessages
+			.getString("EMFCompareConstants.preferences.ignoreIDLabel"); //$NON-NLS-1$
 
 	/** Preferences description for the boolean indicating that the comparison should ignore XMI IDs. */
 	String PREFERENCES_DESCRIPTION_IGNORE_XMIID = EMFCompareUIMessages
@@ -99,14 +103,8 @@ public interface EMFCompareConstants {
 	/** Preferences key for the highlight color. */
 	String PREFERENCES_KEY_HIGHLIGHT_COLOR = "highlight.color"; //$NON-NLS-1$
 
-	/** Preferences key for the boolean indicating that the comparison should ignore XMI IDs. */
-	String PREFERENCES_KEY_IGNORE_XMIID = "emfcompare.ignore.XMIID"; //$NON-NLS-1$
-
 	/** Preferences key for the circling color of a removed element. */
 	String PREFERENCES_KEY_REMOVED_COLOR = "removed.color"; //$NON-NLS-1$
-
-	/** Preferences key for the siblings search window. */
-	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$
 
 	/**
 	 * Key of the property associated with an input change in the structure viewer.
