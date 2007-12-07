@@ -59,7 +59,7 @@ public final class ModelUtils {
 	public static void attachResource(URI resourceURI, EObject root) {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullRoot")); //$NON-NLS-1$
-		
+
 		final Resource newResource = createResource(resourceURI);
 		newResource.getContents().add(root);
 	}
@@ -78,7 +78,7 @@ public final class ModelUtils {
 	public static void attachResource(URI resourceURI, ResourceSet resourceSet, EObject root) {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullRoot")); //$NON-NLS-1$
-		
+
 		final Resource newResource = createResource(resourceURI, resourceSet);
 		newResource.getContents().add(root);
 	}
@@ -176,7 +176,7 @@ public final class ModelUtils {
 			fileExtension = extension;
 		else
 			fileExtension = ""; //$NON-NLS-1$
-		
+
 		final ResourceSet theResourceSet;
 		if (resourceSet == null)
 			theResourceSet = new ResourceSetImpl();
@@ -231,7 +231,6 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	@SuppressWarnings("unchecked")
 	public static EObject load(IFile file, ResourceSet resourceSet) throws IOException {
 		EObject result = null;
 
@@ -263,7 +262,6 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	@SuppressWarnings("unchecked")
 	public static EObject load(InputStream stream, String fileName, ResourceSet resourceSet)
 			throws IOException {
 		if (stream == null)
@@ -313,7 +311,6 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             If the given file does not exist.
 	 */
-	@SuppressWarnings("unchecked")
 	public static EObject load(URI modelURI, ResourceSet resourceSet) throws IOException {
 		EObject result = null;
 
@@ -336,7 +333,6 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             Thrown if an I/O operation has failed or been interrupted during the saving process.
 	 */
-	@SuppressWarnings("unchecked")
 	public static void save(EObject root, String path) throws IOException {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
@@ -357,7 +353,6 @@ public final class ModelUtils {
 	 * @throws IOException
 	 *             Thrown if an I/O operation has failed or been interrupted during the saving process.
 	 */
-	@SuppressWarnings("unchecked")
 	public static String serialize(EObject root) throws IOException {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$

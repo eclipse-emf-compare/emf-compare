@@ -50,13 +50,15 @@ public final class EFactory {
 	 *            New value to add to the feature values.
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
+	 * @throws ClassCastException
+	 *             Thrown it the new value isn't type-compatible with the named feature.
 	 */
 	@SuppressWarnings("unchecked")
-	public static void eAdd(EObject object, String name, Object arg) throws FactoryException {
-		final Object list = object.eGet(eStructuralFeature(object, name));
-		if (list != null && list instanceof List) {
+	public static <T> void eAdd(EObject object, String name, T arg) throws FactoryException {
+		EStructuralFeature feature = eStructuralFeature(object, name);
+		if (feature.isMany()) {
 			if (arg != null) {
-				((List)list).add(arg);
+				((List<? super T>)object.eGet(feature)).add(arg);
 			}
 		} else {
 			eSet(object, name, arg);
@@ -132,14 +134,14 @@ public final class EFactory {
 	 *             Thrown if the retrieval fails.
 	 */
 	@SuppressWarnings("unchecked")
-	public static List eGetAsList(EObject object, String name) throws FactoryException {
-		List list = new ArrayList();
+	public static List<?> eGetAsList(EObject object, String name) throws FactoryException {
+		List<Object> list = new ArrayList<Object>();
 		final Object eGet = eGet(object, name);
 		if (eGet != null) {
 			if (eGet instanceof List) {
-				list = (List)eGet;
+				list = (List<Object>)eGet;
 			} else {
-				list = new BasicEList(1);
+				list = new BasicEList<Object>(1);
 				list.add(eGet);
 			}
 		}
@@ -270,14 +272,12 @@ public final class EFactory {
 	@SuppressWarnings("unchecked")
 	private static Object eCall(Object object, String name, Object... arg) throws FactoryException {
 		try {
-			final Class<? extends Object>[] methodParams;
-			final Object[] invocationParams;
+			final Class<? extends Object>[] methodParams = new Class[arg.length];
+			final Object[] invocationParams = arg;
 
-			methodParams = new Class[arg.length];
 			for (int i = 0; i < arg.length; i++) {
 				methodParams[i] = arg[i].getClass();
 			}
-			invocationParams = arg;
 
 			final Method method = object.getClass().getMethod(name, methodParams);
 			return method.invoke(object, invocationParams);

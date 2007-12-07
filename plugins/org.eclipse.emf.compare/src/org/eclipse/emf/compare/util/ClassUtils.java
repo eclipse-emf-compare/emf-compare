@@ -23,11 +23,11 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 public final class ClassUtils {
 	/** These are all the primitive classes. */
 	private static final Class<?>[] PRIMITIVES = {short.class, int.class, long.class, byte.class, char.class,
-			boolean.class, float.class, double.class, void.class, };
+			boolean.class, float.class, double.class, void.class,};
 
 	/** These are all the wrapper classes for primitive types. */
 	private static final Class<?>[] WRAPPERS = {Short.class, Integer.class, Long.class, Byte.class,
-			Character.class, Boolean.class, Float.class, Double.class, Void.class, };
+			Character.class, Boolean.class, Float.class, Double.class, Void.class,};
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
