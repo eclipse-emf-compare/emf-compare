@@ -807,7 +807,7 @@ public class DiffMaker implements DiffEngine {
 				// If an object from the left is neither in the right nor in the
 				// origin, it's a remotely added
 				// attribute
-				if (!(rightValue).contains(aValue) && !(ancestorValue).contains(aValue)) {
+				if (!rightValue.contains(aValue) && !ancestorValue.contains(aValue)) {
 					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -817,7 +817,7 @@ public class DiffMaker implements DiffEngine {
 					// If the object from the left is not in the right values,
 					// it's been removed since last
 					// checkout
-				} else if (!(rightValue).contains(aValue)) {
+				} else if (!rightValue.contains(aValue)) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -830,7 +830,7 @@ public class DiffMaker implements DiffEngine {
 				// if an object from the right is neither in the left nor in the
 				// origin, it's been added since
 				// last checkout
-				if (!(leftValue).contains(aValue) && !(ancestorValue).contains(aValue)) {
+				if (!leftValue.contains(aValue) && !ancestorValue.contains(aValue)) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -840,7 +840,7 @@ public class DiffMaker implements DiffEngine {
 					// if the object from the right is not in the left values
 					// yet present in the origin, it's
 					// been removed remotely
-				} else if (!(leftValue).contains(aValue)) {
+				} else if (!leftValue.contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
@@ -1044,7 +1044,7 @@ public class DiffMaker implements DiffEngine {
 	private void createNewReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> addedReferences) {
 		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator
-				.hasNext();) {
+				.hasNext(); ) {
 			final EObject eobj = addedReferenceIterator.next();
 			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
 			addOperation.setRightElement(right);
@@ -1078,7 +1078,7 @@ public class DiffMaker implements DiffEngine {
 			final List<?> leftValue = EFactory.eGetAsList(leftElement, attribute.getName());
 			final List<?> rightValue = EFactory.eGetAsList(rightElement, attribute.getName());
 			for (Object aValue : leftValue) {
-				if (!(rightValue).contains(aValue) && aValue instanceof EObject) {
+				if (!rightValue.contains(aValue) && aValue instanceof EObject) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -1088,7 +1088,7 @@ public class DiffMaker implements DiffEngine {
 				}
 			}
 			for (Object aValue : rightValue) {
-				if (!(leftValue).contains(aValue) && aValue instanceof EObject) {
+				if (!leftValue.contains(aValue) && aValue instanceof EObject) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
@@ -1188,7 +1188,7 @@ public class DiffMaker implements DiffEngine {
 				// if the value is present in the left (latest) but not in the
 				// right (working copy), it's been
 				// added remotely
-				if (!(rightValue).contains(aValue)) {
+				if (!rightValue.contains(aValue)) {
 					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
@@ -1201,7 +1201,7 @@ public class DiffMaker implements DiffEngine {
 				// if the value is present in the right (working copy) but not
 				// in the left (latest), it's been
 				// removed remotely
-				if (!(leftValue).contains(aValue)) {
+				if (!leftValue.contains(aValue)) {
 					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
 							.createRemoteRemoveAttribute();
 					operation.setAttribute(attribute);
@@ -1285,7 +1285,7 @@ public class DiffMaker implements DiffEngine {
 			root.getSubDiffElements().add(operation);
 		} else {
 			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator(); addedReferenceIterator
-					.hasNext();) {
+					.hasNext(); ) {
 				final EObject eobj = addedReferenceIterator.next();
 				final RemoteAddReferenceValue addOperation = DiffFactory.eINSTANCE
 						.createRemoteAddReferenceValue();
@@ -1298,7 +1298,7 @@ public class DiffMaker implements DiffEngine {
 				root.getSubDiffElements().add(addOperation);
 			}
 			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator(); deletedReferenceIterator
-					.hasNext();) {
+					.hasNext(); ) {
 				final EObject eobj = deletedReferenceIterator.next();
 				final RemoteRemoveReferenceValue delOperation = DiffFactory.eINSTANCE
 						.createRemoteRemoveReferenceValue();
@@ -1333,7 +1333,7 @@ public class DiffMaker implements DiffEngine {
 	private void createRemovedReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> deletedReferences) {
 		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator
-				.hasNext();) {
+				.hasNext(); ) {
 			final EObject eobj = deletedReferenceIterator.next();
 			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
 			delOperation.setRightElement(right);
@@ -1462,7 +1462,7 @@ public class DiffMaker implements DiffEngine {
 	 */
 	private List<EObject> getMatchedReferences(List<EObject> references) {
 		final List<EObject> matchedReferences = new ArrayList<EObject>();
-		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext();) {
+		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext(); ) {
 			final Object currentReference = refIterator.next();
 			if (currentReference != null) {
 				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
