@@ -52,7 +52,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	protected static final int[] DEFAULT_PRIME_LIST = new int[] {31, 67, 137, 277, 557, 1117, 2237, 4481,
 			8963, 17929, 35863, 71741, 143483, 286973, 573953, 1147921, 2295859, 4591721, 9183457, 18366923,
-			36733847, 73467739, 146935499, 293871013, 587742049, 1175484103, Integer.MAX_VALUE,};
+			36733847, 73467739, 146935499, 293871013, 587742049, 1175484103, Integer.MAX_VALUE, };
 
 	/** Minimal allowed load factor for the map. */
 	protected static final float MINIMUM_LOAD_FACTOR = 0.05f;
@@ -65,7 +65,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 	/** First hundred primes. Used to compute the next prime. */
 	private static final int[] FIRST_PRIMES = new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
-			47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,};
+			47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, };
 
 	/** Serial number of this map. Used for checks upon deserialization. */
 	private static final long serialVersionUID = -890704446117047482L;

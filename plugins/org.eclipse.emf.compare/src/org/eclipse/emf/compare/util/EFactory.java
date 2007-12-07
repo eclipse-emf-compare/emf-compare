@@ -48,14 +48,14 @@ public final class EFactory {
 	 *            The name of the feature to add to.
 	 * @param arg
 	 *            New value to add to the feature values.
+	 * @param <T>
+	 * 			  Type of the new value to be added to the list.
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
-	 * @throws ClassCastException
-	 *             Thrown it the new value isn't type-compatible with the named feature.
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> void eAdd(EObject object, String name, T arg) throws FactoryException {
-		EStructuralFeature feature = eStructuralFeature(object, name);
+		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (feature.isMany()) {
 			if (arg != null) {
 				((List<? super T>)object.eGet(feature)).add(arg);
