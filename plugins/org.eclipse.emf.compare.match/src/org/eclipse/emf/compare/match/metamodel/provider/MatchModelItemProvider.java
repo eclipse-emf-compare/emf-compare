@@ -36,7 +36,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchModelItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -44,6 +43,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public MatchModelItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -56,7 +56,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
@@ -150,7 +149,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addLeftModelPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors
@@ -168,7 +166,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addOriginModelPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors
@@ -186,7 +183,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addRightModelPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors
@@ -204,7 +200,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);

@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class Match2ElementsImpl extends MatchElementImpl implements Match2Elements {
 	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--

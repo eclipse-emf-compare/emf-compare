@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-@SuppressWarnings("nls")
 public interface MatchElement extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Similarity</b></em>' attribute. <!-- begin-user-doc -->

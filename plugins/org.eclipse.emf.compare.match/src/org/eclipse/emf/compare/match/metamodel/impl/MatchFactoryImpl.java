@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	/**
 	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->

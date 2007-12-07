@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	/**
 	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference. <!-- begin-user-doc -->

@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * @generated
  */
-@SuppressWarnings("nls")
+@SuppressWarnings("hiding")
 public interface MatchPackage extends EPackage {
 	/**
 	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -307,7 +307,7 @@ public interface MatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int UN_MATCH_ELEMENT_FEATURE_COUNT = 1;
-	
+
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.impl.RemoteUnMatchElementImpl <em>Remote Un Match Element</em>}'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->

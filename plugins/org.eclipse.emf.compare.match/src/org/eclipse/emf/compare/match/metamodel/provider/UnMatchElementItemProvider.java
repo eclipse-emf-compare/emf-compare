@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class UnMatchElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public UnMatchElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -108,7 +108,6 @@ public class UnMatchElementItemProvider extends ItemProviderAdapter implements I
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors

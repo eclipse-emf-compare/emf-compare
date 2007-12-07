@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EClass;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteUnMatchElementImpl extends UnMatchElementImpl implements RemoteUnMatchElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

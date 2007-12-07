@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EFactory;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
-@SuppressWarnings("nls")
 public interface MatchFactory extends EFactory {
 	/**
 	 * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->

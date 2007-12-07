@@ -37,7 +37,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchItemProviderAdapterFactory extends MatchAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
 	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}. <!-- begin-user-doc
@@ -113,7 +112,6 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	public MatchItemProviderAdapterFactory() {
 		supportedTypes.add(IEditingDomainItemProvider.class);
 		supportedTypes.add(IStructuredItemContentProvider.class);
@@ -302,6 +300,7 @@ public class MatchItemProviderAdapterFactory extends MatchAdapterFactory impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
 		this.parentAdapterFactory = parentAdapterFactory;
 	}

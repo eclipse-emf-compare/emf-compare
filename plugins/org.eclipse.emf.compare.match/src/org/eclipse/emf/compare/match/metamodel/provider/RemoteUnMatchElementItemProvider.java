@@ -29,7 +29,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -37,6 +36,7 @@ public class RemoteUnMatchElementItemProvider extends UnMatchElementItemProvider
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public RemoteUnMatchElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}

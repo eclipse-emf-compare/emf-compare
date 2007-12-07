@@ -35,7 +35,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -43,6 +42,7 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public MatchElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -55,7 +55,6 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
@@ -133,7 +132,6 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addSimilarityPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors
@@ -151,7 +149,6 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);

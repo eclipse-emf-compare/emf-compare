@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -357,7 +356,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	public void initializePackageContents() {
 		if (isInitialized)
 			return;

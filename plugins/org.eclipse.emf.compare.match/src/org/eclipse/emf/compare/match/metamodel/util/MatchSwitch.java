@@ -31,7 +31,6 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchSwitch {
 	/**
 	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -62,8 +61,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatch2Elements(@SuppressWarnings("unused")
-	Match2Elements object) {
+	@SuppressWarnings("unused")
+	public Object caseMatch2Elements(Match2Elements object) {
 		return null;
 	}
 
@@ -78,8 +77,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatch3Element(@SuppressWarnings("unused")
-	Match3Element object) {
+	@SuppressWarnings("unused")
+	public Object caseMatch3Element(Match3Element object) {
 		return null;
 	}
 
@@ -94,8 +93,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatchElement(@SuppressWarnings("unused")
-	MatchElement object) {
+	@SuppressWarnings("unused")
+	public Object caseMatchElement(MatchElement object) {
 		return null;
 	}
 
@@ -110,8 +109,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseMatchModel(@SuppressWarnings("unused")
-	MatchModel object) {
+	@SuppressWarnings("unused")
+	public Object caseMatchModel(MatchModel object) {
 		return null;
 	}
 
@@ -126,8 +125,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseRemoteUnMatchElement(@SuppressWarnings("unused")
-	RemoteUnMatchElement object) {
+	@SuppressWarnings("unused")
+	public Object caseRemoteUnMatchElement(RemoteUnMatchElement object) {
 		return null;
 	}
 
@@ -142,8 +141,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public Object caseUnMatchElement(@SuppressWarnings("unused")
-	UnMatchElement object) {
+	@SuppressWarnings("unused")
+	public Object caseUnMatchElement(UnMatchElement object) {
 		return null;
 	}
 
@@ -158,8 +157,8 @@ public class MatchSwitch {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
-	public Object defaultCase(@SuppressWarnings("unused")
-	EObject object) {
+	@SuppressWarnings("unused")
+	public Object defaultCase(EObject object) {
 		return null;
 	}
 

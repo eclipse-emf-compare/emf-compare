@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class Match3ElementImpl extends Match2ElementsImpl implements Match3Element {
 	/**
 	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--

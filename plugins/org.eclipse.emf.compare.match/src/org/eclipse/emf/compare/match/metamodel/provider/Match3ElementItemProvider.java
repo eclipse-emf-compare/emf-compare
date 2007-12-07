@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class Match3ElementItemProvider extends Match2ElementsItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public Match3ElementItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}

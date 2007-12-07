@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public abstract class MatchElementImpl extends EObjectImpl implements MatchElement {
 	/**
 	 * The default value of the '{@link #getSimilarity() <em>Similarity</em>}' attribute. <!--

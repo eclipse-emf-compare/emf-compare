@@ -31,7 +31,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class Match2ElementsItemProvider extends MatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
@@ -39,6 +38,7 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("hiding")
 	public Match2ElementsItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
@@ -129,7 +129,6 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	protected void addRightElementPropertyDescriptor(@SuppressWarnings("unused")
 	Object object) {
 		itemPropertyDescriptors

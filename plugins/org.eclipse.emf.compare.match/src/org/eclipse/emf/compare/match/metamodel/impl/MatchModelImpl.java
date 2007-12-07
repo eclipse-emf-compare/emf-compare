@@ -42,7 +42,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	/**
 	 * The default value of the '{@link #getLeftModel() <em>Left Model</em>}' attribute. <!-- begin-user-doc
@@ -202,7 +201,6 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	 * @generated
 	 */
 	@Override
-	@SuppressWarnings("unchecked")//$NON-NLS-1$
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__LEFT_MODEL:

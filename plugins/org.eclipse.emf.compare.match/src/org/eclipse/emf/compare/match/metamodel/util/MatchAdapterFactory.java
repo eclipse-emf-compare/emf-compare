@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
-@SuppressWarnings("nls")
 public class MatchAdapterFactory extends AdapterFactoryImpl {
 	/**
 	 * The cached model package. <!-- begin-user-doc --> <!-- end-user-doc -->

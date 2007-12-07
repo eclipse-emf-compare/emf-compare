@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.ResourceLocator;
  * 
  * @generated
  */
-@SuppressWarnings("nls")
 public final class MatchEditPlugin extends EMFPlugin {
 	/**
 	 * Keep track of the singleton. <!-- begin-user-doc --> <!-- end-user-doc -->
