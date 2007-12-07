@@ -194,11 +194,11 @@ public class DifferencesServices implements MatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftObject.eResource()) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightObject.eResource()) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
 						remainingRight.add(iterator.next());
 				}
 			}
@@ -1301,11 +1301,11 @@ public class DifferencesServices implements MatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftRoot.eResource()) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightRoot.eResource()) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext();)
+					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
 						remainingRight.add(iterator.next());
 				}
 			}
