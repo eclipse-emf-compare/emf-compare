@@ -26,13 +26,13 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings({"unchecked", "nls", })
+@SuppressWarnings( {"unchecked", "nls",})
 public class TestKeySet extends TestCase {
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true, };
+			true,};
 
 	/** String displayed when an expected {@link ConcurrentModificationException} isn't thrown. */
 	private static final String MESSAGE_CONCURRENT = "ConcurrentModificationException hasn't been thrown by the iterator after changing map via";
@@ -44,7 +44,7 @@ public class TestKeySet extends TestCase {
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false, };
+			false,};
 
 	/** Map that will be used for all these tests. */
 	private final EMFCompareMap testedMap = new EMFCompareMap();
@@ -214,7 +214,7 @@ public class TestKeySet extends TestCase {
 		testedMethod = "Iterator's remove(Object)";
 
 		int currentMapSize = testedMap.size();
-		for (final Iterator keyIterator = testedMap.keySet().iterator(); keyIterator.hasNext(); ) {
+		for (final Iterator keyIterator = testedMap.keySet().iterator(); keyIterator.hasNext();) {
 			final Object currentKey = keyIterator.next();
 			try {
 				keyIterator.remove();
@@ -319,7 +319,7 @@ public class TestKeySet extends TestCase {
 		assertEquals("Created set hasn't got the same size as its original map.", testedMap.size(), keySet
 				.size());
 
-		for (final Iterator keyIterator = keySet.iterator(); keyIterator.hasNext(); ) {
+		for (final Iterator keyIterator = keySet.iterator(); keyIterator.hasNext();) {
 			final Object currentKey = keyIterator.next();
 			assertTrue("The set's iterator contains mappings different than its original map's keys.",
 					testedMap.containsKey(currentKey));

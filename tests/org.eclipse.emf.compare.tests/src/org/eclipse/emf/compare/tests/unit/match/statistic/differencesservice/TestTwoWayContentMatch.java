@@ -75,12 +75,12 @@ public class TestTwoWayContentMatch extends TestCase {
 		 */
 		final List<EObject> eObjects1 = new ArrayList<EObject>();
 		final List<EObject> eObjects2 = new ArrayList<EObject>();
-		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext();) {
 			final EObject next = iterator.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME))
 				eObjects1.add(next);
 		}
-		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext();) {
 			final EObject next = iterator.next();
 			if (next.eClass().getName().matches("Book"))
 				eObjects2.add(next);
@@ -100,11 +100,11 @@ public class TestTwoWayContentMatch extends TestCase {
 				assertNotNull("Failed to match the two objects.", match);
 
 				int elementCount = 0;
-				for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext(); ) {
+				for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext();) {
 					final EObject next = iterator.next();
 					boolean found = false;
 					for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-							.hasNext(); ) {
+							.hasNext();) {
 						final EObject nextMatch = matchIterator.next();
 						if (nextMatch instanceof UnMatchElement
 								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
@@ -116,11 +116,11 @@ public class TestTwoWayContentMatch extends TestCase {
 						fail("contentMatch() did not found an unmatch for every element of the original object.");
 					elementCount++;
 				}
-				for (final TreeIterator<EObject> iterator = obj2.eAllContents(); iterator.hasNext(); ) {
+				for (final TreeIterator<EObject> iterator = obj2.eAllContents(); iterator.hasNext();) {
 					final EObject next = iterator.next();
 					boolean found = false;
 					for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-							.hasNext(); ) {
+							.hasNext();) {
 						final EObject nextMatch = matchIterator.next();
 						if (nextMatch instanceof UnMatchElement
 								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
@@ -135,7 +135,7 @@ public class TestTwoWayContentMatch extends TestCase {
 
 				int unmatchElementCount = 0;
 				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-						.hasNext(); ) {
+						.hasNext();) {
 					if (matchIterator.next() instanceof UnMatchElement)
 						unmatchElementCount++;
 				}
@@ -183,12 +183,12 @@ public class TestTwoWayContentMatch extends TestCase {
 		final List<EObject> eObjects2 = new ArrayList<EObject>();
 		eObjects1.add(testEObject1);
 		eObjects2.add(testEObject2);
-		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext();) {
 			final EObject next = iterator.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
 				eObjects1.add(next);
 		}
-		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext();) {
 			final EObject next = iterator.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
 				eObjects2.add(next);
@@ -207,11 +207,11 @@ public class TestTwoWayContentMatch extends TestCase {
 			assertNotNull("Failed to match the two objects.", match);
 
 			int elementCount = 0;
-			for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext(); ) {
+			for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext();) {
 				final EObject next = iterator.next();
 				boolean found = false;
 				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-						.hasNext(); ) {
+						.hasNext();) {
 					final EObject nextMatch = matchIterator.next();
 					if (nextMatch instanceof Match2Elements
 							&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
@@ -227,7 +227,7 @@ public class TestTwoWayContentMatch extends TestCase {
 			}
 
 			int matchElementCount = 0;
-			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext();) {
 				if (matchIterator.next() instanceof Match2Elements)
 					matchElementCount++;
 			}

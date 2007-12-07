@@ -21,20 +21,20 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings({"unchecked", "nls", })
+@SuppressWarnings( {"unchecked", "nls",})
 public class TestConstructors extends TestCase {
 	/** These represents invalid initial capacities for the map. */
-	private static final int[] INVALID_CAPACITY = {Integer.MIN_VALUE, -10, -2, -1, };
+	private static final int[] INVALID_CAPACITY = {Integer.MIN_VALUE, -10, -2, -1,};
 
 	/** Invalid load factors for the map. */
 	private static final float[] INVALID_LOAD = {Float.NEGATIVE_INFINITY, -10f, -5f, -2f, -1f, -0.5f, -0.1f,
-			-Float.MIN_VALUE, 0, +0.0f, Float.NaN, };
+			-Float.MIN_VALUE, 0, +0.0f, Float.NaN,};
 
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true, };
+			true,};
 
 	/** Name displayed before the constructor method names. */
 	private static final String MESSAGE_CONSTRUCTOR_NAME = "Constructor Fastmap";
@@ -46,16 +46,16 @@ public class TestConstructors extends TestCase {
 	private static final String MESSAGE_NON_EMPTY_MAP = "created a non empty map.";
 
 	/** These are valid initial capacities for the map. */
-	private static final int[] VALID_CAPACITY = {0, 1, 2, 5, 10, 100, };
+	private static final int[] VALID_CAPACITY = {0, 1, 2, 5, 10, 100,};
 
 	/** These are valid load factors for the map. */
-	private static final float[] VALID_LOAD = {Float.MIN_VALUE, 0.1f, 0.5f, 0.75f, 1f, 100f, Float.MAX_VALUE, };
+	private static final float[] VALID_LOAD = {Float.MIN_VALUE, 0.1f, 0.5f, 0.75f, 1f, 100f, Float.MAX_VALUE,};
 
 	/** Input values for a set map. */
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false, };
+			false,};
 
 	/**
 	 * Checks that the default constructor creates an empty map.

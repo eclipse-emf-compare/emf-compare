@@ -27,13 +27,13 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings({"unchecked", "nls", })
+@SuppressWarnings( {"unchecked", "nls",})
 public class TestValues extends TestCase {
 	/** Input keys for a set map. */
 	private static final Object[] KEY_SET = {null, "", "Alize", "Bise", "Boree", "Chinook", "Eurus",
 			"Hurricane", "Noroit", "Rafale", "Sirocco", "Tourbillon", "Typhon", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(false), new HashSet(), 5, 15L, 25f, 35d, '\u00ab',
-			true, };
+			true,};
 
 	/** String displayed when an expected {@link ConcurrentModificationException} isn't thrown. */
 	private static final String MESSAGE_CONCURRENT = "ConcurrentModificationException hasn't been thrown by the iterator after changing map via";
@@ -45,7 +45,7 @@ public class TestValues extends TestCase {
 	private static final Object[] VALUE_SET = {null, "", "Aquilon", "Blizzard", "Brise", "Cyclone", "Foehn",
 			"Mistral", "Notus", "Simoon", "Suroit", "Tramontane", "Zephyr", new Integer(0), new Long(10),
 			new Float(20), new Double(30), new Boolean(true), new HashSet(), 5, 15L, 25f, 35d, '\u00aa',
-			false, };
+			false,};
 
 	/** Map that will be used for all these tests. */
 	private final EMFCompareMap testedMap = new EMFCompareMap();
@@ -86,7 +86,7 @@ public class TestValues extends TestCase {
 		assertEquals("Created collection hasn't got the same size as its original map.", testedMap.size(),
 				values.size());
 
-		for (final Iterator valueIterator = values.iterator(); valueIterator.hasNext(); ) {
+		for (final Iterator valueIterator = values.iterator(); valueIterator.hasNext();) {
 			final Object currentValue = valueIterator.next();
 			assertTrue(
 					"The collection's iterator contains mappings different than its original map's values.",
@@ -270,7 +270,7 @@ public class TestValues extends TestCase {
 		testedMethod = "Iterator's remove(Object)";
 
 		int currentMapSize = testedMap.size();
-		for (final Iterator valueIterator = testedMap.values().iterator(); valueIterator.hasNext(); ) {
+		for (final Iterator valueIterator = testedMap.values().iterator(); valueIterator.hasNext();) {
 			final Object currentValue = valueIterator.next();
 			try {
 				valueIterator.remove();

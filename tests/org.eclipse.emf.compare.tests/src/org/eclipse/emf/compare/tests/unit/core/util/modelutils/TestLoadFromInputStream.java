@@ -40,7 +40,7 @@ public class TestLoadFromInputStream extends TestCase {
 	private static final String INPUT_DIRECTORY = "/inputs";
 
 	/** Contains invalid file names for model loading. */
-	private static final String[] INVALID_FILENAMES = {"", "model", "ecaure", };
+	private static final String[] INVALID_FILENAMES = {"", "model", "ecaure",};
 
 	/** Message displayed when an unexpected {@link IOException} is thrown. */
 	private static final String MESSAGE_FILENOTFOUNDEXCEPTION_UNEXPECTED = "UnExpected FileNotFoundException has been thrown while loading models from stream.";

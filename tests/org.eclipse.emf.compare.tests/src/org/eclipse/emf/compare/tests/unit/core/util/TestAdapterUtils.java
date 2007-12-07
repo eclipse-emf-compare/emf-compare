@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-@SuppressWarnings({"unchecked", "nls", })
+@SuppressWarnings( {"unchecked", "nls",})
 public class TestAdapterUtils extends TestCase {
 	/** Full path to the model containing this test's input. */
 	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";
@@ -41,7 +41,7 @@ public class TestAdapterUtils extends TestCase {
 	private final String[] expectedFactories = {
 			"org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory",
 			"org.eclipse.emf.compare.match.metamodel.provider.MatchItemProviderAdapterFactory",
-			"org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory", };
+			"org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory",};
 
 	/**
 	 * Tests {@link AdapterUtils#findAdapterFactory(EObject)} with all the contents of a loaded model. Since
@@ -55,7 +55,7 @@ public class TestAdapterUtils extends TestCase {
 		final File modelFile = new File(FileLocator.toFileURL(
 				EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_MODEL_PATH)).getFile());
 		final EObject model = ModelUtils.load(modelFile, new ResourceSetImpl());
-		for (final TreeIterator contentIterator = model.eAllContents(); contentIterator.hasNext(); ) {
+		for (final TreeIterator contentIterator = model.eAllContents(); contentIterator.hasNext();) {
 			final AdapterFactory factory = AdapterUtils.findAdapterFactory((EObject)contentIterator.next());
 			assertNotNull("No adapter factory returned for valid EObject.", factory);
 			assertEquals("Unexpected adapter factory returned for valid EObject.",
@@ -70,7 +70,7 @@ public class TestAdapterUtils extends TestCase {
 	 */
 	public void testFindAdapterFactoryInvalidNsURI() {
 		final String[] invalidURIs = {null, "", "-1",
-				"org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory", };
+				"org.eclipse.emf.compare.diff.provider.DiffItemProviderAdapterFactory",};
 		for (int i = 0; i < invalidURIs.length; i++)
 			assertNull("Unexpected adapter factory returned for invalid URI.", AdapterUtils
 					.findAdapterFactory(invalidURIs[i]));
@@ -114,7 +114,7 @@ public class TestAdapterUtils extends TestCase {
 	 */
 	public void testFindAdapterFactoryValidEObject() {
 		final EObject[] validObjects = {DiffFactory.eINSTANCE.createDiffModel(),
-				MatchFactory.eINSTANCE.createMatchModel(), EcoreFactory.eINSTANCE.createEObject(), };
+				MatchFactory.eINSTANCE.createMatchModel(), EcoreFactory.eINSTANCE.createEObject(),};
 		for (int i = 0; i < validObjects.length; i++) {
 			final AdapterFactory factory = AdapterUtils.findAdapterFactory(validObjects[i]);
 			assertNotNull("No adapter factory returned for valid EObject.", factory);
@@ -148,7 +148,7 @@ public class TestAdapterUtils extends TestCase {
 	 */
 	public void testFindAdapterFactoryValidNsURI() {
 		final String[] nsURIs = {"http://www.eclipse.org/emf/compare/diff/1.1",
-				"http://www.eclipse.org/emf/compare/match/1.1", "http://www.eclipse.org/emf/2002/Ecore", };
+				"http://www.eclipse.org/emf/compare/match/1.1", "http://www.eclipse.org/emf/2002/Ecore",};
 		for (int i = 0; i < nsURIs.length; i++) {
 			final AdapterFactory factory = AdapterUtils.findAdapterFactory(nsURIs[i]);
 			assertNotNull("No adapter factory returned for valid URI.", factory);

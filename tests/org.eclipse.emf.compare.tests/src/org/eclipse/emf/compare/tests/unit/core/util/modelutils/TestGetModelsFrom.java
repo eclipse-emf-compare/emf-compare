@@ -48,7 +48,7 @@ public class TestGetModelsFrom extends TestCase {
 	private ArrayList<File> modelDirectories = new ArrayList<File>();
 
 	/** Names of directories we shouldn't be able to read. */
-	private String[] unreadableDirectories = {"", "\r\n", "/lost+found/", };
+	private String[] unreadableDirectories = {"", "\r\n", "/lost+found/",};
 
 	/**
 	 * Tests {@link ModelUtils#getModelsFrom(File)} with invalid directories. Expects an empty list to be
@@ -154,43 +154,6 @@ public class TestGetModelsFrom extends TestCase {
 	}
 
 	/**
-	 * Tests {@link ModelUtils#getModelsFrom(File)} with valid directories and a valid file extension. Expects
-	 * the returned list to have a size equal to the number of files of that given extension contained by the
-	 * given directory, and all of the list's objects to have an associated resource.
-	 */
-	public void testGetModelsFromValidDirectoryValidExtension() {
-		for (File modelDirectory : modelDirectories) {
-			List<EObject> result = null;
-			final ResourceSet resourceSet = new ResourceSetImpl();
-			final String fileExtension = "ecore";
-			try {
-				result = ModelUtils.getModelsFrom(modelDirectory, fileExtension, resourceSet);
-			} catch (IOException e) {
-				fail("Unexpected IOException thrown while loading models.");
-			}
-
-			// Keeps compiler happy
-			assert result != null;
-
-			int expectedSize = 0;
-			for (File aFile : modelDirectory.listFiles()) {
-				if (!aFile.isDirectory() && !aFile.getName().startsWith(String.valueOf('.'))
-						&& aFile.getName().endsWith(fileExtension)) {
-					expectedSize++;
-				}
-			}
-			assertSame("Resulting list doesn't contain the expected number of objects for this extension.",
-					expectedSize, result.size());
-
-			for (EObject loadedModel : result) {
-				assertNotNull("Loaded EObject isn't associated to a resource.", loadedModel.eResource());
-				assertEquals("Model hasn't been loaded in the expected resource set.", resourceSet,
-						loadedModel.eResource().getResourceSet());
-			}
-		}
-	}
-
-	/**
 	 * Tests {@link ModelUtils#getModelsFrom(File)} with valid directories and no resourceSet. Expects the
 	 * returned list to have a size equal to the number of files contained by the given directory, and all of
 	 * the list's objects to have an associated resource. All resources are expected to be contained by the
@@ -225,6 +188,43 @@ public class TestGetModelsFrom extends TestCase {
 				else
 					assertEquals("Model hasn't been loaded in the accurate resource set.", resourceSet,
 							loadedModel.eResource().getResourceSet());
+			}
+		}
+	}
+
+	/**
+	 * Tests {@link ModelUtils#getModelsFrom(File)} with valid directories and a valid file extension. Expects
+	 * the returned list to have a size equal to the number of files of that given extension contained by the
+	 * given directory, and all of the list's objects to have an associated resource.
+	 */
+	public void testGetModelsFromValidDirectoryValidExtension() {
+		for (File modelDirectory : modelDirectories) {
+			List<EObject> result = null;
+			final ResourceSet resourceSet = new ResourceSetImpl();
+			final String fileExtension = "ecore";
+			try {
+				result = ModelUtils.getModelsFrom(modelDirectory, fileExtension, resourceSet);
+			} catch (IOException e) {
+				fail("Unexpected IOException thrown while loading models.");
+			}
+
+			// Keeps compiler happy
+			assert result != null;
+
+			int expectedSize = 0;
+			for (File aFile : modelDirectory.listFiles()) {
+				if (!aFile.isDirectory() && !aFile.getName().startsWith(String.valueOf('.'))
+						&& aFile.getName().endsWith(fileExtension)) {
+					expectedSize++;
+				}
+			}
+			assertSame("Resulting list doesn't contain the expected number of objects for this extension.",
+					expectedSize, result.size());
+
+			for (EObject loadedModel : result) {
+				assertNotNull("Loaded EObject isn't associated to a resource.", loadedModel.eResource());
+				assertEquals("Model hasn't been loaded in the expected resource set.", resourceSet,
+						loadedModel.eResource().getResourceSet());
 			}
 		}
 	}
