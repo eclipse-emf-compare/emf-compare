@@ -108,7 +108,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		Object[] children = null;
 		if (parentElement instanceof EObject) {
-			final Collection childrenList = new ArrayList();
+			final Collection<EObject> childrenList = new ArrayList<EObject>();
 			for (EObject child : ((EObject)parentElement).eContents()) {
 				if (!DiffAdapterFactory.shouldBeHidden(child))
 					childrenList.add(child);

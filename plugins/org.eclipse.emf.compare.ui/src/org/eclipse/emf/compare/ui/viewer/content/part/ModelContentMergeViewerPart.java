@@ -492,7 +492,7 @@ public class ModelContentMergeViewerPart {
 		Object theElement = null;
 		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
 
-		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator iterator = match.eAllContents(); iterator.hasNext();) {
 			final Object object = iterator.next();
 
 			if (object instanceof Match2Elements) {
