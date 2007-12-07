@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
+import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -616,8 +617,7 @@ public class DifferencesServices implements MatchEngine {
 	/* package */Map<String, Object> loadPreferenceOptionMap() {
 		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
 		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
-		// FIXME create preference for this one
-		optionMap.put(MatchOptions.OPTION_IGNORE_ID, MatchOptions.DEFAULT_IGNORE_ID);
+		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
 		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
 		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, MatchOptions.DEFAULT_DISTINCT_METAMODEL);
 		return optionMap;
@@ -826,6 +826,17 @@ public class DifferencesServices implements MatchEngine {
 		}
 		unMatchedElements.clear();
 	}
+	
+	/**
+	 * Returns whether we should ignore the IDs or compare using them.
+	 * 
+	 * @return <code>True</code> if we should ignore ID, <code>False</code> otherwise.
+	 */
+	private boolean getPreferenceIgnoreID() {
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
+			return EMFComparePlugin.getDefault().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID);
+		return MatchOptions.DEFAULT_IGNORE_ID;
+	}
 
 	/**
 	 * Returns whether we should ignore the XMI IDs or compare with them.
@@ -834,7 +845,7 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private boolean getPreferenceIgnoreXMIID() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
-			return EMFComparePlugin.getDefault().getBoolean("emfcompare.ignore.XMIID"); //$NON-NLS-1$
+			return EMFComparePlugin.getDefault().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID);
 		return MatchOptions.DEFAULT_IGNORE_XMI_ID;
 	}
 
@@ -847,8 +858,8 @@ public class DifferencesServices implements MatchEngine {
 	private int getPreferenceSearchWindow() {
 		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null
-				&& EMFComparePlugin.getDefault().getInt("emfcompare.search.window") > 0) //$NON-NLS-1$
-			searchWindow = EMFComparePlugin.getDefault().getInt("emfcompare.search.window"); //$NON-NLS-1$
+				&& EMFComparePlugin.getDefault().getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW) > 0)
+			searchWindow = EMFComparePlugin.getDefault().getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW);
 		return searchWindow;
 	}
 
