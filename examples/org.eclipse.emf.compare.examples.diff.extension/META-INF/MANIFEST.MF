@@ -13,9 +13,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.ecore,
- org.eclipse.uml2.uml.edit,
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.diff.edit,
- org.eclipse.jface
+ org.eclipse.jface,
+ org.eclipse.emf.ecore.edit
 Eclipse-LazyStart: true
 Bundle-Activator: org.eclipse.emf.compare.examples.diff.extension.DiffExtensionPlugin$Implementation
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

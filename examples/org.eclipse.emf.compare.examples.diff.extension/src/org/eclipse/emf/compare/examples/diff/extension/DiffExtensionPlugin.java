@@ -30,7 +30,6 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-@SuppressWarnings("nls")
 public final class DiffExtensionPlugin extends EMFPlugin {
 	/**
 	 * Keep track of the singleton.
