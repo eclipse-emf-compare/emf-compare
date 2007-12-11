@@ -25,64 +25,63 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter
  * <code>createXXX</code> method for each class of the model. <!-- end-user-doc -->
- * 
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
 public class MatchAdapterFactory extends AdapterFactoryImpl {
 	/**
-	 * The cached model package. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static MatchPackage modelPackage;
 
 	/**
-	 * The switch the delegates to the <code>createXXX</code> methods. <!-- begin-user-doc --> <!--
+	 * The switch that delegates to the <code>createXXX</code> methods.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	protected MatchSwitch modelSwitch = new MatchSwitch() {
+	protected MatchSwitch<Adapter> modelSwitch = new MatchSwitch<Adapter>() {
 		@Override
-		public Object caseMatch2Elements(Match2Elements object) {
-			return createMatch2ElementsAdapter();
-		}
-
-		@Override
-		public Object caseMatch3Element(Match3Element object) {
-			return createMatch3ElementAdapter();
-		}
-
-		@Override
-		public Object caseMatchElement(MatchElement object) {
-			return createMatchElementAdapter();
-		}
-
-		@Override
-		public Object caseMatchModel(MatchModel object) {
+		public Adapter caseMatchModel(MatchModel object) {
 			return createMatchModelAdapter();
 		}
 
 		@Override
-		public Object caseRemoteUnMatchElement(RemoteUnMatchElement object) {
-			return createRemoteUnMatchElementAdapter();
+		public Adapter caseMatchElement(MatchElement object) {
+			return createMatchElementAdapter();
 		}
 
 		@Override
-		public Object caseUnMatchElement(UnMatchElement object) {
+		public Adapter caseMatch2Elements(Match2Elements object) {
+			return createMatch2ElementsAdapter();
+		}
+
+		@Override
+		public Adapter caseMatch3Element(Match3Element object) {
+			return createMatch3ElementAdapter();
+		}
+
+		@Override
+		public Adapter caseUnMatchElement(UnMatchElement object) {
 			return createUnMatchElementAdapter();
 		}
 
 		@Override
-		public Object defaultCase(EObject object) {
+		public Adapter caseRemoteUnMatchElement(RemoteUnMatchElement object) {
+			return createRemoteUnMatchElementAdapter();
+		}
+
+		@Override
+		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
 	};
 
 	/**
-	 * Creates an instance of the adapter factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the adapter factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public MatchAdapterFactory() {
@@ -92,22 +91,21 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates an adapter for the <code>target</code>. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param target
-	 *            the object to adapt.
+	 * Creates an adapter for the <code>target</code>.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param target the object to adapt.
 	 * @return the adapter for the <code>target</code>.
 	 * @generated
 	 */
 	@Override
 	public Adapter createAdapter(Notifier target) {
-		return (Adapter)modelSwitch.doSwitch((EObject)target);
+		return modelSwitch.doSwitch((EObject)target);
 	}
 
 	/**
-	 * Creates a new adapter for the default case. <!-- begin-user-doc --> This default implementation returns
+	 * Creates a new adapter for the default case.
+	 * <!-- begin-user-doc --> This default implementation returns
 	 * null. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @generated
 	 */
@@ -119,7 +117,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.Match2Elements <em>Match2 Elements</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.Match2Elements
 	 * @generated
@@ -132,7 +129,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.Match3Element <em>Match3 Element</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.Match3Element
 	 * @generated
@@ -145,7 +141,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchElement <em>Element</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.MatchElement
 	 * @generated
@@ -158,7 +153,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.MatchModel <em>Model</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.MatchModel
 	 * @generated
@@ -171,7 +165,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement <em>Remote Un Match Element</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement
 	 * @generated
@@ -184,7 +177,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.match.metamodel.UnMatchElement <em>Un Match Element</em>}'.
 	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
-	 * 
 	 * @return the new adapter.
 	 * @see org.eclipse.emf.compare.match.metamodel.UnMatchElement
 	 * @generated
@@ -194,10 +186,10 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Returns whether this factory is applicable for the type of the object. <!-- begin-user-doc --> This
+	 * Returns whether this factory is applicable for the type of the object.
+	 * <!-- begin-user-doc --> This
 	 * implementation returns <code>true</code> if the object is either the model's package or is an
 	 * instance object of the model. <!-- end-user-doc -->
-	 * 
 	 * @return whether this factory is applicable for the type of the object.
 	 * @generated
 	 */

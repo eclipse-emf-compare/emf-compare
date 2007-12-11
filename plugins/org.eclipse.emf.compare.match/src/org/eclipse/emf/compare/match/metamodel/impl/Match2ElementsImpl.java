@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getLeftElement <em>Left Element</em>}</li>
- * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getLeftElement <em>Left Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match2ElementsImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Match2ElementsImpl extends MatchElementImpl implements Match2Elements {
@@ -40,7 +40,7 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftElement = null;
+	protected EObject leftElement;
 
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
@@ -50,11 +50,10 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement = null;
+	protected EObject rightElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected Match2ElementsImpl() {
@@ -63,7 +62,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -72,7 +70,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -81,7 +78,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,7 +97,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -117,7 +112,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -135,7 +129,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -153,7 +146,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -171,7 +163,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -189,7 +180,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -202,7 +192,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -215,7 +204,6 @@ public class Match2ElementsImpl extends MatchElementImpl implements Match2Elemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

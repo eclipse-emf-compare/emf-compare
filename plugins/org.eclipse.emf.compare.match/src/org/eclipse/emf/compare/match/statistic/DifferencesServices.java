@@ -31,6 +31,7 @@ import org.eclipse.emf.compare.match.api.MatchEngine;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
@@ -161,9 +162,9 @@ public class DifferencesServices implements MatchEngine {
 		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
 		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
 
-		final List<Match2Elements> leftObjectMatchedElements = new ArrayList<Match2Elements>(
+		final List<MatchElement> leftObjectMatchedElements = new ArrayList<MatchElement>(
 				leftObjectAncestorMatch.getMatchedElements());
-		final List<Match2Elements> rightObjectMatchedElements = new ArrayList<Match2Elements>(
+		final List<MatchElement> rightObjectMatchedElements = new ArrayList<MatchElement>(
 				rightObjectAncestorMatch.getMatchedElements());
 
 		// populates the unmatched elements list for later use
@@ -173,8 +174,8 @@ public class DifferencesServices implements MatchEngine {
 			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
 
 		try {
-			final Match2Elements leftObjectMatchRoot = leftObjectMatchedElements.get(0);
-			final Match2Elements rightObjectMatchRoot = rightObjectMatchedElements.get(0);
+			final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements.get(0);
+			final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
 			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
 
 			subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
@@ -706,15 +707,17 @@ public class DifferencesServices implements MatchEngine {
 	 */
 	private void createSub3Match(MatchModel root, Match3Element matchElementRoot, Match2Elements left,
 			Match2Elements right) throws FactoryException {
-		final List<Match2Elements> leftSubMatches = left.getSubMatchElements();
-		final List<Match2Elements> rightSubMatches = right.getSubMatchElements();
-		final List<Match2Elements> leftNotFound = new ArrayList<Match2Elements>(leftSubMatches);
-		final List<Match2Elements> rightNotFound = new ArrayList<Match2Elements>(rightSubMatches);
+		final List<MatchElement> leftSubMatches = left.getSubMatchElements();
+		final List<MatchElement> rightSubMatches = right.getSubMatchElements();
+		final List<MatchElement> leftNotFound = new ArrayList<MatchElement>(leftSubMatches);
+		final List<MatchElement> rightNotFound = new ArrayList<MatchElement>(rightSubMatches);
 
-		for (Match2Elements nextLeftMatch : leftSubMatches) {
+		for (MatchElement nextLeft : leftSubMatches) {
+			final Match2Elements nextLeftMatch = (Match2Elements)nextLeft;
 			Match2Elements correspondingMatch = null;
 
-			for (Match2Elements nextRightMatch : rightNotFound) {
+			for (MatchElement nextRight : rightNotFound) {
+				final Match2Elements nextRightMatch = (Match2Elements)nextRight;
 				if (nextRightMatch.getRightElement().equals(nextLeftMatch.getRightElement())) {
 					correspondingMatch = nextRightMatch;
 					break;
@@ -735,10 +738,10 @@ public class DifferencesServices implements MatchEngine {
 			}
 		}
 
-		for (Match2Elements nextLeftNotFound : leftNotFound) {
+		for (MatchElement nextLeftNotFound : leftNotFound) {
 			stillToFindFromModel1.add(nextLeftNotFound);
 		}
-		for (Match2Elements nextRightNotFound : rightNotFound) {
+		for (MatchElement nextRightNotFound : rightNotFound) {
 			stillToFindFromModel2.add(nextRightNotFound);
 		}
 	}
@@ -1276,9 +1279,9 @@ public class DifferencesServices implements MatchEngine {
 		final MatchModel root1AncestorMatch = modelMatch(leftRoot, ancestor, monitor, optionMap);
 		final MatchModel root2AncestorMatch = modelMatch(rightRoot, ancestor, monitor, optionMap);
 
-		final List<Match2Elements> root1MatchedElements = new ArrayList<Match2Elements>(root1AncestorMatch
+		final List<MatchElement> root1MatchedElements = new ArrayList<MatchElement>(root1AncestorMatch
 				.getMatchedElements());
-		final List<Match2Elements> root2MatchedElements = new ArrayList<Match2Elements>(root2AncestorMatch
+		final List<MatchElement> root2MatchedElements = new ArrayList<MatchElement>(root2AncestorMatch
 				.getMatchedElements());
 
 		// populates the unmatched elements list for later use
@@ -1288,8 +1291,8 @@ public class DifferencesServices implements MatchEngine {
 			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
 
 		try {
-			final Match2Elements root1Match = root1MatchedElements.get(0);
-			final Match2Elements root2Match = root2MatchedElements.get(0);
+			final Match2Elements root1Match = (Match2Elements)root1MatchedElements.get(0);
+			final Match2Elements root2Match = (Match2Elements)root2MatchedElements.get(0);
 			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
 
 			subMatchRoot.setSimilarity(absoluteMetric(root1Match.getLeftElement(), root2Match

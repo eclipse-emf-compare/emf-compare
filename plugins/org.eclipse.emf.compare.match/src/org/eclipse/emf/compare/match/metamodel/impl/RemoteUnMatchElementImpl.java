@@ -19,13 +19,12 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class RemoteUnMatchElementImpl extends UnMatchElementImpl implements RemoteUnMatchElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteUnMatchElementImpl() {
@@ -34,7 +33,6 @@ public class RemoteUnMatchElementImpl extends UnMatchElementImpl implements Remo
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

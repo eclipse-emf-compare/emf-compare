@@ -25,26 +25,25 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnMatchElementImpl#getElement <em>Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getElement()
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject element = null;
+	protected EObject element;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UnMatchElementImpl() {
@@ -53,7 +52,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetElement() {
@@ -62,7 +60,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -78,7 +75,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,7 +88,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -107,7 +102,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -122,7 +116,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getElement() {
@@ -140,7 +133,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setElement(EObject newElement) {
@@ -153,7 +145,6 @@ public class UnMatchElementImpl extends EObjectImpl implements UnMatchElement {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

@@ -21,14 +21,14 @@ import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements}
- * object. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.Match2Elements} object.
+ * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
 public class Match2ElementsItemProvider extends MatchElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -44,8 +44,8 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	}
 
 	/**
-	 * This returns Match2Elements.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns Match2Elements.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -60,7 +60,7 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -71,9 +71,9 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -82,8 +82,8 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -93,10 +93,10 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -111,42 +111,46 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	 * 
 	 * @generated
 	 */
-	protected void addLeftElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
+	@SuppressWarnings("unused")
+	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_Match2Elements_leftElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match2Elements_leftElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						getString("_UI_Match2Elements_leftElement_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_Match2Elements_leftElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						MatchPackage.Literals.MATCH2_ELEMENTS__LEFT_ELEMENT, true, false, true, null, null,
 						null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Element feature. <!-- begin-user-doc --> <!--
+	 * This adds a property descriptor for the Right Element feature.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	protected void addRightElementPropertyDescriptor(@SuppressWarnings("unused")
-	Object object) {
+	@SuppressWarnings("unused")
+	protected void addRightElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_Match2Elements_rightElement_feature"), getString("_UI_PropertyDescriptor_description", "_UI_Match2Elements_rightElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						getString("_UI_Match2Elements_rightElement_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_Match2Elements_rightElement_feature", "_UI_Match2Elements_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						MatchPackage.Literals.MATCH2_ELEMENTS__RIGHT_ELEMENT, true, false, true, null, null,
 						null));
 	}
 
 	/**
-	 * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s describing all
-	 * of the children that can be created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

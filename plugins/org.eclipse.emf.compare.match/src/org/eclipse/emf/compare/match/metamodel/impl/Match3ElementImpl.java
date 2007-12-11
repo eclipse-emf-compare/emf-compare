@@ -24,10 +24,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Match3ElementImpl extends Match2ElementsImpl implements Match3Element {
@@ -39,11 +39,10 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject originElement = null;
+	protected EObject originElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected Match3ElementImpl() {
@@ -52,7 +51,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -61,7 +59,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -77,7 +74,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -91,7 +87,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,7 +101,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -121,7 +115,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getOriginElement() {
@@ -139,7 +132,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
@@ -152,7 +144,6 @@ public class Match3ElementImpl extends Match2ElementsImpl implements Match3Eleme
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

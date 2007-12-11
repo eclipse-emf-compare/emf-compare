@@ -15,14 +15,13 @@ import org.eclipse.emf.ecore.EFactory;
 /**
  * <!-- begin-user-doc --> The <b>Factory</b> for the model. It provides a create method for each
  * non-abstract class of the model. <!-- end-user-doc -->
- * 
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
 public interface MatchFactory extends EFactory {
 	/**
-	 * The singleton instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The singleton instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	MatchFactory eINSTANCE = org.eclipse.emf.compare.match.metamodel.impl.MatchFactoryImpl.init();
@@ -46,34 +45,34 @@ public interface MatchFactory extends EFactory {
 	Match3Element createMatch3Element();
 
 	/**
-	 * Returns a new object of class '<em>Model</em>'. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns a new object of class '<em>Model</em>'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return a new object of class '<em>Model</em>'.
 	 * @generated
 	 */
 	MatchModel createMatchModel();
 
 	/**
-	 * Returns a new object of class '<em>Remote Un Match Element</em>'. <!-- begin-user-doc --> <!--
+	 * Returns a new object of class '<em>Remote Un Match Element</em>'.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return a new object of class '<em>Remote Un Match Element</em>'.
 	 * @generated
 	 */
 	RemoteUnMatchElement createRemoteUnMatchElement();
 
 	/**
-	 * Returns a new object of class '<em>Un Match Element</em>'. <!-- begin-user-doc --> <!--
+	 * Returns a new object of class '<em>Un Match Element</em>'.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @return a new object of class '<em>Un Match Element</em>'.
 	 * @generated
 	 */
 	UnMatchElement createUnMatchElement();
 
 	/**
-	 * Returns the package supported by this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the package supported by this factory.
 	 * @generated
 	 */

@@ -25,13 +25,12 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public MatchFactoryImpl() {
@@ -40,7 +39,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -50,14 +48,14 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static MatchFactory init() {
 		try {
 			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$
+					.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$ 
 			if (theMatchFactory != null) {
 				return theMatchFactory;
 			}
@@ -69,7 +67,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -93,7 +90,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match2Elements createMatch2Elements() {
@@ -103,7 +99,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match3Element createMatch3Element() {
@@ -113,7 +108,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchModel createMatchModel() {
@@ -123,7 +117,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUnMatchElement createRemoteUnMatchElement() {
@@ -133,7 +126,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UnMatchElement createUnMatchElement() {
@@ -143,7 +135,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchPackage getMatchPackage() {

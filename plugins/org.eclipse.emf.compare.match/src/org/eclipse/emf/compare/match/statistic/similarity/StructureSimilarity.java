@@ -130,7 +130,7 @@ public final class StructureSimilarity {
 			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
 				final Object value = current.eGet(feature);
 				if (value instanceof List) {
-					for (Object next : (List)value) {
+					for (Object next : (List<?>)value) {
 						if (next instanceof EObject) {
 							final String objName = NameSimilarity.findName((EObject)next);
 							result.append(objName);

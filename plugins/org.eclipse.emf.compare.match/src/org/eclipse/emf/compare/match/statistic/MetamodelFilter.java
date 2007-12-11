@@ -54,9 +54,9 @@ public class MetamodelFilter {
 	 */
 	public void analyseModel(EObject root) {
 		processEObject(root);
-		final Iterator it = root.eAllContents();
+		final Iterator<EObject> it = root.eAllContents();
 		while (it.hasNext()) {
-			final EObject eObj = (EObject)it.next();
+			final EObject eObj = it.next();
 			processEObject(eObj);
 		}
 		unusedFeatures = null;
@@ -78,9 +78,9 @@ public class MetamodelFilter {
 
 		final List<EStructuralFeature> result = new ArrayList<EStructuralFeature>();
 		final Collection<EStructuralFeature> unused = getUnusedFeatures();
-		final Iterator it = eObj.eClass().getEAllStructuralFeatures().iterator();
+		final Iterator<EStructuralFeature> it = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (it.hasNext()) {
-			final EStructuralFeature feat = (EStructuralFeature)it.next();
+			final EStructuralFeature feat = it.next();
 			if (!unused.contains(feat))
 				result.add(feat);
 		}
@@ -123,9 +123,9 @@ public class MetamodelFilter {
 	 *            {@link EObject} we need to parse for feature information.
 	 */
 	private void processEObject(EObject eObj) {
-		final Iterator featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
+		final Iterator<EStructuralFeature> featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (featIt.hasNext()) {
-			final EStructuralFeature feat = (EStructuralFeature)featIt.next();
+			final EStructuralFeature feat = featIt.next();
 			final StringBuilder key = new StringBuilder();
 			key.append(feat.hashCode());
 			key.append(eObj.eClass().getName());
