@@ -26,14 +26,14 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute}
- * object. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute} object.
+ * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
 public class UpdateAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -77,7 +77,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -86,9 +86,9 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -118,10 +118,10 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -131,13 +131,13 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

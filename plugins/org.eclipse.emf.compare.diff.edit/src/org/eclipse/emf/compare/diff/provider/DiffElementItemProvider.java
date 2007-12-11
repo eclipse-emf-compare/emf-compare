@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -32,7 +33,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffElement} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
  * @generated
  */
 public class DiffElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -48,15 +48,15 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
-	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
-	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public Collection getChildrenFeatures(Object object) {
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
@@ -71,7 +71,7 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -81,9 +81,9 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,8 +92,8 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -102,10 +102,10 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -129,22 +129,24 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 */
 	@SuppressWarnings("unused")
 	protected void addIsHiddenByPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_DiffElement_isHiddenBy_feature"), getString( //$NON-NLS-1$
-						"_UI_PropertyDescriptor_description", "_UI_DiffElement_isHiddenBy_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_DiffElement_type"), DiffPackage.Literals.DIFF_ELEMENT__IS_HIDDEN_BY, true, //$NON-NLS-1$
-				false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffElement_isHiddenBy_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffElement_isHiddenBy_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_ELEMENT__IS_HIDDEN_BY, true, false, true, null, null, null));
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
@@ -246,7 +248,6 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

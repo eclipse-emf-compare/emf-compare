@@ -23,14 +23,14 @@ import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement}
- * object. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateModelElement} object.
+ * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
 public class UpdateModelElementItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -74,7 +74,7 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -85,9 +85,9 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -96,8 +96,8 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -106,10 +106,10 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -127,19 +127,20 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	@SuppressWarnings("unused")
 	protected void addLeftElementPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(), getResourceLocator(),
-						getString("_UI_UpdateModelElement_leftElement_feature"), getString( //$NON-NLS-1$
-								"_UI_PropertyDescriptor_description", //$NON-NLS-1$
-								"_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_UpdateModelElement_leftElement_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_leftElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT, true, false, true, null,
 						null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Element feature. <!-- begin-user-doc --> <!--
+	 * This adds a property descriptor for the Right Element feature.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
@@ -149,20 +150,20 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
 						getString("_UI_UpdateModelElement_rightElement_feature"), //$NON-NLS-1$
-						getString("_UI_PropertyDescriptor_description", //$NON-NLS-1$
-								"_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_UpdateModelElement_rightElement_feature", "_UI_UpdateModelElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT, true, false, true, null,
 						null, null));
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

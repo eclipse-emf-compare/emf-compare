@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -33,7 +34,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffModel} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
  * @generated
  */
 public class DiffModelItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -49,15 +49,15 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
-	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
-	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public Collection getChildrenFeatures(Object object) {
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS);
@@ -66,8 +66,8 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This returns DiffModel.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns DiffModel.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -94,9 +94,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -105,22 +105,22 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
 		String label = ((DiffModel)object).getLeft();
-		return label == null || label.length() == 0 ? getString("_UI_DiffModel_type") //$NON-NLS-1$
-				: getString("_UI_DiffModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_DiffModel_type") : //$NON-NLS-1$
+				getString("_UI_DiffModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -143,55 +143,67 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This adds a property descriptor for the Left feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Left feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
 	protected void addLeftPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(), getString("_UI_DiffModel_left_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_left_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_DiffModel_type"), DiffPackage.Literals.DIFF_MODEL__LEFT, true, false, false, //$NON-NLS-1$
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_left_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_left_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__LEFT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Origin feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
 	protected void addOriginPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(), getString("_UI_DiffModel_origin_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_origin_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_DiffModel_type"), DiffPackage.Literals.DIFF_MODEL__ORIGIN, true, false, false, //$NON-NLS-1$
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_origin_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_origin_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__ORIGIN, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Right feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Right feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
 	protected void addRightPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(), getString("_UI_DiffModel_right_feature"), //$NON-NLS-1$
-				getString("_UI_PropertyDescriptor_description", "_UI_DiffModel_right_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_DiffModel_type"), DiffPackage.Literals.DIFF_MODEL__RIGHT, true, false, false, //$NON-NLS-1$
-				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_right_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_right_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__RIGHT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
@@ -293,7 +305,6 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

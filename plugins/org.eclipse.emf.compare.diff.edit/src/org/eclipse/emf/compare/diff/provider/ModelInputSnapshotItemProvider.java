@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -33,9 +34,8 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot}
- * object. <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot} object.
+ * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
 public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -51,15 +51,15 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
-	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
-	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
-	public Collection getChildrenFeatures(Object object) {
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DIFF);
@@ -69,8 +69,8 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	}
 
 	/**
-	 * This returns ModelInputSnapshot.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns ModelInputSnapshot.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -85,7 +85,7 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	 * @generated
 	 */
 	@Override
-	public List getPropertyDescriptors(Object object) {
+	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
@@ -95,9 +95,9 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,23 +106,23 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	}
 
 	/**
-	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public String getText(Object object) {
 		Date labelValue = ((ModelInputSnapshot)object).getDate();
 		String label = labelValue == null ? null : labelValue.toString();
-		return label == null || label.length() == 0 ? getString("_UI_ModelInputSnapshot_type") //$NON-NLS-1$
-				: getString("_UI_ModelInputSnapshot_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return label == null || label.length() == 0 ? getString("_UI_ModelInputSnapshot_type") : //$NON-NLS-1$
+				getString("_UI_ModelInputSnapshot_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -144,28 +144,31 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 	}
 
 	/**
-	 * This adds a property descriptor for the Date feature. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds a property descriptor for the Date feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
 	protected void addDatePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-				.getRootAdapterFactory(), getResourceLocator(),
-				getString("_UI_ModelInputSnapshot_date_feature"), getString( //$NON-NLS-1$
-						"_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature", //$NON-NLS-1$ //$NON-NLS-2$
-						"_UI_ModelInputSnapshot_type"), DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE, //$NON-NLS-1$
-				true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_ModelInputSnapshot_date_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_ModelInputSnapshot_date_feature", "_UI_ModelInputSnapshot_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DATE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.MODEL_INPUT_SNAPSHOT__DIFF,
@@ -177,7 +180,6 @@ public class ModelInputSnapshotItemProvider extends ItemProviderAdapter implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
