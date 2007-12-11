@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collections;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -55,7 +56,7 @@ public final class ExampleLauncher {
 				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet);
 
 				// Creates the match then the diff model for those two models
-				final MatchModel match = MatchService.doMatch(model1, model2, new NullProgressMonitor());
+				final MatchModel match = MatchService.doMatch(model1, model2, new NullProgressMonitor(), Collections.<String, Object> emptyMap());
 				final DiffModel diff = DiffService.doDiff(match, false);
 
 				// Prints the results
