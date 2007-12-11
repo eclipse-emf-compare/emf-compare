@@ -145,16 +145,16 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		} else {
 			if (element instanceof List) {
 				final Object data = item.getData();
-				if (data != ((List)element).get(0)) {
+				if (data != ((List<?>)element).get(0)) {
 					if (data != null) {
 						disassociate(item);
 					}
-					item.setData(((List)element).get(0));
+					item.setData(((List<?>)element).get(0));
 				}
 				// Always map the element, even if data == ((List)element).get(0),
 				// since unmapAllElements() can leave the map inconsistent
 				// See bug 2741 for details.
-				mapElement(((List)element).get(0), item);
+				mapElement(((List<?>)element).get(0), item);
 			} else {
 				super.associate(element, item);
 			}
@@ -184,7 +184,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		public Image getColumnImage(Object object, int columnIndex) {
 			Image image = super.getColumnImage(object, columnIndex);
 			if (object instanceof List) {
-				image = super.getColumnImage(((List)object).get(columnIndex), columnIndex);
+				image = super.getColumnImage(((List<?>)object).get(columnIndex), columnIndex);
 
 			}
 			return image;
@@ -199,7 +199,7 @@ public class ModelContentMergePropertyPart extends TableViewer {
 		public String getColumnText(Object object, int columnIndex) {
 			String text = super.getColumnText(object, columnIndex);
 			if (object instanceof List) {
-				text = super.getColumnText(((List)object).get(columnIndex), columnIndex);
+				text = super.getColumnText(((List<?>)object).get(columnIndex), columnIndex);
 			}
 			return text;
 		}

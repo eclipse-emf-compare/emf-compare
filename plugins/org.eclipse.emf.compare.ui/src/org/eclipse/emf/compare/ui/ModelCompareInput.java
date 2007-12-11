@@ -29,6 +29,7 @@ import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -148,7 +149,7 @@ public class ModelCompareInput implements ICompareInput {
 		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
 		final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
-		for (final TreeIterator iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
+		for (final TreeIterator<EObject> iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
 			final DiffElement aDiff = (DiffElement)iterator.next();
 			if (aDiff instanceof ModelElementChange)
 				modelElementDiffs.add((ModelElementChange)aDiff);

@@ -103,8 +103,8 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 			elements = inputElements.toArray();
 			Arrays.sort(elements, new Comparator<Object>() {
 				public int compare(Object first, Object second) {
-					final String name1 = ((EStructuralFeature)((List)first).get(0)).getName();
-					final String name2 = ((EStructuralFeature)((List)second).get(0)).getName();
+					final String name1 = ((EStructuralFeature)((List<?>)first).get(0)).getName();
+					final String name2 = ((EStructuralFeature)((List<?>)second).get(0)).getName();
 
 					return name1.compareTo(name2);
 				}

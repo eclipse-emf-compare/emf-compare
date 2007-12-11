@@ -186,6 +186,7 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 * @see StructuredViewer#setSelectionToWidget(List, boolean)
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void setSelectionToWidget(List l, boolean reveal) {
 		// Will expand the treeItem to one level below the current if needed
 		for (Object data : l) {
