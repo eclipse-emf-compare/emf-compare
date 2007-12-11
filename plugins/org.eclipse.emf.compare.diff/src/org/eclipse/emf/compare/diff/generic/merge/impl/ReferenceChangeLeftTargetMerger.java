@@ -49,7 +49,7 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator siblings = getDiffModel().eAllContents();
+		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof ReferenceChangeLeftTarget) {
@@ -85,7 +85,7 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator siblings = getDiffModel().eAllContents();
+		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
 			if (op instanceof ReferenceChangeLeftTarget) {

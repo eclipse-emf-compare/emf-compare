@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -130,7 +131,7 @@ public class DefaultMerger implements IMerger {
 	protected Resource findLeftResource() {
 		Resource leftResource = null;
 		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+		for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
 			final Match2Elements element = (Match2Elements)matchIterator.next();
 			if (element.getLeftElement() != null) {
 				leftResource = element.getLeftElement().eResource();
@@ -147,7 +148,7 @@ public class DefaultMerger implements IMerger {
 	protected Resource findRightResource() {
 		Resource rightResource = null;
 		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
+		for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
 			final Match2Elements element = (Match2Elements)matchIterator.next();
 			if (element.getRightElement() != null) {
 				rightResource = element.getRightElement().eResource();

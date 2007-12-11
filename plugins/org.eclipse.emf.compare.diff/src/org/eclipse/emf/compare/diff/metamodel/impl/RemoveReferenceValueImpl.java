@@ -19,13 +19,12 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoveReferenceValueImpl() {
@@ -34,7 +33,6 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl impl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

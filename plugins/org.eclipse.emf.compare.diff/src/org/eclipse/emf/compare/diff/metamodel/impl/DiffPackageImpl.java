@@ -61,299 +61,258 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass abstractDiffExtensionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass addAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass addModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass addReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass conflictingDiffElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass diffElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass diffGroupEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass diffModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass genericDiffElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EDataType iMergerEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass modelInputSnapshotEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass moveModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteAddAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteAddModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteAddReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteMoveModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteRemoveAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteRemoveModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteRemoveReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteUpdateAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass remoteUpdateUniqueReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass removeAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass removeModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass removeReferenceValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass updateAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass updateModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass updateReferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass updateUniqueReferenceValueEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
-	 * which also performs initialization of the package, or returns the registered package, if one already
-	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#eNS_URI
 	 * @see #init()
@@ -410,9 +369,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -540,7 +499,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAbstractDiffExtension() {
@@ -549,7 +507,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAbstractDiffExtension_HideElements() {
@@ -558,7 +515,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAbstractDiffExtension_IsCollapsed() {
@@ -567,7 +523,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAddAttribute() {
@@ -576,7 +531,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAddModelElement() {
@@ -585,7 +539,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAddReferenceValue() {
@@ -594,7 +547,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChange() {
@@ -603,7 +555,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_Attribute() {
@@ -612,7 +563,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_LeftElement() {
@@ -621,7 +571,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_RightElement() {
@@ -630,7 +579,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChangeLeftTarget() {
@@ -639,7 +587,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChangeLeftTarget_LeftTarget() {
@@ -648,7 +595,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChangeRightTarget() {
@@ -657,7 +603,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChangeRightTarget_RightTarget() {
@@ -666,7 +611,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getConflictingDiffElement() {
@@ -675,7 +619,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_LeftParent() {
@@ -684,7 +627,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_OriginElement() {
@@ -693,7 +635,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_RightParent() {
@@ -702,7 +643,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getDiffElement() {
@@ -711,7 +651,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiffElement_IsHiddenBy() {
@@ -720,7 +659,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiffElement_SubDiffElements() {
@@ -729,7 +667,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffFactory getDiffFactory() {
@@ -738,7 +675,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getDiffGroup() {
@@ -747,7 +683,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiffGroup_LeftParent() {
@@ -756,7 +691,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffGroup_Subchanges() {
@@ -765,7 +699,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getDiffModel() {
@@ -774,7 +707,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffModel_Left() {
@@ -783,7 +715,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffModel_Origin() {
@@ -792,7 +723,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getDiffModel_OwnedElements() {
@@ -801,7 +731,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffModel_Right() {
@@ -810,7 +739,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getGenericDiffElement() {
@@ -819,7 +747,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getGenericDiffElement_LeftElement() {
@@ -828,7 +755,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getGenericDiffElement_RightElement() {
@@ -837,7 +763,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EDataType getIMerger() {
@@ -846,7 +771,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChange() {
@@ -855,7 +779,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChangeLeftTarget() {
@@ -864,7 +787,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeLeftTarget_LeftElement() {
@@ -873,7 +795,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeLeftTarget_RightParent() {
@@ -882,7 +803,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChangeRightTarget() {
@@ -891,7 +811,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeRightTarget_LeftParent() {
@@ -900,7 +819,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeRightTarget_RightElement() {
@@ -909,7 +827,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getModelInputSnapshot() {
@@ -918,7 +835,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getModelInputSnapshot_Date() {
@@ -927,7 +843,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelInputSnapshot_Diff() {
@@ -936,7 +851,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getModelInputSnapshot_Match() {
@@ -945,7 +859,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMoveModelElement() {
@@ -954,7 +867,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMoveModelElement_LeftTarget() {
@@ -963,7 +875,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMoveModelElement_RightTarget() {
@@ -972,7 +883,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChange() {
@@ -981,7 +891,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_LeftElement() {
@@ -990,7 +899,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_Reference() {
@@ -999,7 +907,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_RightElement() {
@@ -1008,7 +915,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChangeLeftTarget() {
@@ -1017,7 +923,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeLeftTarget_LeftRemovedTarget() {
@@ -1026,7 +931,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeLeftTarget_RightRemovedTarget() {
@@ -1035,7 +939,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChangeRightTarget() {
@@ -1044,7 +947,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeRightTarget_LeftAddedTarget() {
@@ -1053,7 +955,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeRightTarget_RightAddedTarget() {
@@ -1062,7 +963,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteAddAttribute() {
@@ -1071,7 +971,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteAddModelElement() {
@@ -1080,7 +979,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteAddReferenceValue() {
@@ -1089,7 +987,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteMoveModelElement() {
@@ -1098,7 +995,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteRemoveAttribute() {
@@ -1107,7 +1003,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteRemoveModelElement() {
@@ -1116,7 +1011,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteRemoveReferenceValue() {
@@ -1125,7 +1019,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteUpdateAttribute() {
@@ -1134,7 +1027,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoteUpdateUniqueReferenceValue() {
@@ -1143,7 +1035,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoveAttribute() {
@@ -1152,7 +1043,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoveModelElement() {
@@ -1161,7 +1051,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getRemoveReferenceValue() {
@@ -1170,7 +1059,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUpdateAttribute() {
@@ -1179,7 +1067,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUpdateModelElement() {
@@ -1188,7 +1075,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUpdateModelElement_LeftElement() {
@@ -1197,7 +1083,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUpdateModelElement_RightElement() {
@@ -1206,7 +1091,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUpdateReference() {
@@ -1215,7 +1099,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUpdateUniqueReferenceValue() {
@@ -1224,7 +1107,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUpdateUniqueReferenceValue_LeftTarget() {
@@ -1233,7 +1115,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUpdateUniqueReferenceValue_RightTarget() {
@@ -1241,9 +1122,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
-	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -1261,6 +1142,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				.getEPackage(EcorePackage.eNS_URI);
 		MatchPackage theMatchPackage = (MatchPackage)EPackage.Registry.INSTANCE
 				.getEPackage(MatchPackage.eNS_URI);
+
+		// Create type parameters
+
+		// Set bounds for type parameters
 
 		// Add supertypes to classes
 		genericDiffElementEClass.getESuperTypes().add(this.getDiffElement());
@@ -1297,262 +1182,323 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		remoteUpdateUniqueReferenceValueEClass.getESuperTypes().add(this.getUpdateUniqueReferenceValue());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(diffModelEClass, DiffModel.class, "DiffModel", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getDiffModel_Left(), ecorePackage.getEString(), "left", null, 0, 1, DiffModel.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEAttribute(getDiffModel_Origin(), ecorePackage.getEString(), "origin", null, 0, 1,
-				DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiffModel_Right(), ecorePackage.getEString(), "right", null, 0, 1, DiffModel.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getDiffModel_OwnedElements(), this.getDiffElement(), null, "ownedElements", null, 0,
-				-1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(diffModelEClass, DiffModel.class,
+				"DiffModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getDiffModel_Left(),
+				ecorePackage.getEString(),
+				"left", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiffModel_Origin(),
+				ecorePackage.getEString(),
+				"origin", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiffModel_Right(),
+				ecorePackage.getEString(),
+				"right", null, 0, 1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiffModel_OwnedElements(),
+				this.getDiffElement(),
+				null,
+				"ownedElements", null, 0, -1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(diffElementEClass, DiffElement.class, "DiffElement", IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDiffElement_SubDiffElements(), this.getDiffElement(), null, "subDiffElements",
-				null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDiffElement_IsHiddenBy(), this.getAbstractDiffExtension(), this
-				.getAbstractDiffExtension_HideElements(), "isHiddenBy", null, 0, -1, DiffElement.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(diffElementEClass, DiffElement.class,
+				"DiffElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getDiffElement_SubDiffElements(),
+				this.getDiffElement(),
+				null,
+				"subDiffElements", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiffElement_IsHiddenBy(),
+				this.getAbstractDiffExtension(),
+				this.getAbstractDiffExtension_HideElements(),
+				"isHiddenBy", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(genericDiffElementEClass, GenericDiffElement.class, "GenericDiffElement", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getGenericDiffElement_LeftElement(), ecorePackage.getEObject(), null, "leftElement",
-				null, 0, 1, GenericDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getGenericDiffElement_RightElement(), ecorePackage.getEObject(), null, "rightElement",
-				null, 0, 1, GenericDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(genericDiffElementEClass, GenericDiffElement.class,
+				"GenericDiffElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getGenericDiffElement_LeftElement(),
+				ecorePackage.getEObject(),
+				null,
+				"leftElement", null, 0, 1, GenericDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getGenericDiffElement_RightElement(),
+				ecorePackage.getEObject(),
+				null,
+				"rightElement", null, 0, 1, GenericDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(conflictingDiffElementEClass, ConflictingDiffElement.class, "ConflictingDiffElement",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getConflictingDiffElement_LeftParent(), ecorePackage.getEObject(), null, "leftParent",
-				null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getConflictingDiffElement_RightParent(), ecorePackage.getEObject(), null,
-				"rightParent", null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getConflictingDiffElement_OriginElement(), theEcorePackage.getEObject(), null,
-				"originElement", null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+		initEClass(conflictingDiffElementEClass, ConflictingDiffElement.class,
+				"ConflictingDiffElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getConflictingDiffElement_LeftParent(),
+				ecorePackage.getEObject(),
+				null,
+				"leftParent", null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getConflictingDiffElement_RightParent(),
+				ecorePackage.getEObject(),
+				null,
+				"rightParent", null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getConflictingDiffElement_OriginElement(),
+				theEcorePackage.getEObject(),
+				null,
+				"originElement", null, 0, 1, ConflictingDiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(diffGroupEClass, DiffGroup.class, "DiffGroup", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDiffGroup_LeftParent(), ecorePackage.getEObject(), null, "leftParent", null, 0, 1,
-				DiffGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiffGroup_Subchanges(), ecorePackage.getEInt(), "subchanges", null, 0, 1,
-				DiffGroup.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				IS_DERIVED, IS_ORDERED);
+		initEClass(diffGroupEClass, DiffGroup.class,
+				"DiffGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getDiffGroup_LeftParent(),
+				ecorePackage.getEObject(),
+				null,
+				"leftParent", null, 0, 1, DiffGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiffGroup_Subchanges(),
+				ecorePackage.getEInt(),
+				"subchanges", null, 0, 1, DiffGroup.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(modelInputSnapshotEClass, ModelInputSnapshot.class, "ModelInputSnapshot", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getModelInputSnapshot_Date(), ecorePackage.getEDate(), "date", null, 0, 1,
-				ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelInputSnapshot_Diff(), this.getDiffModel(), null, "diff", null, 0, 1,
-				ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelInputSnapshot_Match(), theMatchPackage.getMatchModel(), null, "match", null,
-				0, 1, ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(modelInputSnapshotEClass, ModelInputSnapshot.class,
+				"ModelInputSnapshot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEAttribute(
+				getModelInputSnapshot_Date(),
+				ecorePackage.getEDate(),
+				"date", null, 0, 1, ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getModelInputSnapshot_Diff(),
+				this.getDiffModel(),
+				null,
+				"diff", null, 0, 1, ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getModelInputSnapshot_Match(),
+				theMatchPackage.getMatchModel(),
+				null,
+				"match", null, 0, 1, ModelInputSnapshot.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(modelElementChangeEClass, ModelElementChange.class, "ModelElementChange", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(modelElementChangeEClass, ModelElementChange.class,
+				"ModelElementChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(modelElementChangeLeftTargetEClass, ModelElementChangeLeftTarget.class,
-				"ModelElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelElementChangeLeftTarget_RightParent(), ecorePackage.getEObject(), null,
-				"rightParent", null, 0, 1, ModelElementChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getModelElementChangeLeftTarget_LeftElement(), ecorePackage.getEObject(), null,
-				"leftElement", null, 0, 1, ModelElementChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"ModelElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getModelElementChangeLeftTarget_RightParent(),
+				ecorePackage.getEObject(),
+				null,
+				"rightParent", null, 0, 1, ModelElementChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getModelElementChangeLeftTarget_LeftElement(),
+				ecorePackage.getEObject(),
+				null,
+				"leftElement", null, 0, 1, ModelElementChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(modelElementChangeRightTargetEClass, ModelElementChangeRightTarget.class,
-				"ModelElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelElementChangeRightTarget_LeftParent(), ecorePackage.getEObject(), null,
-				"leftParent", null, 0, 1, ModelElementChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getModelElementChangeRightTarget_RightElement(), ecorePackage.getEObject(), null,
-				"rightElement", null, 0, 1, ModelElementChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"ModelElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getModelElementChangeRightTarget_LeftParent(),
+				ecorePackage.getEObject(),
+				null,
+				"leftParent", null, 0, 1, ModelElementChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getModelElementChangeRightTarget_RightElement(),
+				ecorePackage.getEObject(),
+				null,
+				"rightElement", null, 0, 1, ModelElementChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addModelElementEClass, AddModelElement.class, "AddModelElement", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(addModelElementEClass, AddModelElement.class,
+				"AddModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(remoteAddModelElementEClass, RemoteAddModelElement.class, "RemoteAddModelElement",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteAddModelElementEClass, RemoteAddModelElement.class,
+				"RemoteAddModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(removeModelElementEClass, RemoveModelElement.class, "RemoveModelElement", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(removeModelElementEClass, RemoveModelElement.class,
+				"RemoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(remoteRemoveModelElementEClass, RemoteRemoveModelElement.class,
-				"RemoteRemoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+				"RemoteRemoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(updateModelElementEClass, UpdateModelElement.class, "UpdateModelElement", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUpdateModelElement_RightElement(), ecorePackage.getEObject(), null, "rightElement",
-				null, 0, 1, UpdateModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getUpdateModelElement_LeftElement(), ecorePackage.getEObject(), null, "leftElement",
-				null, 0, 1, UpdateModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(updateModelElementEClass, UpdateModelElement.class,
+				"UpdateModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getUpdateModelElement_RightElement(),
+				ecorePackage.getEObject(),
+				null,
+				"rightElement", null, 0, 1, UpdateModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getUpdateModelElement_LeftElement(),
+				ecorePackage.getEObject(),
+				null,
+				"leftElement", null, 0, 1, UpdateModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(moveModelElementEClass, MoveModelElement.class, "MoveModelElement", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMoveModelElement_LeftTarget(), ecorePackage.getEObject(), null, "leftTarget", null,
-				0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getMoveModelElement_RightTarget(), ecorePackage.getEObject(), null, "rightTarget",
-				null, 0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(moveModelElementEClass, MoveModelElement.class,
+				"MoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getMoveModelElement_LeftTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"leftTarget", null, 0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getMoveModelElement_RightTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"rightTarget", null, 0, 1, MoveModelElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(remoteMoveModelElementEClass, RemoteMoveModelElement.class, "RemoteMoveModelElement",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteMoveModelElementEClass, RemoteMoveModelElement.class,
+				"RemoteMoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(attributeChangeEClass, AttributeChange.class, "AttributeChange", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAttributeChange_Attribute(), theEcorePackage.getEAttribute(), null, "attribute",
-				null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttributeChange_LeftElement(), ecorePackage.getEObject(), null, "leftElement",
-				null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAttributeChange_RightElement(), ecorePackage.getEObject(), null, "rightElement",
-				null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(attributeChangeEClass, AttributeChange.class,
+				"AttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getAttributeChange_Attribute(),
+				theEcorePackage.getEAttribute(),
+				null,
+				"attribute", null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getAttributeChange_LeftElement(),
+				ecorePackage.getEObject(),
+				null,
+				"leftElement", null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getAttributeChange_RightElement(),
+				ecorePackage.getEObject(),
+				null,
+				"rightElement", null, 0, 1, AttributeChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(attributeChangeLeftTargetEClass, AttributeChangeLeftTarget.class,
-				"AttributeChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAttributeChangeLeftTarget_LeftTarget(), ecorePackage.getEObject(), null,
-				"leftTarget", null, 0, 1, AttributeChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"AttributeChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getAttributeChangeLeftTarget_LeftTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"leftTarget", null, 0, 1, AttributeChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(attributeChangeRightTargetEClass, AttributeChangeRightTarget.class,
-				"AttributeChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAttributeChangeRightTarget_RightTarget(), ecorePackage.getEObject(), null,
-				"rightTarget", null, 0, 1, AttributeChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"AttributeChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getAttributeChangeRightTarget_RightTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"rightTarget", null, 0, 1, AttributeChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addAttributeEClass, AddAttribute.class, "AddAttribute", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(addAttributeEClass, AddAttribute.class,
+				"AddAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(remoteAddAttributeEClass, RemoteAddAttribute.class, "RemoteAddAttribute", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteAddAttributeEClass, RemoteAddAttribute.class,
+				"RemoteAddAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(removeAttributeEClass, RemoveAttribute.class, "RemoveAttribute", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(removeAttributeEClass, RemoveAttribute.class,
+				"RemoveAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(remoteRemoveAttributeEClass, RemoteRemoveAttribute.class, "RemoteRemoveAttribute",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteRemoveAttributeEClass, RemoteRemoveAttribute.class,
+				"RemoteRemoveAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(updateAttributeEClass, UpdateAttribute.class, "UpdateAttribute", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(updateAttributeEClass, UpdateAttribute.class,
+				"UpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(remoteUpdateAttributeEClass, RemoteUpdateAttribute.class, "RemoteUpdateAttribute",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteUpdateAttributeEClass, RemoteUpdateAttribute.class,
+				"RemoteUpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(referenceChangeEClass, ReferenceChange.class, "ReferenceChange", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getReferenceChange_Reference(), theEcorePackage.getEReference(), null, "reference",
-				null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getReferenceChange_RightElement(), ecorePackage.getEObject(), null, "rightElement",
-				null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getReferenceChange_LeftElement(), ecorePackage.getEObject(), null, "leftElement",
-				null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(referenceChangeEClass, ReferenceChange.class,
+				"ReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getReferenceChange_Reference(),
+				theEcorePackage.getEReference(),
+				null,
+				"reference", null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReferenceChange_RightElement(),
+				ecorePackage.getEObject(),
+				null,
+				"rightElement", null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReferenceChange_LeftElement(),
+				ecorePackage.getEObject(),
+				null,
+				"leftElement", null, 0, 1, ReferenceChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(referenceChangeLeftTargetEClass, ReferenceChangeLeftTarget.class,
-				"ReferenceChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getReferenceChangeLeftTarget_LeftRemovedTarget(), ecorePackage.getEObject(), null,
-				"leftRemovedTarget", null, 0, 1, ReferenceChangeLeftTarget.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getReferenceChangeLeftTarget_RightRemovedTarget(), ecorePackage.getEObject(), null,
-				"rightRemovedTarget", null, 0, 1, ReferenceChangeLeftTarget.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+				"ReferenceChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getReferenceChangeLeftTarget_LeftRemovedTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"leftRemovedTarget", null, 0, 1, ReferenceChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReferenceChangeLeftTarget_RightRemovedTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"rightRemovedTarget", null, 0, 1, ReferenceChangeLeftTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(referenceChangeRightTargetEClass, ReferenceChangeRightTarget.class,
-				"ReferenceChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getReferenceChangeRightTarget_RightAddedTarget(), ecorePackage.getEObject(), null,
-				"rightAddedTarget", null, 0, 1, ReferenceChangeRightTarget.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getReferenceChangeRightTarget_LeftAddedTarget(), ecorePackage.getEObject(), null,
-				"leftAddedTarget", null, 0, 1, ReferenceChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"ReferenceChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getReferenceChangeRightTarget_RightAddedTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"rightAddedTarget", null, 0, 1, ReferenceChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getReferenceChangeRightTarget_LeftAddedTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"leftAddedTarget", null, 0, 1, ReferenceChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addReferenceValueEClass, AddReferenceValue.class, "AddReferenceValue", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(addReferenceValueEClass, AddReferenceValue.class,
+				"AddReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(remoteAddReferenceValueEClass, RemoteAddReferenceValue.class, "RemoteAddReferenceValue",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(remoteAddReferenceValueEClass, RemoteAddReferenceValue.class,
+				"RemoteAddReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(removeReferenceValueEClass, RemoveReferenceValue.class, "RemoveReferenceValue",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(removeReferenceValueEClass, RemoveReferenceValue.class,
+				"RemoveReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(remoteRemoveReferenceValueEClass, RemoteRemoveReferenceValue.class,
-				"RemoteRemoveReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+				"RemoteRemoveReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(updateReferenceEClass, UpdateReference.class, "UpdateReference", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(updateReferenceEClass, UpdateReference.class,
+				"UpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(updateUniqueReferenceValueEClass, UpdateUniqueReferenceValue.class,
-				"UpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUpdateUniqueReferenceValue_LeftTarget(), ecorePackage.getEObject(), null,
-				"leftTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getUpdateUniqueReferenceValue_RightTarget(), ecorePackage.getEObject(), null,
-				"rightTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+				"UpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getUpdateUniqueReferenceValue_LeftTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"leftTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getUpdateUniqueReferenceValue_RightTarget(),
+				ecorePackage.getEObject(),
+				null,
+				"rightTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(remoteUpdateUniqueReferenceValueEClass, RemoteUpdateUniqueReferenceValue.class,
-				"RemoteUpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+				"RemoteUpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(abstractDiffExtensionEClass, AbstractDiffExtension.class, "AbstractDiffExtension",
-				IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getAbstractDiffExtension_HideElements(), this.getDiffElement(), this
-				.getDiffElement_IsHiddenBy(), "hideElements", null, 0, -1, AbstractDiffExtension.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAbstractDiffExtension_IsCollapsed(), ecorePackage.getEBoolean(), "isCollapsed",
-				"false", 0, 1, AbstractDiffExtension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(abstractDiffExtensionEClass, AbstractDiffExtension.class,
+				"AbstractDiffExtension", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(
+				getAbstractDiffExtension_HideElements(),
+				this.getDiffElement(),
+				this.getDiffElement_IsHiddenBy(),
+				"hideElements", null, 0, -1, AbstractDiffExtension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getAbstractDiffExtension_IsCollapsed(),
+				ecorePackage.getEBoolean(),
+				"isCollapsed", "false", 0, 1, AbstractDiffExtension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-		EOperation op = addEOperation(abstractDiffExtensionEClass, null, "visit");
-		addEParameter(op, this.getDiffModel(), "diffModel", 0, 1);
+		EOperation op = addEOperation(abstractDiffExtensionEClass, null, "visit", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, this.getDiffModel(), "diffModel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEString(), "getText", 0, 1);
+		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEString(),
+				"getText", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEJavaObject(), "getImage", 0, 1);
+		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEJavaObject(),
+				"getImage", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
-		addEOperation(abstractDiffExtensionEClass, this.getIMerger(), "provideMerger", 0, 1);
+		addEOperation(abstractDiffExtensionEClass, this.getIMerger(),
+				"provideMerger", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		// Initialize data types
-		initEDataType(iMergerEDataType, IMerger.class, "IMerger", IS_SERIALIZABLE,
-				!IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(iMergerEDataType, IMerger.class,
+				"IMerger", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

@@ -57,22 +57,21 @@ import org.eclipse.emf.ecore.EObject;
  * {@link #doSwitch(EObject) doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of
  * the model, starting with the actual class of the object and proceeding up the inheritance hierarchy until a
  * non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
- * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage
  * @generated
  */
 
-public class DiffSwitch {
+public class DiffSwitch<T> {
 	/**
-	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static DiffPackage modelPackage;
 
 	/**
-	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffSwitch() {
@@ -85,15 +84,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Abstract Diff Extension</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Abstract Diff Extension</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAbstractDiffExtension(AbstractDiffExtension object) {
+	public T caseAbstractDiffExtension(AbstractDiffExtension object) {
 		return null;
 	}
 
@@ -109,7 +106,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAddAttribute(AddAttribute object) {
+	public T caseAddAttribute(AddAttribute object) {
 		return null;
 	}
 
@@ -125,7 +122,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAddModelElement(AddModelElement object) {
+	public T caseAddModelElement(AddModelElement object) {
 		return null;
 	}
 
@@ -133,15 +130,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Add Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Add Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAddReferenceValue(AddReferenceValue object) {
+	public T caseAddReferenceValue(AddReferenceValue object) {
 		return null;
 	}
 
@@ -157,7 +152,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAttributeChange(AttributeChange object) {
+	public T caseAttributeChange(AttributeChange object) {
 		return null;
 	}
 
@@ -165,15 +160,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
+	public T caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
 		return null;
 	}
 
@@ -181,15 +174,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
+	public T caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
 		return null;
 	}
 
@@ -197,15 +188,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Conflicting Diff Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Conflicting Diff Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseConflictingDiffElement(ConflictingDiffElement object) {
+	public T caseConflictingDiffElement(ConflictingDiffElement object) {
 		return null;
 	}
 
@@ -221,7 +210,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseDiffElement(DiffElement object) {
+	public T caseDiffElement(DiffElement object) {
 		return null;
 	}
 
@@ -237,7 +226,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseDiffGroup(DiffGroup object) {
+	public T caseDiffGroup(DiffGroup object) {
 		return null;
 	}
 
@@ -253,7 +242,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseDiffModel(DiffModel object) {
+	public T caseDiffModel(DiffModel object) {
 		return null;
 	}
 
@@ -261,15 +250,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Generic Diff Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Generic Diff Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseGenericDiffElement(GenericDiffElement object) {
+	public T caseGenericDiffElement(GenericDiffElement object) {
 		return null;
 	}
 
@@ -277,15 +264,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Model Element Change</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model Element Change</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseModelElementChange(ModelElementChange object) {
+	public T caseModelElementChange(ModelElementChange object) {
 		return null;
 	}
 
@@ -293,15 +278,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Model Element Change Left Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model Element Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
+	public T caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
 		return null;
 	}
 
@@ -309,15 +292,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Model Element Change Right Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model Element Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
+	public T caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
 		return null;
 	}
 
@@ -325,15 +306,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Model Input Snapshot</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model Input Snapshot</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseModelInputSnapshot(ModelInputSnapshot object) {
+	public T caseModelInputSnapshot(ModelInputSnapshot object) {
 		return null;
 	}
 
@@ -349,7 +328,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseMoveModelElement(MoveModelElement object) {
+	public T caseMoveModelElement(MoveModelElement object) {
 		return null;
 	}
 
@@ -365,7 +344,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseReferenceChange(ReferenceChange object) {
+	public T caseReferenceChange(ReferenceChange object) {
 		return null;
 	}
 
@@ -373,15 +352,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
+	public T caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
 		return null;
 	}
 
@@ -389,15 +366,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
+	public T caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
 		return null;
 	}
 
@@ -405,15 +380,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Add Attribute</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Add Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteAddAttribute(RemoteAddAttribute object) {
+	public T caseRemoteAddAttribute(RemoteAddAttribute object) {
 		return null;
 	}
 
@@ -421,15 +394,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Add Model Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Add Model Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteAddModelElement(RemoteAddModelElement object) {
+	public T caseRemoteAddModelElement(RemoteAddModelElement object) {
 		return null;
 	}
 
@@ -437,15 +408,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Add Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Add Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteAddReferenceValue(RemoteAddReferenceValue object) {
+	public T caseRemoteAddReferenceValue(RemoteAddReferenceValue object) {
 		return null;
 	}
 
@@ -453,15 +422,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Move Model Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Move Model Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteMoveModelElement(RemoteMoveModelElement object) {
+	public T caseRemoteMoveModelElement(RemoteMoveModelElement object) {
 		return null;
 	}
 
@@ -469,15 +436,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Remove Attribute</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Remove Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteRemoveAttribute(RemoteRemoveAttribute object) {
+	public T caseRemoteRemoveAttribute(RemoteRemoveAttribute object) {
 		return null;
 	}
 
@@ -485,15 +450,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Remove Model Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Remove Model Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteRemoveModelElement(RemoteRemoveModelElement object) {
+	public T caseRemoteRemoveModelElement(RemoteRemoveModelElement object) {
 		return null;
 	}
 
@@ -501,15 +464,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Remove Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Remove Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteRemoveReferenceValue(RemoteRemoveReferenceValue object) {
+	public T caseRemoteRemoveReferenceValue(RemoteRemoveReferenceValue object) {
 		return null;
 	}
 
@@ -517,15 +478,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Update Attribute</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Update Attribute</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteUpdateAttribute(RemoteUpdateAttribute object) {
+	public T caseRemoteUpdateAttribute(RemoteUpdateAttribute object) {
 		return null;
 	}
 
@@ -533,15 +492,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remote Update Unique Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remote Update Unique Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoteUpdateUniqueReferenceValue(RemoteUpdateUniqueReferenceValue object) {
+	public T caseRemoteUpdateUniqueReferenceValue(RemoteUpdateUniqueReferenceValue object) {
 		return null;
 	}
 
@@ -557,7 +514,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoveAttribute(RemoveAttribute object) {
+	public T caseRemoveAttribute(RemoveAttribute object) {
 		return null;
 	}
 
@@ -565,15 +522,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remove Model Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remove Model Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoveModelElement(RemoveModelElement object) {
+	public T caseRemoveModelElement(RemoveModelElement object) {
 		return null;
 	}
 
@@ -581,15 +536,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Remove Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Remove Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseRemoveReferenceValue(RemoveReferenceValue object) {
+	public T caseRemoveReferenceValue(RemoveReferenceValue object) {
 		return null;
 	}
 
@@ -605,7 +558,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseUpdateAttribute(UpdateAttribute object) {
+	public T caseUpdateAttribute(UpdateAttribute object) {
 		return null;
 	}
 
@@ -613,15 +566,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Update Model Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Update Model Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseUpdateModelElement(UpdateModelElement object) {
+	public T caseUpdateModelElement(UpdateModelElement object) {
 		return null;
 	}
 
@@ -637,7 +588,7 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseUpdateReference(UpdateReference object) {
+	public T caseUpdateReference(UpdateReference object) {
 		return null;
 	}
 
@@ -645,15 +596,13 @@ public class DiffSwitch {
 	 * Returns the result of interpreting the object as an instance of '<em>Update Unique Reference Value</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Update Unique Reference Value</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
+	public T caseUpdateUniqueReferenceValue(UpdateUniqueReferenceValue object) {
 		return null;
 	}
 
@@ -669,63 +618,58 @@ public class DiffSwitch {
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
-	public Object defaultCase(EObject object) {
+	public T defaultCase(EObject object) {
 		return null;
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
-	public Object doSwitch(EObject theEObject) {
+	public T doSwitch(EObject theEObject) {
 		return doSwitch(theEObject.eClass(), theEObject);
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
-	protected Object doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage) {
+	protected T doSwitch(EClass theEClass, EObject theEObject) {
+		if (theEClass.eContainer() == modelPackage)
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		List eSuperTypes = theEClass.getESuperTypes();
-		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch((EClass)eSuperTypes.get(0),
-				theEObject);
+		List<EClass> eSuperTypes = theEClass.getESuperTypes();
+		return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
-	protected Object doSwitch(int classifierID, EObject theEObject) {
+	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case DiffPackage.DIFF_MODEL: {
 				DiffModel diffModel = (DiffModel)theEObject;
-				Object result = caseDiffModel(diffModel);
+				T result = caseDiffModel(diffModel);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
 			}
 			case DiffPackage.DIFF_ELEMENT: {
 				DiffElement diffElement = (DiffElement)theEObject;
-				Object result = caseDiffElement(diffElement);
+				T result = caseDiffElement(diffElement);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
 			}
 			case DiffPackage.GENERIC_DIFF_ELEMENT: {
 				GenericDiffElement genericDiffElement = (GenericDiffElement)theEObject;
-				Object result = caseGenericDiffElement(genericDiffElement);
+				T result = caseGenericDiffElement(genericDiffElement);
 				if (result == null)
 					result = caseDiffElement(genericDiffElement);
 				if (result == null)
@@ -734,7 +678,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT: {
 				ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)theEObject;
-				Object result = caseConflictingDiffElement(conflictingDiffElement);
+				T result = caseConflictingDiffElement(conflictingDiffElement);
 				if (result == null)
 					result = caseDiffElement(conflictingDiffElement);
 				if (result == null)
@@ -743,7 +687,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.DIFF_GROUP: {
 				DiffGroup diffGroup = (DiffGroup)theEObject;
-				Object result = caseDiffGroup(diffGroup);
+				T result = caseDiffGroup(diffGroup);
 				if (result == null)
 					result = caseDiffElement(diffGroup);
 				if (result == null)
@@ -752,14 +696,14 @@ public class DiffSwitch {
 			}
 			case DiffPackage.MODEL_INPUT_SNAPSHOT: {
 				ModelInputSnapshot modelInputSnapshot = (ModelInputSnapshot)theEObject;
-				Object result = caseModelInputSnapshot(modelInputSnapshot);
+				T result = caseModelInputSnapshot(modelInputSnapshot);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE: {
 				ModelElementChange modelElementChange = (ModelElementChange)theEObject;
-				Object result = caseModelElementChange(modelElementChange);
+				T result = caseModelElementChange(modelElementChange);
 				if (result == null)
 					result = caseDiffElement(modelElementChange);
 				if (result == null)
@@ -768,7 +712,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET: {
 				ModelElementChangeLeftTarget modelElementChangeLeftTarget = (ModelElementChangeLeftTarget)theEObject;
-				Object result = caseModelElementChangeLeftTarget(modelElementChangeLeftTarget);
+				T result = caseModelElementChangeLeftTarget(modelElementChangeLeftTarget);
 				if (result == null)
 					result = caseModelElementChange(modelElementChangeLeftTarget);
 				if (result == null)
@@ -779,7 +723,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET: {
 				ModelElementChangeRightTarget modelElementChangeRightTarget = (ModelElementChangeRightTarget)theEObject;
-				Object result = caseModelElementChangeRightTarget(modelElementChangeRightTarget);
+				T result = caseModelElementChangeRightTarget(modelElementChangeRightTarget);
 				if (result == null)
 					result = caseModelElementChange(modelElementChangeRightTarget);
 				if (result == null)
@@ -790,7 +734,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ADD_MODEL_ELEMENT: {
 				AddModelElement addModelElement = (AddModelElement)theEObject;
-				Object result = caseAddModelElement(addModelElement);
+				T result = caseAddModelElement(addModelElement);
 				if (result == null)
 					result = caseModelElementChangeRightTarget(addModelElement);
 				if (result == null)
@@ -803,7 +747,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_ADD_MODEL_ELEMENT: {
 				RemoteAddModelElement remoteAddModelElement = (RemoteAddModelElement)theEObject;
-				Object result = caseRemoteAddModelElement(remoteAddModelElement);
+				T result = caseRemoteAddModelElement(remoteAddModelElement);
 				if (result == null)
 					result = caseModelElementChangeLeftTarget(remoteAddModelElement);
 				if (result == null)
@@ -816,7 +760,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOVE_MODEL_ELEMENT: {
 				RemoveModelElement removeModelElement = (RemoveModelElement)theEObject;
-				Object result = caseRemoveModelElement(removeModelElement);
+				T result = caseRemoveModelElement(removeModelElement);
 				if (result == null)
 					result = caseModelElementChangeLeftTarget(removeModelElement);
 				if (result == null)
@@ -829,7 +773,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_REMOVE_MODEL_ELEMENT: {
 				RemoteRemoveModelElement remoteRemoveModelElement = (RemoteRemoveModelElement)theEObject;
-				Object result = caseRemoteRemoveModelElement(remoteRemoveModelElement);
+				T result = caseRemoteRemoveModelElement(remoteRemoveModelElement);
 				if (result == null)
 					result = caseModelElementChangeRightTarget(remoteRemoveModelElement);
 				if (result == null)
@@ -842,7 +786,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.UPDATE_MODEL_ELEMENT: {
 				UpdateModelElement updateModelElement = (UpdateModelElement)theEObject;
-				Object result = caseUpdateModelElement(updateModelElement);
+				T result = caseUpdateModelElement(updateModelElement);
 				if (result == null)
 					result = caseModelElementChange(updateModelElement);
 				if (result == null)
@@ -853,7 +797,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.MOVE_MODEL_ELEMENT: {
 				MoveModelElement moveModelElement = (MoveModelElement)theEObject;
-				Object result = caseMoveModelElement(moveModelElement);
+				T result = caseMoveModelElement(moveModelElement);
 				if (result == null)
 					result = caseUpdateModelElement(moveModelElement);
 				if (result == null)
@@ -866,7 +810,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_MOVE_MODEL_ELEMENT: {
 				RemoteMoveModelElement remoteMoveModelElement = (RemoteMoveModelElement)theEObject;
-				Object result = caseRemoteMoveModelElement(remoteMoveModelElement);
+				T result = caseRemoteMoveModelElement(remoteMoveModelElement);
 				if (result == null)
 					result = caseMoveModelElement(remoteMoveModelElement);
 				if (result == null)
@@ -881,7 +825,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE: {
 				AttributeChange attributeChange = (AttributeChange)theEObject;
-				Object result = caseAttributeChange(attributeChange);
+				T result = caseAttributeChange(attributeChange);
 				if (result == null)
 					result = caseDiffElement(attributeChange);
 				if (result == null)
@@ -890,7 +834,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET: {
 				AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)theEObject;
-				Object result = caseAttributeChangeLeftTarget(attributeChangeLeftTarget);
+				T result = caseAttributeChangeLeftTarget(attributeChangeLeftTarget);
 				if (result == null)
 					result = caseAttributeChange(attributeChangeLeftTarget);
 				if (result == null)
@@ -901,7 +845,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET: {
 				AttributeChangeRightTarget attributeChangeRightTarget = (AttributeChangeRightTarget)theEObject;
-				Object result = caseAttributeChangeRightTarget(attributeChangeRightTarget);
+				T result = caseAttributeChangeRightTarget(attributeChangeRightTarget);
 				if (result == null)
 					result = caseAttributeChange(attributeChangeRightTarget);
 				if (result == null)
@@ -912,7 +856,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ADD_ATTRIBUTE: {
 				AddAttribute addAttribute = (AddAttribute)theEObject;
-				Object result = caseAddAttribute(addAttribute);
+				T result = caseAddAttribute(addAttribute);
 				if (result == null)
 					result = caseAttributeChangeRightTarget(addAttribute);
 				if (result == null)
@@ -925,7 +869,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_ADD_ATTRIBUTE: {
 				RemoteAddAttribute remoteAddAttribute = (RemoteAddAttribute)theEObject;
-				Object result = caseRemoteAddAttribute(remoteAddAttribute);
+				T result = caseRemoteAddAttribute(remoteAddAttribute);
 				if (result == null)
 					result = caseAttributeChangeLeftTarget(remoteAddAttribute);
 				if (result == null)
@@ -938,7 +882,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOVE_ATTRIBUTE: {
 				RemoveAttribute removeAttribute = (RemoveAttribute)theEObject;
-				Object result = caseRemoveAttribute(removeAttribute);
+				T result = caseRemoveAttribute(removeAttribute);
 				if (result == null)
 					result = caseAttributeChangeLeftTarget(removeAttribute);
 				if (result == null)
@@ -951,7 +895,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_REMOVE_ATTRIBUTE: {
 				RemoteRemoveAttribute remoteRemoveAttribute = (RemoteRemoveAttribute)theEObject;
-				Object result = caseRemoteRemoveAttribute(remoteRemoveAttribute);
+				T result = caseRemoteRemoveAttribute(remoteRemoveAttribute);
 				if (result == null)
 					result = caseAttributeChangeRightTarget(remoteRemoveAttribute);
 				if (result == null)
@@ -964,7 +908,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.UPDATE_ATTRIBUTE: {
 				UpdateAttribute updateAttribute = (UpdateAttribute)theEObject;
-				Object result = caseUpdateAttribute(updateAttribute);
+				T result = caseUpdateAttribute(updateAttribute);
 				if (result == null)
 					result = caseAttributeChange(updateAttribute);
 				if (result == null)
@@ -975,7 +919,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_UPDATE_ATTRIBUTE: {
 				RemoteUpdateAttribute remoteUpdateAttribute = (RemoteUpdateAttribute)theEObject;
-				Object result = caseRemoteUpdateAttribute(remoteUpdateAttribute);
+				T result = caseRemoteUpdateAttribute(remoteUpdateAttribute);
 				if (result == null)
 					result = caseUpdateAttribute(remoteUpdateAttribute);
 				if (result == null)
@@ -988,7 +932,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REFERENCE_CHANGE: {
 				ReferenceChange referenceChange = (ReferenceChange)theEObject;
-				Object result = caseReferenceChange(referenceChange);
+				T result = caseReferenceChange(referenceChange);
 				if (result == null)
 					result = caseDiffElement(referenceChange);
 				if (result == null)
@@ -997,7 +941,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET: {
 				ReferenceChangeLeftTarget referenceChangeLeftTarget = (ReferenceChangeLeftTarget)theEObject;
-				Object result = caseReferenceChangeLeftTarget(referenceChangeLeftTarget);
+				T result = caseReferenceChangeLeftTarget(referenceChangeLeftTarget);
 				if (result == null)
 					result = caseReferenceChange(referenceChangeLeftTarget);
 				if (result == null)
@@ -1008,7 +952,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET: {
 				ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)theEObject;
-				Object result = caseReferenceChangeRightTarget(referenceChangeRightTarget);
+				T result = caseReferenceChangeRightTarget(referenceChangeRightTarget);
 				if (result == null)
 					result = caseReferenceChange(referenceChangeRightTarget);
 				if (result == null)
@@ -1019,7 +963,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ADD_REFERENCE_VALUE: {
 				AddReferenceValue addReferenceValue = (AddReferenceValue)theEObject;
-				Object result = caseAddReferenceValue(addReferenceValue);
+				T result = caseAddReferenceValue(addReferenceValue);
 				if (result == null)
 					result = caseReferenceChangeRightTarget(addReferenceValue);
 				if (result == null)
@@ -1032,7 +976,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_ADD_REFERENCE_VALUE: {
 				RemoteAddReferenceValue remoteAddReferenceValue = (RemoteAddReferenceValue)theEObject;
-				Object result = caseRemoteAddReferenceValue(remoteAddReferenceValue);
+				T result = caseRemoteAddReferenceValue(remoteAddReferenceValue);
 				if (result == null)
 					result = caseReferenceChangeLeftTarget(remoteAddReferenceValue);
 				if (result == null)
@@ -1045,7 +989,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOVE_REFERENCE_VALUE: {
 				RemoveReferenceValue removeReferenceValue = (RemoveReferenceValue)theEObject;
-				Object result = caseRemoveReferenceValue(removeReferenceValue);
+				T result = caseRemoveReferenceValue(removeReferenceValue);
 				if (result == null)
 					result = caseReferenceChangeLeftTarget(removeReferenceValue);
 				if (result == null)
@@ -1058,7 +1002,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_REMOVE_REFERENCE_VALUE: {
 				RemoteRemoveReferenceValue remoteRemoveReferenceValue = (RemoteRemoveReferenceValue)theEObject;
-				Object result = caseRemoteRemoveReferenceValue(remoteRemoveReferenceValue);
+				T result = caseRemoteRemoveReferenceValue(remoteRemoveReferenceValue);
 				if (result == null)
 					result = caseReferenceChangeRightTarget(remoteRemoveReferenceValue);
 				if (result == null)
@@ -1071,7 +1015,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.UPDATE_REFERENCE: {
 				UpdateReference updateReference = (UpdateReference)theEObject;
-				Object result = caseUpdateReference(updateReference);
+				T result = caseUpdateReference(updateReference);
 				if (result == null)
 					result = caseReferenceChange(updateReference);
 				if (result == null)
@@ -1082,7 +1026,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE: {
 				UpdateUniqueReferenceValue updateUniqueReferenceValue = (UpdateUniqueReferenceValue)theEObject;
-				Object result = caseUpdateUniqueReferenceValue(updateUniqueReferenceValue);
+				T result = caseUpdateUniqueReferenceValue(updateUniqueReferenceValue);
 				if (result == null)
 					result = caseUpdateReference(updateUniqueReferenceValue);
 				if (result == null)
@@ -1095,7 +1039,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE: {
 				RemoteUpdateUniqueReferenceValue remoteUpdateUniqueReferenceValue = (RemoteUpdateUniqueReferenceValue)theEObject;
-				Object result = caseRemoteUpdateUniqueReferenceValue(remoteUpdateUniqueReferenceValue);
+				T result = caseRemoteUpdateUniqueReferenceValue(remoteUpdateUniqueReferenceValue);
 				if (result == null)
 					result = caseUpdateUniqueReferenceValue(remoteUpdateUniqueReferenceValue);
 				if (result == null)
@@ -1110,7 +1054,7 @@ public class DiffSwitch {
 			}
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION: {
 				AbstractDiffExtension abstractDiffExtension = (AbstractDiffExtension)theEObject;
-				Object result = caseAbstractDiffExtension(abstractDiffExtension);
+				T result = caseAbstractDiffExtension(abstractDiffExtension);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;

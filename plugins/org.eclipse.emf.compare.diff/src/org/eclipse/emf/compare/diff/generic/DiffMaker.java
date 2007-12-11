@@ -46,6 +46,7 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
@@ -474,9 +475,9 @@ public class DiffMaker implements DiffEngine {
 
 		doDiffDelegate(diffRoot, matchRoot);
 
-		final Iterator unMatched = match.getUnMatchedElements().iterator();
+		final Iterator<UnMatchElement> unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
-			final UnMatchElement unMatchElement = (UnMatchElement)unMatched.next();
+			final UnMatchElement unMatchElement = unMatched.next();
 			boolean isChild = false;
 			boolean isAncestor = false;
 			for (Object object : match.getUnMatchedElements()) {
@@ -1407,11 +1408,11 @@ public class DiffMaker implements DiffEngine {
 		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
 		// we really have changes
 		if (current.getSubDiffElements().size() > 0) {
-			final Iterator it2 = current.getSubDiffElements().iterator();
+			final Iterator<DiffElement> it2 = current.getSubDiffElements().iterator();
 			while (it2.hasNext()) {
-				final Object eObj = it2.next();
-				if (!(eObj instanceof DiffGroup)) {
-					shouldAddToList.add((DiffElement)eObj);
+				final DiffElement diff = it2.next();
+				if (!(diff instanceof DiffGroup)) {
+					shouldAddToList.add(diff);
 				}
 			}
 			for (DiffElement diff : shouldAddToList) {
@@ -1421,7 +1422,7 @@ public class DiffMaker implements DiffEngine {
 			current = root;
 		}
 		// taking care of our childs
-		final Iterator it = match.getSubMatchElements().iterator();
+		final Iterator<MatchElement> it = match.getSubMatchElements().iterator();
 		while (it.hasNext()) {
 			final Match2Elements element = (Match2Elements)it.next();
 			doDiffDelegate(root, element);
@@ -1601,7 +1602,7 @@ public class DiffMaker implements DiffEngine {
 	 *            <code>True</code> if we need to retrieve the informations from the origin model too.
 	 */
 	private void updateEObjectToMatch(MatchModel match, boolean threeWay) {
-		final Iterator rootElemIt = match.getMatchedElements().iterator();
+		final Iterator<MatchElement> rootElemIt = match.getMatchedElements().iterator();
 		while (rootElemIt.hasNext()) {
 			final Match2Elements matchRoot = (Match2Elements)rootElemIt.next();
 			eObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);

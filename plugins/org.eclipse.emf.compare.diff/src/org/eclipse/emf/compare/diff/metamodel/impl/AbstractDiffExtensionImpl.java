@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.8 2007/12/07 13:26:46 lgoubet Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.9 2007/12/11 15:59:40 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -35,14 +35,24 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements AbstractDiffExtension {
+	/**
+	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getHideElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiffElement> hideElements;
+
 	/**
 	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -52,16 +62,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * @ordered
 	 */
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getHideElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList hideElements;
 
 	/**
 	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
@@ -75,7 +75,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AbstractDiffExtensionImpl() {
@@ -84,7 +83,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -100,35 +98,34 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-				return ((InternalEList)getHideElements()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(
+						otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-				return ((InternalEList)getHideElements()).basicRemove(otherEnd, msgs);
+				return ((InternalEList<?>)getHideElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -144,15 +141,15 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
 				getHideElements().clear();
-				getHideElements().addAll((Collection)newValue);
+				getHideElements().addAll((Collection<? extends DiffElement>)newValue);
 				return;
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
 				setIsCollapsed(((Boolean)newValue).booleanValue());
@@ -163,7 +160,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -181,13 +177,12 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public EList getHideElements() {
+	public EList<DiffElement> getHideElements() {
 		if (hideElements == null) {
-			hideElements = new EObjectWithInverseResolvingEList.ManyInverse(DiffElement.class, this,
-					DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS,
+			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class,
+					this, DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS,
 					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
 		}
 		return hideElements;
@@ -215,7 +210,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -224,7 +218,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IMerger provideMerger() {
@@ -235,7 +228,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
@@ -248,7 +240,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -275,7 +266,6 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

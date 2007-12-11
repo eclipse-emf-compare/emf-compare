@@ -56,14 +56,12 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
-@SuppressWarnings("nls")
 public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffFactoryImpl() {
@@ -72,7 +70,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -82,14 +79,14 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static DiffFactory init() {
 		try {
 			DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/diff/1.1");
+					.getEFactory("http://www.eclipse.org/emf/compare/diff/1.1"); //$NON-NLS-1$ 
 			if (theDiffFactory != null) {
 				return theDiffFactory;
 			}
@@ -101,7 +98,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertIMergerToString(EDataType eDataType, Object instanceValue) {
@@ -110,7 +106,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -119,14 +114,13 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 			case DiffPackage.IMERGER:
 				return convertIMergerToString(eDataType, instanceValue);
 			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-						+ "' is not a valid classifier");
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -201,14 +195,13 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 			case DiffPackage.REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE:
 				return createRemoteUpdateUniqueReferenceValue();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName()
-						+ "' is not a valid classifier");
+				throw new IllegalArgumentException(
+						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddAttribute createAddAttribute() {
@@ -218,7 +211,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddModelElement createAddModelElement() {
@@ -228,7 +220,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddReferenceValue createAddReferenceValue() {
@@ -238,7 +229,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChange createAttributeChange() {
@@ -248,7 +238,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
@@ -258,7 +247,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
@@ -268,7 +256,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ConflictingDiffElement createConflictingDiffElement() {
@@ -278,7 +265,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffGroup createDiffGroup() {
@@ -288,7 +274,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffModel createDiffModel() {
@@ -298,7 +283,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -307,14 +291,13 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 			case DiffPackage.IMERGER:
 				return createIMergerFromString(eDataType, initialValue);
 			default:
-				throw new IllegalArgumentException("The datatype '" + eDataType.getName()
-						+ "' is not a valid classifier");
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public GenericDiffElement createGenericDiffElement() {
@@ -324,7 +307,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IMerger createIMergerFromString(EDataType eDataType, String initialValue) {
@@ -333,7 +315,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChange createModelElementChange() {
@@ -343,7 +324,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeLeftTarget createModelElementChangeLeftTarget() {
@@ -353,7 +333,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeRightTarget createModelElementChangeRightTarget() {
@@ -363,7 +342,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelInputSnapshot createModelInputSnapshot() {
@@ -373,7 +351,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MoveModelElement createMoveModelElement() {
@@ -383,7 +360,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChange createReferenceChange() {
@@ -393,7 +369,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
@@ -403,7 +378,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
@@ -413,7 +387,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddAttribute createRemoteAddAttribute() {
@@ -423,7 +396,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddModelElement createRemoteAddModelElement() {
@@ -433,7 +405,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddReferenceValue createRemoteAddReferenceValue() {
@@ -443,7 +414,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteMoveModelElement createRemoteMoveModelElement() {
@@ -453,7 +423,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveAttribute createRemoteRemoveAttribute() {
@@ -463,7 +432,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveModelElement createRemoteRemoveModelElement() {
@@ -473,7 +441,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveReferenceValue createRemoteRemoveReferenceValue() {
@@ -483,7 +450,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUpdateAttribute createRemoteUpdateAttribute() {
@@ -493,7 +459,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue() {
@@ -503,7 +468,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveAttribute createRemoveAttribute() {
@@ -513,7 +477,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveModelElement createRemoveModelElement() {
@@ -523,7 +486,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveReferenceValue createRemoveReferenceValue() {
@@ -533,7 +495,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateAttribute createUpdateAttribute() {
@@ -543,7 +504,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateModelElement createUpdateModelElement() {
@@ -553,7 +513,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateReference createUpdateReference() {
@@ -563,7 +522,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateUniqueReferenceValue createUpdateUniqueReferenceValue() {
@@ -573,7 +531,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffPackage getDiffPackage() {
