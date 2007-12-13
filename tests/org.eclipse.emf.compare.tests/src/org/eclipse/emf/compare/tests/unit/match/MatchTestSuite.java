@@ -25,6 +25,9 @@ import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresi
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class MatchTestSuite extends TestCase {
+	/** Minimal -Xmx setting to run comparison tests. Set to 500m. */
+	private static final long MIN_XMX_SETTING = 500000000;
+	
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -44,8 +47,10 @@ public class MatchTestSuite extends TestCase {
 		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
 		suite.addTestSuite(TestEnginesPriority.class);
 		suite.addTestSuite(TestNameSimilarity.class);
-		suite.addTest(DifferencesServiceTestSuite.suite());
 		suite.addTest(StructureSimilarityTestSuite.suite());
+		// These tests are too long/costly to be run with too low memory
+		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING)
+			suite.addTest(DifferencesServiceTestSuite.suite());
 		return suite;
 	}
 }

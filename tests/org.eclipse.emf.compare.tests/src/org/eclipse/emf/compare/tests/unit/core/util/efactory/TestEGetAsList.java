@@ -90,10 +90,6 @@ public class TestEGetAsList extends TestCase {
 			for (EStructuralFeature feature : testEObjects[i].eClass().getEAllStructuralFeatures()) {
 				try {
 					Object expectedValue = testEObjects[i].eGet(feature);
-					System.out.println(expectedValue);
-					System.out.println(feature);
-					System.out.println(feature.getEType());
-					System.out.println(feature.getEGenericType());
 					if (!(expectedValue instanceof List)) {
 						final List temp = new ArrayList();
 						if (expectedValue != null)
