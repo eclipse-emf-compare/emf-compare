@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: AbstractDiffExtensionImpl.java,v 1.9 2007/12/11 15:59:40 lgoubet Exp $
+ * $Id: AbstractDiffExtensionImpl.java,v 1.10 2007/12/13 14:12:51 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
@@ -14,7 +14,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
