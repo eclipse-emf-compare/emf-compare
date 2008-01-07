@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.emf.compare.nlpack"
+      id="org.eclipse.emf.compare.nl1"
       label="EMF Compare localization Feature"
       version="1.0.0"
       provider-name="Eclipse.org">
@@ -21,9 +21,9 @@ v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
 Contributors:
-	Obeo - French localization
-	Alfons Laarman - Dutch localization
-	Alfons Laarman - German localization
+ Obeo - French localization
+ Alfons Laarman - Dutch localization
+ Alfons Laarman - German localization
    </copyright>
 
    <license url="license.html">
