@@ -6,19 +6,24 @@
       provider-name="Eclipse.org">
 
    <description>
-      EMF Compare localization feature. Currently contains localized messages for\n
+      EMF Compare localization feature. Currently contains localized
+messages for\n
 \t- french
+\t- dutch
+\t- german
    </description>
 
    <copyright>
       Copyright (c) 2006, 2007 Obeo.
 All rights reserved. This program and the accompanying materials
-are made available under the terms of the Eclipse Public License v1.0
+are made available under the terms of the Eclipse Public License
+v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
-
 Contributors:
-    Obeo - initial API and implementation
+	Obeo - French localization
+	Alfons Laarman - Dutch localization
+	Alfons Laarman - German localization
    </copyright>
 
    <license url="license.html">
