@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.tests.unit.match;
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.service.MatchService;
 
 /**
@@ -29,7 +29,7 @@ public class TestEnginesPriority extends TestCase {
 	 *             Thrown when an assertEquals for String has failed.
 	 */
 	public void testEngineFileExtension() throws ComparisonFailure {
-		MatchEngine engine = null;
+		IMatchEngine engine = null;
 		engine = MatchService.getBestMatchEngine("a"); //$NON-NLS-1$
 		assertEquals("AEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 		engine = MatchService.getBestMatchEngine("b"); //$NON-NLS-1$
@@ -43,7 +43,7 @@ public class TestEnginesPriority extends TestCase {
 	 *             Thrown when an assertEquals for String has failed.
 	 */
 	public void testEnginePriority() throws ComparisonFailure {
-		MatchEngine engine = null;
+		IMatchEngine engine = null;
 		engine = MatchService.getBestMatchEngine("c"); //$NON-NLS-1$
 		assertEquals("CHighEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}

@@ -12,21 +12,22 @@ package org.eclipse.emf.compare.tests.match.engines;
 
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
  * A dummy match engine.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class CLowEngine implements MatchEngine {
+public class CLowEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
@@ -37,7 +38,7 @@ public class CLowEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap) {
@@ -47,32 +48,7 @@ public class CLowEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Deprecated
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
-			IProgressMonitor monitor) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
-	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
-			IProgressMonitor monitor, Map<String, Object> optionMap) {
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
@@ -83,21 +59,20 @@ public class CLowEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
-	@Deprecated
-	public MatchModel modelMatch(final EObject leftRoot, final EObject rightRoot, IProgressMonitor monitor) {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
 		return null;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 *      org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
+	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) {
 		return null;
 	}
@@ -105,10 +80,34 @@ public class CLowEngine implements MatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.MatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 *      org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
+	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
+			Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceSetMatch(org.eclipse.emf.ecore.resource.ResourceSet,
+	 *      org.eclipse.emf.ecore.resource.ResourceSet, java.util.Map)
+	 */
+	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
+			Map<String, Object> optionMap) {
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceSetMatch(org.eclipse.emf.ecore.resource.ResourceSet,
+	 *      org.eclipse.emf.ecore.resource.ResourceSet, org.eclipse.emf.ecore.resource.ResourceSet,
+	 *      java.util.Map)
+	 */
+	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
+			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) {
 		return null;
 	}
 }

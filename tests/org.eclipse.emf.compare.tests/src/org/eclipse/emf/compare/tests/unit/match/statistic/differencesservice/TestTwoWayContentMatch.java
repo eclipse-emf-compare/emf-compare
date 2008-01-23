@@ -18,11 +18,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
-import org.eclipse.emf.compare.match.statistic.DifferencesServices;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 // TODO testing : are all pathes explored for two way content matching?
 /**
  * Tests the behavior of
- * {@link DifferencesServices#contentMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}.
+ * {@link GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -47,7 +47,7 @@ public class TestTwoWayContentMatch extends TestCase {
 	private EObject testEObject2;
 
 	/**
-	 * Tests the behavior of {@link DifferencesServices#contentMatch(EObject, EObject, java.util.Map)} with
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
 	 * two distinct EObjects.
 	 * <p>
 	 * A model and its slightly modified deep copy are taken as roots, then we iterate through their content
@@ -95,7 +95,7 @@ public class TestTwoWayContentMatch extends TestCase {
 			for (int j = 0; j < eObjects2.size(); j++) {
 				final EObject obj2 = eObjects2.get(j);
 
-				final MatchModel match = new DifferencesServices().contentMatch(obj1, obj2, Collections
+				final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, Collections
 						.<String, Object> emptyMap());
 				assertNotNull("Failed to match the two objects.", match);
 
@@ -153,7 +153,7 @@ public class TestTwoWayContentMatch extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link DifferencesServices#contentMatch(EObject, EObject, java.util.Map)} with
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
 	 * two equal EObjects.
 	 * <p>
 	 * A model and its deep copy are taken as roots, then we iterate through their content and match EObjects
@@ -202,7 +202,7 @@ public class TestTwoWayContentMatch extends TestCase {
 			final EObject obj1 = eObjects1.get(i);
 			final EObject obj2 = eObjects2.get(i);
 
-			final MatchModel match = new DifferencesServices().contentMatch(obj1, obj2, Collections
+			final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, Collections
 					.<String, Object> emptyMap());
 			assertNotNull("Failed to match the two objects.", match);
 
@@ -247,21 +247,24 @@ public class TestTwoWayContentMatch extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link DifferencesServices#contentMatch(EObject, EObject, java.util.Map)} with
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
 	 * <code>null</code> as the compared EObjects.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
 	 */
 	public void test2WayContentMatchNullEObjects() {
-		final MatchEngine service = new DifferencesServices();
+		final IMatchEngine service = new GenericMatchEngine();
 		final String failNPE = "contentMatch() with null objects did not throw the expected NullPointerException.";
+		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
 			service.contentMatch(null, EcoreFactory.eINSTANCE.createEObject(), Collections
 					.<String, Object> emptyMap());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
+		} catch (InterruptedException e) {
+			fail(failInterrupt);
 		}
 		try {
 			service.contentMatch(EcoreFactory.eINSTANCE.createEObject(), null, Collections
@@ -269,6 +272,8 @@ public class TestTwoWayContentMatch extends TestCase {
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
+		} catch (InterruptedException e) {
+			fail(failInterrupt);
 		}
 	}
 

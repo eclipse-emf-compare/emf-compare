@@ -16,14 +16,13 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
-import org.eclipse.emf.compare.match.statistic.DifferencesServices;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
@@ -33,9 +32,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 // TODO testing : are all pathes explored for two way model matching?
 /**
  * Tests the behavior of
- * {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
+ * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
  * and
- * {@link DifferencesServices#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}.
+ * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -49,8 +48,8 @@ public class TestTwoWayModelMatch extends TestCase {
 
 	/**
 	 * Tests the behavior of
-	 * {@link DifferencesServices#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link DifferencesServices#modelMatch(EObject, EObject, java.util.Map)} with two distinct EObjects
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, java.util.Map)} with two distinct EObjects
 	 * (a model and its deep copy slightly modified).
 	 * <p>
 	 * The compared models are flat and intended to be a little bigger for this test (150 to 600 elements).
@@ -72,8 +71,8 @@ public class TestTwoWayModelMatch extends TestCase {
 
 	/**
 	 * Tests the behavior of
-	 * {@link DifferencesServices#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link DifferencesServices#modelMatch(EObject, EObject, java.util.Map)} with two distinct EObjects
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, java.util.Map)} with two distinct EObjects
 	 * (a model and its deep copy slightly modified).
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
@@ -95,8 +94,8 @@ public class TestTwoWayModelMatch extends TestCase {
 
 	/**
 	 * Tests the behavior of
-	 * {@link DifferencesServices#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link DifferencesServices#modelMatch(EObject, EObject, java.util.Map)} with two equal EObjects (a
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, java.util.Map)} with two equal EObjects (a
 	 * model and its deep copy).
 	 * <p>
 	 * The compared models are flat and intended to be a little bigger for this test (150 to 600 elements).
@@ -117,8 +116,8 @@ public class TestTwoWayModelMatch extends TestCase {
 
 	/**
 	 * Tests the behavior of
-	 * {@link DifferencesServices#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link DifferencesServices#modelMatch(EObject, EObject, java.util.Map)} with two equal EObjects (a
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, java.util.Map)} with two equal EObjects (a
 	 * model and its deep copy).
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
@@ -139,20 +138,20 @@ public class TestTwoWayModelMatch extends TestCase {
 
 	/**
 	 * Tests the behavior of
-	 * {@link DifferencesServices#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link DifferencesServices#modelMatch(EObject, EObject, java.util.Map)} with <code>null</code> as
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, java.util.Map)} with <code>null</code> as
 	 * the compared EObjects.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
 	 */
 	public void test2WayModelMatchNullEObjects() {
-		final MatchEngine service = new DifferencesServices();
+		final IMatchEngine service = new GenericMatchEngine();
 		final String failNPE = "modelMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), new NullProgressMonitor(),
-					Collections.<String, Object> emptyMap());
+			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), Collections
+					.<String, Object> emptyMap());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -165,6 +164,8 @@ public class TestTwoWayModelMatch extends TestCase {
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
+		} catch (InterruptedException e) {
+			fail(failInterrupt);
 		}
 	}
 
@@ -239,62 +240,41 @@ public class TestTwoWayModelMatch extends TestCase {
 		/*
 		 * matching models
 		 */
-		MatchModel match1 = null;
-		MatchModel match2 = null;
+		MatchModel match = null;
 		try {
-			final MatchEngine service = new DifferencesServices();
-			match1 = service.modelMatch(testModel1, testModel2, Collections.<String, Object> emptyMap());
-			match2 = service.modelMatch(testModel1, testModel2, new NullProgressMonitor(), Collections
-					.<String, Object> emptyMap());
+			final IMatchEngine service = new GenericMatchEngine();
+			match = service.modelMatch(testModel1, testModel2, Collections.<String, Object> emptyMap());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
 
-		assertNotNull("Failed to match the two models.", match1);
-		assertNotNull("Failed to match the two models.", match2);
+		assertNotNull("Failed to match the two models.", match);
 		// keeps compiler happy
-		assert match1 != null;
-		assert match2 != null;
+		assert match != null;
 
 		int elementCount = 0;
 		for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
 			final EObject next = iterator.next();
-			boolean found1 = false;
-			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
+			boolean found = false;
+			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
 						|| (nextMatch instanceof UnMatchElement && ((UnMatchElement)nextMatch).getElement()
 								.equals(next))) {
-					found1 = true;
+					found = true;
 					break;
 				}
 			}
-			boolean found2 = false;
-			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
-				final EObject nextMatch = matchIterator.next();
-				if ((nextMatch instanceof Match2Elements && ((Match2Elements)nextMatch).getLeftElement()
-						.equals(next))
-						|| (nextMatch instanceof UnMatchElement && ((UnMatchElement)nextMatch).getElement()
-								.equals(next))) {
-					found2 = true;
-					break;
-				}
-			}
-			if (!found1 || !found2)
+			if (!found)
 				fail("modelMatch() did not found a match for every element of the original model.");
 			elementCount++;
 		}
 
-		int matchElementCount1 = 0;
-		for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
+		int matchElementCount = 0;
+		for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
 			if (matchIterator.next() instanceof Match2Elements)
-				matchElementCount1++;
-		}
-		int matchElementCount2 = 0;
-		for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
-			if (matchIterator.next() instanceof Match2Elements)
-				matchElementCount2++;
+				matchElementCount++;
 		}
 
 		/*
@@ -302,17 +282,12 @@ public class TestTwoWayModelMatch extends TestCase {
 		 * add 1 to the model element count since the root hasn't been counted yet.
 		 */
 		assertEquals("modelMatch() found more matches than there are elements in the original model.",
-				elementCount + 1, matchElementCount1);
-		assertEquals("modelMatch() found more matches than there are elements in the original model.",
-				elementCount + 1, matchElementCount2);
+				elementCount + 1, matchElementCount);
 
 		// We should find one single UnMatchElement corresponding to the added modelElement
-		assertTrue("modelMatch() did not found the unmatched element we added to the model.", match1
+		assertTrue("modelMatch() did not found the unmatched element we added to the model.", match
 				.getUnMatchedElements() != null
-				&& match1.getUnMatchedElements().size() == 1);
-		assertTrue("modelMatch() did not found the unmatched element we added to the model.", match2
-				.getUnMatchedElements() != null
-				&& match2.getUnMatchedElements().size() == 1);
+				&& match.getUnMatchedElements().size() == 1);
 	}
 
 	/**
@@ -324,55 +299,37 @@ public class TestTwoWayModelMatch extends TestCase {
 	 */
 	private void internalTest2wayEqualModels() {
 		try {
-			final MatchEngine service = new DifferencesServices();
-			final MatchModel match1 = service.modelMatch(testModel1, testModel2, Collections
+			final IMatchEngine service = new GenericMatchEngine();
+			final MatchModel match = service.modelMatch(testModel1, testModel2, Collections
 					.<String, Object> emptyMap());
-			final MatchModel match2 = service.modelMatch(testModel1, testModel2, new NullProgressMonitor(),
-					Collections.<String, Object> emptyMap());
 
 			int elementCount = 0;
 			for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
 				final EObject next = iterator.next();
-				boolean found1 = false;
-				for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator
+				boolean found = false;
+				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
 						.hasNext(); ) {
 					final EObject nextMatch = matchIterator.next();
 					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
-						found1 = true;
+						found = true;
 						break;
 					}
 				}
-				boolean found2 = false;
-				for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator
-						.hasNext(); ) {
-					final EObject nextMatch = matchIterator.next();
-					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
-						found2 = true;
-						break;
-					}
-				}
-				if (!found1 || !found2)
+				if (!found)
 					fail("modelMatch() did not found a match for every element of two equal EObjects.");
 				elementCount++;
 			}
 
-			int matchElementCount1 = 0;
-			for (final TreeIterator<EObject> matchIterator = match1.eAllContents(); matchIterator.hasNext(); ) {
+			int matchElementCount = 0;
+			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
 				matchIterator.next();
-				matchElementCount1++;
-			}
-			int matchElementCount2 = 0;
-			for (final TreeIterator<EObject> matchIterator = match2.eAllContents(); matchIterator.hasNext(); ) {
-				matchIterator.next();
-				matchElementCount2++;
+				matchElementCount++;
 			}
 
 			// cannot be less elements since we've found a mapping for each at this point.
 			// Note that we need to add 1 to the model element count since the root hasn't been counted yet.
 			assertEquals("modelMatch() found more matches than there are elements in the model.",
-					elementCount + 1, matchElementCount1);
-			assertEquals("modelMatch() found more matches than there are elements in the model.",
-					elementCount + 1, matchElementCount2);
+					elementCount + 1, matchElementCount);
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}

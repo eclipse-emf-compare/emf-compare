@@ -13,13 +13,13 @@ package org.eclipse.emf.compare.tests.unit;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
@@ -126,7 +126,7 @@ public class TestNonRegressionModels extends TestCase {
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
 				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels.get(1),
-						new NullProgressMonitor());
+						Collections.<String, Object>emptyMap());
 				final DiffModel inputDiff = DiffService.doDiff(inputMatch, false);
 
 				// Serializes current and expected match and diff as Strings
