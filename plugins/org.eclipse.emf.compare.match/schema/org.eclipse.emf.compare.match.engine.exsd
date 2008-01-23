@@ -54,10 +54,10 @@
          <attribute name="engineClass" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.MatchEngine&lt;/code&gt;.
+                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.api.IMatchEngine&lt;/code&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.MatchEngine"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.IMatchEngine"/>
                </appInfo>
             </annotation>
          </attribute>

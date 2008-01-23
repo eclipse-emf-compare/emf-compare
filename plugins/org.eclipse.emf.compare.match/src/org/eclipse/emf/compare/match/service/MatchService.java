@@ -17,14 +17,14 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.statistic.DifferencesServices;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 
 /**
  * Service facade for matching models.
@@ -71,12 +71,14 @@ public final class MatchService {
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return {@link MatchModel} for these three objects' comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
-	 * @see MatchEngine#contentMatch(EObject, EObject, EObject, Map)
+	 * @see IMatchEngine#contentMatch(EObject, EObject, EObject, Map)
 	 * @since 0.8.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
-			Map<String, Object> options) {
+			Map<String, Object> options) throws InterruptedException {
 		String extension = DEFAULT_EXTENSION;
 		if (leftObject.eResource().getURI() != null)
 			extension = leftObject.eResource().getURI().fileExtension();
@@ -84,7 +86,7 @@ public final class MatchService {
 			extension = rightObject.eResource().getURI().fileExtension();
 		else if (ancestor.eResource() != null)
 			extension = ancestor.eResource().getURI().fileExtension();
-		final MatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.contentMatch(leftObject, rightObject, ancestor, options);
 	}
 
@@ -99,18 +101,20 @@ public final class MatchService {
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return {@link MatchModel} for these two objects' comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
-	 * @see MatchEngine#contentMatch(EObject, EObject, Map)
+	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
 	 * @since 0.8.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
-			Map<String, Object> options) {
+			Map<String, Object> options) throws InterruptedException {
 		String extension = DEFAULT_EXTENSION;
 		if (leftObject.eResource().getURI() != null)
 			extension = leftObject.eResource().getURI().fileExtension();
 		else if (rightObject.eResource() != null)
 			extension = rightObject.eResource().getURI().fileExtension();
-		final MatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.contentMatch(leftObject, rightObject, options);
 	}
 
@@ -123,30 +127,6 @@ public final class MatchService {
 	 *            Right model of this comparison.
 	 * @param ancestor
 	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
-	 * @param monitor
-	 *            Progress monitor to display for long operations.
-	 * @return Matching model result of the comparison.
-	 * @throws InterruptedException
-	 *             Thrown if the matching is interrupted somehow.
-	 * @deprecated Use {@link #doMatch(EObject, EObject, EObject, IProgressMonitor, Map)} instead.
-	 */
-	@Deprecated
-	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
-			IProgressMonitor monitor) throws InterruptedException {
-		return doMatch(leftRoot, rightRoot, ancestor, monitor, Collections.<String, Object> emptyMap());
-	}
-
-	/**
-	 * Matches three models and returns the corresponding matching model.
-	 * 
-	 * @param leftRoot
-	 *            Left model of this comparison.
-	 * @param rightRoot
-	 *            Right model of this comparison.
-	 * @param ancestor
-	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
-	 * @param monitor
-	 *            Progress monitor to display for long operations.
 	 * @param options
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
@@ -156,7 +136,7 @@ public final class MatchService {
 	 * @see MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
-			IProgressMonitor monitor, Map<String, Object> options) throws InterruptedException {
+			Map<String, Object> options) throws InterruptedException {
 		String extension = DEFAULT_EXTENSION;
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
@@ -164,8 +144,8 @@ public final class MatchService {
 			extension = rightRoot.eResource().getURI().fileExtension();
 		else if (ancestor.eResource() != null)
 			extension = ancestor.eResource().getURI().fileExtension();
-		final MatchEngine engine = getBestMatchEngine(extension);
-		return engine.modelMatch(leftRoot, rightRoot, ancestor, monitor, options);
+		final IMatchEngine engine = getBestMatchEngine(extension);
+		return engine.modelMatch(leftRoot, rightRoot, ancestor, options);
 	}
 
 	/**
@@ -175,28 +155,6 @@ public final class MatchService {
 	 *            Left model of the comparison.
 	 * @param rightRoot
 	 *            Right model of the comparison.
-	 * @param monitor
-	 *            Progress monitor to display for long operations.
-	 * @return Matching model result of these two models' comparison.
-	 * @throws InterruptedException
-	 *             Thrown if the matching is interrupted somehow.
-	 * @deprecated Use {@link #doMatch(EObject, EObject, IProgressMonitor, Map)} instead.
-	 */
-	@Deprecated
-	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor)
-			throws InterruptedException {
-		return doMatch(leftRoot, rightRoot, monitor, Collections.<String, Object> emptyMap());
-	}
-
-	/**
-	 * Matches two models and returns the corresponding matching model.
-	 * 
-	 * @param leftRoot
-	 *            Left model of the comparison.
-	 * @param rightRoot
-	 *            Right model of the comparison.
-	 * @param monitor
-	 *            Progress monitor to display for long operations.
 	 * @param options
 	 *            Options to tweak the matching procedure. <code>null</code> or
 	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
@@ -205,30 +163,88 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
 	 */
-	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, IProgressMonitor monitor,
-			Map<String, Object> options) throws InterruptedException {
+	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> options)
+			throws InterruptedException {
 		String extension = DEFAULT_EXTENSION;
 		if (leftRoot.eResource().getURI() != null)
 			extension = leftRoot.eResource().getURI().fileExtension();
 		if (extension == null && rightRoot.eResource() != null)
 			extension = rightRoot.eResource().getURI().fileExtension();
-		final MatchEngine engine = getBestMatchEngine(extension);
-		return engine.modelMatch(leftRoot, rightRoot, monitor, options);
+		final IMatchEngine engine = getBestMatchEngine(extension);
+		return engine.modelMatch(leftRoot, rightRoot, options);
 	}
 
 	/**
-	 * Returns the best {@link MatchEngine} for a file given its extension.
+	 * Matches two resources along with their content, then return the corresponding match model.
+	 * 
+	 * @param leftResource
+	 *            Left of the two resources to get compared.
+	 * @param rightResource
+	 *            Right of the two resources to compare.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return {@link MatchModel} for these two resources' comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
+	 * @see MatchOptions
+	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
+	 * @since 0.8.0
+	 */
+	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
+			Map<String, Object> options) throws InterruptedException {
+		String extension = DEFAULT_EXTENSION;
+		if (leftResource.getURI() != null)
+			extension = leftResource.getURI().fileExtension();
+		if (extension == null && rightResource != null)
+			extension = rightResource.getURI().fileExtension();
+		final IMatchEngine engine = getBestMatchEngine(extension);
+		return engine.resourceMatch(leftResource, rightResource, options);
+	}
+
+	/**
+	 * Matches three resources and returns the corresponding matching model.
+	 * 
+	 * @param leftResource
+	 *            Left resource of this comparison.
+	 * @param rightResource
+	 *            Right resource of this comparison.
+	 * @param ancestorResource
+	 *            Common ancestor of <code>leftResource</code> and <code>rightResource</code>.
+	 * @param options
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 * @return Matching model result of the comparison.
+	 * @throws InterruptedException
+	 *             Thrown if the matching is interrupted somehow.
+	 * @see MatchOptions
+	 */
+	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
+			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
+		String extension = DEFAULT_EXTENSION;
+		if (leftResource.getURI() != null)
+			extension = leftResource.getURI().fileExtension();
+		else if (rightResource != null)
+			extension = rightResource.getURI().fileExtension();
+		else if (ancestorResource != null)
+			extension = ancestorResource.getURI().fileExtension();
+		final IMatchEngine engine = getBestMatchEngine(extension);
+		return engine.resourceMatch(leftResource, rightResource, ancestorResource, options);
+	}
+
+	/**
+	 * Returns the best {@link IMatchEngine} for a file given its extension.
 	 * 
 	 * @param extension
-	 *            The extension of the file we need a {@link MatchEngine} for.
-	 * @return The best {@link MatchEngine} for the given file extension.
+	 *            The extension of the file we need a {@link IMatchEngine} for.
+	 * @return The best {@link IMatchEngine} for the given file extension.
 	 */
-	public static MatchEngine getBestMatchEngine(String extension) {
+	public static IMatchEngine getBestMatchEngine(String extension) {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			final EngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
-		return new DifferencesServices();
+		return new GenericMatchEngine();
 	}
 
 	/**

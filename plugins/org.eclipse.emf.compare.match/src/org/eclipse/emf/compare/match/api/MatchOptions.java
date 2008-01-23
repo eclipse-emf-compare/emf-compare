@@ -36,6 +36,11 @@ package org.eclipse.emf.compare.match.api;
  * <td>Boolean, defaults to <code>False</code></td>
  * </tr>
  * <tr>
+ * <td>{@link #OPTION_PROGRESS_MONITOR}</td>
+ * <td>Specifies the progress monitor that will be used to monitor the comparison.</td>
+ * <td>Instance of an IProgressMonitor's implementation, defaults to <code>null</code></td>
+ * </tr>
+ * <tr>
  * <td>{@link #OPTION_SEARCH_WINDOW}</td>
  * <td>Specifies the number of siblings the match procedure will consider to find similar objects. Higher
  * values increase comparison time, lower values decrease comparison accuracy.</td>
@@ -67,6 +72,9 @@ public interface MatchOptions {
 
 	/** Key for the option specifying whether we should ignore XMI ID when comparing. */
 	String OPTION_IGNORE_XMI_ID = "match.ignore.xmi.id"; //$NON-NLS-1$
+	
+	/** Key for the option to give a progress monitor to the match engine. */
+	String OPTION_PROGRESS_MONITOR = "match.progress.monitor"; //$NON-NLS-1$
 
 	/** Key for the option defining the search window. */
 	String OPTION_SEARCH_WINDOW = "match.search.window"; //$NON-NLS-1$

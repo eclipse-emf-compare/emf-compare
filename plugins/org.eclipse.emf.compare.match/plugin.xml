@@ -13,7 +13,7 @@
   <extension
          point="org.eclipse.emf.compare.match.engine">
       <matchengine
-            engineClass="org.eclipse.emf.compare.match.statistic.DifferencesServices"
+            engineClass="org.eclipse.emf.compare.match.engine.GenericMatchEngine"
             fileExtension="*"
             priority="lowest"/>
    </extension>

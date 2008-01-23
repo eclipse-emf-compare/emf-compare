@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.api.MatchEngine;
+import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.util.EngineConstants;
 
 /**
@@ -44,8 +44,8 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 */
 	protected String priority;
 
-	/** {@link MatchEngine} this descriptor describes. */
-	private MatchEngine engine;
+	/** {@link IMatchEngine} this descriptor describes. */
+	private IMatchEngine engine;
 
 	/**
 	 * Instantiate the descriptor given its configuration.
@@ -107,10 +107,10 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * 
 	 * @return The engine instance.
 	 */
-	public MatchEngine getEngineInstance() {
+	public IMatchEngine getEngineInstance() {
 		if (engine == null) {
 			try {
-				engine = (MatchEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
+				engine = (IMatchEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}

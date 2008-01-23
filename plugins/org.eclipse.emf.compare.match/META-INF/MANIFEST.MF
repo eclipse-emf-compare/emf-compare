@@ -7,6 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.match.api,
+ org.eclipse.emf.compare.match.engine,
  org.eclipse.emf.compare.match.metamodel,
  org.eclipse.emf.compare.match.metamodel.impl,
  org.eclipse.emf.compare.match.metamodel.provider,
