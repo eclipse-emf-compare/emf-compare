@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -32,6 +32,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
@@ -48,6 +49,7 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
@@ -61,8 +63,10 @@ import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.action.Action;
@@ -126,7 +130,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
 	 * content provider.
 	 */
-	protected EObject ancestorModel;
+	protected Resource ancestorResource;
 
 	/** Ancestor part of the three possible parts of this content viewer. */
 	protected ModelContentMergeViewerPart ancestorPart;
@@ -141,7 +145,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Left model used for the comparison if it takes place here instead of in the structure viewer's content
 	 * provider.
 	 */
-	protected EObject leftModel;
+	protected Resource leftResource;
 
 	/** Left of the three possible parts of this content viewer. */
 	protected ModelContentMergeViewerPart leftPart;
@@ -150,7 +154,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Right model used for the comparison if it takes place here instead of in the structure viewer's content
 	 * provider.
 	 */
-	protected EObject rightModel;
+	protected Resource rightResource;
 
 	/** Right of the three possible parts of this content viewer. */
 	protected ModelContentMergeViewerPart rightPart;
@@ -695,8 +699,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor,
-								Collections.<String, Object> emptyMap());
+						final Map<String, Object> options = new EMFCompareMap<String, Object>();
+						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource,
+								options);
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 						snapshot.setDate(Calendar.getInstance().getTime());
@@ -708,8 +714,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
 						try {
-							final MatchModel match = MatchService.doMatch(leftModel, rightModel,
-									ancestorModel, monitor, Collections.<String, Object> emptyMap());
+							final Map<String, Object> options = new EMFCompareMap<String, Object>();
+							options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+							final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource,
+									ancestorResource, options);
 							final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
 							snapshot.setDate(Calendar.getInstance().getTime());
@@ -886,28 +894,30 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		try {
 			final ResourceSet modelResourceSet = new ResourceSetImpl();
 			if (left instanceof ResourceNode && right instanceof ResourceNode) {
-				leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-						modelResourceSet);
-				rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
-						modelResourceSet);
+				leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+						modelResourceSet).eResource();
+				rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+						modelResourceSet).eResource();
 				if (isThreeWay)
-					ancestorModel = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
-							modelResourceSet);
+					ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
+							modelResourceSet).eResource();
 			} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 				// this is the case of SVN/CVS comparison, we invert left
 				// (remote) and right (local).
-				rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-						modelResourceSet);
-				leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-						modelResourceSet);
-				final String leftLabel = configuration.getRightLabel(rightModel);
-				configuration.setRightLabel(configuration.getLeftLabel(leftModel));
-				configuration.setLeftLabel(leftLabel);
+				if (((ResourceNode)left).getResource().isAccessible())
+					rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+						modelResourceSet).eResource();
+				else
+					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left).getResource().getFullPath().toOSString(), true));
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
+						modelResourceSet).eResource();
+				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$)
+				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
 				configuration.setLeftEditable(false);
 				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
 				if (isThreeWay)
-					ancestorModel = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-							ancestor.getName(), modelResourceSet);
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), modelResourceSet).eResource();
 			}
 		} catch (IOException e) {
 			throw new EMFCompareException(e);
@@ -943,24 +953,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void updateContent(Object ancestor, Object left, Object right) {
-		if (getInput() != null) {
-			Object ancestorObject = ancestor;
-			Object leftObject = left;
-			Object rightObject = right;
-			if (ancestorObject instanceof TypedElementWrapper)
-				ancestorObject = ((TypedElementWrapper)ancestorObject).getObject();
-			if (leftObject instanceof TypedElementWrapper)
-				leftObject = ((TypedElementWrapper)leftObject).getObject();
-			if (rightObject instanceof TypedElementWrapper)
-				rightObject = ((TypedElementWrapper)rightObject).getObject();
+		Object ancestorObject = ancestor;
+		Object leftObject = left;
+		Object rightObject = right;
+		if (ancestorObject instanceof TypedElementWrapper)
+			ancestorObject = ((TypedElementWrapper)ancestorObject).getObject();
+		if (leftObject instanceof TypedElementWrapper)
+			leftObject = ((TypedElementWrapper)leftObject).getObject();
+		if (rightObject instanceof TypedElementWrapper)
+			rightObject = ((TypedElementWrapper)rightObject).getObject();
 
-			if (ancestorObject != null)
-				ancestorPart.setInput(ancestorObject);
-			if (leftObject != null)
-				leftPart.setInput(leftObject);
-			if (rightObject != null)
-				rightPart.setInput(rightObject);
-		}
+		if (ancestorObject != null)
+			ancestorPart.setInput(ancestorObject);
+		if (leftObject != null)
+			leftPart.setInput(leftObject);
+		if (rightObject != null)
+			rightPart.setInput(rightObject);
 		update();
 	}
 

@@ -155,7 +155,7 @@ public class ModelContentMergeViewerPart {
 	 * @param composite
 	 *            Parent composite of this viewer parts's widgets.
 	 */
-	public void createContents(Composite composite) {
+	protected void createContents(Composite composite) {
 		tabFolder = new CTabFolder(composite, SWT.BOTTOM);
 		final CTabItem treeTab = new CTabItem(tabFolder, SWT.NONE);
 		treeTab.setText(EMFCompareUIMessages.getString("ModelContentMergeViewerPart.tab1.name")); //$NON-NLS-1$

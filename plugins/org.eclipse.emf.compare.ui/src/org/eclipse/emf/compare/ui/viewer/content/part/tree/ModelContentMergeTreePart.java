@@ -87,37 +87,40 @@ public class ModelContentMergeTreePart extends TreeViewer {
 	 */
 	public List<TreeItem> getVisibleElements() {
 		final TreeItem topItem = getTree().getTopItem();
-		// We won't go further down than the visible height of the tree,
-		// yet we will take the whole width into account when searching for elements.
-		final int treeHeight = getTree().getClientArea().height;
-		final int treeWidth = getTree().getBounds().width;
-		final int itemHeight = topItem.getBounds().height;
-		final int itemWidth = topItem.getBounds().width;
-		final List<TreeItem> visibleItems = new ArrayList<TreeItem>(treeHeight / itemHeight + 1);
-
-		visibleItems.add(topItem);
-
-		// The loop will start at the element directly following the "top" one
-		final int loopStart = topItem.getBounds().y + itemHeight;
-		final int loopEnd = treeHeight;
-		for (int i = loopStart; i <= loopEnd; i += itemHeight) {
-			TreeItem next = null;
-			// we'll try and seek on all the line, thus increasing x on each iteration
-			for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 1) {
-				next = getTree().getItem(new Point(xCoord, i));
-				// We found the item, it is unnecessary to probe any further on the line
-				if (next != null)
+		if (topItem != null) {
+			// We won't go further down than the visible height of the tree,
+			// yet we will take the whole width into account when searching for elements.
+			final int treeHeight = getTree().getClientArea().height;
+			final int treeWidth = getTree().getBounds().width;
+			final int itemHeight = topItem.getBounds().height;
+			final int itemWidth = topItem.getBounds().width;
+			final List<TreeItem> visibleItems = new ArrayList<TreeItem>(treeHeight / itemHeight + 1);
+	
+			visibleItems.add(topItem);
+	
+			// The loop will start at the element directly following the "top" one
+			final int loopStart = topItem.getBounds().y + itemHeight;
+			final int loopEnd = treeHeight;
+			for (int i = loopStart; i <= loopEnd; i += itemHeight) {
+				TreeItem next = null;
+				// we'll try and seek on all the line, thus increasing x on each iteration
+				for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 1) {
+					next = getTree().getItem(new Point(xCoord, i));
+					// We found the item, it is unnecessary to probe any further on the line
+					if (next != null)
+						break;
+				}
+				if (next != null) {
+					visibleItems.add(next);
+				} else {
+					// We did not found an item, it is thus useless to probe any further down
 					break;
+				}
 			}
-			if (next != null) {
-				visibleItems.add(next);
-			} else {
-				// We did not found an item, it is thus useless to probe any further down
-				break;
-			}
+	
+			return visibleItems;
 		}
-
-		return visibleItems;
+		return new ArrayList<TreeItem>();
 	}
 
 	/**

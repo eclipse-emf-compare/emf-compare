@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -120,9 +121,18 @@ public class ModelCompareInput implements ICompareInput {
 	public ITypedElement getAncestor() {
 		ITypedElement element = null;
 
-		if (getMatch().getMatchedElements().get(0) instanceof Match3Element)
+		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match3Element)
 			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
 					.getOriginElement());
+		else if (getMatch().getUnMatchedElements().size() > 0) {
+			// long run :/
+			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
+				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getOriginModel())) {
+					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
+					break;
+				}
+			}
+		}
 
 		return element;
 	}
@@ -206,9 +216,18 @@ public class ModelCompareInput implements ICompareInput {
 	public ITypedElement getLeft() {
 		ITypedElement element = null;
 
-		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
+		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match2Elements)
 			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
 					.getLeftElement());
+		else if (getMatch().getUnMatchedElements().size() > 0) {
+			// long run :/
+			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
+				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getLeftModel())) {
+					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
+					break;
+				}
+			}
+		}
 
 		return element;
 	}
@@ -246,9 +265,18 @@ public class ModelCompareInput implements ICompareInput {
 	public ITypedElement getRight() {
 		ITypedElement element = null;
 
-		if (getMatch().getMatchedElements().get(0) instanceof Match2Elements)
+		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match2Elements)
 			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
 					.getRightElement());
+		else if (getMatch().getUnMatchedElements().size() > 0) {
+			// long run :/
+			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
+				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getRightModel())) {
+					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
+					break;
+				}
+			}
+		}
 
 		return element;
 	}

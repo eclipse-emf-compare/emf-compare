@@ -15,8 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.IStreamContentAccessor;
@@ -25,6 +25,7 @@ import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -32,12 +33,15 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
 import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -54,17 +58,17 @@ import org.eclipse.ui.PlatformUI;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
-	/** Ancestor model used in this comparison. */
-	protected EObject ancestorModel;
+	/** Resource of the ancestor model used in this comparison. */
+	protected Resource ancestorResource;
 
 	/** Indicates that this is a three way comparison. */
 	protected boolean isThreeWay;
 
-	/** Left model used in this comparison. */
-	protected EObject leftModel;
+	/** Resource of the left model used in this comparison. */
+	protected Resource leftResource;
 
-	/** Right model used in this comparison. */
-	protected EObject rightModel;
+	/** Resource of the right model used in this comparison. */
+	protected Resource rightResource;
 
 	/** Keeps track of the comparison result. */
 	/* package */ModelInputSnapshot snapshot;
@@ -206,14 +210,16 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	protected void doCompare() {
 		try {
 			final Date start = Calendar.getInstance().getTime();
+			snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+			
 			if (!isThreeWay) {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, monitor,
-								Collections.<String, Object> emptyMap());
+						final Map<String, Object> options = new EMFCompareMap<String, Object>();
+						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource, options);
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
-
-						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+						
 						snapshot.setDate(Calendar.getInstance().getTime());
 						snapshot.setDiff(diff);
 						snapshot.setMatch(match);
@@ -222,11 +228,12 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			} else {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final MatchModel match = MatchService.doMatch(leftModel, rightModel, ancestorModel,
-								monitor, Collections.<String, Object> emptyMap());
+						final Map<String, Object> options = new EMFCompareMap<String, Object>();
+						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
+								options);
 						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
-						snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 						snapshot.setDate(Calendar.getInstance().getTime());
 						snapshot.setDiff(diff);
 						snapshot.setMatch(match);
@@ -259,28 +266,30 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		try {
 			final ResourceSet modelResourceSet = new ResourceSetImpl();
 			if (left instanceof ResourceNode && right instanceof ResourceNode) {
-				leftModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-						modelResourceSet);
-				rightModel = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
-						modelResourceSet);
+				leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+						modelResourceSet).eResource();
+				rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+						modelResourceSet).eResource();
 				if (isThreeWay)
-					ancestorModel = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
-							modelResourceSet);
+					ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
+							modelResourceSet).eResource();
 			} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 				// this is the case of SVN/CVS comparison, we invert left and
 				// right.
-				rightModel = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-						modelResourceSet);
-				leftModel = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-						modelResourceSet);
-				final String leftLabel = configuration.getRightLabel(rightModel);
-				configuration.setRightLabel(configuration.getLeftLabel(leftModel));
-				configuration.setLeftLabel(leftLabel);
+				if (((ResourceNode)left).getResource().isAccessible())
+					rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+							modelResourceSet).eResource();
+				else
+					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left).getResource().getFullPath().toOSString(), true));
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
+						modelResourceSet).eResource();
+				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$)
+				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
 				configuration.setLeftEditable(false);
 				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
 				if (isThreeWay)
-					ancestorModel = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-							ancestor.getName(), modelResourceSet);
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), modelResourceSet).eResource();
 			}
 		} catch (IOException e) {
 			throw new EMFCompareException(e);
