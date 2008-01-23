@@ -100,12 +100,12 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 							 * We have to find the corresponding diff element (if it exists in order to hide
 							 * it)
 							 */
-							final Iterator diffIt = element.eContainer().eAllContents();
+							final Iterator<EObject> diffIt = element.eContainer().eAllContents();
 							while (diffIt.hasNext()) {
-								final EObject childElem = (EObject)diffIt.next();
+								final EObject childElem = diffIt.next();
 								if (childElem instanceof AddModelElement
 										&& ((AddModelElement)childElem).getRightElement() == member)
-									getHideElements().add(childElem);
+									getHideElements().add((AddModelElement)childElem);
 								getProperties().add(childElem);
 							}
 						}
