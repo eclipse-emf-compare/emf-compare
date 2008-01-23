@@ -14,14 +14,14 @@
   <extension
          point="org.eclipse.emf.compare.diff.engine">
       <diffengine
-            engineClass="org.eclipse.emf.compare.diff.generic.DiffMaker"
+            engineClass="org.eclipse.emf.compare.diff.engine.GenericDiffEngine"
             priority="lowest"/>
    </extension>
   <extension
         point="org.eclipse.emf.compare.diff.mergerprovider">
      <mergerprovider
            fileExtension="*"
-           mergerProviderClass="org.eclipse.emf.compare.diff.generic.merge.DefaultMergerProvider"
+           mergerProviderClass="org.eclipse.emf.compare.diff.merge.internal.DefaultMergerProvider"
            priority="lowest">
      </mergerprovider>
   </extension>

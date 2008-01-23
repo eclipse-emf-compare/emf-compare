@@ -8,30 +8,22 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic.merge.impl;
+package org.eclipse.emf.compare.diff.merge.internal.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for an {@link AttributeChangeRightTarget} operation.<br/>
- * <p>
- * Are considered for this merger :
- * <ul>
- * <li>{@link AddAttribute}</li>
- * <li>{@link RemoteRemoveAttribute}</li>
- * </ul>
- * </p>
+ * Merger for an {@link UpdateAttribute}.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class AttributeChangeRightTargetMerger extends DefaultMerger {
+public class UpdateAttributeMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -45,14 +37,12 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 		 * RemoteDeleteModelElement) beforehand. In the current state, we're doing a hard-link between the two
 		 * models.
 		 */
-		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
+		final EObject element = theDiff.getRightElement();
 		final EObject origin = theDiff.getLeftElement();
-		final EObject element = theDiff.getRightTarget();
-		final EObject newOne = EcoreUtil.copy(element);
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eAdd(origin, attr.getName(), newOne);
-			copyXMIID(element, newOne);
+			EFactory.eSet(origin, attr.getName(), EFactory.eGet(element, attr.getName()));
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -72,15 +62,16 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 		 * RemoteAddModelElement) beforehand. In the current state, we're doing a hard-link between the two
 		 * models.
 		 */
-		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
-		final EObject target = theDiff.getRightElement();
-		final EObject element = theDiff.getRightTarget();
+		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
+		final EObject element = theDiff.getRightElement();
+		final EObject origin = theDiff.getLeftElement();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eRemove(target, attr.getName(), element);
+			EFactory.eSet(element, attr.getName(), EFactory.eGet(origin, attr.getName()));
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();
 	}
+
 }

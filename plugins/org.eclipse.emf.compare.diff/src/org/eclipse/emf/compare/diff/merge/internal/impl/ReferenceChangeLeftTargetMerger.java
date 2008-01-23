@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic.merge.impl;
+package org.eclipse.emf.compare.diff.merge.internal.impl;
 
 import java.util.Iterator;
 
@@ -16,23 +16,23 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for an {@link ReferenceChangeRightTarget} operation.<br/>
+ * Merger for an {@link ReferenceChangeLeftTarget} operation.<br/>
  * <p>
  * Are considered for this merger :
  * <ul>
- * <li>{@link AddReferenceValue}</li>
- * <li>{@link RemoteRemoveReferenceValue}</li>
+ * <li>{@link RemoveReferenceValue}</li>
+ * <li>{@link RemoteAddReferenceValue}</li>
  * </ul>
  * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class ReferenceChangeRightTargetMerger extends DefaultMerger {
+public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -40,28 +40,23 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/*
-		 * FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should merge
-		 * its corresponding AddModelElement (or RemoteDeleteModelElement) beforehand. In the current state,
-		 * we're doing a hard-link between the two models.
-		 */
-		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
+		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
-		final EObject leftTarget = theDiff.getLeftAddedTarget();
+		final EObject leftTarget = theDiff.getLeftRemovedTarget();
 		try {
-			EFactory.eAdd(element, theDiff.getReference().getName(), leftTarget);
+			EFactory.eRemove(element, theDiff.getReference().getName(), leftTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
-		// We'll now look through this reference's eOpposite as they are already taken care of
-		final Iterator<EObject> siblings = getDiffModel().eAllContents();
+		// we should now have a look for AddReferencesLinks needing this object
+		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof ReferenceChangeRightTarget) {
-				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
-				// If this is my eOpposite, delete it from the DiffModel (merged along with this one)
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
+				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getLeftAddedTarget().equals(element)) {
+						&& link.getLeftRemovedTarget().equals(element)) {
 					removeFromContainer(link);
 				}
 			}
@@ -76,23 +71,28 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
+		/*
+		 * FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should merge
+		 * its corresponding DeleteModelElement (or RemoteAddModelElement) beforehand. In the current state,
+		 * we're doing a hard-link between the two models.
+		 */
+		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
-		final EObject rightTarget = theDiff.getRightAddedTarget();
+		final EObject rightTarget = theDiff.getRightRemovedTarget();
 		try {
-			EFactory.eRemove(element, theDiff.getReference().getName(), rightTarget);
+			EFactory.eAdd(element, theDiff.getReference().getName(), rightTarget);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator<EObject> siblings = getDiffModel().eAllContents();
+		final Iterator siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
 			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof ReferenceChangeRightTarget) {
-				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getRightAddedTarget().equals(element)) {
+						&& link.getRightRemovedTarget().equals(element)) {
 					removeFromContainer(link);
 				}
 			}

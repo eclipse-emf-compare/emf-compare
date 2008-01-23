@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public interface DiffEngine {
+public interface IDiffEngine {
 	/**
 	 * Return a diffmodel created using the match model. This implementation is a generic and simple one.
 	 * 

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic.merge.impl;
+package org.eclipse.emf.compare.diff.merge.internal.impl;
 
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
 

@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.diff.DiffPlugin;
-import org.eclipse.emf.compare.diff.api.DiffEngine;
-import org.eclipse.emf.compare.diff.generic.DiffMaker;
+import org.eclipse.emf.compare.diff.api.IDiffEngine;
+import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -86,23 +86,23 @@ public final class DiffService {
 	 */
 	public static DiffModel doDiff(MatchModel match, boolean threeWay) {
 		final String extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf(".") + 1); //$NON-NLS-1$
-		final DiffEngine engine = getBestDiffEngine(extension);
+		final IDiffEngine engine = getBestDiffEngine(extension);
 		return engine.doDiff(match, threeWay);
 	}
 
 	/**
-	 * Returns the best {@link DiffEngine} for a file extension.
+	 * Returns the best {@link IDiffEngine} for a file extension.
 	 * 
 	 * @param extension
-	 *            The extension of the file we need a {@link DiffEngine} for.
-	 * @return The best {@link DiffEngine} for the given file extension.
+	 *            The extension of the file we need a {@link IDiffEngine} for.
+	 * @return The best {@link IDiffEngine} for the given file extension.
 	 */
-	public static DiffEngine getBestDiffEngine(String extension) {
+	public static IDiffEngine getBestDiffEngine(String extension) {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			final EngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
-		return new DiffMaker();
+		return new GenericDiffEngine();
 	}
 
 	/**

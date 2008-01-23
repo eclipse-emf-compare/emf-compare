@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.diff.api,
- org.eclipse.emf.compare.diff.generic,
+ org.eclipse.emf.compare.diff.engine,
  org.eclipse.emf.compare.diff.merge.api,
  org.eclipse.emf.compare.diff.merge.service,
  org.eclipse.emf.compare.diff.metamodel,

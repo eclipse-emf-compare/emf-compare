@@ -8,34 +8,33 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic.merge.impl;
+package org.eclipse.emf.compare.diff.merge.internal.impl;
 
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Merger for an {@link ModelElementChangeRightTarget} operation.<br/>
+ * Merger for an {@link ModelElementChangeLeftTarget} operation.<br/>
  * <p>
  * Are considered for this merger :
  * <ul>
- * <li>{@link AddModelElement}</li>
- * <li>{@link RemoteRemoveModelElement}</li>
+ * <li>{@link RemoveModelElement}</li>
+ * <li>{@link RemoteAddModelElement}</li>
  * </ul>
  * </p>
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class ModelElementChangeRightTargetMerger extends DefaultMerger {
+public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -48,33 +47,12 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
 		 * the two models.
 		 */
-		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
-		final EObject origin = theDiff.getLeftParent();
-		final EObject element = theDiff.getRightElement();
-		final EObject newOne = EcoreUtil.copy(element);
-		final EReference ref = element.eContainmentFeature();
-		if (ref != null) {
-			try {
-				EFactory.eAdd(origin, ref.getName(), newOne);
-				copyXMIID(element, newOne);
-			} catch (FactoryException e) {
-				EMFComparePlugin.log(e, true);
-			}
-		} else {
-			findLeftResource().getContents().add(newOne);
-		}
-		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator<EObject> siblings = getDiffModel().eAllContents();
-		while (siblings.hasNext()) {
-			final DiffElement op = (DiffElement)siblings.next();
-			if (op instanceof ReferenceChangeRightTarget) {
-				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
-				// now if I'm in the target References I should put my copy in the origin
-				if (link.getRightAddedTarget().equals(element)) {
-					link.setLeftAddedTarget(newOne);
-				}
-			}
-		}
+		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
+		final EObject element = theDiff.getLeftElement();
+		final EObject parent = theDiff.getLeftElement().eContainer();
+		EcoreUtil.remove(element);
+		// now removes all the dangling references
+		removeDanglingReferences(parent);
 		super.applyInOrigin();
 	}
 
@@ -90,12 +68,34 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
 		 * the two models.
 		 */
-		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
-		final EObject element = theDiff.getRightElement();
-		final EObject parent = theDiff.getRightElement().eContainer();
-		EcoreUtil.remove(element);
-		// now removes all the dangling references
-		removeDanglingReferences(parent);
+		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
+		// we should copy the element to the Origin one.
+		final EObject origin = theDiff.getRightParent();
+		final EObject element = theDiff.getLeftElement();
+		final EObject newOne = EcoreUtil.copy(element);
+		final EReference ref = element.eContainmentFeature();
+		if (ref != null) {
+			try {
+				EFactory.eAdd(origin, ref.getName(), newOne);
+				copyXMIID(element, newOne);
+			} catch (FactoryException e) {
+				EMFComparePlugin.log(e, true);
+			}
+		} else {
+			findRightResource().getContents().add(newOne);
+		}
+		// we should now have a look for RemovedReferencesLinks needing elements to apply
+		final Iterator<EObject> siblings = getDiffModel().eAllContents();
+		while (siblings.hasNext()) {
+			final Object op = siblings.next();
+			if (op instanceof ReferenceChangeLeftTarget) {
+				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
+				// now if I'm in the target References I should put my copy in the origin
+				if (link.getLeftRemovedTarget().equals(element)) {
+					link.setRightRemovedTarget(newOne);
+				}
+			}
+		}
 		super.undoInTarget();
 	}
 }

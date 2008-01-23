@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.api.DiffEngine;
+import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.util.EngineConstants;
 
 /**
@@ -44,8 +44,8 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 */
 	protected final String priority;
 
-	/** {@link DiffEngine} this descriptor describes. */
-	private DiffEngine engine;
+	/** {@link IDiffEngine} this descriptor describes. */
+	private IDiffEngine engine;
 
 	/**
 	 * Instantiate the descriptor given its configuration.
@@ -107,10 +107,10 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * 
 	 * @return The engine instance.
 	 */
-	public DiffEngine getEngineInstance() {
+	public IDiffEngine getEngineInstance() {
 		if (engine == null) {
 			try {
-				engine = (DiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
+				engine = (IDiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}

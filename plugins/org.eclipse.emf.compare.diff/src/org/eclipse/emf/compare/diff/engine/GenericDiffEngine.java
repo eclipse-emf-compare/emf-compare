@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic;
+package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.api.DiffEngine;
+import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
@@ -65,7 +65,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
-public class DiffMaker implements DiffEngine {
+public class GenericDiffEngine implements IDiffEngine {
 	/** Allows retrieval of the ancestor matched object. */
 	protected static final int ANCESTOR_OBJECT = 0;
 
@@ -86,7 +86,7 @@ public class DiffMaker implements DiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.DiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel)
+	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel)
 	 */
 	public DiffModel doDiff(MatchModel match) {
 		return doDiff(match, false);
@@ -95,7 +95,7 @@ public class DiffMaker implements DiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.DiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
+	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean)
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
@@ -468,13 +468,16 @@ public class DiffMaker implements DiffEngine {
 	 */
 	protected DiffGroup doDiffThreeWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+		
+		// It is a possibility that no elements where matched
+		if (match.getMatchedElements().size() > 0) {
+			// we have to browse the model and create the corresponding operations
+			final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
+	
+			doDiffDelegate(diffRoot, matchRoot);
+		}
 
-		// we have to browse the model and create the corresponding operations
-		final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
-		final Resource leftModel = matchRoot.getLeftElement().eResource();
-
-		doDiffDelegate(diffRoot, matchRoot);
-
+		unMatchedElements.clear();
 		final Iterator<UnMatchElement> unMatched = match.getUnMatchedElements().iterator();
 		while (unMatched.hasNext()) {
 			final UnMatchElement unMatchElement = unMatched.next();
@@ -497,8 +500,17 @@ public class DiffMaker implements DiffEngine {
 			if (!isChild)
 				unMatchedElements.put(unMatchElement, isAncestor);
 		}
-		if (unMatchedElements.size() > 0)
+		if (unMatchedElements.size() > 0) {
+			// seeks left resource
+			Resource leftModel = null;
+			for (UnMatchElement element : unMatchedElements.keySet()) {
+				if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
+					leftModel = element.eResource();
+					break;
+				}
+			}
 			processUnMatchedElements(diffRoot, leftModel, unMatchedElements);
+		}
 		return diffRoot;
 	}
 
@@ -513,17 +525,27 @@ public class DiffMaker implements DiffEngine {
 	protected DiffGroup doDiffTwoWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
 
-		// we have to browse the model and create the corresponding operations
-		final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
-		final Resource leftModel = matchRoot.getLeftElement().eResource();
+		// It is a possibility that no elements where matched
+		if (match.getMatchedElements().size() > 0) {
+			// we have to browse the model and create the corresponding operations
+			final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
 
-		// browsing the match model
-		doDiffDelegate(diffRoot, matchRoot);
+			// browsing the match model
+			doDiffDelegate(diffRoot, matchRoot);
+		}
 		// iterate over the unmatched elements end determine if they have been
 		// added or removed.
 		final List<UnMatchElement> unMatched = new ArrayList<UnMatchElement>();
 		for (Object anUnMatched : match.getUnMatchedElements())
 			unMatched.add((UnMatchElement)anUnMatched);
+		// seeks left resource
+		Resource leftModel = null;
+		for (UnMatchElement element : unMatched) {
+			if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
+				leftModel = element.eResource();
+				break;
+			}
+		}
 		processUnMatchedElements(diffRoot, leftModel, unMatched);
 		return diffRoot;
 	}

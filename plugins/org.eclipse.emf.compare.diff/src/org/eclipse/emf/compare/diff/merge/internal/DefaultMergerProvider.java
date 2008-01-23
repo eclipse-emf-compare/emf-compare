@@ -8,21 +8,21 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.generic.merge;
+package org.eclipse.emf.compare.diff.merge.internal;
 
 import java.util.Map;
 
-import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.AttributeChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.ModelElementChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.ModelElementChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.MoveModelElementMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.ReferenceChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.ReferenceChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateAttributeMerger;
-import org.eclipse.emf.compare.diff.generic.merge.impl.UpdateUniqueReferenceValueMerger;
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.merge.api.IMergerProvider;
+import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.MoveModelElementMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateAttributeMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateUniqueReferenceValueMerger;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
