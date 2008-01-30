@@ -9,7 +9,7 @@
             id="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"/>
       <contentTypeBinding
             contentMergeViewerId="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"
-            contentTypeId="org.eclipse.emf.compare.ui.contenttype.ModelContentType"/>
+            contentTypeId="org.eclipse.emf.ecore"/>
    </extension>
    <extension
          point="org.eclipse.compare.structureMergeViewers">
@@ -18,7 +18,7 @@
             extensions="*"
             id="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer"/>
       <contentTypeBinding
-            contentTypeId="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
+            contentTypeId="org.eclipse.emf.ecore"
             structureMergeViewerId="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer"/>
    </extension>
    <extension
@@ -45,7 +45,8 @@
    <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type
-            file-extensions="emfdiff,uml,ecore"
+            base-type="org.eclipse.emf.ecore"
+            file-extensions="emfdiff,uml"
             id="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
             name="%modelContentTypeName"
             priority="normal">
