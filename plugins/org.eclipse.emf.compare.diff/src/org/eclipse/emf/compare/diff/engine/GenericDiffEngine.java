@@ -541,8 +541,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		// seeks left resource
 		Resource leftModel = null;
 		for (UnMatchElement element : unMatched) {
-			if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
-				leftModel = element.eResource();
+			if (element.getElement().eResource().getURI().path().equals(match.getLeftModel())) {
+				leftModel = element.getElement().eResource();
 				break;
 			}
 		}
