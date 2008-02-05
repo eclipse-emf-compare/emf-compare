@@ -15,6 +15,10 @@
         eType="#//DiffElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="isHiddenBy" upperBound="-1"
         eType="#//AbstractDiffExtension" eOpposite="#//AbstractDiffExtension/hideElements"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflicting" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean"
+        changeable="false" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//DifferenceKind"
+        changeable="false" transient="true" defaultValueLiteral="" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GenericDiffElement" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
@@ -34,7 +38,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="#//DiffModel"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass ../../org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelElementChange" eSuperTypes="#//DiffElement"/>
@@ -112,4 +116,11 @@
         defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.IMerger"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="DifferenceKind">
+    <eLiterals name="Addition"/>
+    <eLiterals name="Deletion" value="1"/>
+    <eLiterals name="Change" value="2"/>
+    <eLiterals name="Move" value="3"/>
+    <eLiterals name="Conflict" value="4"/>
+  </eClassifiers>
 </ecore:EPackage>

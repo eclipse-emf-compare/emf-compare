@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
+import org.eclipse.emf.compare.diff.metamodel.*;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
@@ -111,6 +112,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+			case DiffPackage.DIFFERENCE_KIND:
+				return convertDifferenceKindToString(eDataType, instanceValue);
 			case DiffPackage.IMERGER:
 				return convertIMergerToString(eDataType, instanceValue);
 			default:
@@ -288,6 +291,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+			case DiffPackage.DIFFERENCE_KIND:
+				return createDifferenceKindFromString(eDataType, initialValue);
 			case DiffPackage.IMERGER:
 				return createIMergerFromString(eDataType, initialValue);
 			default:
@@ -464,6 +469,29 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue() {
 		RemoteUpdateUniqueReferenceValueImpl remoteUpdateUniqueReferenceValue = new RemoteUpdateUniqueReferenceValueImpl();
 		return remoteUpdateUniqueReferenceValue;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
+		DifferenceKind result = DifferenceKind.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unused")
+	public String convertDifferenceKindToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

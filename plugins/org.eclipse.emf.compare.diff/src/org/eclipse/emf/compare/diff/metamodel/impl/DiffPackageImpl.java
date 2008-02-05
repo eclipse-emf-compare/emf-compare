@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
 import org.eclipse.emf.compare.diff.metamodel.GenericDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
@@ -53,6 +54,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -75,6 +77,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	private EClass abstractDiffExtensionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum differenceKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -389,6 +398,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		diffElementEClass = createEClass(DIFF_ELEMENT);
 		createEReference(diffElementEClass, DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
 		createEReference(diffElementEClass, DIFF_ELEMENT__IS_HIDDEN_BY);
+		createEAttribute(diffElementEClass, DIFF_ELEMENT__CONFLICTING);
+		createEAttribute(diffElementEClass, DIFF_ELEMENT__KIND);
 
 		genericDiffElementEClass = createEClass(GENERIC_DIFF_ELEMENT);
 		createEReference(genericDiffElementEClass, GENERIC_DIFF_ELEMENT__LEFT_ELEMENT);
@@ -493,6 +504,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(abstractDiffExtensionEClass, ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS);
 		createEAttribute(abstractDiffExtensionEClass, ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED);
 
+		// Create enums
+		differenceKindEEnum = createEEnum(DIFFERENCE_KIND);
+
 		// Create data types
 		iMergerEDataType = createEDataType(IMERGER);
 	}
@@ -519,6 +533,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EAttribute getAbstractDiffExtension_IsCollapsed() {
 		return (EAttribute)abstractDiffExtensionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getDifferenceKind() {
+		return differenceKindEEnum;
 	}
 
 	/**
@@ -655,6 +678,24 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EReference getDiffElement_IsHiddenBy() {
 		return (EReference)diffElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiffElement_Conflicting() {
+		return (EAttribute)diffElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDiffElement_Kind() {
+		return (EAttribute)diffElementEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1214,6 +1255,14 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				this.getAbstractDiffExtension(),
 				this.getAbstractDiffExtension_HideElements(),
 				"isHiddenBy", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiffElement_Conflicting(),
+				theEcorePackage.getEBoolean(),
+				"conflicting", null, 0, 1, DiffElement.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getDiffElement_Kind(),
+				this.getDifferenceKind(),
+				"kind", "", 0, 1, DiffElement.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
 		initEClass(genericDiffElementEClass, GenericDiffElement.class,
 				"GenericDiffElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1495,6 +1544,14 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		addEOperation(abstractDiffExtensionEClass, this.getIMerger(),
 				"provideMerger", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		// Initialize enums and add enum literals
+		initEEnum(differenceKindEEnum, DifferenceKind.class, "DifferenceKind"); //$NON-NLS-1$
+		addEEnumLiteral(differenceKindEEnum, DifferenceKind.ADDITION);
+		addEEnumLiteral(differenceKindEEnum, DifferenceKind.DELETION);
+		addEEnumLiteral(differenceKindEEnum, DifferenceKind.CHANGE);
+		addEEnumLiteral(differenceKindEEnum, DifferenceKind.MOVE);
+		addEEnumLiteral(differenceKindEEnum, DifferenceKind.CONFLICT);
 
 		// Initialize data types
 		initEDataType(iMergerEDataType, IMerger.class,

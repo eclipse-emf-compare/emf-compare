@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.diff.metamodel;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -131,13 +132,31 @@ public interface DiffPackage extends EPackage {
 	int DIFF_ELEMENT__IS_HIDDEN_BY = 1;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_ELEMENT__CONFLICTING = 2;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_ELEMENT__KIND = 3;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_ELEMENT_FEATURE_COUNT = 2;
+	int DIFF_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl <em>Conflicting Diff Element</em>}' class.
@@ -240,6 +259,24 @@ public interface DiffPackage extends EPackage {
 	int GENERIC_DIFF_ELEMENT__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_DIFF_ELEMENT__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_DIFF_ELEMENT__KIND = DIFF_ELEMENT__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -283,6 +320,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int CONFLICTING_DIFF_ELEMENT__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONFLICTING_DIFF_ELEMENT__KIND = DIFF_ELEMENT__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
@@ -339,6 +394,24 @@ public interface DiffPackage extends EPackage {
 	int DIFF_GROUP__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_GROUP__KIND = DIFF_ELEMENT__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -373,7 +446,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 	 * @generated
 	 */
-	int IMERGER = 36;
+	int IMERGER = 37;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -475,6 +548,24 @@ public interface DiffPackage extends EPackage {
 	int MODEL_ELEMENT_CHANGE__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE__KIND = DIFF_ELEMENT__KIND;
+
+	/**
 	 * The number of structural features of the '<em>Model Element Change</em>' class.
 	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
@@ -500,6 +591,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING = MODEL_ELEMENT_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND = MODEL_ELEMENT_CHANGE__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -547,6 +656,24 @@ public interface DiffPackage extends EPackage {
 	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING = MODEL_ELEMENT_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND = MODEL_ELEMENT_CHANGE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -590,6 +717,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
@@ -691,6 +836,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -790,6 +953,24 @@ public interface DiffPackage extends EPackage {
 	int REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -833,6 +1014,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOTE_REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
@@ -907,6 +1106,24 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -977,6 +1194,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MOVE_MODEL_ELEMENT__IS_HIDDEN_BY = UPDATE_MODEL_ELEMENT__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MOVE_MODEL_ELEMENT__CONFLICTING = UPDATE_MODEL_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MOVE_MODEL_ELEMENT__KIND = UPDATE_MODEL_ELEMENT__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -1051,6 +1286,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_MOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MOVE_MODEL_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_MOVE_MODEL_ELEMENT__CONFLICTING = MOVE_MODEL_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_MOVE_MODEL_ELEMENT__KIND = MOVE_MODEL_ELEMENT__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1114,6 +1367,24 @@ public interface DiffPackage extends EPackage {
 	int ATTRIBUTE_CHANGE__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE__KIND = DIFF_ELEMENT__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1166,6 +1437,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY = ATTRIBUTE_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING = ATTRIBUTE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__KIND = ATTRIBUTE_CHANGE__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1231,6 +1520,24 @@ public interface DiffPackage extends EPackage {
 	int ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY = ATTRIBUTE_CHANGE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING = ATTRIBUTE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND = ATTRIBUTE_CHANGE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1292,6 +1599,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1357,6 +1682,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1418,6 +1761,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1483,6 +1844,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1544,6 +1923,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1609,6 +2006,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_UPDATE_ATTRIBUTE__IS_HIDDEN_BY = UPDATE_ATTRIBUTE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_UPDATE_ATTRIBUTE__CONFLICTING = UPDATE_ATTRIBUTE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_UPDATE_ATTRIBUTE__KIND = UPDATE_ATTRIBUTE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1663,6 +2078,24 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE__KIND = DIFF_ELEMENT__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1715,6 +2148,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY = REFERENCE_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING = REFERENCE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__KIND = REFERENCE_CHANGE__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1789,6 +2240,24 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY = REFERENCE_CHANGE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING = REFERENCE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__KIND = REFERENCE_CHANGE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1859,6 +2328,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1933,6 +2420,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -2003,6 +2508,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2077,6 +2600,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -2149,6 +2690,24 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_REFERENCE__IS_HIDDEN_BY = REFERENCE_CHANGE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_REFERENCE__CONFLICTING = REFERENCE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_REFERENCE__KIND = REFERENCE_CHANGE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -2201,6 +2760,24 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_UNIQUE_REFERENCE_VALUE__IS_HIDDEN_BY = UPDATE_REFERENCE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__CONFLICTING = UPDATE_REFERENCE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UPDATE_UNIQUE_REFERENCE_VALUE__KIND = UPDATE_REFERENCE__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2284,6 +2861,24 @@ public interface DiffPackage extends EPackage {
 	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE__IS_HIDDEN_BY = UPDATE_UNIQUE_REFERENCE_VALUE__IS_HIDDEN_BY;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE__CONFLICTING = UPDATE_UNIQUE_REFERENCE_VALUE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE__KIND = UPDATE_UNIQUE_REFERENCE_VALUE__KIND;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -2364,6 +2959,16 @@ public interface DiffPackage extends EPackage {
 	int ABSTRACT_DIFF_EXTENSION_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDifferenceKind()
+	 * @generated
+	 */
+	int DIFFERENCE_KIND = 36;
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension <em>Abstract Diff Extension</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Abstract Diff Extension</em>'.
@@ -2391,6 +2996,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getAbstractDiffExtension_IsCollapsed();
+
+	/**
+	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Difference Kind</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
+	 * @generated
+	 */
+	EEnum getDifferenceKind();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AddAttribute <em>Add Attribute</em>}'.
@@ -2553,6 +3168,28 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDiffElement_IsHiddenBy();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isConflicting <em>Conflicting</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Conflicting</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#isConflicting()
+	 * @see #getDiffElement()
+	 * @generated
+	 */
+	EAttribute getDiffElement_Conflicting();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getKind <em>Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Kind</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#getKind()
+	 * @see #getDiffElement()
+	 * @generated
+	 */
+	EAttribute getDiffElement_Kind();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getSubDiffElements <em>Sub Diff Elements</em>}'.
@@ -3145,6 +3782,16 @@ public interface DiffPackage extends EPackage {
 		EAttribute ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED = eINSTANCE.getAbstractDiffExtension_IsCollapsed();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDifferenceKind()
+		 * @generated
+		 */
+		EEnum DIFFERENCE_KIND = eINSTANCE.getDifferenceKind();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl
@@ -3290,6 +3937,22 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIFF_ELEMENT__IS_HIDDEN_BY = eINSTANCE.getDiffElement_IsHiddenBy();
+
+		/**
+		 * The meta object literal for the '<em><b>Conflicting</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF_ELEMENT__CONFLICTING = eINSTANCE.getDiffElement_Conflicting();
+
+		/**
+		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIFF_ELEMENT__KIND = eINSTANCE.getDiffElement_Kind();
 
 		/**
 		 * The meta object literal for the '<em><b>Sub Diff Elements</b></em>' containment reference list feature.

@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getSubDiffElements <em>Sub Diff Elements</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getIsHiddenBy <em>Is Hidden By</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isConflicting <em>Conflicting</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
  *
@@ -47,6 +49,39 @@ public interface DiffElement extends EObject {
 	 * @generated
 	 */
 	EList<AbstractDiffExtension> getIsHiddenBy();
+
+	/**
+	 * Returns the value of the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * This will return true if this DiffElement is conflicting with another. It will in fact check that the
+	 * direct container of this element is a {@link ConflictingDiffElement}.
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Conflicting</em>' attribute.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_Conflicting()
+	 * @model transient="true" changeable="false" derived="true"
+	 * @generated
+	 */
+	boolean isConflicting();
+
+	/**
+	 * Returns the value of the '<em><b>Kind</b></em>' attribute.
+	 * The default value is <code>""</code>.
+	 * The literals are from the enumeration {@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * Return the kind of Difference this DiffElement is. AddModelElement and RemoteAddModelElement are both
+	 * {@link DifferenceKind#ADDITION}, MoveModelElement is a {@link DifferenceKind#MOVE} ...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Kind</em>' attribute.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_Kind()
+	 * @model default="" transient="true" changeable="false" derived="true"
+	 * @generated
+	 */
+	DifferenceKind getKind();
 
 	/**
 	 * Returns the value of the '<em><b>Sub Diff Elements</b></em>' containment reference list.
