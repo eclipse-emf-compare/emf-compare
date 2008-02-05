@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -99,7 +100,8 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_UpdateReference_type"); //$NON-NLS-1$
+		UpdateReference updateReference = (UpdateReference)object;
+		return getString("_UI_UpdateReference_type") + " " + updateReference.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

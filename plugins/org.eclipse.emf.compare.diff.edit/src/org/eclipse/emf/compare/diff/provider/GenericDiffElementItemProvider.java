@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.GenericDiffElement;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -89,7 +90,8 @@ public class GenericDiffElementItemProvider extends DiffElementItemProvider impl
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_GenericDiffElement_type"); //$NON-NLS-1$
+		GenericDiffElement genericDiffElement = (GenericDiffElement)object;
+		return getString("_UI_GenericDiffElement_type") + " " + genericDiffElement.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

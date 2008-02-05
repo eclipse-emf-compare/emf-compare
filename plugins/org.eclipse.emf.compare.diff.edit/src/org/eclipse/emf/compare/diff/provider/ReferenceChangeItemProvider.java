@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -103,7 +104,8 @@ public class ReferenceChangeItemProvider extends DiffElementItemProvider impleme
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ReferenceChange_type"); //$NON-NLS-1$
+		ReferenceChange referenceChange = (ReferenceChange)object;
+		return getString("_UI_ReferenceChange_type") + " " + referenceChange.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

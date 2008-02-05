@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -87,7 +88,8 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_AttributeChangeLeftTarget_type"); //$NON-NLS-1$
+		AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)object;
+		return getString("_UI_AttributeChangeLeftTarget_type") + " " + attributeChangeLeftTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

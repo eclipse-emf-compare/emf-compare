@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
@@ -103,7 +104,8 @@ public class AttributeChangeItemProvider extends DiffElementItemProvider impleme
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_AttributeChange_type"); //$NON-NLS-1$
+		AttributeChange attributeChange = (AttributeChange)object;
+		return getString("_UI_AttributeChange_type") + " " + attributeChange.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
@@ -76,6 +77,8 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 			super.getPropertyDescriptors(object);
 
 			addIsHiddenByPropertyDescriptor(object);
+			addConflictingPropertyDescriptor(object);
+			addKindPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -98,7 +101,8 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_DiffElement_type"); //$NON-NLS-1$
+		DiffElement diffElement = (DiffElement)object;
+		return getString("_UI_DiffElement_type") + " " + diffElement.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -113,6 +117,11 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DiffElement.class)) {
+			case DiffPackage.DIFF_ELEMENT__CONFLICTING:
+			case DiffPackage.DIFF_ELEMENT__KIND:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
+						true));
+				return;
 			case DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
 						false));
@@ -137,6 +146,44 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 						getString(
 								"_UI_PropertyDescriptor_description", "_UI_DiffElement_isHiddenBy_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						DiffPackage.Literals.DIFF_ELEMENT__IS_HIDDEN_BY, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Conflicting feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unused")
+	protected void addConflictingPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffElement_conflicting_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffElement_conflicting_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_ELEMENT__CONFLICTING, false, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Kind feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unused")
+	protected void addKindPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffElement_kind_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffElement_kind_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_ELEMENT__KIND, false, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**

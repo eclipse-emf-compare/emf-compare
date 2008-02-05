@@ -17,6 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -88,7 +89,8 @@ public class ModelElementChangeRightTargetItemProvider extends ModelElementChang
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ModelElementChangeRightTarget_type"); //$NON-NLS-1$
+		ModelElementChangeRightTarget modelElementChangeRightTarget = (ModelElementChangeRightTarget)object;
+		return getString("_UI_ModelElementChangeRightTarget_type") + " " + modelElementChangeRightTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

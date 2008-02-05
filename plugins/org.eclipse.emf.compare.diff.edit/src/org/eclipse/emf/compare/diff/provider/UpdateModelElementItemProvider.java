@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -102,7 +103,8 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_UpdateModelElement_type"); //$NON-NLS-1$
+		UpdateModelElement updateModelElement = (UpdateModelElement)object;
+		return getString("_UI_UpdateModelElement_type") + " " + updateModelElement.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

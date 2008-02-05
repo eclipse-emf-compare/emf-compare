@@ -17,6 +17,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -88,7 +89,8 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ReferenceChangeRightTarget_type"); //$NON-NLS-1$
+		ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)object;
+		return getString("_UI_ReferenceChangeRightTarget_type") + " " + referenceChangeRightTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
