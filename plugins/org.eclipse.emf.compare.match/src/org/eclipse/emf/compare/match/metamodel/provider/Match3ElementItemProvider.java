@@ -16,8 +16,10 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.util.ClassUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -83,11 +85,16 @@ public class Match3ElementItemProvider extends Match2ElementsItemProvider implem
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		Match3Element match3Element = (Match3Element)object;
+		final String leftName = (String)ClassUtils.invokeMethod(match3Element.getLeftElement(), "getName"); //$NON-NLS-1$
+		final String rightName = (String)ClassUtils.invokeMethod(match3Element.getRightElement(), "getName"); //$NON-NLS-1$
+		final String ancestorName = (String)ClassUtils.invokeMethod(match3Element.getOriginElement(), "getName"); //$NON-NLS-1$
+		if (leftName != null || ancestorName != null || rightName != null)
+			return leftName + " <---> " + ancestorName + " <---> " + rightName; //$NON-NLS-1$ //$NON-NLS-2$
 		return getString("_UI_Match3Element_type") + " " + match3Element.getSimilarity(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

@@ -18,6 +18,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.util.ClassUtils;
+import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -84,11 +86,15 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		Match2Elements match2Elements = (Match2Elements)object;
+		final String leftName = (String)ClassUtils.invokeMethod(match2Elements.getLeftElement(), "getName"); //$NON-NLS-1$
+		final String rightName = (String)ClassUtils.invokeMethod(match2Elements.getRightElement(), "getName"); //$NON-NLS-1$
+		if (leftName != null || rightName != null)
+			return leftName + " <---> " + rightName; //$NON-NLS-1$
 		return getString("_UI_Match2Elements_type") + " " + match2Elements.getSimilarity(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
