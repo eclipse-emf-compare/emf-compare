@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,8 +109,8 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		try {
 			return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
 					NameSimilarity.findName(moveOp.getLeftElement()),
-							NameSimilarity.findName(moveOp.getLeftTarget()),
-							NameSimilarity.findName(moveOp.getRightTarget())});
+							NameSimilarity.findName(moveOp.getLeftElement().eContainer()),
+							NameSimilarity.findName(moveOp.getRightElement().eContainer())});
 		} catch (FactoryException e) {
 			return getString("_UI_MoveModelElement_type"); //$NON-NLS-1$
 		}
