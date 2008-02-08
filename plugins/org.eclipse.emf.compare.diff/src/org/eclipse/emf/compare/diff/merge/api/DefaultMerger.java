@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,17 +14,26 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -39,12 +48,19 @@ public class DefaultMerger implements IMerger {
 	/** {@link DiffElement} to be merged by this merger. */
 	protected DiffElement diff;
 
+	/** Keeps a reference on the left resource for this merger. */
+	protected Resource leftResource;
+
+	/** Keeps a reference on the right resource for this merger. */
+	protected Resource rightResource;
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#applyInOrigin()
 	 */
 	public void applyInOrigin() {
+		handleMutuallyDerivedReferences();
 		removeFromContainer(diff);
 	}
 
@@ -81,6 +97,7 @@ public class DefaultMerger implements IMerger {
 	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#undoInTarget()
 	 */
 	public void undoInTarget() {
+		handleMutuallyDerivedReferences();
 		removeFromContainer(diff);
 	}
 
@@ -102,25 +119,19 @@ public class DefaultMerger implements IMerger {
 	}
 
 	/**
-	 * Ensures the two given {@link EObject}s share the same XMI ID.
+	 * Creates a copy of the given EObject as would {@link EcoreUtil#copy(EObject)} would, except we use
+	 * specific handling for unmatched references.
 	 * 
-	 * @param original
-	 *            Object from which to seek the XMI ID.
-	 * @param copy
-	 *            Object on which to set an XMI ID identical to the <code>orginal</code> one.
+	 * @param eObject
+	 *            The object to copy.
+	 * @return the copied object.
 	 */
-	protected void copyXMIID(EObject original, EObject copy) {
-		if (original.eResource() instanceof XMIResource && copy.eResource() instanceof XMIResource) {
-			final XMIResource originResource = (XMIResource)original.eResource();
-			final XMIResource copyResource = (XMIResource)copy.eResource();
-			if (originResource.getID(original) != null)
-				copyResource.setID(copy, originResource.getID(original));
-			// Recursively copy XMI ID of the object's children.
-			// Assumes EObject#eContents() preserves order
-			for (int i = 0; i < original.eContents().size(); i++) {
-				copyXMIID(original.eContents().get(i), copy.eContents().get(i));
-			}
-		}
+	protected EObject copy(EObject eObject) {
+		final EMFCompareEObjectCopier copier = MergeService.getCopier(diff);
+		final EObject result = copier.copy(eObject);
+		copier.copyReferences();
+		copier.copyXMIIDs();
+		return result;
 	}
 
 	/**
@@ -129,12 +140,14 @@ public class DefaultMerger implements IMerger {
 	 * @return The left resource.
 	 */
 	protected Resource findLeftResource() {
-		Resource leftResource = null;
-		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
-			final Match2Elements element = (Match2Elements)matchIterator.next();
-			if (element.getLeftElement() != null) {
-				leftResource = element.getLeftElement().eResource();
+		if (leftResource == null) {
+			final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+			for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator
+					.hasNext(); ) {
+				final Match2Elements element = (Match2Elements)matchIterator.next();
+				if (element.getLeftElement() != null) {
+					leftResource = element.getLeftElement().eResource();
+				}
 			}
 		}
 		return leftResource;
@@ -146,12 +159,14 @@ public class DefaultMerger implements IMerger {
 	 * @return The right resource.
 	 */
 	protected Resource findRightResource() {
-		Resource rightResource = null;
-		final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
-		for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator.hasNext(); ) {
-			final Match2Elements element = (Match2Elements)matchIterator.next();
-			if (element.getRightElement() != null) {
-				rightResource = element.getRightElement().eResource();
+		if (rightResource == null) {
+			final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+			for (final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator(); matchIterator
+					.hasNext(); ) {
+				final Match2Elements element = (Match2Elements)matchIterator.next();
+				if (element.getRightElement() != null) {
+					rightResource = element.getRightElement().eResource();
+				}
 			}
 		}
 		return rightResource;
@@ -202,10 +217,13 @@ public class DefaultMerger implements IMerger {
 				@Override
 				protected boolean crossReference(EObject eObject, EReference eReference,
 						EObject crossReferencedEObject) {
-					return crossReferencedEObject.eResource() == null;
+					if (eReference.isChangeable() && !eReference.isDerived())
+						return crossReferencedEObject.eResource() == null;
+					return false;
 				}
 			};
-			for (final Iterator<Map.Entry<EObject, Collection<Setting>>> i = referencer.entrySet().iterator(); i.hasNext(); ) {
+			for (final Iterator<Map.Entry<EObject, Collection<Setting>>> i = referencer.entrySet().iterator(); i
+					.hasNext(); ) {
 				final Map.Entry<EObject, Collection<Setting>> entry = i.next();
 				for (final Iterator<Setting> j = entry.getValue().iterator(); j.hasNext(); ) {
 					EcoreUtil.remove(j.next(), entry.getKey());
@@ -223,8 +241,6 @@ public class DefaultMerger implements IMerger {
 	protected void removeFromContainer(DiffElement diffElement) {
 		final EObject parent = diffElement.eContainer();
 		EcoreUtil.remove(diffElement);
-
-		// now removes all the dangling references
 		removeDanglingReferences(parent);
 
 		// If diff was contained by a ConflictingDiffElement, we call back this on it
@@ -234,6 +250,78 @@ public class DefaultMerger implements IMerger {
 		// if diff was in a diffGroup and it was the last one, we also remove the diffgroup
 		if (parent instanceof DiffGroup)
 			cleanDiffGroup((DiffGroup)parent);
+	}
+
+	/**
+	 * Mutually derived references need specific handling : merging one will implicitely merge the other and
+	 * there are no way to tell such references apart.
+	 * <p>
+	 * Currently known references raising such issues : <table>
+	 * <tr>
+	 * <td>{@link EcorePackage#ECLASS__ESUPER_TYPES}</td>
+	 * <td>{@link EcorePackage#ECLASS__EGENERIC_SUPER_TYPES}</td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 */
+	private void handleMutuallyDerivedReferences() {
+		DiffElement toRemove = null;
+		if (diff instanceof ReferenceChange) {
+			final EReference reference = ((ReferenceChange)diff).getReference();
+			switch (reference.getFeatureID()) {
+				case EcorePackage.ECLASS__ESUPER_TYPES:
+					final EObject referenceType;
+					if (diff instanceof ReferenceChangeLeftTarget)
+						referenceType = ((ReferenceChangeLeftTarget)diff).getLeftRemovedTarget();
+					else
+						referenceType = ((ReferenceChangeRightTarget)diff).getRightAddedTarget();
+					for (DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
+						if (siblingDiff instanceof ModelElementChangeLeftTarget) {
+							if (((ModelElementChangeLeftTarget)siblingDiff).getLeftElement() instanceof EGenericType
+									&& ((EGenericType)((ModelElementChangeLeftTarget)siblingDiff).getLeftElement()).getEClassifier() == referenceType) {
+								toRemove = siblingDiff;
+								break;
+							}
+						} else if (siblingDiff instanceof ModelElementChangeRightTarget) {
+							if (((ModelElementChangeRightTarget)siblingDiff).getRightElement() instanceof EGenericType
+									&& ((EGenericType)((ModelElementChangeRightTarget)siblingDiff).getRightElement()).getEClassifier() == referenceType) {
+								toRemove = siblingDiff;
+								break;
+							}
+						}
+					}
+					break;
+				default:
+			}
+		} else if (diff instanceof ModelElementChangeLeftTarget
+				&& ((ModelElementChangeLeftTarget)diff).getLeftElement() instanceof EGenericType) {
+			final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)diff;
+			final EClassifier referenceType = ((EGenericType)theDiff.getLeftElement()).getEClassifier();
+			for (DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
+				if (siblingDiff instanceof ReferenceChangeLeftTarget
+						&& ((ReferenceChangeLeftTarget)siblingDiff).getReference().getFeatureID() == EcorePackage.ECLASS__ESUPER_TYPES) {
+					if (((ReferenceChangeLeftTarget)siblingDiff).getLeftRemovedTarget() == referenceType) {
+						toRemove = siblingDiff;
+						break;
+					}
+				}
+			}
+		} else if (diff instanceof ModelElementChangeRightTarget
+				&& ((ModelElementChangeRightTarget)diff).getRightElement() instanceof EGenericType) {
+			final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)diff;
+			final EClassifier referenceType = ((EGenericType)theDiff.getRightElement()).getEClassifier();
+			for (DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
+				if (siblingDiff instanceof ReferenceChangeRightTarget
+						&& ((ReferenceChangeRightTarget)siblingDiff).getReference().getFeatureID() == EcorePackage.ECLASS__ESUPER_TYPES) {
+					if (((ReferenceChangeRightTarget)siblingDiff).getRightAddedTarget() == referenceType) {
+						toRemove = siblingDiff;
+						break;
+					}
+				}
+			}
+		}
+		if (toRemove != null)
+			removeFromContainer(toRemove);
 	}
 
 	/**
@@ -248,4 +336,5 @@ public class DefaultMerger implements IMerger {
 		if (object != null && object.eResource() instanceof XMIResource)
 			((XMIResource)object.eResource()).setID(object, id);
 	}
+
 }

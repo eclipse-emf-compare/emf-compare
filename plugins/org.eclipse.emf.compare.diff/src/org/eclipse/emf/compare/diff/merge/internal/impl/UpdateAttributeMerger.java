@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,12 +31,6 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/*
-		 * FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely, an added
-		 * or remotely deleted datatype), we should merge its corresponding AddModelElement (or
-		 * RemoteDeleteModelElement) beforehand. In the current state, we're doing a hard-link between the two
-		 * models.
-		 */
 		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject origin = theDiff.getLeftElement();
@@ -56,12 +50,6 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/*
-		 * FIXME [bug #209521] if we're merging an attribute pointing to an UnmatchedElement (namely, a
-		 * deleted or remotely added datatype), we should merge its corresponding DeleteModelElement (or
-		 * RemoteAddModelElement) beforehand. In the current state, we're doing a hard-link between the two
-		 * models.
-		 */
 		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject origin = theDiff.getLeftElement();

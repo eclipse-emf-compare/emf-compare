@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,19 +13,32 @@ package org.eclipse.emf.compare.diff.merge.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.compare.diff.merge.api.EMFCompareEObjectCopier;
 import org.eclipse.emf.compare.diff.merge.api.IMergeListener;
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.merge.api.MergeEvent;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Services for model merging.
+ * Service for use with diff merging operations.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public class MergeService {
+public final class MergeService {
 	/** Holds a list of all the merge listeners registered for notifications on merge operations. */
-	private final List<IMergeListener> listeners = new ArrayList<IMergeListener>();
+	private static final List<IMergeListener> MERGE_LISTENERS = new ArrayList<IMergeListener>();
+
+	/** This copier will be used when merging references. */
+	private static EMFCompareEObjectCopier copier;
+
+	/**
+	 * Default constructor.
+	 */
+	private MergeService() {
+		// hides default constructor
+	}
 
 	/**
 	 * Registers a new merge listener for notifications about merge operations. Has no effect if the listener
@@ -34,8 +47,25 @@ public class MergeService {
 	 * @param listener
 	 *            New Listener to register for notifications.
 	 */
-	public void addMergeListener(IMergeListener listener) {
-		listeners.add(listener);
+	public static void addMergeListener(IMergeListener listener) {
+		MERGE_LISTENERS.add(listener);
+	}
+
+	/**
+	 * Returns the copier given the diff it should merge.
+	 * 
+	 * @param diff
+	 *            The DiffElement for which a copier is needed.
+	 * @return The copier for a given diff.
+	 */
+	public static EMFCompareEObjectCopier getCopier(DiffElement diff) {
+		if (copier == null)
+			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff());
+		else if (copier.getDiffModel() != ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff()) {
+			copier.clear();
+			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff());
+		}
+		return copier;
 	}
 
 	/**
@@ -50,7 +80,7 @@ public class MergeService {
 	 *            <code>True</code> if the changes must be applied from the left to the right model,
 	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	public void merge(DiffElement element, boolean leftToRight) {
+	public static void merge(DiffElement element, boolean leftToRight) {
 		fireMergeOperationStart(element);
 		doMerge(element, leftToRight);
 		fireMergeOperationEnd(element);
@@ -68,13 +98,24 @@ public class MergeService {
 	 *            <code>True</code> if the changes must be applied from the left to the right model,
 	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	public void merge(List<DiffElement> elements, boolean leftToRight) {
+	public static void merge(List<DiffElement> elements, boolean leftToRight) {
 		fireMergeOperationStart(elements);
 		for (DiffElement element : elements)
 			// we might remove the diff from the list before merging it (eOpposite reference)
 			if (element.eContainer() != null)
 				doMerge(element, leftToRight);
 		fireMergeOperationEnd(elements);
+	}
+
+	/**
+	 * removes a merge listener from the list of registered listeners. This will have no effect if the given
+	 * listener is not registered for notifications on this service.
+	 * 
+	 * @param listener
+	 *            New Listener to register for notifications.
+	 */
+	public static void removeMergeListener(IMergeListener listener) {
+		MERGE_LISTENERS.remove(listener);
 	}
 
 	/**
@@ -90,7 +131,7 @@ public class MergeService {
 	 *            <code>True</code> if the changes must be applied from the left to the right model,
 	 *            <code>False</code> when they have to be applied the other way around.
 	 */
-	protected void doMerge(DiffElement element, boolean leftToRight) {
+	protected static void doMerge(DiffElement element, boolean leftToRight) {
 		fireMergeDiffStart(element);
 		final IMerger merger = MergeFactory.createMerger(element);
 		if (leftToRight && merger.canUndoInTarget()) {
@@ -107,8 +148,8 @@ public class MergeService {
 	 * @param diff
 	 *            {@link DiffElement} which has just been merged.
 	 */
-	protected void fireMergeDiffEnd(DiffElement diff) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeDiffEnd(DiffElement diff) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeDiffEnd(new MergeEvent(diff));
 	}
 
@@ -118,8 +159,8 @@ public class MergeService {
 	 * @param diff
 	 *            {@link DiffElement} which is about to be merged.
 	 */
-	protected void fireMergeDiffStart(DiffElement diff) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeDiffStart(DiffElement diff) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeDiffStart(new MergeEvent(diff));
 	}
 
@@ -129,8 +170,8 @@ public class MergeService {
 	 * @param diff
 	 *            {@link DiffElement} which has just been merged.
 	 */
-	protected void fireMergeOperationEnd(DiffElement diff) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeOperationEnd(DiffElement diff) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeOperationEnd(new MergeEvent(diff));
 	}
 
@@ -140,8 +181,8 @@ public class MergeService {
 	 * @param diffs
 	 *            {@link DiffElement}s which have been merged.
 	 */
-	protected void fireMergeOperationEnd(List<DiffElement> diffs) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeOperationEnd(List<DiffElement> diffs) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeOperationEnd(new MergeEvent(diffs));
 	}
 
@@ -151,8 +192,8 @@ public class MergeService {
 	 * @param diff
 	 *            {@link DiffElement} which is about to be merged.
 	 */
-	protected void fireMergeOperationStart(DiffElement diff) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeOperationStart(DiffElement diff) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeOperationStart(new MergeEvent(diff));
 	}
 
@@ -162,8 +203,8 @@ public class MergeService {
 	 * @param diffs
 	 *            {@link DiffElement}s which are about to be merged.
 	 */
-	protected void fireMergeOperationStart(List<DiffElement> diffs) {
-		for (IMergeListener listener : listeners)
+	protected static void fireMergeOperationStart(List<DiffElement> diffs) {
+		for (IMergeListener listener : MERGE_LISTENERS)
 			listener.mergeOperationStart(new MergeEvent(diffs));
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
+import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
@@ -71,19 +72,10 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/*
-		 * FIXME [bug #209521] if we're merging a reference pointing to an UnmatchedElement, we should merge
-		 * its corresponding DeleteModelElement (or RemoteAddModelElement) beforehand. In the current state,
-		 * we're doing a hard-link between the two models.
-		 */
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
-		final EObject rightTarget = theDiff.getRightRemovedTarget();
-		try {
-			EFactory.eAdd(element, theDiff.getReference().getName(), rightTarget);
-		} catch (FactoryException e) {
-			EMFComparePlugin.log(e, true);
-		}
+		final EObject leftTarget = theDiff.getLeftRemovedTarget();
+		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, leftTarget);
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {

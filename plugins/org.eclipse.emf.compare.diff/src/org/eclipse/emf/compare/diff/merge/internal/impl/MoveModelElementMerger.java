@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,11 +32,6 @@ public class MoveModelElementMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/*
-		 * FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
-		 * there's a good chance references (for a moved classifier) or attributes (for a moved datatype) are
-		 * lost. This needs to be double-checked.
-		 */
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject leftTarget = theDiff.getLeftTarget();
 		final EObject leftElement = theDiff.getLeftElement();
@@ -66,11 +61,6 @@ public class MoveModelElementMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/*
-		 * FIXME [bug #209521] since we're deleting the element from the model to re-add it afterwards,
-		 * there's a good chance references (for a moved classifier) or attributes (for a moved datatype) are
-		 * lost. This needs to be double-checked.
-		 */
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject rightTarget = theDiff.getRightTarget();
 		final EObject rightElement = theDiff.getRightElement();

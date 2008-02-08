@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,20 +43,14 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		/*
-		 * FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an EPackage
-		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
-		 * the two models.
-		 */
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
 		final EObject origin = theDiff.getLeftParent();
 		final EObject element = theDiff.getRightElement();
-		final EObject newOne = EcoreUtil.copy(element);
+		final EObject newOne = copy(element);
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
-				copyXMIID(element, newOne);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
@@ -85,11 +79,6 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		/*
-		 * FIXME [bug #209521] if we're merging a ModelElement using UnmatchedElements (suppose an EPackage
-		 * containing an EDatatype T and an EClass with an attribute of type T), hard-links are done between
-		 * the two models.
-		 */
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject parent = theDiff.getRightElement().eContainer();
