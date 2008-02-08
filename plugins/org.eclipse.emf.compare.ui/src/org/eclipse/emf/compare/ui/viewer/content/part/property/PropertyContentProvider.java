@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,8 +129,8 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput != null) {
-			if (viewer instanceof ModelContentMergePropertyPart) {
-				final ModelContentMergePropertyPart properties = (ModelContentMergePropertyPart)viewer;
+			if (viewer instanceof ModelContentMergePropertyTab) {
+				final ModelContentMergePropertyTab properties = (ModelContentMergePropertyTab)viewer;
 				properties.getTable().clearAll();
 				partSide = properties.getSide();
 			}

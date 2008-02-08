@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007, 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,9 @@ import org.eclipse.swt.graphics.Image;
 public class ModelCompareInput implements ICompareInput {
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
+	
+	/** Keeps a list of all the differences (without DiffGroup) detected. */
+	private final List<DiffElement> diffList = new ArrayList<DiffElement>();
 
 	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
 	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
@@ -109,7 +112,13 @@ public class ModelCompareInput implements ICompareInput {
 	 *            Direction of the copy.
 	 */
 	public void copy(List<DiffElement> elements, boolean leftToRight) {
-		doCopy(elements, leftToRight);
+		final List<DiffElement> diffs = new ArrayList<DiffElement>();
+		for (DiffElement aDiff : elements)
+			if (aDiff instanceof DiffGroup)
+				diffs.addAll(getContainedDifferences((DiffGroup)aDiff));
+			else
+				diffs.add(aDiff);
+		doCopy(diffs, leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -120,6 +129,8 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public ITypedElement getAncestor() {
 		ITypedElement element = null;
+		if (getMatch().getOriginModel() == null)
+			return element;
 
 		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match3Element)
 			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
@@ -153,30 +164,31 @@ public class ModelCompareInput implements ICompareInput {
 	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
 	public List<DiffElement> getDiffAsList() {
-		final List<DiffElement> diffList = new ArrayList<DiffElement>();
-		// ordering is needed in order to merge modelElement diffs before references change
-		// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
-		final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
-		final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
-		final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
-		for (final TreeIterator<EObject> iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
-			final DiffElement aDiff = (DiffElement)iterator.next();
-			if (aDiff instanceof ModelElementChange)
-				modelElementDiffs.add((ModelElementChange)aDiff);
-			else if (aDiff instanceof AttributeChange)
-				attributeChangeDiffs.add((AttributeChange)aDiff);
-			else if (aDiff instanceof ReferenceChange)
-				referenceChangeDiffs.add((ReferenceChange)aDiff);
-			// fallthrough
-			else if (!(aDiff instanceof DiffGroup))
-				diffList.add(aDiff);
+		if (diffList.size() == 0) {
+			// ordering is needed in order to merge modelElement diffs before references change
+			// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
+			final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
+			final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
+			final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
+			for (final TreeIterator<EObject> iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
+				final DiffElement aDiff = (DiffElement)iterator.next();
+				if (aDiff instanceof ModelElementChange)
+					modelElementDiffs.add((ModelElementChange)aDiff);
+				else if (aDiff instanceof AttributeChange)
+					attributeChangeDiffs.add((AttributeChange)aDiff);
+				else if (aDiff instanceof ReferenceChange)
+					referenceChangeDiffs.add((ReferenceChange)aDiff);
+				// fallthrough
+				else if (!(aDiff instanceof DiffGroup))
+					diffList.add(aDiff);
+			}
+			diffList.addAll(modelElementDiffs);
+			diffList.addAll(attributeChangeDiffs);
+			diffList.addAll(referenceChangeDiffs);
+			modelElementDiffs.clear();
+			attributeChangeDiffs.clear();
+			referenceChangeDiffs.clear();
 		}
-		diffList.addAll(modelElementDiffs);
-		diffList.addAll(attributeChangeDiffs);
-		diffList.addAll(referenceChangeDiffs);
-		modelElementDiffs.clear();
-		attributeChangeDiffs.clear();
-		referenceChangeDiffs.clear();
 
 		return diffList;
 	}
@@ -301,7 +313,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            <code>False</code> otherwise.
 	 */
 	protected void doCopy(DiffElement element, boolean leftToRight) {
-		new MergeService().merge(element, leftToRight);
+		MergeService.merge(element, leftToRight);
 	}
 
 	/**
@@ -315,7 +327,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            <code>False</code> otherwise.
 	 */
 	protected void doCopy(List<DiffElement> elements, boolean leftToRight) {
-		new MergeService().merge(elements, leftToRight);
+		MergeService.merge(elements, leftToRight);
 	}
 
 	/**
@@ -323,6 +335,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * {@link ModelCompareInput input} that a change occured.
 	 */
 	protected void fireCompareInputChanged() {
+		diffList.clear();
 		for (ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);
 		}
