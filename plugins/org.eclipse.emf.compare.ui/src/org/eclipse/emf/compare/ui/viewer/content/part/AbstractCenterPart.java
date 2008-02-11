@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.swt.SWT;
@@ -97,7 +98,9 @@ public abstract class AbstractCenterPart extends Canvas {
 			return;
 
 		final Rectangle drawingBounds = getBounds();
-		final RGB color = ModelContentMergeViewer.getColor(leftItem.getCurveColor());
+		RGB color = ModelContentMergeViewer.getColor(leftItem.getCurveColor());
+		if (rightItem.getCurveColor() != leftItem.getCurveColor() && rightItem.getCurveColor() != EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR)
+			color = ModelContentMergeViewer.getColor(rightItem.getCurveColor());
 
 		// Defines all variables needed for drawing the line.
 		final int treeTabBorder = 5;

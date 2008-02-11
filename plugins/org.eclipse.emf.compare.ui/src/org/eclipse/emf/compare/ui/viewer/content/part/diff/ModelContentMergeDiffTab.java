@@ -33,7 +33,6 @@ import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabItem;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -64,10 +63,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	protected final int partSide;
 
 	/** Maps DiffElements to the TreeItems' data. The key used is the URI of the data. */
-	private final Map<String, DiffElement> dataToDiff = new EMFCompareMap<String, DiffElement>();
+	private final Map<EObject, DiffElement> dataToDiff = new EMFCompareMap<EObject, DiffElement>();
 
 	/** Maps a TreeItem to its data. The key used is the URI of the data. */
-	private final Map<String, ModelContentMergeTabItem> dataToItem = new EMFCompareMap<String, ModelContentMergeTabItem>();
+	private final Map<DiffElement, ModelContentMergeTabItem> dataToItem = new EMFCompareMap<DiffElement, ModelContentMergeTabItem>();
 
 	/** Keeps a reference to the containing tab folder. */
 	private final ModelContentMergeTabFolder parent;
@@ -111,13 +110,13 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public ModelContentMergeTabItem getUIItem(EObject data) {
 		ModelContentMergeTabItem result = null;
 		// If the diff is hidden by another (diff extension), the item won't be returned
-		final DiffElement diff = dataToDiff.get(EcoreUtil.getURI(data).fragment());
+		final DiffElement diff = dataToDiff.get(data);
 		if (diff != null && DiffAdapterFactory.shouldBeHidden(diff))
 			return result;
 
-		final ModelContentMergeTabItem item = dataToItem.get(EcoreUtil.getURI(data).fragment());
+		final ModelContentMergeTabItem item = dataToItem.get(diff);
 
-		// perfect matches, we'll search the first visible element in its tree path
+		// This is a match, we'll search the first visible element in its tree path
 		final Item treeItem = getVisibleAncestorOf(item.getVisibleItem());
 		if (treeItem == item.getVisibleItem()) {
 			// This is actually a perfect match : the item is visible in the tree and it is the actual
@@ -173,9 +172,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			return result;
 		
 		final List<Item> visibleTreeItems = getVisibleTreeItems();
-		final Iterator<String> diffDatas = dataToItem.keySet().iterator();
-		while (diffDatas.hasNext()) {
-			final String data = diffDatas.next();
+		final Iterator<DiffElement> differences = dataToItem.keySet().iterator();
+		while (differences.hasNext()) {
+			final DiffElement data = differences.next();
 			final ModelContentMergeTabItem nextItem = dataToItem.get(data);
 			final ModelContentMergeTabItem nextVisibleItem = getUIItem((EObject)nextItem.getActualItem()
 					.getData());
@@ -385,7 +384,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				data = EMFCompareEObjectUtils.getLeftElement(diff);
 			else
 				data = EMFCompareEObjectUtils.getRightElement(diff);
-			dataToDiff.put(EcoreUtil.getURI(data).fragment(), diff);
+			dataToDiff.put(data, diff);
 		}
 	}
 
@@ -398,7 +397,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		dataToItem.clear();
 		final TreePath[] expandedState = getExpandedTreePaths();
 		expandAll();
-		for (String key : dataToDiff.keySet()) {
+		for (EObject key : dataToDiff.keySet()) {
 			final DiffElement diff = dataToDiff.get(key);
 			// Defines the TreeItem corresponding to this difference
 			final EObject data;
@@ -409,8 +408,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			else
 				data = EMFCompareEObjectUtils.getRightElement(diff);
 			final Item actualItem = (Item)findItem(data);
+			if (actualItem == null)
+				return;
+			
 			Item visibleItem = null;
-
 			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget) {
 				// in the case of a modelElementChangeRightTarget, we know we can't find
 				// the element itself, we'll then search for one with the same index
@@ -449,7 +450,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				wrappedItem = new ModelContentMergeTabItem(actualItem, visibleItem, color);
 			else
 				wrappedItem = new ModelContentMergeTabItem(actualItem, color);
-			dataToItem.put(EcoreUtil.getURI(data).fragment(), wrappedItem);
+			dataToItem.put(diff, wrappedItem);
 		}
 		setExpandedElements(expandedState);
 	}

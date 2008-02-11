@@ -202,9 +202,9 @@ public final class ModelContentMergeTabItem {
 	@Override
 	public String toString() {
 		String result = "actual item="; //$NON-NLS-1$
-		result += actualItem.toString();
+		result += actualItem;
 		result += "\tvisible item="; //$NON-NLS-1$
-		result += visibleItem.toString();
+		result += visibleItem;
 		result += "\t(curveColor="; //$NON-NLS-1$
 		result += curveColorID;
 		result += ", curveSize="; //$NON-NLS-1$
