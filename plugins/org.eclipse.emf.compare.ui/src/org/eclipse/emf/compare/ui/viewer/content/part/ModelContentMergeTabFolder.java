@@ -123,6 +123,17 @@ public class ModelContentMergeTabFolder {
 	}
 
 	/**
+	 * Disposes of all resources used by this folder.
+	 */
+	public void dispose() {
+		properties.dispose();
+		tree.dispose();
+		tabs.clear();
+		tabFolder.dispose();
+		editorPartListeners.clear();
+	}
+
+	/**
 	 * Returns a list of all diffs contained by the input DiffModel except for DiffGroups.
 	 * 
 	 * @return List of the DiffModel's differences.
@@ -224,7 +235,8 @@ public class ModelContentMergeTabFolder {
 		if (partSide == EMFCompareConstants.LEFT) {
 			target = EMFCompareEObjectUtils.getLeftElement(diffs.get(0));
 		} else if (partSide == EMFCompareConstants.RIGHT) {
-			if (diffs.get(0) instanceof DiffGroup && EMFCompareEObjectUtils.getLeftElement(diffs.get(0)) != null)
+			if (diffs.get(0) instanceof DiffGroup
+					&& EMFCompareEObjectUtils.getLeftElement(diffs.get(0)) != null)
 				target = EMFCompareEObjectUtils.getRightElement(findMatchFromElement(EMFCompareEObjectUtils
 						.getLeftElement(diffs.get(0))));
 			else if (!(diffs.get(0) instanceof DiffGroup))
@@ -244,6 +256,17 @@ public class ModelContentMergeTabFolder {
 		parentViewer.updateCenter();
 		// We'll assume the tree has been expanded or collapsed during the process
 		expanded = true;
+	}
+
+	/**
+	 * Removes the given listener from this folder's listeners list. This will have no effect if the listener
+	 * is not registered against this folder.
+	 * 
+	 * @param listener
+	 *            The listener to remove from this folder.
+	 */
+	public void removeCompareEditorPartListener(ICompareEditorPartListener listener) {
+		editorPartListeners.remove(listener);
 	}
 
 	/**
@@ -354,9 +377,9 @@ public class ModelContentMergeTabFolder {
 
 			if (object instanceof Match3Element) {
 				final Match3Element matchElement = (Match3Element)object;
-				if (matchElement.getLeftElement().equals(element)
-						|| matchElement.getRightElement().equals(element)
-						|| matchElement.getOriginElement().equals(element)) {
+				if (element.equals(matchElement.getLeftElement())
+						|| element.equals(matchElement.getRightElement())
+						|| element.equals(matchElement.getOriginElement())) {
 					theElement = matchElement;
 				}
 			} else if (object instanceof Match2Elements) {
@@ -457,8 +480,7 @@ public class ModelContentMergeTabFolder {
 	 * @return The tree part displayed by this viewer part's tree tab.
 	 */
 	private IModelContentMergeViewerTab createTreePart(Composite composite) {
-		final IModelContentMergeViewerTab treePart = new ModelContentMergeDiffTab(composite, partSide,
-				this);
+		final IModelContentMergeViewerTab treePart = new ModelContentMergeDiffTab(composite, partSide, this);
 
 		((Scrollable)treePart.getControl()).getVerticalBar().addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {

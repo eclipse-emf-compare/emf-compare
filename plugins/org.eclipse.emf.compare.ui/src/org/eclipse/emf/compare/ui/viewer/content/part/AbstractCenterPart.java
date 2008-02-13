@@ -82,6 +82,17 @@ public abstract class AbstractCenterPart extends Canvas {
 	 *            {@link GC} used for the painting.
 	 */
 	public abstract void doPaint(GC gc);
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
+	@Override
+	public void dispose() {
+		buffer.dispose();
+		baseCenterCurve = null;
+	}
 
 	/**
 	 * Draws a line connecting the given right and left items.

@@ -92,6 +92,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		setLabelProvider(new TreeLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
 		getTree().addPaintListener(new TreePaintListener());
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#dispose()
+	 */
+	public void dispose() {
+		dataToDiff.clear();
+		dataToItem.clear();
+		getTree().dispose();
+	}
 
 	/**
 	 * Returns a {@link List} of the selected elements.
@@ -535,8 +546,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 							.getCurveY());
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, item.getCurveY(), rectangleWidth, item
-							.getCurveY(), rectangleArcWidth, rectangleArcHeight);
+					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, rectangleArcWidth, rectangleArcHeight);
 				}
 			}
 		}

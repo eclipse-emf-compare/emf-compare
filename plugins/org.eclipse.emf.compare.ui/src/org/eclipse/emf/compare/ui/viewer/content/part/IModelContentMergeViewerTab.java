@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
 
 /**
- * Represents the tree view under a {@link ModelContentMergeTabFolder}'s diff tab.
+ * Represents a tab that will be placed in a {@link ModelContentMergeTabFolder}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
@@ -31,6 +31,11 @@ public interface IModelContentMergeViewerTab {
 	 *            Listener which to register on the Control.
 	 */
 	void addSelectionChangedListener(ISelectionChangedListener listener);
+	
+	/**
+	 * Disposes of all resources allocated this tab.
+	 */
+	void dispose();
 
 	/**
 	 * Returns the Control displayed by the tab.

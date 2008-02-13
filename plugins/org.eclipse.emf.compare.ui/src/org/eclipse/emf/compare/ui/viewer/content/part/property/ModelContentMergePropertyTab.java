@@ -110,6 +110,17 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 
 		mapDifferences();
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#dispose()
+	 */
+	public void dispose() {
+		dataToItem.clear();
+		differences.clear();
+		getTable().dispose();
+	}
 
 	/**
 	 * Returns the widget representing the given {@link DiffElement} in the table.

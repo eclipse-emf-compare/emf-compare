@@ -212,34 +212,23 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			final Date start = Calendar.getInstance().getTime();
 			snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			
-			if (!isThreeWay) {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final Map<String, Object> options = new EMFCompareMap<String, Object>();
-						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource, options);
-						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
-						
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
-					}
-				});
-			} else {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final Map<String, Object> options = new EMFCompareMap<String, Object>();
-						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
-								options);
-						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InterruptedException {
+					final Map<String, Object> options = new EMFCompareMap<String, Object>();
+					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+					final MatchModel match;
+					if (!isThreeWay)
+						match = MatchService.doResourceMatch(leftResource, rightResource, options);
+					else
+						match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource, options);
+					final DiffModel diff = DiffService.doDiff(match, isThreeWay);
+					
+					snapshot.setDate(Calendar.getInstance().getTime());
+					snapshot.setDiff(diff);
+					snapshot.setMatch(match);
+				}
+			});
 
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
-					}
-				});
-			}
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());

@@ -174,6 +174,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * this model.
 	 */
 	private boolean leftDirty;
+	
+	/** This listener will be registered for notifications against all tab folders. */
+	private EditorPartListener partListener;
 
 	/**
 	 * This will listen for changes made on this plug-in's {@link PreferenceStore} to update the GUI colors as
@@ -272,7 +275,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				public void doPaint(GC gc) {
 					if (!ModelContentMergeViewer.shouldDrawDiffMarkers() || getInput() == null)
 						return;
-					final List<DiffElement> diffList = new ArrayList<DiffElement>(((ModelCompareInput)getInput()).getDiffAsList());
+					final List<DiffElement> diffList = new ArrayList<DiffElement>(
+							((ModelCompareInput)getInput()).getDiffAsList());
 					final List<ModelContentMergeTabItem> leftVisible = leftPart.getVisibleElements();
 					final List<ModelContentMergeTabItem> rightVisible = rightPart.getVisibleElements();
 					diffList.removeAll(currentSelection);
@@ -281,7 +285,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					// we don't clear selection when the last diff is merged so this could happen
 					if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null)
 						visibleDiffs.addAll(currentSelection);
-					diffList.clear();
 					for (final DiffElement diff : visibleDiffs) {
 						if (!(diff instanceof DiffGroup)) {
 							final ModelContentMergeTabItem leftUIItem = leftPart.getUIItem(diff);
@@ -413,31 +416,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Copies a single {@link DiffElement} or a {@link DiffGroup} in the given direction, then updates the
-	 * toolbar items states as well as the dirty state of both the left and the right models.
-	 * 
-	 * @param diff
-	 *            {@link DiffElement Element} to copy.
-	 * @param leftToRight
-	 *            Direction of the copy.
-	 * @see ModelCompareInput#copy(DiffElement, boolean)
-	 */
-	protected void copy(DiffElement diff, boolean leftToRight) {
-		if (diff != null) {
-			((ModelCompareInput)getInput()).copy(diff, leftToRight);
-			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
-			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
-			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
-			leftDirty = leftDirty || (leftToRight && configuration.isLeftEditable());
-			rightDirty = rightDirty || (!leftToRight && configuration.isRightEditable());
-			setRightDirty(leftDirty);
-			setLeftDirty(rightDirty);
-			update();
-		}
-	}
-
-	/**
 	 * Copies a list of {@link DiffElement}s or {@link DiffGroup}s in the given direction, then updates the
 	 * toolbar items states as well as the dirty state of both the left and the right models.
 	 * 
@@ -493,7 +471,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		rightPart = new ModelContentMergeTabFolder(this, composite, EMFCompareConstants.RIGHT);
 		ancestorPart = new ModelContentMergeTabFolder(this, composite, EMFCompareConstants.ANCESTOR);
 
-		final EditorPartListener partListener = new EditorPartListener(leftPart, rightPart, ancestorPart);
+		partListener = new EditorPartListener(leftPart, rightPart, ancestorPart);
 		leftPart.addCompareEditorPartListener(partListener);
 		rightPart.addCompareEditorPartListener(partListener);
 		ancestorPart.addCompareEditorPartListener(partListener);
@@ -569,39 +547,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final Date start = Calendar.getInstance().getTime();
 			final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 
-			if (!isThreeWay) {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final Map<String, Object> options = new EMFCompareMap<String, Object>();
-						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-						final MatchModel match = MatchService.doResourceMatch(leftResource, rightResource,
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InterruptedException {
+					final Map<String, Object> options = new EMFCompareMap<String, Object>();
+					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+					final MatchModel match;
+					if (!isThreeWay)
+						match = MatchService.doResourceMatch(leftResource, rightResource, options);
+					else
+						match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
 								options);
-						final DiffModel diff = DiffService.doDiff(match, isThreeWay);
+					final DiffModel diff = DiffService.doDiff(match, isThreeWay);
 
-						snapshot.setDate(Calendar.getInstance().getTime());
-						snapshot.setDiff(diff);
-						snapshot.setMatch(match);
-					}
-				});
-			} else {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InterruptedException {
-						try {
-							final Map<String, Object> options = new EMFCompareMap<String, Object>();
-							options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-							final MatchModel match = MatchService.doResourceMatch(leftResource,
-									rightResource, ancestorResource, options);
-							final DiffModel diff = DiffService.doDiff(match, isThreeWay);
+					snapshot.setDate(Calendar.getInstance().getTime());
+					snapshot.setDiff(diff);
+					snapshot.setMatch(match);
+				}
+			});
 
-							snapshot.setDate(Calendar.getInstance().getTime());
-							snapshot.setDiff(diff);
-							snapshot.setMatch(match);
-						} finally {
-							monitor.done();
-						}
-					}
-				});
-			}
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
@@ -679,10 +642,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super.handleDispose(event);
 		configuration.removePropertyChangeListener(structureSelectionListener);
 		EMFCompareUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
+		leftPart.removeCompareEditorPartListener(partListener);
+		leftPart.dispose();
 		leftPart = null;
+		leftResource.unload();
+		leftResource = null;
+		rightPart.removeCompareEditorPartListener(partListener);
+		rightPart.dispose();
 		rightPart = null;
+		rightResource.unload();
+		rightResource = null;
+		ancestorPart.removeCompareEditorPartListener(partListener);
+		ancestorPart.dispose();
 		ancestorPart = null;
+		ancestorResource.unload();
+		ancestorResource = null;
+		canvas.dispose();
 		canvas = null;
+		currentSelection.clear();
 	}
 
 	/**

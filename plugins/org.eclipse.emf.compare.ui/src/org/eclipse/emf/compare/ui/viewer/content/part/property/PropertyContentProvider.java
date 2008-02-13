@@ -54,7 +54,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
 	public void dispose() {
-		// Nothing needs to be disposed.
+		// Nothing needs to be disposed of here.
 	}
 
 	/**
