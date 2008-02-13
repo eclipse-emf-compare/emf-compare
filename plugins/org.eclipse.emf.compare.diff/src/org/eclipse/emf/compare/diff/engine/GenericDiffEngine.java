@@ -286,6 +286,23 @@ public class GenericDiffEngine implements IDiffEngine {
 		checkReferencesUpdates(current, match);
 		checkMoves(current, match);
 	}
+	
+	/**
+	 * This will call all the different checks we need to call for when computing the diff. Clients can
+	 * override this to alter the checks or add others.
+	 * 
+	 * @param current
+	 *            current {@link DiffGroup} under which the new differences will be added.
+	 * @param match
+	 *            This contains the mapping information about the elements we need to check for a move.
+	 * @throws FactoryException
+	 *             Thrown if one of the checks fails somehow.
+	 */
+	protected void checkForDiffs(DiffGroup current, Match3Element match) throws FactoryException {
+		checkAttributesUpdates(current, match);
+		checkReferencesUpdates(current, match);
+		checkMoves(current, match);
+	}
 
 	/**
 	 * This will check if the elements matched by a given {@link Match2Elements} have been moved..
@@ -1416,7 +1433,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
 	 * @param match
-	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
+	 *            {@link Match2Elements root} of the {@link MatchModel} to analyze.
 	 */
 	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
 		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
@@ -1448,6 +1465,51 @@ public class GenericDiffEngine implements IDiffEngine {
 		while (it.hasNext()) {
 			final Match2Elements element = (Match2Elements)it.next();
 			doDiffDelegate(root, element);
+		}
+	}
+	
+	/**
+	 * This is the core of the diff computing for three way comparison. This will call for checks on attributes,
+	 * references and model elements to check for updates/changes.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffModel} to create.
+	 * @param match
+	 *            {@link Match3Element root} of the {@link MatchModel} to analyze.
+	 */
+	private void doDiffDelegate(DiffGroup root, Match3Element match) {
+		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
+		current.setLeftParent(match.getLeftElement());
+		try {
+			checkForDiffs(current, match);
+		} catch (FactoryException e) {
+			EMFComparePlugin.log(e, false);
+		}
+		// we need to build this list to avoid concurrent modifications
+		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
+		// we really have changes
+		if (current.getSubDiffElements().size() > 0) {
+			final Iterator<DiffElement> it2 = current.getSubDiffElements().iterator();
+			while (it2.hasNext()) {
+				final DiffElement diff = it2.next();
+				if (!(diff instanceof DiffGroup)) {
+					shouldAddToList.add(diff);
+				}
+			}
+			for (DiffElement diff : shouldAddToList) {
+				addInContainerPackage(root, diff, current.getLeftParent());
+			}
+		} else {
+			current = root;
+		}
+		// taking care of our childs
+		final Iterator<MatchElement> it = match.getSubMatchElements().iterator();
+		while (it.hasNext()) {
+			final MatchElement element = it.next();
+			if (element instanceof Match3Element)
+				doDiffDelegate(root, (Match3Element)element);
+			else
+				doDiffDelegate(root, (Match2Elements)element);
 		}
 	}
 

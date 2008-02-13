@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.diff.merge.api.EMFCompareEObjectCopier;
 import org.eclipse.emf.compare.diff.merge.api.IMergeListener;
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.merge.api.MergeEvent;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -133,7 +134,11 @@ public final class MergeService {
 	 */
 	protected static void doMerge(DiffElement element, boolean leftToRight) {
 		fireMergeDiffStart(element);
-		final IMerger merger = MergeFactory.createMerger(element);
+		final IMerger merger;
+		if (element instanceof ConflictingDiffElement)
+			merger = MergeFactory.createMerger(element.getSubDiffElements().get(0));
+		else
+			merger = MergeFactory.createMerger(element);
 		if (leftToRight && merger.canUndoInTarget()) {
 			merger.undoInTarget();
 		} else if (!leftToRight && merger.canApplyInOrigin()) {
