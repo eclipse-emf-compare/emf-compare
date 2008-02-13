@@ -313,13 +313,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		Item result = item;
 		final TreePath path = getTreePathFromItem(item);
 		if (path.getSegmentCount() > 1) {
-			for (int i = path.getSegmentCount() - 2; i >= 0; i--) {
-				if (((TreeItem)findItem(path.getSegment(i))).getExpanded()) {
-					result = (TreeItem)findItem(path.getSegment(i + 1));
+			for (int i = 0; i < path.getSegmentCount(); i++) {
+				final TreeItem ancestor = (TreeItem)findItem(path.getSegment(i));
+				if (!ancestor.getExpanded()) {
+					result = ancestor;
 					break;
 				}
-				if (i == 0)
-					result = (TreeItem)findItem(path.getSegment(0));
 			}
 		}
 		return result;

@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Widget;
 
 /**
  * Represents the property view under a {@link ModelContentMergeTabFolder}'s property tab.
@@ -143,9 +144,11 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 		final Control control = getControl();
 		if (control != null && !control.isDisposed()) {
 			final List<?> list = getSelectionFromWidget();
-			for (Object o : list)
-				if (o instanceof TableItem)
-					result.add((TableItem)o);
+			for (Object o : list) {
+				final Widget w = findItem(o);
+				if (w instanceof TableItem)
+					result.add((TableItem)w);
+			}
 		}
 		return result;
 	}
@@ -250,6 +253,18 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	public void redraw() {
 		getTable().redraw();
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.jface.viewers.ColumnViewer#refresh(java.lang.Object, boolean)
+	 */
+	@Override
+	public void refresh(Object element, boolean updateLabels) {
+		super.refresh(element, updateLabels);
+		mapDifferences();
+		mapTableItems();
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -258,6 +273,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 */
 	public void setReflectiveInput(EObject input) {
 		setInput(input);
+		mapDifferences();
 		mapTableItems();
 	}
 
@@ -326,6 +342,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * Maps the input's differences if any.
 	 */
 	private void mapDifferences() {
+		differences.clear();
 		final Iterator<DiffElement> diffIterator = parent.getDiffAsList().iterator();
 		while (diffIterator.hasNext()) {
 			final DiffElement diff = diffIterator.next();
@@ -341,6 +358,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * for all.
 	 */
 	private void mapTableItems() {
+		dataToItem.clear();
 		for (int i = 0; i < differences.size(); i++) {
 			final DiffElement diff = differences.get(i);
 			// Defines the TableItem corresponding to this difference

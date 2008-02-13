@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
@@ -177,7 +178,7 @@ public class ModelContentMergeTabFolder {
 		ModelContentMergeTabItem result = null;
 		if (data != null)
 			result = tabs.get(tabFolder.getSelectionIndex()).getUIItem(data);
-		else if (featureData != null)
+		if (result == null && featureData != null)
 			result = tabs.get(tabFolder.getSelectionIndex()).getUIItem(featureData);
 		return result;
 	}
@@ -229,10 +230,11 @@ public class ModelContentMergeTabFolder {
 			else if (!(diffs.get(0) instanceof DiffGroup))
 				target = EMFCompareEObjectUtils.getRightElement(diffs.get(0));
 			else
-				// case of the very first diff.
+				// fall through.
 				return;
 		} else
-			target = EMFCompareEObjectUtils.getAncestorElement(diffs.get(0).eContainer());
+			target = EMFCompareEObjectUtils.getAncestorElement(findMatchFromElement(EMFCompareEObjectUtils
+					.getLeftElement(diffs.get(0))));
 
 		tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
 		properties.setReflectiveInput(findMatchFromElement(target));
@@ -350,7 +352,14 @@ public class ModelContentMergeTabFolder {
 		for (final TreeIterator<EObject> iterator = match.eAllContents(); iterator.hasNext(); ) {
 			final Object object = iterator.next();
 
-			if (object instanceof Match2Elements) {
+			if (object instanceof Match3Element) {
+				final Match3Element matchElement = (Match3Element)object;
+				if (matchElement.getLeftElement().equals(element)
+						|| matchElement.getRightElement().equals(element)
+						|| matchElement.getOriginElement().equals(element)) {
+					theElement = matchElement;
+				}
+			} else if (object instanceof Match2Elements) {
 				final Match2Elements matchElement = (Match2Elements)object;
 				if (matchElement.getLeftElement().equals(element)
 						|| matchElement.getRightElement().equals(element)) {

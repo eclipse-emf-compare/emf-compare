@@ -106,8 +106,15 @@ public abstract class AbstractCenterPart extends Canvas {
 		final int treeTabBorder = 5;
 		final int leftX = 0;
 		final int rightX = drawingBounds.width;
-		final int leftY = leftItem.getCurveY() + leftItem.getHeaderHeight() + treeTabBorder;
-		final int rightY = rightItem.getCurveY() + rightItem.getHeaderHeight() + treeTabBorder;
+		final int leftY;
+		final int rightY;
+		if (System.getProperty("os.name").contains("Windows")) { //$NON-NLS-1$ //$NON-NLS-2$
+			leftY = leftItem.getCurveY() + treeTabBorder;
+			rightY = rightItem.getCurveY() + treeTabBorder;
+		} else {
+			leftY = leftItem.getCurveY() + leftItem.getHeaderHeight() + treeTabBorder;
+			rightY = rightItem.getCurveY() + rightItem.getHeaderHeight() + treeTabBorder;
+		}
 		final int lineWidth = leftItem.getCurveSize();
 
 		// Performs the actual drawing

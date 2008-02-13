@@ -34,7 +34,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -314,6 +313,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	public void setInput(Object input) {
 		// We won't compare again if the given input is the same as the last.
 		boolean changed = false;
+		if (input instanceof ICompareInput && ((ICompareInput)input).getAncestor() != null)
+			isThreeWay = true;
 		if (input instanceof ICompareInput && ((ICompareInput)input).getRight() instanceof HistoryItem) {
 			changed = lastHistoryItemDate != ((HistoryItem)((ICompareInput)input).getRight())
 					.getModificationDate();
@@ -366,7 +367,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				leftPart.navigateToDiff(diffs);
 			if (rightPart != null)
 				rightPart.navigateToDiff(diffs);
-			if (isThreeWay && diffs.get(0).eContainer() instanceof ConflictingDiffElement)
+			if (isThreeWay)
 				ancestorPart.navigateToDiff(diffs.get(0));
 			switchCopyState(true);
 		}
