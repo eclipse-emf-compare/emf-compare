@@ -528,6 +528,10 @@ public class GenericMatchEngine implements IMatchEngine {
 		// must be the same instance
 		if (matched != null)
 			result = matched != right;
+		else
+			// we didn't match a single element with this ID.
+			// This could be because no IDs are defined.
+			result = EcoreUtil.getID(left) != null;
 		return result;
 	}
 
@@ -553,6 +557,10 @@ public class GenericMatchEngine implements IMatchEngine {
 		// must be the same instance
 		if (matched != null)
 			result = matched != right;
+		else
+			// we didn't match a single element with this ID.
+			// This could be because no IDs are defined.
+			result = left.eResource() instanceof XMIResource && ((XMIResource)left.eResource()).getID(left) != null;
 		return result;
 	}
 
