@@ -142,6 +142,16 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		return result;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#reset()
+	 */
+	public void reset() {
+	    unMatchedElements.clear();
+	    eObjectToMatch.clear();
+	}
 
 	/**
 	 * Looks for an already created {@link DiffGroup diff group} in order to add the operation, if none
