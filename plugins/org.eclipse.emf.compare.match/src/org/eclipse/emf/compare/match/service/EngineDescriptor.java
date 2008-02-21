@@ -115,6 +115,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 				EMFComparePlugin.log(e, false);
 			}
 		}
+		engine.reset();
 		return engine;
 	}
 
