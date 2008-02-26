@@ -1244,7 +1244,7 @@ public class GenericMatchEngine implements IMatchEngine {
                 if (obj2 != null) {
                     // checks if the most similar to obj2 is obj1
                     final EObject obj1Check = findMostSimilar(obj2, notFoundList1);
-                    if (obj1Check != obj1 && isSimilar(obj1Check, obj2)) {
+                    if (obj1Check != obj1 && obj1Check != null && isSimilar(obj1Check, obj2)) {
                         continue;
                     }
                 }
