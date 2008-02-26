@@ -65,6 +65,15 @@ public class GenericHighestEngine implements IMatchEngine {
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
 		return null;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#reset()
+	 */
+	public void reset() {
+		// no reset needed here
+	}
 
 	/**
 	 * {@inheritDoc}
