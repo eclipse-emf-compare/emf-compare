@@ -403,6 +403,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void copy(boolean leftToRight) {
+		// Avoids warnings "resource has changed ..."
+		setRightDirty(false);
+		setLeftDirty(false);
+		
 		((ModelCompareInput)getInput()).copy(leftToRight);
 		final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
 		snap.setDiff(((ModelCompareInput)getInput()).getDiff());
@@ -427,6 +431,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	protected void copy(List<DiffElement> diffs, boolean leftToRight) {
 		if (diffs.size() > 0) {
+			// Avoids warnings "resource has changed ..."
+			setRightDirty(false);
+			setLeftDirty(false);
+			
 			((ModelCompareInput)getInput()).copy(diffs, leftToRight);
 			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			snap.setDiff(((ModelCompareInput)getInput()).getDiff());

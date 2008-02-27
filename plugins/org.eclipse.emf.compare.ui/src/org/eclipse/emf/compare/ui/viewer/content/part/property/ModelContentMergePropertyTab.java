@@ -384,10 +384,6 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 				// and now the color which should be used for this kind of differences
 				final String color = EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR;
 
-				// properties that present differences should be highlighted
-				item.setBackground(new Color(getControl().getDisplay(), ModelContentMergeViewer
-						.getColor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
-
 				final ModelContentMergeTabItem wrappedItem = new ModelContentMergeTabItem(item, color);
 				String key = new String();
 				if (partSide == EMFCompareConstants.LEFT)
@@ -431,6 +427,10 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 		 */
 		private void drawLine(PaintEvent event, ModelContentMergeTabItem item) {
 			final Rectangle tableBounds = getTable().getBounds();
+			
+			// properties that present differences should be highlighted
+			((TableItem)item.getActualItem()).setBackground(new Color(getControl().getDisplay(), ModelContentMergeViewer
+					.getColor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
 
 			event.gc.setLineWidth(2);
 			event.gc.setForeground(new Color(item.getActualItem().getDisplay(), ModelContentMergeViewer
