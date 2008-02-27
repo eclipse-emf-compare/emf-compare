@@ -272,13 +272,24 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left).getResource().getFullPath().toOSString(), true));
 				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
 						modelResourceSet).eResource();
-				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$)
+				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
 				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
 				configuration.setLeftEditable(false);
 				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
 				if (isThreeWay)
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), modelResourceSet).eResource();
+			} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
+			    // This can happen with some SVN plug-ins
+			    rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(), modelResourceSet).eResource();
+			    leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(), modelResourceSet).eResource();
+			    configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
+                configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
+                configuration.setLeftEditable(false);
+                configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
+                if (isThreeWay)
+                    ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+                            ancestor.getName(), modelResourceSet).eResource();
 			}
 		} catch (IOException e) {
 			throw new EMFCompareException(e);
