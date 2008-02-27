@@ -18,7 +18,7 @@
             extensions="*"
             id="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer"/>
       <contentTypeBinding
-            contentTypeId="org.eclipse.emf.ecore"
+            contentTypeId="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
             structureMergeViewerId="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer">
       </contentTypeBinding>
    </extension>
