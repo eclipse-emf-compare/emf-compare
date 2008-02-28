@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -127,23 +125,13 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * right model.
 	 */
 	private final List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
-
+	
 	/**
-	 * This initializer allows us to place a listener on the core preferences store.
-	 * <p>
-	 * This listener will be used to keep the search window and ignore XMI ID boolean up-to-date with user
-	 * modifications.
-	 * </p>
+	 * This initializer will set default options when running out of eclipse.
 	 */
 	{
-		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null) {
-			EMFComparePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(
-					new IPropertyChangeListener() {
-						public void propertyChange(PropertyChangeEvent event) {
-							options.putAll(GenericMatchEngine.this.loadPreferenceOptionMap());
-						}
-					});
-		}
+		if (!EMFPlugin.IS_ECLIPSE_RUNNING)
+			options.putAll(loadPreferenceOptionMap());
 	}
 
 	/**
@@ -930,6 +918,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		// navigate through both models at the same time and realize mappings..
 		try {
+			System.out.println(options.get(MatchOptions.OPTION_IGNORE_XMI_ID));
 			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID))
 				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource)
 					matchByXMIID((XMIResource)leftResource, (XMIResource)rightResource);
