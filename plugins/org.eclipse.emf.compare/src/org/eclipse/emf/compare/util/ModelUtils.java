@@ -236,22 +236,24 @@ public final class ModelUtils {
 		EObject result = null;
 
 		final Map<String, String> options = new HashMap<String, String>();
-        options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
-        // First tries to load the IFile assuming it is in the workspace
-        Resource modelResource = createResource(URI.createPlatformResourceURI(file.getFullPath().toOSString(), true), resourceSet);
-        try {
-            modelResource.load(options);
-        } catch (IOException e) {
-            // If it failed, load the file assuming it is in the plugins
-            resourceSet.getResources().remove(modelResource);
-            modelResource = createResource(URI.createPlatformPluginURI(file.getFullPath().toOSString(), true), resourceSet);
-            try {
-                modelResource.load(options);
-            } catch (IOException ee) {
-                // If it fails anew, throws the first IOException
-                throw e;
-            }
-        }
+		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
+		// First tries to load the IFile assuming it is in the workspace
+		Resource modelResource = createResource(URI.createPlatformResourceURI(
+				file.getFullPath().toOSString(), true), resourceSet);
+		try {
+			modelResource.load(options);
+		} catch (IOException e) {
+			// If it failed, load the file assuming it is in the plugins
+			resourceSet.getResources().remove(modelResource);
+			modelResource = createResource(
+					URI.createPlatformPluginURI(file.getFullPath().toOSString(), true), resourceSet);
+			try {
+				modelResource.load(options);
+			} catch (IOException ee) {
+				// If it fails anew, throws the first IOException
+				throw e;
+			}
+		}
 		// Returns the first root of the loaded model
 		if (modelResource.getContents().size() > 0)
 			result = modelResource.getContents().get(0);
