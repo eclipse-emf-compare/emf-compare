@@ -14,8 +14,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.core.util.TestAdapterUtils;
-import org.eclipse.emf.compare.tests.unit.core.util.TestClassUtils;
+import org.eclipse.emf.compare.tests.unit.core.util.AdapterUtilsTest;
+import org.eclipse.emf.compare.tests.unit.core.util.ClassUtilsTest;
 import org.eclipse.emf.compare.tests.unit.core.util.efactory.EFactoryTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap.EMFCompareMapTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.modelutils.ModelUtilsTestSuite;
@@ -52,14 +52,14 @@ public final class CoreTestSuite {
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the core plugin.");
 		// package org.eclipse.emf.compare
-		suite.addTestSuite(TestEMFComparePlugin.class);
-		suite.addTestSuite(TestMessages.class);
+		suite.addTestSuite(EMFComparePluginTest.class);
+		suite.addTestSuite(MessagesTest.class);
 		// package org.eclipse.emf.compare.util
 		suite.addTest(EFactoryTestSuite.suite());
 		suite.addTest(EMFCompareMapTestSuite.suite());
 		suite.addTest(ModelUtilsTestSuite.suite());
-		suite.addTestSuite(TestAdapterUtils.class);
-		suite.addTestSuite(TestClassUtils.class);
+		suite.addTestSuite(AdapterUtilsTest.class);
+		suite.addTestSuite(ClassUtilsTest.class);
 		return suite;
 	}
 }

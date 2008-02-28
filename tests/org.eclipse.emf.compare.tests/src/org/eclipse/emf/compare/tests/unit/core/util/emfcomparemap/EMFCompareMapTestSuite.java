@@ -39,16 +39,16 @@ public class EMFCompareMapTestSuite extends TestCase {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the EMFCompareMap behavior");
-		suite.addTestSuite(TestConstructors.class);
-		suite.addTestSuite(TestContainsKeyValue.class);
-		suite.addTestSuite(TestEntrySet.class);
-		suite.addTestSuite(TestEquals.class);
-		suite.addTestSuite(TestGetPut.class);
-		suite.addTestSuite(TestKeySet.class);
-		suite.addTestSuite(TestMethods.class);
-		suite.addTestSuite(TestPutAll.class);
-		suite.addTestSuite(TestRemove.class);
-		suite.addTestSuite(TestValues.class);
+		suite.addTestSuite(ConstructorsTest.class);
+		suite.addTestSuite(ContainsKeyValueTest.class);
+		suite.addTestSuite(EntrySetTest.class);
+		suite.addTestSuite(EqualsTest.class);
+		suite.addTestSuite(GetPutTest.class);
+		suite.addTestSuite(KeySetTest.class);
+		suite.addTestSuite(MethodsTest.class);
+		suite.addTestSuite(PutAllTest.class);
+		suite.addTestSuite(RemoveTest.class);
+		suite.addTestSuite(ValuesTest.class);
 		return suite;
 	}
 }

@@ -8,26 +8,20 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.match;
+package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.match.engine.EngineTestSuite;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.NameSimilarityTest;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity.StructureSimilarityTestSuite;
-
 /**
- * Tests for the match plugin.
+ * Launches all the JUnit tests for the {@link DifferencesService}.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
-public class MatchTestSuite extends TestCase {
-	/** Minimal -Xmx setting to run comparison tests. Set to 500m. */
-	private static final long MIN_XMX_SETTING = 500000000;
-	
+@SuppressWarnings("nls")
+public class EngineTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
@@ -41,16 +35,13 @@ public class MatchTestSuite extends TestCase {
 	/**
 	 * Creates the {@link junit.framework.TestSuite TestSuite} for all the test.
 	 * 
-	 * @return The testsuite containing all the tests
+	 * @return The test suite containing all the tests
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
-		suite.addTestSuite(EnginesPriorityTest.class);
-		suite.addTestSuite(NameSimilarityTest.class);
-		suite.addTest(StructureSimilarityTestSuite.suite());
-		// These tests are too long/costly to be run with too low memory
-		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING)
-			suite.addTest(EngineTestSuite.suite());
+		final TestSuite suite = new TestSuite("Tests for the DifferencesService behavior");
+		suite.addTestSuite(ThreeWayModelMatchTest.class);
+		suite.addTestSuite(TwoWayModelMatchTest.class);
+		suite.addTestSuite(TwoWayContentMatchTest.class);
 		return suite;
 	}
 }

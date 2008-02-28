@@ -39,11 +39,11 @@ public class EFactoryTestSuite extends TestCase {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the EFactory behavior");
-		suite.addTestSuite(TestEAdd.class);
-		suite.addTestSuite(TestEGet.class);
-		suite.addTestSuite(TestEGetAsList.class);
-		suite.addTestSuite(TestERemove.class);
-		suite.addTestSuite(TestESet.class);
+		suite.addTestSuite(EAddTest.class);
+		suite.addTestSuite(EGetTest.class);
+		suite.addTestSuite(EGetAsListTest.class);
+		suite.addTestSuite(ERemoveTest.class);
+		suite.addTestSuite(ESetTest.class);
 		return suite;
 	}
 }

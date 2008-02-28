@@ -39,10 +39,10 @@ public class StructureSimilarityTestSuite extends TestCase {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the StructureSimilarity behavior");
-		suite.addTestSuite(TestRelationsSimilarityDistinct.class);
-		suite.addTestSuite(TestRelationsSimilarityBehavior.class);
-		suite.addTestSuite(TestRelationsSimilaritySimilar.class);
-		suite.addTestSuite(TestTypeSimilarityBehavior.class);
+		suite.addTestSuite(RelationsSimilarityDistinctTest.class);
+		suite.addTestSuite(RelationsSimilarityBehaviorTest.class);
+		suite.addTestSuite(RelationsSimilaritySimilarTest.class);
+		suite.addTestSuite(TypeSimilarityBehaviorTest.class);
 		return suite;
 	}
 }
