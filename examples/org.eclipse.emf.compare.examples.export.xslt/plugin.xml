@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension
+        point="org.eclipse.emf.compare.ui.export">
+     <action
+           class="org.eclipse.emf.compare.examples.export.xslt.action.ExportAsHTMLAction"
+           fileExtension="*"
+           id="org.eclipse.emf.compare.examples.export.xslt.exportashtml">
+     </action>
+  </extension>
+</plugin>
