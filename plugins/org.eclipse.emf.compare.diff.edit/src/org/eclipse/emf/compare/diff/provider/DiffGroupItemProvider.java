@@ -117,11 +117,11 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 		if (group.getLeftParent() != null) {
 			try {
 				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
-						group.getLeftParent().eClass().getName() + " ", //$NON-NLS-1$
+						group.getLeftParent().eClass().getName(),
 						NameSimilarity.findName(group.getLeftParent())});
 			} catch (FactoryException e) {
 				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
-						group.getLeftParent().eClass().getName(), " model"}); //$NON-NLS-1$
+						group.getLeftParent().eClass().getName(), "model"}); //$NON-NLS-1$
 			}
 		}
 		return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "", " model"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
