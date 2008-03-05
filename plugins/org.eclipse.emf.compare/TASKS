@@ -32,7 +32,7 @@ ___ DONE ___
 	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeViewerPart => org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart
 	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeTreePart => org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart
 	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergePropertyPart => org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart
-14/08/2007 - using functionnal ID through Ecore ID
+14/08/2007 - using functional ID through Ecore ID
 14/08/2007 - diff extension API
 14/08/2007 - export diff as API
 30/07/2007 - (DRAFT) - export diff as... extension point

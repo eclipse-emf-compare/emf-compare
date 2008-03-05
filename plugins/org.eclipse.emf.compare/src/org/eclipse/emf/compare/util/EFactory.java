@@ -49,7 +49,7 @@ public final class EFactory {
 	 * @param arg
 	 *            New value to add to the feature values.
 	 * @param <T>
-	 * 			  Type of the new value to be added to the list.
+	 *            Type of the new value to be added to the list.
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
 	 */

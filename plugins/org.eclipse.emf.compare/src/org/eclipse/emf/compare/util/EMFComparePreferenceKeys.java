@@ -21,7 +21,7 @@ public interface EMFComparePreferenceKeys {
 
 	/** Preferences key for the boolean indicating that the comparison should ignore XMI IDs. */
 	String PREFERENCES_KEY_IGNORE_XMIID = "emfcompare.ignore.XMI.ID"; //$NON-NLS-1$
-	
+
 	/** Preferences key for the siblings search window. */
 	String PREFERENCES_KEY_SEARCH_WINDOW = "emfcompare.search.window"; //$NON-NLS-1$
 }
