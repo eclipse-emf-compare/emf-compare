@@ -19,6 +19,9 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
+import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.ContainmentUpdatingFeatureMapEntry;
+import org.eclipse.emf.edit.provider.DelegatingWrapperItemProvider;
+import org.eclipse.emf.edit.provider.FeatureMapEntryWrapperItemProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -76,16 +79,8 @@ public abstract class AbstractCenterPart extends Canvas {
 	}
 
 	/**
-	 * Clients should implement this method for the actual drawing.
-	 * 
-	 * @param gc
-	 *            {@link GC} used for the painting.
-	 */
-	public abstract void doPaint(GC gc);
-	
-	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
 	@Override
@@ -93,6 +88,14 @@ public abstract class AbstractCenterPart extends Canvas {
 		buffer.dispose();
 		baseCenterCurve = null;
 	}
+
+	/**
+	 * Clients should implement this method for the actual drawing.
+	 * 
+	 * @param gc
+	 *            {@link GC} used for the painting.
+	 */
+	public abstract void doPaint(GC gc);
 
 	/**
 	 * Draws a line connecting the given right and left items.
@@ -110,7 +113,8 @@ public abstract class AbstractCenterPart extends Canvas {
 
 		final Rectangle drawingBounds = getBounds();
 		RGB color = ModelContentMergeViewer.getColor(leftItem.getCurveColor());
-		if (rightItem.getCurveColor() != leftItem.getCurveColor() && rightItem.getCurveColor() != EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR)
+		if (rightItem.getCurveColor() != leftItem.getCurveColor()
+				&& rightItem.getCurveColor() != EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR)
 			color = ModelContentMergeViewer.getColor(rightItem.getCurveColor());
 
 		// Defines all variables needed for drawing the line.
@@ -159,12 +163,14 @@ public abstract class AbstractCenterPart extends Canvas {
 					diffList.remove(nextDiff);
 					break;
 				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == left.getActualItem().getData()) {
+						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(left
+								.getActualItem().getData())) {
 					visibleDiffs.add(nextDiff);
 					diffList.remove(nextDiff);
 					break;
 				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == left.getActualItem().getData()) {
+						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(left
+								.getActualItem().getData())) {
 					visibleDiffs.add(nextDiff);
 					diffList.remove(nextDiff);
 					break;
@@ -173,17 +179,20 @@ public abstract class AbstractCenterPart extends Canvas {
 		}
 		for (ModelContentMergeTabItem right : rightVisible) {
 			for (DiffElement nextDiff : diffList) {
-				if (EMFCompareEObjectUtils.getRightElement(nextDiff) == right.getActualItem().getData()) {
+				if (EMFCompareEObjectUtils.getRightElement(nextDiff) == internalFindActualData(right
+						.getActualItem().getData())) {
 					visibleDiffs.add(nextDiff);
 					diffList.remove(nextDiff);
 					break;
 				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == right.getActualItem().getData()) {
+						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(right
+								.getActualItem().getData())) {
 					visibleDiffs.add(nextDiff);
 					diffList.remove(nextDiff);
 					break;
 				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == right.getActualItem().getData()) {
+						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(right
+								.getActualItem().getData())) {
 					visibleDiffs.add(nextDiff);
 					diffList.remove(nextDiff);
 					break;
@@ -272,5 +281,24 @@ public abstract class AbstractCenterPart extends Canvas {
 			points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
 		}
 		return points;
+	}
+
+	/**
+	 * This will seek out the first value of the given Object that is not instance of either
+	 * FeatureMapEntryWrapperItemProvider or DelegatingWrapperItemProvider.
+	 * 
+	 * @param data
+	 *            The data we seek the actual value of.
+	 * @return Actual value of the given TreeItem's data.
+	 */
+	private Object internalFindActualData(Object data) {
+		Object actualData = data;
+		if (data instanceof FeatureMapEntryWrapperItemProvider)
+			actualData = internalFindActualData(((FeatureMapEntryWrapperItemProvider)data).getValue());
+		else if (data instanceof DelegatingWrapperItemProvider)
+			actualData = internalFindActualData(((DelegatingWrapperItemProvider)data).getValue());
+		else if (data instanceof ContainmentUpdatingFeatureMapEntry)
+			actualData = ((ContainmentUpdatingFeatureMapEntry)data).getValue();
+		return actualData;
 	}
 }

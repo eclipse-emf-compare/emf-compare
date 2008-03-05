@@ -71,7 +71,7 @@ public interface EMFCompareConstants {
 	/** Preferences description for the highlight color. */
 	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
-	
+
 	/** Preferences description for the boolean indicating that the comparison should ignore IDs. */
 	String PREFERENCES_DESCRIPTION_IGNORE_ID = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.ignoreIDLabel"); //$NON-NLS-1$

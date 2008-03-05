@@ -174,7 +174,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * this model.
 	 */
 	private boolean leftDirty;
-	
+
 	/** This listener will be registered for notifications against all tab folders. */
 	private EditorPartListener partListener;
 
@@ -406,7 +406,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		// Avoids warnings "resource has changed ..."
 		setRightDirty(false);
 		setLeftDirty(false);
-		
+
 		((ModelCompareInput)getInput()).copy(leftToRight);
 		final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
 		snap.setDiff(((ModelCompareInput)getInput()).getDiff());
@@ -434,7 +434,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			// Avoids warnings "resource has changed ..."
 			setRightDirty(false);
 			setLeftDirty(false);
-			
+
 			((ModelCompareInput)getInput()).copy(diffs, leftToRight);
 			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
@@ -660,17 +660,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		ancestorPart.dispose();
 		ancestorPart = null;
 		if (leftResource != null) {
-            leftResource.unload();
-            leftResource = null;
-        }
-        if (rightResource != null) {
-            rightResource.unload();
-            rightResource = null;
-        }
-        if (ancestorResource != null) {
-    		ancestorResource.unload();
-    		ancestorResource = null;
-        }
+			leftResource.unload();
+			leftResource = null;
+		}
+		if (rightResource != null) {
+			rightResource.unload();
+			rightResource = null;
+		}
+		if (ancestorResource != null) {
+			ancestorResource.unload();
+			ancestorResource = null;
+		}
 		canvas.dispose();
 		canvas = null;
 		currentSelection.clear();
@@ -784,17 +784,19 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), modelResourceSet).eResource();
 			} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-                // This can happen with some SVN plug-ins
-                rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(), modelResourceSet).eResource();
-                leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(), modelResourceSet).eResource();
-                configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
-                configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
-                configuration.setLeftEditable(false);
-                configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
-                if (isThreeWay)
-                    ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-                            ancestor.getName(), modelResourceSet).eResource();
-            }
+				// This can happen with some SVN plug-ins
+				rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
+						modelResourceSet).eResource();
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
+						right.getName(), modelResourceSet).eResource();
+				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
+				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
+				configuration.setLeftEditable(false);
+				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
+				if (isThreeWay)
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), modelResourceSet).eResource();
+			}
 		} catch (IOException e) {
 			throw new EMFCompareException(e);
 		} catch (CoreException e) {

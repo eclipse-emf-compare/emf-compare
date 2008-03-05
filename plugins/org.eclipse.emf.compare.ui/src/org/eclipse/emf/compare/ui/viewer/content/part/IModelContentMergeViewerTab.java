@@ -31,7 +31,7 @@ public interface IModelContentMergeViewerTab {
 	 *            Listener which to register on the Control.
 	 */
 	void addSelectionChangedListener(ISelectionChangedListener listener);
-	
+
 	/**
 	 * Disposes of all resources allocated this tab.
 	 */

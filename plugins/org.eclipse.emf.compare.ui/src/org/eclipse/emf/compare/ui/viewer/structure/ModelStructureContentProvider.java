@@ -211,7 +211,7 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		try {
 			final Date start = Calendar.getInstance().getTime();
 			snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-			
+
 			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InterruptedException {
 					final Map<String, Object> options = new EMFCompareMap<String, Object>();
@@ -220,9 +220,10 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					if (!isThreeWay)
 						match = MatchService.doResourceMatch(leftResource, rightResource, options);
 					else
-						match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource, options);
+						match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
+								options);
 					final DiffModel diff = DiffService.doDiff(match, isThreeWay);
-					
+
 					snapshot.setDate(Calendar.getInstance().getTime());
 					snapshot.setDiff(diff);
 					snapshot.setMatch(match);
@@ -269,9 +270,10 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 							modelResourceSet).eResource();
 				else
-					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left).getResource().getFullPath().toOSString(), true));
-				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-						modelResourceSet).eResource();
+					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(
+							((ResourceNode)left).getResource().getFullPath().toOSString(), true));
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
+						right.getName(), modelResourceSet).eResource();
 				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
 				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
 				configuration.setLeftEditable(false);
@@ -280,16 +282,18 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), modelResourceSet).eResource();
 			} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-			    // This can happen with some SVN plug-ins
-			    rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(), modelResourceSet).eResource();
-			    leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(), modelResourceSet).eResource();
-			    configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
-                configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
-                configuration.setLeftEditable(false);
-                configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
-                if (isThreeWay)
-                    ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-                            ancestor.getName(), modelResourceSet).eResource();
+				// This can happen with some SVN plug-ins
+				rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
+						modelResourceSet).eResource();
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
+						right.getName(), modelResourceSet).eResource();
+				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
+				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
+				configuration.setLeftEditable(false);
+				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
+				if (isThreeWay)
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), modelResourceSet).eResource();
 			}
 		} catch (IOException e) {
 			throw new EMFCompareException(e);

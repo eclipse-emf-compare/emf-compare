@@ -33,7 +33,10 @@ import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabItem;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.ContainmentUpdatingFeatureMapEntry;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.DelegatingWrapperItemProvider;
+import org.eclipse.emf.edit.provider.FeatureMapEntryWrapperItemProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -62,11 +65,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	/** <code>int</code> representing this viewer part side. */
 	protected final int partSide;
 
-	/** Maps DiffElements to the TreeItems' data. The key used is the URI of the data. */
+	/** Maps DiffElements to the TreeItems' data. */
 	private final Map<EObject, DiffElement> dataToDiff = new EMFCompareMap<EObject, DiffElement>();
 
-	/** Maps a TreeItem to its data. The key used is the URI of the data. */
+	/** Maps a TreeItem to its data. */
 	private final Map<DiffElement, ModelContentMergeTabItem> dataToItem = new EMFCompareMap<DiffElement, ModelContentMergeTabItem>();
+
+	/**
+	 * Maps a TreeItem to its data. We're compelled to map the Tree like this because of EMF's FeatureMapEntry
+	 * which default TreeViewers cannot handle accurately.
+	 */
+	private final Map<Object, TreeItem> dataToTreeItem = new EMFCompareMap<Object, TreeItem>();
 
 	/** Keeps a reference to the containing tab folder. */
 	private final ModelContentMergeTabFolder parent;
@@ -92,10 +101,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		setLabelProvider(new TreeLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
 		getTree().addPaintListener(new TreePaintListener());
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#dispose()
 	 */
 	public void dispose() {
@@ -181,14 +190,14 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		// This will happen if the user has "merged all"
 		if (parent.getDiffAsList().size() == 0)
 			return result;
-		
+
 		final List<Item> visibleTreeItems = getVisibleTreeItems();
 		final Iterator<DiffElement> differences = dataToItem.keySet().iterator();
 		while (differences.hasNext()) {
 			final DiffElement data = differences.next();
 			final ModelContentMergeTabItem nextItem = dataToItem.get(data);
-			final ModelContentMergeTabItem nextVisibleItem = getUIItem((EObject)nextItem.getActualItem()
-					.getData());
+			final ModelContentMergeTabItem nextVisibleItem = getUIItem((EObject)internalFindActualData(nextItem
+					.getActualItem().getData()));
 			if (visibleTreeItems.contains(nextVisibleItem.getVisibleItem())) {
 				final ModelContentMergeTabItem next = new ModelContentMergeTabItem(nextItem.getActualItem(),
 						nextVisibleItem.getVisibleItem(), nextItem.getCurveColor(), nextVisibleItem
@@ -207,17 +216,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public void redraw() {
 		getTree().redraw();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.ColumnViewer#refresh(java.lang.Object, boolean)
 	 */
 	@Override
 	public void refresh(Object element, boolean updateLabels) {
 		super.refresh(element, updateLabels);
 		mapDifferences();
-		mapTreeItems();
+		mapTreeItemsToUI();
 	}
 
 	/**
@@ -230,16 +239,18 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		// We *need* to invalidate the cache here since setInput() would try to use it otherwise
 		dataToDiff.clear();
 		dataToItem.clear();
-		
+		dataToTreeItem.clear();
+
 		final ComposedAdapterFactory adapterFactory = EMFAdapterFactoryProvider.getAdapterFactory();
 		final AdapterFactory best = AdapterUtils.findAdapterFactory(eObject);
 		if (best != null)
 			adapterFactory.addAdapterFactory(best);
 		setLabelProvider(new TreeLabelProvider(adapterFactory));
 		setInput(eObject.eResource());
-		
-		mapDifferences();
+
 		mapTreeItems();
+		mapDifferences();
+		mapTreeItemsToUI();
 	}
 
 	/**
@@ -260,6 +271,19 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				datas.add(EMFCompareEObjectUtils.getRightElement(items.get(i)));
 		}
 		setSelection(new StructuredSelection(datas), true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#doFindItem(java.lang.Object)
+	 */
+	@Override
+	protected Widget doFindInputItem(Object element) {
+		final Widget res = dataToTreeItem.get(element);
+		if (res != null)
+			return res;
+		return super.doFindInputItem(element);
 	}
 
 	/**
@@ -380,6 +404,38 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
+	 * This will seek out the first value of the given Object that is not instance of either
+	 * FeatureMapEntryWrapperItemProvider or DelegatingWrapperItemProvider.
+	 * 
+	 * @param data
+	 *            The data we seek the actual value of.
+	 * @return Actual value of the given TreeItem's data.
+	 */
+	private Object internalFindActualData(Object data) {
+		Object actualData = data;
+		if (data instanceof FeatureMapEntryWrapperItemProvider)
+			actualData = internalFindActualData(((FeatureMapEntryWrapperItemProvider)data).getValue());
+		else if (data instanceof DelegatingWrapperItemProvider)
+			actualData = internalFindActualData(((DelegatingWrapperItemProvider)data).getValue());
+		else if (data instanceof ContainmentUpdatingFeatureMapEntry)
+			actualData = ((ContainmentUpdatingFeatureMapEntry)data).getValue();
+		return actualData;
+	}
+
+	/**
+	 * Maps the children of the given <tt>item</tt>.
+	 * 
+	 * @param item
+	 *            TreeItem which children are to be mapped.
+	 */
+	private void internalMapTreeItems(TreeItem item) {
+		for (TreeItem child : item.getItems()) {
+			dataToTreeItem.put(internalFindActualData(child.getData()), child);
+			internalMapTreeItems(child);
+		}
+	}
+
+	/**
 	 * Maps the input's differences if any.
 	 */
 	private void mapDifferences() {
@@ -399,11 +455,26 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
+	 * This will map this TreeViewer's TreeItems to their data. We need to do this in order to find the items
+	 * associated to {@link FeatureMapEntry}s since default TreeViewers cannot handle such data.
+	 */
+	private void mapTreeItems() {
+		dataToTreeItem.clear();
+		final TreePath[] expandedState = getExpandedTreePaths();
+		expandAll();
+		for (TreeItem item : getTree().getItems()) {
+			dataToTreeItem.put(internalFindActualData(item.getData()), item);
+			internalMapTreeItems(item);
+		}
+		setExpandedElements(expandedState);
+	}
+
+	/**
 	 * This will map all the TreeItems in this TreeViewer that need be taken into account when drawing diff
 	 * markers to a corresponding ModelContentMergeTabItem. This will allow us to browse everything once and
 	 * for all.
 	 */
-	private void mapTreeItems() {
+	private void mapTreeItemsToUI() {
 		dataToItem.clear();
 		final TreePath[] expandedState = getExpandedTreePaths();
 		expandAll();
@@ -420,7 +491,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			final Item actualItem = (Item)findItem(data);
 			if (actualItem == null)
 				return;
-			
+
 			Item visibleItem = null;
 			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget) {
 				// in the case of a modelElementChangeRightTarget, we know we can't find
@@ -546,7 +617,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 							.getCurveY());
 				} else {
 					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight, rectangleArcWidth, rectangleArcHeight);
+					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
+							rectangleArcWidth, rectangleArcHeight);
 				}
 			}
 		}

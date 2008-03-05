@@ -86,7 +86,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
 		addField(searchWindowEditor);
-		
+
 		// ignore ID field
 		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_ID, getFieldEditorParent()));
@@ -142,16 +142,14 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	protected void reflectOnCore() {
 		final Preferences corePreferences = EMFComparePlugin.getDefault().getPluginPreferences();
 		// Search window
-		corePreferences.setValue(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
-				getPreferenceStore().getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW));
+		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW, getPreferenceStore()
+				.getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW));
 		// ID
-		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
-				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID));
+		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID, getPreferenceStore()
+				.getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID));
 		// XMI ID
-		corePreferences.setValue(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
-				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
+		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID, getPreferenceStore()
+				.getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
 	}
 
 	/**

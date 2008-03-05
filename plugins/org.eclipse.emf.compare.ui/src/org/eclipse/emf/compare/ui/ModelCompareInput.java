@@ -42,7 +42,7 @@ import org.eclipse.swt.graphics.Image;
 public class ModelCompareInput implements ICompareInput {
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
-	
+
 	/** Keeps a list of all the differences (without DiffGroup) detected. */
 	private final List<DiffElement> diffList = new ArrayList<DiffElement>();
 
@@ -132,7 +132,8 @@ public class ModelCompareInput implements ICompareInput {
 		if (getMatch().getOriginModel() == null)
 			return element;
 
-		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match3Element)
+		if (getMatch().getMatchedElements().size() > 0
+				&& getMatch().getMatchedElements().get(0) instanceof Match3Element)
 			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
 					.getOriginElement());
 		else if (getMatch().getUnMatchedElements().size() > 0) {
@@ -228,7 +229,8 @@ public class ModelCompareInput implements ICompareInput {
 	public ITypedElement getLeft() {
 		ITypedElement element = null;
 
-		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match2Elements)
+		if (getMatch().getMatchedElements().size() > 0
+				&& getMatch().getMatchedElements().get(0) instanceof Match2Elements)
 			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
 					.getLeftElement());
 		else if (getMatch().getUnMatchedElements().size() > 0) {
@@ -277,7 +279,8 @@ public class ModelCompareInput implements ICompareInput {
 	public ITypedElement getRight() {
 		ITypedElement element = null;
 
-		if (getMatch().getMatchedElements().size() > 0 && getMatch().getMatchedElements().get(0) instanceof Match2Elements)
+		if (getMatch().getMatchedElements().size() > 0
+				&& getMatch().getMatchedElements().get(0) instanceof Match2Elements)
 			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
 					.getRightElement());
 		else if (getMatch().getUnMatchedElements().size() > 0) {

@@ -67,7 +67,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * as {@link #dataToItem} will be populated.
 	 */
 	private final List<DiffElement> differences = new ArrayList<DiffElement>();
-	
+
 	/** Keeps a reference to the containing tab folder. */
 	private final ModelContentMergeTabFolder parent;
 
@@ -82,7 +82,8 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * @param parentFolder
 	 *            Parent folder of this tab.
 	 */
-	public ModelContentMergePropertyTab(Composite parentComposite, int side, ModelContentMergeTabFolder parentFolder) {
+	public ModelContentMergePropertyTab(Composite parentComposite, int side,
+			ModelContentMergeTabFolder parentFolder) {
 		super(parentComposite, SWT.NONE);
 		partSide = side;
 		parent = parentFolder;
@@ -110,10 +111,10 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 
 		mapDifferences();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#dispose()
 	 */
 	public void dispose() {
@@ -227,7 +228,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	public List<ModelContentMergeTabItem> getVisibleElements() {
 		if (dataToItem.size() > 0 && dataToItem.values().iterator().next().getActualItem().isDisposed())
 			mapTableItems();
-			
+
 		final List<ModelContentMergeTabItem> result = new ArrayList<ModelContentMergeTabItem>();
 		for (String data : dataToItem.keySet()) {
 			final EObject element;
@@ -264,10 +265,10 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	public void redraw() {
 		getTable().redraw();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.jface.viewers.ColumnViewer#refresh(java.lang.Object, boolean)
 	 */
 	@Override
@@ -348,7 +349,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 			}
 		}
 	}
-	
+
 	/**
 	 * Maps the input's differences if any.
 	 */
@@ -427,10 +428,10 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 		 */
 		private void drawLine(PaintEvent event, ModelContentMergeTabItem item) {
 			final Rectangle tableBounds = getTable().getBounds();
-			
+
 			// properties that present differences should be highlighted
-			((TableItem)item.getActualItem()).setBackground(new Color(getControl().getDisplay(), ModelContentMergeViewer
-					.getColor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
+			((TableItem)item.getActualItem()).setBackground(new Color(getControl().getDisplay(),
+					ModelContentMergeViewer.getColor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR)));
 
 			event.gc.setLineWidth(2);
 			event.gc.setForeground(new Color(item.getActualItem().getDisplay(), ModelContentMergeViewer
