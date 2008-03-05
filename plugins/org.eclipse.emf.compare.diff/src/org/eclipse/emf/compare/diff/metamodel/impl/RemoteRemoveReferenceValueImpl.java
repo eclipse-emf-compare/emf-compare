@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -33,6 +36,21 @@ public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetIm
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", NameSimilarity.findName(rightAddedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", rightAddedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +58,4 @@ public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetIm
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOTE_REMOVE_REFERENCE_VALUE;
 	}
-
 } // RemoteRemoveReferenceValueImpl

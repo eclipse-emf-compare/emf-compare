@@ -34,16 +34,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class UpdateModelElementImpl extends ModelElementChangeImpl implements UpdateModelElement {
 	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightElement;
-
-	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -52,6 +42,16 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	 * @ordered
 	 */
 	protected EObject leftElement;
+
+	/**
+	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

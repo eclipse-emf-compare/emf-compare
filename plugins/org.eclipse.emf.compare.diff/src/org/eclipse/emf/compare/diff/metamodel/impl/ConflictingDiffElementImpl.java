@@ -11,8 +11,11 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -45,16 +48,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject leftParent;
 
 	/**
-	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightParent;
-
-	/**
 	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -63,6 +56,16 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	 * @ordered
 	 */
 	protected EObject originElement;
+
+	/**
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightParent;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -262,6 +265,21 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("ConflictingDiffElementImpl.ToString", NameSimilarity.findName(leftParent), NameSimilarity.findName(rightParent)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("ConflictingDiffElementImpl.ToString", leftParent.eClass().getName(), rightParent.eClass().getName()); //$NON-NLS-1$
+		}
 	}
 
 	/**

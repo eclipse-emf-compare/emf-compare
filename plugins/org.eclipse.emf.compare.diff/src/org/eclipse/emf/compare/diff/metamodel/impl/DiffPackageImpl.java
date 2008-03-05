@@ -79,13 +79,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	private EClass abstractDiffExtensionEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum differenceKindEEnum = null;
-
-	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -132,6 +125,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	private EClass diffElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum differenceKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -536,15 +536,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EEnum getDifferenceKind() {
-		return differenceKindEEnum;
-	}
-
-	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -673,20 +664,20 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getDiffElement_IsHiddenBy() {
-		return (EReference)diffElementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EAttribute getDiffElement_Conflicting() {
 		return (EAttribute)diffElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiffElement_IsHiddenBy() {
+		return (EReference)diffElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -704,6 +695,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EReference getDiffElement_SubDiffElements() {
 		return (EReference)diffElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EEnum getDifferenceKind() {
+		return differenceKindEEnum;
 	}
 
 	/**

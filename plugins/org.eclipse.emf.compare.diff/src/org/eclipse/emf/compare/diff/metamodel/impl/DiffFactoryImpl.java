@@ -98,6 +98,16 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unused")
+	public String convertDifferenceKindToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -264,6 +274,19 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public ConflictingDiffElement createConflictingDiffElement() {
 		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
 		return conflictingDiffElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
+		DifferenceKind result = DifferenceKind.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return result;
 	}
 
 	/**
@@ -469,29 +492,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue() {
 		RemoteUpdateUniqueReferenceValueImpl remoteUpdateUniqueReferenceValue = new RemoteUpdateUniqueReferenceValueImpl();
 		return remoteUpdateUniqueReferenceValue;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
-		DifferenceKind result = DifferenceKind.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException(
-					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	public String convertDifferenceKindToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

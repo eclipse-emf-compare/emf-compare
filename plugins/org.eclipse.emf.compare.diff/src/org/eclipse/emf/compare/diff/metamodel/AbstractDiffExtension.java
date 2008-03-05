@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: AbstractDiffExtension.java,v 1.7 2007/12/11 15:59:40 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007, 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel;
 
 import org.eclipse.emf.common.util.EList;

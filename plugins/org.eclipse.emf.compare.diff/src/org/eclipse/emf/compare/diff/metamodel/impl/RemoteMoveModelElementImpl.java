@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -33,6 +36,21 @@ public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements 
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +58,4 @@ public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements 
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOTE_MOVE_MODEL_ELEMENT;
 	}
-
 } // RemoteMoveModelElementImpl

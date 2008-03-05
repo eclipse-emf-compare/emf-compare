@@ -20,5 +20,5 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 public interface RemoteUpdateAttribute extends UpdateAttribute {
-	// This class doesn't need any Overriding to be functionnal
+	// This class doesn't need any Overriding to be functional
 } // RemoteUpdateAttribute

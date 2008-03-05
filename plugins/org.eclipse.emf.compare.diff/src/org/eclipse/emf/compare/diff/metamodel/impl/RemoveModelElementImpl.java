@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.ecore.EClass;
@@ -33,6 +34,17 @@ public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl imp
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		return EMFCompareDiffMessages.getString("RemoveModelElementImpl.ToString", leftElement); //$NON-NLS-1$
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +52,4 @@ public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl imp
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOVE_MODEL_ELEMENT;
 	}
-
 } // RemoveModelElementImpl

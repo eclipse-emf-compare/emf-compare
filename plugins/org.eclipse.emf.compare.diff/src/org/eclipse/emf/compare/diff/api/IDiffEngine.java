@@ -39,11 +39,10 @@ public interface IDiffEngine {
 	 * @return the corresponding diff model
 	 */
 	DiffModel doDiff(MatchModel match, boolean threeWay);
-	
+
 	/**
-     * This will be called with each access from the service to the singleton
-     * instance of this engine. Clients should dispose of all caches and
-     * recorded information within this method's implementation.
-     */
+	 * This will be called with each access from the service to the singleton instance of this engine. Clients
+	 * should dispose of all caches and recorded information within this method's implementation.
+	 */
 	void reset();
 }

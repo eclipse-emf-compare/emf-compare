@@ -57,49 +57,6 @@ public final class EMFCompareEObjectCopier extends Copier {
 	}
 
 	/**
-	 * Returns the DiffModel associated to this copier.
-	 * 
-	 * @return The DiffModel associated to this copier.
-	 */
-	public DiffModel getDiffModel() {
-		return diffModel;
-	}
-
-	/**
-	 * Ensures the original and copied objects all share the same XMI ID.
-	 */
-	public void copyXMIIDs() {
-		for (Map.Entry<EObject, EObject> entry : entrySet()) {
-			final EObject original = entry.getKey();
-			final EObject copy = entry.getValue();
-			if (original.eResource() instanceof XMIResource && copy.eResource() instanceof XMIResource) {
-				final XMIResource originResource = (XMIResource)original.eResource();
-				final XMIResource copyResource = (XMIResource)copy.eResource();
-				if (originResource.getID(original) != null)
-					copyResource.setID(copy, originResource.getID(original));
-			}
-		}
-	}
-	
-	/**
-     * This will copy the given <tt>value</tt> to the reference <tt>targetReference</tt> of <tt>target</tt>.
-     * @param targetReference The reference to add a value to.
-     * @param target The object to copy to.
-     * @param value The value that is to be copied.
-     */
-	@SuppressWarnings("unchecked")
-	public void copyReferenceValue(EReference targetReference, EObject target, EObject value) {
-		final EObject targetValue = get(value);
-		if (targetValue != null)
-			((List<Object>)target.eGet(targetReference)).add(targetValue);
-		else if (mergeLinkedDiff(value))
-			// referenced object was an unmatched one and we managed to merge its corresponding diff
-			((List<Object>)target.eGet(targetReference)).add(get(value));
-		else
-			((List<Object>)target.eGet(targetReference)).add(value);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.ecore.util.EcoreUtil$Copier#copyReferences()
@@ -124,6 +81,104 @@ public final class EMFCompareEObjectCopier extends Copier {
 						copyFeatureMap(eObject, eStructuralFeature);
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * This will copy the given <tt>value</tt> to the reference <tt>targetReference</tt> of
+	 * <tt>target</tt>.
+	 * 
+	 * @param targetReference
+	 *            The reference to add a value to.
+	 * @param target
+	 *            The object to copy to.
+	 * @param value
+	 *            The value that is to be copied.
+	 */
+	@SuppressWarnings("unchecked")
+	public void copyReferenceValue(EReference targetReference, EObject target, EObject value) {
+		final EObject targetValue = get(value);
+		if (targetValue != null)
+			((List<Object>)target.eGet(targetReference)).add(targetValue);
+		else if (mergeLinkedDiff(value))
+			// referenced object was an unmatched one and we managed to merge its corresponding diff
+			((List<Object>)target.eGet(targetReference)).add(get(value));
+		else
+			((List<Object>)target.eGet(targetReference)).add(value);
+	}
+
+	/**
+	 * Ensures the original and copied objects all share the same XMI ID.
+	 */
+	public void copyXMIIDs() {
+		for (Map.Entry<EObject, EObject> entry : entrySet()) {
+			final EObject original = entry.getKey();
+			final EObject copy = entry.getValue();
+			if (original.eResource() instanceof XMIResource && copy.eResource() instanceof XMIResource) {
+				final XMIResource originResource = (XMIResource)original.eResource();
+				final XMIResource copyResource = (XMIResource)copy.eResource();
+				if (originResource.getID(original) != null)
+					copyResource.setID(copy, originResource.getID(original));
+			}
+		}
+	}
+
+	/**
+	 * Returns the DiffModel associated to this copier.
+	 * 
+	 * @return The DiffModel associated to this copier.
+	 */
+	public DiffModel getDiffModel() {
+		return diffModel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.ecore.util.EcoreUtil$Copier#copyReference(org.eclipse.emf.ecore.EReference,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
+		// No use trying to copy the reference if it isn't set in the origin
+		if (!eObject.eIsSet(eReference))
+			return;
+		if (eReference.isMany()) {
+			final List<?> referencedObjectsList = (List<?>)eObject.eGet(eReference, resolveProxies);
+			if (referencedObjectsList == null)
+				copyEObject.eSet(getTarget(eReference), null);
+			else if (referencedObjectsList.size() == 0)
+				copyEObject.eSet(getTarget(eReference), referencedObjectsList);
+			else {
+				for (Object referencedEObject : referencedObjectsList) {
+					final Object copyReferencedEObject = get(referencedEObject);
+					if (copyReferencedEObject != null)
+						// The referenced object has been copied via this Copier
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedEObject);
+					else if (mergeLinkedDiff((EObject)referencedEObject))
+						// referenced object was an unmatched one and we managed to merge its corresponding
+						// diff
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObject));
+					else
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
+				}
+			}
+		} else {
+			final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
+			if (referencedEObject == null)
+				copyEObject.eSet(getTarget(eReference), null);
+			else {
+				final Object copyReferencedEObject = get(referencedEObject);
+				if (copyReferencedEObject != null)
+					// The referenced object has been copied via this Copier
+					copyEObject.eSet(getTarget(eReference), copyReferencedEObject);
+				else if (mergeLinkedDiff((EObject)referencedEObject))
+					// referenced object was an unmatched one and we managed to merge its corresponding diff
+					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
+				else
+					copyEObject.eSet(getTarget(eReference), referencedEObject);
 			}
 		}
 	}
@@ -168,55 +223,6 @@ public final class EMFCompareEObjectCopier extends Copier {
 				}
 			} else {
 				copyFeatureMap.add(featureMap.get(k));
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.ecore.util.EcoreUtil$Copier#copyReference(org.eclipse.emf.ecore.EReference,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
-		// No use trying to copy the reference if it isn't set in the origin
-		if (!eObject.eIsSet(eReference))
-			return;
-		if (eReference.isMany()) {
-			final List<?> referencedObjectsList = (List<?>)eObject.eGet(eReference, resolveProxies);
-			if (referencedObjectsList == null)
-				copyEObject.eSet(getTarget(eReference), null);
-			else if (referencedObjectsList.size() == 0)
-				copyEObject.eSet(getTarget(eReference), referencedObjectsList);
-			else {
-				for (Object referencedEObject : referencedObjectsList) {
-					final Object copyReferencedEObject = get(referencedEObject);
-					if (copyReferencedEObject != null)
-						// The referenced object has been copied via this Copier
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedEObject);
-					else if (mergeLinkedDiff((EObject)referencedEObject))
-						// referenced object was an unmatched one and we managed to merge its corresponding diff
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObject));
-					else
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
-				}
-			}
-		} else {
-			final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
-			if (referencedEObject == null)
-				copyEObject.eSet(getTarget(eReference), null);
-			else {
-				final Object copyReferencedEObject = get(referencedEObject);
-				if (copyReferencedEObject != null)
-					// The referenced object has been copied via this Copier
-					copyEObject.eSet(getTarget(eReference), copyReferencedEObject);
-				else if (mergeLinkedDiff((EObject)referencedEObject))
-					// referenced object was an unmatched one and we managed to merge its corresponding diff
-					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
-				else
-					copyEObject.eSet(getTarget(eReference), referencedEObject);
 			}
 		}
 	}

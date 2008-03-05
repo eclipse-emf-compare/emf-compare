@@ -142,15 +142,15 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#reset()
 	 */
 	public void reset() {
-	    unMatchedElements.clear();
-	    eObjectToMatch.clear();
+		unMatchedElements.clear();
+		eObjectToMatch.clear();
 	}
 
 	/**
@@ -296,7 +296,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		checkReferencesUpdates(current, match);
 		checkMoves(current, match);
 	}
-	
+
 	/**
 	 * This will call all the different checks we need to call for when computing the diff. Clients can
 	 * override this to alter the checks or add others.
@@ -495,12 +495,12 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	protected DiffGroup doDiffThreeWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
-		
+
 		// It is a possibility that no elements where matched
 		if (match.getMatchedElements().size() > 0) {
 			// we have to browse the model and create the corresponding operations
 			final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
-	
+
 			doDiffDelegate(diffRoot, matchRoot);
 		}
 
@@ -1477,10 +1477,10 @@ public class GenericDiffEngine implements IDiffEngine {
 			doDiffDelegate(root, element);
 		}
 	}
-	
+
 	/**
-	 * This is the core of the diff computing for three way comparison. This will call for checks on attributes,
-	 * references and model elements to check for updates/changes.
+	 * This is the core of the diff computing for three way comparison. This will call for checks on
+	 * attributes, references and model elements to check for updates/changes.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffModel} to create.

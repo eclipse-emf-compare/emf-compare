@@ -28,11 +28,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public final class MergeService {
-	/** Holds a list of all the merge listeners registered for notifications on merge operations. */
-	private static final List<IMergeListener> MERGE_LISTENERS = new ArrayList<IMergeListener>();
-
 	/** This copier will be used when merging references. */
 	private static EMFCompareEObjectCopier copier;
+
+	/** Holds a list of all the merge listeners registered for notifications on merge operations. */
+	private static final List<IMergeListener> MERGE_LISTENERS = new ArrayList<IMergeListener>();
 
 	/**
 	 * Default constructor.
@@ -61,10 +61,12 @@ public final class MergeService {
 	 */
 	public static EMFCompareEObjectCopier getCopier(DiffElement diff) {
 		if (copier == null)
-			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff());
+			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff))
+					.getDiff());
 		else if (copier.getDiffModel() != ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff()) {
 			copier.clear();
-			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff());
+			copier = new EMFCompareEObjectCopier(((ModelInputSnapshot)EcoreUtil.getRootContainer(diff))
+					.getDiff());
 		}
 		return copier;
 	}

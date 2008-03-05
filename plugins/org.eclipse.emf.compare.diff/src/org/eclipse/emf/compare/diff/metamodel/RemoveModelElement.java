@@ -21,5 +21,5 @@ package org.eclipse.emf.compare.diff.metamodel;
  */
 
 public interface RemoveModelElement extends ModelElementChangeLeftTarget {
-	// This class doesn't need any Overriding to be functionnal
+	// This class doesn't need any Overriding to be functional
 } // RemoveModelElement

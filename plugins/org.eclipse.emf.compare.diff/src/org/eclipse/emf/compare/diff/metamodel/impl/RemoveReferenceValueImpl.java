@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -32,6 +35,21 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl impl
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -39,5 +57,4 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl impl
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOVE_REFERENCE_VALUE;
 	}
-
 } // RemoveReferenceValueImpl

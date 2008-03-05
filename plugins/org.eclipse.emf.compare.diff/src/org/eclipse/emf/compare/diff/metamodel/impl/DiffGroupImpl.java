@@ -13,10 +13,13 @@ package org.eclipse.emf.compare.diff.metamodel.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -37,16 +40,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	/**
-	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject leftParent;
-
-	/**
 	 * The default value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -55,6 +48,16 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	 * @ordered
 	 */
 	protected static final int SUBCHANGES_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLeftParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject leftParent;
 
 	/**
 	 * The cached value of the '{@link #getSubchanges() <em>Subchanges</em>}' attribute.
@@ -229,22 +232,18 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (subchanges: "); //$NON-NLS-1$
-		if (subchangesESet)
-			result.append(subchanges);
-		else
-			result.append("<unset>"); //$NON-NLS-1$
-		result.append(')');
-		return result.toString();
+		try {
+			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", subchanges, leftParent.eClass().getName(), NameSimilarity.findName(leftParent)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", subchanges, leftParent.eClass().getName()); //$NON-NLS-1$
+		}
 	}
 
 	/**

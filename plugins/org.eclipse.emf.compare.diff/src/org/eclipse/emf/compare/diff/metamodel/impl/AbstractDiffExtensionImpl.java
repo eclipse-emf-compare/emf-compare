@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: AbstractDiffExtensionImpl.java,v 1.10 2007/12/13 14:12:51 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2006, 2007, 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import java.util.Collection;
@@ -34,24 +38,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements AbstractDiffExtension {
-	/**
-	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getHideElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DiffElement> hideElements;
-
 	/**
 	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -61,6 +55,16 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	 * @ordered
 	 */
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getHideElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiffElement> hideElements;
 
 	/**
 	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
@@ -74,6 +78,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AbstractDiffExtensionImpl() {
@@ -82,6 +87,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -97,6 +103,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -112,6 +119,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -125,6 +133,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -140,6 +149,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -159,6 +169,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -176,6 +187,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
@@ -209,6 +221,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -217,6 +230,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IMerger provideMerger() {
@@ -227,6 +241,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
@@ -239,6 +254,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -265,6 +281,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

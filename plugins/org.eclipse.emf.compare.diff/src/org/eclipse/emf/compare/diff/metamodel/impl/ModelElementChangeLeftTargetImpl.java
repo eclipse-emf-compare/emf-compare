@@ -34,16 +34,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl implements ModelElementChangeLeftTarget {
 	/**
-	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightParent;
-
-	/**
 	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -52,6 +42,16 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl imp
 	 * @ordered
 	 */
 	protected EObject leftElement;
+
+	/**
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightParent;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

@@ -33,16 +33,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implements ReferenceChangeRightTarget {
 	/**
-	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightAddedTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject rightAddedTarget;
-
-	/**
 	 * The cached value of the '{@link #getLeftAddedTarget() <em>Left Added Target</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -51,6 +41,16 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 	 * @ordered
 	 */
 	protected EObject leftAddedTarget;
+
+	/**
+	 * The cached value of the '{@link #getRightAddedTarget() <em>Right Added Target</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightAddedTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject rightAddedTarget;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

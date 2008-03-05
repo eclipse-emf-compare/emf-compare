@@ -51,26 +51,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getSubDiffElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DiffElement> subDiffElements;
-
-	/**
-	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getIsHiddenBy()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<AbstractDiffExtension> isHiddenBy;
-
-	/**
 	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -79,16 +59,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * @ordered
 	 */
 	protected static final boolean CONFLICTING_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #isConflicting()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean conflicting = CONFLICTING_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -101,6 +71,26 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final DifferenceKind KIND_EDEFAULT = DifferenceKind.ADDITION;
 
 	/**
+	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isConflicting()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean conflicting = CONFLICTING_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getIsHiddenBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<AbstractDiffExtension> isHiddenBy;
+
+	/**
 	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -109,6 +99,16 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * @ordered
 	 */
 	protected DifferenceKind kind = KIND_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getSubDiffElements()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiffElement> subDiffElements;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -196,25 +196,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * 
 	 * @generated
 	 */
-	@Override
-	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (conflicting: "); //$NON-NLS-1$
-		result.append(conflicting);
-		result.append(", kind: "); //$NON-NLS-1$
-		result.append(kind);
-		result.append(')');
-		return result.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
@@ -268,19 +249,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * 
 	 * @generated NOT
 	 */
-	public boolean isConflicting() {
-		if (eContainer() instanceof ConflictingDiffElementImpl)
-			conflicting = true;
-		else
-			conflicting = CONFLICTING_EDEFAULT;
-		return conflicting;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated NOT
-	 */
 	public DifferenceKind getKind() {
 		if (this instanceof AttributeChange || this instanceof ReferenceChange)
 			kind = DifferenceKind.CHANGE;
@@ -309,6 +277,38 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 					DiffPackage.DIFF_ELEMENT__SUB_DIFF_ELEMENTS);
 		}
 		return subDiffElements;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
+	 */
+	public boolean isConflicting() {
+		if (eContainer() instanceof ConflictingDiffElementImpl)
+			conflicting = true;
+		else
+			conflicting = CONFLICTING_EDEFAULT;
+		return conflicting;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (conflicting: "); //$NON-NLS-1$
+		result.append(conflicting);
+		result.append(", kind: "); //$NON-NLS-1$
+		result.append(kind);
+		result.append(')');
+		return result.toString();
 	}
 
 	/**

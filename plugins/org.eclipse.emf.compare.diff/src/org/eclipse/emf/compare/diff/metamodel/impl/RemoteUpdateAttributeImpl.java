@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -33,6 +36,21 @@ public class RemoteUpdateAttributeImpl extends UpdateAttributeImpl implements Re
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("RemoteUpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("RemoteUpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +58,4 @@ public class RemoteUpdateAttributeImpl extends UpdateAttributeImpl implements Re
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOTE_UPDATE_ATTRIBUTE;
 	}
-
 } // RemoteUpdateAttributeImpl

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
@@ -33,6 +34,17 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		return EMFCompareDiffMessages.getString("AddModelElementImpl.ToString", rightElement); //$NON-NLS-1$
+	}
+	
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +52,4 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.ADD_MODEL_ELEMENT;
 	}
-
 } // AddModelElementImpl

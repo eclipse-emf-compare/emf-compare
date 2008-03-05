@@ -11,8 +11,11 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -202,6 +205,21 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+		}
 	}
 
 	/**

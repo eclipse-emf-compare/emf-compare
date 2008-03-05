@@ -253,6 +253,19 @@ public class DefaultMerger implements IMerger {
 	}
 
 	/**
+	 * Sets the XMI ID of the given {@link EObject} if it belongs in an {@link XMIResource}.
+	 * 
+	 * @param object
+	 *            Object we want to set the XMI ID of.
+	 * @param id
+	 *            XMI ID to give to <code>object</code>.
+	 */
+	protected void setXMIID(EObject object, String id) {
+		if (object != null && object.eResource() instanceof XMIResource)
+			((XMIResource)object.eResource()).setID(object, id);
+	}
+
+	/**
 	 * Mutually derived references need specific handling : merging one will implicitely merge the other and
 	 * there are no way to tell such references apart.
 	 * <p>
@@ -278,13 +291,15 @@ public class DefaultMerger implements IMerger {
 					for (DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
 						if (siblingDiff instanceof ModelElementChangeLeftTarget) {
 							if (((ModelElementChangeLeftTarget)siblingDiff).getLeftElement() instanceof EGenericType
-									&& ((EGenericType)((ModelElementChangeLeftTarget)siblingDiff).getLeftElement()).getEClassifier() == referenceType) {
+									&& ((EGenericType)((ModelElementChangeLeftTarget)siblingDiff)
+											.getLeftElement()).getEClassifier() == referenceType) {
 								toRemove = siblingDiff;
 								break;
 							}
 						} else if (siblingDiff instanceof ModelElementChangeRightTarget) {
 							if (((ModelElementChangeRightTarget)siblingDiff).getRightElement() instanceof EGenericType
-									&& ((EGenericType)((ModelElementChangeRightTarget)siblingDiff).getRightElement()).getEClassifier() == referenceType) {
+									&& ((EGenericType)((ModelElementChangeRightTarget)siblingDiff)
+											.getRightElement()).getEClassifier() == referenceType) {
 								toRemove = siblingDiff;
 								break;
 							}
@@ -322,19 +337,6 @@ public class DefaultMerger implements IMerger {
 		}
 		if (toRemove != null)
 			removeFromContainer(toRemove);
-	}
-
-	/**
-	 * Sets the XMI ID of the given {@link EObject} if it belongs in an {@link XMIResource}.
-	 * 
-	 * @param object
-	 *            Object we want to set the XMI ID of.
-	 * @param id
-	 *            XMI ID to give to <code>object</code>.
-	 */
-	protected void setXMIID(EObject object, String id) {
-		if (object != null && object.eResource() instanceof XMIResource)
-			((XMIResource)object.eResource()).setID(object, id);
 	}
 
 }

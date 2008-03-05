@@ -36,6 +36,16 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceChange {
 	/**
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLeftElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject leftElement;
+
+	/**
 	 * The cached value of the '{@link #getReference() <em>Reference</em>}' reference.
 	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
@@ -54,16 +64,6 @@ public class ReferenceChangeImpl extends DiffElementImpl implements ReferenceCha
 	 * @ordered
 	 */
 	protected EObject rightElement;
-
-	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject leftElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

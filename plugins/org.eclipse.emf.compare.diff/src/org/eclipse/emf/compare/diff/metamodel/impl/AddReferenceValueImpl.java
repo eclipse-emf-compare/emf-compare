@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -33,6 +36,21 @@ public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implem
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("AddReferenceValueImpl.ToString", NameSimilarity.findName(rightAddedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("AddReferenceValueImpl.ToString", rightAddedTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +58,4 @@ public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implem
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.ADD_REFERENCE_VALUE;
 	}
-
 } // AddReferenceValueImpl

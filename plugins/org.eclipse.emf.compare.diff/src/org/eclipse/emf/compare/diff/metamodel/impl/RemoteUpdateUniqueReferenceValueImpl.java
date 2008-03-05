@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -33,6 +36,21 @@ public class RemoteUpdateUniqueReferenceValueImpl extends UpdateUniqueReferenceV
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -40,5 +58,4 @@ public class RemoteUpdateUniqueReferenceValueImpl extends UpdateUniqueReferenceV
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE;
 	}
-
 } // RemoteUpdateUniqueReferenceValueImpl

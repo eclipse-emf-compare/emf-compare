@@ -11,8 +11,11 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -204,6 +207,21 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		try {
+			return EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+		} catch (FactoryException e) {
+			return EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -211,5 +229,4 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 	protected EClass eStaticClass() {
 		return DiffPackage.Literals.MOVE_MODEL_ELEMENT;
 	}
-
 } // MoveModelElementImpl

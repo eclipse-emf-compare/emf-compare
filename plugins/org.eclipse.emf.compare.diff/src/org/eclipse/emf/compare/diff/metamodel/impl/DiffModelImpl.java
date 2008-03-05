@@ -52,16 +52,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String LEFT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @see #getLeft()
-	 * @generated
-	 * @ordered
-	 */
-	protected String left = LEFT_EDEFAULT;
-
-	/**
 	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -70,16 +60,6 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 * @ordered
 	 */
 	protected static final String ORIGIN_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOrigin()
-	 * @generated
-	 * @ordered
-	 */
-	protected String origin = ORIGIN_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
@@ -92,14 +72,24 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	protected static final String RIGHT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * @see #getRight()
+	 * @see #getLeft()
 	 * @generated
 	 * @ordered
 	 */
-	protected String right = RIGHT_EDEFAULT;
+	protected String left = LEFT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOrigin()
+	 * @generated
+	 * @ordered
+	 */
+	protected String origin = ORIGIN_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list.
@@ -109,6 +99,16 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 * @ordered
 	 */
 	protected EList<DiffElement> ownedElements;
+
+	/**
+	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * @see #getRight()
+	 * @generated
+	 * @ordered
+	 */
+	protected String right = RIGHT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
