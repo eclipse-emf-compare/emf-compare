@@ -27,7 +27,7 @@ package org.eclipse.emf.compare.match.api;
  * </tr>
  * <tr>
  * <td>{@link #OPTION_IGNORE_ID}</td>
- * <td>Specifies whether we should ignore functionnal IDs when matching.</td>
+ * <td>Specifies whether we should ignore functional IDs when matching.</td>
  * <td>Boolean, defaults to <code>False</code></td>
  * </tr>
  * <tr>
@@ -72,7 +72,7 @@ public interface MatchOptions {
 
 	/** Key for the option specifying whether we should ignore XMI ID when comparing. */
 	String OPTION_IGNORE_XMI_ID = "match.ignore.xmi.id"; //$NON-NLS-1$
-	
+
 	/** Key for the option to give a progress monitor to the match engine. */
 	String OPTION_PROGRESS_MONITOR = "match.progress.monitor"; //$NON-NLS-1$
 

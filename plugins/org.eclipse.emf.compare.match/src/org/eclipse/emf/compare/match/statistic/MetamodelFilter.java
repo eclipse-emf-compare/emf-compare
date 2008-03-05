@@ -62,14 +62,14 @@ public class MetamodelFilter {
 		unusedFeatures = null;
 		eClassToFeaturesList.clear();
 	}
-	
+
 	/**
 	 * Clears all recorded information.
 	 */
 	public void clear() {
-	    featuresToInformation.clear();
-        unusedFeatures = null;
-	    eClassToFeaturesList.clear();
+		featuresToInformation.clear();
+		unusedFeatures = null;
+		eClassToFeaturesList.clear();
 	}
 
 	/**

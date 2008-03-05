@@ -14,7 +14,7 @@ Export-Package: org.eclipse.emf.compare.match.api,
  org.eclipse.emf.compare.match.metamodel.util,
  org.eclipse.emf.compare.match.service,
  org.eclipse.emf.compare.match.statistic,
- org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit,org.eclipse.emf.compare.ui,org.eclipse.emf.compare.tests"
+ org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit,org.eclipse.emf.compare.ui,org.eclipse.emf.compare.tests,org.eclipse.emf.compare.diff"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,

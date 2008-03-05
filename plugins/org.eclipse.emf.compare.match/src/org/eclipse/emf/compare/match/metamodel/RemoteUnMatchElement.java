@@ -20,5 +20,5 @@ package org.eclipse.emf.compare.match.metamodel;
  * @generated
  */
 public interface RemoteUnMatchElement extends UnMatchElement {
-	// This class doesn't need any Overriding to be functionnal
+	// This class doesn't need any Overriding to be functional
 } // RemoteUnMatchElement

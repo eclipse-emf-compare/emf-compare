@@ -437,25 +437,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		return null;
 	}
 
-	/*
-	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
-	 * opened.
-	 */
-	/**
-	 * This will load all the needed options with their default values.
-	 * 
-	 * @return Map containing all the needed options with their default values.
-	 */
-	/* package */Map<String, Object> loadPreferenceOptionMap() {
-		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
-		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
-		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
-		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, MatchOptions.DEFAULT_DISTINCT_METAMODEL);
-		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
-		return optionMap;
-	}
-
 	/**
 	 * This will compute the similarity between two {@link EObject}s' contents.
 	 * 
@@ -680,6 +661,25 @@ public class GenericMatchEngine implements IMatchEngine {
 			// fails silently, will return a similarity of 0d
 		}
 		return similarity;
+	}
+
+	/*
+	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
+	 * opened.
+	 */
+	/**
+	 * This will load all the needed options with their default values.
+	 * 
+	 * @return Map containing all the needed options with their default values.
+	 */
+	/* package */Map<String, Object> loadPreferenceOptionMap() {
+		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
+		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
+		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
+		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, MatchOptions.DEFAULT_DISTINCT_METAMODEL);
+		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
+		return optionMap;
 	}
 
 	/**
