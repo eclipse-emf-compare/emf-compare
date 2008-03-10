@@ -24,38 +24,36 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class AdapterUtils {
-    /** Adapter factory instance. This contains all factories registered in the global registry. */
-    private static final AdapterFactory FACTORY = createAdapterFactory();
-    
-    /**
-     * Utility classes don't need to (and shouldn't) be instantiated.
-     */
-    private AdapterUtils() {
-        // prevents instantiation.
-    }
+	/** Adapter factory instance. This contains all factories registered in the global registry. */
+	private static final AdapterFactory FACTORY = createAdapterFactory();
 
-    /**
-     * Returns a factory built with all the {@link AdapterFactory} instances
-     * available in the global registry.
-     * 
-     * @return A factory built with all the {@link AdapterFactory} instances
-     *          available in the global registry.
-     */
-    public static AdapterFactory getAdapterFactory() {
-        return FACTORY;
-    }
+	/**
+	 * Utility classes don't need to (and shouldn't) be instantiated.
+	 */
+	private AdapterUtils() {
+		// prevents instantiation.
+	}
 
-    /**
-     * Returns an adapter factory containing all the global EMF registry's factories.
-     * @return An adapter factory made of all the adapter factories declared in
-     *         the registry.
-     */
-    private static ComposedAdapterFactory createAdapterFactory() {
-        final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
-        factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-        // These two factories could prove useful to avoid potential errors
-        factories.add(new ResourceItemProviderAdapterFactory());
-        factories.add(new ReflectiveItemProviderAdapterFactory());
-        return new ComposedAdapterFactory(factories);
-    }
+	/**
+	 * Returns a factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 * 
+	 * @return A factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 */
+	public static AdapterFactory getAdapterFactory() {
+		return FACTORY;
+	}
+
+	/**
+	 * Returns an adapter factory containing all the global EMF registry's factories.
+	 * 
+	 * @return An adapter factory made of all the adapter factories declared in the registry.
+	 */
+	private static ComposedAdapterFactory createAdapterFactory() {
+		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+		// These two factories could prove useful to avoid potential errors
+		factories.add(new ResourceItemProviderAdapterFactory());
+		factories.add(new ReflectiveItemProviderAdapterFactory());
+		return new ComposedAdapterFactory(factories);
+	}
 }
