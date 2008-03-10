@@ -65,10 +65,6 @@ public final class ProviderImageUtil {
 		return null;
 	}
 
-	/*
-	 * TODOCBR comment
-	 */
-
 	/**
 	 * Fetches the {@link org.eclipse.emf.common.notify.AdapterFactory AdapterFactory} corresponding to a
 	 * particular feature of a given object.
@@ -90,7 +86,7 @@ public final class ProviderImageUtil {
 
 		AdapterFactory featureAdapterFactory = null;
 		if (featureValue != null && (featureValue instanceof EObject))
-			featureAdapterFactory = AdapterUtils.findAdapterFactory((EObject)featureValue);
+			featureAdapterFactory = AdapterUtils.getAdapterFactory();
 
 		return featureAdapterFactory;
 	}
