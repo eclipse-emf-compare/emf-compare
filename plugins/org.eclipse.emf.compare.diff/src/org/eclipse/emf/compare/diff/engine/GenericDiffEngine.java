@@ -59,6 +59,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.FeatureMap.Entry;
 
 /**
  * This class is useful when one wants to determine a diff from a matching model.
@@ -848,10 +849,10 @@ public class GenericDiffEngine implements IDiffEngine {
 		if (!attribute.isMany()) {
 			createConflictingAttributeChange(root, attribute, mapping);
 		} else {
-			final List<?> leftValue = EFactory.eGetAsList(mapping.getLeftElement(), attribute.getName());
-			final List<?> rightValue = EFactory.eGetAsList(mapping.getRightElement(), attribute.getName());
-			final List<?> ancestorValue = EFactory
-					.eGetAsList(mapping.getOriginElement(), attribute.getName());
+			final List<?> leftValue = internalConvertFeatureMapList(EFactory.eGetAsList(mapping.getLeftElement(), attribute.getName()));
+			final List<?> rightValue = internalConvertFeatureMapList(EFactory.eGetAsList(mapping.getRightElement(), attribute.getName()));
+			final List<?> ancestorValue = internalConvertFeatureMapList(EFactory
+					.eGetAsList(mapping.getOriginElement(), attribute.getName()));
 
 			for (Object aValue : leftValue) {
 				// If an object from the left is neither in the right nor in the
@@ -1566,6 +1567,30 @@ public class GenericDiffEngine implements IDiffEngine {
 			}
 		}
 		return matchedReferences;
+	}
+	
+	/**
+	 * This will return a list containing only EObjects. This is mainly aimed at FeatureMap.Entry values.
+	 * @param input List that is to be converted.
+	 * @return A list containing only EObjects.
+	 */
+	private List<EObject> internalConvertFeatureMapList(List<?> input) {
+	    final List<EObject> result = new ArrayList<EObject>();
+	    for (Object inputValue : input) {
+	        result.add(internalFindActualEObject(inputValue));
+	    }
+	    return result;
+	}
+	
+	/**
+	 * This will return the first value of <tt>data</tt> that is not an instance of {@link Entry}.
+	 * @param data The object we need a valued of.
+	 * @return The first value of <tt>data</tt> that is not an instance of FeatureMapEntry.
+	 */
+	private EObject internalFindActualEObject(Object data) {
+	    if (data instanceof Entry)
+	        return internalFindActualEObject(((Entry)data).getValue());
+	    return (EObject)data;
 	}
 
 	/**
