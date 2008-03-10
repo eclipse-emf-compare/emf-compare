@@ -14,7 +14,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.core.util.AdapterUtilsTest;
 import org.eclipse.emf.compare.tests.unit.core.util.ClassUtilsTest;
 import org.eclipse.emf.compare.tests.unit.core.util.efactory.EFactoryTestSuite;
 import org.eclipse.emf.compare.tests.unit.core.util.emfcomparemap.EMFCompareMapTestSuite;
@@ -58,7 +57,6 @@ public final class CoreTestSuite {
 		suite.addTest(EFactoryTestSuite.suite());
 		suite.addTest(EMFCompareMapTestSuite.suite());
 		suite.addTest(ModelUtilsTestSuite.suite());
-		suite.addTestSuite(AdapterUtilsTest.class);
 		suite.addTestSuite(ClassUtilsTest.class);
 		return suite;
 	}
