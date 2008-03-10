@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.util;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 
 /**
  * Useful methods for EMF adapter factories handling.
@@ -24,83 +24,38 @@ import org.eclipse.emf.ecore.EObject;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class AdapterUtils {
-	/** Name of the extension point to parse for adapter factories. */
-	private static final String ADAPTER_FACTORY_EXTENSION_POINT = "org.eclipse.emf.edit.itemProviderAdapterFactories"; //$NON-NLS-1$
+    /** Adapter factory instance. This contains all factories registered in the global registry. */
+    private static final AdapterFactory FACTORY = createAdapterFactory();
+    
+    /**
+     * Utility classes don't need to (and shouldn't) be instantiated.
+     */
+    private AdapterUtils() {
+        // prevents instantiation.
+    }
 
-	/** Keeps track of all the {@link AdapterFactory adapter factories} this plug-in knows of. */
-	private static final Map<String, AdapterFactoryDescriptor> FACTORIES = new EMFCompareMap<String, AdapterFactoryDescriptor>();
+    /**
+     * Returns a factory built with all the {@link AdapterFactory} instances
+     * available in the global registry.
+     * 
+     * @return A factory built with all the {@link AdapterFactory} instances
+     *          available in the global registry.
+     */
+    public static AdapterFactory getAdapterFactory() {
+        return FACTORY;
+    }
 
-	/**
-	 * This static initializer will parse the extension point to seek for factory classes and populate the
-	 * factories list.
-	 */
-	static {
-		parseExtensionMetadata();
-	}
-
-	/**
-	 * Utility classes don't need to (and shouldn't) be instantiated.
-	 */
-	private AdapterUtils() {
-		// prevents instantiation.
-	}
-
-	/**
-	 * Returns the adapter factory for the given {@link EObject} or <code>null</code> if it cannot be found.
-	 * 
-	 * @param eObj
-	 *            {@link EObject} we seek the {@link AdapterFactory} for.
-	 * @return Specific {@link AdapterFactory} adapted to the {@link EObject}, <code>null</code> if it
-	 *         cannot be found.
-	 */
-	public static AdapterFactory findAdapterFactory(EObject eObj) {
-		final String uri = eObj.eClass().getEPackage().getNsURI();
-		return findAdapterFactory(uri);
-	}
-
-	/**
-	 * Returns the factory described by the given <code>nsURI</code>, <code>null</code> if it cannot be
-	 * found.
-	 * 
-	 * @param nsURI
-	 *            <code>nsURI</code> of the desired {@link AdapterFactory}.
-	 * @return The factory described by the fiven <code>nsURI</code>, <code>null</code> if it cannot be
-	 *         found.
-	 */
-	public static AdapterFactory findAdapterFactory(String nsURI) {
-		AdapterFactory adapterFactory = null;
-		if (FACTORIES.containsKey(nsURI))
-			adapterFactory = FACTORIES.get(nsURI).getAdapterInstance();
-		return adapterFactory;
-	}
-
-	/**
-	 * Creates an {@link AdapterFactoryDescriptor} given the
-	 * {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory} from.
-	 * 
-	 * @param configElement
-	 *            The {@link IConfigurationElement configuration element} to parse its {@link AdapterFactory}
-	 *            from.
-	 * @return The descriptor for the {@link AdapterFactory} defined by the given
-	 *         {@link IConfigurationElement configuration element}.
-	 */
-	private static AdapterFactoryDescriptor parseAdapterFactory(IConfigurationElement configElement) {
-		return new AdapterFactoryDescriptor(configElement);
-	}
-
-	/**
-	 * This will parse {@link #ADAPTER_FACTORY_EXTENSION_POINT} for information about factories and populate
-	 * the {@link #FACTORIES known factories} list.
-	 */
-	private static void parseExtensionMetadata() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				ADAPTER_FACTORY_EXTENSION_POINT).getExtensions();
-		for (int i = 0; i < extensions.length; i++) {
-			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-			for (int j = 0; j < configElements.length; j++) {
-				final AdapterFactoryDescriptor desc = parseAdapterFactory(configElements[j]);
-				FACTORIES.put(desc.getNsURI(), desc);
-			}
-		}
-	}
+    /**
+     * Returns an adapter factory containing all the global EMF registry's factories.
+     * @return An adapter factory made of all the adapter factories declared in
+     *         the registry.
+     */
+    private static ComposedAdapterFactory createAdapterFactory() {
+        final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+        factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+        // These two factories could prove useful to avoid potential errors
+        factories.add(new ResourceItemProviderAdapterFactory());
+        factories.add(new ReflectiveItemProviderAdapterFactory());
+        return new ComposedAdapterFactory(factories);
+    }
 }
