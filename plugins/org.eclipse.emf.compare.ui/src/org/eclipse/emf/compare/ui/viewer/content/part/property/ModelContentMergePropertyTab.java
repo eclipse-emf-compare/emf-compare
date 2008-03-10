@@ -22,13 +22,13 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
-import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabFolder;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabItem;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -89,7 +89,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 		parent = parentFolder;
 
 		setContentProvider(new PropertyContentProvider());
-		setLabelProvider(new PropertyLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
+		setLabelProvider(new PropertyLabelProvider(AdapterUtils.getAdapterFactory()));
 		getTable().addPaintListener(new PropertyPaintListener());
 
 		setUseHashlookup(true);

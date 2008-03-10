@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ui.util;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.ClassUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -128,7 +129,7 @@ public final class EMFCompareEObjectUtils {
 	 */
 	private static AdapterFactoryLabelProvider getLabelProvider() {
 		if (labelProvider == null) {
-			labelProvider = new AdapterFactoryLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory());
+			labelProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
 		}
 		return labelProvider;
 	}

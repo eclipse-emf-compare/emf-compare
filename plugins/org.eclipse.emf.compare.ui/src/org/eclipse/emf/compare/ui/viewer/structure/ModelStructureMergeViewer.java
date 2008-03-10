@@ -22,9 +22,8 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
-import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -283,7 +282,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		 * Default constructor.
 		 */
 		public ModelStructureLabelProvider() {
-			adapterProvider = new AdapterFactoryLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory());
+			adapterProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
 
 		}
 
@@ -307,12 +306,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			} else {
 				if (image == null) {
 					image = adapterProvider.getImage(object);
-					if (image == null && object instanceof EObject) {
-						if (EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object)) {
-							adapterProvider.setAdapterFactory(EMFAdapterFactoryProvider.getAdapterFactory());
-							image = adapterProvider.getImage(object);
-						}
-					}
 				}
 			}
 			return image;
@@ -337,12 +330,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 					text = ((IFile)object).getName();
 				} else {
 					text = adapterProvider.getText(object);
-					if (text == null && object instanceof EObject) {
-						if (EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object)) {
-							adapterProvider.setAdapterFactory(EMFAdapterFactoryProvider.getAdapterFactory());
-							text = adapterProvider.getText(object);
-						}
-					}
 				}
 			}
 			return text;

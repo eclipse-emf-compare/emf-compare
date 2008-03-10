@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
-import org.eclipse.emf.compare.ui.util.EMFAdapterFactoryProvider;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
@@ -34,7 +33,6 @@ import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.ContainmentUpdatingFeatureMapEntry;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.DelegatingWrapperItemProvider;
 import org.eclipse.emf.edit.provider.FeatureMapEntryWrapperItemProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -46,7 +44,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -97,8 +94,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		parent = parentFolder;
 
 		setUseHashlookup(true);
-		setContentProvider(new AdapterFactoryContentProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
-		setLabelProvider(new TreeLabelProvider(EMFAdapterFactoryProvider.getAdapterFactory()));
+		setContentProvider(new AdapterFactoryContentProvider(AdapterUtils.getAdapterFactory()));
+		setLabelProvider(new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory()));
 		getTree().addPaintListener(new TreePaintListener());
 	}
 
@@ -241,11 +238,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		dataToItem.clear();
 		dataToTreeItem.clear();
 
-		final ComposedAdapterFactory adapterFactory = EMFAdapterFactoryProvider.getAdapterFactory();
-		final AdapterFactory best = AdapterUtils.findAdapterFactory(eObject);
-		if (best != null)
-			adapterFactory.addAdapterFactory(best);
-		setLabelProvider(new TreeLabelProvider(adapterFactory));
+		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
+		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 		setInput(eObject.eResource());
 
 		mapTreeItems();
@@ -621,53 +615,6 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 							rectangleArcWidth, rectangleArcHeight);
 				}
 			}
-		}
-	}
-
-	/**
-	 * Label provider used by the tree control of this part.
-	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
-	 */
-	private class TreeLabelProvider extends AdapterFactoryLabelProvider {
-		/**
-		 * Instantiates this label provider given its {@link AdapterFactory}.
-		 * 
-		 * @param theAdapterFactory
-		 *            Adapter factory providing this {@link LabelProvider}'s text and images.
-		 */
-		public TreeLabelProvider(AdapterFactory theAdapterFactory) {
-			super(theAdapterFactory);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see AdapterFactoryLabelProvider#getImage(Object)
-		 */
-		@Override
-		public Image getImage(Object object) {
-			Image image = super.getImage(object);
-			if (image == null && object instanceof EObject) {
-				EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object);
-				image = super.getImage(object);
-			}
-			return image;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see AdapterFactoryLabelProvider#getText(Object)
-		 */
-		@Override
-		public String getText(Object object) {
-			String text = super.getText(object);
-			if (text == null && object instanceof EObject) {
-				EMFAdapterFactoryProvider.addAdapterFactoryFor((EObject)object);
-				text = super.getText(object);
-			}
-			return text;
 		}
 	}
 }
