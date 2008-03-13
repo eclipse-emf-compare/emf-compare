@@ -86,7 +86,7 @@ public final class ProviderImageUtil {
 
 		AdapterFactory featureAdapterFactory = null;
 		if (featureValue != null && (featureValue instanceof EObject))
-			featureAdapterFactory = AdapterUtils.getAdapterFactory();
+			featureAdapterFactory = AdapterUtils.findAdapterFactory((EObject)featureValue);
 
 		return featureAdapterFactory;
 	}
