@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -24,8 +25,11 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class AdapterUtils {
-	/** Adapter factory instance. This contains all factories registered in the global registry. */
-	private static final AdapterFactory FACTORY = createAdapterFactory();
+	/**
+	 * Adapter factory instance. This contains all factories registered in the
+	 * global registry.
+	 */
+	private static final ComposedAdapterFactory FACTORY = createAdapterFactory();
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
@@ -35,25 +39,41 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Returns a factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 * Returns a factory built with all the {@link AdapterFactory} instances
+	 * available in the global registry.
 	 * 
-	 * @return A factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 * @return A factory built with all the {@link AdapterFactory} instances
+	 *         available in the global registry.
 	 */
 	public static AdapterFactory getAdapterFactory() {
 		return FACTORY;
 	}
 
 	/**
-	 * Returns an adapter factory containing all the global EMF registry's factories.
+	 * Returns an adapter factory containing all the global EMF registry's
+	 * factories.
 	 * 
-	 * @return An adapter factory made of all the adapter factories declared in the registry.
+	 * @return An adapter factory made of all the adapter factories declared in
+	 *         the registry.
 	 */
 	private static ComposedAdapterFactory createAdapterFactory() {
 		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
-		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+		factories.add(new ComposedAdapterFactory(
+				ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		// These two factories could prove useful to avoid potential errors
 		factories.add(new ResourceItemProviderAdapterFactory());
 		factories.add(new ReflectiveItemProviderAdapterFactory());
 		return new ComposedAdapterFactory(factories);
+	}
+
+	/**
+	 * Return a factory for a given instance.
+	 * 
+	 * @param eObj
+	 *            the instance.
+	 * @return the factory.
+	 */
+	public static AdapterFactory findAdapterFactory(EObject eObj) {
+		return FACTORY.getFactoryForType(eObj);
 	}
 }
