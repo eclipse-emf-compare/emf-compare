@@ -56,13 +56,15 @@ public final class ModelUtils {
 	 *            URI of the new resource to create.
 	 * @param root
 	 *            EObject to attach to a new resource.
+	 * @return The resource <tt>root</tt> has been attached to.
 	 */
-	public static void attachResource(URI resourceURI, EObject root) {
+	public static Resource attachResource(URI resourceURI, EObject root) {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullRoot")); //$NON-NLS-1$
 
 		final Resource newResource = createResource(resourceURI);
 		newResource.getContents().add(root);
+		return newResource;
 	}
 
 	/**
@@ -75,13 +77,15 @@ public final class ModelUtils {
 	 *            ResourceSet in which to create the resource.
 	 * @param root
 	 *            EObject to attach to a new resource.
+	 * @return The resource <tt>root</tt> has been attached to.
 	 */
-	public static void attachResource(URI resourceURI, ResourceSet resourceSet, EObject root) {
+	public static Resource attachResource(URI resourceURI, ResourceSet resourceSet, EObject root) {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullRoot")); //$NON-NLS-1$
 
 		final Resource newResource = createResource(resourceURI, resourceSet);
 		newResource.getContents().add(root);
+		return newResource;
 	}
 
 	/**
