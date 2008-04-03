@@ -57,7 +57,7 @@
                   The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.api.IMatchEngine&lt;/code&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.IMatchEngine"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.api.IMatchEngine"/>
                </appInfo>
             </annotation>
          </attribute>
