@@ -54,10 +54,10 @@
          <attribute name="extensionClass" type="string" use="required">
             <annotation>
                <documentation>
-                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.match.DiffEngine&lt;/code&gt;.
+                  The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension&lt;/code&gt;.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.match.DiffExtension"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension"/>
                </appInfo>
             </annotation>
          </attribute>
