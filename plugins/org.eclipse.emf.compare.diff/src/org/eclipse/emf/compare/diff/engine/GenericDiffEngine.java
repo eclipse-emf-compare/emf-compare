@@ -1096,8 +1096,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	private void createNewReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> addedReferences) {
-		for (final Iterator<EObject> addedReferenceIterator = addedReferences.iterator(); addedReferenceIterator
-				.hasNext(); ) {
+		final Iterator<EObject> addedReferenceIterator = addedReferences.iterator();
+		while (addedReferenceIterator.hasNext()) {
 			final EObject eobj = addedReferenceIterator.next();
 			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
 			addOperation.setRightElement(right);
@@ -1337,8 +1337,8 @@ public class GenericDiffEngine implements IDiffEngine {
 
 			root.getSubDiffElements().add(operation);
 		} else {
-			for (final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator(); addedReferenceIterator
-					.hasNext(); ) {
+			final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator();
+			while (addedReferenceIterator.hasNext()) {
 				final EObject eobj = addedReferenceIterator.next();
 				final RemoteAddReferenceValue addOperation = DiffFactory.eINSTANCE
 						.createRemoteAddReferenceValue();
@@ -1350,8 +1350,8 @@ public class GenericDiffEngine implements IDiffEngine {
 					addOperation.setRightRemovedTarget(getMatchedEObject(eobj));
 				root.getSubDiffElements().add(addOperation);
 			}
-			for (final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator(); deletedReferenceIterator
-					.hasNext(); ) {
+			final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator();
+			while (deletedReferenceIterator.hasNext()) {
 				final EObject eobj = deletedReferenceIterator.next();
 				final RemoteRemoveReferenceValue delOperation = DiffFactory.eINSTANCE
 						.createRemoteRemoveReferenceValue();
@@ -1385,8 +1385,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	private void createRemovedReferencesOperation(DiffGroup root, EObject left, EObject right,
 			EReference reference, List<EObject> deletedReferences) {
-		for (final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator(); deletedReferenceIterator
-				.hasNext(); ) {
+		final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator();
+		while (deletedReferenceIterator.hasNext()) {
 			final EObject eobj = deletedReferenceIterator.next();
 			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
 			delOperation.setRightElement(right);
@@ -1560,7 +1560,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	private List<EObject> getMatchedReferences(List<EObject> references) {
 		final List<EObject> matchedReferences = new ArrayList<EObject>();
-		for (final Iterator<EObject> refIterator = references.iterator(); refIterator.hasNext(); ) {
+		final Iterator<EObject> refIterator = references.iterator();
+		while (refIterator.hasNext()) {
 			final Object currentReference = refIterator.next();
 			if (currentReference != null) {
 				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
