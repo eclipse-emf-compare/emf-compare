@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
+import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -154,9 +155,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	protected void inputChanged(Object input, Object oldInput) {
 		super.inputChanged(input, oldInput);
 		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
-			setInput(((ModelStructureContentProvider)getContentProvider()).getSnapshot());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT,
-					((ModelStructureContentProvider)getContentProvider()).getSnapshot());
+			setInput(ModelComparator.getComparator(configuration).getComparisonResult());
 		}
 		updateToolItems();
 	}
@@ -166,11 +165,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * menu.
 	 */
 	protected void updateToolItems() {
-		Boolean enableSave = (Boolean)configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE);
-		if (enableSave == null)
-			enableSave = false;
-
-		exportMenu.enableSave(!enableSave);
+		exportMenu.enableSave(!ModelComparator.getComparator(configuration).isLeftRemote()
+				&& !ModelComparator.getComparator(configuration).isRightRemote());
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 

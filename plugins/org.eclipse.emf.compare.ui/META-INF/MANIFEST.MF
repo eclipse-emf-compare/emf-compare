@@ -23,5 +23,6 @@ Bundle-Vendor: %providerName
 Export-Package: org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.ui.editor,
  org.eclipse.emf.compare.ui.export,
+ org.eclipse.emf.compare.ui.internal;x-friends:="org.eclipse.emf.compare.team.subversive",
  org.eclipse.emf.compare.ui.util
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

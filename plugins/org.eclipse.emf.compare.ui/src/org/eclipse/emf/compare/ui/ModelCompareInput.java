@@ -27,10 +27,11 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -40,6 +41,9 @@ import org.eclipse.swt.graphics.Image;
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ModelCompareInput implements ICompareInput {
+	/** Resource containing the ancestor object of this comparison. */
+	private Resource ancestorResource;
+
 	/** {@link DiffModel} result of the underlying comparison. */
 	private final DiffModel diff;
 
@@ -49,8 +53,14 @@ public class ModelCompareInput implements ICompareInput {
 	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
 	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
 
+	/** Resource containing the left compared object. */
+	private Resource leftResource;
+
 	/** {@link MatchModel} result of the underlying comparison. */
 	private final MatchModel match;
+
+	/** Resource containing the right compared object. */
+	private Resource rightResource;
 
 	/**
 	 * Creates a CompareInput given the resulting
@@ -65,6 +75,25 @@ public class ModelCompareInput implements ICompareInput {
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel) {
 		match = matchModel;
 		diff = diffModel;
+	}
+
+	/**
+	 * Creates a CompareInput given the resulting
+	 * {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} and
+	 * {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
+	 * 
+	 * @param matchModel
+	 *            {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} of the comparison.
+	 * @param diffModel
+	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
+	 * @param comparator
+	 *            The comparator which has been used for this comparison.
+	 */
+	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel, ModelComparator comparator) {
+		this(matchModel, diffModel);
+		leftResource = comparator.getLeftResource();
+		rightResource = comparator.getRightResource();
+		ancestorResource = comparator.getAncestorResource();
 	}
 
 	/**
@@ -128,25 +157,20 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
-		ITypedElement element = null;
-		if (getMatch().getOriginModel() == null)
-			return element;
-
-		if (getMatch().getMatchedElements().size() > 0
-				&& getMatch().getMatchedElements().get(0) instanceof Match3Element)
-			element = new TypedElementWrapper(((Match3Element)getMatch().getMatchedElements().get(0))
-					.getOriginElement());
-		else if (getMatch().getUnMatchedElements().size() > 0) {
-			// long run :/
-			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
-				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getOriginModel())) {
-					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
-					break;
-				}
+		if (ancestorResource != null)
+			return new TypedElementWrapper(ancestorResource.getContents().get(0));
+		// Seeks a resource from the MatchModel
+		// Assumes that some elements have been matched
+		final TreeIterator<EObject> matchIterator = match.eAllContents();
+		EObject root = null;
+		while (matchIterator.hasNext()) {
+			final EObject matchElement = matchIterator.next();
+			if (matchElement instanceof Match3Element) {
+				root = ((Match3Element)matchElement).getOriginElement().eResource().getContents().get(0);
+				break;
 			}
 		}
-
-		return element;
+		return new TypedElementWrapper(root);
 	}
 
 	/**
@@ -171,7 +195,8 @@ public class ModelCompareInput implements ICompareInput {
 			final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 			final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
 			final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
-			for (final TreeIterator<EObject> iterator = getDiff().eAllContents(); iterator.hasNext(); ) {
+			final TreeIterator<EObject> iterator = getDiff().eAllContents();
+			while (iterator.hasNext()) {
 				final DiffElement aDiff = (DiffElement)iterator.next();
 				if (aDiff instanceof ModelElementChange)
 					modelElementDiffs.add((ModelElementChange)aDiff);
@@ -227,23 +252,20 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
-		ITypedElement element = null;
-
-		if (getMatch().getMatchedElements().size() > 0
-				&& getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
-					.getLeftElement());
-		else if (getMatch().getUnMatchedElements().size() > 0) {
-			// long run :/
-			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
-				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getLeftModel())) {
-					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
-					break;
-				}
+		if (leftResource != null)
+			return new TypedElementWrapper(leftResource.getContents().get(0));
+		// Seeks a resource from the MatchModel
+		// Assumes that some elements have been matched
+		final TreeIterator<EObject> matchIterator = match.eAllContents();
+		EObject root = null;
+		while (matchIterator.hasNext()) {
+			final EObject matchElement = matchIterator.next();
+			if (matchElement instanceof Match2Elements) {
+				root = ((Match2Elements)matchElement).getLeftElement().eResource().getContents().get(0);
+				break;
 			}
 		}
-
-		return element;
+		return new TypedElementWrapper(root);
 	}
 
 	/**
@@ -277,23 +299,20 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
-		ITypedElement element = null;
-
-		if (getMatch().getMatchedElements().size() > 0
-				&& getMatch().getMatchedElements().get(0) instanceof Match2Elements)
-			element = new TypedElementWrapper(((Match2Elements)getMatch().getMatchedElements().get(0))
-					.getRightElement());
-		else if (getMatch().getUnMatchedElements().size() > 0) {
-			// long run :/
-			for (UnMatchElement unmatch : getMatch().getUnMatchedElements()) {
-				if (unmatch.getElement().eResource().getURI().toString().equals(getMatch().getRightModel())) {
-					element = new TypedElementWrapper(unmatch.getElement().eResource().getContents().get(0));
-					break;
-				}
+		if (rightResource != null)
+			return new TypedElementWrapper(rightResource.getContents().get(0));
+		// Seeks a resource from the MatchModel
+		// Assumes that some elements have been matched
+		final TreeIterator<EObject> matchIterator = match.eAllContents();
+		EObject root = null;
+		while (matchIterator.hasNext()) {
+			final EObject matchElement = matchIterator.next();
+			if (matchElement instanceof Match2Elements) {
+				root = ((Match2Elements)matchElement).getRightElement().eResource().getContents().get(0);
+				break;
 			}
 		}
-
-		return element;
+		return new TypedElementWrapper(root);
 	}
 
 	/**

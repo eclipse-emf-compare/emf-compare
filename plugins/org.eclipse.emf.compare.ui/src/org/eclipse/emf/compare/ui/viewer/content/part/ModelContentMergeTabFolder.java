@@ -372,7 +372,8 @@ public class ModelContentMergeTabFolder {
 		EObject theElement = null;
 		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
 
-		for (final TreeIterator<EObject> iterator = match.eAllContents(); iterator.hasNext(); ) {
+		final TreeIterator<EObject> iterator = match.eAllContents();
+		while (iterator.hasNext()) {
 			final Object object = iterator.next();
 
 			if (object instanceof Match3Element) {

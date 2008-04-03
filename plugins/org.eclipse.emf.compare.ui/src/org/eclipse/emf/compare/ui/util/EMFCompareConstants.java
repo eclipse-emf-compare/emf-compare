@@ -106,11 +106,6 @@ public interface EMFCompareConstants {
 	/** Preferences key for the circling color of a removed element. */
 	String PREFERENCES_KEY_REMOVED_COLOR = "removed.color"; //$NON-NLS-1$
 
-	/**
-	 * Key of the property associated with an input change in the structure viewer.
-	 */
-	String PROPERTY_COMPARISON_RESULT = "comparison.result"; //$NON-NLS-1$
-
 	/** Key for the property associated with the comparison time. */
 	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$
 
@@ -123,9 +118,6 @@ public interface EMFCompareConstants {
 	 * Key of the property associated with a change in the content merge viewer trees' selection.
 	 */
 	String PROPERTY_CONTENT_SELECTION = "content.selection.changed"; //$NON-NLS-1$
-
-	/** Key for the property indicating whether the left model is remote. */
-	String PROPERTY_LEFT_IS_REMOTE = "comparison.left.remote"; //$NON-NLS-1$
 
 	/**
 	 * Key of the property associated with a selection in the structure merge viewer.

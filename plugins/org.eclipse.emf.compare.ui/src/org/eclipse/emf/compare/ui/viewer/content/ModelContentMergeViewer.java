@@ -12,10 +12,7 @@ package org.eclipse.emf.compare.ui.viewer.content;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -23,48 +20,32 @@ import java.util.ResourceBundle;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.compare.HistoryItem;
-import org.eclipse.compare.IStreamContentAccessor;
-import org.eclipse.compare.ITypedElement;
-import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
+import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewer.content.part.AbstractCenterPart;
 import org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabFolder;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabItem;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -80,7 +61,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Scrollable;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
@@ -110,35 +90,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Ancestor part of the three possible parts of this content viewer. */
 	protected ModelContentMergeTabFolder ancestorPart;
 
-	/**
-	 * Ancestor model used for the comparison if it takes place here instead of in the structure viewer's
-	 * content provider.
-	 */
-	protected Resource ancestorResource;
-
 	/** Keeps track of the current diff Selection. */
 	protected final List<DiffElement> currentSelection = new ArrayList<DiffElement>();
-
-	/** Indicates that this is a three way comparison. */
-	protected boolean isThreeWay;
 
 	/** Left of the three possible parts of this content viewer. */
 	protected ModelContentMergeTabFolder leftPart;
 
-	/**
-	 * Left model used for the comparison if it takes place here instead of in the structure viewer's content
-	 * provider.
-	 */
-	protected Resource leftResource;
-
 	/** Right of the three possible parts of this content viewer. */
 	protected ModelContentMergeTabFolder rightPart;
-
-	/**
-	 * Right model used for the comparison if it takes place here instead of in the structure viewer's content
-	 * provider.
-	 */
-	protected Resource rightResource;
 
 	/**
 	 * this is the "center" part of the content merge viewer where we handle all the drawing operations.
@@ -162,6 +121,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * left model.
 	 */
 	private Action copyDiffRightToLeft;
+
+	/** Indicates that this is a three-way comparison. */
+	private boolean isThreeWay;
 
 	/**
 	 * Used for history comparisons, this will keep track of modification time of the last {@link HistoryItem}
@@ -324,23 +286,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (changed)
 				lastHistoryItemDate = ((HistoryItem)((ICompareInput)input).getRight()).getModificationDate();
 		}
-		if (configuration.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT) != null && !changed) {
-			final ModelInputSnapshot snapshot = (ModelInputSnapshot)configuration
-					.getProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT);
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+		final ModelComparator comparator = ModelComparator.getComparator(configuration);
+		if (comparator.getComparisonResult() != null && !changed) {
+			final ModelInputSnapshot snapshot = comparator.getComparisonResult();
+			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
 		} else if (input instanceof ModelInputSnapshot) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
+			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
 		} else if (input instanceof ICompareInput) {
-			final ITypedElement left = ((ICompareInput)input).getLeft();
-			final ITypedElement right = ((ICompareInput)input).getRight();
-			final ITypedElement ancestor = ((ICompareInput)input).getAncestor();
-
-			if (ancestor != null)
-				isThreeWay = true;
-
-			prepareComparison(left, right, ancestor);
-			doCompare();
+			comparator.loadResources((ICompareInput)input);
+			final ModelInputSnapshot snapshot = comparator.compare(configuration);
+			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
 		}
 	}
 
@@ -412,10 +368,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		snap.setDiff(((ModelCompareInput)getInput()).getDiff());
 		snap.setMatch(((ModelCompareInput)getInput()).getMatch());
 		configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
-		leftDirty = leftDirty || leftToRight;
-		rightDirty = rightDirty || !leftToRight;
-		setRightDirty(leftDirty);
-		setLeftDirty(rightDirty);
+		leftDirty |= !leftToRight;
+		rightDirty |= leftToRight;
+		setLeftDirty(leftDirty);
+		setRightDirty(rightDirty);
 		update();
 	}
 
@@ -440,10 +396,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
 			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
 			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
-			leftDirty = leftDirty || (leftToRight && configuration.isLeftEditable());
-			rightDirty = rightDirty || (!leftToRight && configuration.isRightEditable());
-			setRightDirty(leftDirty);
-			setLeftDirty(rightDirty);
+			leftDirty |= !leftToRight && configuration.isLeftEditable();
+			rightDirty |= leftToRight && configuration.isRightEditable();
+			setLeftDirty(leftDirty);
+			setRightDirty(rightDirty);
 			update();
 		}
 	}
@@ -548,45 +504,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Handles the comparison (either two or three ways) of the models.
-	 */
-	protected void doCompare() {
-		try {
-			final Date start = Calendar.getInstance().getTime();
-			final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
-
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InterruptedException {
-					final Map<String, Object> options = new EMFCompareMap<String, Object>();
-					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-					final MatchModel match;
-					if (!isThreeWay)
-						match = MatchService.doResourceMatch(leftResource, rightResource, options);
-					else
-						match = MatchService.doResourceMatch(leftResource, rightResource, ancestorResource,
-								options);
-					final DiffModel diff = DiffService.doDiff(match, isThreeWay);
-
-					snapshot.setDate(Calendar.getInstance().getTime());
-					snapshot.setDiff(diff);
-					snapshot.setMatch(match);
-				}
-			});
-
-			final Date end = Calendar.getInstance().getTime();
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
-					- start.getTime());
-
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_RESULT, snapshot);
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff()));
-		} catch (InterruptedException e) {
-			throw new EMFCompareException(e);
-		} catch (InvocationTargetException e) {
-			EMFComparePlugin.log(e, true);
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.jface.viewers.Viewer#fireSelectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -659,21 +576,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		ancestorPart.removeCompareEditorPartListener(partListener);
 		ancestorPart.dispose();
 		ancestorPart = null;
-		if (leftResource != null) {
-			leftResource.unload();
-			leftResource = null;
-		}
-		if (rightResource != null) {
-			rightResource.unload();
-			rightResource = null;
-		}
-		if (ancestorResource != null) {
-			ancestorResource.unload();
-			ancestorResource = null;
-		}
 		canvas.dispose();
 		canvas = null;
 		currentSelection.clear();
+		ModelComparator.removeComparator(configuration);
 	}
 
 	/**
@@ -745,66 +651,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Handles all the loading operations for the three models we need.
-	 * 
-	 * @param left
-	 *            Left resource (either local or remote) to load.
-	 * @param right
-	 *            Right resource (either local or remote) to load.
-	 * @param ancestor
-	 *            Ancestor resource (either local or remote) to load.
-	 */
-	protected void prepareComparison(ITypedElement left, ITypedElement right, ITypedElement ancestor) {
-		try {
-			final ResourceSet modelResourceSet = new ResourceSetImpl();
-			if (left instanceof ResourceNode && right instanceof ResourceNode) {
-				leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-						modelResourceSet).eResource();
-				rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
-						modelResourceSet).eResource();
-				if (isThreeWay)
-					ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
-							modelResourceSet).eResource();
-			} else if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
-				// this is the case of SVN/CVS comparison, we invert left
-				// (remote) and right (local).
-				if (((ResourceNode)left).getResource().isAccessible())
-					rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
-							modelResourceSet).eResource();
-				else
-					rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(
-							((ResourceNode)left).getResource().getFullPath().toOSString(), true));
-				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
-						right.getName(), modelResourceSet).eResource();
-				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$)
-				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
-				configuration.setLeftEditable(false);
-				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
-				if (isThreeWay)
-					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-							ancestor.getName(), modelResourceSet).eResource();
-			} else if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-				// This can happen with some SVN plug-ins
-				rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
-						modelResourceSet).eResource();
-				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
-						right.getName(), modelResourceSet).eResource();
-				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
-				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
-				configuration.setLeftEditable(false);
-				configuration.setProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE, true);
-				if (isThreeWay)
-					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-							ancestor.getName(), modelResourceSet).eResource();
-			}
-		} catch (IOException e) {
-			throw new EMFCompareException(e);
-		} catch (CoreException e) {
-			throw new EMFCompareException(e);
-		}
-	}
-
-	/**
 	 * This will enable or disable the toolbar's copy actions according to the given <code>boolean</code>.
 	 * The "copy diff left to right" action will be enabled if <code>enable</code> is <code>True</code>,
 	 * but the "copy diff right to left" action will only be activated if <code>enable</code> is
@@ -814,12 +660,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            <code>True</code> if we seek to enable the actions, <code>False</code> otherwise.
 	 */
 	protected void switchCopyState(boolean enabled) {
-		boolean leftIsRemote = false;
-		if (configuration.getProperty(EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE) != null)
-			leftIsRemote = Boolean.parseBoolean(configuration.getProperty(
-					EMFCompareConstants.PROPERTY_LEFT_IS_REMOTE).toString());
+		final boolean leftIsRemote = ModelComparator.getComparator(configuration).isLeftRemote();
+		final boolean rightIsRemote = ModelComparator.getComparator(configuration).isRightRemote();
 		if (copyDiffLeftToRight != null)
-			copyDiffLeftToRight.setEnabled(enabled);
+			copyDiffLeftToRight.setEnabled(!rightIsRemote && enabled);
 		if (copyDiffRightToLeft != null)
 			copyDiffRightToLeft.setEnabled(!leftIsRemote && enabled);
 	}

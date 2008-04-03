@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.emf.compare.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.emf.compare.ui" id="org.eclipse.emf.compare.internal.team.handler" name="org.eclipse.emf.compare.internal.team.handler"/>
+      </appInfo>
+      <documentation>
+         This internal extension point is not considered API. It is used to add specific code for resources handling when EMF Compare is called by given team providers.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="handler"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="handler">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The fully qualified name of an action extending &lt;code&gt;org.eclipse.emf.compare.ui.internal.AbstractTeamHandler&lt;/code&gt;
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.ui.internal.AbstractTeamHandler:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         0.8
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

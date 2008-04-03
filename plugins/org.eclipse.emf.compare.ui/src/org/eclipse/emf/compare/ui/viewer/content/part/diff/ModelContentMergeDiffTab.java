@@ -140,7 +140,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			// item displayed by the diff
 			result = item;
 		} else {
-			// The item corresponding to the diff is not visible. We'll wrap its first visible ancestor.
+			// The item corresponding to the diff is not visible. We'll wrap its
+			// first visible ancestor.
 			result = new ModelContentMergeTabItem(item.getActualItem(), treeItem, item.getCurveColor());
 		}
 
@@ -444,7 +445,11 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				data = EMFCompareEObjectUtils.getLeftElement(diff);
 			else
 				data = EMFCompareEObjectUtils.getRightElement(diff);
-			dataToDiff.put(data, diff);
+			if (data != null)
+			    dataToDiff.put(data, diff);
+			else
+			    // TODO for now, we're using the first item's data, we should look for the matchedElement
+			    dataToDiff.put((EObject)getTree().getItems()[0].getData(), diff);
 		}
 	}
 
@@ -475,21 +480,26 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		for (EObject key : dataToDiff.keySet()) {
 			final DiffElement diff = dataToDiff.get(key);
 			// Defines the TreeItem corresponding to this difference
-			final EObject data;
+			EObject data;
 			if (partSide == EMFCompareConstants.ANCESTOR && diff instanceof ConflictingDiffElement)
-				data = ((ConflictingDiffElement)diff).getOriginElement();
-			else if (partSide == EMFCompareConstants.LEFT)
-				data = EMFCompareEObjectUtils.getLeftElement(diff);
-			else
-				data = EMFCompareEObjectUtils.getRightElement(diff);
+                data = ((ConflictingDiffElement)diff).getOriginElement();
+            else if (partSide == EMFCompareConstants.LEFT)
+                data = EMFCompareEObjectUtils.getLeftElement(diff);
+            else
+                data = EMFCompareEObjectUtils.getRightElement(diff);
+			if (data == null)
+                // TODO for now, we're using the first item's data, we should look for the matchedElement
+                data = (EObject)getTree().getItems()[0].getData();
 			final Item actualItem = (Item)findItem(data);
 			if (actualItem == null)
 				return;
 
 			Item visibleItem = null;
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget) {
-				// in the case of a modelElementChangeRightTarget, we know we can't find
-				// the element itself, we'll then search for one with the same index
+			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget && ((ModelElementChangeRightTarget)diff).getRightElement().eContainer() != null) {
+				// in the case of a modelElementChangeRightTarget, we know we
+				// can't find
+				// the element itself, we'll then search for one with the same
+				// index
 				final EObject right = ((ModelElementChangeRightTarget)diff).getRightElement();
 				final EObject left = ((ModelElementChangeRightTarget)diff).getLeftParent();
 				final int rightIndex = right.eContainer().eContents().indexOf(right);
@@ -497,7 +507,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				final int leftIndex = Math.min(rightIndex - 1, left.eContents().size() - 1);
 				if (left.eContents().size() > 0)
 					visibleItem = (Item)findItem(left.eContents().get(leftIndex));
-			} else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget) {
+			} else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget && ((ModelElementChangeLeftTarget)diff).getLeftElement().eContainer() != null) {
 				// in the case of a modelElementChangeLeftTarget, we know we can't find
 				// the element itself, we'll then search for one with the same index
 				final EObject right = ((ModelElementChangeLeftTarget)diff).getRightParent();

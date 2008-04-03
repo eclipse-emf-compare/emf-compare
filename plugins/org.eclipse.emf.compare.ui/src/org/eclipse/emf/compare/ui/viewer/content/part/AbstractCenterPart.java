@@ -85,7 +85,10 @@ public abstract class AbstractCenterPart extends Canvas {
 	 */
 	@Override
 	public void dispose() {
-		buffer.dispose();
+		super.dispose();
+		if (buffer != null) {
+		    buffer.dispose();
+		}
 		baseCenterCurve = null;
 	}
 
