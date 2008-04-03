@@ -53,7 +53,7 @@ package org.eclipse.emf.compare.match.api;
  */
 public interface MatchOptions {
 	/** Default value for the "distinct metamodel" option. */
-	boolean DEFAULT_DISTINCT_METAMODEL = true;
+	boolean DEFAULT_DISTINCT_METAMODEL = false;
 
 	/** Default value for the "distinct metamodel" option. */
 	boolean DEFAULT_IGNORE_ID = false;

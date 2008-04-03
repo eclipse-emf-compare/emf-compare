@@ -182,11 +182,13 @@ public class GenericMatchEngine implements IMatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftObject.eResource()) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					final TreeIterator<EObject> iterator = unMatched.eAllContents();
+					while (iterator.hasNext())
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightObject.eResource()) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					final TreeIterator<EObject> iterator = unMatched.eAllContents();
+					while (iterator.hasNext())
 						remainingRight.add(iterator.next());
 				}
 			}
@@ -482,10 +484,12 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext()) {
 			final EObject next = it.next();
-			final double similarity = absoluteMetric(eObj, next);
-			if (similarity > max) {
-				max = similarity;
-				resultObject = next;
+			if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) || eObj.eClass() == next.eClass()) {
+    			final double similarity = absoluteMetric(eObj, next);
+    			if (similarity > max) {
+    				max = similarity;
+    				resultObject = next;
+    			}
 			}
 		}
 		return resultObject;
@@ -1058,11 +1062,13 @@ public class GenericMatchEngine implements IMatchEngine {
 			for (EObject unMatched : remainingUnMatchedElements) {
 				if (unMatched.eResource() == leftResource) {
 					remainingLeft.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					final TreeIterator<EObject> iterator = unMatched.eAllContents();
+					while (iterator.hasNext())
 						remainingLeft.add(iterator.next());
 				} else if (unMatched.eResource() == rightResource) {
 					remainingRight.add(unMatched);
-					for (final TreeIterator<EObject> iterator = unMatched.eAllContents(); iterator.hasNext(); )
+					final TreeIterator<EObject> iterator = unMatched.eAllContents();
+					while (iterator.hasNext())
 						remainingRight.add(iterator.next());
 				}
 			}
