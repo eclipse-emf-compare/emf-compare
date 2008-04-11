@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id: plugin.xml,v 1.1 2008/04/11 14:56:48 cbrun Exp $
+-->
+
+<plugin>
+
+  <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+    <factory 
+       uri = "http://www.eclipse.org/emf/compare/examples/addressbook" 
+       class = "org.eclipse.emf.compare.examples.addressbook.addressbook.provider.AddressbookItemProviderAdapterFactory"
+       supportedTypes = 
+         "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+          org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+          org.eclipse.emf.edit.provider.ITreeItemContentProvider
+          org.eclipse.emf.edit.provider.IItemLabelProvider
+          org.eclipse.emf.edit.provider.IItemPropertySource" />
+  </extension>
+  
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package
+       uri = "http://www.eclipse.org/emf/compare/examples/addressbook"
+       class = "org.eclipse.emf.compare.examples.addressbook.addressbook.AddressbookPackage"
+       genModel = "model/addressbook.genmodel" /> 
+  </extension>
+
+
+  <extension
+    point = "org.eclipse.ui.newWizards">
+    <category
+      id = "org.eclipse.emf.ecore.Wizard.category.ID"
+      name="%_UI_Wizard_category">
+    </category>
+    <wizard
+      id = "addressbook.presentation.AddressbookModelWizardID"
+      name = "%_UI_AddressbookModelWizard_label"
+      class = "org.eclipse.emf.compare.examples.addressbook.addressbook.presentation.AddressbookModelWizard"
+      category = "org.eclipse.emf.ecore.Wizard.category.ID"
+      icon = "icons/full/obj16/AddressbookModelFile.gif">
+      <description>%_UI_AddressbookModelWizard_description</description>
+      <selection class = "org.eclipse.core.resources.IResource" />
+    </wizard>
+  </extension>
+
+  <extension point = "org.eclipse.ui.editors">
+    <editor
+        id = "addressbook.presentation.AddressbookEditorID"
+        name = "%_UI_AddressbookEditor_label"
+        icon = "icons/full/obj16/AddressbookModelFile.gif"
+        extensions = "addressbook"
+        class = "org.eclipse.emf.compare.examples.addressbook.addressbook.presentation.AddressbookEditor" 
+        contributorClass="org.eclipse.emf.compare.examples.addressbook.addressbook.presentation.AddressbookActionBarContributor" >
+    </editor>
+  </extension>
+  <extension
+        point="org.eclipse.emf.compare.match.engine">
+     <matchengine
+           engineClass="org.eclipse.emf.compare.examples.addressbook.service.AddressBookMatcher"
+           fileExtension="addressbook"
+           priority="normal">
+     </matchengine>
+  </extension>    
+</plugin>
