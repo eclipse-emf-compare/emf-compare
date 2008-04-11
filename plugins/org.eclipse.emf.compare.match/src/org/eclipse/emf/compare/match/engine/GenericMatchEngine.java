@@ -1638,11 +1638,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	private void setModelURIs(MatchModel modelRoot, Resource left, Resource right, Resource ancestor) {
 		// Sets values of left, right and ancestor model URIs
 		if (left != null && left.getURI() != null)
-			modelRoot.setLeftModel(left.getURI().path());
+			modelRoot.setLeftModel(left.getURI().toString());
 		if (right != null && right.getURI() != null)
-			modelRoot.setRightModel(right.getURI().path());
+			modelRoot.setRightModel(right.getURI().toString());
 		if (ancestor != null && ancestor.getURI() != null)
-			modelRoot.setOriginModel(ancestor.getURI().path());
+			modelRoot.setOriginModel(ancestor.getURI().toString());
 	}
 
 	/**
