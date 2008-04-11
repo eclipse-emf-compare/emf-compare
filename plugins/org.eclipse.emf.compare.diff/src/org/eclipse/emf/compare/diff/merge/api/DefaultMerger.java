@@ -178,7 +178,13 @@ public class DefaultMerger implements IMerger {
 	 * @return The {@link DiffModel} containing the {@link DiffElement} this merger is intended to merge.
 	 */
 	protected DiffModel getDiffModel() {
-		return ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getDiff();
+	    EObject container = diff.eContainer();
+        while (container != null) {
+            if (container instanceof DiffModel)
+                return (DiffModel)container;
+            container = container.eContainer();
+        }
+        return null;
 	}
 
 	/**
