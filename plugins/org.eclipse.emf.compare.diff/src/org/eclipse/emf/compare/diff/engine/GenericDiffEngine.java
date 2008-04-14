@@ -533,7 +533,8 @@ public class GenericDiffEngine implements IDiffEngine {
 			Resource leftModel = null;
 			for (UnMatchElement element : unMatchedElements.keySet()) {
 				if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
-					leftModel = element.eResource();
+					// TODO check this
+					leftModel = element.getElement().eResource();
 					break;
 				}
 			}
