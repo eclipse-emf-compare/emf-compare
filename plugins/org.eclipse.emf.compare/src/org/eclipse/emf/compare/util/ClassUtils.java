@@ -59,12 +59,14 @@ public final class ClassUtils {
 				for (int i = 0; i < PRIMITIVES.length; i++) {
 					if (class1.equals(PRIMITIVES[i])) {
 						result = class2.equals(WRAPPERS[i]);
+						break;
 					}
 				}
 			} else if (class2.isPrimitive()) {
 				for (int i = 0; i < PRIMITIVES.length; i++) {
 					if (class2.equals(PRIMITIVES[i])) {
 						result = class1.equals(WRAPPERS[i]);
+						break;
 					}
 				}
 			}
@@ -139,7 +141,7 @@ public final class ClassUtils {
 	 * @return The method we were searching for if existing, <code>null</code> otherwise.
 	 */
 	private static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
-		Method seekedMethod = null;
+		Method soughtMethod = null;
 		/*
 		 * We use Class#getMethods() instead of Class#getDeclaredMethods() to avoid protected, private and
 		 * default (package) methods.
@@ -149,16 +151,18 @@ public final class ClassUtils {
 			if (method.getName().equals(methodName)) {
 				final Class<?>[] params = method.getParameterTypes();
 				if (parameters.length == params.length) {
-					seekedMethod = method;
+					soughtMethod = method;
 					for (int i = 0; i < params.length; i++) {
 						if (!classEquals(parameters[i], params[i])) {
-							seekedMethod = null;
+							soughtMethod = null;
 							break;
 						}
 					}
+					if (soughtMethod != null)
+						break;
 				}
 			}
 		}
-		return seekedMethod;
+		return soughtMethod;
 	}
 }

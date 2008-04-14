@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.internal.runtime;
 
-import org.eclipse.emf.compare.util.ClassUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * Encapsulates an {@link org.eclipse.core.runtime.IProgressMonitor IProgressMonitor} to allow us to run out
@@ -49,7 +49,7 @@ public class CompareProgressMonitor {
 	 */
 	public void beginTask(String name, int totalWork) {
 		if (progressMonitor != null)
-			ClassUtils.invokeMethod(progressMonitor, "beginTask", name, totalWork); //$NON-NLS-1$
+			((IProgressMonitor)progressMonitor).beginTask(name, totalWork);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class CompareProgressMonitor {
 	 */
 	public boolean isCanceled() {
 		if (progressMonitor != null)
-			return (Boolean)ClassUtils.invokeMethod(progressMonitor, "isCanceled"); //$NON-NLS-1$
+			return ((IProgressMonitor)progressMonitor).isCanceled();
 		return false;
 	}
 
@@ -71,7 +71,7 @@ public class CompareProgressMonitor {
 	 */
 	public void subTask(String name) {
 		if (progressMonitor != null)
-			ClassUtils.invokeMethod(progressMonitor, "subTask", name); //$NON-NLS-1$
+			((IProgressMonitor)progressMonitor).subTask(name);
 	}
 
 	/**
@@ -82,6 +82,6 @@ public class CompareProgressMonitor {
 	 */
 	public void worked(int work) {
 		if (progressMonitor != null)
-			ClassUtils.invokeMethod(progressMonitor, "worked", work); //$NON-NLS-1$
+			((IProgressMonitor)progressMonitor).worked(work);
 	}
 }
