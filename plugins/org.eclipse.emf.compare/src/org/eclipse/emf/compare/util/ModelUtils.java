@@ -339,7 +339,7 @@ public final class ModelUtils {
 	 */
 	public static EObject load(String path, ResourceSet resourceSet) throws IOException {
 		if (path == null || "".equals(path)) //$NON-NLS-1$
-			throw new IllegalArgumentException("Path cannot be null or empty.");
+			throw new IllegalArgumentException(EMFCompareMessages.getString("ModelUtils.NullPath")); //$NON-NLS-1$
 
 		final EObject result;
 		// path is already defined with a platform scheme
@@ -361,7 +361,7 @@ public final class ModelUtils {
 			result = temp;
 		}
 		if (result == null)
-			throw new IOException("Unable to load model at " + path);
+			throw new IOException(EMFCompareMessages.getString("ModelUtils.LoadFailure", path)); //$NON-NLS-1$
 		return result;
 	}
 
