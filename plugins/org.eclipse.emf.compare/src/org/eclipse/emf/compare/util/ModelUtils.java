@@ -314,6 +314,56 @@ public final class ModelUtils {
 	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
 		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
 	}
+	
+	/**
+	 * Loads a model from the String representing the location of a model.
+	 * <p>
+	 * This can be called with pathes of the form
+	 * <ul>
+	 * <li><code>/pluginID/path</code></li>
+	 * <li><code>platform:/plugin/pluginID/path</code></li>
+	 * <li><code>platform:/resource/pluginID/path</code></li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * This will return the first root of the loaded model, other roots can be accessed via the resource's content.
+	 * </p>
+	 * 
+	 * @param path
+	 *            Location of the model.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The model loaded from the path.
+	 * @throws IOException
+	 *             If the path doesn't resolve to a reachable location.
+	 */
+	public static EObject load(String path, ResourceSet resourceSet) throws IOException {
+		if (path == null || "".equals(path)) //$NON-NLS-1$
+			throw new IllegalArgumentException("Path cannot be null or empty.");
+
+		final EObject result;
+		// path is already defined with a platform scheme
+		if (path.startsWith("platform")) //$NON-NLS-1$
+			result = load(URI.createURI(path), resourceSet);
+		else {
+			EObject temp = null;
+			try {
+				// Will first try and load as if the model is in the plugins
+				temp = load(URI.createPlatformPluginURI(path, true), resourceSet);
+			} catch (IOException e) {
+				// Model wasn't in the plugins, try and load it within the workspace
+				try {
+					temp = load(URI.createPlatformResourceURI(path, true), resourceSet);
+				} catch (IOException ee) {
+					// Silently discarded, will fail later on
+				}
+			}
+			result = temp;
+		}
+		if (result == null)
+			throw new IOException("Unable to load model at " + path);
+		return result;
+	}
 
 	/**
 	 * Loads a model from an {@link org.eclipse.emf.common.util.URI URI} in a given {@link ResourceSet}.
