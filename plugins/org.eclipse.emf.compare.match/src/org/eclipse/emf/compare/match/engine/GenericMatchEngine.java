@@ -283,6 +283,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+		
 		MatchModel result = null;
 		try {
 			// Creates and sizes progress monitor
@@ -298,8 +301,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			startMonitor(monitor, size * 2);
 
-			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor,
-					optionMap);
+			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
 		} catch (InterruptedException e) {
 			// cannot be thrown
 			assert false;
@@ -314,6 +316,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+		
 		MatchModel result = null;
 		try {
 			// Creates and sizes progress monitor
@@ -329,7 +334,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			startMonitor(monitor, size);
 
-			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), monitor, optionMap);
+			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), monitor);
 		} catch (InterruptedException e) {
 			// cannot be thrown
 			assert false;
@@ -362,6 +367,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+		
 		MatchModel result = null;
 		try {
 			// Creates and sizes progress monitor
@@ -377,7 +385,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			startMonitor(monitor, size);
 
-			result = doMatch(leftResource, rightResource, monitor, optionMap);
+			result = doMatch(leftResource, rightResource, monitor);
 		} catch (InterruptedException e) {
 			// cannot be thrown
 			assert false;
@@ -393,6 +401,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0)
+			loadOptionMap(optionMap);
+		
 		MatchModel result = null;
 		try {
 			// Creates and sizes progress monitor
@@ -408,7 +419,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			startMonitor(monitor, size * 2);
 
-			result = doMatch(leftResource, rightResource, ancestorResource, monitor, optionMap);
+			result = doMatch(leftResource, rightResource, ancestorResource, monitor);
 		} catch (InterruptedException e) {
 			// cannot be thrown
 			assert false;
@@ -424,7 +435,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			Map<String, Object> optionMap) {
-		return null;
+		// TODO this should be implemented
+		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
 	/**
@@ -436,7 +448,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) {
-		return null;
+		// TODO this should be implemented
+		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
 	/**
@@ -901,18 +914,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Right model for the comparison.
 	 * @param monitor
 	 *            Progress monitor to display while the comparison lasts.
-	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor,
-			Map<String, Object> optionMap) throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0)
-			loadOptionMap(optionMap);
-
+	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelURIs(root, leftResource, rightResource);
 
@@ -1008,19 +1014,16 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Common ancestor of the right and left models.
 	 * @param monitor
 	 *            Progress monitor to display while the comparison lasts.
-	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
-			CompareProgressMonitor monitor, Map<String, Object> optionMap) throws InterruptedException {
+			CompareProgressMonitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelURIs(root, leftResource, rightResource, ancestorResource);
-		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor, optionMap);
-		final MatchModel root2AncestorMatch = doMatch(rightResource, ancestorResource, monitor, optionMap);
+		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor);
+		final MatchModel root2AncestorMatch = doMatch(rightResource, ancestorResource, monitor);
 
 		final List<MatchElement> root1MatchedElements = new ArrayList<MatchElement>(root1AncestorMatch
 				.getMatchedElements());
