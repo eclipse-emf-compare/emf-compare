@@ -38,7 +38,7 @@ import org.eclipse.swt.graphics.Image;
  * Input to be used for a 2 or 3-way comparison in a
  * {@link org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer ModelContentMergeViewer}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class ModelCompareInput implements ICompareInput {
 	/** Resource containing the ancestor object of this comparison. */

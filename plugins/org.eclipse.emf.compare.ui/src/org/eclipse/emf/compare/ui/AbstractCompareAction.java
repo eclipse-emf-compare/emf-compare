@@ -26,7 +26,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 /**
  * Implements an action that will be initialized given a {@link ResourceBundle} and a key prefix.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public abstract class AbstractCompareAction extends Action {
 	/** Fullpath for our action icons. */

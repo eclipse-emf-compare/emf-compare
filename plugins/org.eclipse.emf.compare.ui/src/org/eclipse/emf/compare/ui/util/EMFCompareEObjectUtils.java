@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Utility class providing access to some objects description.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public final class EMFCompareEObjectUtils {
 	/** Label provider used to compute images and texts for the {@link EObject}s. */

@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * Content provider used by {@link ModelContentMergePropertiesPart}s displaying {@link Match2Elements}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class PropertyContentProvider implements IStructuredContentProvider {
 	/** EObject which properties are provided by this content provider. */

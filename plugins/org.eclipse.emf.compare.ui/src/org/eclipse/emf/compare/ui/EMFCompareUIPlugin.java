@@ -18,7 +18,7 @@ import org.osgi.framework.BundleContext;
 /**
  * Activator for the EMF Compare's UI plugin.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	/** This plugin's ID. */

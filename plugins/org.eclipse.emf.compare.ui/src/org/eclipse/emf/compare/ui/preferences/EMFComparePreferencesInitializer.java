@@ -20,7 +20,7 @@ import org.eclipse.jface.preference.PreferenceConverter;
 /**
  * This will feed default value to the preferences page.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class EMFComparePreferencesInitializer extends AbstractPreferenceInitializer {
 	/**

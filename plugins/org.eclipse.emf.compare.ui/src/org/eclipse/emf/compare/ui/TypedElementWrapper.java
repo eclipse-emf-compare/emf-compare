@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Basic wrapper for an {@link ITypedElement}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class TypedElementWrapper implements ITypedElement {
 	/** {@link EObject} this wrapper is build upon. */

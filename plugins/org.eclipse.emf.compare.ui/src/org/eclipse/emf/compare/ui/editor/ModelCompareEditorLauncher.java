@@ -23,7 +23,7 @@ import org.eclipse.ui.IEditorLauncher;
 /**
  * This launcher will be called to open a {@link CompareEditor} for the edition of emfdiff files.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class ModelCompareEditorLauncher implements IEditorLauncher {
 	/**

@@ -38,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
  * This implementation of {@link AbstractCompareAction} is used to create the structure viewer's "export as"
  * action.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 	/** Wild card for all file extensions. */
@@ -242,7 +242,7 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 /**
  * Describes an action registered from a plug-in's extension point for the "export diff as..." menu.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 final class ExportActionDescriptor {
 	/** Name of the extension point attribute corresponding to the action's class. */

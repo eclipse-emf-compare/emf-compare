@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * Represents the property view under a {@link ModelContentMergeTabFolder}'s property tab.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  */
 public final class ModelContentMergePropertyTab extends TableViewer implements IModelContentMergeViewerTab {
 	/** <code>int</code> representing this viewer part side. */
