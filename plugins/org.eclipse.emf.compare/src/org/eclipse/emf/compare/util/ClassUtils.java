@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 /**
  * Provides utility methods to get information on {@link Class} objects.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ClassUtils {
 	/** These are all the primitive classes. */

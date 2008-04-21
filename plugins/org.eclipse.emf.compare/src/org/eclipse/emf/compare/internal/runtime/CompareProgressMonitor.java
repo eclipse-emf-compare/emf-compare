@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * Encapsulates an {@link org.eclipse.core.runtime.IProgressMonitor IProgressMonitor} to allow us to run out
  * of eclipse where no progress monitors are accessible.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class CompareProgressMonitor {
 	/** Progress monitor wrapped within this instance. Can be <code>null</code>. */

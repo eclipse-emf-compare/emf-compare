@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.util;
 /**
  * Defines constants for use with all engine classes.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public interface EngineConstants {
 	/** Integer (value 4) representing high priority. */

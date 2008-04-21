@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * This is a factory for an ecore metamodel. There is a factory by package. Each factory is used to create
  * instances of classifiers.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class EFactory {
 	/**

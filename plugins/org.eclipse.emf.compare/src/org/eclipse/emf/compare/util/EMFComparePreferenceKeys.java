@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.util;
 /**
  * Defines constants used for EMF Compare preferences. These are used by the UI as well as the match.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface EMFComparePreferenceKeys {
 	/** Preferences key for the boolean indicating that the comparison should ignore IDs. */

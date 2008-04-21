@@ -18,7 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
  * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code>
  * and the {@link IConfigurationElement} it's been created from.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 /* package */class AdapterFactoryDescriptor {
 	/** Keeps a reference to the configuration element that describes the {@link AdapterFactory factory}. */

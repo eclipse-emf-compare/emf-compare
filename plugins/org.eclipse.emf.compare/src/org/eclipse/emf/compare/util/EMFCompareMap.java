@@ -32,7 +32,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * This implementation ensures the capacity of this Map is a prime number at all time.
  * </p>
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @param <K>
  *            Specifies the keys' class for this Map.
  * @param <V>
@@ -702,7 +702,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Represents a mapping key => value for this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	/* package */class Entry implements Map.Entry<K, V> {
 		/** Index of this entry. */
@@ -825,7 +825,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * This iterator allows traversing keys and values of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 * @param <E>
 	 *            Defines the class of this iterator's contents.
 	 */
@@ -901,7 +901,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Allows iteration over the entries of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class EntryIterator extends AbstractHashIterator<Map.Entry<K, V>> {
 		/**
@@ -925,7 +925,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Provides a view over the entries of the Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class EntrySet extends AbstractSet<Map.Entry<K, V>> {
 		/**
@@ -1064,7 +1064,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Allows iteration over the keys of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class KeyIterator extends AbstractHashIterator<K> {
 		/**
@@ -1088,7 +1088,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Provides a view over the keys of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class KeySet extends AbstractSet<K> {
 		/**
@@ -1152,7 +1152,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Allows iteration over the values of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class ValueIterator extends AbstractHashIterator<V> {
 		/**
@@ -1176,7 +1176,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/**
 	 * Provides a view over the values of this Map.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class ValueSet extends AbstractSet<V> {
 		/**

@@ -13,7 +13,7 @@ package org.eclipse.emf.compare;
 /**
  * Exception thrown when a comparison launched from the GUI fails.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class EMFCompareException extends RuntimeException {
 	/** Serial used for unserialization checks. */

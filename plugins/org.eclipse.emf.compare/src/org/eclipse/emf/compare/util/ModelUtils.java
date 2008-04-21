@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 /**
  * Utility class for model loading/saving and serialization.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelUtils {
 	/** Constant for the file encoding system property. */

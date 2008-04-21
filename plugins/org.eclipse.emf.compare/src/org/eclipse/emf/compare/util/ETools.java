@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 /**
  * This contains general utility methods for ecore browsing support.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  * @deprecated This unused class will be deleted before 1.0 is released.
  */
 @Deprecated

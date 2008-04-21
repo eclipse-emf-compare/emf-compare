@@ -13,7 +13,7 @@ package org.eclipse.emf.compare;
 /**
  * Factory Exception, indicates that an error occured during an {@link EFactory} operation.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class FactoryException extends Exception {
 	/** Serial used for unserialization checks. */

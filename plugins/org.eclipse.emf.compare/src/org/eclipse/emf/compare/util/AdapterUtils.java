@@ -22,7 +22,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 /**
  * Useful methods for EMF adapter factories handling.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class AdapterUtils {
 	/**
