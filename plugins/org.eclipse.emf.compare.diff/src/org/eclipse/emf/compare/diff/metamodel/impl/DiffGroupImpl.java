@@ -239,10 +239,12 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	 */
 	@Override
 	public String toString() {
+		if (leftParent == null)
+			return super.toString();
 		try {
-			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", subchanges, leftParent.eClass().getName(), NameSimilarity.findName(leftParent)); //$NON-NLS-1$
+			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", getSubchanges(), leftParent.eClass().getName(), NameSimilarity.findName(leftParent)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", subchanges, leftParent.eClass().getName()); //$NON-NLS-1$
+			return EMFCompareDiffMessages.getString("DiffGroupImpl.ToString", getSubchanges(), leftParent.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 

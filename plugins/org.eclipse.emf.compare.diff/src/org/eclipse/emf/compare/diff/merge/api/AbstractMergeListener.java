@@ -15,7 +15,7 @@ package org.eclipse.emf.compare.diff.merge.api;
  * clients should override the method corresponding to whichever event they are interested in handling
  * notifications for.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractMergeListener implements IMergeListener {
 	/**

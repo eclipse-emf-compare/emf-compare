@@ -24,7 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * 
  * @see IMerger
  * @see MergeFactory
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IMergerProvider {
 	/**

@@ -38,7 +38,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
 /**
  * This will associate all of the basic {@link DiffElement}s with generic merger implementations.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultMergerProvider implements IMergerProvider {
 	/**

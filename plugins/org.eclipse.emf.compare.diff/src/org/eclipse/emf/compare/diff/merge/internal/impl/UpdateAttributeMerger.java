@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Merger for an {@link UpdateAttribute}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class UpdateAttributeMerger extends DefaultMerger {
 	/**

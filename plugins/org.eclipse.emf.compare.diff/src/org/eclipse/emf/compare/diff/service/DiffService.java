@@ -31,7 +31,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
 /**
  * Parses extension meta data to fetch the diff engine to use.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class DiffService {
 	/** Wild card for file extensions. */

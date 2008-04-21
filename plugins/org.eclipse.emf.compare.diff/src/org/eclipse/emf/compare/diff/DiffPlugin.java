@@ -16,7 +16,7 @@ import org.osgi.framework.BundleContext;
 /**
  * Activator for EMF Compare's diff plugin.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class DiffPlugin extends Plugin {
 	/** This plugin's ID. */

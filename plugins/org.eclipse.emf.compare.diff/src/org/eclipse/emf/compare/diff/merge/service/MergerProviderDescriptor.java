@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * This descriptor represents a merger provider contribution via the extension point
  * <code>org.eclipse.emf.compare.diff.mergerprovider</code>.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 /* package */class MergerProviderDescriptor implements Comparable<MergerProviderDescriptor> {
 	/** Configuration element of this descriptor. */

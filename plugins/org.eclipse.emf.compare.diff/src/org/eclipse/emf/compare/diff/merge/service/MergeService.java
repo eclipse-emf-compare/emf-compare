@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * Service for use with diff merging operations.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class MergeService {
     /** This copier will be used when merging references. */

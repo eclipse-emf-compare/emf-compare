@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * <b>This map's content should be cleared when all differences of {@link #diffModel} are merged.</b>
  * </p>
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFCompareEObjectCopier extends Copier {
 	/** This class' serial version UID. */

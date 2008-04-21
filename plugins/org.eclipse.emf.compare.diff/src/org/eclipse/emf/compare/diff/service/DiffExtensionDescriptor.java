@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 /**
  * The engine descriptor represents a diff extension contribution trough the extension point.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class DiffExtensionDescriptor {
 	/** Class name of this {@link DiffExtension}. */

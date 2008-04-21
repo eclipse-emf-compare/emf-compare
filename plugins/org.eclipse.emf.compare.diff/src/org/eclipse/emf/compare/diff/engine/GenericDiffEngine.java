@@ -64,7 +64,7 @@ import org.eclipse.emf.ecore.util.FeatureMap.Entry;
 /**
  * This class is useful when one wants to determine a diff from a matching model.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class GenericDiffEngine implements IDiffEngine {
 	/** Allows retrieval of the ancestor matched object. */

@@ -17,7 +17,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * {@link DefaultMerger} which also provide some utility methods.
  * 
  * @see DefaultMerger
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IMerger {
 	/**

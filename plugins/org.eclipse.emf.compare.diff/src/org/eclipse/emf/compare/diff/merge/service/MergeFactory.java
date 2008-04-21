@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class MergeFactory {
 	/** Wild card for file extensions. */

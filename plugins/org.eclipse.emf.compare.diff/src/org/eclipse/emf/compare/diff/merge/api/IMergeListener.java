@@ -15,7 +15,7 @@ import java.util.EventListener;
 /**
  * Base interface for the listeners that can be notified when a merge operation is about to occur or to end.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IMergeListener extends EventListener {
 	/**

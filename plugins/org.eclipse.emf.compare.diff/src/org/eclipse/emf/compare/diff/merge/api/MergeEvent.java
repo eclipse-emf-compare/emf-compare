@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * An event characterizing a merge operation. Holds information about the DiffElement(s) that is(are) about to
  * be merged (or which has just been merged) and the merger that handled the operation.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class MergeEvent {
 	/** Target {@link DiffElement}s of the underlying merge operation. */

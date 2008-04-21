@@ -42,7 +42,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * Basic implementation of an {@link IMerger}. Clients can extend this class instead of implementing IMerger
  * to avoid reimplementing all methods.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultMerger implements IMerger {
 	/** {@link DiffElement} to be merged by this merger. */
