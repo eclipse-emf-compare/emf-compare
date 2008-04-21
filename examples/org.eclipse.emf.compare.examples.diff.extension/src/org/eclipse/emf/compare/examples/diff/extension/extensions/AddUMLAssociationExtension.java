@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * are created by the generic diff engine : ADD association, and ADD property. Using this extension these
  * changes are hiddent by an unique change.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 	/** TODOCBR comment. */

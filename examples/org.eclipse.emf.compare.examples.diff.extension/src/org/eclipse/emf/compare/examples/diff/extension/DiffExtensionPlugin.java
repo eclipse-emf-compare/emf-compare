@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 /**
  * This is the central singleton for the Diff edit plugin.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class DiffExtensionPlugin extends EMFPlugin {
 	/**
