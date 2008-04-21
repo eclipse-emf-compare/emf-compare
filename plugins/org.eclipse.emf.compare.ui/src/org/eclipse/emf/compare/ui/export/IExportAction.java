@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Image;
  * Describes an action that can be used by EMF Compare "export diff as" menu. EMF Compare "export" extension
  * point requires a class implementing this.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IExportAction {
 	/**

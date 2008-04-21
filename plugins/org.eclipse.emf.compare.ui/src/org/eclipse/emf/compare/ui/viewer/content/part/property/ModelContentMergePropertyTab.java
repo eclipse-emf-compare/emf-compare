@@ -53,7 +53,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * Represents the property view under a {@link ModelContentMergeTabFolder}'s property tab.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelContentMergePropertyTab extends TableViewer implements IModelContentMergeViewerTab {
 	/** <code>int</code> representing this viewer part side. */
@@ -402,7 +402,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
 	 * the properties tab.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	class PropertyPaintListener implements PaintListener {
 		/**
@@ -445,7 +445,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	/**
 	 * Label provider used by the table control of this part.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class PropertyLabelProvider extends AdapterFactoryLabelProvider {
 		/**

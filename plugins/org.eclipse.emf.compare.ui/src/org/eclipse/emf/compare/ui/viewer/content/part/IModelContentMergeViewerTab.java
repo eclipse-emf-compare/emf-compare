@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Item;
 /**
  * Represents a tab that will be placed in a {@link ModelContentMergeTabFolder}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IModelContentMergeViewerTab {
 	/**

@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * possible.
  * </p>
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractTeamHandler {
 	/** This will hold the ancestor resource. */

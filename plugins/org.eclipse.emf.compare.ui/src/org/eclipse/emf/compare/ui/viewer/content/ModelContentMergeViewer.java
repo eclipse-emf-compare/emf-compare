@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Scrollable;
  * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
  * getKind
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelContentMergeViewer extends ContentMergeViewer {
 	/** Name of the bundle resources property file. */

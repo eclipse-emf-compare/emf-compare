@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Content provider for our {@link ContentMergeViewer}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelContentMergeContentProvider implements IMergeViewerContentProvider {
 	/**

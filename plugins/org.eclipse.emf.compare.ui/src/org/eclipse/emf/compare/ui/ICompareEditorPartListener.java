@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  * Listens for events sent by
  * {@link org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer ModelContentMergeViewers}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface ICompareEditorPartListener {
 	/**

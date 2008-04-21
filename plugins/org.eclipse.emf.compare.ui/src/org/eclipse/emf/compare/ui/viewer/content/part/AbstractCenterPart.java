@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Composite;
  * We want to avoid flickering as much as possible for our draw operations on the center part, yet we can't
  * use double buffering to draw on it. We will then draw on a {@link Canvas} moved above that center part.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public abstract class AbstractCenterPart extends Canvas {
 	/** Buffer used by this {@link Canvas} to smoothly paint its content. */

@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Item;
  * This wrapper will also hold UI information about the way connectors should be drawn between tabs.
  * </p>
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelContentMergeTabItem {
 	/** The item this instance has actually been created for. */

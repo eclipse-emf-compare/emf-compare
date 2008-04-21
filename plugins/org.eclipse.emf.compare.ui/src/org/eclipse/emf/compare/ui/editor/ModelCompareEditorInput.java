@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Control;
 /**
  * This will be used as input for the {@link CompareEditor} used for the edition of emfdiff files.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelCompareEditorInput extends CompareEditorInput {
 	/**

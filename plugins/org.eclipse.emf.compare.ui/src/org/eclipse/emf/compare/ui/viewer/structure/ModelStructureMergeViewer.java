@@ -49,7 +49,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Compare and merge viewer with an area showing diffs as a structured tree.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelStructureMergeViewer extends TreeViewer {
 	/** Configuration element of the underlying comparison. */
@@ -220,7 +220,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * Listens to property change events on the compare configuration. Typically responds to selection change
 	 * events in the content viewer and preferences change.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class ConfigurationPropertyListener implements IPropertyChangeListener {
 		/**
@@ -265,7 +265,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	/**
 	 * {@link LabelProvider} of this viewer.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private class ModelStructureLabelProvider extends LabelProvider {
 		/**

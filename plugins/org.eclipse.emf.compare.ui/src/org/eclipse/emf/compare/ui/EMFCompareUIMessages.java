@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 /**
  * Utility class to access externalized Strings for EMF Compare's UI.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class EMFCompareUIMessages {
 	/** Full qualified path to the properties file in which to seek the keys. */

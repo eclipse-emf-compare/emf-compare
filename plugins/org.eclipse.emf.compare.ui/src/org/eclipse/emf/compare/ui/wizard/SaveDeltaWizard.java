@@ -28,7 +28,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 /**
  * Wizard used by the "save" action of the {@link ModelStructureMergeViewer}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	/**

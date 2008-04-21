@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.Viewer;
  * {@link org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer ModelStructureMergeViewer}.
  * Assumes that its input is a {@link DiffModel}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelStructureContentProvider implements ITreeContentProvider {
 	/** Keeps track of the comparison result. */

@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Widget;
 /**
  * Represents the tree view under a {@link ModelContentMergeTabFolder}'s diff tab.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelContentMergeDiffTab extends TreeViewer implements IModelContentMergeViewerTab {
 	/** <code>int</code> representing this viewer part side. */
@@ -544,7 +544,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
 	 * the tree tab.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	class TreePaintListener implements PaintListener {
 		/**

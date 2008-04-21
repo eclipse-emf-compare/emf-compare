@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.RGB;
 /**
  * Defines constants used throughout EMF Compare's UI.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface EMFCompareConstants {
 	/** Three-way change constant (value 3) indicating the ancestor. */

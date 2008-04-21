@@ -51,7 +51,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * Preference page used for <b>EMFCompare</b>, it allows the user to define which files to compare with
  * <b>EMFCompare</b> and the colors to use for the differences' highlighting.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EMFComparePreferencesPage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 	/**

@@ -54,7 +54,7 @@ import org.eclipse.ui.PlatformUI;
  * This class will allow model comparison given a CompareConfiguration while allowing specific handling of
  * resource loading when team providers require it.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelComparator {
 	/** Keeps track of the team handlers declared for the extension point. */
@@ -409,7 +409,7 @@ public final class ModelComparator {
 	/**
 	 * Describes a team handler registered from a plug-in's extension point.
 	 * 
-	 * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	private static final class TeamHandlerDescriptor {
 		/**
