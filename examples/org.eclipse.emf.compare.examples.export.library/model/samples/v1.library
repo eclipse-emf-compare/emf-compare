@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library:Library xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:library="library" name="Imaginary">
+  <books title="Dune" pages="544" author="//@writers.2"/>
+  <books title="Dune Messiah" pages="222" author="//@writers.2"/>
+  <books title="Children Of Dune" pages="592" author="//@writers.2"/>
+  <books title="God Emperor Of Dune" pages="352" author="//@writers.2"/>
+  <books title="Heretics Of Dune" pages="359" author="//@writers.2"/>
+  <books title="The Fellowship Of The Ring" pages="398" author="//@writers.1"/>
+  <books title="The Two Towers" pages="725" author="//@writers.1"/>
+  <books title="The Return Of The King" pages="1137" author="//@writers.1"/>
+  <books title="Whiteout" pages="384" author="//@writers.0"/>
+  <writers name="Ken Follet" books="//@books.8"/>
+  <writers name="J.R.R. Tolkien" books="//@books.5 //@books.6 //@books.7"/>
+  <writers name="Frank Herbert" books="//@books.0 //@books.1 //@books.2 //@books.3 //@books.4"/>
+  <members name="Cedric Brun" id="1" borrowedBooks="//@books.0"/>
+  <members name="Laurent Goubet" id="2"/>
+  <members name="Jonathan Musset" id="3" borrowedBooks="//@books.5 //@books.7 //@books.6"/>
+</library:Library>
