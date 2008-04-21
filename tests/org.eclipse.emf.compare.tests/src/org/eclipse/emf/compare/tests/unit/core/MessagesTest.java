@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.EMFCompareMessages;
  * Tests Messages class. These tests successful completion heavily depends on org.eclipse.emf.compare
  * "messages.properties" file contents.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings({"unchecked", "nls", })
 public class MessagesTest extends TestCase {

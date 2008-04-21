@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresi
 /**
  * Tests for the match plugin.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class MatchTestSuite extends TestCase {
 	/** Minimal -Xmx setting to run comparison tests. Set to 500m. */

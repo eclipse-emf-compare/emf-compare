@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 /**
  * Tests the methods used to compute name similarity.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
 public class NameSimilarityTest extends TestCase {

@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * {@link StructureSimilarity#relationsSimilarityMetric(EObject, EObject, MetamodelFilter)} with objects known
  * to be distinct.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
 public class RelationsSimilarityDistinctTest extends TestCase {

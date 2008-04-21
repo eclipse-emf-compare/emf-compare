@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * the same size and contain the same mappings. A map cannot be considered equal to anything that isn't an
  * instance of Map itself.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings({"unchecked", "nls", })
 public class EqualsTest extends TestCase {

@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.util.ClassUtils;
 /**
  * Tests for the utility methods offered by {@link ClassUtils}.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
 public class ClassUtilsTest extends TestCase {

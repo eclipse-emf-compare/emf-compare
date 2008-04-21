@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 /**
  * Tests {@link StructureSimilarity#typeSimilarityMetric(EObject, EObject)} to ensure it behaves as expected.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
 public class TypeSimilarityBehaviorTest extends TestCase {

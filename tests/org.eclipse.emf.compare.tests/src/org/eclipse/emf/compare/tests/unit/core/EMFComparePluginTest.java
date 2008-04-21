@@ -27,7 +27,7 @@ import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 /**
  * Tests for the core plug-in activator. Will mainly test behavior of utility methods it declares.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
 public class EMFComparePluginTest extends TestCase {

@@ -25,7 +25,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 /**
  * Launches all the JUnit tests for EMF compare.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 @SuppressWarnings("nls")
 public class AllTests extends TestCase implements IApplication {

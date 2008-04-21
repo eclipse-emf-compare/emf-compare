@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
 /**
  * Tests the behavior of the map's constructors.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings({"unchecked", "nls", })
 public class ConstructorsTest extends TestCase {

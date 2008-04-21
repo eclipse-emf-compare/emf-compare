@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * Tests the behavior of {@link EMFCompareMap#get(Object)} and {@link EMFCompareMap#put(Object, Object)} so
  * that they behave the same as their {@link HashMap} counterparts.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings({"unchecked", "nls", })
 public class GetPutTest extends TestCase {

@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
  * Tests the behavior of {@link EMFCompareMap#remove(Object)} so that it behaves the same as its
  * {@link HashMap} counterpart.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings({"unchecked", "nls", })
 public class RemoveTest extends TestCase {

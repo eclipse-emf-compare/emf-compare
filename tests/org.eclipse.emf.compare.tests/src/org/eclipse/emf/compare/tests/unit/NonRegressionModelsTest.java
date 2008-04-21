@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 /**
  * Test the results models are still the same as expected.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 @SuppressWarnings("nls")
 public class NonRegressionModelsTest extends TestCase {
