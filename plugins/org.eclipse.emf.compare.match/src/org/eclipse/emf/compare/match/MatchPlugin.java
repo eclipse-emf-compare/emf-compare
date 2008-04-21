@@ -16,7 +16,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class MatchPlugin extends Plugin {
 	/** The plugin ID. */

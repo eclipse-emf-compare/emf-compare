@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * A Match Engine is responsible for returning a match model from a set of models. The resulting match model
  * is then used to create a diff between the two models.
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface IMatchEngine {
 	/**

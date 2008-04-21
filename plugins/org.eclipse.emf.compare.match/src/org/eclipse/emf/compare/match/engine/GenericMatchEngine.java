@@ -48,7 +48,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 /**
  * These services are useful when one wants to compare models more precisely using the method modelDiff.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class GenericMatchEngine implements IMatchEngine {
 	/** Used while computing similarity, this defines the general threshold. */

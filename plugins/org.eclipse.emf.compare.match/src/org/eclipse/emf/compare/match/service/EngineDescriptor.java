@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 /**
  * Contribution representation one may give throught the "match engine" extension point.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 /* package */class EngineDescriptor implements Comparable<EngineDescriptor> {
 	/** Configuration element of this descriptor. */

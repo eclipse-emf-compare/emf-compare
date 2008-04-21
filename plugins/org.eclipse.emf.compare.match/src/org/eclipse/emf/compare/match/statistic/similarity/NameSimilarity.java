@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 /**
  * This class provides services to work on strings and to compare EObjects.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class NameSimilarity {
 	/** {@link String} assumed to be the name of the feature that holds the name of an object. */

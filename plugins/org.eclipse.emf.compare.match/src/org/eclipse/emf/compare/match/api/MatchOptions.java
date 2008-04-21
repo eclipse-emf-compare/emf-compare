@@ -49,7 +49,7 @@ package org.eclipse.emf.compare.match.api;
  * </table>
  * </p>
  * 
- * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface MatchOptions {
 	/** Default value for the "distinct metamodel" option. */

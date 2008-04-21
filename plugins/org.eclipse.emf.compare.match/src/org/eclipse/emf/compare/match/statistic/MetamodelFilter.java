@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * classes.
  * </p>
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class MetamodelFilter {
 	/** Keeps track of all the informations of the features. */
@@ -157,7 +157,7 @@ public class MetamodelFilter {
 /**
  * Describes a feature.
  * 
- * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 class FeatureInformation {
 	/** Structure which information is computed here. */
