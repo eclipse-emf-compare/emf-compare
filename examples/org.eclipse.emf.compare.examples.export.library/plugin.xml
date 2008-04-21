@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="org.eclipse.emf.compare.ui.export">
+    <action
+    	class="org.eclipse.emf.compare.examples.export.library.action.LibraryExportAction"
+    	fileExtension="library"
+    	id="org.eclipse.emf.compare.examples.export.library.exportlibraryreport">
+    </action>
+  </extension>
+
+  <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+    <factory 
+       uri = "library" 
+       class = "org.eclipse.emf.compare.examples.export.library.provider.LibraryItemProviderAdapterFactory"
+       supportedTypes = 
+         "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+          org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+          org.eclipse.emf.edit.provider.ITreeItemContentProvider
+          org.eclipse.emf.edit.provider.IItemLabelProvider
+          org.eclipse.emf.edit.provider.IItemPropertySource" />
+  </extension>
+  
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package
+       uri = "library"
+       class = "org.eclipse.emf.compare.examples.export.library.LibraryPackage"
+       genModel = "model/library.genmodel" /> 
+  </extension>
+
+
+  <extension
+    point = "org.eclipse.ui.newWizards">
+    <category
+      id = "org.eclipse.emf.ecore.Wizard.category.ID"
+      name="%_UI_Wizard_category">
+    </category>
+    <wizard
+      id = "org.eclipse.emf.compare.examples.export.library.presentation.LibraryModelWizardID"
+      name = "%_UI_LibraryModelWizard_label"
+      class = "org.eclipse.emf.compare.examples.export.library.presentation.LibraryModelWizard"
+      category = "org.eclipse.emf.ecore.Wizard.category.ID"
+      icon = "icons/full/obj16/LibraryModelFile.gif">
+      <description>%_UI_LibraryModelWizard_description</description>
+      <selection class = "org.eclipse.core.resources.IResource" />
+    </wizard>
+  </extension>
+
+  <extension point = "org.eclipse.ui.editors">
+    <editor
+        id = "org.eclipse.emf.compare.examples.export.library.presentation.LibraryEditorID"
+        name = "%_UI_LibraryEditor_label"
+        icon = "icons/full/obj16/LibraryModelFile.gif"
+        extensions = "library"
+        class = "org.eclipse.emf.compare.examples.export.library.presentation.LibraryEditor" 
+        contributorClass="org.eclipse.emf.compare.examples.export.library.presentation.LibraryActionBarContributor" >
+    </editor>
+  </extension>    
+</plugin>

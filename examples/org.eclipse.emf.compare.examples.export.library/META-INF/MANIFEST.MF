@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.compare.examples.export.library; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: .
+Bundle-Activator: org.eclipse.emf.compare.examples.export.library.provider.LibraryEditPlugin$Implementation
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.emf.compare.examples.export.library,
+ org.eclipse.emf.compare.examples.export.library.impl,
+ org.eclipse.emf.compare.examples.export.library.presentation,
+ org.eclipse.emf.compare.examples.export.library.provider,
+ org.eclipse.emf.compare.examples.export.library.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;visibility:=reexport,
+ org.eclipse.emf.compare.diff,
+ org.eclipse.emf.compare.ui,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.edit;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
+ org.eclipse.emf.edit.ui;visibility:=reexport,
+ org.eclipse.ui,
+ org.eclipse.ui.ide;visibility:=reexport,
+ org.eclipse.emf.compare.match
+Eclipse-LazyStart: true
