@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 Obeo.
+ * Copyright (c) 2006, 2007 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,13 @@ package org.eclipse.emf.compare.examples.standalone;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
@@ -23,6 +27,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
@@ -49,18 +54,34 @@ public final class ExampleLauncher {
 		if (args.length == 2 && new File(args[0]).canRead() && new File(args[1]).canRead()) {
 			// Creates the resourceSet where we'll load the models
 			final ResourceSet resourceSet = new ResourceSetImpl();
+			// Register additionnal packages here. For UML2 for instance :
+//			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
+//					UMLResource.Factory.INSTANCE);
+//			resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+
 			try {
+				System.out.println("Loading resources.\n"); //$NON-NLS-1$
 				// Loads the two models passed as arguments
 				final EObject model1 = ModelUtils.load(new File(args[0]), resourceSet);
 				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet);
 
 				// Creates the match then the diff model for those two models
-				final MatchModel match = MatchService.doMatch(model1, model2, Collections.<String, Object> emptyMap());
+				System.out.println("Matching models.\n"); //$NON-NLS-1$
+				final MatchModel match = MatchService.doMatch(model1, model2, Collections
+						.<String, Object> emptyMap());
+				System.out.println("Differencing models.\n"); //$NON-NLS-1$
 				final DiffModel diff = DiffService.doDiff(match, false);
+				
+				System.out.println("Merging difference to args[1].\n"); //$NON-NLS-1$
+				final List<DiffElement> differences = new ArrayList<DiffElement>(diff.getOwnedElements());
+				// This will merge all references to the right model (second argument).
+				MergeService.merge(differences, true);
 
 				// Prints the results
 				try {
+					System.out.println("MatchModel :\n"); //$NON-NLS-1$
 					System.out.println(ModelUtils.serialize(match));
+					System.out.println("DiffModel :\n"); //$NON-NLS-1$
 					System.out.println(ModelUtils.serialize(diff));
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -80,7 +101,7 @@ public final class ExampleLauncher {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("usage : Launcher <Model1> <Model2>"); //$NON-NLS-1$
+			System.out.println("usage : ExampleLauncher <Model1> <Model2>"); //$NON-NLS-1$
 		}
 	}
 }
