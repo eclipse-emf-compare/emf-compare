@@ -277,35 +277,30 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
-	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
+	 *
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
-			Map<String, Object> optionMap) {
+			Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
 		
 		MatchModel result = null;
-		try {
-			// Creates and sizes progress monitor
-			final CompareProgressMonitor monitor = new CompareProgressMonitor(
-					getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
-			int size = 1;
-			for (EObject root : leftRoot.eResource().getContents()) {
-				final Iterator<EObject> rootContent = root.eAllContents();
-				while (rootContent.hasNext()) {
-					rootContent.next();
-					size++;
-				}
+		// Creates and sizes progress monitor
+		final CompareProgressMonitor monitor = new CompareProgressMonitor(
+				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		int size = 1;
+		for (EObject root : leftRoot.eResource().getContents()) {
+			final Iterator<EObject> rootContent = root.eAllContents();
+			while (rootContent.hasNext()) {
+				rootContent.next();
+				size++;
 			}
-			startMonitor(monitor, size * 2);
-
-			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
-		} catch (InterruptedException e) {
-			// cannot be thrown
-			assert false;
 		}
+		startMonitor(monitor, size * 2);
+
+		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
+		
 		return result;
 	}
 
@@ -315,30 +310,25 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
 		
 		MatchModel result = null;
-		try {
-			// Creates and sizes progress monitor
-			final CompareProgressMonitor monitor = new CompareProgressMonitor(
-					getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
-			int size = 1;
-			for (EObject root : leftRoot.eResource().getContents()) {
-				final Iterator<EObject> rootContent = root.eAllContents();
-				while (rootContent.hasNext()) {
-					rootContent.next();
-					size++;
-				}
+		// Creates and sizes progress monitor
+		final CompareProgressMonitor monitor = new CompareProgressMonitor(
+				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		int size = 1;
+		for (EObject root : leftRoot.eResource().getContents()) {
+			final Iterator<EObject> rootContent = root.eAllContents();
+			while (rootContent.hasNext()) {
+				rootContent.next();
+				size++;
 			}
-			startMonitor(monitor, size);
-
-			result = doMatch(leftRoot.eResource(), rightRoot.eResource(), monitor);
-		} catch (InterruptedException e) {
-			// cannot be thrown
-			assert false;
 		}
+		startMonitor(monitor, size);
+
+		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), monitor);
 		return result;
 	}
 
@@ -366,30 +356,25 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
-			Map<String, Object> optionMap) {
+			Map<String, Object> optionMap)  throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
 		
 		MatchModel result = null;
-		try {
-			// Creates and sizes progress monitor
-			final CompareProgressMonitor monitor = new CompareProgressMonitor(
-					getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
-			int size = 1;
-			for (EObject root : leftResource.getContents()) {
-				final Iterator<EObject> rootContent = root.eAllContents();
-				while (rootContent.hasNext()) {
-					rootContent.next();
-					size++;
-				}
+		// Creates and sizes progress monitor
+		final CompareProgressMonitor monitor = new CompareProgressMonitor(
+				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		int size = 1;
+		for (EObject root : leftResource.getContents()) {
+			final Iterator<EObject> rootContent = root.eAllContents();
+			while (rootContent.hasNext()) {
+				rootContent.next();
+				size++;
 			}
-			startMonitor(monitor, size);
-
-			result = doMatch(leftResource, rightResource, monitor);
-		} catch (InterruptedException e) {
-			// cannot be thrown
-			assert false;
 		}
+		startMonitor(monitor, size);
+
+		result = doMatch(leftResource, rightResource, monitor);
 		return result;
 	}
 
@@ -400,30 +385,25 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
-			Map<String, Object> optionMap) {
+			Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
 		
 		MatchModel result = null;
-		try {
-			// Creates and sizes progress monitor
-			final CompareProgressMonitor monitor = new CompareProgressMonitor(
-					getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
-			int size = 1;
-			for (EObject root : leftResource.getContents()) {
-				final Iterator<EObject> rootContent = root.eAllContents();
-				while (rootContent.hasNext()) {
-					rootContent.next();
-					size++;
-				}
+		// Creates and sizes progress monitor
+		final CompareProgressMonitor monitor = new CompareProgressMonitor(
+				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		int size = 1;
+		for (EObject root : leftResource.getContents()) {
+			final Iterator<EObject> rootContent = root.eAllContents();
+			while (rootContent.hasNext()) {
+				rootContent.next();
+				size++;
 			}
-			startMonitor(monitor, size * 2);
-
-			result = doMatch(leftResource, rightResource, ancestorResource, monitor);
-		} catch (InterruptedException e) {
-			// cannot be thrown
-			assert false;
 		}
+		startMonitor(monitor, size * 2);
+
+		result = doMatch(leftResource, rightResource, ancestorResource, monitor);
 		return result;
 	}
 
