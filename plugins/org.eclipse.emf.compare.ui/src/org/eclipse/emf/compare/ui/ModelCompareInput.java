@@ -48,7 +48,7 @@ public class ModelCompareInput implements ICompareInput {
 	private final DiffModel diff;
 
 	/** Keeps a list of all the differences (without DiffGroup) detected. */
-	private final List<DiffElement> diffList = new ArrayList<DiffElement>();
+	private List<DiffElement> diffList;
 
 	/** Memorizes all listeners registered for this {@link ICompareInput compare input}. */
 	private final List<ICompareInputChangeListener> inputChangeListeners = new ArrayList<ICompareInputChangeListener>();
@@ -189,7 +189,8 @@ public class ModelCompareInput implements ICompareInput {
 	 * @return The {@link DiffElement} of the input {@link DiffModel} as a list.
 	 */
 	public List<DiffElement> getDiffAsList() {
-		if (diffList.size() == 0) {
+		if (diffList == null) {
+			diffList = new ArrayList<DiffElement>();
 			// ordering is needed in order to merge modelElement diffs before references change
 			// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
 			final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
@@ -358,6 +359,7 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	protected void fireCompareInputChanged() {
 		diffList.clear();
+		diffList = null;
 		for (ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);
 		}

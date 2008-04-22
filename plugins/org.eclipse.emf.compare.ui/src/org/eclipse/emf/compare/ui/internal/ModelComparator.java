@@ -31,13 +31,13 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
@@ -178,7 +178,9 @@ public final class ModelComparator {
 					}
 				});
 			} catch (InterruptedException e) {
-				throw new EMFCompareException(e.getMessage());
+				comparisonResult.setDate(Calendar.getInstance().getTime());
+				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
+				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
 			} catch (InvocationTargetException e) {
 				EMFComparePlugin.log(e, true);
 			}

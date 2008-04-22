@@ -359,20 +359,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void copy(boolean leftToRight) {
-		// Avoids warnings "resource has changed ..."
-		setRightDirty(false);
-		setLeftDirty(false);
-
-		((ModelCompareInput)getInput()).copy(leftToRight);
-		final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
-		snap.setDiff(((ModelCompareInput)getInput()).getDiff());
-		snap.setMatch(((ModelCompareInput)getInput()).getMatch());
-		configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
-		leftDirty |= !leftToRight;
-		rightDirty |= leftToRight;
-		setLeftDirty(leftDirty);
-		setRightDirty(rightDirty);
-		update();
+		if (((ModelCompareInput)getInput()).getDiffAsList().size() > 0) {
+			// Avoids warnings "resource has changed ..."
+			setRightDirty(false);
+			setLeftDirty(false);
+	
+			((ModelCompareInput)getInput()).copy(leftToRight);
+			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
+			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
+			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			leftDirty |= !leftToRight;
+			rightDirty |= leftToRight;
+			setLeftDirty(leftDirty);
+			setRightDirty(rightDirty);
+			update();
+		}
 	}
 
 	/**
