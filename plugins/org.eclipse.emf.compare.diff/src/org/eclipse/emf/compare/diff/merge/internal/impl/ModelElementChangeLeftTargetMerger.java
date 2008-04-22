@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * </ul>
  * </p>
  * 
- * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
@@ -67,6 +67,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 		if (ref != null) {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
+				setXMIID(newOne, getXMIID(element));
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}

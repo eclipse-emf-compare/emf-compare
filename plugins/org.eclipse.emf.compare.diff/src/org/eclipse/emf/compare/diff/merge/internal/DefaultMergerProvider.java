@@ -16,6 +16,7 @@ import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.merge.api.IMergerProvider;
 import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeLeftTargetMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.DiffGroupMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeLeftTargetMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeRightTargetMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.MoveModelElementMerger;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateUniqueReferenceVal
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
@@ -55,6 +57,7 @@ public class DefaultMergerProvider implements IMergerProvider {
 	public Map<Class<? extends DiffElement>, Class<? extends IMerger>> getMergers() {
 		if (mergerTypes == null) {
 			mergerTypes = new EMFCompareMap<Class<? extends DiffElement>, Class<? extends IMerger>>();
+			mergerTypes.put(DiffGroup.class, DiffGroupMerger.class);
 			mergerTypes.put(ModelElementChangeRightTarget.class, ModelElementChangeRightTargetMerger.class);
 			mergerTypes.put(ModelElementChangeLeftTarget.class, ModelElementChangeLeftTargetMerger.class);
 			mergerTypes.put(MoveModelElement.class, MoveModelElementMerger.class);

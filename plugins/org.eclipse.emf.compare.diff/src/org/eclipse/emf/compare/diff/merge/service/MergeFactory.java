@@ -106,7 +106,9 @@ public final class MergeFactory {
 		EObject leftElement = (EObject)ClassUtils.invokeMethod(element, "getLeftElement"); //$NON-NLS-1$
 		if (leftElement == null)
 			leftElement = (EObject)ClassUtils.invokeMethod(element, "getLeftParent"); //$NON-NLS-1$
-		String resourceFileExtension = leftElement.eResource().getURI().fileExtension();
+		String resourceFileExtension = null;
+		if (leftElement != null)
+			resourceFileExtension = leftElement.eResource().getURI().fileExtension();
 
 		if (resourceFileExtension == null)
 			resourceFileExtension = ALL_EXTENSIONS;
