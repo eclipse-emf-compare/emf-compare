@@ -127,6 +127,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public ModelContentMergeTabItem getUIItem(EObject data) {
 		ModelContentMergeTabItem result = null;
 		// If the diff is hidden by another (diff extension), the item won't be returned
+		// Same goes for diffs that couldn't be matched
 		final DiffElement diff = dataToDiff.get(data);
 		if (diff != null && DiffAdapterFactory.shouldBeHidden(diff))
 			return result;
@@ -223,6 +224,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	@Override
 	public void refresh(Object element, boolean updateLabels) {
 		super.refresh(element, updateLabels);
+		mapTreeItems();
 		mapDifferences();
 		mapTreeItemsToUI();
 	}
@@ -276,8 +278,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	@Override
 	protected Widget doFindInputItem(Object element) {
 		final Widget res = dataToTreeItem.get(element);
-		if (res != null)
+		if (res != null && !res.isDisposed())
 			return res;
+		else if (res != null) {
+			// mapped items are disposed
+			mapTreeItems();
+			mapDifferences();
+			mapTreeItemsToUI();
+			// won't call this recursively since it could eventually lead to stack overflows
+			dataToTreeItem.get(element);
+		}
 		return super.doFindInputItem(element);
 	}
 

@@ -111,7 +111,8 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#copy(boolean)
 	 */
 	public void copy(boolean leftToRight) {
-		doCopy(getDiffAsList(), leftToRight);
+		final List<DiffElement> differences = new ArrayList<DiffElement>(diff.getOwnedElements());
+		doCopy(differences, leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -124,11 +125,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            Direction of the copy.
 	 */
 	public void copy(DiffElement element, boolean leftToRight) {
-		if (element instanceof DiffGroup) {
-			doCopy(getContainedDifferences((DiffGroup)element), leftToRight);
-		} else {
-			doCopy(element, leftToRight);
-		}
+		doCopy(element, leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -141,13 +138,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            Direction of the copy.
 	 */
 	public void copy(List<DiffElement> elements, boolean leftToRight) {
-		final List<DiffElement> diffs = new ArrayList<DiffElement>();
-		for (DiffElement aDiff : elements)
-			if (aDiff instanceof DiffGroup)
-				diffs.addAll(getContainedDifferences((DiffGroup)aDiff));
-			else
-				diffs.add(aDiff);
-		doCopy(diffs, leftToRight);
+		doCopy(elements, leftToRight);
 		fireCompareInputChanged();
 	}
 
@@ -363,23 +354,5 @@ public class ModelCompareInput implements ICompareInput {
 		for (ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);
 		}
-	}
-
-	/**
-	 * Returns all the differences contained by a given {@link DiffGroup}.
-	 * 
-	 * @param group
-	 *            DiffGroup which we seek the subDifferences of.
-	 * @return List of all the differences contained by <code>group</code>.
-	 */
-	protected List<DiffElement> getContainedDifferences(DiffGroup group) {
-		final List<DiffElement> result = new ArrayList<DiffElement>();
-		for (Object subDiff : group.getSubDiffElements()) {
-			if (subDiff instanceof DiffGroup)
-				result.addAll(getContainedDifferences((DiffGroup)subDiff));
-			else
-				result.add((DiffElement)subDiff);
-		}
-		return result;
 	}
 }
