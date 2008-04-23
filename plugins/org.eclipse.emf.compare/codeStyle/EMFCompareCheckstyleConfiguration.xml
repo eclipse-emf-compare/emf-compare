@@ -211,7 +211,7 @@
         </module>
         <module name="NestedIfDepth">
             <property name="severity" value="error"/>
-            <property name="max" value="2"/>
+            <property name="max" value="3"/>
         </module>
         <module name="NestedTryDepth">
             <property name="severity" value="error"/>
