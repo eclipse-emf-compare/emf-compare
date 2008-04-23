@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.compare.EMFCompareException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
@@ -100,12 +102,36 @@ public final class EMFCompareEObjectCopier extends Copier {
 	public void copyReferenceValue(EReference targetReference, EObject target, EObject value) {
 		final EObject targetValue = get(value);
 		if (targetValue != null)
-			((List<Object>)target.eGet(targetReference)).add(targetValue);
+			((List<Object>)target.eGet(targetReference)).add(get(value));
 		else if (mergeLinkedDiff(value))
 			// referenced object was an unmatched one and we managed to merge its corresponding diff
 			((List<Object>)target.eGet(targetReference)).add(get(value));
 		else
-			((List<Object>)target.eGet(targetReference)).add(value);
+			throw new EMFCompareException(EMFCompareDiffMessages.getString("EMFCompareEObjectCopier.MergeFailure", value, targetReference)); //$NON-NLS-1$
+	}
+
+	/**
+	 * This will copy the given <tt>value</tt> to the reference <tt>targetReference</tt> of
+	 * <tt>target</tt>.
+	 * 
+	 * @param targetReference
+	 *            The reference to add a value to.
+	 * @param target
+	 *            The object to copy to.
+	 * @param value
+	 *            The value that is to be copied.
+	 * @param matchedValue
+	 *            Matched value of <tt>value</tt> if it is know. Will behave like
+	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
+	 */
+	@SuppressWarnings("unchecked")
+	public void copyReferenceValue(EReference targetReference, EObject target, EObject value,
+			EObject matchedValue) {
+		if (matchedValue != null) {
+			put(value, matchedValue);
+			((List<Object>)target.eGet(targetReference)).add(matchedValue);
+		} else
+			copyReferenceValue(targetReference, target, value);
 	}
 
 	/**
@@ -161,8 +187,7 @@ public final class EMFCompareEObjectCopier extends Copier {
 						// referenced object was an unmatched one and we managed to merge its corresponding
 						// diff
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObject));
-					else
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
+					// else => don't take any action, this has already been handled
 				}
 			}
 		} else {
@@ -177,8 +202,7 @@ public final class EMFCompareEObjectCopier extends Copier {
 				else if (mergeLinkedDiff((EObject)referencedEObject))
 					// referenced object was an unmatched one and we managed to merge its corresponding diff
 					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
-				else
-					copyEObject.eSet(getTarget(eReference), referencedEObject);
+				// else => don't take any action, this has already been handled
 			}
 		}
 	}

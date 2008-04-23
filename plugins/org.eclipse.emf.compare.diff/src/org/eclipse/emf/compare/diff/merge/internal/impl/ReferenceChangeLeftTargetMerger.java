@@ -75,7 +75,8 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject leftTarget = theDiff.getLeftRemovedTarget();
-		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, leftTarget);
+		final EObject rightTarget = theDiff.getRightRemovedTarget();
+		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, leftTarget, rightTarget);
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {

@@ -428,8 +428,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if we cannot fetch the references' values.
 	 */
 	protected void checkReferencesUpdates(DiffGroup root, Match3Element mapping) throws FactoryException {
-		// Ignores matchElements when they don't have origin (no updates on
-		// these)
+		// Ignores matchElements when they don't have origin (no updates on these)
 		if (mapping.getOriginElement() == null)
 			return;
 		final EClass eClass = mapping.getOriginElement().eClass();
@@ -460,18 +459,27 @@ public class GenericDiffEngine implements IDiffEngine {
 					createRemoteReferencesUpdate(root, next, mapping, remoteAddedReferences,
 							remoteDeletedReferences);
 
-					boolean isUniqueReferenceUpdate = false;
-					if (!next.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
-						isUniqueReferenceUpdate = !addedReferences.get(0).eIsProxy()
-								|| !deletedReferences.get(0).eIsProxy()
-								|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
-										EcoreUtil.getURI(deletedReferences.get(0)));
-					}
+					if (!next.isMany()) {
+						EObject addedValue = null;
+						EObject deletedValue = null;
+						if (addedReferences.size() > 0)
+							addedValue = addedReferences.get(0);
+						if (deletedReferences.size() > 0)
+							deletedValue = deletedReferences.get(0);
 
-					if (isUniqueReferenceUpdate) {
-						root.getSubDiffElements().add(
-								createUpdatedReferencesOperation(mapping.getLeftElement(), mapping
-										.getRightElement(), next, addedReferences, deletedReferences));
+						// One of the two value is null, reference has been unset
+						if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
+							root.getSubDiffElements().add(
+									createUpdatedReferenceOperation(mapping.getLeftElement(), mapping
+											.getRightElement(), next, addedValue,
+											deletedValue));
+						} else if (addedValue != null && deletedValue != null
+								&& !EcoreUtil.getURI(addedValue).equals(EcoreUtil.getURI(deletedValue))) {
+							root.getSubDiffElements().add(
+									createUpdatedReferenceOperation(mapping.getLeftElement(), mapping
+											.getRightElement(), next, addedValue,
+											deletedValue));
+						}
 					} else if (addedReferences.size() > 0) {
 						// REFERENCES ADD
 						createNewReferencesOperation(root, mapping.getLeftElement(), mapping
@@ -1191,19 +1199,28 @@ public class GenericDiffEngine implements IDiffEngine {
 				rightElementReferences);
 
 		// REFERENCES UPDATES
-		if (!reference.isMany() && addedReferences.size() > 0 && deletedReferences.size() > 0) {
+		if (!reference.isMany()) {
+			EObject addedValue = null;
+			EObject deletedValue = null;
 			/*
-			 * If neither the left nor the right target are proxies, or if their target URIs are distinct,
-			 * this is a reference update. Otherwise, we are here because we haven't been able to resolve the
-			 * proxy.
+			 * If neither the left nor the right target are proxies, or if their URIs are distinct, this is a
+			 * reference update. Otherwise, we are here because we haven't been able to resolve the proxy.
 			 */
-			if (!addedReferences.get(0).eIsProxy()
-					|| !deletedReferences.get(0).eIsProxy()
-					|| !EcoreUtil.getURI(addedReferences.get(0)).equals(
-							EcoreUtil.getURI(deletedReferences.get(0)))) {
+			if (addedReferences.size() > 0)
+				addedValue = addedReferences.get(0);
+			if (deletedReferences.size() > 0)
+				deletedValue = deletedReferences.get(0);
+
+			// One of the two value is null, reference has been unset
+			if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
 				root.getSubDiffElements().add(
-						createUpdatedReferencesOperation(leftElement, rightElement, reference,
-								addedReferences, deletedReferences));
+						createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
+								deletedValue));
+			} else if (addedValue != null && deletedValue != null
+					&& !EcoreUtil.getURI(addedValue).equals(EcoreUtil.getURI(deletedValue))) {
+				root.getSubDiffElements().add(
+						createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
+								deletedValue));
 			}
 		} else {
 			// REFERENCES ADD
@@ -1401,9 +1418,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Creates the {@link DiffElement} corresponding to an unique reference's value update.<br/>The
-	 * parameters include the lists of added and removed references, these can be computed using
-	 * {@link #computeAddedReferences(List, List)} and {@link #computeDeletedReferences(List, List)}.
+	 * Creates the {@link DiffElement} corresponding to an unique reference's value update.
 	 * 
 	 * @param left
 	 *            Left element of the reference change.
@@ -1411,28 +1426,26 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            Right element of the reference change.
 	 * @param reference
 	 *            {@link EReference} target of the operation.
-	 * @param deletedReferences
-	 *            {@link List} of reference values that have been removed in the <code>right</code> element
-	 *            since the <code>left</code> element.
-	 * @param addedReferences
-	 *            {@link List} of reference values that have been added in the <code>right</code> element
-	 *            since the <code>left</code> element.
+	 * @param addedValue
+	 *            Value which has been added for the reference.
+	 * @param deletedValue
+	 *            Value that has been deleted from the reference.
 	 * @return The {@link DiffElement} corresponding to an unique reference's value update
 	 */
-	private UpdateUniqueReferenceValue createUpdatedReferencesOperation(EObject left, EObject right,
-			EReference reference, List<EObject> addedReferences, List<EObject> deletedReferences) {
+	private UpdateUniqueReferenceValue createUpdatedReferenceOperation(EObject left, EObject right,
+			EReference reference, EObject addedValue, EObject deletedValue) {
 		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
 		operation.setLeftElement(left);
 		operation.setRightElement(right);
 		operation.setReference(reference);
 
-		EObject leftTarget = getMatchedEObject(addedReferences.get(0));
-		EObject rightTarget = getMatchedEObject(deletedReferences.get(0));
+		EObject leftTarget = getMatchedEObject(addedValue);
+		EObject rightTarget = getMatchedEObject(deletedValue);
 		// checks if target are defined remotely
 		if (leftTarget == null)
-			leftTarget = addedReferences.get(0);
+			leftTarget = addedValue;
 		if (rightTarget == null)
-			rightTarget = deletedReferences.get(0);
+			rightTarget = deletedValue;
 
 		operation.setLeftTarget(leftTarget);
 		operation.setRightTarget(rightTarget);

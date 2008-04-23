@@ -43,8 +43,9 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
+		final EObject leftTarget = theDiff.getLeftAddedTarget();
 		final EObject rightTarget = theDiff.getRightAddedTarget();
-		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, rightTarget);
+		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, rightTarget, leftTarget);
 		// We'll now look through this reference's eOpposite as they are already taken care of
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
