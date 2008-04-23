@@ -303,7 +303,11 @@ public class ModelContentMergeTabFolder {
 	 *            New input of this viewer part.
 	 */
 	public void setInput(Object input) {
-		tabs.get(tabFolder.getSelectionIndex()).setReflectiveInput((EObject)input);
+		final IModelContentMergeViewerTab currentTab = tabs.get(tabFolder.getSelectionIndex());
+		if (currentTab == properties)
+			currentTab.setReflectiveInput(findMatchFromElement((EObject)input));
+		else
+			tabs.get(tabFolder.getSelectionIndex()).setReflectiveInput((EObject)input);
 	}
 
 	/**
