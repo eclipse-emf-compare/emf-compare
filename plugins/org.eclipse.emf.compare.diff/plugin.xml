@@ -16,6 +16,11 @@
       <diffengine
             engineClass="org.eclipse.emf.compare.diff.engine.GenericDiffEngine"
             priority="lowest"/>
+      <diffengine
+            engineClass="org.eclipse.emf.compare.diff.engine.EcoreDiffEngine"
+            fileExtension="ecore"
+            priority="lowest">
+      </diffengine>
    </extension>
   <extension
         point="org.eclipse.emf.compare.diff.mergerprovider">
