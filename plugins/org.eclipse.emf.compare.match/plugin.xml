@@ -16,6 +16,11 @@
             engineClass="org.eclipse.emf.compare.match.engine.GenericMatchEngine"
             fileExtension="*"
             priority="lowest"/>
+      <matchengine
+            engineClass="org.eclipse.emf.compare.match.engine.EcoreMatchEngine"
+            fileExtension="ecore"
+            priority="lowest">
+      </matchengine>
    </extension>
 
  
