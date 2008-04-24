@@ -2,9 +2,10 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="EMF Compare Developer Guide">
+	<topic label="Adding new actions to the export menu" href="tutorials/html/EMF_Compare_Export_Tutorial.html" />
 	<!--
 	<topic label="Programmer&apos;s Guides">
-		<topic label="EMF Framework Programmer&apos;s Guide" href="references/overview/EMF.html" />
+     </topic>
 		<topic label="EMF.Edit Framework Programmer&apos;s Guide" href="references/overview/EMF.Edit.html" />
 		<topic label="EMF Validation Framework Programmer&apos;s Guide" href="references/overview/EMF.Validation.html" />
 	</topic>
