@@ -2,6 +2,9 @@
 Adding new actions to the export menu
 =====================================
 
+:Authors: Laurent Goubet
+:Contact: laurent.goubet@obeo.fr
+
 .. contents:: Table Of Contents
 
 Source Code
