@@ -386,7 +386,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 				final String color = EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR;
 
 				final ModelContentMergeTabItem wrappedItem = new ModelContentMergeTabItem(item, color);
-				String key = new String();
+				String key = "";
 				if (partSide == EMFCompareConstants.LEFT)
 					key = EcoreUtil.getURI(EMFCompareEObjectUtils.getLeftElement(diff)).fragment();
 				else if (partSide == EMFCompareConstants.RIGHT)

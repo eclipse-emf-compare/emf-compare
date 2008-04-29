@@ -55,7 +55,7 @@ public final class EMFCompareEObjectUtils {
 	 */
 	public static String computeObjectName(EObject eObject) {
 		String objectName = getLabelProvider().getText(eObject);
-		if (objectName == null || objectName.equals(new String()))
+		if (objectName == null || objectName.equals("")) //$NON-NLS-1$
 			objectName = EMFCompareUIMessages.getString("EMFCompareEObjectUtils.undefinedName"); //$NON-NLS-1$
 		return objectName;
 	}
