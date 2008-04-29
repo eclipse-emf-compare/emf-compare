@@ -17,12 +17,9 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -34,9 +31,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -58,8 +56,8 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final UpdateUniqueReferenceValue updateReference = (UpdateUniqueReferenceValue)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftTarget());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -91,9 +89,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -109,26 +107,27 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	@Override
 	public String getText(Object object) {
 		final UpdateUniqueReferenceValue updateRef = (UpdateUniqueReferenceValue)object;
-		try {
-			final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
-			final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
-			if (updateRef.eContainer() instanceof ConflictingDiffElement)
-				return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] { //$NON-NLS-1$
-						NameSimilarity.findName(updateRef.getReference()),
-								NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
-			return getString(
-					"_UI_UpdateUniqueReferenceValue_type", new Object[] {NameSimilarity.findName(updateRef.getReference()), NameSimilarity.findName(updateRef.getLeftElement()), //$NON-NLS-1$
-							NameSimilarity.findName(leftValue), NameSimilarity.findName(rightValue),});
-		} catch (FactoryException e) {
-			return getString("_UI_UpdateUniqueReferenceValue_type"); //$NON-NLS-1$
-		}
+
+		final EObject leftValue = (EObject)updateRef.getLeftElement().eGet(updateRef.getReference());
+		final EObject rightValue = (EObject)updateRef.getRightElement().eGet(updateRef.getReference());
+
+		final String elementLabel = AdapterUtils.getItemProviderText(updateRef.getLeftElement());
+		final String referenceLabel = AdapterUtils.getItemProviderText(updateRef.getReference());
+		final String leftValueLabel = AdapterUtils.getItemProviderText(leftValue);
+		final String rightValueLabel = AdapterUtils.getItemProviderText(rightValue);
+
+		if (updateRef.isConflicting())
+			return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$
+					leftValueLabel, rightValueLabel,});
+		return getString("_UI_UpdateUniqueReferenceValue_type", new Object[] {referenceLabel, elementLabel, //$NON-NLS-1$
+				leftValueLabel, rightValueLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -176,9 +175,9 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

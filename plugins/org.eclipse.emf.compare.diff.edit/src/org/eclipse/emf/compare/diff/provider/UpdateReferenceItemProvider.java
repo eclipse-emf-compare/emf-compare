@@ -18,8 +18,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -52,8 +51,8 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final UpdateReference updateReference = (UpdateReference)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftElement());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);

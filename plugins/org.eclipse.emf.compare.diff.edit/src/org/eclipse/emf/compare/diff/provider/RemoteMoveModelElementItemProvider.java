@@ -16,9 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -27,9 +26,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -45,8 +45,8 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	}
 
 	/**
-	 * This returns RemoteMoveModelElement.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RemoteMoveModelElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,9 +70,9 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -87,21 +87,21 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	 */
 	@Override
 	public String getText(Object object) {
-		RemoteMoveModelElement moveOp = (RemoteMoveModelElement)object;
-		try {
-			return getString(
-					"_UI_RemoteMoveModelElement_type", new Object[] {NameSimilarity.findName(moveOp.getLeftElement()), NameSimilarity.findName(moveOp.getRightTarget()), //$NON-NLS-1$
-							NameSimilarity.findName(moveOp.getLeftTarget())});
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteMoveModelElement_type"); //$NON-NLS-1$
-		}
+		final RemoteMoveModelElement moveOp = (RemoteMoveModelElement)object;
+
+		final String elementLabel = AdapterUtils.getItemProviderText(moveOp.getLeftElement());
+		final String remoteParentLabel = AdapterUtils.getItemProviderText(moveOp.getRightTarget());
+		final String localParentLabel = AdapterUtils.getItemProviderText(moveOp.getLeftTarget());
+
+		return getString("_UI_RemoteMoveModelElement_type", new Object[] {elementLabel, remoteParentLabel, //$NON-NLS-1$
+				localParentLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -111,9 +111,9 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

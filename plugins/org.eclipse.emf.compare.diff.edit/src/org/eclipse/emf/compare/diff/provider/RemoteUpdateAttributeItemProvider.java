@@ -16,9 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -27,9 +26,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 public class RemoteUpdateAttributeItemProvider extends UpdateAttributeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -45,8 +45,8 @@ public class RemoteUpdateAttributeItemProvider extends UpdateAttributeItemProvid
 	}
 
 	/**
-	 * This returns RemoteUpdateAttribute.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RemoteUpdateAttribute.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,9 +70,9 @@ public class RemoteUpdateAttributeItemProvider extends UpdateAttributeItemProvid
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -88,19 +88,19 @@ public class RemoteUpdateAttributeItemProvider extends UpdateAttributeItemProvid
 	@Override
 	public String getText(Object object) {
 		final RemoteUpdateAttribute updateOp = (RemoteUpdateAttribute)object;
-		try {
-			return getString(
-					"_UI_RemoteUpdateAttribute_type", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), NameSimilarity.findName(updateOp.getLeftElement()),}); //$NON-NLS-1$
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteUpdateAttribute_type"); //$NON-NLS-1$
-		}
+
+		final String elementLabel = AdapterUtils.getItemProviderText(updateOp.getLeftElement());
+		final String attributeLabel = AdapterUtils.getItemProviderText(updateOp.getAttribute());
+
+		return getString("_UI_RemoteUpdateAttribute_type", new Object[] {attributeLabel, //$NON-NLS-1$
+				elementLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -110,9 +110,9 @@ public class RemoteUpdateAttributeItemProvider extends UpdateAttributeItemProvid
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

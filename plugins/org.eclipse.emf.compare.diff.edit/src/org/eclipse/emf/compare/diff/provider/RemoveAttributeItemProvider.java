@@ -17,11 +17,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -31,8 +28,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -54,8 +52,8 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final RemoveAttribute removeAttribute = (RemoveAttribute)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(removeAttribute.getAttribute());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -85,9 +83,9 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -103,20 +101,19 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	@Override
 	public String getText(Object object) {
 		final RemoveAttribute removeOp = (RemoveAttribute)object;
-		try {
-			return getString(
-					"_UI_RemoveAttribute_type", new Object[] {NameSimilarity.findName(removeOp.getLeftTarget()), NameSimilarity.findName(removeOp.getAttribute()), //$NON-NLS-1$
-							NameSimilarity.findName(removeOp.getLeftElement()),});
-		} catch (FactoryException e) {
-			return getString("_UI_RemoveAttribute_type"); //$NON-NLS-1$
-		}
+
+		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
+		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
+		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getLeftTarget());
+
+		return getString("_UI_RemoveAttribute_type", new Object[] {valueLabel, attributeLabel, elementLabel,}); //$NON-NLS-1$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -126,9 +123,9 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

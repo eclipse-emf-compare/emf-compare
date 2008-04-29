@@ -17,12 +17,10 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -38,6 +36,7 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffGroup} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class DiffGroupItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -63,8 +62,7 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 				&& ((EObject)object).eContainer() instanceof DiffModel) {
 			return getResourceLocator().getImage("full/obj16/DiffModel"); //$NON-NLS-1$
 		}
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		Object labelImage = AdapterUtils.getItemProviderImage(((DiffGroup)object).getLeftParent());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -96,9 +94,9 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -113,25 +111,22 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	 */
 	@Override
 	public String getText(Object object) {
-		DiffGroup group = (DiffGroup)object;
-		if (group.getLeftParent() != null) {
-			try {
-				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
-						group.getLeftParent().eClass().getName(),
-						NameSimilarity.findName(group.getLeftParent())});
-			} catch (FactoryException e) {
-				return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
-						group.getLeftParent().eClass().getName(), "model"}); //$NON-NLS-1$
-			}
+		final DiffGroup group = (DiffGroup)object;
+		final EObject parent = group.getLeftParent();
+
+		if (parent != null) {
+			final String parentLabel = AdapterUtils.getItemProviderText(parent);
+			return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
+					parentLabel});
 		}
-		return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "", " model"}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "model"}); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -185,9 +180,9 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

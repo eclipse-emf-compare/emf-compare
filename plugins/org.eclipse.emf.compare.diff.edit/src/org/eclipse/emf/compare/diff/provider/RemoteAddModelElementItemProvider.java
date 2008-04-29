@@ -16,9 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -88,12 +87,10 @@ public class RemoteAddModelElementItemProvider extends ModelElementChangeLeftTar
 	@Override
 	public String getText(Object object) {
 		final RemoteAddModelElement addOp = (RemoteAddModelElement)object;
-		try {
-			return getString(
-					"_UI_RemoteAddModelElement_type", new Object[] {NameSimilarity.findName(addOp.getLeftElement())}); //$NON-NLS-1$
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteAddModelElement_type"); //$NON-NLS-1$
-		}
+		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getLeftElement());
+		
+		return getString(
+				"_UI_RemoteAddModelElement_type", new Object[] {elementLabel,}); //$NON-NLS-1$
 	}
 
 	/**

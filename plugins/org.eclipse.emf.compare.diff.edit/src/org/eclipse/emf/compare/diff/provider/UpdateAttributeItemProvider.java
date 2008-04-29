@@ -17,12 +17,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -32,8 +28,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -55,8 +52,8 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final UpdateAttribute updateAttribute = (UpdateAttribute)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(updateAttribute.getAttribute());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -86,9 +83,9 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -103,25 +100,25 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	 */
 	@Override
 	public String getText(Object object) {
-		UpdateAttribute updateOp = (UpdateAttribute)object;
-		try {
-			final Object leftValue = updateOp.getLeftElement().eGet(updateOp.getAttribute());
-			final Object rightValue = updateOp.getRightElement().eGet(updateOp.getAttribute());
-			if (updateOp.eContainer() instanceof ConflictingDiffElement)
-				return getString(
-						"_UI_UpdateAttribute_conflicting", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), leftValue, rightValue,}); //$NON-NLS-1$
-			return getString(
-					"_UI_UpdateAttribute_type", new Object[] {NameSimilarity.findName(updateOp.getAttribute()), NameSimilarity.findName(updateOp.getLeftElement()), leftValue, rightValue,}); //$NON-NLS-1$
-		} catch (FactoryException e) {
-			return getString("_UI_UpdateAttribute_type"); //$NON-NLS-1$
-		}
+		final UpdateAttribute updateOp = (UpdateAttribute)object;
+
+		final String attributeLabel = AdapterUtils.getItemProviderText(updateOp.getAttribute());
+		final String elementLabel = AdapterUtils.getItemProviderText(updateOp.getLeftElement());
+		final Object leftValue = updateOp.getLeftElement().eGet(updateOp.getAttribute());
+		final Object rightValue = updateOp.getRightElement().eGet(updateOp.getAttribute());
+
+		if (updateOp.isConflicting())
+			return getString("_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, leftValue, //$NON-NLS-1$
+					rightValue,});
+		return getString("_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, leftValue, //$NON-NLS-1$
+				rightValue,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -131,9 +128,9 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

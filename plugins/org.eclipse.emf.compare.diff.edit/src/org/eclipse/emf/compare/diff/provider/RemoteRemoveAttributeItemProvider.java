@@ -16,9 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -27,9 +26,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -45,8 +45,8 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 	}
 
 	/**
-	 * This returns RemoteRemoveAttribute.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns RemoteRemoveAttribute.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -70,9 +70,9 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -88,20 +88,20 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 	@Override
 	public String getText(Object object) {
 		final RemoteRemoveAttribute removeOp = (RemoteRemoveAttribute)object;
-		try {
-			return getString(
-					"_UI_RemoteRemoveAttribute_type", new Object[] {NameSimilarity.findName(removeOp.getRightTarget()), NameSimilarity.findName(removeOp.getAttribute()), //$NON-NLS-1$
-							NameSimilarity.findName(removeOp.getLeftElement()),});
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteRemoveAttribute_type"); //$NON-NLS-1$
-		}
+
+		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getRightTarget());
+		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
+		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
+
+		return getString("_UI_RemoteRemoveAttribute_type", new Object[] {valueLabel, attributeLabel, //$NON-NLS-1$
+				elementLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -111,9 +111,9 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

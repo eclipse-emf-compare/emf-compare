@@ -10,15 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -46,11 +47,23 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 	/**
 	 * This returns RemoteAddAttribute.gif.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoteAddAttribute")); //$NON-NLS-1$
+		final RemoteAddAttribute addOp = (RemoteAddAttribute)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(addOp.getAttribute());
+
+		if (labelImage != null) {
+			List<Object> images = new ArrayList<Object>(2);
+			images.add(labelImage);
+			images.add(getResourceLocator().getImage("full/obj16/RemoteAddAttribute")); //$NON-NLS-1$
+			labelImage = new ComposedImage(images);
+		} else {
+			labelImage = getResourceLocator().getImage("full/obj16/RemoteAddAttribute"); //$NON-NLS-1$
+		}
+
+		return labelImage;
 	}
 
 	/**
@@ -87,13 +100,14 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 	@Override
 	public String getText(Object object) {
 		final RemoteAddAttribute addOp = (RemoteAddAttribute)object;
-		try {
-			return getString(
-					"_UI_RemoteAddAttribute_type", new Object[] {NameSimilarity.findName(addOp.getLeftTarget()), NameSimilarity.findName(addOp.getAttribute()), //$NON-NLS-1$
-							NameSimilarity.findName(addOp.getRightElement()),});
-		} catch (FactoryException e) {
-			return getString("_UI_RemoteAddAttribute_type"); //$NON-NLS-1$
-		}
+		
+		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getLeftTarget());
+		final String attributeLabel = AdapterUtils.getItemProviderText(addOp.getAttribute());
+		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
+		
+		return getString(
+				"_UI_RemoteAddAttribute_type", new Object[] {valueLabel, attributeLabel, //$NON-NLS-1$
+						elementLabel,});
 	}
 
 	/**

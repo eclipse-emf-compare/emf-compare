@@ -17,11 +17,9 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -32,8 +30,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -55,8 +54,8 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final MoveModelElement moveModelElement = (MoveModelElement)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(moveModelElement.getLeftElement());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -88,9 +87,9 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -105,22 +104,21 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		MoveModelElement moveOp = (MoveModelElement)object;
-		try {
-			return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
-					NameSimilarity.findName(moveOp.getLeftElement()),
-							NameSimilarity.findName(moveOp.getLeftElement().eContainer()),
-							NameSimilarity.findName(moveOp.getRightElement().eContainer())});
-		} catch (FactoryException e) {
-			return getString("_UI_MoveModelElement_type"); //$NON-NLS-1$
-		}
+		final MoveModelElement moveModelElement = (MoveModelElement)object;
+
+		final String elementLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftElement());
+		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
+		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
+
+		return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
+				elementLabel, oldParentLabel, newParentLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -168,9 +166,9 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

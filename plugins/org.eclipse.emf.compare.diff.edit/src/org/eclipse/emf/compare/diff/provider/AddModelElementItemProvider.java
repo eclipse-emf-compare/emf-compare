@@ -17,11 +17,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.diff.util.ProviderImageUtil;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -54,8 +51,8 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	 */
 	@Override
 	public Object getImage(Object object) {
-		Object labelImage = ProviderImageUtil.findImage(object, DiffPackage.eINSTANCE
-				.getAttributeChange_Attribute(), adapterFactory.getClass());
+		final AddModelElement diff = (AddModelElement)object;
+		Object labelImage = AdapterUtils.getItemProviderImage(diff.getRightElement());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -102,13 +99,10 @@ public class AddModelElementItemProvider extends ModelElementChangeRightTargetIt
 	 */
 	@Override
 	public String getText(Object object) {
-		AddModelElement addOp = (AddModelElement)object;
-		try {
-			return getString(
-					"_UI_AddModelElement_type", new Object[] {NameSimilarity.findName(addOp.getRightElement())}); //$NON-NLS-1$
-		} catch (FactoryException e) {
-			return getString("_UI_AddModelElement_type"); //$NON-NLS-1$
-		}
+		final AddModelElement addOp = (AddModelElement)object;
+		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
+		return getString(
+				"_UI_AddModelElement_type", new Object[] {elementLabel,}); //$NON-NLS-1$
 	}
 
 	/**

@@ -16,10 +16,9 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -29,9 +28,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object.
- * <!-- begin-user-doc --> <!--
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement} object. <!-- begin-user-doc --> <!--
  * end-user-doc -->
+ * 
  * @generated
  */
 public class ConflictingDiffElementItemProvider extends DiffElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -47,8 +47,8 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This returns ConflictingDiffElement.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns ConflictingDiffElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -75,9 +75,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -93,20 +93,19 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	@Override
 	public String getText(Object object) {
 		final ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)object;
-		try {
-			return getString(
-					"_UI_ConflictingDiffElement_type", new Object[] {NameSimilarity.findName(conflictingDiffElement.getLeftParent()), //$NON-NLS-1$
-							NameSimilarity.findName(conflictingDiffElement.getRightParent())});
-		} catch (FactoryException e) {
-			return getString("_UI_ConflictingDiffElement_type"); //$NON-NLS-1$
-		}
+
+		final String leftLabel = AdapterUtils.getItemProviderText(conflictingDiffElement.getLeftParent());
+		final String rightLabel = AdapterUtils.getItemProviderText(conflictingDiffElement.getRightParent());
+
+		return getString("_UI_ConflictingDiffElement_type", new Object[] {leftLabel, //$NON-NLS-1$
+				rightLabel,});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -135,9 +134,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds a property descriptor for the Origin Element feature.
-	 * <!-- begin-user-doc --> <!--
+	 * This adds a property descriptor for the Origin Element feature. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
@@ -173,9 +172,9 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
