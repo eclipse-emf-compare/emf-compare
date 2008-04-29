@@ -39,7 +39,7 @@ public final class MergeFactory {
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
 	/** Remembers the last file extension for which we've populated {@link #MERGER_TYPES}. */
-	private static String lastExtension = new String();
+	private static String lastExtension = ""; //$NON-NLS-1$
 
 	/** Name of the extension point to parse for merger providers. */
 	private static final String MERGER_PROVIDER_EXTENSION_POINT = "org.eclipse.emf.compare.diff.mergerprovider"; //$NON-NLS-1$
