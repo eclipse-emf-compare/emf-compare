@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 
 /**
  * Useful methods for EMF adapter factories handling.
@@ -26,8 +26,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
  */
 public final class AdapterUtils {
 	/**
-	 * Adapter factory instance. This contains all factories registered in the
-	 * global registry.
+	 * Adapter factory instance. This contains all factories registered in the global registry.
 	 */
 	private static final ComposedAdapterFactory FACTORY = createAdapterFactory();
 
@@ -39,41 +38,87 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Returns a factory built with all the {@link AdapterFactory} instances
-	 * available in the global registry.
+	 * This will try and return an adapter of the given type associated to the given EObject.
 	 * 
-	 * @return A factory built with all the {@link AdapterFactory} instances
-	 *         available in the global registry.
+	 * @param <T>
+	 *            Type of the adapter to return.
+	 * @param eObj
+	 *            The EObject we seek an adapter for.
+	 * @param type
+	 *            The sought adapter's type.
+	 * @return An associated adapter.
+	 * @see AdapterFactory#adapt(Object, Object)
 	 */
-	public static AdapterFactory getAdapterFactory() {
-		return FACTORY;
+	@SuppressWarnings("unchecked")
+	public static <T> T adapt(EObject eObj, Class<? extends T> type) {
+		return (T)getAdapterFactory().adapt(eObj, type);
 	}
-
-	/**
-	 * Returns an adapter factory containing all the global EMF registry's
-	 * factories.
-	 * 
-	 * @return An adapter factory made of all the adapter factories declared in
-	 *         the registry.
-	 */
-	private static ComposedAdapterFactory createAdapterFactory() {
-		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
-		factories.add(new ComposedAdapterFactory(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
-		// These two factories could prove useful to avoid potential errors
-		factories.add(new ResourceItemProviderAdapterFactory());
-		factories.add(new ReflectiveItemProviderAdapterFactory());
-		return new ComposedAdapterFactory(factories);
-	}
-
+	
 	/**
 	 * Return a factory for a given instance.
 	 * 
 	 * @param eObj
 	 *            the instance.
 	 * @return the factory.
+	 * @deprecated This unused method will be deleted before 1.0 is released.
 	 */
+	@Deprecated
 	public static AdapterFactory findAdapterFactory(EObject eObj) {
 		return FACTORY.getFactoryForType(eObj);
+	}
+
+	/**
+	 * Returns a factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 * 
+	 * @return A factory built with all the {@link AdapterFactory} instances available in the global registry.
+	 */
+	public static AdapterFactory getAdapterFactory() {
+		return FACTORY;
+	}
+
+	/**
+	 * This will try and get the IItemLabelProvider associated to the given EObject if its ItemProviderFactory
+	 * is registered, then return the image it provides.
+	 * 
+	 * @param eObj
+	 *            EObject we need an image for.
+	 * @return The Image provided by the IItemLabelProvider associated with <tt>eObj</tt>,
+	 *         <code>null</code> if it cannot be found.
+	 * @see IItemLabelProvider#getImage(Object)
+	 */
+	public static Object getItemProviderImage(EObject eObj) {
+		final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
+		if (labelProvider != null)
+			return labelProvider.getImage(eObj);
+		return null;
+	}
+
+	/**
+	 * This will try and get the IItemLabelProvider associated to the given EObject if its ItemProviderFactory
+	 * is registered, then return the text it provides.
+	 * 
+	 * @param eObj
+	 *            EObject we need the text of.
+	 * @return The text provided by the IItemLabelProvider associated with <tt>eObj</tt>, <code>null</code>
+	 *         if it cannot be found.
+	 * @see IItemLabelProvider#getText(Object)
+	 */
+	public static String getItemProviderText(EObject eObj) {
+		final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
+		if (labelProvider != null)
+			return labelProvider.getText(eObj);
+		return null;
+	}
+
+	/**
+	 * Returns an adapter factory containing all the global EMF registry's factories.
+	 * 
+	 * @return An adapter factory made of all the adapter factories declared in the registry.
+	 */
+	private static ComposedAdapterFactory createAdapterFactory() {
+		final List<AdapterFactory> factories = new ArrayList<AdapterFactory>();
+		factories.add(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+		factories.add(new ReflectiveItemProviderAdapterFactory());
+		return new ComposedAdapterFactory(factories);
 	}
 }
