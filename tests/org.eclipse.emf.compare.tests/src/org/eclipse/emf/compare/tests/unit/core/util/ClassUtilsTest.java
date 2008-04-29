@@ -152,7 +152,7 @@ public class ClassUtilsTest extends TestCase {
 			// We were expectin this
 		}
 		try {
-			ClassUtils.invokeMethod(null, "", new String(), new Object(), new Integer(5));
+			ClassUtils.invokeMethod(null, "", "", new Object(), new Integer(5));
 			fail("Expected NullPointerException hasn't been thrown by invokeMethod.");
 		} catch (NullPointerException e) {
 			// We were expectin this
