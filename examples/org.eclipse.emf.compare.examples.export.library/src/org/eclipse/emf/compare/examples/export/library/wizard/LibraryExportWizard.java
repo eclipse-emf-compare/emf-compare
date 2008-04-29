@@ -175,7 +175,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the added members, an empty String if there are none.
 	 */
 	private String generateNewMemberTable() {
-		String newMembers = new String();
+		String newMembers = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
@@ -208,7 +208,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the added books, an empty String if there are none.
 	 */
 	private String generateNewBookTable() {
-		String newBooks = new String();
+		String newBooks = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
@@ -241,7 +241,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the borrowed books, an empty String if there are none.
 	 */
 	private String generateBorrowedTable() {
-		String borrowedBooks = new String();
+		String borrowedBooks = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
@@ -276,7 +276,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the returned books, an empty String if there are none.
 	 */
 	private String generateReturnedTable() {
-		String returnedBooks = new String();
+		String returnedBooks = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
@@ -311,7 +311,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the removed members, an empty String if there are none.
 	 */
 	private String generateRemovedMemberTable() {
-		String removedMembers = new String();
+		String removedMembers = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
@@ -344,7 +344,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @return An html table for the removed books, an empty String if there are none.
 	 */
 	private String generateRemovedBookTable() {
-		String removedBooks = new String();
+		String removedBooks = "";
 		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
