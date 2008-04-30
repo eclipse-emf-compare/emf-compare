@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.ContainmentUpdatingFeatureMapEntry;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.DelegatingWrapperItemProvider;
 import org.eclipse.emf.edit.provider.FeatureMapEntryWrapperItemProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -230,12 +231,11 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * Modifies the input of this viewer. Sets a new label provider adapted to the given {@link EObject}.
-	 * 
-	 * @param eObject
-	 *            New input of this viewer.
+	 * {@inheritDoc}
+	 *
+	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#setReflectiveInput(java.lang.Object)
 	 */
-	public void setReflectiveInput(EObject eObject) {
+	public void setReflectiveInput(Object object) {
 		// We *need* to invalidate the cache here since setInput() would try to use it otherwise
 		dataToDiff.clear();
 		dataToItem.clear();
@@ -243,7 +243,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
 		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
-		setInput(eObject.eResource());
+		if (object instanceof EObject)
+			setInput(((EObject)object).eResource());
+		else {
+			assert object instanceof Resource;
+			setInput(object);
+		}
 
 		mapTreeItems();
 		mapDifferences();

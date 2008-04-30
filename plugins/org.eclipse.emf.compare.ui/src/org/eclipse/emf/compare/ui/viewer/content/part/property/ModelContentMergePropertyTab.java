@@ -283,7 +283,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * 
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#setReflectiveInput(org.eclipse.emf.ecore.EObject)
 	 */
-	public void setReflectiveInput(EObject input) {
+	public void setReflectiveInput(Object input) {
 		setInput(input);
 		mapDifferences();
 		mapTableItems();
@@ -386,7 +386,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 				final String color = EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR;
 
 				final ModelContentMergeTabItem wrappedItem = new ModelContentMergeTabItem(item, color);
-				String key = "";
+				String key = ""; //$NON-NLS-1$
 				if (partSide == EMFCompareConstants.LEFT)
 					key = EcoreUtil.getURI(EMFCompareEObjectUtils.getLeftElement(diff)).fragment();
 				else if (partSide == EMFCompareConstants.RIGHT)

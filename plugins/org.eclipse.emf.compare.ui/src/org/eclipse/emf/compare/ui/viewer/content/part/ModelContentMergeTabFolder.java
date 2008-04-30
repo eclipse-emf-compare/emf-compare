@@ -307,7 +307,7 @@ public class ModelContentMergeTabFolder {
 		if (currentTab == properties)
 			currentTab.setReflectiveInput(findMatchFromElement((EObject)input));
 		else
-			tabs.get(tabFolder.getSelectionIndex()).setReflectiveInput((EObject)input);
+			tabs.get(tabFolder.getSelectionIndex()).setReflectiveInput(input);
 	}
 
 	/**

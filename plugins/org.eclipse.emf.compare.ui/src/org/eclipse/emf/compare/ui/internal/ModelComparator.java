@@ -344,24 +344,35 @@ public final class ModelComparator {
 	private boolean handleGenericResources(ITypedElement left, ITypedElement right, ITypedElement ancestor)
 			throws IOException, CoreException {
 		if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
-			if (((ResourceNode)left).getResource().isAccessible())
+			if (((ResourceNode)left).getResource().isAccessible()) {
 				rightResource = ModelUtils
 						.load(((ResourceNode)left).getResource().getFullPath(), resourceSet).eResource();
-			else
+			} else {
 				rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
 						.getResource().getFullPath().toOSString(), true));
-			leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-					resourceSet).eResource();
+				// resource has been deleted. We set it as "remote" to disable merge facilities
+				rightIsRemote = true;
+			}
+			if (((IStreamContentAccessor)right).getContents().available() > 0) {
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
+						resourceSet).eResource();
+			} else {
+				leftResource = ModelUtils.createResource(URI.createURI(right.getName()));
+				// left resource has been added to the repository. Set the right as remote to disable merge facilities
+				rightIsRemote = true;
+			}
 			leftIsRemote = true;
-			if (ancestor != null)
+			if (ancestor != null && ((IStreamContentAccessor)ancestor).getContents().available() > 0)
 				ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 						ancestor.getName(), resourceSet).eResource();
+			else if (ancestor != null)
+				ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
 			return true;
 		}
 		/*
-		 * We *should* never be here. There always is a local resource when comparing with CVS, this code will
-		 * be executed if we couldn't manage to handle this *local* resource as such. Though the resource will
-		 * be loaded with this generic handler, note that it will not be saveable.
+		 * We *should* never be here. There always is a local resource when comparing with CVS. this code will
+		 * be executed if we couldn't manage to handle this *local* resource as such. Though the resource *will*
+		 * be loaded thanks to this generic handler, note that it will not be saveable.
 		 */
 		boolean result = false;
 		if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {

@@ -148,20 +148,25 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
-		if (ancestorResource != null)
-			return new TypedElementWrapper(ancestorResource.getContents().get(0));
-		// Seeks a resource from the MatchModel
-		// Assumes that some elements have been matched
-		final TreeIterator<EObject> matchIterator = match.eAllContents();
-		EObject root = null;
-		while (matchIterator.hasNext()) {
-			final EObject matchElement = matchIterator.next();
-			if (matchElement instanceof Match3Element) {
-				root = ((Match3Element)matchElement).getOriginElement().eResource().getContents().get(0);
-				break;
+		ITypedElement ancestor = null;
+		if (ancestorResource != null) {
+			if (ancestorResource.getContents().size() > 0)
+				ancestor = new TypedElementWrapper(ancestorResource.getContents().get(0));
+		} else {
+			// Seeks a resource from the MatchModel
+			// Assumes that some elements have been matched
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			EObject root = null;
+			while (matchIterator.hasNext()) {
+				final EObject matchElement = matchIterator.next();
+				if (matchElement instanceof Match3Element) {
+					root = ((Match3Element)matchElement).getOriginElement().eResource().getContents().get(0);
+					break;
+				}
 			}
+			ancestor = new TypedElementWrapper(root);
 		}
-		return new TypedElementWrapper(root);
+		return ancestor;
 	}
 
 	/**
@@ -244,20 +249,25 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
-		if (leftResource != null)
-			return new TypedElementWrapper(leftResource.getContents().get(0));
-		// Seeks a resource from the MatchModel
-		// Assumes that some elements have been matched
-		final TreeIterator<EObject> matchIterator = match.eAllContents();
-		EObject root = null;
-		while (matchIterator.hasNext()) {
-			final EObject matchElement = matchIterator.next();
-			if (matchElement instanceof Match2Elements) {
-				root = ((Match2Elements)matchElement).getLeftElement().eResource().getContents().get(0);
-				break;
+		ITypedElement left = null;
+		if (leftResource != null) {
+			if (leftResource.getContents().size() > 0)
+				left = new TypedElementWrapper(leftResource.getContents().get(0));
+		} else {
+			// Seeks a resource from the MatchModel
+			// Assumes that some elements have been matched
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			EObject root = null;
+			while (matchIterator.hasNext()) {
+				final EObject matchElement = matchIterator.next();
+				if (matchElement instanceof Match2Elements) {
+					root = ((Match2Elements)matchElement).getLeftElement().eResource().getContents().get(0);
+					break;
+				}
 			}
+			left = new TypedElementWrapper(root);
 		}
-		return new TypedElementWrapper(root);
+		return left;
 	}
 
 	/**
@@ -291,20 +301,25 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
-		if (rightResource != null)
-			return new TypedElementWrapper(rightResource.getContents().get(0));
-		// Seeks a resource from the MatchModel
-		// Assumes that some elements have been matched
-		final TreeIterator<EObject> matchIterator = match.eAllContents();
-		EObject root = null;
-		while (matchIterator.hasNext()) {
-			final EObject matchElement = matchIterator.next();
-			if (matchElement instanceof Match2Elements) {
-				root = ((Match2Elements)matchElement).getRightElement().eResource().getContents().get(0);
-				break;
+		ITypedElement right = null;
+		if (rightResource != null) {
+			if (rightResource.getContents().size() > 0)
+				right = new TypedElementWrapper(rightResource.getContents().get(0));
+		} else {
+			// Seeks a resource from the MatchModel
+			// Assumes that some elements have been matched
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			EObject root = null;
+			while (matchIterator.hasNext()) {
+				final EObject matchElement = matchIterator.next();
+				if (matchElement instanceof Match2Elements) {
+					root = ((Match2Elements)matchElement).getRightElement().eResource().getContents().get(0);
+					break;
+				}
 			}
+			right = new TypedElementWrapper(root);
 		}
-		return new TypedElementWrapper(root);
+		return right;
 	}
 
 	/**

@@ -84,7 +84,7 @@ public interface IModelContentMergeViewerTab {
 	 * @param input
 	 *            New input of the tab's viewer.
 	 */
-	void setReflectiveInput(EObject input);
+	void setReflectiveInput(Object input);
 
 	/**
 	 * Ensures the given List of items is made visible in the tab's Control client area.
