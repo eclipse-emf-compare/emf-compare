@@ -115,15 +115,14 @@ public class GenericDiffEngine implements IDiffEngine {
 		result.getOwnedElements().add(diffRoot);
 
 		final Iterator<EObject> it = match.eAllContents();
-		boolean found = false;
 		EObject leftRoot = null;
 		EObject rightRoot = null;
-		while (it.hasNext() && !found) {
+		while (it.hasNext()) {
 			final EObject itMatch = it.next();
 			if (itMatch instanceof Match2Elements) {
 				leftRoot = ((Match2Elements)itMatch).getLeftElement();
 				rightRoot = ((Match2Elements)itMatch).getRightElement();
-				found = true;
+				break;
 			}
 		}
 		/*
