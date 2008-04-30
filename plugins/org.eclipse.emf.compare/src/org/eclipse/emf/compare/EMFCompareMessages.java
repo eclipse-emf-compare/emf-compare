@@ -49,7 +49,7 @@ public final class EMFCompareMessages {
 	}
 
 	/**
-	 * Returns a String from the resource bundle binded with the given arguments.
+	 * Returns a String from the resource bundle bound with the given arguments.
 	 * 
 	 * @param key
 	 *            Key of the String we seek.

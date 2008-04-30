@@ -93,26 +93,6 @@ public final class EFactory {
 				throw eGet;
 			}
 		}
-		/*
-		 * Following code is only meaningful if we desire a specific hanfling of enumerations. This isn't the
-		 * case in EMF Compare.
-		 */
-		// if (result != null && result instanceof Enumerator) {
-		// result = ((Enumerator)result).getName();
-		// } else
-		// if (result != null && result instanceof EDataTypeUniqueEList) {
-		// final List<Object> list = new ArrayList<Object>();
-		// final Iterator enums = ((EDataTypeUniqueEList)result).iterator();
-		// while (enums.hasNext()) {
-		// final Object next = enums.next();
-		// if (next instanceof Enumerator) {
-		// list.add(((Enumerator)next).getName());
-		// } else {
-		// list.add(next);
-		// }
-		// }
-		// result = list;
-		// }
 		return result;
 	}
 
@@ -211,21 +191,6 @@ public final class EFactory {
 		if (feature.getEType() instanceof EEnum && arg instanceof String) {
 			final EEnumLiteral literal = ((EEnum)feature.getEType()).getEEnumLiteral((String)arg);
 			object.eSet(feature, literal);
-			// try {
-			// final Class<?> c = object.getClass().getClassLoader().loadClass(
-			// ETools.getEClassifierPath(feature.getEType()));
-			// final Method m = c.getMethod(GETTER_PREFIX, new Class[] {String.class});
-			// final Object value = m.invoke(c, new Object[] {arg});
-			// object.eSet(feature, value);
-			// } catch (ClassNotFoundException e) {
-			// throw new FactoryException(e);
-			// } catch (NoSuchMethodException e) {
-			// throw new FactoryException(e);
-			// } catch (IllegalAccessException e) {
-			// throw new FactoryException(e);
-			// } catch (InvocationTargetException e) {
-			// throw new FactoryException(e);
-			// }
 		} else {
 			if (arg == null && feature.isMany())
 				object.eSet(feature, Collections.EMPTY_LIST);
