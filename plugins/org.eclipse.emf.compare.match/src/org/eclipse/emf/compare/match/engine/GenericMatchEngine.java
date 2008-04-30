@@ -477,7 +477,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext()) {
 			final EObject next = it.next();
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) || eObj.eClass() == next.eClass()) {
+			if (this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) || eObj.eClass() == next.eClass()) {
     			final double similarity = absoluteMetric(eObj, next);
     			if (similarity > max) {
     				max = similarity;
@@ -926,9 +926,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			final Set<EObject> still1 = new HashSet<EObject>();
 			final Set<EObject> still2 = new HashSet<EObject>();
 
-			// If the left resource has no roots, considers it
-			// has been deleted
-			if (leftResource.getContents().size() > 0) {
+			// If one of the resources has no roots, considers it as deleted
+			if (leftResource.getContents().size() > 0 && rightResource.getContents().size() > 0) {
 				Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
 				// We haven't found any similar roots, we then consider the
 				// firsts
@@ -970,6 +969,10 @@ public class GenericMatchEngine implements IMatchEngine {
 				monitor.subTask(EMFCompareMatchMessages
 						.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
 				createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
+			} else {
+				// Roots are unmatched, this is either a file addition or deletion
+				still1.addAll(unMatchedLeftRoots);
+				still2.addAll(unMatchedRightRoots);
 			}
 
 			// Now takes care of remaining unfound elements
