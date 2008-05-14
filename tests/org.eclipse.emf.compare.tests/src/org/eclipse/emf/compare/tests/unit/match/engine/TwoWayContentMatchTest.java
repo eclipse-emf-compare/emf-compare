@@ -11,14 +11,16 @@
 package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -47,8 +49,8 @@ public class TwoWayContentMatchTest extends TestCase {
 	private EObject testEObject2;
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
-	 * two distinct EObjects.
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
+	 * distinct EObjects.
 	 * <p>
 	 * A model and its slightly modified deep copy are taken as roots, then we iterate through their content
 	 * and match EObjects one after the other.
@@ -75,19 +77,18 @@ public class TwoWayContentMatchTest extends TestCase {
 		 */
 		final List<EObject> eObjects1 = new ArrayList<EObject>();
 		final List<EObject> eObjects2 = new ArrayList<EObject>();
-		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext(); ) {
-			final EObject next = iterator.next();
+		final TreeIterator<EObject> iteratorObj1 = testEObject1.eAllContents();
+		while (iteratorObj1.hasNext()) {
+			final EObject next = iteratorObj1.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME))
 				eObjects1.add(next);
 		}
-		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext(); ) {
-			final EObject next = iterator.next();
+		final TreeIterator<EObject> iteratorObj2 = testEObject2.eAllContents();
+		while (iteratorObj2.hasNext()) {
+			final EObject next = iteratorObj2.next();
 			if (next.eClass().getName().matches("Book"))
 				eObjects2.add(next);
 		}
-
-		assertFalse("There shouldn't be the same number of element in both of the objects.",
-				eObjects1.size() == eObjects2.size());
 
 		// now tests the matching process
 		for (int i = 0; i < eObjects1.size(); i++) {
@@ -95,16 +96,16 @@ public class TwoWayContentMatchTest extends TestCase {
 			for (int j = 0; j < eObjects2.size(); j++) {
 				final EObject obj2 = eObjects2.get(j);
 
-				final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, Collections
-						.<String, Object> emptyMap());
+				final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, getOptions());
 				assertNotNull("Failed to match the two objects.", match);
 
 				int elementCount = 0;
-				for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext(); ) {
-					final EObject next = iterator.next();
+				final TreeIterator<EObject> iterator1 = obj1.eAllContents();
+				while (iterator1.hasNext()) {
+					final EObject next = iterator1.next();
 					boolean found = false;
-					for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-							.hasNext(); ) {
+					final TreeIterator<EObject> matchIterator = match.eAllContents();
+					while (matchIterator.hasNext()) {
 						final EObject nextMatch = matchIterator.next();
 						if (nextMatch instanceof UnMatchElement
 								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
@@ -116,11 +117,12 @@ public class TwoWayContentMatchTest extends TestCase {
 						fail("contentMatch() did not found an unmatch for every element of the original object.");
 					elementCount++;
 				}
-				for (final TreeIterator<EObject> iterator = obj2.eAllContents(); iterator.hasNext(); ) {
-					final EObject next = iterator.next();
+				final TreeIterator<EObject> iterator2 = obj2.eAllContents();
+				while (iterator2.hasNext()) {
+					final EObject next = iterator2.next();
 					boolean found = false;
-					for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-							.hasNext(); ) {
+					final TreeIterator<EObject> matchIterator = match.eAllContents();
+					while (matchIterator.hasNext()) {
 						final EObject nextMatch = matchIterator.next();
 						if (nextMatch instanceof UnMatchElement
 								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
@@ -131,18 +133,11 @@ public class TwoWayContentMatchTest extends TestCase {
 					if (!found)
 						fail("contentMatch() did not found an unmatch for every element of the original object.");
 					elementCount++;
-				}
-
-				int unmatchElementCount = 0;
-				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-						.hasNext(); ) {
-					if (matchIterator.next() instanceof UnMatchElement)
-						unmatchElementCount++;
 				}
 
 				// Note : need to add 2 to the element count this none of the two roots has been counted yet
 				assertEquals("contentMatch() found shouldn't have found a match element.", elementCount + 2,
-						unmatchElementCount);
+						match.getUnMatchedElements().size());
 
 				// We shouldn't find a single MatchElement
 				assertTrue("contentMatch() found a matched element in the compared objects", match
@@ -153,8 +148,8 @@ public class TwoWayContentMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
-	 * two equal EObjects.
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
+	 * equal EObjects.
 	 * <p>
 	 * A model and its deep copy are taken as roots, then we iterate through their content and match EObjects
 	 * one after the other.
@@ -176,20 +171,20 @@ public class TwoWayContentMatchTest extends TestCase {
 
 		/*
 		 * We'll create the list of the EObjects to be compared : all the writers and books contained by the
-		 * library. We won't compare the library itself (this test is handled with modelMatch's tests) or the
+		 * library. We won't compare the library itself (this is handled with modelMatch's tests) or the
 		 * objects' structural features.
 		 */
 		final List<EObject> eObjects1 = new ArrayList<EObject>();
 		final List<EObject> eObjects2 = new ArrayList<EObject>();
-		eObjects1.add(testEObject1);
-		eObjects2.add(testEObject2);
-		for (final TreeIterator<EObject> iterator = testEObject1.eAllContents(); iterator.hasNext(); ) {
-			final EObject next = iterator.next();
+		final TreeIterator<EObject> iterator1 = testEObject1.eAllContents();
+		while (iterator1.hasNext()) {
+			final EObject next = iterator1.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
 				eObjects1.add(next);
 		}
-		for (final TreeIterator<EObject> iterator = testEObject2.eAllContents(); iterator.hasNext(); ) {
-			final EObject next = iterator.next();
+		final TreeIterator<EObject> iterator2 = testEObject2.eAllContents();
+		while (iterator2.hasNext()) {
+			final EObject next = iterator2.next();
 			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
 				eObjects2.add(next);
 		}
@@ -202,16 +197,16 @@ public class TwoWayContentMatchTest extends TestCase {
 			final EObject obj1 = eObjects1.get(i);
 			final EObject obj2 = eObjects2.get(i);
 
-			final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, Collections
-					.<String, Object> emptyMap());
+			final MatchModel match = new GenericMatchEngine().contentMatch(obj1, obj2, getOptions());
 			assertNotNull("Failed to match the two objects.", match);
 
 			int elementCount = 0;
-			for (final TreeIterator<EObject> iterator = obj1.eAllContents(); iterator.hasNext(); ) {
-				final EObject next = iterator.next();
+			final TreeIterator<EObject> iteratorObj1 = obj1.eAllContents();
+			while (iteratorObj1.hasNext()) {
+				final EObject next = iteratorObj1.next();
 				boolean found = false;
-				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-						.hasNext(); ) {
+				final TreeIterator<EObject> matchIterator = match.eAllContents();
+				while (matchIterator.hasNext()) {
 					final EObject nextMatch = matchIterator.next();
 					if (nextMatch instanceof Match2Elements
 							&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
@@ -227,7 +222,8 @@ public class TwoWayContentMatchTest extends TestCase {
 			}
 
 			int matchElementCount = 0;
-			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			while (matchIterator.hasNext()) {
 				if (matchIterator.next() instanceof Match2Elements)
 					matchElementCount++;
 			}
@@ -258,8 +254,7 @@ public class TwoWayContentMatchTest extends TestCase {
 		final String failNPE = "contentMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.contentMatch(null, EcoreFactory.eINSTANCE.createEObject(), Collections
-					.<String, Object> emptyMap());
+			service.contentMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -267,8 +262,7 @@ public class TwoWayContentMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.contentMatch(EcoreFactory.eINSTANCE.createEObject(), null, Collections
-					.<String, Object> emptyMap());
+			service.contentMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -291,5 +285,16 @@ public class TwoWayContentMatchTest extends TestCase {
 			EcoreUtil.remove(testEObject2);
 		testEObject1 = null;
 		testEObject2 = null;
+	}
+
+	/**
+	 * This will return the map of options to be used for comparisons within this test class.
+	 * 
+	 * @return Default options for matching.
+	 */
+	private Map<String, Object> getOptions() {
+		final Map<String, Object> options = new HashMap<String, Object>();
+		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, Boolean.TRUE);
+		return options;
 	}
 }

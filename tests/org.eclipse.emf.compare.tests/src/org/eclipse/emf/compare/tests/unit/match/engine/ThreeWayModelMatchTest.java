@@ -11,14 +11,16 @@
 package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -88,8 +90,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		final String failNPE = "modelMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), null, Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -97,8 +98,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -106,8 +106,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), (EObject)null, Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), (EObject)null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -115,8 +114,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -142,6 +140,17 @@ public class ThreeWayModelMatchTest extends TestCase {
 		testModel1 = null;
 		testModel2 = null;
 		testModel3 = null;
+	}
+	
+	/**
+	 * This will return the map of options to be used for comparisons within this test class.
+	 * 
+	 * @return Default options for matching.
+	 */
+	private Map<String, Object> getOptions() {
+		final Map<String, Object> options = new HashMap<String, Object>();
+		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, Boolean.TRUE);
+		return options;
 	}
 
 	/**
@@ -202,8 +211,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		MatchModel match = null;
 		try {
 			final IMatchEngine service = new GenericMatchEngine();
-			match = service.modelMatch(testModel1, testModel2, testModel3, Collections
-					.<String, Object> emptyMap());
+			match = service.modelMatch(testModel1, testModel2, testModel3, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException while comparing three models.");
 		}

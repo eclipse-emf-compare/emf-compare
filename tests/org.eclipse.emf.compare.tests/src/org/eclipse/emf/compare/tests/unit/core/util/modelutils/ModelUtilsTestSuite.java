@@ -43,6 +43,7 @@ public class ModelUtilsTestSuite extends TestCase {
 		suite.addTestSuite(GetModelsFromTest.class);
 		suite.addTestSuite(LoadFromFileTest.class);
 		suite.addTestSuite(LoadFromInputStreamTest.class);
+		suite.addTestSuite(LoadFromStringTest.class);
 		suite.addTestSuite(SaveSerializeTest.class);
 		return suite;
 	}

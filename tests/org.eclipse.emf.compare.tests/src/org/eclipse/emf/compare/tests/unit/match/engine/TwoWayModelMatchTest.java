@@ -11,14 +11,16 @@
 package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -150,8 +152,7 @@ public class TwoWayModelMatchTest extends TestCase {
 		final String failNPE = "modelMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -159,8 +160,7 @@ public class TwoWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(EcoreFactory.eINSTANCE.createEObject(), null, Collections
-					.<String, Object> emptyMap());
+			service.modelMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -183,6 +183,17 @@ public class TwoWayModelMatchTest extends TestCase {
 			EcoreUtil.remove(testModel2);
 		testModel1 = null;
 		testModel2 = null;
+	}
+	
+	/**
+	 * This will return the map of options to be used for comparisons within this test class.
+	 * 
+	 * @return Default options for matching.
+	 */
+	private Map<String, Object> getOptions() {
+		final Map<String, Object> options = new HashMap<String, Object>();
+		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, Boolean.TRUE);
+		return options;
 	}
 
 	/**
@@ -243,7 +254,7 @@ public class TwoWayModelMatchTest extends TestCase {
 		MatchModel match = null;
 		try {
 			final IMatchEngine service = new GenericMatchEngine();
-			match = service.modelMatch(testModel1, testModel2, Collections.<String, Object> emptyMap());
+			match = service.modelMatch(testModel1, testModel2, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
@@ -300,8 +311,7 @@ public class TwoWayModelMatchTest extends TestCase {
 	private void internalTest2wayEqualModels() {
 		try {
 			final IMatchEngine service = new GenericMatchEngine();
-			final MatchModel match = service.modelMatch(testModel1, testModel2, Collections
-					.<String, Object> emptyMap());
+			final MatchModel match = service.modelMatch(testModel1, testModel2, getOptions());
 
 			int elementCount = 0;
 			for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
