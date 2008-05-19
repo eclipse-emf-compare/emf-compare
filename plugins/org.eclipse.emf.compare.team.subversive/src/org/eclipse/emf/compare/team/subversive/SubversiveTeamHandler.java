@@ -17,7 +17,7 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.ui.internal.AbstractTeamHandler;
 import org.eclipse.emf.compare.util.ModelUtils;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 import org.eclipse.team.svn.ui.compare.ResourceCompareInput.ResourceElement;
 
@@ -35,6 +35,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * 
 	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#isRightRemote()
 	 */
+	@Override
 	public boolean isRightRemote() {
 		return rightIsRemote;
 	}
@@ -44,7 +45,8 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * 
 	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#loadResources(org.eclipse.compare.structuremergeviewer.ICompareInput)
 	 */
-	public boolean loadResources(ICompareInput input, ResourceSet resourceSet) throws IOException,
+	@Override
+	public boolean loadResources(ICompareInput input) throws IOException,
 			CoreException {
 		final ITypedElement left = input.getLeft();
 		final ITypedElement right = input.getRight();
@@ -53,18 +55,18 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 		if (left instanceof ResourceElement && right instanceof ResourceElement) {
 			if (((ResourceElement)left).getRepositoryResource().getSelectedRevision() == SVNRevision.WORKING) {
 				rightResource = ModelUtils.load(
-						((ResourceElement)left).getLocalResource().getResource().getFullPath(), resourceSet)
+						((ResourceElement)left).getLocalResource().getResource().getFullPath(), new ResourceSetImpl())
 						.eResource();
 			} else {
 				rightResource = ModelUtils.load(((ResourceElement)left).getContents(),
-						((ResourceElement)left).getName(), resourceSet).eResource();
+						((ResourceElement)left).getName(), new ResourceSetImpl()).eResource();
 				rightIsRemote = true;
 			}
 			leftResource = ModelUtils.load(((ResourceElement)right).getContents(),
-					((ResourceElement)right).getName(), resourceSet).eResource();
+					((ResourceElement)right).getName(), new ResourceSetImpl()).eResource();
 			if (ancestor != null)
 				ancestorResource = ModelUtils.load(((ResourceElement)ancestor).getContents(),
-						((ResourceElement)ancestor).getName(), resourceSet).eResource();
+						((ResourceElement)ancestor).getName(), new ResourceSetImpl()).eResource();
 			return true;
 		}
 		return false;
