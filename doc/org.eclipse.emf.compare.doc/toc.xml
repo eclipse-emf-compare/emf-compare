@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="EMF Compare Developer Guide">
-	<topic label="Adding new actions to the export menu" href="tutorials/html/EMF_Compare_Export_Tutorial.html" />
+<toc label="EMF Compare Guide">
+     <topic label="User Guide" href="tutorials/html/User_Guide.html"/>       
+     <topic label="Developper Guide" href="tutorials/html/Architecture.html"> 
+	   <topic label="Adding new actions to the export menu" href="tutorials/html/EMF_Compare_Export_Tutorial.html" />
+	 </topic>
 	<!--
 	<topic label="Programmer&apos;s Guides">
      </topic>

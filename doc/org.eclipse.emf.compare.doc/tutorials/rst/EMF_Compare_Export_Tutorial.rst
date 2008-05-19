@@ -7,6 +7,10 @@ Adding new actions to the export menu
 
 .. contents:: Table Of Contents
 
+.. include:: <isonum.txt>
+
+Copyright |copy| 2007-2008, Obeo\ |trade|.
+
 Source Code
 -----------
 
