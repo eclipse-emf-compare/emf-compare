@@ -15,7 +15,6 @@ import java.io.IOException;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
  * This abstract base class will be used to implement team handlers.
@@ -102,8 +101,6 @@ public abstract class AbstractTeamHandler {
 	 * 
 	 * @param input
 	 *            CompareInput which holds the resources to be loaded.
-	 * @param resourceSet
-	 *            The resource set in which resources are to be loaded.
 	 * @return <code>true</code> if the given models have been successfully loaded, <code>false</code>
 	 *         otherwise.
 	 * @throws IOException
@@ -111,6 +108,6 @@ public abstract class AbstractTeamHandler {
 	 * @throws CoreException
 	 *             Can be thrown if resource loading fails.
 	 */
-	public abstract boolean loadResources(ICompareInput input, ResourceSet resourceSet) throws IOException,
+	public abstract boolean loadResources(ICompareInput input) throws IOException,
 			CoreException;
 }

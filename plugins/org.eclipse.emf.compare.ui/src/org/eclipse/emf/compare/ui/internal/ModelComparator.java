@@ -85,9 +85,6 @@ public final class ModelComparator {
 	/** Resource of the left model used in this comparison. */
 	private Resource leftResource;
 
-	/** ResourceSet which will be used to load our resources. */
-	private final ResourceSet resourceSet = new ResourceSetImpl();
-
 	/**
 	 * Indicates that the right compared model is remote and shouldn't be modified. This will only happen if
 	 * we couldn't load a local resource when comparing with repository.
@@ -287,7 +284,7 @@ public final class ModelComparator {
 				final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS.iterator();
 				while (handlerDescriptorIterator.hasNext()) {
 					final AbstractTeamHandler handler = handlerDescriptorIterator.next().getHandlerInstance();
-					result |= handler.loadResources(input, resourceSet);
+					result |= handler.loadResources(input);
 					if (result) {
 						comparisonHandler = handler;
 						break;
@@ -310,17 +307,31 @@ public final class ModelComparator {
 	 * Clears all loaded resources from the resource set.
 	 */
 	private void clear() {
+		clearResourceSet(leftResource, rightResource, ancestorResource);
 		leftResource = null;
 		rightResource = null;
 		ancestorResource = null;
-		final Iterator<Resource> resourcesIterator = resourceSet.getResources().iterator();
-		while (resourcesIterator.hasNext()) {
-			final Resource resource = resourcesIterator.next();
-			resource.unload();
-		}
-		resourceSet.getResources().clear();
 		comparisonResult = null;
 		comparisonHandler = null;
+	}
+
+	/**
+	 * This will empty the resourceSet of the given <tt>resource</tt>.
+	 * 
+	 * @param resource
+	 *            Resource that is to be cleared.
+	 */
+	private void clearResourceSet(Resource... resource) {
+		for (int i = 0; i < resource.length; i++) {
+			if (resource[i] == null)
+				continue;
+			final ResourceSet resourceSet = resource[i].getResourceSet();
+			final Iterator<Resource> resourcesIterator = resourceSet.getResources().iterator();
+			while (resourcesIterator.hasNext()) {
+				resourcesIterator.next().unload();
+			}
+			resourceSet.getResources().clear();
+		}
 	}
 
 	/**
@@ -346,7 +357,7 @@ public final class ModelComparator {
 		if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 			if (((ResourceNode)left).getResource().isAccessible()) {
 				rightResource = ModelUtils
-						.load(((ResourceNode)left).getResource().getFullPath(), resourceSet).eResource();
+						.load(((ResourceNode)left).getResource().getFullPath(), new ResourceSetImpl()).eResource();
 			} else {
 				rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
 						.getResource().getFullPath().toOSString(), true));
@@ -354,37 +365,38 @@ public final class ModelComparator {
 				rightIsRemote = true;
 			}
 			if (((IStreamContentAccessor)right).getContents().available() > 0) {
-				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-						resourceSet).eResource();
+				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
+						right.getName(), new ResourceSetImpl()).eResource();
 			} else {
 				leftResource = ModelUtils.createResource(URI.createURI(right.getName()));
-				// left resource has been added to the repository. Set the right as remote to disable merge facilities
+				// left resource has been added to the repository. Set the right as remote to disable merge
+				// facilities
 				rightIsRemote = true;
 			}
 			leftIsRemote = true;
 			if (ancestor != null && ((IStreamContentAccessor)ancestor).getContents().available() > 0)
 				ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-						ancestor.getName(), resourceSet).eResource();
+						ancestor.getName(), new ResourceSetImpl()).eResource();
 			else if (ancestor != null)
 				ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
 			return true;
 		}
 		/*
 		 * We *should* never be here. There always is a local resource when comparing with CVS. this code will
-		 * be executed if we couldn't manage to handle this *local* resource as such. Though the resource *will*
-		 * be loaded thanks to this generic handler, note that it will not be saveable.
+		 * be executed if we couldn't manage to handle this *local* resource as such. Though the resource
+		 * *will* be loaded thanks to this generic handler, note that it will not be saveable.
 		 */
 		boolean result = false;
 		if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
 			rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
-					resourceSet).eResource();
+					new ResourceSetImpl()).eResource();
 			leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
-					resourceSet).eResource();
+					new ResourceSetImpl()).eResource();
 			rightIsRemote = true;
 			leftIsRemote = true;
 			if (ancestor != null)
 				ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-						ancestor.getName(), resourceSet).eResource();
+						ancestor.getName(), new ResourceSetImpl()).eResource();
 			result = true;
 		}
 		return result;
@@ -407,13 +419,13 @@ public final class ModelComparator {
 	private boolean handleLocalResources(ITypedElement left, ITypedElement right, ITypedElement ancestor)
 			throws IOException {
 		if (left instanceof ResourceNode && right instanceof ResourceNode) {
-			leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(), resourceSet)
+			leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(), new ResourceSetImpl())
 					.eResource();
-			rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(), resourceSet)
+			rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(), new ResourceSetImpl())
 					.eResource();
 			if (ancestor != null)
 				ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
-						resourceSet).eResource();
+						new ResourceSetImpl()).eResource();
 			return true;
 		}
 		return false;

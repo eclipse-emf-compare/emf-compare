@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -153,11 +154,15 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
+		final TreePath[] expandedPaths = getExpandedTreePaths();
+		
 		super.inputChanged(input, oldInput);
 		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
 			setInput(ModelComparator.getComparator(configuration).getComparisonResult());
 		}
 		updateToolItems();
+		
+		setExpandedTreePaths(expandedPaths);
 	}
 
 	/**
