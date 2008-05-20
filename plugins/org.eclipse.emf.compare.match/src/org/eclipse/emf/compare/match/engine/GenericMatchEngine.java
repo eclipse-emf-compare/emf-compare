@@ -160,17 +160,25 @@ public class GenericMatchEngine implements IMatchEngine {
 			remainingUnMatchedElements.add(((UnMatchElement)unMatch).getElement());
 
 		try {
-			final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements.get(0);
-			final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
-			final Match3Element subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
-
-			subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
-					rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
-			subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
-			subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
-			subMatchRoot.setOriginElement(rightObjectMatchRoot.getRightElement());
-			redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
-			createSub3Match(root, subMatchRoot, leftObjectMatchRoot, rightObjectMatchRoot);
+			Match3Element subMatchRoot = null;
+			if (leftObjectMatchedElements.size() > 0 && rightObjectMatchedElements.size() > 0) {
+				final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements.get(0);
+				final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
+				subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
+	
+				subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
+						rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
+				subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
+				subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
+				subMatchRoot.setOriginElement(rightObjectMatchRoot.getRightElement());
+				redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
+				createSub3Match(root, subMatchRoot, leftObjectMatchRoot, rightObjectMatchRoot);
+			} else {
+				for (EObject left : leftObjectMatchedElements)
+					stillToFindFromModel1.add(left);
+				for (EObject right : rightObjectMatchedElements)
+					stillToFindFromModel2.add(right);
+			}
 
 			// We will now check through the unmatched object for matches.
 			processUnmatchedElements(root, subMatchRoot);
@@ -201,7 +209,10 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match3Element subMatch = MatchFactory.eINSTANCE.createMatch3Element();
 				subMatch.setLeftElement(map.getLeftElement());
 				subMatch.setRightElement(map.getRightElement());
-				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+				if (subMatchRoot == null)
+					redirectedAdd(root, MATCH_ELEMENT_NAME, subMatch);
+				else
+					redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
 			}
 			final Map<EObject, Boolean> unMatchedElements = new EMFCompareMap<EObject, Boolean>();
 			for (EObject remoteUnMatch : stillToFindFromModel1) {
@@ -415,7 +426,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			Map<String, Object> optionMap) {
-		// TODO this should be implemented
+		// TODO this should be implemented. It will break both match and diff MMs so wait till 0.9/1.0.
 		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
@@ -428,7 +439,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) {
-		// TODO this should be implemented
+		// TODO this should be implemented. It will break both match and diff MMs so wait till 0.9/1.0.
 		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
@@ -1482,8 +1493,14 @@ public class GenericMatchEngine implements IMatchEngine {
 							match.setLeftElement(match1.getLeftElement());
 							match.setRightElement(match2.getLeftElement());
 							match.setOriginElement(match2.getRightElement());
-							redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, match);
-							createSub3Match(root, subMatchRoot, match1, match2);
+							// This will happen if we couldn't match previously
+							if (subMatchRoot == null) {
+								redirectedAdd(root, MATCH_ELEMENT_NAME, match);
+								createSub3Match(root, match, match1, match2);
+							} else {
+								redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, match);
+								createSub3Match(root, subMatchRoot, match1, match2);
+							}
 							stillToFindFromModel1.remove(match1);
 							stillToFindFromModel2.remove(match2);
 						}
