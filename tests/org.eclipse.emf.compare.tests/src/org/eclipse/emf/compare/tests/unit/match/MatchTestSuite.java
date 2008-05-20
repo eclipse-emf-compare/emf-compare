@@ -27,7 +27,7 @@ import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresi
 public class MatchTestSuite extends TestCase {
 	/** Minimal -Xmx setting to run comparison tests. Set to 500m. */
 	private static final long MIN_XMX_SETTING = 500000000;
-	
+
 	/**
 	 * Launches the test with the given arguments.
 	 * 

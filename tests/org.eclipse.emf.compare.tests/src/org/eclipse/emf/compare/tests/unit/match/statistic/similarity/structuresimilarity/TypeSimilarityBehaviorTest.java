@@ -106,8 +106,9 @@ public class TypeSimilarityBehaviorTest extends TestCase {
 			// input data for these tests. See model at location INPUT_MODEL_PATH.
 			final int packageIndex = 7;
 			final EObject inputPackage = model.eContents().get(packageIndex);
-
-			for (final Iterator<EObject> it = inputPackage.eAllContents(); it.hasNext(); )
+			
+			final Iterator<EObject> it = inputPackage.eAllContents();
+			while (it.hasNext())
 				inputList.add(it.next());
 
 			filter = new MetamodelFilter();

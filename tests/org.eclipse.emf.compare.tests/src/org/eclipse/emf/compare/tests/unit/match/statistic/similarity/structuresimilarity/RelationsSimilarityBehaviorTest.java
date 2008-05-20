@@ -158,7 +158,8 @@ public class RelationsSimilarityBehaviorTest extends TestCase {
 			final int packageIndex = 7;
 			final EObject inputPackage = model.eContents().get(packageIndex);
 
-			for (final Iterator<EObject> it = inputPackage.eAllContents(); it.hasNext(); )
+			final Iterator<EObject> it = inputPackage.eAllContents();
+			while (it.hasNext())
 				inputList.add(it.next());
 
 			filter = new MetamodelFilter();

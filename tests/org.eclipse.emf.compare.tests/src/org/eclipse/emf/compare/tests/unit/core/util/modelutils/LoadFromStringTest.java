@@ -30,7 +30,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 public class LoadFromStringTest extends TestCase {
 	/** This holds pathes to unreadable or inexistant files. */
 	private static final String[] INVALID_PATHES = {"/etc/shadow", "/etc/sudoers",
-			"/inputs/attribute/attributeChange/v1.ecore", File.listRoots()[0].getAbsolutePath() + "projectname/modelname.extension", };
+			"/inputs/attribute/attributeChange/v1.ecore",
+			File.listRoots()[0].getAbsolutePath() + "projectname/modelname.extension", };
 
 	/** Message displayed when an unexpected {@link IOException} is thrown. */
 	private static final String MESSAGE_IOEXCEPTION_UNEXPECTED = "UnExpected IOException has been thrown.";

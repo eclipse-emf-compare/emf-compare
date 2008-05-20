@@ -19,19 +19,17 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.api.MatchOptions;
-import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-// TODO testing : finish implementation of these tests
 /**
  * Tests the behavior of
  * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
@@ -79,6 +77,76 @@ public class ThreeWayModelMatchTest extends TestCase {
 	/**
 	 * Tests the behavior of
 	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with three distinct
+	 * EObjects (a model and its deep copy slightly modified).
+	 * <p>
+	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
+	 * matchModel to contain a mapping for each and every EObject of the test model, and an
+	 * {@link UnMatchElement} for each element added in the copy.
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the comparison fails somehow.
+	 */
+	public void test3WayModelMatchDifferentSmallObjects() throws FactoryException {
+		final int writerCount = 3;
+		final int bookPerWriterCount = 5;
+		final long seed = System.nanoTime();
+		testModel1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel3 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		internalTest3WayDistinctModels();
+	}
+
+	/**
+	 * Tests the behavior of
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with equal EObjects
+	 * (a model and its deep copies).
+	 * <p>
+	 * The compared models are flat and intended to be a little bigger for this test (150 to 600 elements).
+	 * Expects the matchModel to contain a mapping for each and every EObject of the test model.
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the comparison fails somehow.
+	 */
+	public void test3WayModelMatchEqualBigEObjects() throws FactoryException {
+		final int writerCount = 150;
+		final int bookPerWriterCount = 4;
+		final long seed = System.nanoTime();
+		testModel1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel3 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		internalTest3wayEqualModels();
+	}
+
+	/**
+	 * Tests the behavior of
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
+	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with equal EObjects
+	 * (a model and its deep copies).
+	 * <p>
+	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
+	 * matchModel to contain a mapping for each and every EObject of the test model.
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the comparison fails somehow.
+	 */
+	public void test3WayModelMatchEqualSmallEObjects() throws FactoryException {
+		final int writerCount = 3;
+		final int bookPerWriterCount = 5;
+		final long seed = System.nanoTime();
+		testModel1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		testModel3 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed);
+		internalTest3wayEqualModels();
+	}
+
+	/**
+	 * Tests the behavior of
+	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
 	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with
 	 * <code>null</code> as the compared EObjects.
 	 * <p>
@@ -86,11 +154,10 @@ public class ThreeWayModelMatchTest extends TestCase {
 	 * </p>
 	 */
 	public void test3WayModelMatchNullEObjects() {
-		final IMatchEngine service = new GenericMatchEngine();
 		final String failNPE = "modelMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
+			MatchService.doMatch(null, EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -98,7 +165,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
+			MatchService.doMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -106,7 +173,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), (EObject)null, getOptions());
+			MatchService.doMatch(null, EcoreFactory.eINSTANCE.createEObject(), (EObject)null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -114,7 +181,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
+			MatchService.doMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -141,7 +208,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		testModel2 = null;
 		testModel3 = null;
 	}
-	
+
 	/**
 	 * This will return the map of options to be used for comparisons within this test class.
 	 * 
@@ -210,8 +277,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		 */
 		MatchModel match = null;
 		try {
-			final IMatchEngine service = new GenericMatchEngine();
-			match = service.modelMatch(testModel1, testModel2, testModel3, getOptions());
+			match = MatchService.doMatch(testModel1, testModel2, testModel3, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException while comparing three models.");
 		}
@@ -221,10 +287,12 @@ public class ThreeWayModelMatchTest extends TestCase {
 		assert match != null;
 
 		int elementCount = 0;
-		for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
+		final TreeIterator<EObject> iterator = testModel1.eAllContents();
+		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			boolean found = false;
-			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			while (matchIterator.hasNext()) {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
@@ -240,7 +308,8 @@ public class ThreeWayModelMatchTest extends TestCase {
 		}
 
 		int matchElementCount = 0;
-		for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+		final TreeIterator<EObject> matchIterator = match.eAllContents();
+		while (matchIterator.hasNext()) {
 			if (matchIterator.next() instanceof Match2Elements)
 				matchElementCount++;
 		}
@@ -256,5 +325,50 @@ public class ThreeWayModelMatchTest extends TestCase {
 		assertTrue("modelMatch() did not found the unmatched element we added in the right model.", match
 				.getUnMatchedElements() != null
 				&& match.getUnMatchedElements().size() == 1);
+	}
+
+	/**
+	 * Handles the comparing of the test models for equal objects comparison.
+	 * <p>
+	 * This will fail if an unexpected exception is thrown or we did not find a mapping for each element of
+	 * the model. Externalized here to avoid copy/pasting within the two tests making use of it.
+	 * </p>
+	 */
+	private void internalTest3wayEqualModels() {
+		try {
+			final MatchModel match = MatchService.doMatch(testModel1, testModel2, testModel3, getOptions());
+
+			int elementCount = 0;
+			final TreeIterator<EObject> iterator = testModel1.eAllContents();
+			while (iterator.hasNext()) {
+				final EObject next = iterator.next();
+				boolean found = false;
+				final TreeIterator<EObject> matchIterator = match.eAllContents();
+				while (matchIterator.hasNext()) {
+					final EObject nextMatch = matchIterator.next();
+					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+					fail("modelMatch() did not found a match for every element of two equal EObjects.");
+				elementCount++;
+			}
+
+			int matchElementCount = 0;
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			while (matchIterator.hasNext()) {
+				matchIterator.next();
+				matchElementCount++;
+			}
+
+			// cannot be less elements since we've found a mapping for each at this point.
+			// Note that we need to add 1 to the model element count since the root hasn't been counted yet.
+			assertEquals("modelMatch() found more matches than there are elements in the model.",
+					elementCount + 1, matchElementCount);
+		} catch (InterruptedException e) {
+			fail("modelMatch() threw an unexpected InterruptedException.");
+		}
 	}
 }

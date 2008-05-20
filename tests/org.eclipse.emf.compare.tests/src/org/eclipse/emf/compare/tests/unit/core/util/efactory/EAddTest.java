@@ -141,7 +141,7 @@ public class EAddTest extends TestCase {
 				if (!feature.isChangeable()) {
 					final Object oldValue = testEObjects[i].eGet(feature);
 					try {
-						EFactory.eAdd(testEObjects[i],            feature.getName(), null);
+						EFactory.eAdd(testEObjects[i], feature.getName(), null);
 						if (oldValue instanceof List)
 							assertEquals("eAdd changed the feature's values list.", oldValue, testEObjects[i]
 									.eGet(feature));

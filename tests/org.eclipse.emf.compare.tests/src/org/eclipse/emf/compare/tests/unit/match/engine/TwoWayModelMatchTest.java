@@ -19,19 +19,17 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.api.MatchOptions;
-import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-// TODO testing : are all pathes explored for two way model matching?
 /**
  * Tests the behavior of
  * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
@@ -148,11 +146,10 @@ public class TwoWayModelMatchTest extends TestCase {
 	 * </p>
 	 */
 	public void test2WayModelMatchNullEObjects() {
-		final IMatchEngine service = new GenericMatchEngine();
 		final String failNPE = "modelMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			service.modelMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
+			MatchService.doMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -160,7 +157,7 @@ public class TwoWayModelMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			service.modelMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
+			MatchService.doMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -184,7 +181,7 @@ public class TwoWayModelMatchTest extends TestCase {
 		testModel1 = null;
 		testModel2 = null;
 	}
-	
+
 	/**
 	 * This will return the map of options to be used for comparisons within this test class.
 	 * 
@@ -253,8 +250,7 @@ public class TwoWayModelMatchTest extends TestCase {
 		 */
 		MatchModel match = null;
 		try {
-			final IMatchEngine service = new GenericMatchEngine();
-			match = service.modelMatch(testModel1, testModel2, getOptions());
+			match = MatchService.doMatch(testModel1, testModel2, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
@@ -264,10 +260,12 @@ public class TwoWayModelMatchTest extends TestCase {
 		assert match != null;
 
 		int elementCount = 0;
-		for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
+		final TreeIterator<EObject> iterator = testModel1.eAllContents();
+		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			boolean found = false;
-			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			while (matchIterator.hasNext()) {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
@@ -283,7 +281,8 @@ public class TwoWayModelMatchTest extends TestCase {
 		}
 
 		int matchElementCount = 0;
-		for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+		final TreeIterator<EObject> matchIterator = match.eAllContents();
+		while (matchIterator.hasNext()) {
 			if (matchIterator.next() instanceof Match2Elements)
 				matchElementCount++;
 		}
@@ -310,15 +309,15 @@ public class TwoWayModelMatchTest extends TestCase {
 	 */
 	private void internalTest2wayEqualModels() {
 		try {
-			final IMatchEngine service = new GenericMatchEngine();
-			final MatchModel match = service.modelMatch(testModel1, testModel2, getOptions());
+			final MatchModel match = MatchService.doMatch(testModel1, testModel2, getOptions());
 
 			int elementCount = 0;
-			for (final TreeIterator<EObject> iterator = testModel1.eAllContents(); iterator.hasNext(); ) {
+			final TreeIterator<EObject> iterator = testModel1.eAllContents();
+			while (iterator.hasNext()) {
 				final EObject next = iterator.next();
 				boolean found = false;
-				for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator
-						.hasNext(); ) {
+				final TreeIterator<EObject> matchIterator = match.eAllContents();
+				while (matchIterator.hasNext()) {
 					final EObject nextMatch = matchIterator.next();
 					if (((Match2Elements)nextMatch).getLeftElement().equals(next)) {
 						found = true;
@@ -331,7 +330,8 @@ public class TwoWayModelMatchTest extends TestCase {
 			}
 
 			int matchElementCount = 0;
-			for (final TreeIterator<EObject> matchIterator = match.eAllContents(); matchIterator.hasNext(); ) {
+			final TreeIterator<EObject> matchIterator = match.eAllContents();
+			while (matchIterator.hasNext()) {
 				matchIterator.next();
 				matchElementCount++;
 			}

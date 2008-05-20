@@ -126,7 +126,7 @@ public class NonRegressionModelsTest extends TestCase {
 
 			if (inputModels.size() == 2 && expectedSnapshot.size() == 1) {
 				final MatchModel inputMatch = MatchService.doMatch(inputModels.get(0), inputModels.get(1),
-						Collections.<String, Object>emptyMap());
+						Collections.<String, Object> emptyMap());
 				final DiffModel inputDiff = DiffService.doDiff(inputMatch, false);
 
 				// Serializes current and expected match and diff as Strings

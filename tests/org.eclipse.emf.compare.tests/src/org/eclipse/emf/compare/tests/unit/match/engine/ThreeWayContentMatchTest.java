@@ -31,12 +31,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Tests the behavior of
- * {@link GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}.
+ * {@link GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
-public class TwoWayContentMatchTest extends TestCase {
+public class ThreeWayContentMatchTest extends TestCase {
 	/** Name of the metamodel's &quot;Writer&quot; class. */
 	private static final String WRITER_CLASS_NAME = "Writer";
 
@@ -47,11 +47,12 @@ public class TwoWayContentMatchTest extends TestCase {
 	private EObject testEObject2;
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
-	 * distinct EObjects.
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, EObject, java.util.Map)}
+	 * with three distinct EObjects.
 	 * <p>
 	 * A model and its slightly modified deep copy are taken as roots, then we iterate through their content
-	 * and match EObjects one after the other.
+	 * and match EObjects one after the other. A deep copy of the original model will be used as common
+	 * ancestor.
 	 * </p>
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Since the
@@ -61,9 +62,10 @@ public class TwoWayContentMatchTest extends TestCase {
 	 * 
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
-	 *             @throws InterruptedException Won't be thrown : We're not using progress monitors.
+	 * @throws InterruptedException
+	 *             Won't be thrown since we've got no progress monitor.
 	 */
-	public void test2WayContentMatchDifferentObjects() throws FactoryException, InterruptedException {
+	public void test3WayContentMatchDifferentObjects() throws FactoryException, InterruptedException {
 		final int writerCount = 3;
 		final int bookPerWriterCount = 5;
 		final long seed = System.nanoTime();
@@ -72,7 +74,8 @@ public class TwoWayContentMatchTest extends TestCase {
 
 		/*
 		 * We'll create the list of the EObjects to be compared : all the writers of the library as "left"
-		 * elements, all the books in the library as "right" elements.
+		 * elements, all the books in the library as "right" elements. Writers will also be considered as
+		 * common ancestors.
 		 */
 		final List<EObject> eObjects1 = new ArrayList<EObject>();
 		final List<EObject> eObjects2 = new ArrayList<EObject>();
@@ -95,8 +98,8 @@ public class TwoWayContentMatchTest extends TestCase {
 			for (int j = 0; j < eObjects2.size(); j++) {
 				final EObject obj2 = eObjects2.get(j);
 
-				final MatchModel match = MatchService.doContentMatch(obj1, obj2, getOptions());
-				assertNotNull("Failed to match the two objects.", match);
+				final MatchModel match = MatchService.doContentMatch(obj1, obj2, obj1, getOptions());
+				assertNotNull("Failed to match the three objects.", match);
 
 				int elementCount = 0;
 				final TreeIterator<EObject> iterator1 = obj1.eAllContents();
@@ -135,8 +138,8 @@ public class TwoWayContentMatchTest extends TestCase {
 				}
 
 				// Note : need to add 2 to the element count this none of the two roots has been counted yet
-				assertEquals("contentMatch() found shouldn't have found a match element.", elementCount + 2,
-						match.getUnMatchedElements().size());
+				assertEquals("contentMatch() shouldn't have found a match element.", elementCount + 2, match
+						.getUnMatchedElements().size());
 
 				// We shouldn't find a single MatchElement
 				assertTrue("contentMatch() found a matched element in the compared objects", match
@@ -147,11 +150,11 @@ public class TwoWayContentMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
-	 * equal EObjects.
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, EObject, java.util.Map)}
+	 * with three equal EObjects.
 	 * <p>
 	 * A model and its deep copy are taken as roots, then we iterate through their content and match EObjects
-	 * one after the other.
+	 * one after the other. The original model's deep copy will be considered common ancestor.
 	 * </p>
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
@@ -160,9 +163,9 @@ public class TwoWayContentMatchTest extends TestCase {
 	 * 
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
-	 *             @throws InterruptedException Won't be thrown : we're not using progress monitors.
+	 *             @throws InterruptedException Won't be thrown: we're not using Progress monitors here.
 	 */
-	public void test2WayContentMatchEqualEObjects() throws FactoryException, InterruptedException {
+	public void test3WayContentMatchEqualEObjects() throws FactoryException, InterruptedException {
 		final int writerCount = 3;
 		final int bookPerWriterCount = 5;
 		final long seed = System.nanoTime();
@@ -197,8 +200,8 @@ public class TwoWayContentMatchTest extends TestCase {
 			final EObject obj1 = eObjects1.get(i);
 			final EObject obj2 = eObjects2.get(i);
 
-			final MatchModel match = MatchService.doContentMatch(obj1, obj2, getOptions());
-			assertNotNull("Failed to match the two objects.", match);
+			final MatchModel match = MatchService.doContentMatch(obj1, obj2, obj1, getOptions());
+			assertNotNull("Failed to match the three objects.", match);
 
 			int elementCount = 0;
 			final TreeIterator<EObject> iteratorObj1 = obj1.eAllContents();
@@ -243,17 +246,18 @@ public class TwoWayContentMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
-	 * <code>null</code> as the compared EObjects.
+	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, EObject, java.util.Map)}
+	 * with <code>null</code> as the compared EObjects.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
 	 */
-	public void test2WayContentMatchNullEObjects() {
+	public void test3WayContentMatchNullEObjects() {
 		final String failNPE = "contentMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			MatchService.doContentMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
+			MatchService.doContentMatch(null, EcoreFactory.eINSTANCE.createEObject(), EcoreFactory.eINSTANCE
+					.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -261,7 +265,17 @@ public class TwoWayContentMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
+			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), null, EcoreFactory.eINSTANCE
+					.createEObject(), getOptions());
+			fail(failNPE);
+		} catch (NullPointerException e) {
+			// This was expected behavior
+		} catch (InterruptedException e) {
+			fail(failInterrupt);
+		}
+		try {
+			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), EcoreFactory.eINSTANCE
+					.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior

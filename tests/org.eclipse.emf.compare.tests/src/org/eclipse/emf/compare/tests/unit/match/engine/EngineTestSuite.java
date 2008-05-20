@@ -40,6 +40,7 @@ public class EngineTestSuite extends TestCase {
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the generic match engine behavior");
 		suite.addTestSuite(ThreeWayModelMatchTest.class);
+		suite.addTestSuite(ThreeWayContentMatchTest.class);
 		suite.addTestSuite(TwoWayModelMatchTest.class);
 		suite.addTestSuite(TwoWayContentMatchTest.class);
 		return suite;
