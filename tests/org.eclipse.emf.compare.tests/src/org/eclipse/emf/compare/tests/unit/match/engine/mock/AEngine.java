@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.match.engines;
+package org.eclipse.emf.compare.tests.unit.match.engine.mock;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class CLowEngine implements IMatchEngine {
+public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 

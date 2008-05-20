@@ -61,7 +61,8 @@ public class TwoWayContentMatchTest extends TestCase {
 	 * 
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
-	 *             @throws InterruptedException Won't be thrown : We're not using progress monitors.
+	 * @throws InterruptedException
+	 *             Won't be thrown : We're not using progress monitors.
 	 */
 	public void test2WayContentMatchDifferentObjects() throws FactoryException, InterruptedException {
 		final int writerCount = 3;
@@ -160,7 +161,8 @@ public class TwoWayContentMatchTest extends TestCase {
 	 * 
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
-	 *             @throws InterruptedException Won't be thrown : we're not using progress monitors.
+	 * @throws InterruptedException
+	 *             Won't be thrown : we're not using progress monitors.
 	 */
 	public void test2WayContentMatchEqualEObjects() throws FactoryException, InterruptedException {
 		final int writerCount = 3;

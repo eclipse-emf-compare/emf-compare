@@ -163,7 +163,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 	 * 
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
-	 *             @throws InterruptedException Won't be thrown: we're not using Progress monitors here.
+	 * @throws InterruptedException
+	 *             Won't be thrown: we're not using Progress monitors here.
 	 */
 	public void test3WayContentMatchEqualEObjects() throws FactoryException, InterruptedException {
 		final int writerCount = 3;

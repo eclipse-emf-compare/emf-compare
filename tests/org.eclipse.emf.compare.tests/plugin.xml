@@ -5,19 +5,19 @@
    <extension
          point="org.eclipse.emf.compare.match.engine">
       <matchengine
-            engineClass="org.eclipse.emf.compare.tests.match.engines.AEngine"
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.AEngine"
             fileExtension="a"
             priority="low"/>
       <matchengine
-            engineClass="org.eclipse.emf.compare.tests.match.engines.BEngine"
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.BEngine"
             fileExtension="b"
             priority="low"/>
       <matchengine
-            engineClass="org.eclipse.emf.compare.tests.match.engines.CHighEngine"
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.CHighEngine"
             fileExtension="c"
             priority="high"/>
       <matchengine
-            engineClass="org.eclipse.emf.compare.tests.match.engines.CLowEngine"
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.CLowEngine"
             fileExtension="c"
             priority="low"/>
             <!--
