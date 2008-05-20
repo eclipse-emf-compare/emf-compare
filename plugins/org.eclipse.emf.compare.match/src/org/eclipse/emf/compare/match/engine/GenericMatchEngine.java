@@ -930,13 +930,14 @@ public class GenericMatchEngine implements IMatchEngine {
 			if (leftResource.getContents().size() > 0 && rightResource.getContents().size() > 0) {
 				Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
 				// We haven't found any similar roots, we then consider the
-				// firsts
-				// to be similar.
+				// firsts to be similar.
 				if (matchedRoots.size() == 0) {
 					final Match2Elements rootMapping = MatchFactory.eINSTANCE.createMatch2Elements();
 					rootMapping.setLeftElement(leftResource.getContents().get(0));
-					rootMapping.setRightElement(findMostSimilar(leftResource.getContents().get(0),
-							unMatchedRightRoots));
+					EObject rightElement = findMostSimilar(leftResource.getContents().get(0), unMatchedRightRoots);
+					if (rightElement == null)
+						rightElement = unMatchedRightRoots.get(0);
+					rootMapping.setRightElement(rightElement);
 					matchedRoots.add(rootMapping);
 				}
 				monitor.subTask(EMFCompareMatchMessages
