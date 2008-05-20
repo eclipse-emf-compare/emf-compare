@@ -1171,7 +1171,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @return <code>True</code> if the {@link EObject}s have the same URI, <code>False</code> otherwise.
 	 */
 	private boolean hasSameUri(EObject obj1, EObject obj2) {
-		return obj1.eResource().getURIFragment(obj1).equals(obj2.eResource().getURIFragment(obj2));
+		if (obj1.eResource() != null && obj2.eResource() != null)
+			return obj1.eResource().getURIFragment(obj1).equals(obj2.eResource().getURIFragment(obj2));
+		return false;
 	}
 
 	/**
