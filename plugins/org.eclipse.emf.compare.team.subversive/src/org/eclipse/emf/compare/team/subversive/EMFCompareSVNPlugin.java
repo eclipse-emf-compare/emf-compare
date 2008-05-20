@@ -1,49 +1,63 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2007, 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.team.subversive;
 
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class, controls the plug-in life cycle.
+ * 
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class EMFCompareSVNPlugin extends Plugin {
+	/** The plugin ID. */
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.team.subversive"; //$NON-NLS-1$
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.team.subversive";
-
-	// The shared instance
+	/** Plug-in's shared instance. */
 	private static EMFCompareSVNPlugin plugin;
 
 	/**
-	 * The constructor
+	 * Default constructor.
 	 */
 	public EMFCompareSVNPlugin() {
+		plugin = this;
 	}
 
 	/**
-	 * Returns the shared instance
+	 * Returns the plugin's shared instance.
 	 * 
-	 * @return the shared instance
+	 * @return The plugin's shared instance.
 	 */
 	public static EMFCompareSVNPlugin getDefault() {
 		return plugin;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * @see Plugin#start(BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
