@@ -21,7 +21,7 @@ import junit.textui.TestRunner;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
-public class EngineTestSuite extends TestCase {
+public class MatchEngineTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 

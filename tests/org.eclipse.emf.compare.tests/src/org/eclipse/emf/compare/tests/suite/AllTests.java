@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
+import org.eclipse.emf.compare.tests.unit.diff.DiffTestSuite;
 import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -48,6 +49,7 @@ public class AllTests extends TestCase implements IApplication {
 		final TestSuite suite = new TestSuite("EMF Compare test suite");
 		suite.addTest(CoreTestSuite.suite());
 		suite.addTest(MatchTestSuite.suite());
+		suite.addTest(DiffTestSuite.suite());
 		// Non regression
 		// suite.addTestSuite(TestNonRegressionModels.class);
 		return suite;

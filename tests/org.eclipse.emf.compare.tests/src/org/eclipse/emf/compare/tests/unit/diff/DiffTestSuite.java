@@ -8,23 +8,19 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.match;
+package org.eclipse.emf.compare.tests.unit.diff;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.eclipse.emf.compare.tests.unit.match.engine.MatchEngineTestSuite;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.NameSimilarityTest;
-import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity.StructureSimilarityTestSuite;
-
 /**
- * Tests for the match plugin.
+ * Tests for the diff plugin.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class MatchTestSuite extends TestCase {
+public class DiffTestSuite extends TestCase {
 	/** Minimal -Xmx setting to run comparison tests. Set to 500m. */
 	private static final long MIN_XMX_SETTING = 500000000;
 
@@ -44,13 +40,13 @@ public class MatchTestSuite extends TestCase {
 	 * @return The testsuite containing all the tests
 	 */
 	public static Test suite() {
-		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
-		suite.addTestSuite(EnginesPriorityTest.class);
-		suite.addTestSuite(NameSimilarityTest.class);
-		suite.addTest(StructureSimilarityTestSuite.suite());
 		// These tests are too long/costly to be run with too low memory
-		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING)
-			suite.addTest(MatchEngineTestSuite.suite());
-		return suite;
+		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING) {
+			final TestSuite suite = new TestSuite("Tests for the diff plugin."); //$NON-NLS-1$
+			suite.addTestSuite(TwoWayDiffTest.class);
+			return suite;
+		}
+		// FIXME can we return null here?
+		return null;
 	}
 }
