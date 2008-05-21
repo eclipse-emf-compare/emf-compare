@@ -250,6 +250,17 @@ public class GetModelsFromTest extends TestCase {
 			}
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() {
+		invalidDirectories.clear();
+		modelDirectories.clear();
+	}
 
 	/**
 	 * Called from setup, this method allows retrieval of references to the files corresponding to the

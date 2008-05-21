@@ -43,6 +43,7 @@ public class DiffTestSuite extends TestCase {
 		// These tests are too long/costly to be run with too low memory
 		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING) {
 			final TestSuite suite = new TestSuite("Tests for the diff plugin."); //$NON-NLS-1$
+			suite.addTestSuite(ThreeWayDiffTest.class);
 			suite.addTestSuite(TwoWayDiffTest.class);
 			return suite;
 		}

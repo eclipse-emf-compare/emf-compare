@@ -49,6 +49,9 @@ public final class EcoreModelUtils {
 
 	/** Keeps a reference to the library class of the metamodel created via {@link #createMetaModel()}. */
 	private static EClass libraryClass;
+	
+	/** Keeps a reference towards the created metamodel. */
+	private static EPackage metaModel;
 
 	/** Keeps a reference to the visibility enum of the metamodel created via {@link #createMetaModel()}. */
 	private static EEnum visibilityEnum;
@@ -239,40 +242,41 @@ public final class EcoreModelUtils {
 	 * @return The root of the created metamodel.
 	 */
 	public static EPackage createMetaModel() {
-		final String eenumName = "visibility";
-		final String nameFeatureName = "name";
-		final Resource resource = new ResourceImpl();
-		// First creates the structure (classes, packages, datatypes)
-		final EPackage rootPackage = createEPackage(resource, "root");
-		final EPackage libraryPackage = createEPackage(rootPackage, "library");
-		libraryClass = createEClass(libraryPackage, "Library");
-		bookClass = createEClass(libraryPackage, "Book");
-		writerClass = createEClass(libraryPackage, "Writer");
-		visibilityEnum = createEEnum(libraryPackage, eenumName, "private", "package", "protected", "public");
-
-		// Then creates structural features.
-		// Library features
-		createEAttribute(libraryClass, nameFeatureName, EPACKAGE.getEString());
-		final EReference libraryBooksReference = createContainmentEReference(libraryClass, "books", bookClass);
-		final EReference libraryWritersReference = createContainmentEReference(libraryClass, "authors",
-				writerClass);
-		// Book features
-		createEAttribute(bookClass, "title", EPACKAGE.getEString());
-		createEAttribute(bookClass, "pages", EPACKAGE.getEInt());
-		createEAttribute(bookClass, eenumName, visibilityEnum);
-		final EReference bookAuthorReference = createEReference(bookClass, "author", writerClass);
-		// Writer features
-		createEAttribute(writerClass, nameFeatureName, EPACKAGE.getEString());
-		createEAttribute(writerClass, eenumName, visibilityEnum);
-		final EReference writerBooksReference = createEReference(writerClass, "writtenBooks", bookClass);
-
-		// Sets multiplicity and oppposites of the references
-		libraryBooksReference.setUpperBound(-1);
-		libraryWritersReference.setUpperBound(-1);
-		bookAuthorReference.setEOpposite(writerBooksReference);
-		writerBooksReference.setUpperBound(-1);
-
-		return rootPackage;
+		if (metaModel == null) {
+			final String eenumName = "visibility";
+			final String nameFeatureName = "name";
+			final Resource resource = new ResourceImpl();
+			// First creates the structure (classes, packages, datatypes)
+			metaModel = createEPackage(resource, "root");
+			final EPackage libraryPackage = createEPackage(metaModel, "library");
+			libraryClass = createEClass(libraryPackage, "Library");
+			bookClass = createEClass(libraryPackage, "Book");
+			writerClass = createEClass(libraryPackage, "Writer");
+			visibilityEnum = createEEnum(libraryPackage, eenumName, "private", "package", "protected", "public");
+	
+			// Then creates structural features.
+			// Library features
+			createEAttribute(libraryClass, nameFeatureName, EPACKAGE.getEString());
+			final EReference libraryBooksReference = createContainmentEReference(libraryClass, "books", bookClass);
+			final EReference libraryWritersReference = createContainmentEReference(libraryClass, "authors",
+					writerClass);
+			// Book features
+			createEAttribute(bookClass, "title", EPACKAGE.getEString());
+			createEAttribute(bookClass, "pages", EPACKAGE.getEInt());
+			createEAttribute(bookClass, eenumName, visibilityEnum);
+			final EReference bookAuthorReference = createEReference(bookClass, "author", writerClass);
+			// Writer features
+			createEAttribute(writerClass, nameFeatureName, EPACKAGE.getEString());
+			createEAttribute(writerClass, eenumName, visibilityEnum);
+			final EReference writerBooksReference = createEReference(writerClass, "writtenBooks", bookClass);
+	
+			// Sets multiplicity and oppposites of the references
+			libraryBooksReference.setUpperBound(-1);
+			libraryWritersReference.setUpperBound(-1);
+			bookAuthorReference.setEOpposite(writerBooksReference);
+			writerBooksReference.setUpperBound(-1);
+		}
+		return metaModel;
 	}
 
 	/**

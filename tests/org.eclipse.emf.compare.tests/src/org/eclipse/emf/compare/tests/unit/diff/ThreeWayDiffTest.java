@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -33,13 +34,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+// TODO testing : these tests are not covering conflicting changes
 /**
  * Tests the behavior of the generic diff engine. Be aware that these tests will take a while to be executed.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
-public class TwoWayDiffTest extends TestCase {
+public class ThreeWayDiffTest extends TestCase {
 	/** This is the resource holding the first model we'll use to test the differencing process. */
 	private Resource testResource1;
 
@@ -47,8 +49,8 @@ public class TwoWayDiffTest extends TestCase {
 	private Resource testResource2;
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two distinct EObjects (a model
-	 * and its deep copy slightly modified).
+	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel, boolean)} with two distinct EObjects (a model
+	 * and its deep copy slightly modified). The left model will be used as common ancestor.
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -57,38 +59,18 @@ public class TwoWayDiffTest extends TestCase {
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
 	 */
-	public void test2WayDiffDifferentBigModels() throws FactoryException {
-		final int writerCount = 150;
-		final int bookPerWriterCount = 4;
-		final long seed = System.nanoTime();
-		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		internalTest2WayDistinctModels();
-	}
-
-	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two distinct EObjects (a model
-	 * and its deep copy slightly modified).
-	 * <p>
-	 * We're assuming that the matching process is returning the expected result as it has been tested through
-	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
-	 * </p>
-	 * 
-	 * @throws FactoryException
-	 *             Thrown if the comparison fails somehow.
-	 */
-	public void test2WayDiffDifferentSmallModels() throws FactoryException {
+	public void test3WayDiffDifferentModelsLocalChange() throws FactoryException {
 		final int writerCount = 3;
 		final int bookPerWriterCount = 5;
 		final long seed = System.nanoTime();
 		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
 		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		internalTest2WayDistinctModels();
+		internalTest3WayDistinctModelsLocalChange();
 	}
-
+	
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel) with two equal EObjects (a model and
-	 * its deep copy).
+	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel, boolean)} with two distinct EObjects (a model
+	 * and its deep copy slightly modified). The right model will be used as common ancestor.
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -97,46 +79,106 @@ public class TwoWayDiffTest extends TestCase {
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
 	 */
-	public void test2WayDiffEqualBigModels() throws FactoryException {
-		final int writerCount = 150;
-		final int bookPerWriterCount = 4;
-		final long seed = System.nanoTime();
-		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		internalTest2wayEqualModels();
-	}
-
-	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two equal EObjects (a model and
-	 * its deep copy).
-	 * <p>
-	 * We're assuming that the matching process is returning the expected result as it has been tested through
-	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
-	 * </p>
-	 * 
-	 * @throws FactoryException
-	 *             Thrown if the comparison fails somehow.
-	 */
-	public void test2WayDiffEqualSmallModels() throws FactoryException {
+	public void test3WayDiffDifferentModelsRemoteChange() throws FactoryException {
 		final int writerCount = 3;
 		final int bookPerWriterCount = 5;
 		final long seed = System.nanoTime();
 		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
 		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
-		internalTest2wayEqualModels();
+		internalTest3WayDistinctModelsRemoteChange();
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with a <code>null</code> match
+	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel, boolean)} with two equal EObjects (a model and
+	 * its deep copy). The left model will be used as common ancestor.
+	 * <p>
+	 * We're assuming that the matching process is returning the expected result as it has been tested through
+	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the comparison fails somehow.
+	 */
+	public void test3WayDiffEqualModelsLocalChange() throws FactoryException {
+		final int writerCount = 3;
+		final int bookPerWriterCount = 5;
+		final long seed = System.nanoTime();
+		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
+		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
+		
+		MatchModel match = null;
+		try {
+			match = MatchService.doResourceMatch(testResource1, testResource2, testResource1, getOptions());
+		} catch (InterruptedException e) {
+			fail("modelMatch() threw an unexpected Exception.");
+		}
+		assertNotNull("Failed to match the models.", match);
+
+		final DiffModel diff = DiffService.doDiff(match, true);
+		assertNotNull("Failed to compute the models' diff.", diff);
+
+		final TreeIterator<EObject> diffIterator = diff.eAllContents();
+		int elementCount = 0;
+		while (diffIterator.hasNext()) {
+			final DiffElement aDiff = (DiffElement)diffIterator.next();
+			if (!(aDiff instanceof DiffGroup))
+				elementCount++;
+		}
+		
+		assertEquals("There shouldn't have been a differences.", 0, elementCount);
+	}
+	
+	/**
+	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel, boolean)} with two equal EObjects (a model and
+	 * its deep copy). The right model will be used as common ancestor.
+	 * <p>
+	 * We're assuming that the matching process is returning the expected result as it has been tested through
+	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
+	 * </p>
+	 * 
+	 * @throws FactoryException
+	 *             Thrown if the comparison fails somehow.
+	 */
+	public void test3WayDiffEqualModelsRemoteChange() throws FactoryException {
+		final int writerCount = 3;
+		final int bookPerWriterCount = 5;
+		final long seed = System.nanoTime();
+		testResource1 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
+		testResource2 = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed).eResource();
+		
+		MatchModel match = null;
+		try {
+			match = MatchService.doResourceMatch(testResource1, testResource2, testResource1, getOptions());
+		} catch (InterruptedException e) {
+			fail("modelMatch threw an unexpected InterruptedException.");
+		}
+		assertNotNull("Failed to match the two models.", match);
+
+		final DiffModel diff = DiffService.doDiff(match, true);
+		assertNotNull("Failed to compute the two models' diff.", diff);
+
+		final TreeIterator<EObject> diffIterator = diff.eAllContents();
+		int elementCount = 0;
+		while (diffIterator.hasNext()) {
+			final DiffElement aDiff = (DiffElement)diffIterator.next();
+			if (!(aDiff instanceof DiffGroup))
+				elementCount++;
+		}
+		
+		assertEquals("There shouldn't have been a single difference.", 0, elementCount);
+	}
+
+	/**
+	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel, boolean)} with a <code>null</code> match
 	 * model.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
 	 */
-	public void test2WayDiffNullEObjects() {
+	public void test3WayDiffNullEObjects() {
 		final String failNPE = "The differencing process did not throw the expected NullPointerException.";
 		try {
-			DiffService.doDiff(null);
+			DiffService.doDiff(null, true);
 			fail(failNPE);
 		} catch (NullPointerException e) {
 			// This was expected behavior
@@ -214,24 +256,24 @@ public class TwoWayDiffTest extends TestCase {
 	/**
 	 * Handles the modification and comparison of the test models for distinct objects comparison.
 	 * <p>
-	 * Match failures should have been tests in the match engine test suite. As for the differencing failures,
-	 * we expect to find an AddModelElement and a ModelElementChangeLeftTarget in the result. Externalized
+	 * Match failures should have been tested in the match engine test suite. As for the differencing failures,
+	 * we expect to find an AddModelElement and an UpdateAttribute in the result. Externalized
 	 * here to avoid copy/pasting within the two tests making use of it.
 	 * </p>
 	 */
-	private void internalTest2WayDistinctModels() {
+	private void internalTest3WayDistinctModelsLocalChange() {
 		internalModifyModel(testResource2.getContents().get(0));
 
 		MatchModel match = null;
 		try {
-			match = MatchService.doResourceMatch(testResource1, testResource2, getOptions());
+			match = MatchService.doResourceMatch(testResource1, testResource2, testResource1, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
-		assertNotNull("Failed to match the two models.", match);
+		assertNotNull("Failed to match the three models.", match);
 
-		final DiffModel diff = DiffService.doDiff(match);
-		assertNotNull("Failed to compute the two models' diff.", diff);
+		final DiffModel diff = DiffService.doDiff(match, true);
+		assertNotNull("Failed to compute the three models' diff.", diff);
 
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
@@ -248,35 +290,42 @@ public class TwoWayDiffTest extends TestCase {
 		assertEquals("Unexpected count of differences.", 2, elementCount);
 		assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
 	}
-
+	
 	/**
-	 * Handles the comparing of the test models for equal objects comparison.
+	 * Handles the modification and comparison of the test models for distinct objects comparison.
 	 * <p>
-	 * Match failures should have been tests in the match engine test suite. As for the diff, we expect to
-	 * find no differences in the resulting DiffModel. Externalized here to avoid copy/pasting within the two
-	 * tests making use of it.
+	 * Match failures should have been tested in the match engine test suite. As for the differencing failures,
+	 * we expect to find a RemoteRemoveModelElement and a RemoteUpdateAttribute in the result. Externalized
+	 * here to avoid copy/pasting within the two tests making use of it.
 	 * </p>
 	 */
-	private void internalTest2wayEqualModels() {
+	private void internalTest3WayDistinctModelsRemoteChange() {
+		internalModifyModel(testResource2.getContents().get(0));
+
 		MatchModel match = null;
 		try {
-			match = MatchService.doResourceMatch(testResource1, testResource2, getOptions());
+			match = MatchService.doResourceMatch(testResource1, testResource2, testResource2, getOptions());
 		} catch (InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
-		assertNotNull("Failed to match the two models.", match);
+		assertNotNull("Failed to match the three models.", match);
 
-		final DiffModel diff = DiffService.doDiff(match);
-		assertNotNull("Failed to compute the two models' diff.", diff);
-		
+		final DiffModel diff = DiffService.doDiff(match, true);
+		assertNotNull("Failed to compute the three models' diff.", diff);
+
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
+		int removalCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
+			if (aDiff instanceof RemoteRemoveModelElement)
+				removalCount++;
 			if (!(aDiff instanceof DiffGroup))
 				elementCount++;
 		}
 
-		assertEquals("There shouldn't have been a single difference.", 0, elementCount);
+		// We're expecting two changes, one of which being a removal
+		assertEquals("Unexpected count of differences.", 2, elementCount);
+		assertEquals("Unexpected count of additions in the DiffModel.", 1, removalCount);
 	}
 }
