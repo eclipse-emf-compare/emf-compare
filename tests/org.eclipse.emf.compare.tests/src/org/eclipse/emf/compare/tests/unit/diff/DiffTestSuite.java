@@ -47,7 +47,6 @@ public class DiffTestSuite extends TestCase {
 			suite.addTestSuite(TwoWayDiffTest.class);
 			return suite;
 		}
-		// FIXME can we return null here?
 		return null;
 	}
 }

@@ -49,7 +49,10 @@ public class AllTests extends TestCase implements IApplication {
 		final TestSuite suite = new TestSuite("EMF Compare test suite");
 		suite.addTest(CoreTestSuite.suite());
 		suite.addTest(MatchTestSuite.suite());
-		suite.addTest(DiffTestSuite.suite());
+		// This will be null if memory setting is too low
+		final Test diffSuite = DiffTestSuite.suite();
+		if (diffSuite != null)
+			suite.addTest(diffSuite);
 		// Non regression
 		// suite.addTestSuite(TestNonRegressionModels.class);
 		return suite;
