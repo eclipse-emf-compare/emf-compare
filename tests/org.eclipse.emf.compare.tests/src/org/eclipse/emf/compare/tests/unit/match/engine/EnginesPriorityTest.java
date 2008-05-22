@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.tests.unit.match;
+package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;

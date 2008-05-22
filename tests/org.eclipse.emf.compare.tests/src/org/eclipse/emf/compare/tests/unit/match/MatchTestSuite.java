@@ -45,7 +45,6 @@ public class MatchTestSuite extends TestCase {
 	 */
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
-		suite.addTestSuite(EnginesPriorityTest.class);
 		suite.addTestSuite(NameSimilarityTest.class);
 		suite.addTest(StructureSimilarityTestSuite.suite());
 		// These tests are too long/costly to be run with too low memory

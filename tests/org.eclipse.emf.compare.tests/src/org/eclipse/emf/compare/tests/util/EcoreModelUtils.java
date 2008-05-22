@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
 /**
  * This class is a convenience class for creating ecore models for the purpose of testing.
@@ -208,33 +210,33 @@ public final class EcoreModelUtils {
 	 * <pre>
 	 * EPackage -root-
 	 * |
-	 * ----EPackage -library-
+	 * |---EPackage -library-
 	 *     |
-	 *     ----EClass -Library-
+	 *     |---EClass -Library-
 	 *     |   |
-	 *     |   ----EAttribute -name-    : EString
-	 *     |   ----EReference -books-   : Book
-	 *     |   ----EReference -authors- : Writer
+	 *     |   |---EAttribute -name-    : EString
+	 *     |   |---EReference -books-   : Book
+	 *     |   |---EReference -authors- : Writer
 	 *     |
-	 *     ----EClass -Book-
+	 *     |---EClass -Book-
 	 *     |   |
-	 *     |   ----EAttribute -title-      : EString
-	 *     |   ----EAttribute -pages-      : EInt
-	 *     |   ----EAttribute -visibility- : visibility
-	 *     |   ----EReference -author-     : Writer
+	 *     |   |---EAttribute -title-      : EString
+	 *     |   |---EAttribute -pages-      : EInt
+	 *     |   |---EAttribute -visibility- : visibility
+	 *     |   |---EReference -author-     : Writer
 	 *     |
-	 *     ----EClass -Writer-
+	 *     |---EClass -Writer-
 	 *     |   |
-	 *     |   ----EAttribute -name-         : EString
-	 *     |   ----EAttribute -visibility-   : visibility
-	 *     |   ----EReference -writtenBooks- : Book
+	 *     |   |---EAttribute -name-         : EString
+	 *     |   |---EAttribute -visibility-   : visibility
+	 *     |   |---EReference -writtenBooks- : Book
 	 *     |
-	 *     ----EEnum -visibility-
+	 *     |---EEnum -visibility-
 	 *         |
-	 *         ----EEnumLiteral -private-   = 0
-	 *         ----EEnumLiteral -package-   = 1
-	 *         ----EEnumLiteral -protected- = 2
-	 *         ----EEnumLiteral -public-    = 3
+	 *         |---EEnumLiteral -private-   = 0
+	 *         |---EEnumLiteral -package-   = 1
+	 *         |---EEnumLiteral -protected- = 2
+	 *         |---EEnumLiteral -public-    = 3
 	 * </pre>
 	 * 
 	 * </p>
@@ -326,21 +328,63 @@ public final class EcoreModelUtils {
 	 */
 	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed)
 			throws FactoryException {
+		return createModel(writerCount, bookPerWriterCount, seed, false);
+	}
+	
+	/**
+	 * This will create an ecore model with the metamodel defined by {@link #createMetaModel()}.
+	 * <p>
+	 * <code>writerCount</code> and <code>bookPerWriterCount</code> allows us to create either small or
+	 * huge models.
+	 * </p>
+	 * <p>
+	 * <code>seed</code> will be used for the random number generator throughout the creation. calling this
+	 * method twice with the same given <code>seed</code> will create equal models.
+	 * </p>
+	 * 
+	 * @param writerCount
+	 *            Total number of writers to create in the model.
+	 * @param bookPerWriterCount
+	 *            Maximum number of books to create for each author. Actual number will be comprised between 0
+	 *            and this value.
+	 * @param seed
+	 *            <code>seed</code> to be used for the pseudo-random number generator.
+	 *            @param setXMIID
+	 *            If set to <code>True</code>, this will set a an auto incremented number as the XMI ID of each created object.
+	 * @return The root of the created model.
+	 * @throws FactoryException
+	 *             Thrown if an error occurs when trying to set one of the model content's features via
+	 *             {@link EFactory#eSet(EObject, String, Object)}.
+	 * @see Random
+	 */
+	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed, boolean setXMIID) throws FactoryException {
+		int xmiID = 0;
+		final XMIResource resource = new XMIResourceImpl();
 		final String eenumName = "visibility";
 		final String nameFeatureName = "name";
 		final Random randomGenerator = new Random(seed);
 		final EPackage libraryPackage = (EPackage)createMetaModel().eContents().get(0);
 		final org.eclipse.emf.ecore.EFactory libraryFactory = libraryPackage.getEFactoryInstance();
 
+		// Creates the library itself
 		final EObject library = libraryFactory.create(libraryClass);
 		EFactory.eSet(library, nameFeatureName, "Library");
+		resource.getContents().add(library);
+		if (setXMIID)
+			resource.setID(library, new Integer(++xmiID).toString());
 
+		// Creates each writer of the library
 		for (int writerNum = 0; writerNum < writerCount; writerNum++) {
 			final EObject writer = libraryFactory.create(writerClass);
 			EFactory.eSet(writer, nameFeatureName, "writer" + writerNum);
 			EFactory.eSet(writer, eenumName, visibilityEnum.getELiterals().get(
 					Double.valueOf(randomGenerator.nextDouble() * visibilityEnum.getELiterals().size())
 							.intValue()).getLiteral());
+			EFactory.eAdd(library, "authors", writer);
+			if (setXMIID)
+				resource.setID(writer, new Integer(++xmiID).toString());
+			
+			// Creates a random number of book for each writer
 			for (int bookNum = 0; bookNum < (randomGenerator.nextDouble() * bookPerWriterCount) + 1; bookNum++) {
 				final EObject book = libraryFactory.create(bookClass);
 				EFactory
@@ -351,12 +395,10 @@ public final class EcoreModelUtils {
 								.intValue()).getLiteral());
 				EFactory.eSet(book, "author", writer);
 				EFactory.eAdd(library, "books", book);
+				if (setXMIID)
+					resource.setID(book, new Integer(++xmiID).toString());
 			}
-			EFactory.eAdd(library, "authors", writer);
 		}
-		// attaches library to a resource before returning it
-		final Resource resource = new ResourceImpl();
-		resource.getContents().add(library);
 
 		return library;
 	}
