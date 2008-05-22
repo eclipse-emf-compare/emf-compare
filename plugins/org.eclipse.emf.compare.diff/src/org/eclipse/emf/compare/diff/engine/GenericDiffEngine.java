@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
-import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
@@ -43,7 +41,6 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
-import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Element;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
@@ -113,33 +110,7 @@ public class GenericDiffEngine implements IDiffEngine {
 			diffRoot = doDiffTwoWay(match);
 
 		result.getOwnedElements().add(diffRoot);
-
-		final Iterator<EObject> it = match.eAllContents();
-		EObject leftRoot = null;
-		EObject rightRoot = null;
-		while (it.hasNext()) {
-			final EObject itMatch = it.next();
-			if (itMatch instanceof Match2Elements) {
-				leftRoot = ((Match2Elements)itMatch).getLeftElement();
-				rightRoot = ((Match2Elements)itMatch).getRightElement();
-				break;
-			}
-		}
-		/*
-		 * First get the file extension..
-		 */
-		String extension = "ecore"; //$NON-NLS-1$
-		if (leftRoot != null && leftRoot.eResource() != null)
-			extension = leftRoot.eResource().getURI().fileExtension();
-		if (extension == null && rightRoot != null && rightRoot.eResource() != null)
-			extension = rightRoot.eResource().getURI().fileExtension();
-		final Collection<AbstractDiffExtension> extensions = DiffService
-				.getCorrespondingDiffExtensions(extension);
-		for (AbstractDiffExtension ext : extensions) {
-			// TODOCBR can this really be null?
-			if (ext != null)
-				ext.visit(result);
-		}
+		
 		return result;
 	}
 
@@ -503,11 +474,13 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	protected DiffGroup doDiffThreeWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
-
+		Resource leftModel = null;
+		
 		// It is a possibility that no elements where matched
 		if (match.getMatchedElements().size() > 0) {
 			// we have to browse the model and create the corresponding operations
 			final Match3Element matchRoot = (Match3Element)match.getMatchedElements().get(0);
+			leftModel = matchRoot.getLeftElement().eResource();
 
 			doDiffDelegate(diffRoot, matchRoot);
 		}
@@ -536,15 +509,14 @@ public class GenericDiffEngine implements IDiffEngine {
 				unMatchedElements.put(unMatchElement, isAncestor);
 		}
 		if (unMatchedElements.size() > 0) {
-			// seeks left resource
-			Resource leftModel = null;
-			for (UnMatchElement element : unMatchedElements.keySet()) {
-				if (element.getElement().eResource() == null)
-					continue;
-				if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
-					// TODO check this
-					leftModel = element.getElement().eResource();
-					break;
+			if (leftModel == null) {
+				for (UnMatchElement element : unMatchedElements.keySet()) {
+					if (element.getElement().eResource() == null)
+						continue;
+					if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
+						leftModel = element.getElement().eResource();
+						break;
+					}
 				}
 			}
 			processUnMatchedElements(diffRoot, leftModel, unMatchedElements);
@@ -562,11 +534,13 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	protected DiffGroup doDiffTwoWay(MatchModel match) {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
+		Resource leftModel = null;
 
 		// It is a possibility that no elements where matched
 		if (match.getMatchedElements().size() > 0) {
 			// we have to browse the model and create the corresponding operations
 			final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
+			leftModel = matchRoot.getLeftElement().eResource();
 
 			// browsing the match model
 			doDiffDelegate(diffRoot, matchRoot);
@@ -576,12 +550,14 @@ public class GenericDiffEngine implements IDiffEngine {
 		final List<UnMatchElement> unMatched = new ArrayList<UnMatchElement>();
 		for (Object anUnMatched : match.getUnMatchedElements())
 			unMatched.add((UnMatchElement)anUnMatched);
-		// seeks left resource
-		Resource leftModel = null;
-		for (UnMatchElement element : unMatched) {
-			if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
-				leftModel = element.getElement().eResource();
-				break;
+		if (leftModel == null) {
+			for (UnMatchElement element : unMatched) {
+				if (element.getElement().eResource() == null)
+					continue;
+				if (element.getElement().eResource().getURI().toString().equals(match.getLeftModel())) {
+					leftModel = element.getElement().eResource();
+					break;
+				}
 			}
 		}
 		processUnMatchedElements(diffRoot, leftModel, unMatched);

@@ -37,6 +37,9 @@ public final class DiffService {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
+	/** Default extension for EObjects not attached to a resource. */
+	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
+
 	/** Name of the extension point to parse for engines. */
 	private static final String DIFF_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.diff.engine"; //$NON-NLS-1$
 
@@ -85,9 +88,18 @@ public final class DiffService {
 	 * @return the corresponding diff model
 	 */
 	public static DiffModel doDiff(MatchModel match, boolean threeWay) {
-		final String extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf(".") + 1); //$NON-NLS-1$
+		String extension = DEFAULT_EXTENSION;
+		if (match.getLeftModel() != null && match.getLeftModel().lastIndexOf('.') > 0)
+			extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf('.') + 1);
 		final IDiffEngine engine = getBestDiffEngine(extension);
-		return engine.doDiff(match, threeWay);
+		final DiffModel diff = engine.doDiff(match, threeWay);
+		
+		final Collection<AbstractDiffExtension> extensions = DiffService.getCorrespondingDiffExtensions(extension);
+		for (AbstractDiffExtension ext : extensions) {
+			if (ext != null)
+				ext.visit(diff);
+		}
+		return diff;
 	}
 
 	/**
