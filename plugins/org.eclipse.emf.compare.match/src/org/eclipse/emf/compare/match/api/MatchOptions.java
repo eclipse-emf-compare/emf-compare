@@ -23,7 +23,7 @@ package org.eclipse.emf.compare.match.api;
  * <td>{@link #OPTION_DISTINCT_METAMODEL}</td>
  * <td>Specifies whether the models to compare are of the same meta-model. This mainly impact performance by
  * allowing faster check to match elements (no use trying to match an interface and a class).</td>
- * <td>Boolean, defaults to <code>True</code></td>
+ * <td>Boolean, defaults to <code>false</code></td>
  * </tr>
  * <tr>
  * <td>{@link #OPTION_IGNORE_ID}</td>
