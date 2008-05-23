@@ -593,6 +593,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		boolean similar = false;
 
 		// Defines threshold constants to assume objects' similarity
+		final double nameOnlyMetricThreshold = 0.7d;
 		final double fewerAttributesNameThreshold = 0.8d;
 		final double relationsThreshold = 0.9d;
 		final double nameThreshold = 0.2d;
@@ -600,8 +601,12 @@ public class GenericMatchEngine implements IMatchEngine {
 		final double triWayThreshold = 0.9d;
 		final double generalThreshold = GENERAL_THRESHOLD;
 
+		// Computes some of the required metrics
 		final double nameSimilarity = nameSimilarity(obj1, obj2);
 		final boolean hasSameUri = hasSameUri(obj1, obj2);
+		final int obj1NonNullFeatures = nonNullFeaturesCount(obj1);
+		final int obj2NonNullFeatures = nonNullFeaturesCount(obj2);
+		
 		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
 				&& obj1.eClass() != obj2.eClass()) {
 			similar = false;
@@ -612,11 +617,12 @@ public class GenericMatchEngine implements IMatchEngine {
 			similar = false;
 		} else if (nameSimilarity == 1 && hasSameUri) {
 			similar = true;
-			// softer test if we don't have enough attributes to compare the
-			// objects
+			// softer tests if we don't have enough attributes to compare the objects
+		} else if (obj1NonNullFeatures == 1 && obj2NonNullFeatures == 1) {
+			similar = nameSimilarity > nameOnlyMetricThreshold;
 		} else if (nameSimilarity > fewerAttributesNameThreshold
-				&& nonNullFeaturesCount(obj1) <= MIN_ATTRIBUTES_COUNT
-				&& nonNullFeaturesCount(obj2) <= MIN_ATTRIBUTES_COUNT
+				&& obj1NonNullFeatures <= MIN_ATTRIBUTES_COUNT
+				&& obj2NonNullFeatures <= MIN_ATTRIBUTES_COUNT
 				&& typeSimilarity(obj1, obj2) > generalThreshold) {
 			similar = true;
 		} else {
