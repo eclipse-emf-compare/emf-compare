@@ -364,21 +364,25 @@ public final class ModelComparator {
 				// resource has been deleted. We set it as "remote" to disable merge facilities
 				rightIsRemote = true;
 			}
-			if (((IStreamContentAccessor)right).getContents().available() > 0) {
+			try {
 				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
 						right.getName(), new ResourceSetImpl()).eResource();
-			} else {
+			} catch (IOException e) {
+				// We couldn't load the remote resource. Considers it has been added to the repository
 				leftResource = ModelUtils.createResource(URI.createURI(right.getName()));
-				// left resource has been added to the repository. Set the right as remote to disable merge
-				// facilities
+				// Set the right as remote to disable merge facilities
 				rightIsRemote = true;
 			}
 			leftIsRemote = true;
-			if (ancestor != null && ((IStreamContentAccessor)ancestor).getContents().available() > 0)
-				ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-						ancestor.getName(), new ResourceSetImpl()).eResource();
-			else if (ancestor != null)
-				ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
+			if (ancestor != null) {
+				try {
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), new ResourceSetImpl()).eResource();
+				} catch (IOException e) {
+					// Couldn't load ancestor resource, create an empty one
+					ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
+				}
+			}
 			return true;
 		}
 		/*
