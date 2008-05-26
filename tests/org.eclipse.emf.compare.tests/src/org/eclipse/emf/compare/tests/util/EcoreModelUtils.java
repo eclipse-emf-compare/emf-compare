@@ -51,7 +51,7 @@ public final class EcoreModelUtils {
 
 	/** Keeps a reference to the library class of the metamodel created via {@link #createMetaModel()}. */
 	private static EClass libraryClass;
-	
+
 	/** Keeps a reference towards the created metamodel. */
 	private static EPackage metaModel;
 
@@ -203,6 +203,15 @@ public final class EcoreModelUtils {
 	}
 
 	/**
+	 * This is a convenience method fully equivalent to <code>createMetaModel(false)</code>.
+	 * 
+	 * @return The root of the created metamodel.
+	 */
+	public static EPackage createMetaModel() {
+		return createMetaModel(false);
+	}
+
+	/**
 	 * This will generate an ecore metamodel.
 	 * <p>
 	 * Generated metamodel will be of the form :
@@ -241,10 +250,13 @@ public final class EcoreModelUtils {
 	 * 
 	 * </p>
 	 * 
+	 * @param forceCreate
+	 *            If set to <code>True</code>, the metamodel will be created anew even if it has already
+	 *            been cached.
 	 * @return The root of the created metamodel.
 	 */
-	public static EPackage createMetaModel() {
-		if (metaModel == null) {
+	public static EPackage createMetaModel(boolean forceCreate) {
+		if (metaModel == null || forceCreate) {
 			final String eenumName = "visibility";
 			final String nameFeatureName = "name";
 			final Resource resource = new ResourceImpl();
@@ -254,12 +266,14 @@ public final class EcoreModelUtils {
 			libraryClass = createEClass(libraryPackage, "Library");
 			bookClass = createEClass(libraryPackage, "Book");
 			writerClass = createEClass(libraryPackage, "Writer");
-			visibilityEnum = createEEnum(libraryPackage, eenumName, "private", "package", "protected", "public");
-	
+			visibilityEnum = createEEnum(libraryPackage, eenumName, "private", "package", "protected",
+					"public");
+
 			// Then creates structural features.
 			// Library features
 			createEAttribute(libraryClass, nameFeatureName, EPACKAGE.getEString());
-			final EReference libraryBooksReference = createContainmentEReference(libraryClass, "books", bookClass);
+			final EReference libraryBooksReference = createContainmentEReference(libraryClass, "books",
+					bookClass);
 			final EReference libraryWritersReference = createContainmentEReference(libraryClass, "authors",
 					writerClass);
 			// Book features
@@ -271,7 +285,7 @@ public final class EcoreModelUtils {
 			createEAttribute(writerClass, nameFeatureName, EPACKAGE.getEString());
 			createEAttribute(writerClass, eenumName, visibilityEnum);
 			final EReference writerBooksReference = createEReference(writerClass, "writtenBooks", bookClass);
-	
+
 			// Sets multiplicity and oppposites of the references
 			libraryBooksReference.setUpperBound(-1);
 			libraryWritersReference.setUpperBound(-1);
@@ -299,7 +313,7 @@ public final class EcoreModelUtils {
 	 *             {@link EFactory#eSet(EObject, String, Object)}.
 	 */
 	public static EObject createModel(int writerCount, int bookPerWriterCount) throws FactoryException {
-		return createModel(writerCount, bookPerWriterCount, System.nanoTime());
+		return createModel(writerCount, bookPerWriterCount, System.nanoTime(), false, false);
 	}
 
 	/**
@@ -328,7 +342,39 @@ public final class EcoreModelUtils {
 	 */
 	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed)
 			throws FactoryException {
-		return createModel(writerCount, bookPerWriterCount, seed, false);
+		return createModel(writerCount, bookPerWriterCount, seed, false, false);
+	}
+
+	/**
+	 * This will create an ecore model with the metamodel defined by {@link #createMetaModel()}.
+	 * <p>
+	 * <code>writerCount</code> and <code>bookPerWriterCount</code> allows us to create either small or
+	 * huge models.
+	 * </p>
+	 * <p>
+	 * <code>seed</code> will be used for the random number generator throughout the creation. calling this
+	 * method twice with the same given <code>seed</code> will create equal models.
+	 * </p>
+	 * 
+	 * @param writerCount
+	 *            Total number of writers to create in the model.
+	 * @param bookPerWriterCount
+	 *            Maximum number of books to create for each author. Actual number will be comprised between 0
+	 *            and this value.
+	 * @param seed
+	 *            <code>seed</code> to be used for the pseudo-random number generator.
+	 * @param setXMIID
+	 *            If set to <code>True</code>, this will set a an auto incremented number as the XMI ID of
+	 *            each created object.
+	 * @return The root of the created model.
+	 * @throws FactoryException
+	 *             Thrown if an error occurs when trying to set one of the model content's features via
+	 *             {@link EFactory#eSet(EObject, String, Object)}.
+	 * @see Random
+	 */
+	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed, boolean setXMIID)
+			throws FactoryException {
+		return createModel(writerCount, bookPerWriterCount, seed, setXMIID, false);
 	}
 	
 	/**
@@ -349,21 +395,25 @@ public final class EcoreModelUtils {
 	 *            and this value.
 	 * @param seed
 	 *            <code>seed</code> to be used for the pseudo-random number generator.
-	 *            @param setXMIID
-	 *            If set to <code>True</code>, this will set a an auto incremented number as the XMI ID of each created object.
+	 * @param setXMIID
+	 *            If set to <code>True</code>, this will set a an auto incremented number as the XMI ID of
+	 *            each created object.
+	 * @param forceMetaModelCreation
+	 * Forces the creation of a new meta model even if one has already been cached.
 	 * @return The root of the created model.
 	 * @throws FactoryException
 	 *             Thrown if an error occurs when trying to set one of the model content's features via
 	 *             {@link EFactory#eSet(EObject, String, Object)}.
 	 * @see Random
 	 */
-	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed, boolean setXMIID) throws FactoryException {
+	public static EObject createModel(int writerCount, int bookPerWriterCount, long seed, boolean setXMIID, boolean forceMetaModelCreation)
+			throws FactoryException {
 		int xmiID = 0;
 		final XMIResource resource = new XMIResourceImpl();
 		final String eenumName = "visibility";
 		final String nameFeatureName = "name";
 		final Random randomGenerator = new Random(seed);
-		final EPackage libraryPackage = (EPackage)createMetaModel().eContents().get(0);
+		final EPackage libraryPackage = (EPackage)createMetaModel(forceMetaModelCreation).eContents().get(0);
 		final org.eclipse.emf.ecore.EFactory libraryFactory = libraryPackage.getEFactoryInstance();
 
 		// Creates the library itself
@@ -383,7 +433,7 @@ public final class EcoreModelUtils {
 			EFactory.eAdd(library, "authors", writer);
 			if (setXMIID)
 				resource.setID(writer, new Integer(++xmiID).toString());
-			
+
 			// Creates a random number of book for each writer
 			for (int bookNum = 0; bookNum < (randomGenerator.nextDouble() * bookPerWriterCount) + 1; bookNum++) {
 				final EObject book = libraryFactory.create(bookClass);
