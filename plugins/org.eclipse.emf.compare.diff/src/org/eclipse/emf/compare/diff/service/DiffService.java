@@ -118,11 +118,11 @@ public final class DiffService {
 	}
 
 	/**
-	 * TODOCBR comment.
+	 * Returns all {@link AbstractDiffExtension}s registered against the given file <tt>extension</tt>.
 	 * 
 	 * @param extension
-	 *            comment
-	 * @return comment
+	 *            The extension of the file we need the {@link AbstractDiffExtension}s for.
+	 * @return All of the {@link AbstractDiffExtension}s registered against the given file <tt>extension</tt>.
 	 */
 	public static Collection<AbstractDiffExtension> getCorrespondingDiffExtensions(String extension) {
 		final Collection<AbstractDiffExtension> result = new ArrayList<AbstractDiffExtension>();
