@@ -356,8 +356,8 @@ public final class ModelComparator {
 			throws IOException, CoreException {
 		if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 			if (((ResourceNode)left).getResource().isAccessible()) {
-				rightResource = ModelUtils
-						.load(((ResourceNode)left).getResource().getFullPath(), new ResourceSetImpl()).eResource();
+				rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+						new ResourceSetImpl()).eResource();
 			} else {
 				rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
 						.getResource().getFullPath().toOSString(), true));
@@ -423,10 +423,10 @@ public final class ModelComparator {
 	private boolean handleLocalResources(ITypedElement left, ITypedElement right, ITypedElement ancestor)
 			throws IOException {
 		if (left instanceof ResourceNode && right instanceof ResourceNode) {
-			leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(), new ResourceSetImpl())
-					.eResource();
-			rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(), new ResourceSetImpl())
-					.eResource();
+			leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+					new ResourceSetImpl()).eResource();
+			rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+					new ResourceSetImpl()).eResource();
 			if (ancestor != null)
 				ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
