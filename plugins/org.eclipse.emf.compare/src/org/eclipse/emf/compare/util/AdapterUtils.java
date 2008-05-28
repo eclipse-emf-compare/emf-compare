@@ -48,6 +48,7 @@ public final class AdapterUtils {
 	 *            The sought adapter's type.
 	 * @return An associated adapter.
 	 * @see AdapterFactory#adapt(Object, Object)
+	 * @since 0.8
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T adapt(EObject eObj, Class<? extends T> type) {
@@ -85,6 +86,7 @@ public final class AdapterUtils {
 	 * @return The Image provided by the IItemLabelProvider associated with <tt>eObj</tt>,
 	 *         <code>null</code> if it cannot be found.
 	 * @see IItemLabelProvider#getImage(Object)
+	 * @since 0.8
 	 */
 	public static Object getItemProviderImage(EObject eObj) {
 		final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
@@ -102,6 +104,7 @@ public final class AdapterUtils {
 	 * @return The text provided by the IItemLabelProvider associated with <tt>eObj</tt>, <code>null</code>
 	 *         if it cannot be found.
 	 * @see IItemLabelProvider#getText(Object)
+	 * @since 0.8
 	 */
 	public static String getItemProviderText(EObject eObj) {
 		final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
