@@ -14,7 +14,7 @@ Export-Package: org.eclipse.emf.compare.diff.api,
  org.eclipse.emf.compare.diff.metamodel.impl,
  org.eclipse.emf.compare.diff.metamodel.util,
  org.eclipse.emf.compare.diff.service
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
  org.eclipse.emf.compare,
  org.eclipse.emf.compare.match,
  org.eclipse.emf.ecore,
