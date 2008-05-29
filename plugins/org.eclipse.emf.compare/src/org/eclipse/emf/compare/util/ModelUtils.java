@@ -15,13 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.ecore.EObject;
@@ -222,49 +219,6 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Loads a model from an {@link org.eclipse.core.resources.IFile IFile} in a given {@link ResourceSet}.
-	 * <p>
-	 * This will return the first root of the loaded model, other roots can be accessed via the resource's
-	 * content.
-	 * </p>
-	 * 
-	 * @param file
-	 *            {@link org.eclipse.core.resources.IFile IFile} containing the model to be loaded.
-	 * @param resourceSet
-	 *            The {@link ResourceSet} to load the model in.
-	 * @return The model loaded from the file.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(IFile file, ResourceSet resourceSet) throws IOException {
-		EObject result = null;
-
-		final Map<String, String> options = new HashMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
-		// First tries to load the IFile assuming it is in the workspace
-		Resource modelResource = createResource(URI.createPlatformResourceURI(
-				file.getFullPath().toOSString(), true), resourceSet);
-		try {
-			modelResource.load(options);
-		} catch (IOException e) {
-			// If it failed, load the file assuming it is in the plugins
-			resourceSet.getResources().remove(modelResource);
-			modelResource = createResource(
-					URI.createPlatformPluginURI(file.getFullPath().toOSString(), true), resourceSet);
-			try {
-				modelResource.load(options);
-			} catch (IOException ee) {
-				// If it fails anew, throws the first IOException
-				throw e;
-			}
-		}
-		// Returns the first root of the loaded model
-		if (modelResource.getContents().size() > 0)
-			result = modelResource.getContents().get(0);
-		return result;
-	}
-
-	/**
 	 * Load a model from an {@link java.io.InputStream  InputStream} in a given {@link ResourceSet}.
 	 * <p>
 	 * This will return the first root of the loaded model, other roots can be accessed via the resource's
@@ -288,31 +242,10 @@ public final class ModelUtils {
 		EObject result = null;
 
 		final Resource modelResource = createResource(URI.createURI(fileName), resourceSet);
-		final Map<String, String> options = new EMFCompareMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
-		modelResource.load(stream, options);
+		modelResource.load(stream, Collections.emptyMap());
 		if (modelResource.getContents().size() > 0)
 			result = modelResource.getContents().get(0);
 		return result;
-	}
-
-	/**
-	 * Loads a model from an {@link IPath} in a given {@link ResourceSet}.
-	 * <p>
-	 * This will return the first root of the loaded model, other roots can be accessed via the resource's
-	 * content.
-	 * </p>
-	 * 
-	 * @param path
-	 *            {@link IPath} where the model lies.
-	 * @param resourceSet
-	 *            The {@link ResourceSet} to load the model in.
-	 * @return The model loaded from the path.
-	 * @throws IOException
-	 *             If the given file does not exist.
-	 */
-	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
-		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
 	}
 	
 	/**
@@ -384,9 +317,7 @@ public final class ModelUtils {
 		EObject result = null;
 
 		final Resource modelResource = createResource(modelURI, resourceSet);
-		final Map<String, String> options = new EMFCompareMap<String, String>();
-		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
-		modelResource.load(options);
+		modelResource.load(Collections.emptyMap());
 		if (modelResource.getContents().size() > 0)
 			result = modelResource.getContents().get(0);
 		return result;
