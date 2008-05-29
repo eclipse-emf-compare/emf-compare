@@ -16,6 +16,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.compare.ui.internal.AbstractTeamHandler;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.svn.core.connector.SVNRevision;
@@ -53,7 +54,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 
 		if (left instanceof ResourceElement && right instanceof ResourceElement) {
 			if (((ResourceElement)left).getRepositoryResource().getSelectedRevision() == SVNRevision.WORKING) {
-				rightResource = ModelUtils.load(
+				rightResource = EclipseModelUtils.load(
 						((ResourceElement)left).getLocalResource().getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
 			} else {
