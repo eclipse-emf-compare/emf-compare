@@ -43,6 +43,7 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.EMFCompareMap;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -356,7 +357,7 @@ public final class ModelComparator {
 			throws IOException, CoreException {
 		if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 			if (((ResourceNode)left).getResource().isAccessible()) {
-				rightResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+				rightResource = EclipseModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
 			} else {
 				rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
@@ -423,12 +424,12 @@ public final class ModelComparator {
 	private boolean handleLocalResources(ITypedElement left, ITypedElement right, ITypedElement ancestor)
 			throws IOException {
 		if (left instanceof ResourceNode && right instanceof ResourceNode) {
-			leftResource = ModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+			leftResource = EclipseModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 					new ResourceSetImpl()).eResource();
-			rightResource = ModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
+			rightResource = EclipseModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
 					new ResourceSetImpl()).eResource();
 			if (ancestor != null)
-				ancestorResource = ModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
+				ancestorResource = EclipseModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
 			return true;
 		}
