@@ -14,6 +14,10 @@
       <contentTypeBinding
             contentMergeViewerId="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"
             contentTypeId="org.eclipse.emf.ecore"/>
+      <contentTypeBinding
+            contentMergeViewerId="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"
+            contentTypeId="org.eclipse.emf.ecore.xmi">
+      </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.compare.structureMergeViewers">
@@ -27,6 +31,10 @@
       <contentTypeBinding
             structureMergeViewerId="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer"
             contentTypeId="org.eclipse.emf.ecore"/>
+      <contentTypeBinding
+            contentTypeId="org.eclipse.emf.ecore.xmi"
+            structureMergeViewerId="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer">
+      </contentTypeBinding>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
