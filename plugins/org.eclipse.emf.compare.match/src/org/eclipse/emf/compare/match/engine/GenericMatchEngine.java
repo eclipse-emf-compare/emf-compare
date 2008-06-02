@@ -57,7 +57,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	/** Containmnent reference for the matched elements root. */
 	private static final String MATCH_ELEMENT_NAME = "matchedElements"; //$NON-NLS-1$
 
-	/** Minimal number of attributes an element must have for content comparison. */
+	/**
+	 * Minimal number of attributes an element must have for content comparison.
+	 */
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
 	/** This constant is used as key for the buffering of name similarity. */
@@ -108,8 +110,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <p>
 	 * More specifically, we will populate this list with the {@link UnMatchElement}s created by the
 	 * comparison between the left and the ancestor model, followed by the {@link UnMatchElement} created by
-	 * the comparison between the right and the ancestor model.<br/> Those {@link UnMatchElement} will then
-	 * be filtered to retain only those that actually cannot be matched.
+	 * the comparison between the right and the ancestor model.<br/> Those {@link UnMatchElement} will then be
+	 * filtered to retain only those that actually cannot be matched.
 	 * </p>
 	 */
 	private final Set<EObject> remainingUnMatchedElements = new HashSet<EObject>();
@@ -165,7 +167,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements.get(0);
 				final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
 				subMatchRoot = MatchFactory.eINSTANCE.createMatch3Element();
-	
+
 				subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
 						rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
 				subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
@@ -288,14 +290,15 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 * 
+	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
-		
+
 		MatchModel result = null;
 		// Creates and sizes progress monitor
 		final CompareProgressMonitor monitor = new CompareProgressMonitor(
@@ -311,7 +314,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		startMonitor(monitor, size * 2);
 
 		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
-		
+
 		return result;
 	}
 
@@ -321,10 +324,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
-	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) throws InterruptedException {
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
+			throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
-		
+
 		MatchModel result = null;
 		// Creates and sizes progress monitor
 		final CompareProgressMonitor monitor = new CompareProgressMonitor(
@@ -367,10 +371,10 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
-			Map<String, Object> optionMap)  throws InterruptedException {
+			Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
-		
+
 		MatchModel result = null;
 		// Creates and sizes progress monitor
 		final CompareProgressMonitor monitor = new CompareProgressMonitor(
@@ -399,7 +403,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			Map<String, Object> optionMap) throws InterruptedException {
 		if (optionMap != null && optionMap.size() > 0)
 			loadOptionMap(optionMap);
-		
+
 		MatchModel result = null;
 		// Creates and sizes progress monitor
 		final CompareProgressMonitor monitor = new CompareProgressMonitor(
@@ -426,7 +430,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			Map<String, Object> optionMap) {
-		// TODO this should be implemented. It will break both match and diff MMs so wait till 0.9/1.0.
+		// TODO this should be implemented. It will break both match and diff
+		// MMs so wait till 0.9/1.0.
 		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
@@ -439,7 +444,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
 			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) {
-		// TODO this should be implemented. It will break both match and diff MMs so wait till 0.9/1.0.
+		// TODO this should be implemented. It will break both match and diff
+		// MMs so wait till 0.9/1.0.
 		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
@@ -450,8 +456,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents.
-	 *         0 &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents. 0
+	 *         &lt; value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
 	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
@@ -486,14 +492,15 @@ public class GenericMatchEngine implements IMatchEngine {
 		double max = 0d;
 		EObject resultObject = null;
 		final Iterator<EObject> it = list.iterator();
-		while (it.hasNext()) {
+		while (it.hasNext() && max != 1.0d) {
 			final EObject next = it.next();
-			if (this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS) || eObj.eClass() == next.eClass()) {
-    			final double similarity = absoluteMetric(eObj, next);
-    			if (similarity > max) {
-    				max = similarity;
-    				resultObject = next;
-    			}
+			if (this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
+					|| eObj.eClass() == next.eClass()) {
+				final double similarity = absoluteMetric(eObj, next);
+				if (similarity > max) {
+					max = similarity;
+					resultObject = next;
+				}
 			}
 		}
 		return resultObject;
@@ -526,8 +533,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Left of the two objects to check.
 	 * @param right
 	 *            right of the two objects to check.
-	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code>
-	 *         otherwise.
+	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code> otherwise.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the key for the object to match.
 	 */
@@ -606,7 +612,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final boolean hasSameUri = hasSameUri(obj1, obj2);
 		final int obj1NonNullFeatures = nonNullFeaturesCount(obj1);
 		final int obj2NonNullFeatures = nonNullFeaturesCount(obj2);
-		
+
 		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
 				&& obj1.eClass() != obj2.eClass()) {
 			similar = false;
@@ -617,12 +623,12 @@ public class GenericMatchEngine implements IMatchEngine {
 			similar = false;
 		} else if (nameSimilarity == 1 && hasSameUri) {
 			similar = true;
-			// softer tests if we don't have enough attributes to compare the objects
+			// softer tests if we don't have enough attributes to compare the
+			// objects
 		} else if (obj1NonNullFeatures == 1 && obj2NonNullFeatures == 1) {
 			similar = nameSimilarity > nameOnlyMetricThreshold;
 		} else if (nameSimilarity > fewerAttributesNameThreshold
-				&& obj1NonNullFeatures <= MIN_ATTRIBUTES_COUNT
-				&& obj2NonNullFeatures <= MIN_ATTRIBUTES_COUNT
+				&& obj1NonNullFeatures <= MIN_ATTRIBUTES_COUNT && obj2NonNullFeatures <= MIN_ATTRIBUTES_COUNT
 				&& typeSimilarity(obj1, obj2) > generalThreshold) {
 			similar = true;
 		} else {
@@ -656,8 +662,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0
-	 *         &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0 &lt;
+	 *         value &lt; 1.
 	 * @see NameSimilarity#nameSimilarityMetric(String, String)
 	 */
 	protected double nameSimilarity(EObject obj1, EObject obj2) {
@@ -691,7 +697,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
 		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
 		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, MatchOptions.DEFAULT_DISTINCT_METAMODEL);
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, getPreferenceDistinctMetaModel());
 		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
 		return optionMap;
 	}
@@ -714,17 +720,25 @@ public class GenericMatchEngine implements IMatchEngine {
 		if (hasSameUri(obj1, obj2))
 			sameUri = 1;
 		final double positionSimilarity = relationsSimilarity / 2d + sameUri / 2d;
-		final double contentSimilarity = contentSimilarity(obj1, obj2);
-		// Computing type similarity really is time expensive
-		// double typeSimilarity = typeSimilarity(obj1, obj2);
 
 		final double contentWeight = 0.5d;
-		final double nameWeight = 0.4d;
-		final double positionWeight = 0.4d;
 
-		return (contentSimilarity * contentWeight + nameSimilarity * nameWeight + positionSimilarity
-				* positionWeight)
-				/ (contentWeight + nameWeight + positionWeight);
+		if (nonNullFeaturesCount(obj1) > MIN_ATTRIBUTES_COUNT
+				&& nonNullFeaturesCount(obj2) > MIN_ATTRIBUTES_COUNT) {
+			final double nameWeight = 0.4d;
+			final double positionWeight = 0.4d;
+			final double contentSimilarity = contentSimilarity(obj1, obj2);
+			// Computing type similarity really is time expensive
+			// double typeSimilarity = typeSimilarity(obj1, obj2);
+			return (contentSimilarity * contentWeight + nameSimilarity * nameWeight + positionSimilarity
+					* positionWeight)
+					/ (contentWeight + nameWeight + positionWeight);
+		}
+		// we didn't have enough features to compute an accurate metric
+		final double nameWeight = 0.8d;
+		final double positionWeight = 0.2d;
+		return (nameSimilarity * nameWeight + positionSimilarity * positionWeight)
+				/ (nameWeight + positionWeight);
 	}
 
 	/**
@@ -750,7 +764,8 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * This will recursively create three-way submatches and add them under the given {@link MatchModel}. The
-	 * two {@link Match2Elements} we consider as parameters are the result of the two-way comparisons between :
+	 * two {@link Match2Elements} we consider as parameters are the result of the two-way comparisons between
+	 * :
 	 * <ul>
 	 * <li>The left and origin model.</li>
 	 * <li>The right and origin model.</li>
@@ -772,10 +787,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param right
 	 *            Right {@link Match2Elements} to consider.
 	 * @throws FactoryException
-	 *             Thrown if we cannot compute the
-	 *             {@link #absoluteMetric(EObject, EObject, EObject) absolute metric} between the three
-	 *             elements or if we cannot add a {@link Match3Element} under the given
-	 *             <code>matchElementRoot</code>.
+	 *             Thrown if we cannot compute the {@link #absoluteMetric(EObject, EObject, EObject) absolute
+	 *             metric} between the three elements or if we cannot add a {@link Match3Element} under the
+	 *             given <code>matchElementRoot</code>.
 	 */
 	private void createSub3Match(MatchModel root, Match3Element matchElementRoot, Match2Elements left,
 			Match2Elements right) throws FactoryException {
@@ -915,7 +929,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor) throws InterruptedException {
+	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor)
+			throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelURIs(root, leftResource, rightResource);
 
@@ -951,7 +966,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				if (matchedRoots.size() == 0) {
 					final Match2Elements rootMapping = MatchFactory.eINSTANCE.createMatch2Elements();
 					rootMapping.setLeftElement(leftResource.getContents().get(0));
-					EObject rightElement = findMostSimilar(leftResource.getContents().get(0), unMatchedRightRoots);
+					EObject rightElement = findMostSimilar(leftResource.getContents().get(0),
+							unMatchedRightRoots);
 					if (rightElement == null)
 						rightElement = unMatchedRightRoots.get(0);
 					rootMapping.setRightElement(rightElement);
@@ -988,7 +1004,8 @@ public class GenericMatchEngine implements IMatchEngine {
 						.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
 				createSubMatchElements(matchModelRoot, unMatchedLeftRoots, unMatchedRightRoots, monitor);
 			} else {
-				// Roots are unmatched, this is either a file addition or deletion
+				// Roots are unmatched, this is either a file addition or
+				// deletion
 				still1.addAll(unMatchedLeftRoots);
 				still2.addAll(unMatchedRightRoots);
 			}
@@ -1114,6 +1131,18 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Returns whether we should assume the metamodels of the compared models are distinct.
+	 * 
+	 * @return <code>true</code> if the metamodels are to be assumed distinct, <code>false</code> otherwise.
+	 */
+	private boolean getPreferenceDistinctMetaModel() {
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
+			return EMFComparePlugin.getDefault().getBoolean(
+					EMFComparePreferenceKeys.PREFERENCES_KEY_DISTINCT_METAMODEL);
+		return MatchOptions.DEFAULT_DISTINCT_METAMODEL;
+	}
+
+	/**
 	 * Returns whether we should ignore the IDs or compare using them.
 	 * 
 	 * @return <code>True</code> if we should ignore ID, <code>False</code> otherwise.
@@ -1172,8 +1201,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Second of the two {@link EObject}s we seek the similarity for.
 	 * @param similarityKind
 	 *            Kind of similarity to get.
-	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the
-	 *         two given {@link EObject}s.
+	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the two
+	 *         given {@link EObject}s.
 	 */
 	private Double getSimilarityFromCache(EObject obj1, EObject obj2, char similarityKind) {
 		return metricsCache.get(pairHashCode(obj1, obj2, similarityKind));
@@ -1429,6 +1458,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @return The number of features initialized to <code>null</code> or the empty String.
 	 */
 	private int nonNullFeaturesCount(EObject eobj) {
+		// TODO should probably cache result here
 		int nonNullFeatures = 0;
 		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
 		while (features.hasNext()) {
@@ -1541,9 +1571,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * We consider here <code>current1</code> and <code>current2</code> are similar. This method creates
-	 * the mapping for the objects <code>current1</code> and <code>current2</code>, Then submappings for
-	 * these two elements' contents.
+	 * We consider here <code>current1</code> and <code>current2</code> are similar. This method creates the
+	 * mapping for the objects <code>current1</code> and <code>current2</code>, Then submappings for these two
+	 * elements' contents.
 	 * 
 	 * @param current1
 	 *            First element of the two elements mapping.
@@ -1603,8 +1633,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' relations.
-	 *         0 &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' relations. 0
+	 *         &lt; value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the relations' similarity metrics.
 	 * @see StructureSimilarity#relationsSimilarityMetric(EObject, EObject, MetamodelFilter)
@@ -1702,8 +1732,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' types. 0
-	 *         &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' types. 0 &lt;
+	 *         value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the type similarity metrics.
 	 * @see StructureSimilarity#typeSimilarityMetric(EObject, EObject)
