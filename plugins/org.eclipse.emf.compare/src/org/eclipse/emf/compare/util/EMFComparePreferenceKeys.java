@@ -11,15 +11,28 @@
 package org.eclipse.emf.compare.util;
 
 /**
- * Defines constants used for EMF Compare preferences. These are used by the UI as well as the match.
+ * Defines constants used for EMF Compare preferences. These are used by the UI
+ * as well as the match.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public interface EMFComparePreferenceKeys {
-	/** Preferences key for the boolean indicating that the comparison should ignore IDs. */
+	/**
+	 * Preferences key for the boolean indicating that the comparison should
+	 * assume the compared models have distinct metamodels.
+	 */
+	String PREFERENCES_KEY_DISTINCT_METAMODEL = "emfcompare.distinct.metamodel"; //$NON-NLS-1$
+
+	/**
+	 * Preferences key for the boolean indicating that the comparison should
+	 * ignore IDs.
+	 */
 	String PREFERENCES_KEY_IGNORE_ID = "emfcompare.ignore.ID"; //$NON-NLS-1$
 
-	/** Preferences key for the boolean indicating that the comparison should ignore XMI IDs. */
+	/**
+	 * Preferences key for the boolean indicating that the comparison should
+	 * ignore XMI IDs.
+	 */
 	String PREFERENCES_KEY_IGNORE_XMIID = "emfcompare.ignore.XMI.ID"; //$NON-NLS-1$
 
 	/** Preferences key for the siblings search window. */
