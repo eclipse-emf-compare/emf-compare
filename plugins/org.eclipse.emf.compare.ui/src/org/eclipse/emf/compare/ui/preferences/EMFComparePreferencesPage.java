@@ -86,6 +86,13 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
 		addField(searchWindowEditor);
+		
+		// distinct meta model field
+		/* TODO uncomment this to show the option on the preferences page. should work
+		 * "out-of-the-box" but needs to be double-checked
+		 */
+//		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_DISTINCT_METAMODEL,
+//				EMFCompareConstants.PREFERENCES_DESCRIPTION_DISTINCT_METAMODEL, getFieldEditorParent()));
 
 		// ignore ID field
 		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,

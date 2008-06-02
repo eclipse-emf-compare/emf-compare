@@ -63,8 +63,18 @@ public interface EMFCompareConstants {
 	/** Preferences description for the conflicting element color. */
 	String PREFERENCES_DESCRIPTION_CONFLICTING_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.conflictingColorLabel") + ':'; //$NON-NLS-1$
+	
+	/**
+	 * Preferences description for the boolean indicating that the comparison
+	 * should assume the compared models have distinct metamodels.
+	 */
+	String PREFERENCES_DESCRIPTION_DISTINCT_METAMODEL = EMFCompareUIMessages
+			.getString("EMFCompareConstants.preferences.distinctMMLabel"); //$NON-NLS-1$
 
-	/** Preferences description for the boolean indicating that the differences markers have to be drawn. */
+	/**
+	 * Preferences description for the boolean indicating that the differences
+	 * markers have to be drawn.
+	 */
 	String PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.drawDifferencesLabel"); //$NON-NLS-1$
 
@@ -72,11 +82,17 @@ public interface EMFCompareConstants {
 	String PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.highlightColorLabel") + ':'; //$NON-NLS-1$
 
-	/** Preferences description for the boolean indicating that the comparison should ignore IDs. */
+	/**
+	 * Preferences description for the boolean indicating that the comparison
+	 * should ignore IDs.
+	 */
 	String PREFERENCES_DESCRIPTION_IGNORE_ID = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.ignoreIDLabel"); //$NON-NLS-1$
 
-	/** Preferences description for the boolean indicating that the comparison should ignore XMI IDs. */
+	/**
+	 * Preferences description for the boolean indicating that the comparison
+	 * should ignore XMI IDs.
+	 */
 	String PREFERENCES_DESCRIPTION_IGNORE_XMIID = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.ignoreXMIIDLabel"); //$NON-NLS-1$
 
@@ -97,7 +113,10 @@ public interface EMFCompareConstants {
 	/** Preferences key for the circling color of a changed element. */
 	String PREFERENCES_KEY_CONFLICTING_COLOR = "conflicting.color"; //$NON-NLS-1$
 
-	/** Preferences key for the boolean indicating that the differences markers have to be drawn. */
+	/**
+	 * Preferences key for the boolean indicating that the differences markers
+	 * have to be drawn.
+	 */
 	String PREFERENCES_KEY_DRAW_DIFFERENCES = "viewer.draw.differences"; //$NON-NLS-1$
 
 	/** Preferences key for the highlight color. */
@@ -110,17 +129,20 @@ public interface EMFCompareConstants {
 	String PROPERTY_COMPARISON_TIME = "comparison.time"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property associated with an input change in the content viewer.
+	 * Key of the property associated with an input change in the content
+	 * viewer.
 	 */
 	String PROPERTY_CONTENT_INPUT_CHANGED = "content.input.changed"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property associated with a change in the content merge viewer trees' selection.
+	 * Key of the property associated with a change in the content merge viewer
+	 * trees' selection.
 	 */
 	String PROPERTY_CONTENT_SELECTION = "content.selection.changed"; //$NON-NLS-1$
 
 	/**
-	 * Key of the property associated with a selection in the structure merge viewer.
+	 * Key of the property associated with a selection in the structure merge
+	 * viewer.
 	 */
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 

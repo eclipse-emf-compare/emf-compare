@@ -35,7 +35,7 @@ public class EMFComparePreferencesInitializer extends AbstractPreferenceInitiali
 		store.setDefault(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
 		// The "ignore ID" boolean doesn't need a default : initialized to false
-		// Same goes for the "ignore XMI ID" boolean
+		// Same goes for the "ignore XMI ID" and "distinct metamodel" booleans
 		// Default value for the "draw differences" boolean
 		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES, true);
 
