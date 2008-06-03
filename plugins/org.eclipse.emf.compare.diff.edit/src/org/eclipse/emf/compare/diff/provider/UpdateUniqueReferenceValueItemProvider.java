@@ -57,7 +57,11 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	@Override
 	public Object getImage(Object object) {
 		final UpdateUniqueReferenceValue updateReference = (UpdateUniqueReferenceValue)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftTarget());
+		Object labelImage;
+		if (updateReference.getLeftTarget() == null)
+			labelImage = AdapterUtils.getItemProviderImage(updateReference.getRightTarget());
+		else
+			labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftTarget());
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);
@@ -113,8 +117,17 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 
 		final String elementLabel = AdapterUtils.getItemProviderText(updateRef.getLeftElement());
 		final String referenceLabel = AdapterUtils.getItemProviderText(updateRef.getReference());
-		final String leftValueLabel = AdapterUtils.getItemProviderText(leftValue);
-		final String rightValueLabel = AdapterUtils.getItemProviderText(rightValue);
+		final String leftValueLabel;
+		final String rightValueLabel;
+		if (leftValue == null)
+			leftValueLabel = "null"; //$NON-NLS-1$
+		else
+			leftValueLabel = AdapterUtils.getItemProviderText(leftValue);
+		if (rightValue == null)
+			rightValueLabel = "null"; //$NON-NLS-1$
+		else
+			rightValueLabel = AdapterUtils.getItemProviderText(rightValue);
+		
 
 		if (updateRef.isConflicting())
 			return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$
