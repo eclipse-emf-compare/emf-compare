@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -110,8 +112,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <p>
 	 * More specifically, we will populate this list with the {@link UnMatchElement}s created by the
 	 * comparison between the left and the ancestor model, followed by the {@link UnMatchElement} created by
-	 * the comparison between the right and the ancestor model.<br/> Those {@link UnMatchElement} will then be
-	 * filtered to retain only those that actually cannot be matched.
+	 * the comparison between the right and the ancestor model.<br/> Those {@link UnMatchElement} will then
+	 * be filtered to retain only those that actually cannot be matched.
 	 * </p>
 	 */
 	private final Set<EObject> remainingUnMatchedElements = new HashSet<EObject>();
@@ -456,8 +458,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents. 0
-	 *         &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents.
+	 *         0 &lt; value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
 	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
@@ -533,7 +535,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Left of the two objects to check.
 	 * @param right
 	 *            right of the two objects to check.
-	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code> otherwise.
+	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code>
+	 *         otherwise.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the key for the object to match.
 	 */
@@ -662,8 +665,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0 &lt;
-	 *         value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0
+	 *         &lt; value &lt; 1.
 	 * @see NameSimilarity#nameSimilarityMetric(String, String)
 	 */
 	protected double nameSimilarity(EObject obj1, EObject obj2) {
@@ -764,8 +767,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * This will recursively create three-way submatches and add them under the given {@link MatchModel}. The
-	 * two {@link Match2Elements} we consider as parameters are the result of the two-way comparisons between
-	 * :
+	 * two {@link Match2Elements} we consider as parameters are the result of the two-way comparisons between :
 	 * <ul>
 	 * <li>The left and origin model.</li>
 	 * <li>The right and origin model.</li>
@@ -1131,9 +1133,35 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
+	 * not match since not returned by {@link EObject#eContents()}. This allows us to return the list of all
+	 * contents from an EObject <u>including</u> those references.
+	 * 
+	 * @param eObject
+	 *            The EObject we seek the content of.
+	 * @return The list of all the content of a given EObject, derived containmnent references included.
+	 */
+	@SuppressWarnings("unchecked")
+	private List<EObject> getContents(EObject eObject) {
+		// TODO can this be cached (Map<EClass, List<EReference>>)?
+		final List<EObject> result = new ArrayList(eObject.eContents());
+		for (EReference reference : eObject.eClass().getEAllReferences()) {
+			if (reference.isContainment() && reference.isDerived()) {
+				final Object value = eObject.eGet(reference);
+				if (value instanceof Collection)
+					result.addAll((Collection)value);
+				else if (value instanceof EObject)
+					result.add((EObject)value);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Returns whether we should assume the metamodels of the compared models are distinct.
 	 * 
-	 * @return <code>true</code> if the metamodels are to be assumed distinct, <code>false</code> otherwise.
+	 * @return <code>true</code> if the metamodels are to be assumed distinct, <code>false</code>
+	 *         otherwise.
 	 */
 	private boolean getPreferenceDistinctMetaModel() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
@@ -1201,8 +1229,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Second of the two {@link EObject}s we seek the similarity for.
 	 * @param similarityKind
 	 *            Kind of similarity to get.
-	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the two
-	 *         given {@link EObject}s.
+	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the
+	 *         two given {@link EObject}s.
 	 */
 	private Double getSimilarityFromCache(EObject obj1, EObject obj2, char similarityKind) {
 		return metricsCache.get(pairHashCode(obj1, obj2, similarityKind));
@@ -1571,9 +1599,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * We consider here <code>current1</code> and <code>current2</code> are similar. This method creates the
-	 * mapping for the objects <code>current1</code> and <code>current2</code>, Then submappings for these two
-	 * elements' contents.
+	 * We consider here <code>current1</code> and <code>current2</code> are similar. This method creates
+	 * the mapping for the objects <code>current1</code> and <code>current2</code>, Then submappings for
+	 * these two elements' contents.
 	 * 
 	 * @param current1
 	 *            First element of the two elements mapping.
@@ -1596,7 +1624,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		mapping.setLeftElement(current1);
 		mapping.setRightElement(current2);
 		mapping.setSimilarity(absoluteMetric(current1, current2));
-		final List<Match2Elements> mapList = mapLists(current1.eContents(), current2.eContents(), this
+		final List<Match2Elements> mapList = mapLists(getContents(current1), getContents(current2), this
 				.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
 		// We can map other elements with mapLists; we iterate through them.
 		final Iterator<Match2Elements> it = mapList.iterator();
@@ -1633,8 +1661,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' relations. 0
-	 *         &lt; value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' relations.
+	 *         0 &lt; value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the relations' similarity metrics.
 	 * @see StructureSimilarity#relationsSimilarityMetric(EObject, EObject, MetamodelFilter)
@@ -1732,8 +1760,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            First of the two {@link EObject}s.
 	 * @param obj2
 	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' types. 0 &lt;
-	 *         value &lt; 1.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' types. 0
+	 *         &lt; value &lt; 1.
 	 * @throws FactoryException
 	 *             Thrown if we cannot compute the type similarity metrics.
 	 * @see StructureSimilarity#typeSimilarityMetric(EObject, EObject)
