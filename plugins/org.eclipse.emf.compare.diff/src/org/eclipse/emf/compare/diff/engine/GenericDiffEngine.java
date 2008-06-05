@@ -536,7 +536,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		final DiffGroup diffRoot = DiffFactory.eINSTANCE.createDiffGroup();
 		Resource leftModel = null;
 
-		// It is a possibility that no elements where matched
+		// It is a possibility that no elements were matched
 		if (match.getMatchedElements().size() > 0) {
 			// we have to browse the model and create the corresponding operations
 			final Match2Elements matchRoot = (Match2Elements)match.getMatchedElements().get(0);
