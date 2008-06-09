@@ -4,6 +4,7 @@
 <toc label="EMF Compare Guide">
      <topic label="User Guide" href="tutorials/html/User_Guide.html"/>       
      <topic label="Developper Guide" href="tutorials/html/Architecture.html"> 
+	   <topic label="Using the Compare Services" href="tutorials/html/Using_Compare_Services.html" />
 	   <topic label="Adding new actions to the export menu" href="tutorials/html/EMF_Compare_Export_Tutorial.html" />
 	 </topic>
 	<!--
