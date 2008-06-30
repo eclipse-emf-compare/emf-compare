@@ -135,47 +135,49 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 		final ModelContentMergeTabItem item = dataToItem.get(diff);
 
-		// This is a match, we'll search the first visible element in its tree path
-		final Item treeItem = getVisibleAncestorOf(item.getVisibleItem());
-		if (treeItem == item.getVisibleItem()) {
-			// This is actually a perfect match : the item is visible in the tree and it is the actual
-			// item displayed by the diff
-			result = item;
-		} else {
-			// The item corresponding to the diff is not visible. We'll wrap its
-			// first visible ancestor.
-			result = new ModelContentMergeTabItem(item.getActualItem(), treeItem, item.getCurveColor());
+		if (item != null) {
+    		// This is a match, we'll search the first visible element in its tree path
+    		final Item treeItem = getVisibleAncestorOf(item.getVisibleItem());
+    		if (treeItem == item.getVisibleItem()) {
+    			// This is actually a perfect match : the item is visible in the tree and it is the actual
+    			// item displayed by the diff
+    			result = item;
+    		} else {
+    			// The item corresponding to the diff is not visible. We'll wrap its
+    			// first visible ancestor.
+    			result = new ModelContentMergeTabItem(item.getActualItem(), treeItem, item.getCurveColor());
+    		}
+    
+    		// we should have found an item. sets the curve width and Y coordinate
+    		final int curveY;
+    		if (result.getActualItem() == result.getVisibleItem()) {
+    			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
+    			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
+    			else
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height / 2;
+    			result.setCurveY(curveY);
+    		} else {
+    			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
+    			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
+    			else
+    				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
+    						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
+    			result.setCurveY(curveY);
+    		}
+    		if (getSelectedElements().contains(result.getActualItem()))
+    			result.setCurveSize(2);
+    		else
+    			result.setCurveSize(1);
 		}
-
-		// we should have found an item. sets the curve width and Y coordinate
-		final int curveY;
-		if (result.getActualItem() == result.getVisibleItem()) {
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
-			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
-			else
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height / 2;
-			result.setCurveY(curveY);
-		} else {
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
-			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
-			else
-				curveY = ((TreeItem)result.getVisibleItem()).getBounds().y
-						+ ((TreeItem)result.getVisibleItem()).getBounds().height;
-			result.setCurveY(curveY);
-		}
-		if (getSelectedElements().contains(result.getActualItem()))
-			result.setCurveSize(2);
-		else
-			result.setCurveSize(1);
 
 		return result;
 	}
