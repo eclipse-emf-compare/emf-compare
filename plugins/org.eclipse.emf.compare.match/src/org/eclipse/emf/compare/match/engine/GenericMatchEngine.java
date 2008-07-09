@@ -1134,7 +1134,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
-	 * not match since not returned by {@link EObject#eContents()}. This allows us to return the list of all
+	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
 	 * contents from an EObject <u>including</u> those references.
 	 * 
 	 * @param eObject
@@ -1208,6 +1208,8 @@ public class GenericMatchEngine implements IMatchEngine {
 						EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW) > 0)
 			searchWindow = EMFComparePlugin.getDefault().getInt(
 					EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW);
+		if (searchWindow < 0)
+			searchWindow = 0;
 		return searchWindow;
 	}
 
@@ -1259,6 +1261,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void loadOptionMap(Map<String, Object> map) {
 		options.putAll(map);
+		if (this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW) < 0)
+			options.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
 	}
 
 	/**
@@ -1491,7 +1495,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
 		while (features.hasNext()) {
 			final EStructuralFeature feature = features.next();
-			if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) //$NON-NLS-1$
+			if (eobj.eGet(feature) != null && !eobj.eGet(feature).toString().equals("")) //$NON-NLS-1$
 				nonNullFeatures++;
 		}
 		return nonNullFeatures;

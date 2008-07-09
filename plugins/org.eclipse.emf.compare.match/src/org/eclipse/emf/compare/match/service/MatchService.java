@@ -79,7 +79,8 @@ public final class MatchService {
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftObject, rightObject, ancestor);
+		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource(), ancestor
+				.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.contentMatch(leftObject, rightObject, ancestor, options);
 	}
@@ -103,7 +104,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftObject, rightObject);
+		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.contentMatch(leftObject, rightObject, options);
 	}
@@ -127,7 +128,8 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftRoot, rightRoot, ancestor);
+		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource(), ancestor
+				.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.modelMatch(leftRoot, rightRoot, ancestor, options);
 	}
@@ -149,7 +151,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> options)
 			throws InterruptedException {
-		final String extension = getBestExtension(leftRoot, rightRoot);
+		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.modelMatch(leftRoot, rightRoot, options);
 	}
@@ -173,11 +175,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> options) throws InterruptedException {
-		String extension = DEFAULT_EXTENSION;
-		if (leftResource.getURI() != null && leftResource.getURI().fileExtension() != null)
-			extension = leftResource.getURI().fileExtension();
-		else if (rightResource.getURI() != null && rightResource.getURI().fileExtension() != null)
-			extension = rightResource.getURI().fileExtension();
+		final String extension = getBestExtension(leftResource, rightResource);
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.resourceMatch(leftResource, rightResource, options);
 	}
@@ -201,13 +199,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
-		String extension = DEFAULT_EXTENSION;
-		if (leftResource.getURI() != null && leftResource.getURI().fileExtension() != null)
-			extension = leftResource.getURI().fileExtension();
-		else if (rightResource.getURI() != null && rightResource.getURI().fileExtension() != null)
-			extension = rightResource.getURI().fileExtension();
-		else if (ancestorResource.getURI() != null && ancestorResource.getURI().fileExtension() != null)
-			extension = ancestorResource.getURI().fileExtension();
+		final String extension = getBestExtension(leftResource, rightResource, ancestorResource);
 		final IMatchEngine engine = getBestMatchEngine(extension);
 		return engine.resourceMatch(leftResource, rightResource, ancestorResource, options);
 	}
@@ -245,21 +237,25 @@ public final class MatchService {
 	}
 
 	/**
-	 * This will try and find the file extension of the compared models. Left resource is considered before
-	 * the right one which in turns goes before the ancestor. If no file extension can be found, returns
-	 * {@link #DEFAULT_EXTENSION}.
+	 * This will try and find the file extension of the compared models.
+	 * <p>
+	 * When the two extensions are distinct or empty, {@link #DEFAULT_EXTENSION} will be returned.
+	 * </p>
 	 * 
-	 * @param eObjects
-	 *            The EObjects that will be compared.
+	 * @param resources
+	 *            The Resources that will be compared.
 	 * @return The file extension to consider when searching for a match engine.
 	 */
-	private static String getBestExtension(EObject... eObjects) {
-		String extension = DEFAULT_EXTENSION;
-		for (EObject eObj : eObjects) {
-			final Resource resource = eObj.eResource();
-			if (resource != null && resource.getURI() != null && resource.getURI().fileExtension() != null) {
-				extension = resource.getURI().fileExtension();
-				break;
+	private static String getBestExtension(Resource... resources) {
+		String extension = null;
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i].getURI() != null) {
+				if (extension == null)
+					extension = resources[i].getURI().fileExtension();
+				else if (!extension.equals(resources[i].getURI().fileExtension())) {
+					extension = DEFAULT_EXTENSION;
+					break;
+				}
 			}
 		}
 		return extension;

@@ -22,7 +22,7 @@ package org.eclipse.emf.compare.match.api;
  * <tr>
  * <td>{@link #OPTION_DISTINCT_METAMODEL}</td>
  * <td>Specifies whether the models to compare are of the same meta-model. This mainly impact performance by
- * allowing faster check to match elements (no use trying to match an interface and a class).</td>
+ * allowing faster checks to match elements (no use trying to match an interface and a class).</td>
  * <td>Boolean, defaults to <code>false</code></td>
  * </tr>
  * <tr>
@@ -44,7 +44,7 @@ package org.eclipse.emf.compare.match.api;
  * <td>{@link #OPTION_SEARCH_WINDOW}</td>
  * <td>Specifies the number of siblings the match procedure will consider to find similar objects. Higher
  * values increase comparison time, lower values decrease comparison accuracy.</td>
- * <td>Positive integer, defaults to <code>100</code></td>
+ * <td>Positive integer, defaults to <code>100</code>. A negative value will be reset to the default.</td>
  * </tr>
  * </table>
  * </p>
