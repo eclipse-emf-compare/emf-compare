@@ -5,11 +5,11 @@ Adding new actions to the export menu
 :Authors: Laurent Goubet
 :Contact: laurent.goubet@obeo.fr
 
-.. contents:: Table Of Contents
-
 .. include:: <isonum.txt>
 
 Copyright |copy| 2007-2008, Obeo\ |trade|.
+
+.. contents:: Table Of Contents
 
 Source Code
 -----------

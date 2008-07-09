@@ -1,15 +1,15 @@
-========================
+=======================
  EMF Compare User Guide
-========================
+=======================
 
-:Authors: Cédric
+:Authors: Cédric Brun
 :Contact: cedric.brun@obeo.fr
-
-.. contents:: Table Of Contents
 
 .. include:: <isonum.txt>
 
 Copyright |copy| 2007-2008, Obeo\ |trade|.
+
+.. contents:: Table Of Contents
 
 Installation
 ============
@@ -20,10 +20,9 @@ or the build bits from the download page  : <http://www.eclipse.org/modeling/emf
 Requirements
 ------------
 EMF Compare depends on:
-#. EMF runtime
-#. Eclipse Platform (if you don't want to run EMF Compare in "standalone mode".
 
- 
+#. EMF runtime
+#. Eclipse Platform (if you don't want to run EMF Compare in "standalone mode").
 
 Configuration
 =============
@@ -38,7 +37,7 @@ You may add your own extension using the Preferences view / Global / Content-typ
 
 Usage
 -----
-Once activated you can compare your file (localy or from any Configuration Management System supported by the Team API) using the "compare with" menu in Eclipse.
+Once activated you can compare your file (locally or from any Configuration Management System supported by the Team API) using the "compare with" menu in Eclipse.
 
 .. image:: ../images/CompareUI.png
 
@@ -53,5 +52,5 @@ The following areas are highlighted in the picture :
 7. Merge all non conflicting differences (left to right or right to left)
 8. Display properties differences
 
-Note that buttons may be disabled depending on whether you are using Configuration Management System or not.
+Note that some actions may be disabled depending on whether you are using VCS or not.
 
