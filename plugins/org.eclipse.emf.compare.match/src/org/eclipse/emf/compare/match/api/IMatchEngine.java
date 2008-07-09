@@ -17,6 +17,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
+/* FIXME ResourceSetMatch **CANNOT** be implemented in a match engine! The
+ * MatchService needs to parse its extension point and call the accurate match
+ * method on each model (distinct extension!!!) for each resource contained
+ * by the resource set!
+ */ 
 /**
  * A Match Engine is responsible for returning a match model from a set of models. The resulting match model
  * is then used to create a diff between the two models.
