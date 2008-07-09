@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.tests.unit.core;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
@@ -26,14 +27,7 @@ import org.eclipse.emf.compare.tests.unit.core.util.modelutils.ModelUtilsTestSui
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
-public final class CoreTestSuite {
-	/**
-	 * Utility classes don't need to (and shouldn't) be instantiated.
-	 */
-	private CoreTestSuite() {
-		// prevents instantiation
-	}
-
+public class CoreTestSuite extends TestCase {
 	/**
 	 * Launches the test with the given arguments.
 	 * 
