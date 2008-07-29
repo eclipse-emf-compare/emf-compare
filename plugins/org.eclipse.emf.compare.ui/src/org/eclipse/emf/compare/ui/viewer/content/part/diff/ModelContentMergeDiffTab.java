@@ -112,7 +112,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		setLabelProvider(new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory()));
 		getTree().addPaintListener(new TreePaintListener());
 
-		// The following listeners will be used to invalidate the cache of visible elements
+		// The following listeners will be used to invalidate the cache of
+		// visible elements
 		getTree().addTreeListener(new TreeListener() {
 			public void treeCollapsed(TreeEvent e) {
 				needsRedraw = true;
@@ -158,7 +159,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	public ModelContentMergeTabItem getUIItem(EObject data) {
 		ModelContentMergeTabItem result = null;
-		// If the diff is hidden by another (diff extension), the item won't be returned
+		// If the diff is hidden by another (diff extension), the item won't be
+		// returned
 		// Same goes for diffs that couldn't be matched
 		final DiffElement diff = dataToDiff.get(data);
 		if (diff != null && DiffAdapterFactory.shouldBeHidden(diff))
@@ -167,14 +169,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		final ModelContentMergeTabItem item = diffToUIItem.get(diff);
 
 		if (item != null) {
-			// This is a match, we'll search the first visible element in its tree path
+			// This is a match, we'll search the first visible element in its
+			// tree path
 			final Item treeItem = getVisibleAncestorOf(item.getVisibleItem());
 			if (treeItem == item.getVisibleItem()) {
-				// This is actually a perfect match : the item is visible in the tree and it is the actual
+				// This is actually a perfect match : the item is visible in the
+				// tree and it is the actual
 				// item displayed by the diff
 				result = item;
 			} else {
-				// The item corresponding to the diff is not visible. We'll wrap its
+				// The item corresponding to the diff is not visible. We'll wrap
+				// its
 				// first visible ancestor.
 				result = new ModelContentMergeTabItem(diff, item.getActualItem(), treeItem, item
 						.getCurveColor());
@@ -201,15 +206,30 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		while (differences.hasNext()) {
 			final DiffElement diff = differences.next();
 			final ModelContentMergeTabItem nextItem = diffToUIItem.get(diff);
+
+			// seeks for a perfect match (item is actually visible)
+			Item visibleMatch = null;
 			for (Item visible : items) {
-				if (nextItem.getActualItem() == visible
-						|| getTreePathFromItem(nextItem.getActualItem()).startsWith(
-								getTreePathFromItem(visible), null)) {
-					nextItem.setVisibleItem(visible);
-					computeUIInfoFor(nextItem);
-					result.add(nextItem);
+				if (nextItem.getActualItem() == visible) {
+					visibleMatch = visible;
 					break;
 				}
+			}
+			// or a regular match (ancestor of the item is visible and collapsed)
+			if (visibleMatch == null) {
+				for (Item visible : items) {
+					if (!((TreeItem)visible).getExpanded()
+							&& getTreePathFromItem(nextItem.getActualItem()).startsWith(
+									getTreePathFromItem(visible), null)) {
+						visibleMatch = visible;
+						break;
+					}
+				}
+			}
+			if (visibleMatch != null) {
+				nextItem.setVisibleItem(visibleMatch);
+				computeUIInfoFor(nextItem);
+				result.add(nextItem);
 			}
 		}
 		return result;
@@ -243,7 +263,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#setReflectiveInput(java.lang.Object)
 	 */
 	public void setReflectiveInput(Object object) {
-		// We *need* to invalidate the cache here since setInput() would try to use it otherwise
+		// We *need* to invalidate the cache here since setInput() would try to
+		// use it otherwise
 		dataToDiff.clear();
 		diffToUIItem.clear();
 		dataToTreeItem.clear();
@@ -297,7 +318,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			mapTreeItems();
 			mapDifferences();
 			mapTreeItemsToUI();
-			// won't call this recursively since it could eventually lead to stack overflows
+			// won't call this recursively since it could eventually lead to
+			// stack overflows
 			dataToTreeItem.get(element);
 		}
 		return super.doFindInputItem(element);
@@ -331,7 +353,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 		super.inputChanged(input, oldInput);
 
-		// Expands all items so that we'll be able to find them back (defeats purpose of lazy loading)
+		// Expands all items so that we'll be able to find them back (defeats
+		// purpose of lazy loading)
 		expandAll();
 		setExpandedTreePaths(expandedTreePaths);
 	}
@@ -430,8 +453,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * 
 	 * @param item
 	 *            item we look for a visible ancestor of.
-	 * @return The first container of <tt>item</tt> that is not expanded, the element itself if its
-	 *         container is expanded.
+	 * @return The first container of <tt>item</tt> that is not expanded, the element itself if its container
+	 *         is expanded.
 	 */
 	private Item getVisibleAncestorOf(Item item) {
 		Item result = item;
@@ -460,7 +483,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			final TreeItem topItem = getTree().getTopItem();
 			if (topItem != null) {
 				// We won't go further down than the visible height of the tree,
-				// yet we will take the whole width into account when searching for elements.
+				// yet we will take the whole width into account when searching
+				// for elements.
 				final int treeHeight = getTree().getClientArea().height;
 				final int treeWidth = getTree().getBounds().width;
 				final int itemHeight = topItem.getBounds().height;
@@ -468,23 +492,27 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 				visibleItems.add(topItem);
 
-				// The loop will start at the element directly following the "top" one,
+				// The loop will start at the element directly following the
+				// "top" one,
 				// And we'll go down to one item more than there are in the tree
 				final int loopStart = topItem.getBounds().y + itemHeight + itemHeight / 2;
 				final int loopEnd = treeHeight;
 				for (int i = loopStart; i <= loopEnd; i += itemHeight) {
 					TreeItem next = null;
-					// we'll try and seek on all the line, thus increasing x on each iteration
+					// we'll try and seek on all the line, thus increasing x on
+					// each iteration
 					for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 1) {
 						next = getTree().getItem(new Point(xCoord, i));
-						// We found the item, it is unnecessary to probe any further on the line
+						// We found the item, it is unnecessary to probe any
+						// further on the line
 						if (next != null)
 							break;
 					}
 					if (next != null) {
 						visibleItems.add(next);
 					} else {
-						// We did not found an item, it is thus useless to probe any further down
+						// We did not found an item, it is thus useless to probe
+						// any further down
 						break;
 					}
 				}
@@ -543,7 +571,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			if (data != null)
 				dataToDiff.put(data, diff);
 			else
-				// TODO for now, we're using the first item's data, we should look for the matchedElement
+				// TODO for now, we're using the first item's data, we should
+				// look for the matchedElement
 				dataToDiff.put((EObject)getTree().getItems()[0].getData(), diff);
 		}
 	}
@@ -578,7 +607,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			else
 				data = EMFCompareEObjectUtils.getRightElement(diff);
 			if (data == null)
-				// TODO for now, we're using the first item's data, we should look for the matchedElement
+				// TODO for now, we're using the first item's data, we should
+				// look for the matchedElement
 				data = (EObject)getTree().getItems()[0].getData();
 			final Item actualItem = (Item)findItem(data);
 			if (actualItem == null)
@@ -600,8 +630,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					visibleItem = (Item)findItem(left.eContents().get(leftIndex));
 			} else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget
 					&& ((ModelElementChangeLeftTarget)diff).getLeftElement().eContainer() != null) {
-				// in the case of a modelElementChangeLeftTarget, we know we can't find
-				// the element itself, we'll then search for one with the same index
+				// in the case of a modelElementChangeLeftTarget, we know we
+				// can't find
+				// the element itself, we'll then search for one with the same
+				// index
 				final EObject right = ((ModelElementChangeLeftTarget)diff).getRightParent();
 				final EObject left = ((ModelElementChangeLeftTarget)diff).getLeftElement();
 				final int leftIndex = left.eContainer().eContents().indexOf(left);
@@ -611,7 +643,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					visibleItem = (Item)findItem(right.eContents().get(rightIndex));
 			}
 
-			// and now the color which should be used for this kind of differences
+			// and now the color which should be used for this kind of
+			// differences
 			final String color;
 			if (diff.getKind() == DifferenceKind.CONFLICT || diff.isConflicting()) {
 				color = EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR;
@@ -666,7 +699,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			// Defines the circling Color
 			final RGB color = ModelContentMergeViewer.getColor(item.getCurveColor());
 
-			// We add a margin before the rectangle to circle the "+" as well as the tree line.
+			// We add a margin before the rectangle to circle the "+" as well as
+			// the tree line.
 			final int margin = 60;
 
 			// Defines all variables needed for drawing the rectangle.
