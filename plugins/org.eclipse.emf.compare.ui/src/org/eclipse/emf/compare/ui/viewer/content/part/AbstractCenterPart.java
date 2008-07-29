@@ -51,6 +51,15 @@ public abstract class AbstractCenterPart extends Canvas {
 	 */
 	private double[] baseCenterCurve;
 
+	/** Keeps track of the last visible diffs. */
+	private List<DiffElement> lastVisibleDiffs;
+
+	/** Keeps track of the last "left visible" items list. */
+	private List<ModelContentMergeTabItem> lastLeftVisible;
+
+	/** Keeps track of the last "right visible" items list. */
+	private List<ModelContentMergeTabItem> lastRightVisible;
+
 	/**
 	 * Default constructor, instantiates the canvas given its parent.
 	 * 
@@ -62,7 +71,11 @@ public abstract class AbstractCenterPart extends Canvas {
 
 		final PaintListener paintListener = new PaintListener() {
 			public void paintControl(PaintEvent event) {
+				final long start = System.nanoTime();
 				doubleBufferedPaint(event.gc);
+				final long end = System.nanoTime();
+				System.out.println("paint center " + ((end - start) / 1000000) + " ms.");
+				System.out.println("==nega===================================");
 			}
 		};
 		addPaintListener(paintListener);
@@ -87,7 +100,7 @@ public abstract class AbstractCenterPart extends Canvas {
 	public void dispose() {
 		super.dispose();
 		if (buffer != null) {
-		    buffer.dispose();
+			buffer.dispose();
 		}
 		baseCenterCurve = null;
 	}
@@ -158,51 +171,53 @@ public abstract class AbstractCenterPart extends Canvas {
 	 */
 	protected List<DiffElement> retainVisibleDiffs(List<DiffElement> diffList,
 			List<ModelContentMergeTabItem> leftVisible, List<ModelContentMergeTabItem> rightVisible) {
-		final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(diffList.size());
-		for (ModelContentMergeTabItem left : leftVisible) {
-			for (DiffElement nextDiff : diffList) {
-				if (EMFCompareEObjectUtils.getLeftElement(nextDiff) == left.getActualItem().getData()) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(left
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(left
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
+		if (!leftVisible.equals(lastLeftVisible) || !rightVisible.equals(lastRightVisible)) {
+			lastVisibleDiffs = new ArrayList<DiffElement>(diffList.size());
+			for (ModelContentMergeTabItem left : leftVisible) {
+				for (DiffElement nextDiff : diffList) {
+					if (EMFCompareEObjectUtils.getLeftElement(nextDiff) == left.getActualItem().getData()) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					} else if (nextDiff instanceof AttributeChange
+							&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(left
+									.getActualItem().getData())) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					} else if (nextDiff instanceof ReferenceChange
+							&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(left
+									.getActualItem().getData())) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					}
+				}
+			}
+			for (ModelContentMergeTabItem right : rightVisible) {
+				for (DiffElement nextDiff : diffList) {
+					if (EMFCompareEObjectUtils.getRightElement(nextDiff) == internalFindActualData(right
+							.getActualItem().getData())) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					} else if (nextDiff instanceof AttributeChange
+							&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(right
+									.getActualItem().getData())) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					} else if (nextDiff instanceof ReferenceChange
+							&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(right
+									.getActualItem().getData())) {
+						lastVisibleDiffs.add(nextDiff);
+						diffList.remove(nextDiff);
+						break;
+					}
 				}
 			}
 		}
-		for (ModelContentMergeTabItem right : rightVisible) {
-			for (DiffElement nextDiff : diffList) {
-				if (EMFCompareEObjectUtils.getRightElement(nextDiff) == internalFindActualData(right
-						.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(right
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(right
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				}
-			}
-		}
-		return visibleDiffs;
+		return lastVisibleDiffs;
 	}
 
 	/**
