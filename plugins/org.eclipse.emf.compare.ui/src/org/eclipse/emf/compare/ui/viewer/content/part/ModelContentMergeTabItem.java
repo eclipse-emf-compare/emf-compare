@@ -39,7 +39,7 @@ public final class ModelContentMergeTabItem {
 	private int headerHeight;
 
 	/** The visible item on which will be drawn UI marquees. */
-	private Item visibleItem;
+	private final Item visibleItem;
 
 	/**
 	 * Constructs a wrapper around the given item. This constructor specifies the color to use when drawing UI
@@ -74,8 +74,8 @@ public final class ModelContentMergeTabItem {
 	 * @param curveExpectedSize
 	 *            Size of the center curve for this item.
 	 */
-	public ModelContentMergeTabItem(Item actual, Item visible, String drawingColor,
-			int curveExpectedY, int curveExpectedSize) {
+	public ModelContentMergeTabItem(Item actual, Item visible, String drawingColor, int curveExpectedY,
+			int curveExpectedSize) {
 		actualItem = actual;
 		visibleItem = visible;
 		if (drawingColor == null)
@@ -192,16 +192,6 @@ public final class ModelContentMergeTabItem {
 	 */
 	public void setHeaderHeight(int newHeaderHeight) {
 		headerHeight = newHeaderHeight;
-	}
-
-	/**
-	 * Sets the visible item for this instance.
-	 * 
-	 * @param newVisibleItem
-	 *            New value of the visible Item reference.
-	 */
-	public void setVisibleItem(Item newVisibleItem) {
-		visibleItem = newVisibleItem;
 	}
 
 	/**
