@@ -385,7 +385,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 				// and now the color which should be used for this kind of differences
 				final String color = EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR;
 
-				final ModelContentMergeTabItem wrappedItem = new ModelContentMergeTabItem(item, color);
+				final ModelContentMergeTabItem wrappedItem = new ModelContentMergeTabItem(diff, item, color);
 				String key = ""; //$NON-NLS-1$
 				if (partSide == EMFCompareConstants.LEFT)
 					key = EcoreUtil.getURI(EMFCompareEObjectUtils.getLeftElement(diff)).fragment();

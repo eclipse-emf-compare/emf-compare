@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.content.part;
 
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.swt.widgets.Item;
 
+// TODO Diff should be made optional. What if a tab doesn't display diff-related information?
 /**
  * This class will be used to wrap {@link Item} subclasses such as {@link TreeItem} and {@link TableItem} to
  * allow us to call methods such as <tt>getBounds</tt> without explicitely casting each time we do so.
  * <p>
- * This wrapper will also hold UI information about the way connectors should be drawn between tabs.
+ * This wrapper will allow us to maintain a logical structure of the tree : which TreeItem corresponds to
+ * which difference or visible parent ...
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
@@ -35,16 +38,21 @@ public final class ModelContentMergeTabItem {
 	/** Y coordinate at which the center curve should be connected for this item. */
 	private int curveY;
 
+	/** Holds a reference to the difference represented by the wrapped item. */
+	private final DiffElement difference;
+
 	/** Height of the item's control's header. */
 	private int headerHeight;
 
 	/** The visible item on which will be drawn UI marquees. */
-	private final Item visibleItem;
+	private Item visibleItem;
 
 	/**
 	 * Constructs a wrapper around the given item. This constructor specifies the color to use when drawing UI
 	 * components with this item.
 	 * 
+	 * @param diff
+	 *            Difference represented by this item.
 	 * @param actual
 	 *            The effective item this instance describes.
 	 * @param visible
@@ -53,8 +61,8 @@ public final class ModelContentMergeTabItem {
 	 * @param drawingColor
 	 *            Key of the color to use when drawing UI components for this item.
 	 */
-	public ModelContentMergeTabItem(Item actual, Item visible, String drawingColor) {
-		this(actual, visible, drawingColor, -1, -1);
+	public ModelContentMergeTabItem(DiffElement diff, Item actual, Item visible, String drawingColor) {
+		this(diff, actual, visible, drawingColor, -1, -1);
 	}
 
 	/**
@@ -62,6 +70,8 @@ public final class ModelContentMergeTabItem {
 	 * components with this item as well as the Y coordinate and size of the center curve connected to this
 	 * item.
 	 * 
+	 * @param diff
+	 *            Difference represented by this item.
 	 * @param actual
 	 *            The effective item this instance describes.
 	 * @param visible
@@ -74,8 +84,9 @@ public final class ModelContentMergeTabItem {
 	 * @param curveExpectedSize
 	 *            Size of the center curve for this item.
 	 */
-	public ModelContentMergeTabItem(Item actual, Item visible, String drawingColor, int curveExpectedY,
-			int curveExpectedSize) {
+	public ModelContentMergeTabItem(DiffElement diff, Item actual, Item visible, String drawingColor,
+			int curveExpectedY, int curveExpectedSize) {
+		difference = diff;
 		actualItem = actual;
 		visibleItem = visible;
 		if (drawingColor == null)
@@ -90,13 +101,15 @@ public final class ModelContentMergeTabItem {
 	 * Constructs a wrapper around the given item. This constructor specifies the color to use when drawing UI
 	 * components with this item.
 	 * 
+	 * @param diff
+	 *            Difference represented by this item.
 	 * @param actual
 	 *            The effective item this instance describes.
 	 * @param drawingColor
 	 *            Key of the color to use when drawing UI components for this item.
 	 */
-	public ModelContentMergeTabItem(Item actual, String drawingColor) {
-		this(actual, actual, drawingColor, -1, -1);
+	public ModelContentMergeTabItem(DiffElement diff, Item actual, String drawingColor) {
+		this(diff, actual, actual, drawingColor, -1, -1);
 	}
 
 	/**
@@ -147,6 +160,15 @@ public final class ModelContentMergeTabItem {
 	}
 
 	/**
+	 * Returns the represented difference.
+	 * 
+	 * @return The represented difference.
+	 */
+	public DiffElement getDiff() {
+		return difference;
+	}
+
+	/**
 	 * Returns the height of the item's control header.
 	 * 
 	 * @return The height of the item's control header.
@@ -192,6 +214,16 @@ public final class ModelContentMergeTabItem {
 	 */
 	public void setHeaderHeight(int newHeaderHeight) {
 		headerHeight = newHeaderHeight;
+	}
+
+	/**
+	 * Sets the visible item for this instance.
+	 * 
+	 * @param newVisibleItem
+	 *            New value of the visible Item reference.
+	 */
+	public void setVisibleItem(Item newVisibleItem) {
+		visibleItem = newVisibleItem;
 	}
 
 	/**

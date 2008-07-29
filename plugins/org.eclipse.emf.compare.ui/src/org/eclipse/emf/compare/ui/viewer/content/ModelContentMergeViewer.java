@@ -237,13 +237,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 				public void doPaint(GC gc) {
 					if (!ModelContentMergeViewer.shouldDrawDiffMarkers() || getInput() == null)
 						return;
-					final List<DiffElement> diffList = new ArrayList<DiffElement>(
-							((ModelCompareInput)getInput()).getDiffAsList());
 					final List<ModelContentMergeTabItem> leftVisible = leftPart.getVisibleElements();
 					final List<ModelContentMergeTabItem> rightVisible = rightPart.getVisibleElements();
-					diffList.removeAll(currentSelection);
-					final List<DiffElement> visibleDiffs = retainVisibleDiffs(diffList, leftVisible,
-							rightVisible);
+					final List<DiffElement> visibleDiffs = retainVisibleDiffs(leftVisible, rightVisible);
 					// we don't clear selection when the last diff is merged so this could happen
 					if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null)
 						visibleDiffs.addAll(currentSelection);
@@ -363,7 +359,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			// Avoids warnings "resource has changed ..."
 			setRightDirty(false);
 			setLeftDirty(false);
-	
+
 			((ModelCompareInput)getInput()).copy(leftToRight);
 			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			snap.setDiff(((ModelCompareInput)getInput()).getDiff());

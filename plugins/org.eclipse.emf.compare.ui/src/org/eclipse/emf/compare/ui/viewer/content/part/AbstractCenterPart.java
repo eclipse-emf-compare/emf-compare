@@ -13,15 +13,9 @@ package org.eclipse.emf.compare.ui.viewer.content.part;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
-import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.ContainmentUpdatingFeatureMapEntry;
-import org.eclipse.emf.edit.provider.DelegatingWrapperItemProvider;
-import org.eclipse.emf.edit.provider.FeatureMapEntryWrapperItemProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -50,6 +44,15 @@ public abstract class AbstractCenterPart extends Canvas {
 	 * This array is used to compute the curve to draw between left and right elements.
 	 */
 	private double[] baseCenterCurve;
+
+	/** Keeps track of the last "left visible" items list. */
+	private List<ModelContentMergeTabItem> lastLeftVisible;
+
+	/** Keeps track of the last "right visible" items list. */
+	private List<ModelContentMergeTabItem> lastRightVisible;
+
+	/** Keeps track of the last visible diffs. */
+	private List<DiffElement> lastVisibleDiffs;
 
 	/**
 	 * Default constructor, instantiates the canvas given its parent.
@@ -87,7 +90,7 @@ public abstract class AbstractCenterPart extends Canvas {
 	public void dispose() {
 		super.dispose();
 		if (buffer != null) {
-		    buffer.dispose();
+			buffer.dispose();
 		}
 		baseCenterCurve = null;
 	}
@@ -148,61 +151,24 @@ public abstract class AbstractCenterPart extends Canvas {
 	/**
 	 * This will retain the visible differences in the given list.
 	 * 
-	 * @param diffList
-	 *            List of differences to filter.
 	 * @param leftVisible
 	 *            Items visible on the left part.
 	 * @param rightVisible
 	 *            Items visible on the right part.
 	 * @return Filtered list of DiffElements.
 	 */
-	protected List<DiffElement> retainVisibleDiffs(List<DiffElement> diffList,
-			List<ModelContentMergeTabItem> leftVisible, List<ModelContentMergeTabItem> rightVisible) {
-		final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(diffList.size());
-		for (ModelContentMergeTabItem left : leftVisible) {
-			for (DiffElement nextDiff : diffList) {
-				if (EMFCompareEObjectUtils.getLeftElement(nextDiff) == left.getActualItem().getData()) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(left
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(left
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				}
+	protected List<DiffElement> retainVisibleDiffs(List<ModelContentMergeTabItem> leftVisible,
+			List<ModelContentMergeTabItem> rightVisible) {
+		if (!leftVisible.equals(lastLeftVisible) || !rightVisible.equals(lastRightVisible)) {
+			lastVisibleDiffs = new ArrayList<DiffElement>(leftVisible.size() + rightVisible.size());
+			for (ModelContentMergeTabItem left : leftVisible) {
+				lastVisibleDiffs.add(left.getDiff());
+			}
+			for (ModelContentMergeTabItem right : rightVisible) {
+				lastVisibleDiffs.add(right.getDiff());
 			}
 		}
-		for (ModelContentMergeTabItem right : rightVisible) {
-			for (DiffElement nextDiff : diffList) {
-				if (EMFCompareEObjectUtils.getRightElement(nextDiff) == internalFindActualData(right
-						.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof AttributeChange
-						&& ((AttributeChange)nextDiff).getAttribute() == internalFindActualData(right
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				} else if (nextDiff instanceof ReferenceChange
-						&& ((ReferenceChange)nextDiff).getReference() == internalFindActualData(right
-								.getActualItem().getData())) {
-					visibleDiffs.add(nextDiff);
-					diffList.remove(nextDiff);
-					break;
-				}
-			}
-		}
-		return visibleDiffs;
+		return lastVisibleDiffs;
 	}
 
 	/**
@@ -284,24 +250,5 @@ public abstract class AbstractCenterPart extends Canvas {
 			points[i] = (int)(-height * baseCenterCurve[i] + height + starty);
 		}
 		return points;
-	}
-
-	/**
-	 * This will seek out the first value of the given Object that is not instance of either
-	 * FeatureMapEntryWrapperItemProvider or DelegatingWrapperItemProvider.
-	 * 
-	 * @param data
-	 *            The data we seek the actual value of.
-	 * @return Actual value of the given TreeItem's data.
-	 */
-	private Object internalFindActualData(Object data) {
-		Object actualData = data;
-		if (data instanceof FeatureMapEntryWrapperItemProvider)
-			actualData = internalFindActualData(((FeatureMapEntryWrapperItemProvider)data).getValue());
-		else if (data instanceof DelegatingWrapperItemProvider)
-			actualData = internalFindActualData(((DelegatingWrapperItemProvider)data).getValue());
-		else if (data instanceof ContainmentUpdatingFeatureMapEntry)
-			actualData = ((ContainmentUpdatingFeatureMapEntry)data).getValue();
-		return actualData;
 	}
 }
