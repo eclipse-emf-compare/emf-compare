@@ -49,21 +49,25 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.events.TreeListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Represents the tree view under a {@link ModelContentMergeTabFolder}'s diff tab.
+ * Represents the tree view under a {@link ModelContentMergeTabFolder}'s diff
+ * tab.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class ModelContentMergeDiffTab extends TreeViewer implements IModelContentMergeViewerTab {
+public class ModelContentMergeDiffTab extends TreeViewer implements
+		IModelContentMergeViewerTab {
 	/** Tells the tree viewer it needs to be redrawn. */
 	protected boolean needsRedraw = true;
 
@@ -80,8 +84,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	private final Map<EObject, DiffElement> dataToDiff = new EMFCompareMap<EObject, DiffElement>();
 
 	/**
-	 * Maps a TreeItem to its data. We're compelled to map the Tree like this because of EMF's FeatureMapEntry
-	 * which default TreeViewers cannot handle accurately.
+	 * Maps a TreeItem to its data. We're compelled to map the Tree like this
+	 * because of EMF's FeatureMapEntry which default TreeViewers cannot handle
+	 * accurately.
 	 */
 	private final Map<Object, TreeItem> dataToTreeItem = new EMFCompareMap<Object, TreeItem>();
 
@@ -103,13 +108,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	public ModelContentMergeDiffTab(Composite parentComposite, int side,
 			ModelContentMergeTabFolder parentFolder) {
-		super(new Tree(parentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL));
+		super(new Tree(parentComposite, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.DOUBLE_BUFFERED));
 		partSide = side;
 		parent = parentFolder;
 
 		setUseHashlookup(true);
-		setContentProvider(new AdapterFactoryContentProvider(AdapterUtils.getAdapterFactory()));
-		setLabelProvider(new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory()));
+		setContentProvider(new AdapterFactoryContentProvider(AdapterUtils
+				.getAdapterFactory()));
+		setLabelProvider(new AdapterFactoryLabelProvider(AdapterUtils
+				.getAdapterFactory()));
 		getTree().addPaintListener(new TreePaintListener());
 
 		// The following listeners will be used to invalidate the cache of
@@ -127,6 +135,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				needsRedraw = true;
+				redraw();
 			}
 		});
 	}
@@ -181,8 +190,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				// The item corresponding to the diff is not visible. We'll wrap
 				// its
 				// first visible ancestor.
-				result = new ModelContentMergeTabItem(diff, item.getActualItem(), treeItem, item
-						.getCurveColor());
+				result = new ModelContentMergeTabItem(diff, item
+						.getActualItem(), treeItem, item.getCurveColor());
 			}
 			computeUIInfoFor(result);
 		}
@@ -202,7 +211,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			return result;
 
 		final List<Item> items = getVisibleTreeItems();
-		final Iterator<DiffElement> differences = diffToUIItem.keySet().iterator();
+		final Iterator<DiffElement> differences = diffToUIItem.keySet()
+				.iterator();
 		while (differences.hasNext()) {
 			final DiffElement diff = differences.next();
 			final ModelContentMergeTabItem nextItem = diffToUIItem.get(diff);
@@ -215,12 +225,14 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					break;
 				}
 			}
-			// or a regular match (ancestor of the item is visible and collapsed)
+			// or a regular match (ancestor of the item is visible and
+			// collapsed)
 			if (visibleMatch == null) {
 				for (Item visible : items) {
-					if (!((TreeItem)visible).getExpanded()
-							&& getTreePathFromItem(nextItem.getActualItem()).startsWith(
-									getTreePathFromItem(visible), null)) {
+					if (!((TreeItem) visible).getExpanded()
+							&& getTreePathFromItem(nextItem.getActualItem())
+									.startsWith(getTreePathFromItem(visible),
+											null)) {
 						visibleMatch = visible;
 						break;
 					}
@@ -247,7 +259,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.ColumnViewer#refresh(java.lang.Object, boolean)
+	 * @see org.eclipse.jface.viewers.ColumnViewer#refresh(java.lang.Object,
+	 *      boolean)
 	 */
 	@Override
 	public void refresh(Object element, boolean updateLabels) {
@@ -272,7 +285,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
 		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 		if (object instanceof EObject)
-			setInput(((EObject)object).eResource());
+			setInput(((EObject) object).eResource());
 		else {
 			assert object instanceof Resource;
 			setInput(object);
@@ -284,8 +297,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * Ensures the first element of the given list of items is visible in the tree, and sets the tree's
-	 * selection to this list.
+	 * Ensures the first element of the given list of items is visible in the
+	 * tree, and sets the tree's selection to this list.
 	 * 
 	 * @param items
 	 *            Items to make visible.
@@ -293,14 +306,18 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public void showItems(List<DiffElement> items) {
 		final List<EObject> datas = new ArrayList<EObject>();
 		for (int i = 0; i < items.size(); i++) {
-			if (partSide == EMFCompareConstants.ANCESTOR && items.get(i) instanceof ConflictingDiffElement)
-				datas.add(((ConflictingDiffElement)items.get(i)).getOriginElement());
+			if (partSide == EMFCompareConstants.ANCESTOR
+					&& items.get(i) instanceof ConflictingDiffElement)
+				datas.add(((ConflictingDiffElement) items.get(i))
+						.getOriginElement());
 			else if (partSide == EMFCompareConstants.LEFT)
 				datas.add(EMFCompareEObjectUtils.getLeftElement(items.get(i)));
 			else
 				datas.add(EMFCompareEObjectUtils.getRightElement(items.get(i)));
 		}
 		setSelection(new StructuredSelection(datas), true);
+		needsRedraw = true;
+		redraw();
 	}
 
 	/**
@@ -345,7 +362,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.jface.viewers.AbstractTreeViewer#inputChanged(java.lang.Object,
+	 *      java.lang.Object)
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
@@ -372,14 +390,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		for (Object data : l) {
 			Widget widget = null;
 			if (data instanceof EObject)
-				widget = findItemForEObject((EObject)data);
+				widget = findItemForEObject((EObject) data);
 			else if (data instanceof TreePath)
-				widget = findItemForEObject((EObject)((TreePath)data).getLastSegment());
+				widget = findItemForEObject((EObject) ((TreePath) data)
+						.getLastSegment());
 			else if (data != null)
 				widget = findItem(data);
 			if (widget != null && widget instanceof TreeItem) {
-				newSelection.add((TreeItem)widget);
-				if (((TreeItem)widget).getExpanded() && getChildren(widget).length > 0)
+				newSelection.add((TreeItem) widget);
+				if (((TreeItem) widget).getExpanded()
+						&& getChildren(widget).length > 0)
 					expandToLevel(data, 1);
 			}
 		}
@@ -390,8 +410,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * This will compute the necessary GUI information for the given {@link ModelContentMergeTabItem} given
-	 * the diff it represents.
+	 * This will compute the necessary GUI information for the given
+	 * {@link ModelContentMergeTabItem} given the diff it represents.
 	 * 
 	 * @param item
 	 *            The item which UI information is to be set.
@@ -400,26 +420,31 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		final int curveY;
 		final DiffElement diff = item.getDiff();
 		if (item.getActualItem() == item.getVisibleItem()) {
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
-			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
+			if (partSide == EMFCompareConstants.LEFT
+					&& diff instanceof ModelElementChangeRightTarget)
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height;
+			else if (partSide == EMFCompareConstants.RIGHT
+					&& diff instanceof ModelElementChangeLeftTarget)
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height;
 			else
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height / 2;
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height
+						/ 2;
 			item.setCurveY(curveY);
 		} else {
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget)
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
-			else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget)
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
+			if (partSide == EMFCompareConstants.LEFT
+					&& diff instanceof ModelElementChangeRightTarget)
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height;
+			else if (partSide == EMFCompareConstants.RIGHT
+					&& diff instanceof ModelElementChangeLeftTarget)
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height;
 			else
-				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
+				curveY = ((TreeItem) item.getVisibleItem()).getBounds().y
+						+ ((TreeItem) item.getVisibleItem()).getBounds().height;
 			item.setCurveY(curveY);
 		}
 		if (getSelectedElements().contains(item.getActualItem()))
@@ -429,7 +454,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * Returns the Item corresponding to the given EObject or its container if none can be found.
+	 * Returns the Item corresponding to the given EObject or its container if
+	 * none can be found.
 	 * 
 	 * @param element
 	 *            {@link EObject} to seek in the tree.
@@ -449,19 +475,21 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * Returns a visible ancestor of the given item. Will return the first container that is not expanded.
+	 * Returns a visible ancestor of the given item. Will return the first
+	 * container that is not expanded.
 	 * 
 	 * @param item
 	 *            item we look for a visible ancestor of.
-	 * @return The first container of <tt>item</tt> that is not expanded, the element itself if its container
-	 *         is expanded.
+	 * @return The first container of <tt>item</tt> that is not expanded, the
+	 *         element itself if its container is expanded.
 	 */
 	private Item getVisibleAncestorOf(Item item) {
 		Item result = item;
 		final TreePath path = getTreePathFromItem(item);
 		if (path.getSegmentCount() > 1) {
 			for (int i = 0; i < path.getSegmentCount(); i++) {
-				final TreeItem ancestor = (TreeItem)findItem(path.getSegment(i));
+				final TreeItem ancestor = (TreeItem) findItem(path
+						.getSegment(i));
 				if (!ancestor.getExpanded()) {
 					result = ancestor;
 					break;
@@ -495,13 +523,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				// The loop will start at the element directly following the
 				// "top" one,
 				// And we'll go down to one item more than there are in the tree
-				final int loopStart = topItem.getBounds().y + itemHeight + itemHeight / 2;
+				final int loopStart = topItem.getBounds().y + itemHeight
+						+ itemHeight / 2;
 				final int loopEnd = treeHeight;
+				// We can safely assume all items are of the same height
 				for (int i = loopStart; i <= loopEnd; i += itemHeight) {
 					TreeItem next = null;
 					// we'll try and seek on all the line, thus increasing x on
 					// each iteration
-					for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 1) {
+					// For this, we will assume items cannot be more than eight
+					// time smaller than the "top"
+					for (int xCoord = topItem.getBounds().x; xCoord < treeWidth; xCoord += itemWidth >> 3) {
 						next = getTree().getItem(new Point(xCoord, i));
 						// We found the item, it is unnecessary to probe any
 						// further on the line
@@ -522,8 +554,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * This will seek out the first value of the given Object that is not instance of either
-	 * FeatureMapEntryWrapperItemProvider or DelegatingWrapperItemProvider.
+	 * This will seek out the first value of the given Object that is not
+	 * instance of either FeatureMapEntryWrapperItemProvider or
+	 * DelegatingWrapperItemProvider.
 	 * 
 	 * @param data
 	 *            The data we seek the actual value of.
@@ -532,11 +565,13 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	private Object internalFindActualData(Object data) {
 		Object actualData = data;
 		if (data instanceof FeatureMapEntryWrapperItemProvider)
-			actualData = internalFindActualData(((FeatureMapEntryWrapperItemProvider)data).getValue());
+			actualData = internalFindActualData(((FeatureMapEntryWrapperItemProvider) data)
+					.getValue());
 		else if (data instanceof DelegatingWrapperItemProvider)
-			actualData = internalFindActualData(((DelegatingWrapperItemProvider)data).getValue());
+			actualData = internalFindActualData(((DelegatingWrapperItemProvider) data)
+					.getValue());
 		else if (data instanceof ContainmentUpdatingFeatureMapEntry)
-			actualData = ((ContainmentUpdatingFeatureMapEntry)data).getValue();
+			actualData = ((ContainmentUpdatingFeatureMapEntry) data).getValue();
 		return actualData;
 	}
 
@@ -558,12 +593,14 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	private void mapDifferences() {
 		dataToDiff.clear();
-		final Iterator<DiffElement> diffIterator = parent.getDiffAsList().iterator();
+		final Iterator<DiffElement> diffIterator = parent.getDiffAsList()
+				.iterator();
 		while (diffIterator.hasNext()) {
 			final DiffElement diff = diffIterator.next();
 			final EObject data;
-			if (partSide == EMFCompareConstants.ANCESTOR && diff instanceof ConflictingDiffElement)
-				data = ((ConflictingDiffElement)diff).getOriginElement();
+			if (partSide == EMFCompareConstants.ANCESTOR
+					&& diff instanceof ConflictingDiffElement)
+				data = ((ConflictingDiffElement) diff).getOriginElement();
 			else if (partSide == EMFCompareConstants.LEFT)
 				data = EMFCompareEObjectUtils.getLeftElement(diff);
 			else
@@ -573,13 +610,15 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			else
 				// TODO for now, we're using the first item's data, we should
 				// look for the matchedElement
-				dataToDiff.put((EObject)getTree().getItems()[0].getData(), diff);
+				dataToDiff.put((EObject) getTree().getItems()[0].getData(),
+						diff);
 		}
 	}
 
 	/**
-	 * This will map this TreeViewer's TreeItems to their data. We need to do this in order to find the items
-	 * associated to {@link FeatureMapEntry}s since default TreeViewers cannot handle such data.
+	 * This will map this TreeViewer's TreeItems to their data. We need to do
+	 * this in order to find the items associated to {@link FeatureMapEntry}s
+	 * since default TreeViewers cannot handle such data.
 	 */
 	private void mapTreeItems() {
 		dataToTreeItem.clear();
@@ -590,9 +629,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	}
 
 	/**
-	 * This will map all the TreeItems in this TreeViewer that need be taken into account when drawing diff
-	 * markers to a corresponding ModelContentMergeTabItem. This will allow us to browse everything once and
-	 * for all.
+	 * This will map all the TreeItems in this TreeViewer that need be taken
+	 * into account when drawing diff markers to a corresponding
+	 * ModelContentMergeTabItem. This will allow us to browse everything once
+	 * and for all.
 	 */
 	private void mapTreeItemsToUI() {
 		diffToUIItem.clear();
@@ -600,8 +640,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			final DiffElement diff = dataToDiff.get(key);
 			// Defines the TreeItem corresponding to this difference
 			EObject data;
-			if (partSide == EMFCompareConstants.ANCESTOR && diff instanceof ConflictingDiffElement)
-				data = ((ConflictingDiffElement)diff).getOriginElement();
+			if (partSide == EMFCompareConstants.ANCESTOR
+					&& diff instanceof ConflictingDiffElement)
+				data = ((ConflictingDiffElement) diff).getOriginElement();
 			else if (partSide == EMFCompareConstants.LEFT)
 				data = EMFCompareEObjectUtils.getLeftElement(diff);
 			else
@@ -609,44 +650,59 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			if (data == null)
 				// TODO for now, we're using the first item's data, we should
 				// look for the matchedElement
-				data = (EObject)getTree().getItems()[0].getData();
-			final Item actualItem = (Item)findItem(data);
+				data = (EObject) getTree().getItems()[0].getData();
+			final Item actualItem = (Item) findItem(data);
 			if (actualItem == null)
 				return;
 
 			Item visibleItem = null;
-			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget
-					&& ((ModelElementChangeRightTarget)diff).getRightElement().eContainer() != null) {
+			if (partSide == EMFCompareConstants.LEFT
+					&& diff instanceof ModelElementChangeRightTarget
+					&& ((ModelElementChangeRightTarget) diff).getRightElement()
+							.eContainer() != null) {
 				// in the case of a modelElementChangeRightTarget, we know we
 				// can't find
 				// the element itself, we'll then search for one with the same
 				// index
-				final EObject right = ((ModelElementChangeRightTarget)diff).getRightElement();
-				final EObject left = ((ModelElementChangeRightTarget)diff).getLeftParent();
-				final int rightIndex = right.eContainer().eContents().indexOf(right);
+				final EObject right = ((ModelElementChangeRightTarget) diff)
+						.getRightElement();
+				final EObject left = ((ModelElementChangeRightTarget) diff)
+						.getLeftParent();
+				final int rightIndex = right.eContainer().eContents().indexOf(
+						right);
 				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int leftIndex = Math.min(rightIndex - 1, left.eContents().size() - 1);
+				final int leftIndex = Math.min(rightIndex - 1, left.eContents()
+						.size() - 1);
 				if (left.eContents().size() > 0)
-					visibleItem = (Item)findItem(left.eContents().get(leftIndex));
-			} else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget
-					&& ((ModelElementChangeLeftTarget)diff).getLeftElement().eContainer() != null) {
+					visibleItem = (Item) findItem(left.eContents().get(
+							leftIndex));
+			} else if (partSide == EMFCompareConstants.RIGHT
+					&& diff instanceof ModelElementChangeLeftTarget
+					&& ((ModelElementChangeLeftTarget) diff).getLeftElement()
+							.eContainer() != null) {
 				// in the case of a modelElementChangeLeftTarget, we know we
 				// can't find
 				// the element itself, we'll then search for one with the same
 				// index
-				final EObject right = ((ModelElementChangeLeftTarget)diff).getRightParent();
-				final EObject left = ((ModelElementChangeLeftTarget)diff).getLeftElement();
-				final int leftIndex = left.eContainer().eContents().indexOf(left);
+				final EObject right = ((ModelElementChangeLeftTarget) diff)
+						.getRightParent();
+				final EObject left = ((ModelElementChangeLeftTarget) diff)
+						.getLeftElement();
+				final int leftIndex = left.eContainer().eContents().indexOf(
+						left);
 				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int rightIndex = Math.max(0, Math.min(leftIndex - 1, right.eContents().size() - 1));
+				final int rightIndex = Math.max(0, Math.min(leftIndex - 1,
+						right.eContents().size() - 1));
 				if (right.eContents().size() > 0)
-					visibleItem = (Item)findItem(right.eContents().get(rightIndex));
+					visibleItem = (Item) findItem(right.eContents().get(
+							rightIndex));
 			}
 
 			// and now the color which should be used for this kind of
 			// differences
 			final String color;
-			if (diff.getKind() == DifferenceKind.CONFLICT || diff.isConflicting()) {
+			if (diff.getKind() == DifferenceKind.CONFLICT
+					|| diff.isConflicting()) {
 				color = EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR;
 			} else if (diff.getKind() == DifferenceKind.ADDITION) {
 				color = EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR;
@@ -657,16 +713,18 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 			final ModelContentMergeTabItem wrappedItem;
 			if (visibleItem != null)
-				wrappedItem = new ModelContentMergeTabItem(diff, actualItem, visibleItem, color);
+				wrappedItem = new ModelContentMergeTabItem(diff, actualItem,
+						visibleItem, color);
 			else
-				wrappedItem = new ModelContentMergeTabItem(diff, actualItem, color);
+				wrappedItem = new ModelContentMergeTabItem(diff, actualItem,
+						color);
 			diffToUIItem.put(diff, wrappedItem);
 		}
 	}
 
 	/**
-	 * This implementation of {@link PaintListener} handles the drawing of blocks around modified members in
-	 * the tree tab.
+	 * This implementation of {@link PaintListener} handles the drawing of
+	 * blocks around modified members in the tree tab.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
@@ -679,7 +737,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		public void paintControl(PaintEvent event) {
 			if (ModelContentMergeViewer.shouldDrawDiffMarkers()) {
 				for (ModelContentMergeTabItem item : getVisibleElements()) {
-					drawRectangle(event, item);
+					drawRectangle(event.gc, item);
 				}
 			}
 		}
@@ -690,14 +748,17 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		 * @param event
 		 *            {@link PaintEvent} that triggered this operation.
 		 * @param item
-		 *            Item that need to be circled and connected to the center part.
+		 *            Item that need to be circled and connected to the center
+		 *            part.
 		 */
-		private void drawRectangle(PaintEvent event, ModelContentMergeTabItem item) {
+		private void drawRectangle(GC gc, ModelContentMergeTabItem item) {
 			final Rectangle treeBounds = getTree().getClientArea();
-			final Rectangle treeItemBounds = ((TreeItem)item.getVisibleItem()).getBounds();
+			final Rectangle treeItemBounds = ((TreeItem) item.getVisibleItem())
+					.getBounds();
 
 			// Defines the circling Color
-			final RGB color = ModelContentMergeViewer.getColor(item.getCurveColor());
+			final RGB color = ModelContentMergeViewer.getColor(item
+					.getCurveColor());
 
 			// We add a margin before the rectangle to circle the "+" as well as
 			// the tree line.
@@ -712,42 +773,49 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			final int rectangleArcHeight = 5;
 
 			// Performs the actual drawing
-			event.gc.setLineWidth(item.getCurveSize());
-			event.gc.setForeground(new Color(getTree().getDisplay(), color));
+			gc.setLineWidth(item.getCurveSize());
+			gc.setForeground(new Color(getTree().getDisplay(), color));
 			if (partSide == EMFCompareConstants.LEFT) {
-				if (item.getCurveY() != treeItemBounds.y + treeItemBounds.height / 2) {
-					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, item.getCurveY(), treeBounds.width + treeBounds.x, item
-							.getCurveY());
-				} else {
-					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
-							rectangleArcWidth, rectangleArcHeight);
-					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(), treeBounds.width
+				if (item.getCurveY() != treeItemBounds.y
+						+ treeItemBounds.height / 2) {
+					gc.setLineStyle(SWT.LINE_SOLID);
+					gc.drawLine(rectangleX, item.getCurveY(), treeBounds.width
 							+ treeBounds.x, item.getCurveY());
+				} else {
+					gc.setLineStyle(SWT.LINE_DASHDOT);
+					gc.drawRoundRectangle(rectangleX, rectangleY,
+							rectangleWidth, rectangleHeight, rectangleArcWidth,
+							rectangleArcHeight);
+					gc.setLineStyle(SWT.LINE_SOLID);
+					gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(),
+							treeBounds.width + treeBounds.x, item.getCurveY());
 				}
 			} else if (partSide == EMFCompareConstants.RIGHT) {
-				if (item.getCurveY() != treeItemBounds.y + treeItemBounds.height / 2) {
-					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(), treeBounds.x, item
-							.getCurveY());
+				if (item.getCurveY() != treeItemBounds.y
+						+ treeItemBounds.height / 2) {
+					gc.setLineStyle(SWT.LINE_SOLID);
+					gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(),
+							treeBounds.x, item.getCurveY());
 				} else {
-					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
-							rectangleArcWidth, rectangleArcHeight);
-					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX, item.getCurveY(), treeBounds.x, item.getCurveY());
+					gc.setLineStyle(SWT.LINE_DASHDOT);
+					gc.drawRoundRectangle(rectangleX, rectangleY,
+							rectangleWidth, rectangleHeight, rectangleArcWidth,
+							rectangleArcHeight);
+					gc.setLineStyle(SWT.LINE_SOLID);
+					gc.drawLine(rectangleX, item.getCurveY(), treeBounds.x,
+							item.getCurveY());
 				}
 			} else {
-				if (item.getCurveY() != treeItemBounds.y + treeItemBounds.height / 2) {
-					event.gc.setLineStyle(SWT.LINE_SOLID);
-					event.gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(), rectangleX, item
-							.getCurveY());
+				if (item.getCurveY() != treeItemBounds.y
+						+ treeItemBounds.height / 2) {
+					gc.setLineStyle(SWT.LINE_SOLID);
+					gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(),
+							rectangleX, item.getCurveY());
 				} else {
-					event.gc.setLineStyle(SWT.LINE_DASHDOT);
-					event.gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
-							rectangleArcWidth, rectangleArcHeight);
+					gc.setLineStyle(SWT.LINE_DASHDOT);
+					gc.drawRoundRectangle(rectangleX, rectangleY,
+							rectangleWidth, rectangleHeight, rectangleArcWidth,
+							rectangleArcHeight);
 				}
 			}
 		}
