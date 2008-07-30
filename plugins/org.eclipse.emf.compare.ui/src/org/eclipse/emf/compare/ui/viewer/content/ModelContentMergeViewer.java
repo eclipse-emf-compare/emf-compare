@@ -226,7 +226,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * Returns the center {@link Canvas} appearing between the vewer parts.
+	 * Returns the center {@link Canvas} appearing between the viewer parts.
 	 * 
 	 * @return The center {@link Canvas}.
 	 */
