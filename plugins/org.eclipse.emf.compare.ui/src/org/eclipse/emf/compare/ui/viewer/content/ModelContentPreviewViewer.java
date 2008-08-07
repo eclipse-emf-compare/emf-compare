@@ -1,0 +1,51 @@
+/*******************************************************************************
+ * Copyright (c) 2008 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Moritz Eysholdt <Moritz@Eysholdt.de> - initial API and implementation
+
+ *******************************************************************************/
+package org.eclipse.emf.compare.ui.viewer.content;
+
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareViewerPane;
+import org.eclipse.emf.compare.ui.IModelCompareInputProvider;
+import org.eclipse.ltk.ui.refactoring.ChangePreviewViewerInput;
+import org.eclipse.ltk.ui.refactoring.IChangePreviewViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
+/**
+ * This PreviewVierwer integrates itself into the LTK and thereby makes the {@link ModelContentMergeViewer}
+ * available to visualize diffs within the LTK's refactoring wizard.
+ * 
+ * @author Moritz Eysholdt
+ */
+public class ModelContentPreviewViewer implements IChangePreviewViewer {
+
+	private ModelContentMergeViewer view;
+
+	private CompareViewerPane pane;
+
+	public void createControl(Composite parent) {
+		CompareConfiguration conf = new CompareConfiguration();
+		pane = new CompareViewerPane(parent, SWT.NONE);
+		view = new ModelContentMergeViewer(pane, conf);
+		pane.setContent(view.getControl());
+	}
+
+	public Control getControl() {
+		return pane;
+	}
+
+	public void setInput(ChangePreviewViewerInput in) {
+		IModelCompareInputProvider p = (IModelCompareInputProvider)in.getChange();
+		view.setInput(p.getModelCompareInput());
+	}
+
+}

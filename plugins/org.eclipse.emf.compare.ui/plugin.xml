@@ -66,4 +66,14 @@
             priority="normal">
       </content-type>
    </extension>
+   <extension
+       point="org.eclipse.ltk.ui.refactoring.changePreviewViewers">
+      <changePreviewViewer
+          class="org.eclipse.emf.compare.ui.viewer.content.ModelContentPreviewViewer"
+          id="de.itemis.emf.refacoring.EMFChangePreviewViewer">
+         <enablement>
+            <instanceof value="org.eclipse.emf.compare.ui.IModelCompareInputProvider"/>
+         </enablement>
+      </changePreviewViewer>
+   </extension>
 </plugin>
