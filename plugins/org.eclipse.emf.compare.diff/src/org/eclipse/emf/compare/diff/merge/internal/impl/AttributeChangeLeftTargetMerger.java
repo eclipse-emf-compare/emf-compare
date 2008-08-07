@@ -40,10 +40,10 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject origin = theDiff.getLeftElement();
-		final EObject element = theDiff.getLeftTarget();
+		final Object value = theDiff.getLeftTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eRemove(origin, attr.getName(), element);
+			EFactory.eRemove(origin, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -59,11 +59,10 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	public void undoInTarget() {
 		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject target = theDiff.getRightElement();
-		final EObject element = theDiff.getLeftTarget();
-		final EObject newOne = copy(element);
+		final Object value = theDiff.getLeftTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eAdd(target, attr.getName(), newOne);
+			EFactory.eAdd(target, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}

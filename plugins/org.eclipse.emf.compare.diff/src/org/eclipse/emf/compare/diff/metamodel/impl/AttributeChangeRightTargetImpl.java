@@ -14,8 +14,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -24,13 +22,23 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implements AttributeChangeRightTarget {
+	/**
+	 * The default value of the '{@link #getRightTarget() <em>Right Target</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getRightTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Object RIGHT_TARGET_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -39,10 +47,11 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightTarget;
+	protected Object rightTarget = RIGHT_TARGET_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeRightTargetImpl() {
@@ -51,49 +60,60 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetRightTarget() {
-		return rightTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
-				if (resolve)
-					return getRightTarget();
-				return basicGetRightTarget();
+				return getRightTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
-				return rightTarget != null;
+				return RIGHT_TARGET_EDEFAULT == null ? rightTarget != null : !RIGHT_TARGET_EDEFAULT
+						.equals(rightTarget);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (rightTarget: "); //$NON-NLS-1$
+		result.append(rightTarget);
+		result.append(')');
+		return result.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
-				setRightTarget((EObject)newValue);
+				setRightTarget(newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -101,13 +121,14 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET:
-				setRightTarget((EObject)null);
+				setRightTarget(RIGHT_TARGET_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -115,28 +136,20 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EObject getRightTarget() {
-		if (rightTarget != null && rightTarget.eIsProxy()) {
-			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
-			rightTarget = eResolveProxy(oldRightTarget);
-			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, oldRightTarget,
-							rightTarget));
-			}
-		}
+	public Object getRightTarget() {
 		return rightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public void setRightTarget(EObject newRightTarget) {
-		EObject oldRightTarget = rightTarget;
+	public void setRightTarget(Object newRightTarget) {
+		Object oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
@@ -145,6 +158,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

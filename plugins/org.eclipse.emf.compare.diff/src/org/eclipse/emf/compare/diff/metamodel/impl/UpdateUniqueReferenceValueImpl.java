@@ -27,11 +27,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
@@ -58,6 +58,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateUniqueReferenceValueImpl() {
@@ -66,6 +67,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -74,6 +76,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -82,6 +85,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,6 +105,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -116,6 +121,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -133,6 +139,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -150,6 +157,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -167,6 +175,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
@@ -185,6 +194,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
@@ -197,6 +207,7 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
@@ -206,24 +217,29 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET, oldRightTarget, rightTarget));
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

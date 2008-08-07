@@ -24,25 +24,15 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getRightElement <em>Right Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getRightElement <em>Right Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class UpdateModelElementImpl extends ModelElementChangeImpl implements UpdateModelElement {
-	/**
-	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject leftElement;
-
 	/**
 	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -54,7 +44,18 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 	protected EObject rightElement;
 
 	/**
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLeftElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject leftElement;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateModelElementImpl() {
@@ -63,6 +64,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -71,6 +73,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -79,6 +82,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -98,6 +102,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -113,6 +118,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,6 +136,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -147,6 +154,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -164,6 +172,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -181,6 +190,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -193,6 +203,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -205,6 +216,7 @@ public class UpdateModelElementImpl extends ModelElementChangeImpl implements Up
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

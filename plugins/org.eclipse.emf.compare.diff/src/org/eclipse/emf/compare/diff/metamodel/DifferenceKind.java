@@ -17,19 +17,17 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Difference Kind</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Difference Kind</b></em>',
+ * and utility methods for working with them. <!-- end-user-doc -->
+ * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDifferenceKind()
  * @model
  * @generated
  */
 public enum DifferenceKind implements Enumerator {
 	/**
-	 * The '<em><b>Addition</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>Addition</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #ADDITION_VALUE
 	 * @generated
 	 * @ordered
@@ -37,9 +35,8 @@ public enum DifferenceKind implements Enumerator {
 	ADDITION(0, "Addition", "Addition"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * The '<em><b>Deletion</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>Deletion</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #DELETION_VALUE
 	 * @generated
 	 * @ordered
@@ -47,9 +44,8 @@ public enum DifferenceKind implements Enumerator {
 	DELETION(1, "Deletion", "Deletion"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * The '<em><b>Change</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>Change</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #CHANGE_VALUE
 	 * @generated
 	 * @ordered
@@ -57,19 +53,17 @@ public enum DifferenceKind implements Enumerator {
 	CHANGE(2, "Change", "Change"), //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * The '<em><b>Move</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>Move</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #MOVE_VALUE
 	 * @generated
 	 * @ordered
 	 */
 	MOVE(3, "Move", "Move"), //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
-	 * The '<em><b>Conflict</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The '<em><b>Conflict</b></em>' literal object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #CONFLICT_VALUE
 	 * @generated
 	 * @ordered
@@ -77,13 +71,13 @@ public enum DifferenceKind implements Enumerator {
 	CONFLICT(4, "Conflict", "Conflict"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * The '<em><b>Addition</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>Addition</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Addition</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>Addition</b></em>' literal object isn't clear, there really should be
+	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #ADDITION
 	 * @model name="Addition"
 	 * @generated
@@ -92,13 +86,13 @@ public enum DifferenceKind implements Enumerator {
 	public static final int ADDITION_VALUE = 0;
 
 	/**
-	 * The '<em><b>Deletion</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>Deletion</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Deletion</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>Deletion</b></em>' literal object isn't clear, there really should be
+	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #DELETION
 	 * @model name="Deletion"
 	 * @generated
@@ -107,13 +101,13 @@ public enum DifferenceKind implements Enumerator {
 	public static final int DELETION_VALUE = 1;
 
 	/**
-	 * The '<em><b>Change</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>Change</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Change</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>Change</b></em>' literal object isn't clear, there really should be more
+	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #CHANGE
 	 * @model name="Change"
 	 * @generated
@@ -122,13 +116,13 @@ public enum DifferenceKind implements Enumerator {
 	public static final int CHANGE_VALUE = 2;
 
 	/**
-	 * The '<em><b>Move</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>Move</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Move</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>Move</b></em>' literal object isn't clear, there really should be more
+	 * of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #MOVE
 	 * @model name="Move"
 	 * @generated
@@ -137,13 +131,13 @@ public enum DifferenceKind implements Enumerator {
 	public static final int MOVE_VALUE = 3;
 
 	/**
-	 * The '<em><b>Conflict</b></em>' literal value.
-	 * <!-- begin-user-doc -->
+	 * The '<em><b>Conflict</b></em>' literal value. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of '<em><b>Conflict</b></em>' literal object isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of '<em><b>Conflict</b></em>' literal object isn't clear, there really should be
+	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #CONFLICT
 	 * @model name="Conflict"
 	 * @generated
@@ -152,27 +146,27 @@ public enum DifferenceKind implements Enumerator {
 	public static final int CONFLICT_VALUE = 4;
 
 	/**
-	 * An array of all the '<em><b>Difference Kind</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * An array of all the '<em><b>Difference Kind</b></em>' enumerators. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private static final DifferenceKind[] VALUES_ARRAY = new DifferenceKind[] {ADDITION, DELETION, CHANGE,
 			MOVE, CONFLICT,};
 
 	/**
-	 * A public read-only list of all the '<em><b>Difference Kind</b></em>' enumerators.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * A public read-only list of all the '<em><b>Difference Kind</b></em>' enumerators. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static final List<DifferenceKind> VALUES = Collections.unmodifiableList(Arrays
 			.asList(VALUES_ARRAY));
 
 	/**
-	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified literal value. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static DifferenceKind get(String literal) {
@@ -186,9 +180,9 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified name.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified name. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static DifferenceKind getByName(String name) {
@@ -202,9 +196,9 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified integer value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the '<em><b>Difference Kind</b></em>' literal with the specified integer value. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static DifferenceKind get(int value) {
@@ -224,30 +218,29 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private final String literal;
 
 	/**
-	 * Only this class can construct instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Only this class can construct instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("hiding")
@@ -258,8 +251,8 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public int getValue() {
@@ -267,8 +260,8 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -276,8 +269,8 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getLiteral() {
@@ -285,9 +278,9 @@ public enum DifferenceKind implements Enumerator {
 	}
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * Returns the literal value of the enumerator, which is its string representation. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -295,4 +288,4 @@ public enum DifferenceKind implements Enumerator {
 		return literal;
 	}
 
-} //DifferenceKind
+} // DifferenceKind

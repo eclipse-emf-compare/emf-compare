@@ -14,8 +14,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -24,13 +22,23 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implements AttributeChangeLeftTarget {
+	/**
+	 * The default value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getLeftTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Object LEFT_TARGET_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -39,10 +47,11 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftTarget;
+	protected Object leftTarget = LEFT_TARGET_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeLeftTargetImpl() {
@@ -51,49 +60,60 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetLeftTarget() {
-		return leftTarget;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				if (resolve)
-					return getLeftTarget();
-				return basicGetLeftTarget();
+				return getLeftTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				return leftTarget != null;
+				return LEFT_TARGET_EDEFAULT == null ? leftTarget != null : !LEFT_TARGET_EDEFAULT
+						.equals(leftTarget);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (leftTarget: "); //$NON-NLS-1$
+		result.append(leftTarget);
+		result.append(')');
+		return result.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)newValue);
+				setLeftTarget(newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -101,13 +121,14 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET:
-				setLeftTarget((EObject)null);
+				setLeftTarget(LEFT_TARGET_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -115,27 +136,20 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EObject getLeftTarget() {
-		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
-			leftTarget = eResolveProxy(oldLeftTarget);
-			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
-			}
-		}
+	public Object getLeftTarget() {
 		return leftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
+	public void setLeftTarget(Object newLeftTarget) {
+		Object oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
@@ -144,6 +158,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

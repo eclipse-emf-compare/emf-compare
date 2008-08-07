@@ -22,12 +22,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoveReferenceValueImpl() {
@@ -36,21 +37,26 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl impl
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoveReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoveReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

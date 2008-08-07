@@ -851,7 +851,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject)aValue);
+					operation.setLeftTarget(aValue);
 					root.getSubDiffElements().add(operation);
 					// If the object from the left is not in the right values,
 					// it's been removed since last
@@ -861,7 +861,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject)aValue);
+					operation.setLeftTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -874,7 +874,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject)aValue);
+					operation.setRightTarget(aValue);
 					root.getSubDiffElements().add(operation);
 					// if the object from the right is not in the left values
 					// yet present in the origin, it's
@@ -885,7 +885,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject)aValue);
+					operation.setRightTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -1117,22 +1117,22 @@ public class GenericDiffEngine implements IDiffEngine {
 			final List<?> leftValue = EFactory.eGetAsList(leftElement, attribute.getName());
 			final List<?> rightValue = EFactory.eGetAsList(rightElement, attribute.getName());
 			for (Object aValue : leftValue) {
-				if (!rightValue.contains(aValue) && aValue instanceof EObject) {
+				if (!rightValue.contains(aValue)) {
 					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
-					operation.setLeftTarget((EObject)aValue);
+					operation.setLeftTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
 			for (Object aValue : rightValue) {
-				if (!leftValue.contains(aValue) && aValue instanceof EObject) {
+				if (!leftValue.contains(aValue)) {
 					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
-					operation.setRightTarget((EObject)aValue);
+					operation.setRightTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -1241,7 +1241,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget((EObject)aValue);
+					operation.setLeftTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}
@@ -1255,7 +1255,7 @@ public class GenericDiffEngine implements IDiffEngine {
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget((EObject)aValue);
+					operation.setRightTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
 			}

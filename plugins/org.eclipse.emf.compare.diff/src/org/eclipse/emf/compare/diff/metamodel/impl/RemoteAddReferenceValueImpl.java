@@ -22,13 +22,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoteAddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteAddReferenceValueImpl() {
@@ -37,21 +38,26 @@ public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl i
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoteAddReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoteAddReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -51,34 +51,14 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #isConflicting()
+	 * @see #getSubDiffElements()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean CONFLICTING_EDEFAULT = false;
-
-	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getKind()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final DifferenceKind KIND_EDEFAULT = DifferenceKind.ADDITION;
-
-	/**
-	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #isConflicting()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean conflicting = CONFLICTING_EDEFAULT;
+	protected EList<DiffElement> subDiffElements;
 
 	/**
 	 * The cached value of the '{@link #getIsHiddenBy() <em>Is Hidden By</em>}' reference list. <!--
@@ -91,6 +71,36 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected EList<AbstractDiffExtension> isHiddenBy;
 
 	/**
+	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isConflicting()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CONFLICTING_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isConflicting()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean conflicting = CONFLICTING_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getKind()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final DifferenceKind KIND_EDEFAULT = DifferenceKind.ADDITION;
+
+	/**
 	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -99,16 +109,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * @ordered
 	 */
 	protected DifferenceKind kind = KIND_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getSubDiffElements()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<DiffElement> subDiffElements;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

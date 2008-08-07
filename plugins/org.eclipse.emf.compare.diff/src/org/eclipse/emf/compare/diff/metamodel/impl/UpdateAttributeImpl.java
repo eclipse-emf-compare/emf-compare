@@ -22,13 +22,14 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UpdateAttributeImpl() {
@@ -37,21 +38,26 @@ public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAt
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("UpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"UpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("UpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"UpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

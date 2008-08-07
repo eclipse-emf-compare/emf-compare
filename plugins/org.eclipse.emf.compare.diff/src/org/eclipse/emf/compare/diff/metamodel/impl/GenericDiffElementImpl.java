@@ -13,7 +13,6 @@ package org.eclipse.emf.compare.diff.metamodel.impl;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.GenericDiffElement;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -25,11 +24,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl#getLeftElement <em>Left Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl#getRightElement <em>Right Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl#getLeftElement <em>Left Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl#getRightElement <em>Right Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class GenericDiffElementImpl extends DiffElementImpl implements GenericDiffElement {
@@ -55,6 +54,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected GenericDiffElementImpl() {
@@ -63,6 +63,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftElement() {
@@ -71,6 +72,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightElement() {
@@ -79,6 +81,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -98,6 +101,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -113,6 +117,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,6 +135,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -147,6 +153,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftElement() {
@@ -164,6 +171,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightElement() {
@@ -181,6 +189,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftElement(EObject newLeftElement) {
@@ -193,6 +202,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightElement(EObject newRightElement) {
@@ -205,6 +215,7 @@ public class GenericDiffElementImpl extends DiffElementImpl implements GenericDi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

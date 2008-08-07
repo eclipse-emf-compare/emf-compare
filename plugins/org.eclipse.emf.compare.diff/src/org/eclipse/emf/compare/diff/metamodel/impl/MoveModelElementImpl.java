@@ -27,11 +27,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
@@ -58,6 +58,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected MoveModelElementImpl() {
@@ -66,6 +67,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -74,6 +76,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -82,6 +85,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,6 +105,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -116,6 +121,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -133,6 +139,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -150,6 +157,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -167,6 +175,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
@@ -184,6 +193,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
@@ -196,6 +206,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
@@ -208,21 +219,26 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"MoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

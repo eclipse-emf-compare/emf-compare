@@ -20,13 +20,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class AddModelElementImpl extends ModelElementChangeRightTargetImpl implements AddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AddModelElementImpl() {
@@ -35,7 +36,7 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
@@ -43,9 +44,10 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 	public String toString() {
 		return EMFCompareDiffMessages.getString("AddModelElementImpl.ToString", rightElement); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

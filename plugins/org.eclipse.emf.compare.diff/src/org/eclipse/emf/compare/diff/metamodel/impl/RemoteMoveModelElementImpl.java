@@ -22,13 +22,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements RemoteMoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteMoveModelElementImpl() {
@@ -37,21 +38,26 @@ public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements 
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoteMoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"RemoteMoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

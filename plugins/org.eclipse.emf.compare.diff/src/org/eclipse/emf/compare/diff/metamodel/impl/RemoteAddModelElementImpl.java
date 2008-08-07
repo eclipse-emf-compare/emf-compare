@@ -20,13 +20,14 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoteAddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected RemoteAddModelElementImpl() {
@@ -35,7 +36,7 @@ public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl 
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
@@ -46,6 +47,7 @@ public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

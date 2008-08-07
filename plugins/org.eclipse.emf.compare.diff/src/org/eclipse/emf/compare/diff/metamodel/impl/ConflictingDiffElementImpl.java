@@ -27,12 +27,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getLeftParent <em>Left Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getRightParent <em>Right Parent</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
@@ -48,16 +48,6 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject leftParent;
 
 	/**
-	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getOriginElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected EObject originElement;
-
-	/**
 	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -68,7 +58,18 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 	protected EObject rightParent;
 
 	/**
+	 * The cached value of the '{@link #getOriginElement() <em>Origin Element</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getOriginElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected EObject originElement;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ConflictingDiffElementImpl() {
@@ -77,6 +78,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftParent() {
@@ -85,6 +87,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -93,6 +96,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightParent() {
@@ -101,6 +105,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -124,6 +129,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -141,6 +147,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -161,6 +168,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -181,6 +189,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftParent() {
@@ -198,6 +207,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getOriginElement() {
@@ -216,6 +226,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightParent() {
@@ -233,6 +244,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftParent(EObject newLeftParent) {
@@ -245,6 +257,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
@@ -257,6 +270,7 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightParent(EObject newRightParent) {
@@ -266,24 +280,29 @@ public class ConflictingDiffElementImpl extends DiffElementImpl implements Confl
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.CONFLICTING_DIFF_ELEMENT__RIGHT_PARENT, oldRightParent, rightParent));
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @generated NOT
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
 	 */
 	@Override
 	public String toString() {
 		try {
-			return EMFCompareDiffMessages.getString("ConflictingDiffElementImpl.ToString", NameSimilarity.findName(leftParent), NameSimilarity.findName(rightParent)); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"ConflictingDiffElementImpl.ToString", NameSimilarity.findName(leftParent), NameSimilarity.findName(rightParent)); //$NON-NLS-1$
 		} catch (FactoryException e) {
-			return EMFCompareDiffMessages.getString("ConflictingDiffElementImpl.ToString", leftParent.eClass().getName(), rightParent.eClass().getName()); //$NON-NLS-1$
+			return EMFCompareDiffMessages
+					.getString(
+							"ConflictingDiffElementImpl.ToString", leftParent.eClass().getName(), rightParent.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
