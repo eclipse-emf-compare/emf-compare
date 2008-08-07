@@ -127,7 +127,6 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 			rightValueLabel = "null"; //$NON-NLS-1$
 		else
 			rightValueLabel = AdapterUtils.getItemProviderText(rightValue);
-		
 
 		if (updateRef.isConflicting())
 			return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$

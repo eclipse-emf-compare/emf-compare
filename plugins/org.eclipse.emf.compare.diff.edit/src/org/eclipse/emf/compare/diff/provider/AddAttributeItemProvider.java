@@ -102,11 +102,10 @@ public class AddAttributeItemProvider extends AttributeChangeRightTargetItemProv
 	public String getText(Object object) {
 		final AddAttribute addOp = (AddAttribute)object;
 
-		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getRightTarget());
 		final String attributeLabel = AdapterUtils.getItemProviderText(addOp.getAttribute());
 		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
 
-		return getString("_UI_AddAttribute_type", new Object[] {valueLabel, //$NON-NLS-1$
+		return getString("_UI_AddAttribute_type", new Object[] {addOp.getRightTarget(), //$NON-NLS-1$
 				attributeLabel, elementLabel,});
 	}
 

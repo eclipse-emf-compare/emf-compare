@@ -89,11 +89,10 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 	public String getText(Object object) {
 		final RemoteRemoveAttribute removeOp = (RemoteRemoveAttribute)object;
 
-		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getRightTarget());
 		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 
-		return getString("_UI_RemoteRemoveAttribute_type", new Object[] {valueLabel, attributeLabel, //$NON-NLS-1$
+		return getString("_UI_RemoteRemoveAttribute_type", new Object[] {removeOp.getRightTarget(), attributeLabel, //$NON-NLS-1$
 				elementLabel,});
 	}
 

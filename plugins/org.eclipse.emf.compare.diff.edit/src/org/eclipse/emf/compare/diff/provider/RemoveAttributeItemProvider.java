@@ -104,9 +104,8 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
-		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getLeftTarget());
 
-		return getString("_UI_RemoveAttribute_type", new Object[] {valueLabel, attributeLabel, elementLabel,}); //$NON-NLS-1$
+		return getString("_UI_RemoveAttribute_type", new Object[] {removeOp.getLeftTarget(), attributeLabel, elementLabel,}); //$NON-NLS-1$
 	}
 
 	/**
