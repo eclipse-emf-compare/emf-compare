@@ -382,9 +382,9 @@ public class ModelContentMergeTabFolder {
 
 			if (object instanceof Match3Element) {
 				final Match3Element matchElement = (Match3Element)object;
-				if (element.equals(matchElement.getLeftElement())
-						|| element.equals(matchElement.getRightElement())
-						|| element.equals(matchElement.getOriginElement())) {
+				if (matchElement.getLeftElement().equals(element)
+						|| matchElement.getRightElement().equals(element)
+						|| matchElement.getOriginElement().equals(element)) {
 					theElement = matchElement;
 				}
 			} else if (object instanceof Match2Elements) {

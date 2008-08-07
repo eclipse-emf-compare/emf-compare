@@ -283,13 +283,13 @@ public final class ModelComparator {
 		boolean result = false;
 		if (ancestorElement != input.getAncestor() || leftElement != input.getLeft() || rightElement != input.getRight()) {
 			clear();
-			final ITypedElement left = input.getLeft();
-			final ITypedElement right = input.getRight();
-			final ITypedElement ancestor = input.getAncestor();
+			leftElement = input.getLeft();
+			rightElement = input.getRight();
+			ancestorElement = input.getAncestor();
 	
 			try {
 				// This will be sufficient when comparing local resources
-				result = handleLocalResources(left, right, ancestor);
+				result = handleLocalResources(leftElement, rightElement, ancestorElement);
 				// If resources weren't local, iterates through the registry to find
 				// a proper team handler
 				if (!result) {
@@ -305,7 +305,7 @@ public final class ModelComparator {
 				}
 				// We didn't found a proper handler, use a generic one
 				if (!result)
-					result |= handleGenericResources(left, right, ancestor);
+					result |= handleGenericResources(leftElement, rightElement, ancestorElement);
 				result = true;
 			} catch (IOException e) {
 				EMFComparePlugin.log(e, true);
