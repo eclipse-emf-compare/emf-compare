@@ -72,11 +72,17 @@ public final class ModelComparator {
 	/** This will hold the result of these resources' comparison. */
 	protected ModelInputSnapshot comparisonResult;
 
+	/** Keeps a reference to the last "ancestor" element of the input. */
+	private ITypedElement ancestorElement;
+	
 	/** Resource of the ancestor model used in this comparison. */
 	private Resource ancestorResource;
 
 	/** This will keep track of the handler used by this comparison. */
 	private AbstractTeamHandler comparisonHandler;
+	
+	/** Keeps a reference to the last "left" element of the input. */
+	private ITypedElement leftElement;
 
 	/**
 	 * Indicates that the left compared model is remote and shouldn't be modified.
@@ -85,6 +91,9 @@ public final class ModelComparator {
 
 	/** Resource of the left model used in this comparison. */
 	private Resource leftResource;
+	
+	/** Keeps a reference to the last "right" element of the input. */
+	private ITypedElement rightElement;
 
 	/**
 	 * Indicates that the right compared model is remote and shouldn't be modified. This will only happen if
@@ -271,37 +280,43 @@ public final class ModelComparator {
 	 *         otherwise.
 	 */
 	public boolean loadResources(ICompareInput input) {
-		clear();
-		final ITypedElement left = input.getLeft();
-		final ITypedElement right = input.getRight();
-		final ITypedElement ancestor = input.getAncestor();
-
-		try {
-			// This will be sufficient when comparing local resources
-			boolean result = handleLocalResources(left, right, ancestor);
-			// If resources weren't local, iterates through the registry to find
-			// a proper team handler
-			if (!result) {
-				final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS.iterator();
-				while (handlerDescriptorIterator.hasNext()) {
-					final AbstractTeamHandler handler = handlerDescriptorIterator.next().getHandlerInstance();
-					result |= handler.loadResources(input);
-					if (result) {
-						comparisonHandler = handler;
-						break;
+		boolean result = false;
+		if (ancestorElement != input.getAncestor() || leftElement != input.getLeft() || rightElement != input.getRight()) {
+			clear();
+			final ITypedElement left = input.getLeft();
+			final ITypedElement right = input.getRight();
+			final ITypedElement ancestor = input.getAncestor();
+	
+			try {
+				// This will be sufficient when comparing local resources
+				result = handleLocalResources(left, right, ancestor);
+				// If resources weren't local, iterates through the registry to find
+				// a proper team handler
+				if (!result) {
+					final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS.iterator();
+					while (handlerDescriptorIterator.hasNext()) {
+						final AbstractTeamHandler handler = handlerDescriptorIterator.next().getHandlerInstance();
+						result |= handler.loadResources(input);
+						if (result) {
+							comparisonHandler = handler;
+							break;
+						}
 					}
 				}
+				// We didn't found a proper handler, use a generic one
+				if (!result)
+					result |= handleGenericResources(left, right, ancestor);
+				result = true;
+			} catch (IOException e) {
+				EMFComparePlugin.log(e, true);
+			} catch (CoreException e) {
+				EMFComparePlugin.log(e.getStatus());
 			}
-			// We didn't found a proper handler, use a generic one
-			if (!result)
-				result |= handleGenericResources(left, right, ancestor);
-			return result;
-		} catch (IOException e) {
-			EMFComparePlugin.log(e, true);
-		} catch (CoreException e) {
-			EMFComparePlugin.log(e.getStatus());
+		} else {
+			// input was the same as the last, we consider loading succeeded
+			result = true;
 		}
-		return false;
+		return result;
 	}
 
 	/**

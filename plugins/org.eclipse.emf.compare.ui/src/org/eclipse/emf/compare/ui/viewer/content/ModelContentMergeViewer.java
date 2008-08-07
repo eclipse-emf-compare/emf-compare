@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
-import org.eclipse.compare.HistoryItem;
 import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
@@ -124,12 +123,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/** Indicates that this is a three-way comparison. */
 	private boolean isThreeWay;
-
-	/**
-	 * Used for history comparisons, this will keep track of modification time of the last {@link HistoryItem}
-	 * we compared.
-	 */
-	private long lastHistoryItemDate;
 
 	/**
 	 * Indicates that the left model has been modified since opening. Will allow us to prompt the user to save
@@ -272,23 +265,16 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	public void setInput(Object input) {
-		// We won't compare again if the given input is the same as the last.
-		boolean changed = false;
+		// This would be a lot faster if the comparison wasn't replayed each time, yet we cannot rely on the HistoryItem interface ; replace with => history does not make use of this interface.
 		if (input instanceof ICompareInput && ((ICompareInput)input).getAncestor() != null)
 			isThreeWay = true;
-		if (input instanceof ICompareInput && ((ICompareInput)input).getRight() instanceof HistoryItem) {
-			changed = lastHistoryItemDate != ((HistoryItem)((ICompareInput)input).getRight())
-					.getModificationDate();
-			if (changed)
-				lastHistoryItemDate = ((HistoryItem)((ICompareInput)input).getRight()).getModificationDate();
-		}
 		final ModelComparator comparator = ModelComparator.getComparator(configuration);
-		if (comparator.getComparisonResult() != null && !changed) {
-			final ModelInputSnapshot snapshot = comparator.getComparisonResult();
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
-		} else if (input instanceof ModelInputSnapshot) {
+		if (input instanceof ModelInputSnapshot) {
 			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
+		} else if (input instanceof ModelCompareInput) {
+			// if there is already a ModelCompareInput provided, no reloading of resources should be done.
+			super.setInput(input);
 		} else if (input instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)input);
 			final ModelInputSnapshot snapshot = comparator.compare(configuration);

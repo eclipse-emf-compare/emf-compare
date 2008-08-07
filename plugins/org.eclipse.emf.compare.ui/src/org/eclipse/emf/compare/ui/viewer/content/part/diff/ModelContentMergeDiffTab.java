@@ -284,6 +284,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		mapTreeItems();
 		mapDifferences();
 		mapTreeItemsToUI();
+		needsRedraw = true;
 	}
 
 	/**
