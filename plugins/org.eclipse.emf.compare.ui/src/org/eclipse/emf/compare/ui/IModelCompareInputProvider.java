@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
-import org.eclipse.ltk.core.refactoring.Change;
-
 /**
  * This interface needs to be implemented by objects that want to provide a {@link ModelCompareInput}. For
  * example, this is supposed to be used for classes based on {@link Change}, that want to be visualized via
@@ -21,9 +19,9 @@ import org.eclipse.ltk.core.refactoring.Change;
  * @author Moritz Eysholdt
  */
 public interface IModelCompareInputProvider {
-
 	/**
+	 * This will return the {@link ModelCompareInput} for the object.
 	 * @return Returns the {@link ModelCompareInput} for the object.
 	 */
-	public ModelCompareInput getModelCompareInput();
+	ModelCompareInput getModelCompareInput();
 }
