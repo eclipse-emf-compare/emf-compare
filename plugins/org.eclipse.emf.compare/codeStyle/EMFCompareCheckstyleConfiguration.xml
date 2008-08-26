@@ -312,9 +312,16 @@
             <property name="format" value="Copyright\s\(c\)\s(20[0-9]{2},?\s)+"/>
         </module>
         <module name="GenericIllegalRegexp">
-            <metadata name="com.atlassw.tools.eclipse.checkstyle.customMessage" value="Caractères susceptibles de poser problème (encoding)"/>
             <property name="severity" value="error"/>
+            <property name="id" value="illegal.regex.encoding"/>
             <property name="format" value="[^a-zA-Z0-9_!:;,\.\+\(\)/\\\]\[{}\-\*&lt;&gt;%@\&amp; \|\t\n&quot;' =$#\r\?éèàê\^]"/>
+            <property name="message" value="Character could cause encoding issue."/>
+        </module>
+        <module name="GenericIllegalRegexp">
+            <property name="id" value="illegal.regex.equals"/>
+            <property name="format" value="[^&quot;]\.equals\(&quot;"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="This kind of expression can easily throw NPEs. Receiver and argument should be inverted."/>
         </module>
     </module>
 </module>

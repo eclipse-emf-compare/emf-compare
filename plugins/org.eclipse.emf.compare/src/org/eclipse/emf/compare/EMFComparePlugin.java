@@ -114,7 +114,7 @@ public class EMFComparePlugin extends Plugin {
 			if (blocker)
 				severity = IStatus.ERROR;
 			String errorMessage = message;
-			if (errorMessage == null || errorMessage.equals("")) //$NON-NLS-1$
+			if (errorMessage == null || "".equals(errorMessage)) //$NON-NLS-1$
 				errorMessage = EMFCompareMessages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}
