@@ -767,7 +767,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = scroll3.getHorizontalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals("carbon") && getControl() != null //$NON-NLS-1$
+				if ("carbon".equals(SWT.getPlatform()) && getControl() != null //$NON-NLS-1$
 						&& !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
@@ -807,7 +807,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final ScrollBar scrollBar3 = table3.getVerticalBar();
 					scrollBar3.setSelection((int)((scrollBar3.getMaximum() - scrollBar3.getThumb()) * v));
 				}
-				if (SWT.getPlatform().equals("carbon") && getControl() != null //$NON-NLS-1$
+				if ("carbon".equals(SWT.getPlatform()) && getControl() != null //$NON-NLS-1$
 						&& !getControl().isDisposed()) {
 					getControl().getDisplay().update();
 				}
