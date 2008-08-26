@@ -236,7 +236,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			EObject originalWriter = null;
 			EObject newElement = null;
 			for (EObject element : copyModel.eContents()) {
-				if (element.eClass().getName().equals("Writer")) {
+				if ("Writer".equals(element.eClass().getName())) {
 					originalWriter = element;
 					newElement = EcoreUtil.copy(element);
 					break;

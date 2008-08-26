@@ -191,11 +191,11 @@ public class EAddTest extends TestCase {
 				if (desiredClass.matches("double")) {
 					newValues = new Object[] {(double)feature.getLowerBound(), Double.NaN, 0d,
 							Double.POSITIVE_INFINITY, (double)feature.getUpperBound(), };
-				} else if (desiredClass.equals("org.eclipse.emf.ecore.EObject")) {
+				} else if ("org.eclipse.emf.ecore.EObject".equals(desiredClass)) {
 					newValues[0] = EcoreFactory.eINSTANCE.createEObject();
-				} else if (desiredClass.equals("org.eclipse.emf.compare.diff.metamodel.DiffElement")) {
+				} else if ("org.eclipse.emf.compare.diff.metamodel.DiffElement".equals(desiredClass)) {
 					newValues[0] = DiffFactory.eINSTANCE.createDiffGroup();
-				} else if (desiredClass.equals("org.eclipse.emf.ecore.EPackage")) {
+				} else if ("org.eclipse.emf.ecore.EPackage".equals(desiredClass)) {
 					newValues[0] = EcoreFactory.eINSTANCE.createEPackage();
 				}
 				// many elements aren't given a test value here. Add as needed

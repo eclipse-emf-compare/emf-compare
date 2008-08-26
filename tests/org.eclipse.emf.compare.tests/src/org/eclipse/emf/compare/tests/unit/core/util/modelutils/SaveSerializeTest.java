@@ -150,7 +150,7 @@ public class SaveSerializeTest extends TestCase {
 				final String result = ModelUtils.serialize(modelRoot);
 
 				assertNotNull("EObject hasn't been serialized by serialize().", result);
-				assertFalse("EObject has been serialized as an empty String", result.equals(""));
+				assertFalse("EObject has been serialized as an empty String", "".equals(result));
 				assertTrue("EObject hasn't been serialized as an XML object.", result.startsWith("<?xml"));
 			} catch (IOException e) {
 				fail("Unexpected IOException has been thrown by a valid call to save().");

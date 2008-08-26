@@ -42,7 +42,7 @@ public final class FileUtils {
 			directories = aDirectory.listFiles(new FileFilter() {
 				public boolean accept(File file) {
 					return file.isDirectory() && !file.getName().startsWith(".") //$NON-NLS-1$
-							&& !file.getName().equals("CVS"); //$NON-NLS-1$
+							&& !"CVS".equals(file.getName()); //$NON-NLS-1$
 				}
 			});
 		}
