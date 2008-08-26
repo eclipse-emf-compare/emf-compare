@@ -1495,7 +1495,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
 		while (features.hasNext()) {
 			final EStructuralFeature feature = features.next();
-			if (eobj.eGet(feature) != null && !eobj.eGet(feature).toString().equals("")) //$NON-NLS-1$
+			if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) //$NON-NLS-1$
 				nonNullFeatures++;
 		}
 		return nonNullFeatures;
