@@ -198,13 +198,13 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		if (priorityString == null)
 			throw new IllegalArgumentException(EMFCompareDiffMessages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
 		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if (priorityString.equals("lowest")) { //$NON-NLS-1$
+		if ("lowest".equals(priorityString)) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if (priorityString.equals("low")) { //$NON-NLS-1$
+		} else if ("low".equals(priorityString)) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if (priorityString.equals("high")) { //$NON-NLS-1$
+		} else if ("high".equals(priorityString)) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if (priorityString.equals("highest")) { //$NON-NLS-1$
+		} else if ("highest".equals(priorityString)) { //$NON-NLS-1$
 			priorityValue = EngineConstants.PRIORITY_HIGHEST;
 		}
 		return priorityValue;
