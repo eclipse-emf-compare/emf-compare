@@ -226,7 +226,7 @@ litigation.
    </license>
 
    <requires>
-      <import feature="org.eclipse.emf.compare" version="0.8.0.qualifier"/>
+      <import feature="org.eclipse.emf.compare" version="0.8.1.qualifier"/>
    </requires>
 
    <plugin
