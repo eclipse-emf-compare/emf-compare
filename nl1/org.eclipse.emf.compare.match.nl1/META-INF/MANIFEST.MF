@@ -3,6 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: EMF Compare match internationalized messages
 Bundle-SymbolicName: org.eclipse.emf.compare.match.nl1
 Bundle-Version: 1.0.0
-Fragment-Host: org.eclipse.emf.compare.match;bundle-version="0.8.0"
+Fragment-Host: org.eclipse.emf.compare.match;bundle-version="0.8.1"
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
