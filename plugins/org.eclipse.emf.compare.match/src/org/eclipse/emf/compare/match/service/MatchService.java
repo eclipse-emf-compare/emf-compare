@@ -75,7 +75,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, EObject, Map)
-	 * @since 0.8.0
+	 * @since 0.9.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
@@ -100,7 +100,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
-	 * @since 0.8.0
+	 * @since 0.9.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
 			Map<String, Object> options) throws InterruptedException {
@@ -171,7 +171,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
-	 * @since 0.8.0
+	 * @since 0.9.0
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> options) throws InterruptedException {
