@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Main-Class: org.eclipse.emf.compare.examples.standalone.ExampleLauncher
-Class-Path: lib/org.eclipse.emf.compare_0.8.0.v20080228.jar 
- lib/org.eclipse.emf.compare.diff_0.8.0.v20080228.jar 
- lib/org.eclipse.emf.compare.match_0.8.0.v20080228.jar 
+Class-Path: lib/org.eclipse.emf.compare_0.8.1.v20080228.jar 
+ lib/org.eclipse.emf.compare.diff_0.8.1.v20080228.jar 
+ lib/org.eclipse.emf.compare.match_0.8.1.v20080228.jar 
  lib/org.eclipse.emf.common_2.3.0.v200706262000.jar 
  lib/org.eclipse.emf.ecore_2.3.0.v200706262000.jar 
  lib/org.eclipse.emf.ecore.xmi_2.3.0.v200706262000.jar 
