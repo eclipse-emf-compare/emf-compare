@@ -13,26 +13,27 @@ package org.eclipse.emf.compare.diff.metamodel;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Attribute Change Left Target</b></em>'.
  * <!-- end-user-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAttributeChangeLeftTarget()
  * @model
  * @generated
  */
 public interface AttributeChangeLeftTarget extends AttributeChange {
 	/**
-	 * Returns the value of the '<em><b>Left Target</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Left Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Target</em>' reference isn't clear, there really should be more of
 	 * a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Left Target</em>' attribute.
 	 * @see #setLeftTarget(Object)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAttributeChangeLeftTarget_LeftTarget()
@@ -42,11 +43,9 @@ public interface AttributeChangeLeftTarget extends AttributeChange {
 	Object getLeftTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget <em>Left Target</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Left Target</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget#getLeftTarget <em>Left Target</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Target</em>' attribute.
 	 * @see #getLeftTarget()
 	 * @generated
 	 */

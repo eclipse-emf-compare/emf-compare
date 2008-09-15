@@ -20,14 +20,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 
 public class AddModelElementImpl extends ModelElementChangeRightTargetImpl implements AddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AddModelElementImpl() {
@@ -47,7 +46,6 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

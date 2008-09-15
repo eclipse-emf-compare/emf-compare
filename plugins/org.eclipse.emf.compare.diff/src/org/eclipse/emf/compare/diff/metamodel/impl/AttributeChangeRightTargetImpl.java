@@ -22,10 +22,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implements AttributeChangeRightTarget {
@@ -51,7 +51,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AttributeChangeRightTargetImpl() {
@@ -60,7 +59,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -74,7 +72,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -89,7 +86,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,7 +102,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -121,7 +116,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -136,7 +130,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Object getRightTarget() {
@@ -145,7 +138,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightTarget(Object newRightTarget) {
@@ -158,7 +150,6 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

@@ -22,14 +22,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 
 public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements RemoteMoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteMoveModelElementImpl() {
@@ -57,7 +56,6 @@ public class RemoteMoveModelElementImpl extends MoveModelElementImpl implements 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

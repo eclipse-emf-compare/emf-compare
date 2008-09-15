@@ -22,14 +22,13 @@ import org.eclipse.emf.ecore.EClass;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 
 public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetImpl implements RemoteRemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected RemoteRemoveReferenceValueImpl() {
@@ -57,7 +56,6 @@ public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetIm
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

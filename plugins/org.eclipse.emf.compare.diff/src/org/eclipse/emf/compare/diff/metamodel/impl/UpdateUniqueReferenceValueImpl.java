@@ -27,11 +27,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 
@@ -58,7 +58,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UpdateUniqueReferenceValueImpl() {
@@ -67,7 +66,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -76,7 +74,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -85,7 +82,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -105,7 +101,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -121,7 +116,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -139,7 +133,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -157,7 +150,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
@@ -175,7 +167,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
@@ -194,7 +185,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
@@ -207,7 +197,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
@@ -239,7 +228,6 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

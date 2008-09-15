@@ -62,7 +62,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UpdateContainmentFeature" eSuperTypes="#//MoveModelElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftContainmentFeature"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightContainmentFeature"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteMoveModelElement" eSuperTypes="#//MoveModelElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateContainmentFeature" eSuperTypes="#//UpdateContainmentFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeChange" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>

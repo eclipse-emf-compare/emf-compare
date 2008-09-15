@@ -22,14 +22,13 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 
 public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UpdateAttributeImpl() {
@@ -57,7 +56,6 @@ public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAt
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
