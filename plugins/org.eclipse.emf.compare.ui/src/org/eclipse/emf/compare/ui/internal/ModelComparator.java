@@ -164,7 +164,9 @@ public final class ModelComparator {
 		if (comparisonResult == null) {
 			comparisonResult = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			final Date start = Calendar.getInstance().getTime();
-
+			
+			MatchService.setMatchEngineSelector(new VisualMatchEngineSelector());
+			
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
