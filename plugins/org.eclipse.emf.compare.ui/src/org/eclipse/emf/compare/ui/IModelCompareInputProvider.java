@@ -7,7 +7,6 @@
  * 
  * Contributors:
  *     Moritz Eysholdt <Moritz@Eysholdt.de> - initial API and implementation
-
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
