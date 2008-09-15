@@ -11,9 +11,10 @@
 package org.eclipse.emf.compare.match.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -22,7 +23,6 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -41,11 +41,14 @@ public final class MatchService {
 	/** Name of the extension point to parse for engines. */
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
 
-	/** Keeps track of all the engines parsed. */
-	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new EMFCompareMap<String, ArrayList<EngineDescriptor>>();
-
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
+
+	/** Keeps track of all the engines we parsed. */
+	private static final List<EngineDescriptor> PARSED_ENGINES = new ArrayList<EngineDescriptor>();
+
+	/** Currently set match engine selector. */
+	private static IMatchEngineSelector matchEngineSelector = new DefaultMatchEngineSelector();
 
 	static {
 		parseExtensionMetadata();
@@ -68,8 +71,8 @@ public final class MatchService {
 	 * @param ancestor
 	 *            Common ancestor of the two others.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return {@link MatchModel} for these three objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -93,8 +96,8 @@ public final class MatchService {
 	 * @param rightObject
 	 *            Right of the two objects to compare.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -119,8 +122,8 @@ public final class MatchService {
 	 * @param ancestor
 	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -142,8 +145,8 @@ public final class MatchService {
 	 * @param rightRoot
 	 *            Right model of the comparison.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -164,8 +167,8 @@ public final class MatchService {
 	 * @param rightResource
 	 *            Right of the two resources to compare.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return {@link MatchModel} for these two resources' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -190,8 +193,8 @@ public final class MatchService {
 	 * @param ancestorResource
 	 *            Common ancestor of <code>leftResource</code> and <code>rightResource</code>.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
@@ -220,6 +223,25 @@ public final class MatchService {
 	}
 
 	/**
+	 * Returns the current match engine selector.
+	 * 
+	 * @return The current match engine selector.
+	 */
+	public static IMatchEngineSelector getMatchEngineSelector() {
+		return matchEngineSelector;
+	}
+
+	/**
+	 * Sets the match engine selector that is to be used.
+	 * 
+	 * @param selector
+	 *            the new engine selector.
+	 */
+	public static void setMatchEngineSelector(IMatchEngineSelector selector) {
+		matchEngineSelector = selector;
+	}
+
+	/**
 	 * Returns the best {@link EngineDescriptor} for a given file extension.
 	 * 
 	 * @param extension
@@ -227,13 +249,28 @@ public final class MatchService {
 	 * @return The best {@link EngineDescriptor}.
 	 */
 	private static EngineDescriptor getBestDescriptor(String extension) {
-		EngineDescriptor descriptor = null;
-		if (PARSED_ENGINES.containsKey(extension)) {
-			descriptor = getHighestDescriptor(PARSED_ENGINES.get(extension));
-		} else if (PARSED_ENGINES.containsKey(ALL_EXTENSIONS)) {
-			descriptor = getHighestDescriptor(PARSED_ENGINES.get(ALL_EXTENSIONS));
+		final Set<EngineDescriptor> engines = new HashSet<EngineDescriptor>();
+
+		for (final EngineDescriptor engine : PARSED_ENGINES) {
+			final String[] extensions = engine.getFileExtension().split(","); //$NON-NLS-1$
+
+			for (final String ext : extensions) {
+				if (ext.equals(extension) || ext.equals(ALL_EXTENSIONS)) {
+					engines.add(engine);
+				}
+			}
+
 		}
-		return descriptor;
+
+		EngineDescriptor engine = null;
+
+		if (engines.size() == 1) {
+			engine = engines.iterator().next();
+		} else if (engines.size() > 1) {
+			engine = matchEngineSelector.selectMatchEngine(engines);
+		}
+
+		return engine;
 	}
 
 	/**
@@ -250,29 +287,15 @@ public final class MatchService {
 		String extension = null;
 		for (int i = 0; i < resources.length; i++) {
 			if (resources[i].getURI() != null) {
-				if (extension == null)
+				if (extension == null) {
 					extension = resources[i].getURI().fileExtension();
-				else if (!extension.equals(resources[i].getURI().fileExtension())) {
+				} else if (!extension.equals(resources[i].getURI().fileExtension())) {
 					extension = DEFAULT_EXTENSION;
 					break;
 				}
 			}
 		}
 		return extension;
-	}
-
-	/**
-	 * Returns the highest {@link EngineDescriptor} from the given {@link List}.
-	 * 
-	 * @param set
-	 *            {@link List} of {@link EngineDescriptor} from which to find the highest one.
-	 * @return The highest {@link EngineDescriptor} from the given {@link List}.
-	 */
-	private static EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
-		Collections.sort(set, Collections.reverseOrder());
-		if (set.size() > 0)
-			return set.get(0);
-		return null;
 	}
 
 	/**
@@ -318,14 +341,6 @@ public final class MatchService {
 	private static void storeEngineDescriptor(EngineDescriptor desc) {
 		if (desc.getFileExtension() == null)
 			return;
-
-		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
-		for (String engineExtension : extensions) {
-			if (!PARSED_ENGINES.containsKey(engineExtension)) {
-				PARSED_ENGINES.put(engineExtension, new ArrayList<EngineDescriptor>());
-			}
-			final List<EngineDescriptor> set = PARSED_ENGINES.get(engineExtension);
-			set.add(desc);
-		}
+		PARSED_ENGINES.add(desc);
 	}
 }
