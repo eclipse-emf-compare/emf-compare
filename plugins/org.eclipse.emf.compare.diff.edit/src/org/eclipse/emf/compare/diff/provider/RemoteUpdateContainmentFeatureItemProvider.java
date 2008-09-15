@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: RemoteUpdateContainmentFeatureItemProvider.java,v 1.1 2008/09/15 13:20:54 lgoubet Exp $
+ * $Id: RemoteUpdateContainmentFeatureItemProvider.java,v 1.2 2008/09/15 13:42:11 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
@@ -68,14 +68,15 @@ public class RemoteUpdateContainmentFeatureItemProvider extends UpdateContainmen
 	/**
 	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
 		final RemoteUpdateContainmentFeature remoteUpdateContainmentFeature = (RemoteUpdateContainmentFeature)object;
-		return getString("_UI_UpdateContainmentFeature_type", new Object[] {remoteUpdateContainmentFeature //$NON-NLS-1$
-				.getLeftContainmentFeature().getName(),
-				remoteUpdateContainmentFeature.getRightContainmentFeature().getName(),});
+		return getString(
+				"_UI_RemoteUpdateContainmentFeature_type", new Object[] {remoteUpdateContainmentFeature //$NON-NLS-1$
+						.getLeftElement().eContainmentFeature().getName(),
+						remoteUpdateContainmentFeature.getRightElement().eContainmentFeature().getName(),});
 	}
 
 	/**

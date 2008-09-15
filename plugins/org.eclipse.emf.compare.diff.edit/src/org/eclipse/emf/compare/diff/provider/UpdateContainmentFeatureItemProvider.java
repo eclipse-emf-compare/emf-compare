@@ -2,7 +2,7 @@
  * <copyright>
  * </copyright>
  *
- * $Id: UpdateContainmentFeatureItemProvider.java,v 1.1 2008/09/15 13:20:54 lgoubet Exp $
+ * $Id: UpdateContainmentFeatureItemProvider.java,v 1.2 2008/09/15 13:42:11 lgoubet Exp $
  */
 package org.eclipse.emf.compare.diff.provider;
 
@@ -12,10 +12,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
 
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -62,8 +60,6 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftContainmentFeaturePropertyDescriptor(object);
-			addRightContainmentFeaturePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -77,8 +73,8 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	public String getText(Object object) {
 		final UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)object;
 		return getString("_UI_UpdateContainmentFeature_type", new Object[] {updateContainmentFeature //$NON-NLS-1$
-				.getLeftContainmentFeature().getName(),
-				updateContainmentFeature.getRightContainmentFeature().getName(),});
+				.getLeftElement().eContainmentFeature().getName(),
+				updateContainmentFeature.getRightElement().eContainmentFeature().getName(),});
 	}
 
 	/**
@@ -92,42 +88,6 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Containment Feature feature. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addLeftContainmentFeaturePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UpdateContainmentFeature_leftContainmentFeature_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UpdateContainmentFeature_leftContainmentFeature_feature", "_UI_UpdateContainmentFeature_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE, true,
-						false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Containment Feature feature. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void addRightContainmentFeaturePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UpdateContainmentFeature_rightContainmentFeature_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UpdateContainmentFeature_rightContainmentFeature_feature", "_UI_UpdateContainmentFeature_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE, true,
-						false, true, null, null, null));
 	}
 
 	/**
