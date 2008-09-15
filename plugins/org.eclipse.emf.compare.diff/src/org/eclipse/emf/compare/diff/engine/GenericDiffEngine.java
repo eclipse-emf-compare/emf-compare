@@ -314,8 +314,6 @@ public class GenericDiffEngine implements IDiffEngine {
 						.createUpdateContainmentFeature();
 				updateContainment.setLeftElement(leftElement);
 				updateContainment.setRightElement(rightElement);
-				updateContainment.setLeftContainmentFeature(leftElement.eContainmentFeature());
-				updateContainment.setRightContainmentFeature(rightElement.eContainmentFeature());
 				updateContainment.setRightTarget(getMatchedEObject(leftElement.eContainer()));
 				updateContainment.setLeftTarget(getMatchedEObject(rightElement.eContainer()));
 
@@ -692,8 +690,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if <code>side</code> is invalid.
 	 */
 	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
 			throw new IllegalArgumentException(EMFCompareDiffMessages.getString("DiffMaker.IllegalSide")); //$NON-NLS-1$
+		}
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null) {
@@ -1483,8 +1482,6 @@ public class GenericDiffEngine implements IDiffEngine {
 				.createRemoteUpdateContainmentFeature();
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
-		updateContainment.setLeftContainmentFeature(left.eContainmentFeature());
-		updateContainment.setRightContainmentFeature(right.eContainmentFeature());
 		updateContainment.setRightTarget(getMatchedEObject(left.eContainer()));
 		updateContainment.setLeftTarget(getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);
@@ -1540,8 +1537,6 @@ public class GenericDiffEngine implements IDiffEngine {
 				.createUpdateContainmentFeature();
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
-		updateContainment.setLeftContainmentFeature(left.eContainmentFeature());
-		updateContainment.setRightContainmentFeature(right.eContainmentFeature());
 		updateContainment.setRightTarget(getMatchedEObject(left.eContainer()));
 		updateContainment.setLeftTarget(getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);

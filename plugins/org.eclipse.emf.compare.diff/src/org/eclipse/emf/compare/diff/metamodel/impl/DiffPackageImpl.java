@@ -462,9 +462,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__RIGHT_TARGET);
 
 		updateContainmentFeatureEClass = createEClass(UPDATE_CONTAINMENT_FEATURE);
-		createEReference(updateContainmentFeatureEClass, UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE);
-		createEReference(updateContainmentFeatureEClass,
-				UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE);
 
 		remoteMoveModelElementEClass = createEClass(REMOTE_MOVE_MODEL_ELEMENT);
 
@@ -951,24 +948,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getUpdateContainmentFeature_LeftContainmentFeature() {
-		return (EReference)updateContainmentFeatureEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getUpdateContainmentFeature_RightContainmentFeature() {
-		return (EReference)updateContainmentFeatureEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -1450,16 +1429,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(updateContainmentFeatureEClass, UpdateContainmentFeature.class,
 				"UpdateContainmentFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-		initEReference(
-				getUpdateContainmentFeature_LeftContainmentFeature(),
-				theEcorePackage.getEStructuralFeature(),
-				null,
-				"leftContainmentFeature", null, 0, 1, UpdateContainmentFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-		initEReference(
-				getUpdateContainmentFeature_RightContainmentFeature(),
-				theEcorePackage.getEStructuralFeature(),
-				null,
-				"rightContainmentFeature", null, 0, 1, UpdateContainmentFeature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(remoteMoveModelElementEClass, RemoteMoveModelElement.class,
 				"RemoteMoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

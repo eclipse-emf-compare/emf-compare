@@ -1341,31 +1341,13 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_CONTAINMENT_FEATURE__RIGHT_TARGET = MOVE_MODEL_ELEMENT__RIGHT_TARGET;
 
 	/**
-	 * The feature id for the '<em><b>Left Containment Feature</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Right Containment Feature</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Update Containment Feature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UPDATE_CONTAINMENT_FEATURE_FEATURE_COUNT = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 2;
+	int UPDATE_CONTAINMENT_FEATURE_FEATURE_COUNT = MOVE_MODEL_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteMoveModelElementImpl <em>Remote Move Model Element</em>}' class.
@@ -1538,24 +1520,6 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REMOTE_UPDATE_CONTAINMENT_FEATURE__RIGHT_TARGET = UPDATE_CONTAINMENT_FEATURE__RIGHT_TARGET;
-
-	/**
-	 * The feature id for the '<em><b>Left Containment Feature</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE = UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE;
-
-	/**
-	 * The feature id for the '<em><b>Right Containment Feature</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REMOTE_UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE = UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE;
 
 	/**
 	 * The number of structural features of the '<em>Remote Update Containment Feature</em>' class.
@@ -3687,28 +3651,6 @@ public interface DiffPackage extends EPackage {
 	EClass getUpdateContainmentFeature();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature#getLeftContainmentFeature <em>Left Containment Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Containment Feature</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature#getLeftContainmentFeature()
-	 * @see #getUpdateContainmentFeature()
-	 * @generated
-	 */
-	EReference getUpdateContainmentFeature_LeftContainmentFeature();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature#getRightContainmentFeature <em>Right Containment Feature</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Containment Feature</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature#getRightContainmentFeature()
-	 * @see #getUpdateContainmentFeature()
-	 * @generated
-	 */
-	EReference getUpdateContainmentFeature_RightContainmentFeature();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChange <em>Reference Change</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Reference Change</em>'.
@@ -4446,24 +4388,6 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UPDATE_CONTAINMENT_FEATURE = eINSTANCE.getUpdateContainmentFeature();
-
-		/**
-		 * The meta object literal for the '<em><b>Left Containment Feature</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference UPDATE_CONTAINMENT_FEATURE__LEFT_CONTAINMENT_FEATURE = eINSTANCE
-				.getUpdateContainmentFeature_LeftContainmentFeature();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Containment Feature</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference UPDATE_CONTAINMENT_FEATURE__RIGHT_CONTAINMENT_FEATURE = eINSTANCE
-				.getUpdateContainmentFeature_RightContainmentFeature();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
