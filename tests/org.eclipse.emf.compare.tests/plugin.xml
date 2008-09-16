@@ -7,19 +7,23 @@
       <matchengine
             engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.AEngine"
             fileExtension="a"
-            priority="low"/>
+            priority="low"
+            label="AEngine"/>
       <matchengine
             engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.BEngine"
             fileExtension="b"
-            priority="low"/>
+            priority="low"
+            label="BEngine"/>
       <matchengine
             engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.CHighEngine"
             fileExtension="c"
-            priority="high"/>
+            priority="high"
+            label="CHighEngine"/>
       <matchengine
             engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.CLowEngine"
             fileExtension="c"
-            priority="low"/>
+            priority="low"
+            label="CLowEngine"/>
             <!--
       <matchengine
             engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.GenericHighestEngine"
