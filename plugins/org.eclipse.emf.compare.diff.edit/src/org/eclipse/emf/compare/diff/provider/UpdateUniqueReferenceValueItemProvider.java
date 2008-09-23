@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.util.AdapterUtils;
@@ -57,13 +56,14 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 	public Object getImage(Object object) {
 		final UpdateUniqueReferenceValue updateReference = (UpdateUniqueReferenceValue)object;
 		Object labelImage;
-		if (updateReference.getLeftTarget() == null)
+		if (updateReference.getLeftTarget() == null) {
 			labelImage = AdapterUtils.getItemProviderImage(updateReference.getRightTarget());
-		else
+		} else {
 			labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftTarget());
+		}
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/UpdateUniqueReferenceValue")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -107,20 +107,22 @@ public class UpdateUniqueReferenceValueItemProvider extends UpdateReferenceItemP
 		final String referenceLabel = AdapterUtils.getItemProviderText(updateRef.getReference());
 		final String leftValueLabel;
 		final String rightValueLabel;
-		if (leftValue == null)
+		if (leftValue == null) {
 			leftValueLabel = "null"; //$NON-NLS-1$
-		else
+		} else {
 			leftValueLabel = AdapterUtils.getItemProviderText(leftValue);
-		if (rightValue == null)
+		}
+		if (rightValue == null) {
 			rightValueLabel = "null"; //$NON-NLS-1$
-		else
+		} else {
 			rightValueLabel = AdapterUtils.getItemProviderText(rightValue);
+		}
 
 		if (updateRef.isConflicting())
 			return getString("_UI_UpdateUniqueReferenceValue_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$
-					leftValueLabel, rightValueLabel,});
+					rightValueLabel, leftValueLabel,});
 		return getString("_UI_UpdateUniqueReferenceValue_type", new Object[] {referenceLabel, elementLabel, //$NON-NLS-1$
-				leftValueLabel, rightValueLabel,});
+				rightValueLabel, leftValueLabel,});
 	}
 
 	/**

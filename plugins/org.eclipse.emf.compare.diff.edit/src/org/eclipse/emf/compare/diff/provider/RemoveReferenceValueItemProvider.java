@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -32,7 +31,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class RemoveReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoveReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -52,10 +51,10 @@ public class RemoveReferenceValueItemProvider extends ReferenceChangeLeftTargetI
 	@Override
 	public Object getImage(Object object) {
 		final RemoveReferenceValue removeReferenceValue = (RemoveReferenceValue)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(removeReferenceValue.getLeftRemovedTarget());
+		Object labelImage = AdapterUtils.getItemProviderImage(removeReferenceValue.getRightTarget());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/RemoveReferenceValue")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -90,7 +89,7 @@ public class RemoveReferenceValueItemProvider extends ReferenceChangeLeftTargetI
 	public String getText(Object object) {
 		final RemoveReferenceValue removeOp = (RemoveReferenceValue)object;
 
-		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getLeftRemovedTarget());
+		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getRightTarget());
 		final String referenceLabel = AdapterUtils.getItemProviderText(removeOp.getReference());
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 

@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
@@ -57,7 +56,7 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		Object labelImage = AdapterUtils.getItemProviderImage(moveModelElement.getLeftElement());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -95,9 +94,12 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		final MoveModelElement moveModelElement = (MoveModelElement)object;
 
 		final String elementLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftElement());
-		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
-		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
+		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
+		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
 
+		if (moveModelElement.isConflicting())
+			return getString("_UI_MoveModelElement_conflicting", new Object[] { //$NON-NLS-1$
+					elementLabel, oldParentLabel, newParentLabel,});
 		return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
 				elementLabel, oldParentLabel, newParentLabel,});
 	}

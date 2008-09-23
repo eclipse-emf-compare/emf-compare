@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -31,7 +30,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * end-user-doc -->
  * @generated
  */
-public class RemoteAddModelElementItemProvider extends ModelElementChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteAddModelElementItemProvider extends ModelElementChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -76,7 +75,7 @@ public class RemoteAddModelElementItemProvider extends ModelElementChangeLeftTar
 	@Override
 	public String getText(Object object) {
 		final RemoteAddModelElement addOp = (RemoteAddModelElement)object;
-		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getLeftElement());
+		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
 
 		return getString("_UI_RemoteAddModelElement_type", new Object[] {elementLabel,}); //$NON-NLS-1$
 	}

@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: UpdateContainmentFeatureItemProvider.java,v 1.2 2008/09/15 13:42:11 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
 import java.util.Collection;
@@ -11,9 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
-
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -22,10 +24,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a
- * {@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature} object. <!-- begin-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature} object.
+ * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
- * 
  * @generated
  */
 public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -40,8 +41,8 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	}
 
 	/**
-	 * This returns UpdateContainmentFeature.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns UpdateContainmentFeature.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -73,15 +74,15 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	public String getText(Object object) {
 		final UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)object;
 		return getString("_UI_UpdateContainmentFeature_type", new Object[] {updateContainmentFeature //$NON-NLS-1$
-				.getLeftElement().eContainmentFeature().getName(),
-				updateContainmentFeature.getRightElement().eContainmentFeature().getName(),});
+				.getRightElement().eContainmentFeature().getName(),
+				updateContainmentFeature.getLeftElement().eContainmentFeature().getName(),});
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -91,9 +92,9 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override

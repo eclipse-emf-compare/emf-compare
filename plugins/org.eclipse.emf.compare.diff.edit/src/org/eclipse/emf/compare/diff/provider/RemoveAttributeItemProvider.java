@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -32,7 +31,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoveAttributeItemProvider extends AttributeChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -55,7 +54,7 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 		Object labelImage = AdapterUtils.getItemProviderImage(removeAttribute.getAttribute());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/RemoveAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -94,7 +93,7 @@ public class RemoveAttributeItemProvider extends AttributeChangeLeftTargetItemPr
 		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
 
 		return getString(
-				"_UI_RemoveAttribute_type", new Object[] {removeOp.getLeftTarget(), attributeLabel, elementLabel,}); //$NON-NLS-1$
+				"_UI_RemoveAttribute_type", new Object[] {removeOp.getRightTarget(), attributeLabel, elementLabel,}); //$NON-NLS-1$
 	}
 
 	/**

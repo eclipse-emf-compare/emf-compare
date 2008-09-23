@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -31,7 +30,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -77,7 +76,7 @@ public class RemoteRemoveReferenceValueItemProvider extends ReferenceChangeRight
 	public String getText(Object object) {
 		final RemoteRemoveReferenceValue removeOp = (RemoteRemoveReferenceValue)object;
 
-		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getRightAddedTarget());
+		final String valueLabel = AdapterUtils.getItemProviderText(removeOp.getLeftTarget());
 		final String referenceLabel = AdapterUtils.getItemProviderText(removeOp.getReference());
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 

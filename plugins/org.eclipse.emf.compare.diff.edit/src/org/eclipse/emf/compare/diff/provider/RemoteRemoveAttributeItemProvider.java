@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -31,7 +30,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * end-user-doc -->
  * @generated
  */
-public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteRemoveAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -81,7 +80,7 @@ public class RemoteRemoveAttributeItemProvider extends AttributeChangeRightTarge
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 
 		return getString(
-				"_UI_RemoteRemoveAttribute_type", new Object[] {removeOp.getRightTarget(), attributeLabel, //$NON-NLS-1$
+				"_UI_RemoteRemoveAttribute_type", new Object[] {removeOp.getLeftTarget(), attributeLabel, //$NON-NLS-1$
 						elementLabel,});
 	}
 

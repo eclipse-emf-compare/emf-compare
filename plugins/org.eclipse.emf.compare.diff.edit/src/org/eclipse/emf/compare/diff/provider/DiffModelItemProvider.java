@@ -207,9 +207,6 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createGenericDiffElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createConflictingDiffElement()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,

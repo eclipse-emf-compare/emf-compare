@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
@@ -58,13 +57,12 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	@Override
 	public Object getImage(Object object) {
 		if (object instanceof EObject && ((EObject)object).eContainer() != null
-				&& ((EObject)object).eContainer() instanceof DiffModel) {
+				&& ((EObject)object).eContainer() instanceof DiffModel)
 			return getResourceLocator().getImage("full/obj16/DiffModel"); //$NON-NLS-1$
-		}
-		Object labelImage = AdapterUtils.getItemProviderImage(((DiffGroup)object).getLeftParent());
+		Object labelImage = AdapterUtils.getItemProviderImage(((DiffGroup)object).getRightParent());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/DiffGroup")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -86,10 +84,27 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftParentPropertyDescriptor(object);
+			addRightParentPropertyDescriptor(object);
 			addSubchangesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @generated
+	 */
+	protected void addRightParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffGroup_rightParent_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffGroup_rightParent_feature", "_UI_DiffGroup_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_GROUP__RIGHT_PARENT, true, false, true, null, null, null));
 	}
 
 	/**
@@ -100,7 +115,7 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 	@Override
 	public String getText(Object object) {
 		final DiffGroup group = (DiffGroup)object;
-		final EObject parent = group.getLeftParent();
+		final EObject parent = group.getRightParent();
 
 		if (parent != null) {
 			final String parentLabel = AdapterUtils.getItemProviderText(parent);
@@ -128,24 +143,6 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 				return;
 		}
 		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Parent feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addLeftParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiffGroup_leftParent_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_DiffGroup_leftParent_feature", "_UI_DiffGroup_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.DIFF_GROUP__LEFT_PARENT, true, false, true, null, null, null));
 	}
 
 	/**

@@ -120,14 +120,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	protected DiffModelItemProvider diffModelItemProvider;
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected GenericDiffElementItemProvider genericDiffElementItemProvider;
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChange} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -519,21 +511,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 		}
 
 		return diffModelItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createGenericDiffElementAdapter() {
-		if (genericDiffElementItemProvider == null) {
-			genericDiffElementItemProvider = new GenericDiffElementItemProvider(this);
-		}
-
-		return genericDiffElementItemProvider;
 	}
 
 	/**
@@ -941,8 +918,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	public void dispose() {
 		if (diffModelItemProvider != null)
 			diffModelItemProvider.dispose();
-		if (genericDiffElementItemProvider != null)
-			genericDiffElementItemProvider.dispose();
 		if (conflictingDiffElementItemProvider != null)
 			conflictingDiffElementItemProvider.dispose();
 		if (diffGroupItemProvider != null)

@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -55,7 +54,7 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 		Object labelImage = AdapterUtils.getItemProviderImage(updateAttribute.getAttribute());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/UpdateAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -96,10 +95,10 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 		final Object rightValue = updateOp.getRightElement().eGet(updateOp.getAttribute());
 
 		if (updateOp.isConflicting())
-			return getString("_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, leftValue, //$NON-NLS-1$
-					rightValue,});
-		return getString("_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, leftValue, //$NON-NLS-1$
-				rightValue,});
+			return getString("_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, rightValue, //$NON-NLS-1$
+					leftValue,});
+		return getString("_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, rightValue, //$NON-NLS-1$
+				leftValue,});
 	}
 
 	/**

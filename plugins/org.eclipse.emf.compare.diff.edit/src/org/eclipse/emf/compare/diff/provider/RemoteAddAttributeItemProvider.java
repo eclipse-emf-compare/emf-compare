@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -32,7 +31,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteAddAttributeItemProvider extends AttributeChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -55,7 +54,7 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 		Object labelImage = AdapterUtils.getItemProviderImage(addOp.getAttribute());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/RemoteAddAttribute")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -93,7 +92,7 @@ public class RemoteAddAttributeItemProvider extends AttributeChangeLeftTargetIte
 		final String attributeLabel = AdapterUtils.getItemProviderText(addOp.getAttribute());
 		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
 
-		return getString("_UI_RemoteAddAttribute_type", new Object[] {addOp.getLeftTarget(), attributeLabel, //$NON-NLS-1$
+		return getString("_UI_RemoteAddAttribute_type", new Object[] {addOp.getRightTarget(), attributeLabel, //$NON-NLS-1$
 				elementLabel,});
 	}
 

@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -31,7 +30,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- end-user-doc -->
  * @generated
  */
-public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteRemoveModelElementItemProvider extends ModelElementChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -77,7 +76,7 @@ public class RemoteRemoveModelElementItemProvider extends ModelElementChangeRigh
 	public String getText(Object object) {
 		final RemoteRemoveModelElement removeOp = (RemoteRemoveModelElement)object;
 
-		final String targetName = AdapterUtils.getItemProviderText(removeOp.getRightElement());
+		final String targetName = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 
 		if (removeOp.isConflicting())
 			return getString("_UI_RemoteRemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$

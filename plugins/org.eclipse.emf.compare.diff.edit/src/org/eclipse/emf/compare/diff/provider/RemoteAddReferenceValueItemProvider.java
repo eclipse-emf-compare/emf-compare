@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -31,7 +30,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * end-user-doc -->
  * @generated
  */
-public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoteAddReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -79,7 +78,7 @@ public class RemoteAddReferenceValueItemProvider extends ReferenceChangeLeftTarg
 
 		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
 		final String referenceLabel = AdapterUtils.getItemProviderText(addOp.getReference());
-		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getLeftRemovedTarget());
+		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getRightTarget());
 
 		return getString("_UI_RemoteAddReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
 				elementLabel,});

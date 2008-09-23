@@ -65,10 +65,46 @@ public class ReferenceChangeLeftTargetItemProvider extends ReferenceChangeItemPr
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftRemovedTargetPropertyDescriptor(object);
-			addRightRemovedTargetPropertyDescriptor(object);
+			addLeftTargetPropertyDescriptor(object);
+			addRightTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Left Target feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLeftTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_ReferenceChangeLeftTarget_leftTarget_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_leftTarget_feature", "_UI_ReferenceChangeLeftTarget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, true, false, true,
+						null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Target feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addRightTargetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_ReferenceChangeLeftTarget_rightTarget_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_rightTarget_feature", "_UI_ReferenceChangeLeftTarget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET, true, false, true,
+						null, null, null));
 	}
 
 	/**
@@ -93,44 +129,6 @@ public class ReferenceChangeLeftTargetItemProvider extends ReferenceChangeItemPr
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Removed Target feature.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addLeftRemovedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ReferenceChangeLeftTarget_leftRemovedTarget_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_leftRemovedTarget_feature", "_UI_ReferenceChangeLeftTarget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET, true, false,
-						true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Removed Target feature.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addRightRemovedTargetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_ReferenceChangeLeftTarget_rightRemovedTarget_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_ReferenceChangeLeftTarget_rightRemovedTarget_feature", "_UI_ReferenceChangeLeftTarget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET, true, false,
-						true, null, null, null));
 	}
 
 	/**

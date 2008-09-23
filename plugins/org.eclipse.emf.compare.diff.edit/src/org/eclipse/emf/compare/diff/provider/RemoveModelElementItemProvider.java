@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -32,7 +31,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class RemoveModelElementItemProvider extends ModelElementChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class RemoveModelElementItemProvider extends ModelElementChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -52,10 +51,10 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	@Override
 	public Object getImage(Object object) {
 		final RemoveModelElement removeModeElement = (RemoveModelElement)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(removeModeElement.getLeftElement());
+		Object labelImage = AdapterUtils.getItemProviderImage(removeModeElement.getRightElement());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/RemoveModelElement")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -88,9 +87,9 @@ public class RemoveModelElementItemProvider extends ModelElementChangeLeftTarget
 	 */
 	@Override
 	public String getText(Object object) {
-		RemoveModelElement removeOp = (RemoveModelElement)object;
+		final RemoveModelElement removeOp = (RemoveModelElement)object;
 
-		final String targetName = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
+		final String targetName = AdapterUtils.getItemProviderText(removeOp.getRightElement());
 		if (removeOp.isConflicting())
 			return getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$
 		return getString("_UI_RemoveModelElement_type", new Object[] {targetName}); //$NON-NLS-1$

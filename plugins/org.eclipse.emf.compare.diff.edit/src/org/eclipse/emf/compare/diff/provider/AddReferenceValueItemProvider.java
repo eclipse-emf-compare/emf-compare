@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposedImage;
@@ -32,7 +31,7 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class AddReferenceValueItemProvider extends ReferenceChangeRightTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class AddReferenceValueItemProvider extends ReferenceChangeLeftTargetItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -52,10 +51,10 @@ public class AddReferenceValueItemProvider extends ReferenceChangeRightTargetIte
 	@Override
 	public Object getImage(Object object) {
 		final AddReferenceValue addReferenceValue = (AddReferenceValue)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(addReferenceValue.getRightAddedTarget());
+		Object labelImage = AdapterUtils.getItemProviderImage(addReferenceValue.getLeftTarget());
 
 		if (labelImage != null) {
-			List<Object> images = new ArrayList<Object>(2);
+			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
 			images.add(getResourceLocator().getImage("full/obj16/AddReferenceValue")); //$NON-NLS-1$
 			labelImage = new ComposedImage(images);
@@ -88,9 +87,9 @@ public class AddReferenceValueItemProvider extends ReferenceChangeRightTargetIte
 	 */
 	@Override
 	public String getText(Object object) {
-		AddReferenceValue addOp = (AddReferenceValue)object;
+		final AddReferenceValue addOp = (AddReferenceValue)object;
 
-		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getRightAddedTarget());
+		final String valueLabel = AdapterUtils.getItemProviderText(addOp.getLeftTarget());
 		final String referenceLabel = AdapterUtils.getItemProviderText(addOp.getReference());
 		final String elementLabel = AdapterUtils.getItemProviderText(addOp.getRightElement());
 

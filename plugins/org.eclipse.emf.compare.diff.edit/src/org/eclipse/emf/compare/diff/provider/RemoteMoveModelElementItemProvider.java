@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -81,8 +80,8 @@ public class RemoteMoveModelElementItemProvider extends MoveModelElementItemProv
 		final String remoteParentLabel = AdapterUtils.getItemProviderText(moveOp.getRightTarget());
 		final String localParentLabel = AdapterUtils.getItemProviderText(moveOp.getLeftTarget());
 
-		return getString("_UI_RemoteMoveModelElement_type", new Object[] {elementLabel, remoteParentLabel, //$NON-NLS-1$
-				localParentLabel,});
+		return getString("_UI_RemoteMoveModelElement_type", new Object[] {elementLabel, localParentLabel, //$NON-NLS-1$
+				remoteParentLabel,});
 	}
 
 	/**
