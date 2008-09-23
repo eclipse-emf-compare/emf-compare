@@ -78,7 +78,7 @@
         </module>
         <module name="ExecutableStatementCount">
             <property name="severity" value="error"/>
-            <property name="max" value="45"/>
+            <property name="max" value="55"/>
             <property name="tokens" value="INSTANCE_INIT,STATIC_INIT,METHOD_DEF,CTOR_DEF"/>
         </module>
         <module name="FileLength">
