@@ -28,17 +28,17 @@ import org.eclipse.team.svn.ui.compare.ResourceCompareInput.ResourceElement;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class SubversiveTeamHandler extends AbstractTeamHandler {
-	/** Indicates that the right resource is remote. */
-	private boolean rightIsRemote;
+	/** Indicates that the left resource is remote. */
+	private boolean leftIsRemote;
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#isRightRemote()
+	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#isLeftRemote()
 	 */
 	@Override
-	public boolean isRightRemote() {
-		return rightIsRemote;
+	public boolean isLeftRemote() {
+		return leftIsRemote;
 	}
 
 	/**
@@ -54,19 +54,20 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 
 		if (left instanceof ResourceElement && right instanceof ResourceElement) {
 			if (((ResourceElement)left).getRepositoryResource().getSelectedRevision() == SVNRevision.WORKING) {
-				rightResource = EclipseModelUtils.load(
+				leftResource = EclipseModelUtils.load(
 						((ResourceElement)left).getLocalResource().getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
 			} else {
-				rightResource = ModelUtils.load(((ResourceElement)left).getContents(),
+				leftResource = ModelUtils.load(((ResourceElement)left).getContents(),
 						((ResourceElement)left).getName(), new ResourceSetImpl()).eResource();
-				rightIsRemote = true;
+				leftIsRemote = true;
 			}
-			leftResource = ModelUtils.load(((ResourceElement)right).getContents(),
+			rightResource = ModelUtils.load(((ResourceElement)right).getContents(),
 					((ResourceElement)right).getName(), new ResourceSetImpl()).eResource();
-			if (ancestor != null)
+			if (ancestor != null) {
 				ancestorResource = ModelUtils.load(((ResourceElement)ancestor).getContents(),
 						((ResourceElement)ancestor).getName(), new ResourceSetImpl()).eResource();
+			}
 			return true;
 		}
 		return false;
