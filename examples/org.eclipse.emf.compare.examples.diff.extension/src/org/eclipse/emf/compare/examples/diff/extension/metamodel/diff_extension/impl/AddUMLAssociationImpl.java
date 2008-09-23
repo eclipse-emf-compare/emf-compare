@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: AddUMLAssociationImpl.java,v 1.4 2008/02/08 20:40:19 lgoubet Exp $
+ * $Id: AddUMLAssociationImpl.java,v 1.5 2008/09/23 16:00:15 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 
 import org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.AddUMLAssociation;
@@ -52,8 +53,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getIsHiddenBy <em>Is Hidden By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#isConflicting <em>Conflicting</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getKind <em>Kind</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getLeftParent <em>Left Parent</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getRightElement <em>Right Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getRightParent <em>Right Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl#getLeftElement <em>Left Element</em>}</li>
  * </ul>
  * </p>
  *
@@ -126,24 +127,24 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 	protected DifferenceKind kind = KIND_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getLeftParent()
+	 * The cached value of the '{@link #getRightParent() <em>Right Parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRightParent()
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject leftParent;
+	protected EObject rightParent;
 
 	/**
-	 * The cached value of the '{@link #getRightElement() <em>Right Element</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getRightElement()
+	 * The cached value of the '{@link #getLeftElement() <em>Left Element</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLeftElement()
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject rightElement;
+	protected EObject leftElement;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -151,22 +152,6 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 	 */
 	protected AddUMLAssociationImpl() {
 		super();
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetLeftParent() {
-		return leftParent;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetRightElement() {
-		return rightElement;
 	}
 
 	/**
@@ -189,10 +174,10 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 				default: return -1;
 			}
 		}
-		if (baseClass == ModelElementChangeRightTarget.class) {
+		if (baseClass == ModelElementChangeLeftTarget.class) {
 			switch (derivedFeatureID) {
-				case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT: return DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
-				case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT: return DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+				case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT: return DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
+				case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT: return DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 				default: return -1;
 			}
 		}
@@ -224,10 +209,10 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 				default: return -1;
 			}
 		}
-		if (baseClass == ModelElementChangeRightTarget.class) {
+		if (baseClass == ModelElementChangeLeftTarget.class) {
 			switch (baseFeatureID) {
-				case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT: return DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT;
-				case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT: return DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT;
+				case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT: return DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT;
+				case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT: return DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT;
 				default: return -1;
 			}
 		}
@@ -272,12 +257,12 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 				return isConflicting() ? Boolean.TRUE : Boolean.FALSE;
 			case DiffExtensionPackage.ADD_UML_ASSOCIATION__KIND:
 				return getKind();
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT:
-				if (resolve) return getLeftParent();
-				return basicGetLeftParent();
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT:
-				if (resolve) return getRightElement();
-				return basicGetRightElement();
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT:
+				if (resolve) return getRightParent();
+				return basicGetRightParent();
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT:
+				if (resolve) return getLeftElement();
+				return basicGetLeftElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -326,10 +311,10 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 				return conflicting != CONFLICTING_EDEFAULT;
 			case DiffExtensionPackage.ADD_UML_ASSOCIATION__KIND:
 				return kind != KIND_EDEFAULT;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT:
-				return leftParent != null;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT:
-				return rightElement != null;
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT:
+				return rightParent != null;
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT:
+				return leftElement != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -350,11 +335,11 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 				getIsHiddenBy().clear();
 				getIsHiddenBy().addAll((Collection<? extends AbstractDiffExtension>)newValue);
 				return;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT:
-				setLeftParent((EObject)newValue);
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT:
+				setRightParent((EObject)newValue);
 				return;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT:
-				setRightElement((EObject)newValue);
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT:
+				setLeftElement((EObject)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -373,11 +358,11 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 			case DiffExtensionPackage.ADD_UML_ASSOCIATION__IS_HIDDEN_BY:
 				getIsHiddenBy().clear();
 				return;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT:
-				setLeftParent((EObject)null);
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT:
+				setRightParent((EObject)null);
 				return;
-			case DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT:
-				setRightElement((EObject)null);
+			case DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT:
+				setLeftElement((EObject)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -413,35 +398,79 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EObject getLeftParent() {
-		if (leftParent != null && leftParent.eIsProxy()) {
-			InternalEObject oldLeftParent = (InternalEObject)leftParent;
-			leftParent = eResolveProxy(oldLeftParent);
-			if (leftParent != oldLeftParent) {
+	public EObject getRightParent() {
+		if (rightParent != null && rightParent.eIsProxy()) {
+			InternalEObject oldRightParent = (InternalEObject)rightParent;
+			rightParent = eResolveProxy(oldRightParent);
+			if (rightParent != oldRightParent) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT, oldLeftParent, leftParent));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT, oldRightParent, rightParent));
 			}
 		}
-		return leftParent;
+		return rightParent;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EObject getRightElement() {
-		if (rightElement != null && rightElement.eIsProxy()) {
-			InternalEObject oldRightElement = (InternalEObject)rightElement;
-			rightElement = eResolveProxy(oldRightElement);
-			if (rightElement != oldRightElement) {
+	public EObject basicGetRightParent() {
+		return rightParent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRightParent(EObject newRightParent) {
+		EObject oldRightParent = rightParent;
+		rightParent = newRightParent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_PARENT, oldRightParent, rightParent));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject getLeftElement() {
+		if (leftElement != null && leftElement.eIsProxy()) {
+			InternalEObject oldLeftElement = (InternalEObject)leftElement;
+			leftElement = eResolveProxy(oldLeftElement);
+			if (leftElement != oldLeftElement) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT, oldRightElement, rightElement));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT, oldLeftElement, leftElement));
 			}
 		}
-		return rightElement;
+		return leftElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EObject basicGetLeftElement() {
+		return leftElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setLeftElement(EObject newLeftElement) {
+		EObject oldLeftElement = leftElement;
+		leftElement = newLeftElement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_ELEMENT, oldLeftElement, leftElement));
 	}
 
 	/**
@@ -453,28 +482,6 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 			subDiffElements = new EObjectContainmentEList<DiffElement>(DiffElement.class, this, DiffExtensionPackage.ADD_UML_ASSOCIATION__SUB_DIFF_ELEMENTS);
 		}
 		return subDiffElements;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setLeftParent(EObject newLeftParent) {
-		EObject oldLeftParent = leftParent;
-		leftParent = newLeftParent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.ADD_UML_ASSOCIATION__LEFT_PARENT, oldLeftParent, leftParent));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRightElement(EObject newRightElement) {
-		EObject oldRightElement = rightElement;
-		rightElement = newRightElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffExtensionPackage.ADD_UML_ASSOCIATION__RIGHT_ELEMENT, oldRightElement, rightElement));
 	}
 
 	/**

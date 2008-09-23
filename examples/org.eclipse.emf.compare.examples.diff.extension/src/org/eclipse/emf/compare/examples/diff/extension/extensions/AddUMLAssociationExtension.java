@@ -77,8 +77,8 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 		while (it.hasNext()) {
 			final DiffElement element = (DiffElement)it.next();
 			if (element instanceof AddModelElement
-					&& isAssociation(((AddModelElement)element).getRightElement())) {
-				final EObject assoc = ((AddModelElement)element).getRightElement();
+					&& isAssociation(((AddModelElement)element).getLeftElement())) {
+				final EObject assoc = ((AddModelElement)element).getLeftElement();
 				/*
 				 * We have an association, let's add our new higher level delta and hide the others...
 				 */
@@ -88,8 +88,9 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 				 * it's some kind of "special" association, meaning "Navigable" for instance.
 				 */
 				try {
-					final Collection<EObject> members = (List<EObject>)EFactory.eGetAsList(assoc, "memberEnd");
-					for (EObject member : members) {
+					final Collection<EObject> members = (List<EObject>)EFactory
+							.eGetAsList(assoc, "memberEnd");
+					for (final EObject member : members) {
 						/*
 						 * It's a navigable association then we should hide the property and the association
 						 * and show ourselves instead.
@@ -104,8 +105,9 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 							while (diffIt.hasNext()) {
 								final EObject childElem = diffIt.next();
 								if (childElem instanceof AddModelElement
-										&& ((AddModelElement)childElem).getRightElement() == member)
+										&& ((AddModelElement)childElem).getLeftElement() == member) {
 									getHideElements().add((AddModelElement)childElem);
+								}
 								getProperties().add(childElem);
 							}
 						}
@@ -119,7 +121,7 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 						}
 
 					}
-				} catch (FactoryException e) {
+				} catch (final FactoryException e) {
 					// nothing to do, probably not some kind of UML I know...
 				}
 
@@ -134,8 +136,8 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 	 *            comment.
 	 */
 	private void copyAssociationData(AddModelElement element) {
-		setLeftParent(element.getLeftParent());
-		setRightElement(element.getRightElement());
+		setRightParent(element.getRightParent());
+		setLeftElement(element.getLeftElement());
 	}
 
 	/**

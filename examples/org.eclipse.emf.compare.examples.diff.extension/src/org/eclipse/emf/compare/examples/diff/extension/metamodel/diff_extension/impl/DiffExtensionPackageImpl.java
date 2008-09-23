@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: DiffExtensionPackageImpl.java,v 1.4 2008/02/08 20:40:19 lgoubet Exp $
+ * $Id: DiffExtensionPackageImpl.java,v 1.5 2008/09/23 16:00:15 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -119,8 +119,6 @@ public class DiffExtensionPackageImpl extends EPackageImpl implements DiffExtens
 
 		// Initialize simple dependencies
 		DiffPackage.eINSTANCE.eClass();
-		EcorePackage.eINSTANCE.eClass();
-		MatchPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theDiffExtensionPackage.createPackageContents();
