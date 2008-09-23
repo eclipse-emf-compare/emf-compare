@@ -16,15 +16,15 @@ import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Model Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Model Element</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
 
-public class RemoteRemoveModelElementImpl extends ModelElementChangeRightTargetImpl implements RemoteRemoveModelElement {
+public class RemoteRemoveModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoteRemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -41,7 +41,7 @@ public class RemoteRemoveModelElementImpl extends ModelElementChangeRightTargetI
 	 */
 	@Override
 	public String toString() {
-		return EMFCompareDiffMessages.getString("RemoteRemoveModelElementImpl.ToString", rightElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("RemoteRemoveModelElementImpl.ToString", leftElement); //$NON-NLS-1$
 	}
 
 	/**

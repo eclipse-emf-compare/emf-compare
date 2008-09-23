@@ -16,15 +16,15 @@ import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Model Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Model Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
 
-public class AddModelElementImpl extends ModelElementChangeRightTargetImpl implements AddModelElement {
+public class AddModelElementImpl extends ModelElementChangeLeftTargetImpl implements AddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -41,7 +41,7 @@ public class AddModelElementImpl extends ModelElementChangeRightTargetImpl imple
 	 */
 	@Override
 	public String toString() {
-		return EMFCompareDiffMessages.getString("AddModelElementImpl.ToString", rightElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("AddModelElementImpl.ToString", leftElement); //$NON-NLS-1$
 	}
 
 	/**

@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Unique Reference Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Update Unique Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,9 +37,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implements UpdateUniqueReferenceValue {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -218,11 +218,11 @@ public class UpdateUniqueReferenceValueImpl extends UpdateReferenceImpl implemen
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"UpdateUniqueReferenceValueImpl.ToString", NameSimilarity.findName(reference), NameSimilarity.findName(leftElement), rightElement.eGet(reference), leftElement.eGet(reference)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), leftElement.eGet(reference), rightElement.eGet(reference)); //$NON-NLS-1$
+							"UpdateUniqueReferenceValueImpl.ToString", leftElement.eClass().getName(), rightElement.eClass().getName(), rightElement.eGet(reference), leftElement.eGet(reference)); //$NON-NLS-1$
 		}
 	}
 

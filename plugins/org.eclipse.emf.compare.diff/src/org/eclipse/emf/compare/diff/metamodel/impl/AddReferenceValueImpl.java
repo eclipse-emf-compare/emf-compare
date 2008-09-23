@@ -18,15 +18,15 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Reference Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Add Reference Value</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
 
-public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implements AddReferenceValue {
+public class AddReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements AddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -46,11 +46,11 @@ public class AddReferenceValueImpl extends ReferenceChangeRightTargetImpl implem
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"AddReferenceValueImpl.ToString", NameSimilarity.findName(rightAddedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"AddReferenceValueImpl.ToString", NameSimilarity.findName(leftTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"AddReferenceValueImpl.ToString", rightAddedTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
+							"AddReferenceValueImpl.ToString", leftTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 

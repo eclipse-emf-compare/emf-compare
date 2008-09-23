@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * Are considered for this merger :
  * <ul>
- * <li>{@link AddReferenceValue}</li>
- * <li>{@link RemoteRemoveReferenceValue}</li>
+ * <li>RemoveReferenceValue</li>
+ * <li>RemoteAddReferenceValue</li>
  * </ul>
  * </p>
  * 
@@ -43,9 +43,10 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
-		final EObject leftTarget = theDiff.getLeftAddedTarget();
-		final EObject rightTarget = theDiff.getRightAddedTarget();
-		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, rightTarget, leftTarget);
+		final EObject leftTarget = theDiff.getRightTarget();
+		final EObject rightTarget = theDiff.getLeftTarget();
+		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, rightTarget,
+				leftTarget);
 		// We'll now look through this reference's eOpposite as they are already taken care of
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
@@ -54,7 +55,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// If this is my eOpposite, delete it from the DiffModel (merged along with this one)
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getLeftAddedTarget().equals(element)) {
+						&& link.getRightTarget().equals(element)) {
 					removeFromContainer(link);
 				}
 			}
@@ -71,10 +72,10 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	public void undoInTarget() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
-		final EObject rightTarget = theDiff.getRightAddedTarget();
+		final EObject rightTarget = theDiff.getLeftTarget();
 		try {
 			EFactory.eRemove(element, theDiff.getReference().getName(), rightTarget);
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
@@ -85,7 +86,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getRightAddedTarget().equals(element)) {
+						&& link.getLeftTarget().equals(element)) {
 					removeFromContainer(link);
 				}
 			}

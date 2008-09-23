@@ -16,15 +16,15 @@ import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Model Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remove Model Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
 
-public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoveModelElement {
+public class RemoveModelElementImpl extends ModelElementChangeRightTargetImpl implements RemoveModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -41,7 +41,7 @@ public class RemoveModelElementImpl extends ModelElementChangeLeftTargetImpl imp
 	 */
 	@Override
 	public String toString() {
-		return EMFCompareDiffMessages.getString("RemoveModelElementImpl.ToString", leftElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("RemoveModelElementImpl.ToString", rightElement); //$NON-NLS-1$
 	}
 
 	/**

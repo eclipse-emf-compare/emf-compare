@@ -47,7 +47,7 @@ public class RemoteUpdateAttributeImpl extends UpdateAttributeImpl implements Re
 			return EMFCompareDiffMessages
 					.getString(
 							"RemoteUpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
 							"RemoteUpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$

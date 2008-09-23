@@ -18,15 +18,15 @@ import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Remove Reference Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Remote Remove Reference Value</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
  * @generated
  */
 
-public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetImpl implements RemoteRemoveReferenceValue {
+public class RemoteRemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoteRemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -46,11 +46,11 @@ public class RemoteRemoveReferenceValueImpl extends ReferenceChangeRightTargetIm
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoteRemoveReferenceValueImpl.ToString", NameSimilarity.findName(rightAddedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"RemoteRemoveReferenceValueImpl.ToString", NameSimilarity.findName(leftTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoteRemoveReferenceValueImpl.ToString", rightAddedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
+							"RemoteRemoveReferenceValueImpl.ToString", leftTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 

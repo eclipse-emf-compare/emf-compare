@@ -27,8 +27,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <p>
  * Are considered for this merger :
  * <ul>
- * <li>{@link RemoveModelElement}</li>
- * <li>{@link RemoteAddModelElement}</li>
+ * <li>AddModelElement</li>
+ * <li>RemoteRemoveModelElement</li>
  * </ul>
  * </p>
  * 
@@ -68,7 +68,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			try {
 				EFactory.eAdd(origin, ref.getName(), newOne);
 				setXMIID(newOne, getXMIID(element));
-			} catch (FactoryException e) {
+			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
 		} else {
@@ -81,8 +81,8 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeLeftTarget) {
 				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getLeftRemovedTarget().equals(element)) {
-					link.setRightRemovedTarget(newOne);
+				if (link.getRightTarget().equals(element)) {
+					link.setLeftTarget(newOne);
 				}
 			}
 		}

@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 
-public class RemoteRemoveAttributeImpl extends AttributeChangeRightTargetImpl implements RemoteRemoveAttribute {
+public class RemoteRemoveAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoteRemoveAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

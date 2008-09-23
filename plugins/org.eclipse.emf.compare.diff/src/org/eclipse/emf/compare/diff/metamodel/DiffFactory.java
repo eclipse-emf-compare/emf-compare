@@ -106,15 +106,6 @@ public interface DiffFactory extends EFactory {
 	DiffModel createDiffModel();
 
 	/**
-	 * Returns a new object of class '<em>Generic Diff Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Generic Diff Element</em>'.
-	 * @generated
-	 */
-	GenericDiffElement createGenericDiffElement();
-
-	/**
 	 * Returns a new object of class '<em>Model Element Change</em>'.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

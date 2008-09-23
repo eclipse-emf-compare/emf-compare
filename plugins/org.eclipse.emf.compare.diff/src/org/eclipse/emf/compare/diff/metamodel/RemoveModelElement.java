@@ -20,6 +20,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 
-public interface RemoveModelElement extends ModelElementChangeLeftTarget {
+public interface RemoveModelElement extends ModelElementChangeRightTarget {
 	// This class doesn't need any Overriding to be functional
 } // RemoveModelElement

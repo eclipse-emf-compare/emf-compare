@@ -1,25 +1,21 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: UpdateContainmentFeatureImpl.java,v 1.2 2008/09/15 13:42:23 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
-
-import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
-
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Update Containment Feature</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Update Containment Feature</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
@@ -28,8 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class UpdateContainmentFeatureImpl extends MoveModelElementImpl implements UpdateContainmentFeature {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected UpdateContainmentFeatureImpl() {
@@ -37,8 +32,7 @@ public class UpdateContainmentFeatureImpl extends MoveModelElementImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -46,4 +40,4 @@ public class UpdateContainmentFeatureImpl extends MoveModelElementImpl implement
 		return DiffPackage.Literals.UPDATE_CONTAINMENT_FEATURE;
 	}
 
-} //UpdateContainmentFeatureImpl
+} // UpdateContainmentFeatureImpl

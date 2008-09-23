@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Move Model Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Move Model Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,9 +37,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class MoveModelElementImpl extends UpdateModelElementImpl implements MoveModelElement {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -217,11 +217,11 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), rightElement.eContainer(), leftElement.eContainer()); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"MoveModelElementImpl.ToString", leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer()); //$NON-NLS-1$
+							"MoveModelElementImpl.ToString", leftElement.eClass().getName(), rightElement.eContainer(), leftElement.eContainer()); //$NON-NLS-1$
 		}
 	}
 

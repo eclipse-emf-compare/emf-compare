@@ -62,9 +62,9 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -253,8 +253,8 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	}
 
 	/**
-	 * <!-- begin-user-doc --> This method is called by the {@link DiffMaker} to let the diff extension a
-	 * chance to refactor the diff model and plug themselves inside. <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> This method is called by the Diff Engine to let the diff extension a chance to
+	 * refactor the diff model and plug themselves inside. <!-- end-user-doc -->
 	 * 
 	 * @generated NOT
 	 */

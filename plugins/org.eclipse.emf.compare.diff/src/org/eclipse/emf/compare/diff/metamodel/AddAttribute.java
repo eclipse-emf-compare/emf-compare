@@ -19,6 +19,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @model
  * @generated
  */
-public interface AddAttribute extends AttributeChangeRightTarget {
+public interface AddAttribute extends AttributeChangeLeftTarget {
 	// This class doesn't need any Overriding to be functional
 } // AddAttribute

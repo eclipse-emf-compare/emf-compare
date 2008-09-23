@@ -46,11 +46,11 @@ public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAt
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"UpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"UpdateAttributeImpl.ToString", NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), rightElement.eGet(attribute), leftElement.eGet(attribute)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"UpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), leftElement.eGet(attribute), rightElement.eGet(attribute)); //$NON-NLS-1$
+							"UpdateAttributeImpl.ToString", attribute.eClass().getName(), leftElement.eClass().getName(), rightElement.eGet(attribute), leftElement.eGet(attribute)); //$NON-NLS-1$
 		}
 	}
 

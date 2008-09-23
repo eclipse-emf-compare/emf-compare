@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoveReferenceValue {
+public class RemoveReferenceValueImpl extends ReferenceChangeRightTargetImpl implements RemoveReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -45,11 +45,11 @@ public class RemoveReferenceValueImpl extends ReferenceChangeLeftTargetImpl impl
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoveReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"RemoveReferenceValueImpl.ToString", NameSimilarity.findName(rightTarget), NameSimilarity.findName(reference), NameSimilarity.findName(leftElement)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoveReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
+							"RemoveReferenceValueImpl.ToString", rightTarget.eClass().getName(), reference.eClass().getName(), leftElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 

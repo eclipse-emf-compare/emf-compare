@@ -39,7 +39,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAbstractDiffExtension()
 	 * @generated
 	 */
-	int ABSTRACT_DIFF_EXTENSION = 37;
+	int ABSTRACT_DIFF_EXTENSION = 36;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl <em>Element</em>}' class.
@@ -57,7 +57,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffGroup()
 	 * @generated
 	 */
-	int DIFF_GROUP = 4;
+	int DIFF_GROUP = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl <em>Model</em>}' class.
@@ -165,7 +165,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffElement()
 	 * @generated
 	 */
-	int CONFLICTING_DIFF_ELEMENT = 3;
+	int CONFLICTING_DIFF_ELEMENT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
@@ -174,7 +174,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChange()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE = 18;
+	int ATTRIBUTE_CHANGE = 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl <em>Attribute Change Left Target</em>}' class.
@@ -183,7 +183,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeLeftTarget()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE_LEFT_TARGET = 19;
+	int ATTRIBUTE_CHANGE_LEFT_TARGET = 18;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl <em>Attribute Change Right Target</em>}' class.
@@ -192,7 +192,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeRightTarget()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE_RIGHT_TARGET = 20;
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET = 19;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
@@ -201,7 +201,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddAttribute()
 	 * @generated
 	 */
-	int ADD_ATTRIBUTE = 21;
+	int ADD_ATTRIBUTE = 20;
 
 	/**
 	 * The singleton instance of the package.
@@ -230,78 +230,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/1.1"; //$NON-NLS-1$
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl <em>Generic Diff Element</em>}' class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getGenericDiffElement()
-	 * @generated
-	 */
-	int GENERIC_DIFF_ELEMENT = 2;
-
-	/**
-	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
-
-	/**
-	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
-
-	/**
-	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
-
-	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__KIND = DIFF_ELEMENT__KIND;
-
-	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__LEFT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT__RIGHT_ELEMENT = DIFF_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The number of structural features of the '<em>Generic Diff Element</em>' class.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_DIFF_ELEMENT_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -412,13 +340,13 @@ public interface DiffPackage extends EPackage {
 	int DIFF_GROUP__KIND = DIFF_ELEMENT__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_GROUP__LEFT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
+	int DIFF_GROUP__RIGHT_PARENT = DIFF_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Subchanges</b></em>' attribute.
@@ -446,7 +374,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 	 * @generated
 	 */
-	int IMERGER = 39;
+	int IMERGER = 38;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -455,7 +383,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChange()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE = 6;
+	int MODEL_ELEMENT_CHANGE = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl <em>Model Element Change Left Target</em>}' class.
@@ -464,7 +392,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeLeftTarget()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 7;
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl <em>Model Element Change Right Target</em>}' class.
@@ -473,7 +401,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeRightTarget()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 8;
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl <em>Add Model Element</em>}' class.
@@ -482,7 +410,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddModelElement()
 	 * @generated
 	 */
-	int ADD_MODEL_ELEMENT = 9;
+	int ADD_MODEL_ELEMENT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
@@ -491,7 +419,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
 	 * @generated
 	 */
-	int MODEL_INPUT_SNAPSHOT = 5;
+	int MODEL_INPUT_SNAPSHOT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -707,7 +635,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -716,7 +644,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -725,7 +653,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -734,25 +662,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
+	int ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
+	int ADD_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int ADD_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The number of structural features of the '<em>Add Model Element</em>' class.
@@ -761,7 +689,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeImpl <em>Reference Change</em>}' class.
@@ -770,7 +698,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChange()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE = 27;
+	int REFERENCE_CHANGE = 26;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl <em>Reference Change Left Target</em>}' class.
@@ -779,7 +707,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeLeftTarget()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE_LEFT_TARGET = 28;
+	int REFERENCE_CHANGE_LEFT_TARGET = 27;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl <em>Reference Change Right Target</em>}' class.
@@ -788,7 +716,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeRightTarget()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE_RIGHT_TARGET = 29;
+	int REFERENCE_CHANGE_RIGHT_TARGET = 28;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl <em>Add Reference Value</em>}' class.
@@ -797,7 +725,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddReferenceValue()
 	 * @generated
 	 */
-	int ADD_REFERENCE_VALUE = 30;
+	int ADD_REFERENCE_VALUE = 29;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl <em>Remote Add Attribute</em>}' class.
@@ -806,7 +734,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddAttribute()
 	 * @generated
 	 */
-	int REMOTE_ADD_ATTRIBUTE = 22;
+	int REMOTE_ADD_ATTRIBUTE = 21;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl <em>Remote Add Model Element</em>}' class.
@@ -815,7 +743,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddModelElement()
 	 * @generated
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT = 10;
+	int REMOTE_ADD_MODEL_ELEMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -824,7 +752,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_ADD_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -833,7 +761,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_ADD_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -842,7 +770,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOTE_ADD_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -851,25 +779,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
+	int REMOTE_ADD_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
+	int REMOTE_ADD_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOTE_ADD_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The number of structural features of the '<em>Remote Add Model Element</em>' class. <!--
@@ -878,7 +806,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_ADD_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddReferenceValueImpl <em>Remote Add Reference Value</em>}' class.
@@ -887,7 +815,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE = 31;
+	int REMOTE_ADD_REFERENCE_VALUE = 30;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl <em>Remote Remove Attribute</em>}' class.
@@ -896,7 +824,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveAttribute()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE = 24;
+	int REMOTE_REMOVE_ATTRIBUTE = 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl <em>Remote Remove Model Element</em>}' class.
@@ -905,7 +833,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveModelElement()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT = 12;
+	int REMOTE_REMOVE_MODEL_ELEMENT = 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl <em>Remote Remove Reference Value</em>}' class.
@@ -914,7 +842,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE = 33;
+	int REMOTE_REMOVE_REFERENCE_VALUE = 32;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
@@ -923,7 +851,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveAttribute()
 	 * @generated
 	 */
-	int REMOVE_ATTRIBUTE = 23;
+	int REMOVE_ATTRIBUTE = 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl <em>Remove Model Element</em>}' class.
@@ -932,7 +860,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveModelElement()
 	 * @generated
 	 */
-	int REMOVE_MODEL_ELEMENT = 11;
+	int REMOVE_MODEL_ELEMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -941,7 +869,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -950,7 +878,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -959,7 +887,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -968,25 +896,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
+	int REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
+	int REMOVE_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The number of structural features of the '<em>Remove Model Element</em>' class.
@@ -995,7 +923,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1004,7 +932,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_REMOVE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS = MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -1013,7 +941,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_REMOVE_MODEL_ELEMENT__IS_HIDDEN_BY = MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -1022,7 +950,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int REMOTE_REMOVE_MODEL_ELEMENT__CONFLICTING = MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1031,25 +959,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
+	int REMOTE_REMOVE_MODEL_ELEMENT__KIND = MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
 
 	/**
-	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__LEFT_PARENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
+	int REMOTE_REMOVE_MODEL_ELEMENT__RIGHT_PARENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Element</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT__RIGHT_ELEMENT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int REMOTE_REMOVE_MODEL_ELEMENT__LEFT_ELEMENT = MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The number of structural features of the '<em>Remote Remove Model Element</em>' class. <!--
@@ -1058,7 +986,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_REMOVE_MODEL_ELEMENT_FEATURE_COUNT = MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveReferenceValueImpl <em>Remove Reference Value</em>}' class.
@@ -1067,7 +995,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveReferenceValue()
 	 * @generated
 	 */
-	int REMOVE_REFERENCE_VALUE = 32;
+	int REMOVE_REFERENCE_VALUE = 31;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
@@ -1076,7 +1004,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateAttribute()
 	 * @generated
 	 */
-	int UPDATE_ATTRIBUTE = 25;
+	int UPDATE_ATTRIBUTE = 24;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl <em>Update Model Element</em>}' class.
@@ -1085,7 +1013,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateModelElement()
 	 * @generated
 	 */
-	int UPDATE_MODEL_ELEMENT = 13;
+	int UPDATE_MODEL_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1157,7 +1085,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateReference()
 	 * @generated
 	 */
-	int UPDATE_REFERENCE = 34;
+	int UPDATE_REFERENCE = 33;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
@@ -1166,7 +1094,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
 	 * @generated
 	 */
-	int UPDATE_UNIQUE_REFERENCE_VALUE = 35;
+	int UPDATE_UNIQUE_REFERENCE_VALUE = 34;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.
@@ -1175,7 +1103,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getMoveModelElement()
 	 * @generated
 	 */
-	int MOVE_MODEL_ELEMENT = 14;
+	int MOVE_MODEL_ELEMENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1266,7 +1194,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateContainmentFeature()
 	 * @generated
 	 */
-	int UPDATE_CONTAINMENT_FEATURE = 15;
+	int UPDATE_CONTAINMENT_FEATURE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1356,7 +1284,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteMoveModelElement()
 	 * @generated
 	 */
-	int REMOTE_MOVE_MODEL_ELEMENT = 16;
+	int REMOTE_MOVE_MODEL_ELEMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1447,7 +1375,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateContainmentFeature()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_CONTAINMENT_FEATURE = 17;
+	int REMOTE_UPDATE_CONTAINMENT_FEATURE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1771,7 +1699,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -1780,7 +1708,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -1789,7 +1717,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1798,7 +1726,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
+	int ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1807,7 +1735,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
+	int ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -1816,7 +1744,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+	int ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -1825,16 +1753,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
+	int ADD_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Add Attribute</em>' class.
@@ -1843,7 +1771,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1852,7 +1780,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_ADD_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -1861,7 +1789,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_ADD_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -1870,7 +1798,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOTE_ADD_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1879,7 +1807,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
+	int REMOTE_ADD_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1888,7 +1816,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
+	int REMOTE_ADD_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -1897,7 +1825,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOTE_ADD_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -1906,16 +1834,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+	int REMOTE_ADD_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Target</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
+	int REMOTE_ADD_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remote Add Attribute</em>' class.
@@ -1924,7 +1852,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_ADD_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1933,7 +1861,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -1942,7 +1870,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -1951,7 +1879,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1960,7 +1888,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
+	int REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1969,7 +1897,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
+	int REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -1978,7 +1906,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -1987,16 +1915,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+	int REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Target</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
+	int REMOVE_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remove Attribute</em>' class.
@@ -2005,7 +1933,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2014,7 +1942,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_REMOVE_ATTRIBUTE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -2023,7 +1951,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_REMOVE_ATTRIBUTE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -2032,7 +1960,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int REMOTE_REMOVE_ATTRIBUTE__CONFLICTING = ATTRIBUTE_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2041,7 +1969,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_RIGHT_TARGET__KIND;
+	int REMOTE_REMOVE_ATTRIBUTE__KIND = ATTRIBUTE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -2050,7 +1978,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_RIGHT_TARGET__ATTRIBUTE;
+	int REMOTE_REMOVE_ATTRIBUTE__ATTRIBUTE = ATTRIBUTE_CHANGE_LEFT_TARGET__ATTRIBUTE;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -2059,7 +1987,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+	int REMOTE_REMOVE_ATTRIBUTE__LEFT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -2068,16 +1996,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Target</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Target</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE__RIGHT_TARGET = ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
+	int REMOTE_REMOVE_ATTRIBUTE__LEFT_TARGET = ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remote Remove Attribute</em>' class. <!--
@@ -2086,7 +2014,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_REMOVE_ATTRIBUTE_FEATURE_COUNT = ATTRIBUTE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2167,7 +2095,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateAttribute()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_ATTRIBUTE = 26;
+	int REMOTE_UPDATE_ATTRIBUTE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2377,22 +2305,22 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Reference Change Left Target</em>' class. <!--
@@ -2467,22 +2395,22 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+	int REFERENCE_CHANGE_RIGHT_TARGET__LEFT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Reference Change Right Target</em>' class. <!--
@@ -2500,7 +2428,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -2509,7 +2437,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -2518,7 +2446,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2527,7 +2455,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
+	int ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2536,7 +2464,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
+	int ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -2545,7 +2473,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -2554,25 +2482,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+	int ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET;
+	int ADD_REFERENCE_VALUE__LEFT_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET;
+	int ADD_REFERENCE_VALUE__RIGHT_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Add Reference Value</em>' class.
@@ -2581,7 +2509,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2590,7 +2518,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_ADD_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -2599,7 +2527,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_ADD_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -2608,7 +2536,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOTE_ADD_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2617,7 +2545,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
+	int REMOTE_ADD_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2626,7 +2554,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
+	int REMOTE_ADD_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -2635,7 +2563,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -2644,25 +2572,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOTE_ADD_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET;
+	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
 
 	/**
-	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET;
+	int REMOTE_ADD_REFERENCE_VALUE__LEFT_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remote Add Reference Value</em>' class. <!--
@@ -2671,7 +2599,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_ADD_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2680,7 +2608,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -2689,7 +2617,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+	int REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -2698,7 +2626,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
+	int REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2707,7 +2635,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
+	int REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2716,7 +2644,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
+	int REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -2725,7 +2653,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
+	int REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -2734,25 +2662,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+	int REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Left Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__LEFT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET;
+	int REMOVE_REFERENCE_VALUE__RIGHT_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET;
 
 	/**
-	 * The feature id for the '<em><b>Right Removed Target</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE__RIGHT_REMOVED_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET;
+	int REMOVE_REFERENCE_VALUE__LEFT_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remove Reference Value</em>' class. <!--
@@ -2761,7 +2689,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+	int REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2770,7 +2698,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+	int REMOTE_REMOVE_REFERENCE_VALUE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
 
 	/**
 	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
@@ -2779,7 +2707,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+	int REMOTE_REMOVE_REFERENCE_VALUE__IS_HIDDEN_BY = REFERENCE_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
 
 	/**
 	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
@@ -2788,7 +2716,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_RIGHT_TARGET__CONFLICTING;
+	int REMOTE_REMOVE_REFERENCE_VALUE__CONFLICTING = REFERENCE_CHANGE_LEFT_TARGET__CONFLICTING;
 
 	/**
 	 * The feature id for the '<em><b>Kind</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2797,7 +2725,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_RIGHT_TARGET__KIND;
+	int REMOTE_REMOVE_REFERENCE_VALUE__KIND = REFERENCE_CHANGE_LEFT_TARGET__KIND;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2806,7 +2734,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_RIGHT_TARGET__REFERENCE;
+	int REMOTE_REMOVE_REFERENCE_VALUE__REFERENCE = REFERENCE_CHANGE_LEFT_TARGET__REFERENCE;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -2815,7 +2743,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -2824,25 +2752,25 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ELEMENT;
+	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ELEMENT = REFERENCE_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
 
 	/**
-	 * The feature id for the '<em><b>Right Added Target</b></em>' reference.
+	 * The feature id for the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET;
+	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_TARGET = REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET;
 
 	/**
-	 * The feature id for the '<em><b>Left Added Target</b></em>' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The feature id for the '<em><b>Right Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE__LEFT_ADDED_TARGET = REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET;
+	int REMOTE_REMOVE_REFERENCE_VALUE__RIGHT_TARGET = REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET;
 
 	/**
 	 * The number of structural features of the '<em>Remote Remove Reference Value</em>' class. <!--
@@ -2851,7 +2779,7 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+	int REMOTE_REMOVE_REFERENCE_VALUE_FEATURE_COUNT = REFERENCE_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -3022,7 +2950,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateUniqueReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 36;
+	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -3147,7 +3075,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDifferenceKind()
 	 * @generated
 	 */
-	int DIFFERENCE_KIND = 38;
+	int DIFFERENCE_KIND = 37;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension <em>Abstract Diff Extension</em>}'.
@@ -3398,14 +3326,15 @@ public interface DiffPackage extends EPackage {
 	EClass getDiffGroup();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Parent</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent()
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getRightParent <em>Right Parent</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Parent</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffGroup#getRightParent()
 	 * @see #getDiffGroup()
 	 * @generated
 	 */
-	EReference getDiffGroup_LeftParent();
+	EReference getDiffGroup_RightParent();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}'.
@@ -3465,35 +3394,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDiffModel_Right();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement <em>Generic Diff Element</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Generic Diff Element</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.GenericDiffElement
-	 * @generated
-	 */
-	EClass getGenericDiffElement();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement#getLeftElement <em>Left Element</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Element</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.GenericDiffElement#getLeftElement()
-	 * @see #getGenericDiffElement()
-	 * @generated
-	 */
-	EReference getGenericDiffElement_LeftElement();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.GenericDiffElement#getRightElement <em>Right Element</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Element</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.GenericDiffElement#getRightElement()
-	 * @see #getGenericDiffElement()
-	 * @generated
-	 */
-	EReference getGenericDiffElement_RightElement();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.diff.merge.api.IMerger <em>IMerger</em>}'.
@@ -3699,24 +3599,26 @@ public interface DiffPackage extends EPackage {
 	EClass getReferenceChangeLeftTarget();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget <em>Left Removed Target</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Removed Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget()
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftTarget()
 	 * @see #getReferenceChangeLeftTarget()
 	 * @generated
 	 */
-	EReference getReferenceChangeLeftTarget_LeftRemovedTarget();
+	EReference getReferenceChangeLeftTarget_LeftTarget();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget <em>Right Removed Target</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Removed Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget()
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightTarget()
 	 * @see #getReferenceChangeLeftTarget()
 	 * @generated
 	 */
-	EReference getReferenceChangeLeftTarget_RightRemovedTarget();
+	EReference getReferenceChangeLeftTarget_RightTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget <em>Reference Change Right Target</em>}'.
@@ -3728,24 +3630,26 @@ public interface DiffPackage extends EPackage {
 	EClass getReferenceChangeRightTarget();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget <em>Left Added Target</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Left Added Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget()
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightTarget()
 	 * @see #getReferenceChangeRightTarget()
 	 * @generated
 	 */
-	EReference getReferenceChangeRightTarget_LeftAddedTarget();
+	EReference getReferenceChangeRightTarget_RightTarget();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget <em>Right Added Target</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Right Added Target</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget()
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftTarget()
 	 * @see #getReferenceChangeRightTarget()
 	 * @generated
 	 */
-	EReference getReferenceChangeRightTarget_RightAddedTarget();
+	EReference getReferenceChangeRightTarget_LeftTarget();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute <em>Remote Add Attribute</em>}'.
@@ -4168,12 +4072,12 @@ public interface DiffPackage extends EPackage {
 		EClass DIFF_GROUP = eINSTANCE.getDiffGroup();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Parent</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Right Parent</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference DIFF_GROUP__LEFT_PARENT = eINSTANCE.getDiffGroup_LeftParent();
+		EReference DIFF_GROUP__RIGHT_PARENT = eINSTANCE.getDiffGroup_RightParent();
 
 		/**
 		 * The meta object literal for the '<em><b>Subchanges</b></em>' attribute feature. <!--
@@ -4222,31 +4126,6 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIFF_MODEL__RIGHT = eINSTANCE.getDiffModel_Right();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl <em>Generic Diff Element</em>}' class.
-		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.GenericDiffElementImpl
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getGenericDiffElement()
-		 * @generated
-		 */
-		EClass GENERIC_DIFF_ELEMENT = eINSTANCE.getGenericDiffElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Left Element</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference GENERIC_DIFF_ELEMENT__LEFT_ELEMENT = eINSTANCE.getGenericDiffElement_LeftElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Right Element</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference GENERIC_DIFF_ELEMENT__RIGHT_ELEMENT = eINSTANCE.getGenericDiffElement_RightElement();
 
 		/**
 		 * The meta object literal for the '<em>IMerger</em>' data type.
@@ -4432,22 +4311,22 @@ public interface DiffPackage extends EPackage {
 		EClass REFERENCE_CHANGE_LEFT_TARGET = eINSTANCE.getReferenceChangeLeftTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Removed Target</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE_LEFT_TARGET__LEFT_REMOVED_TARGET = eINSTANCE
-				.getReferenceChangeLeftTarget_LeftRemovedTarget();
+		EReference REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET = eINSTANCE
+				.getReferenceChangeLeftTarget_LeftTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Removed Target</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE_LEFT_TARGET__RIGHT_REMOVED_TARGET = eINSTANCE
-				.getReferenceChangeLeftTarget_RightRemovedTarget();
+		EReference REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET = eINSTANCE
+				.getReferenceChangeLeftTarget_RightTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl <em>Reference Change Right Target</em>}' class.
@@ -4459,22 +4338,22 @@ public interface DiffPackage extends EPackage {
 		EClass REFERENCE_CHANGE_RIGHT_TARGET = eINSTANCE.getReferenceChangeRightTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Left Added Target</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE_RIGHT_TARGET__LEFT_ADDED_TARGET = eINSTANCE
-				.getReferenceChangeRightTarget_LeftAddedTarget();
+		EReference REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET = eINSTANCE
+				.getReferenceChangeRightTarget_RightTarget();
 
 		/**
-		 * The meta object literal for the '<em><b>Right Added Target</b></em>' reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_ADDED_TARGET = eINSTANCE
-				.getReferenceChangeRightTarget_RightAddedTarget();
+		EReference REFERENCE_CHANGE_RIGHT_TARGET__LEFT_TARGET = eINSTANCE
+				.getReferenceChangeRightTarget_LeftTarget();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl <em>Remote Add Attribute</em>}' class.

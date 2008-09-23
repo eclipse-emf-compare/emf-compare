@@ -20,6 +20,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @generated
  */
 
-public interface RemoveReferenceValue extends ReferenceChangeLeftTarget {
+public interface RemoveReferenceValue extends ReferenceChangeRightTarget {
 	// This class doesn't need any Overriding to be functional
 } // RemoveReferenceValue

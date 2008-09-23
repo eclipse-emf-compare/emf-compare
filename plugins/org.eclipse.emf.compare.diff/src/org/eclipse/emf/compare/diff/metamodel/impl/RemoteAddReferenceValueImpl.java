@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 
-public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl implements RemoteAddReferenceValue {
+public class RemoteAddReferenceValueImpl extends ReferenceChangeRightTargetImpl implements RemoteAddReferenceValue {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -46,11 +46,11 @@ public class RemoteAddReferenceValueImpl extends ReferenceChangeLeftTargetImpl i
 		try {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoteAddReferenceValueImpl.ToString", NameSimilarity.findName(leftRemovedTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
-		} catch (FactoryException e) {
+							"RemoteAddReferenceValueImpl.ToString", NameSimilarity.findName(rightTarget), NameSimilarity.findName(reference), NameSimilarity.findName(rightElement)); //$NON-NLS-1$
+		} catch (final FactoryException e) {
 			return EMFCompareDiffMessages
 					.getString(
-							"RemoteAddReferenceValueImpl.ToString", leftRemovedTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
+							"RemoteAddReferenceValueImpl.ToString", rightTarget.eClass().getName(), reference.eClass().getName(), rightElement.eClass().getName()); //$NON-NLS-1$
 		}
 	}
 

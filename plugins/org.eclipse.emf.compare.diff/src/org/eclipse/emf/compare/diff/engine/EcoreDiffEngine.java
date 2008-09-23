@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.diff.engine;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 
@@ -24,30 +24,32 @@ import org.eclipse.emf.ecore.EObject;
 public class EcoreDiffEngine extends GenericDiffEngine {
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#checkMoves(org.eclipse.emf.compare.diff.metamodel.DiffGroup, org.eclipse.emf.compare.match.metamodel.Match2Elements)
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#checkMoves(org.eclipse.emf.compare.diff.metamodel.DiffGroup,
+	 *      org.eclipse.emf.compare.match.metamodel.Match2Elements)
 	 */
 	@Override
 	protected void checkMoves(DiffGroup root, Match2Elements matchElement) {
 		final EObject left = matchElement.getLeftElement();
 		final EObject right = matchElement.getRightElement();
-		
+
 		if (!(left instanceof EGenericType || right instanceof EGenericType)) {
 			super.checkMoves(root, matchElement);
-		}			
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#checkMoves(org.eclipse.emf.compare.diff.metamodel.DiffGroup, org.eclipse.emf.compare.match.metamodel.Match3Element)
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#checkMoves(org.eclipse.emf.compare.diff.metamodel.DiffGroup,
+	 *      org.eclipse.emf.compare.match.metamodel.Match3Element)
 	 */
 	@Override
-	protected void checkMoves(DiffGroup root, Match3Element matchElement) {
+	protected void checkMoves(DiffGroup root, Match3Elements matchElement) {
 		final EObject leftElement = matchElement.getLeftElement();
 		final EObject rightElement = matchElement.getRightElement();
 		final EObject originElement = matchElement.getOriginElement();
-		
+
 		if (!(leftElement instanceof EGenericType || rightElement instanceof EGenericType || originElement instanceof EGenericType)) {
 			super.checkMoves(root, matchElement);
 		}

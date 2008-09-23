@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget <em>Right Added Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget <em>Left Added Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightTarget <em>Right Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
  *
@@ -30,53 +30,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ReferenceChangeRightTarget extends ReferenceChange {
 	/**
-	 * Returns the value of the '<em><b>Left Added Target</b></em>' reference.
+	 * Returns the value of the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Added Target</em>' reference isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Right Target</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Added Target</em>' reference.
-	 * @see #setLeftAddedTarget(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeRightTarget_LeftAddedTarget()
+	 * @return the value of the '<em>Right Target</em>' reference.
+	 * @see #setRightTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeRightTarget_RightTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getLeftAddedTarget();
+	EObject getRightTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Added Target</b></em>' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightTarget <em>Right Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Target</em>' reference.
+	 * @see #getRightTarget()
+	 * @generated
+	 */
+	void setRightTarget(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right Added Target</em>' reference isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Left Target</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Added Target</em>' reference.
-	 * @see #setRightAddedTarget(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeRightTarget_RightAddedTarget()
+	 * @return the value of the '<em>Left Target</em>' reference.
+	 * @see #setLeftTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeRightTarget_LeftTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getRightAddedTarget();
+	EObject getLeftTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftAddedTarget <em>Left Added Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Added Target</em>' reference.
-	 * @see #getLeftAddedTarget()
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getLeftTarget <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Target</em>' reference.
+	 * @see #getLeftTarget()
 	 * @generated
 	 */
-	void setLeftAddedTarget(EObject value);
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget#getRightAddedTarget <em>Right Added Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Added Target</em>' reference.
-	 * @see #getRightAddedTarget()
-	 * @generated
-	 */
-	void setRightAddedTarget(EObject value);
+	void setLeftTarget(EObject value);
 
 } // ReferenceChangeRightTarget

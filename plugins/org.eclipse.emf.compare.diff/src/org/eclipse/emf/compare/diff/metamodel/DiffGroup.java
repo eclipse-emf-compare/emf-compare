@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getRightParent <em>Right Parent</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}</li>
  * </ul>
  * </p>
@@ -30,20 +30,30 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface DiffGroup extends DiffElement {
 	/**
-	 * Returns the value of the '<em><b>Left Parent</b></em>' reference.
+	 * Returns the value of the '<em><b>Right Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Parent</em>' reference isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Right Parent</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Parent</em>' reference.
-	 * @see #setLeftParent(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffGroup_LeftParent()
+	 * @return the value of the '<em>Right Parent</em>' reference.
+	 * @see #setRightParent(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffGroup_RightParent()
 	 * @model
 	 * @generated
 	 */
-	EObject getLeftParent();
+	EObject getRightParent();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getRightParent <em>Right Parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Parent</em>' reference.
+	 * @see #getRightParent()
+	 * @generated
+	 */
+	void setRightParent(EObject value);
 
 	/**
 	 * Returns the value of the '<em><b>Subchanges</b></em>' attribute.
@@ -73,15 +83,6 @@ public interface DiffGroup extends DiffElement {
 	 * @generated
 	 */
 	boolean isSetSubchanges();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getLeftParent <em>Left Parent</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Parent</em>' reference.
-	 * @see #getLeftParent()
-	 * @generated
-	 */
-	void setLeftParent(EObject value);
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute.

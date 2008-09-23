@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 
-public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl implements RemoteAddModelElement {
+public class RemoteAddModelElementImpl extends ModelElementChangeRightTargetImpl implements RemoteAddModelElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -41,7 +41,7 @@ public class RemoteAddModelElementImpl extends ModelElementChangeLeftTargetImpl 
 	 */
 	@Override
 	public String toString() {
-		return EMFCompareDiffMessages.getString("RemoteAddModelElementImpl.ToString", leftElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("RemoteAddModelElementImpl.ToString", rightElement); //$NON-NLS-1$
 	}
 
 	/**

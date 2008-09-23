@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 
-public class RemoveAttributeImpl extends AttributeChangeLeftTargetImpl implements RemoveAttribute {
+public class RemoveAttributeImpl extends AttributeChangeRightTargetImpl implements RemoveAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

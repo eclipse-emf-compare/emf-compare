@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget <em>Left Removed Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget <em>Right Removed Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
  *
@@ -30,53 +30,55 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ReferenceChangeLeftTarget extends ReferenceChange {
 	/**
-	 * Returns the value of the '<em><b>Left Removed Target</b></em>' reference.
+	 * Returns the value of the '<em><b>Left Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Left Removed Target</em>' reference isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Left Target</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Removed Target</em>' reference.
-	 * @see #setLeftRemovedTarget(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeLeftTarget_LeftRemovedTarget()
+	 * @return the value of the '<em>Left Target</em>' reference.
+	 * @see #setLeftTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeLeftTarget_LeftTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getLeftRemovedTarget();
+	EObject getLeftTarget();
 
 	/**
-	 * Returns the value of the '<em><b>Right Removed Target</b></em>' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftTarget <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Target</em>' reference.
+	 * @see #getLeftTarget()
+	 * @generated
+	 */
+	void setLeftTarget(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Right Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right Removed Target</em>' reference isn't clear, there really should be
-	 * more of a description here...
+	 * If the meaning of the '<em>Right Target</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Removed Target</em>' reference.
-	 * @see #setRightRemovedTarget(EObject)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeLeftTarget_RightRemovedTarget()
+	 * @return the value of the '<em>Right Target</em>' reference.
+	 * @see #setRightTarget(EObject)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getReferenceChangeLeftTarget_RightTarget()
 	 * @model
 	 * @generated
 	 */
-	EObject getRightRemovedTarget();
+	EObject getRightTarget();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getLeftRemovedTarget <em>Left Removed Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Removed Target</em>' reference.
-	 * @see #getLeftRemovedTarget()
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightTarget <em>Right Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Target</em>' reference.
+	 * @see #getRightTarget()
 	 * @generated
 	 */
-	void setLeftRemovedTarget(EObject value);
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget#getRightRemovedTarget <em>Right Removed Target</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Removed Target</em>' reference.
-	 * @see #getRightRemovedTarget()
-	 * @generated
-	 */
-	void setRightRemovedTarget(EObject value);
+	void setRightTarget(EObject value);
 
 } // ReferenceChangeLeftTarget

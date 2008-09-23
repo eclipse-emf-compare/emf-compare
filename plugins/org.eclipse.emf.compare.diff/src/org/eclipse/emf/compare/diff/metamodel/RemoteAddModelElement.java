@@ -19,6 +19,6 @@ package org.eclipse.emf.compare.diff.metamodel;
  * @model
  * @generated
  */
-public interface RemoteAddModelElement extends ModelElementChangeLeftTarget {
+public interface RemoteAddModelElement extends ModelElementChangeRightTarget {
 	// This class doesn't need any Overriding to be functional
 } // RemoteAddModelElement

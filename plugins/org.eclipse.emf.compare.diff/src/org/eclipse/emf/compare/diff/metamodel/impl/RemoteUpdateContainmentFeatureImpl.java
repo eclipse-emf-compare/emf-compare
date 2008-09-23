@@ -1,20 +1,22 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: RemoteUpdateContainmentFeatureImpl.java,v 1.1 2008/09/15 13:20:46 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2008 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateContainmentFeature;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Remote Update Containment Feature</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Remote Update Containment Feature</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -22,8 +24,7 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class RemoteUpdateContainmentFeatureImpl extends UpdateContainmentFeatureImpl implements RemoteUpdateContainmentFeature {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected RemoteUpdateContainmentFeatureImpl() {
@@ -31,8 +32,7 @@ public class RemoteUpdateContainmentFeatureImpl extends UpdateContainmentFeature
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -40,4 +40,4 @@ public class RemoteUpdateContainmentFeatureImpl extends UpdateContainmentFeature
 		return DiffPackage.Literals.REMOTE_UPDATE_CONTAINMENT_FEATURE;
 	}
 
-} //RemoteUpdateContainmentFeatureImpl
+} // RemoteUpdateContainmentFeatureImpl

@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EClass;
  * @generated
  */
 
-public class AddAttributeImpl extends AttributeChangeRightTargetImpl implements AddAttribute {
+public class AddAttributeImpl extends AttributeChangeLeftTargetImpl implements AddAttribute {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated

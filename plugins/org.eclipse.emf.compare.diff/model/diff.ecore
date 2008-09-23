@@ -20,17 +20,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//DifferenceKind"
         changeable="false" transient="true" defaultValueLiteral="" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GenericDiffElement" eSuperTypes="#//DiffElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConflictingDiffElement" eSuperTypes="#//DiffElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffGroup" eSuperTypes="#//DiffElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subchanges" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         transient="true" unsettable="true" derived="true"/>
   </eClassifiers>
@@ -50,10 +46,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AddModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoveModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AddModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveModelElement" eSuperTypes="#//ModelElementChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveModelElement" eSuperTypes="#//ModelElementChangeLeftTarget"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateModelElement" eSuperTypes="#//ModelElementChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
@@ -76,10 +72,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="AttributeChangeRightTarget" eSuperTypes="#//AttributeChange">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rightTarget" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AddAttribute" eSuperTypes="#//AttributeChangeRightTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddAttribute" eSuperTypes="#//AttributeChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoveAttribute" eSuperTypes="#//AttributeChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveAttribute" eSuperTypes="#//AttributeChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AddAttribute" eSuperTypes="#//AttributeChangeLeftTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddAttribute" eSuperTypes="#//AttributeChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveAttribute" eSuperTypes="#//AttributeChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveAttribute" eSuperTypes="#//AttributeChangeLeftTarget"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateAttribute" eSuperTypes="#//AttributeChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="RemoteUpdateAttribute" eSuperTypes="#//UpdateAttribute"/>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceChange" eSuperTypes="#//DiffElement">
@@ -88,17 +84,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceChangeLeftTarget" eSuperTypes="#//ReferenceChange">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftRemovedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightRemovedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceChangeRightTarget" eSuperTypes="#//ReferenceChange">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rightAddedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leftAddedTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AddReferenceValue" eSuperTypes="#//ReferenceChangeRightTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddReferenceValue" eSuperTypes="#//ReferenceChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoveReferenceValue" eSuperTypes="#//ReferenceChangeLeftTarget"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveReferenceValue" eSuperTypes="#//ReferenceChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AddReferenceValue" eSuperTypes="#//ReferenceChangeLeftTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddReferenceValue" eSuperTypes="#//ReferenceChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveReferenceValue" eSuperTypes="#//ReferenceChangeRightTarget"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveReferenceValue" eSuperTypes="#//ReferenceChangeLeftTarget"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateReference" eSuperTypes="#//ReferenceChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateUniqueReferenceValue" eSuperTypes="#//UpdateReference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
