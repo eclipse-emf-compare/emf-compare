@@ -144,7 +144,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 				writer.flush();
 				writer.close();
 				result = true;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				final IStatus status = new Status(IStatus.ERROR,
 						"org.eclipse.emf.compare.examples.export.library", //$NON-NLS-1$
 						"Couldn't create file " + createdFile.getFullPath(), e);
@@ -180,7 +180,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof AddModelElement) {
-				final EObject addedElement = ((AddModelElement)next).getRightElement();
+				final EObject addedElement = ((AddModelElement)next).getLeftElement();
 				if (addedElement instanceof Member) {
 					// We need to create the table headers
 					if (newMembers.length() == 0) {
@@ -197,8 +197,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found added members
-		if (newMembers.length() > 0)
+		if (newMembers.length() > 0) {
 			newMembers += "</table>"; //$NON-NLS-1$
+		}
 		return newMembers;
 	}
 
@@ -213,7 +214,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof AddModelElement) {
-				final EObject addedElement = ((AddModelElement)next).getRightElement();
+				final EObject addedElement = ((AddModelElement)next).getLeftElement();
 				if (addedElement instanceof Book) {
 					// We need to create the table headers
 					if (newBooks.length() == 0) {
@@ -230,8 +231,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found added books
-		if (newBooks.length() > 0)
+		if (newBooks.length() > 0) {
 			newBooks += "</table>"; //$NON-NLS-1$
+		}
 		return newBooks;
 	}
 
@@ -254,7 +256,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 						borrowedBooks += "<td class=\"header\" colspan=\"2\">Borrowed Books</td></tr>"; //$NON-NLS-1$
 						borrowedBooks += "<tr><td class=\"header\">Title</td><td class=\"header\">Member</td></tr>"; //$NON-NLS-1$
 					}
-					final Book borrowed = (Book)((AddReferenceValue)next).getRightAddedTarget();
+					final Book borrowed = (Book)((AddReferenceValue)next).getLeftTarget();
 					final Member member = (Member)((AddReferenceValue)next).getRightElement();
 					borrowedBooks += "<tr><td>"; //$NON-NLS-1$
 					borrowedBooks += borrowed.getTitle();
@@ -265,8 +267,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found borrowals
-		if (borrowedBooks.length() > 0)
+		if (borrowedBooks.length() > 0) {
 			borrowedBooks += "</table>"; //$NON-NLS-1$
+		}
 		return borrowedBooks;
 	}
 
@@ -289,7 +292,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 						returnedBooks += "<td class=\"header\" colspan=\"2\">Returned Books</td></tr>"; //$NON-NLS-1$
 						returnedBooks += "<tr><td class=\"header\">Title</td><td class=\"header\">Member</td></tr>"; //$NON-NLS-1$
 					}
-					final Book returned = (Book)((RemoveReferenceValue)next).getRightRemovedTarget();
+					final Book returned = (Book)((RemoveReferenceValue)next).getLeftTarget();
 					final Member member = (Member)((RemoveReferenceValue)next).getRightElement();
 					returnedBooks += "<tr><td>"; //$NON-NLS-1$
 					returnedBooks += returned.getTitle();
@@ -300,8 +303,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found returned books
-		if (returnedBooks.length() > 0)
+		if (returnedBooks.length() > 0) {
 			returnedBooks += "</table>"; //$NON-NLS-1$
+		}
 		return returnedBooks;
 	}
 
@@ -316,7 +320,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof RemoveModelElement) {
-				final EObject removedElement = ((RemoveModelElement)next).getLeftElement();
+				final EObject removedElement = ((RemoveModelElement)next).getRightElement();
 				if (removedElement instanceof Member) {
 					// We need to create the table headers
 					if (removedMembers.length() == 0) {
@@ -333,8 +337,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found removed members
-		if (removedMembers.length() > 0)
+		if (removedMembers.length() > 0) {
 			removedMembers += "</table>"; //$NON-NLS-1$
+		}
 		return removedMembers;
 	}
 
@@ -349,7 +354,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof RemoveModelElement) {
-				final EObject removedElement = ((RemoveModelElement)next).getLeftElement();
+				final EObject removedElement = ((RemoveModelElement)next).getRightElement();
 				if (removedElement instanceof Book) {
 					// We need to create the table headers
 					if (removedBooks.length() == 0) {
@@ -366,8 +371,9 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			}
 		}
 		// Closes the table if we found removed members
-		if (removedBooks.length() > 0)
+		if (removedBooks.length() > 0) {
 			removedBooks += "</table>"; //$NON-NLS-1$
+		}
 		return removedBooks;
 	}
 
