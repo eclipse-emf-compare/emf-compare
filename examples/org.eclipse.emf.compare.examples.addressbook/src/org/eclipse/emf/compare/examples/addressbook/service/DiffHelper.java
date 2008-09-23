@@ -21,44 +21,42 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Utility class to retrieve elements from a {@link DiffModel}. At some point
- * it may be included in the EMF compare utility classes.
+ * Utility class to retrieve elements from a {@link DiffModel}. At some point it may be included in the EMF
+ * compare utility classes.
  * 
  * @author Cedric Brun <cedric.brun@obeo.fr>
- * 
  */
 public class DiffHelper {
 
-    public static AddModelElement isAdded(EObject instance, DiffModel diff) {
-        EcoreUtil.CrossReferencer referencer = getCrossReferencer(instance, diff);
-        Collection<EStructuralFeature.Setting> references = referencer.get(instance);
-        if (references != null && references.size() > 0) {
-            Iterator<EStructuralFeature.Setting> it = references.iterator();
-            while (it.hasNext()) {
-                EStructuralFeature.Setting setting = it.next();
-                EObject eObj = setting.getEObject();
-                if (eObj instanceof AddModelElement && ((AddModelElement) eObj).getRightElement() == instance) {
-                    return (AddModelElement) eObj;
-                }
-            }
-        }
-        return null;
+	public static AddModelElement isAdded(EObject instance, DiffModel diff) {
+		final EcoreUtil.CrossReferencer referencer = getCrossReferencer(instance, diff);
+		final Collection<EStructuralFeature.Setting> references = referencer.get(instance);
+		if (references != null && references.size() > 0) {
+			final Iterator<EStructuralFeature.Setting> it = references.iterator();
+			while (it.hasNext()) {
+				final EStructuralFeature.Setting setting = it.next();
+				final EObject eObj = setting.getEObject();
+				if (eObj instanceof AddModelElement && ((AddModelElement)eObj).getLeftElement() == instance)
+					return (AddModelElement)eObj;
+			}
+		}
+		return null;
 
-    }
+	}
 
-    public static EcoreUtil.CrossReferencer getCrossReferencer(EObject instance, DiffModel diff) {
-        Collection<EObject> models = new ArrayList<EObject>(2);
-        models.add(instance);
-        models.add(diff);
-        EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(models) {
-            private static final long serialVersionUID = 1L;
+	public static EcoreUtil.CrossReferencer getCrossReferencer(EObject instance, DiffModel diff) {
+		final Collection<EObject> models = new ArrayList<EObject>(2);
+		models.add(instance);
+		models.add(diff);
+		final EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(models) {
+			private static final long serialVersionUID = 1L;
 
-            // initializer for this anonymous class
-            {
-                crossReference();
-            }
+			// initializer for this anonymous class
+			{
+				crossReference();
+			}
 
-        };
-        return referencer;
-    }
+		};
+		return referencer;
+	}
 }
