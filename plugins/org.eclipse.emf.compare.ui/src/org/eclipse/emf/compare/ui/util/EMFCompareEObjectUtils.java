@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.ui.util;
 
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
-import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.compare.util.ClassUtils;
@@ -55,17 +55,18 @@ public final class EMFCompareEObjectUtils {
 	 */
 	public static String computeObjectName(EObject eObject) {
 		String objectName = getLabelProvider().getText(eObject);
-		if (objectName == null || "".equals(objectName)) //$NON-NLS-1$
+		if (objectName == null || "".equals(objectName)) { //$NON-NLS-1$
 			objectName = EMFCompareUIMessages.getString("EMFCompareEObjectUtils.undefinedName"); //$NON-NLS-1$
+		}
 		return objectName;
 	}
 
 	/**
 	 * Returns the ancestor element of the given {@link EObject}. Will try to invoke the method called
 	 * "getLeftParent" if the {@link EObject} is a {@link ConflictingDiffGroup}, "getOriginElement" if the
-	 * {@link EObject} is a {@link Match3Element}. <code>null</code> if neither of these methods can be
+	 * {@link EObject} is a {@link Match3Elements}. <code>null</code> if neither of these methods can be
 	 * found.<br/> This method is intended to be called with a {@link ConflictingDiffGroup} or
-	 * {@link Match3Element} as argument.
+	 * {@link Match3Elements} as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -74,10 +75,11 @@ public final class EMFCompareEObjectUtils {
 	public static EObject getAncestorElement(EObject object) {
 		EObject ancestorElement = null;
 
-		if (object instanceof ConflictingDiffElement)
+		if (object instanceof ConflictingDiffElement) {
 			ancestorElement = ((ConflictingDiffElement)object).getOriginElement();
-		else if (object instanceof Match3Element)
-			ancestorElement = ((Match3Element)object).getOriginElement();
+		} else if (object instanceof Match3Elements) {
+			ancestorElement = ((Match3Elements)object).getOriginElement();
+		}
 
 		return ancestorElement;
 	}
@@ -86,7 +88,7 @@ public final class EMFCompareEObjectUtils {
 	 * Returns the left element of the given {@link EObject}. Will try to invoke the method called
 	 * "getLeftElement" and, if it fails to find it, "getLeftParent". <code>null</code> if neither of these
 	 * methods can be found.<br/> This method is intended to be called with a {@link DiffElement} or
-	 * {@link MatchElement} as argument.
+	 * MatchElement as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -96,17 +98,18 @@ public final class EMFCompareEObjectUtils {
 		EObject leftElement = null;
 
 		leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftElement"); //$NON-NLS-1$
-		if (leftElement == null)
+		if (leftElement == null) {
 			leftElement = (EObject)ClassUtils.invokeMethod(object, "getLeftParent"); //$NON-NLS-1$
+		}
 
 		return leftElement;
 	}
 
 	/**
 	 * Returns the right element of the given {@link EObject}. Will try to invoke the method called
-	 * "getRightElement" and, if it fails to find it, "getRightParent". <code>null</code> if neither of
-	 * these methods can be found.<br/> This method is intended to be called with a {@link DiffElement} or
-	 * {@link MatchElement} as argument.
+	 * "getRightElement" and, if it fails to find it, "getRightParent". <code>null</code> if neither of these
+	 * methods can be found.<br/> This method is intended to be called with a {@link DiffElement} or
+	 * MatchElement as argument.
 	 * 
 	 * @param object
 	 *            The {@link EObject}.
@@ -116,8 +119,9 @@ public final class EMFCompareEObjectUtils {
 		EObject rightElement = null;
 
 		rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightElement"); //$NON-NLS-1$
-		if (rightElement == null)
+		if (rightElement == null) {
 			rightElement = (EObject)ClassUtils.invokeMethod(object, "getRightParent"); //$NON-NLS-1$
+		}
 
 		return rightElement;
 	}

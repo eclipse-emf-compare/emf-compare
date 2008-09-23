@@ -20,9 +20,9 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
@@ -96,15 +96,15 @@ public class ModelContentMergeTabFolder {
 	 * @param composite
 	 *            Parent {@link Composite} for this part.
 	 * @param side
-	 *            Comparison side of this part. Must be one of
-	 *            {@link EMFCompareConstants#LEFT EMFCompareConstants.RIGHT},
-	 *            {@link EMFCompareConstants#RIGHT EMFCompareConstants.LEFT} or
+	 *            Comparison side of this part. Must be one of {@link EMFCompareConstants#LEFT
+	 *            EMFCompareConstants.RIGHT}, {@link EMFCompareConstants#RIGHT EMFCompareConstants.LEFT} or
 	 *            {@link EMFCompareConstants#ANCESTOR EMFCompareConstants.ANCESTOR}.
 	 */
 	public ModelContentMergeTabFolder(ModelContentMergeViewer viewer, Composite composite, int side) {
 		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
-				&& side != EMFCompareConstants.ANCESTOR)
+				&& side != EMFCompareConstants.ANCESTOR) {
 			throw new IllegalArgumentException(EMFCompareUIMessages.getString("IllegalSide", side)); //$NON-NLS-1$
+		}
 
 		parentViewer = viewer;
 		partSide = side;
@@ -171,26 +171,30 @@ public class ModelContentMergeTabFolder {
 	 */
 	public ModelContentMergeTabItem getUIItem(DiffElement element) {
 		final EObject data;
-		if (partSide == EMFCompareConstants.ANCESTOR && element instanceof ConflictingDiffElement)
+		if (partSide == EMFCompareConstants.ANCESTOR && element instanceof ConflictingDiffElement) {
 			data = ((ConflictingDiffElement)element).getOriginElement();
-		else if (partSide == EMFCompareConstants.LEFT)
+		} else if (partSide == EMFCompareConstants.LEFT) {
 			data = EMFCompareEObjectUtils.getLeftElement(element);
-		else
+		} else {
 			data = EMFCompareEObjectUtils.getRightElement(element);
+		}
 
 		final EObject featureData;
-		if (element instanceof AttributeChange)
+		if (element instanceof AttributeChange) {
 			featureData = ((AttributeChange)element).getAttribute();
-		else if (element instanceof ReferenceChange)
+		} else if (element instanceof ReferenceChange) {
 			featureData = ((ReferenceChange)element).getReference();
-		else
+		} else {
 			featureData = null;
+		}
 
 		ModelContentMergeTabItem result = null;
-		if (data != null)
+		if (data != null) {
 			result = tabs.get(tabFolder.getSelectionIndex()).getUIItem(data);
-		if (result == null && featureData != null)
+		}
+		if (result == null && featureData != null) {
 			result = tabs.get(tabFolder.getSelectionIndex()).getUIItem(featureData);
+		}
 		return result;
 	}
 
@@ -236,17 +240,18 @@ public class ModelContentMergeTabFolder {
 			target = EMFCompareEObjectUtils.getLeftElement(diffs.get(0));
 		} else if (partSide == EMFCompareConstants.RIGHT) {
 			if (diffs.get(0) instanceof DiffGroup
-					&& EMFCompareEObjectUtils.getLeftElement(diffs.get(0)) != null)
+					&& EMFCompareEObjectUtils.getLeftElement(diffs.get(0)) != null) {
 				target = EMFCompareEObjectUtils.getRightElement(findMatchFromElement(EMFCompareEObjectUtils
 						.getLeftElement(diffs.get(0))));
-			else if (!(diffs.get(0) instanceof DiffGroup))
+			} else if (!(diffs.get(0) instanceof DiffGroup)) {
 				target = EMFCompareEObjectUtils.getRightElement(diffs.get(0));
-			else
+			} else
 				// fall through.
 				return;
-		} else
+		} else {
 			target = EMFCompareEObjectUtils.getAncestorElement(findMatchFromElement(EMFCompareEObjectUtils
 					.getLeftElement(diffs.get(0))));
+		}
 
 		tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
 		properties.setReflectiveInput(findMatchFromElement(target));
@@ -304,10 +309,11 @@ public class ModelContentMergeTabFolder {
 	 */
 	public void setInput(Object input) {
 		final IModelContentMergeViewerTab currentTab = tabs.get(tabFolder.getSelectionIndex());
-		if (currentTab == properties)
+		if (currentTab == properties) {
 			currentTab.setReflectiveInput(findMatchFromElement((EObject)input));
-		else
+		} else {
 			tabs.get(tabFolder.getSelectionIndex()).setReflectiveInput(input);
+		}
 	}
 
 	/**
@@ -380,8 +386,8 @@ public class ModelContentMergeTabFolder {
 		while (iterator.hasNext()) {
 			final Object object = iterator.next();
 
-			if (object instanceof Match3Element) {
-				final Match3Element matchElement = (Match3Element)object;
+			if (object instanceof Match3Elements) {
+				final Match3Elements matchElement = (Match3Elements)object;
 				if (matchElement.getLeftElement().equals(element)
 						|| matchElement.getRightElement().equals(element)
 						|| matchElement.getOriginElement().equals(element)) {
@@ -393,10 +399,10 @@ public class ModelContentMergeTabFolder {
 						|| matchElement.getRightElement().equals(element)) {
 					theElement = matchElement;
 				}
-			} else if (object instanceof UnMatchElement) {
-				final UnMatchElement unMatchElement = (UnMatchElement)object;
-				if (unMatchElement.getElement().equals(element)) {
-					theElement = unMatchElement;
+			} else if (object instanceof UnmatchElement) {
+				final UnmatchElement unmatchElement = (UnmatchElement)object;
+				if (unmatchElement.getElement().equals(element)) {
+					theElement = unmatchElement;
 				}
 			}
 		}
@@ -409,7 +415,7 @@ public class ModelContentMergeTabFolder {
 	 * selection has been changed.
 	 */
 	protected void fireSelectedtabChanged() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
+		for (final ICompareEditorPartListener listener : editorPartListeners) {
 			listener.selectedTabChanged(tabFolder.getSelectionIndex());
 		}
 	}
@@ -422,7 +428,7 @@ public class ModelContentMergeTabFolder {
 	 *            Source {@link SelectionChangedEvent Selection changed event} of the notification.
 	 */
 	protected void fireSelectionChanged(SelectionChangedEvent event) {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
+		for (final ICompareEditorPartListener listener : editorPartListeners) {
 			listener.selectionChanged(event);
 		}
 	}
@@ -432,7 +438,7 @@ public class ModelContentMergeTabFolder {
 	 * center part needs to be refreshed.
 	 */
 	protected void fireUpdateCenter() {
-		for (ICompareEditorPartListener listener : editorPartListeners) {
+		for (final ICompareEditorPartListener listener : editorPartListeners) {
 			listener.updateCenter();
 		}
 	}
@@ -527,15 +533,18 @@ public class ModelContentMergeTabFolder {
 					for (final DiffElement diff : ((ModelCompareInput)parentViewer.getInput())
 							.getDiffAsList()) {
 						if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.LEFT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff)))
+							if (selected.getData().equals(EMFCompareEObjectUtils.getLeftElement(diff))) {
 								parentViewer.setSelection(diff);
+							}
 						} else if (!(diff instanceof DiffGroup) && partSide == EMFCompareConstants.RIGHT) {
-							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff)))
+							if (selected.getData().equals(EMFCompareEObjectUtils.getRightElement(diff))) {
 								parentViewer.setSelection(diff);
+							}
 						}
 					}
-					if (!selected.isDisposed() && selected.getData() instanceof EObject)
+					if (!selected.isDisposed() && selected.getData() instanceof EObject) {
 						properties.setReflectiveInput(findMatchFromElement((EObject)selected.getData()));
+					}
 				}
 			}
 		});

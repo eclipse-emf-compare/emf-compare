@@ -74,13 +74,13 @@ public final class ModelComparator {
 
 	/** Keeps a reference to the last "ancestor" element of the input. */
 	private ITypedElement ancestorElement;
-	
+
 	/** Resource of the ancestor model used in this comparison. */
 	private Resource ancestorResource;
 
 	/** This will keep track of the handler used by this comparison. */
 	private AbstractTeamHandler comparisonHandler;
-	
+
 	/** Keeps a reference to the last "left" element of the input. */
 	private ITypedElement leftElement;
 
@@ -91,7 +91,7 @@ public final class ModelComparator {
 
 	/** Resource of the left model used in this comparison. */
 	private Resource leftResource;
-	
+
 	/** Keeps a reference to the last "right" element of the input. */
 	private ITypedElement rightElement;
 
@@ -123,8 +123,9 @@ public final class ModelComparator {
 	 * @return The comparator for this configuration.
 	 */
 	public static ModelComparator getComparator(CompareConfiguration configuration) {
-		if (!INSTANCES.containsKey(configuration))
+		if (!INSTANCES.containsKey(configuration)) {
 			INSTANCES.put(configuration, new ModelComparator());
+		}
 		return INSTANCES.get(configuration);
 	}
 
@@ -144,8 +145,8 @@ public final class ModelComparator {
 	private static void parseExtensionMetaData() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
 				TEAM_HANDLERS_EXTENSION_POINT).getExtensions();
-		for (IExtension extension : extensions) {
-			for (IConfigurationElement configElement : extension.getConfigurationElements()) {
+		for (final IExtension extension : extensions) {
+			for (final IConfigurationElement configElement : extension.getConfigurationElements()) {
 				final TeamHandlerDescriptor descriptor = new TeamHandlerDescriptor(configElement);
 				CACHED_HANDLERS.add(descriptor);
 			}
@@ -164,21 +165,22 @@ public final class ModelComparator {
 		if (comparisonResult == null) {
 			comparisonResult = DiffFactory.eINSTANCE.createModelInputSnapshot();
 			final Date start = Calendar.getInstance().getTime();
-			
+
 			MatchService.setMatchEngineSelector(new VisualMatchEngineSelector());
-			
+
 			try {
 				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
 						final Map<String, Object> options = new EMFCompareMap<String, Object>();
 						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
 						final MatchModel match;
-						if (getAncestorResource() == null)
+						if (getAncestorResource() == null) {
 							match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
 									options);
-						else
+						} else {
 							match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
 									getAncestorResource(), options);
+						}
 						final DiffModel diff = DiffService.doDiff(match, getAncestorResource() != null);
 
 						comparisonResult.setDate(Calendar.getInstance().getTime());
@@ -186,11 +188,11 @@ public final class ModelComparator {
 						comparisonResult.setMatch(match);
 					}
 				});
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				comparisonResult.setDate(Calendar.getInstance().getTime());
 				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
 				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
-			} catch (InvocationTargetException e) {
+			} catch (final InvocationTargetException e) {
 				EMFComparePlugin.log(e, true);
 			}
 
@@ -283,21 +285,24 @@ public final class ModelComparator {
 	 */
 	public boolean loadResources(ICompareInput input) {
 		boolean result = false;
-		if (ancestorElement != input.getAncestor() || leftElement != input.getLeft() || rightElement != input.getRight()) {
+		if (ancestorElement != input.getAncestor() || leftElement != input.getLeft()
+				|| rightElement != input.getRight()) {
 			clear();
 			leftElement = input.getLeft();
 			rightElement = input.getRight();
 			ancestorElement = input.getAncestor();
-	
+
 			try {
 				// This will be sufficient when comparing local resources
 				result = handleLocalResources(leftElement, rightElement, ancestorElement);
 				// If resources weren't local, iterates through the registry to find
 				// a proper team handler
 				if (!result) {
-					final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS.iterator();
+					final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS
+							.iterator();
 					while (handlerDescriptorIterator.hasNext()) {
-						final AbstractTeamHandler handler = handlerDescriptorIterator.next().getHandlerInstance();
+						final AbstractTeamHandler handler = handlerDescriptorIterator.next()
+								.getHandlerInstance();
 						result |= handler.loadResources(input);
 						if (result) {
 							comparisonHandler = handler;
@@ -306,12 +311,13 @@ public final class ModelComparator {
 					}
 				}
 				// We didn't found a proper handler, use a generic one
-				if (!result)
+				if (!result) {
 					result |= handleGenericResources(leftElement, rightElement, ancestorElement);
+				}
 				result = true;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				EMFComparePlugin.log(e, true);
-			} catch (CoreException e) {
+			} catch (final CoreException e) {
 				EMFComparePlugin.log(e.getStatus());
 			}
 		} else {
@@ -341,8 +347,9 @@ public final class ModelComparator {
 	 */
 	private void clearResourceSet(Resource... resource) {
 		for (int i = 0; i < resource.length; i++) {
-			if (resource[i] == null)
+			if (resource[i] == null) {
 				continue;
+			}
 			final ResourceSet resourceSet = resource[i].getResourceSet();
 			final Iterator<Resource> resourcesIterator = resourceSet.getResources().iterator();
 			while (resourcesIterator.hasNext()) {
@@ -374,29 +381,29 @@ public final class ModelComparator {
 			throws IOException, CoreException {
 		if (left instanceof ResourceNode && right instanceof IStreamContentAccessor) {
 			if (((ResourceNode)left).getResource().isAccessible()) {
-				rightResource = EclipseModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
+				leftResource = EclipseModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 						new ResourceSetImpl()).eResource();
 			} else {
-				rightResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
+				leftResource = ModelUtils.createResource(URI.createPlatformResourceURI(((ResourceNode)left)
 						.getResource().getFullPath().toOSString(), true));
 				// resource has been deleted. We set it as "remote" to disable merge facilities
-				rightIsRemote = true;
+				leftIsRemote = true;
 			}
 			try {
-				leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
+				rightResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
 						right.getName(), new ResourceSetImpl()).eResource();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// We couldn't load the remote resource. Considers it has been added to the repository
-				leftResource = ModelUtils.createResource(URI.createURI(right.getName()));
-				// Set the right as remote to disable merge facilities
-				rightIsRemote = true;
+				rightResource = ModelUtils.createResource(URI.createURI(right.getName()));
+				// Set the left as remote to disable merge facilities
+				leftIsRemote = true;
 			}
-			leftIsRemote = true;
+			rightIsRemote = true;
 			if (ancestor != null) {
 				try {
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), new ResourceSetImpl()).eResource();
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					// Couldn't load ancestor resource, create an empty one
 					ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
 				}
@@ -404,21 +411,22 @@ public final class ModelComparator {
 			return true;
 		}
 		/*
-		 * We *should* never be here. There always is a local resource when comparing with CVS. this code will
-		 * be executed if we couldn't manage to handle this *local* resource as such. Though the resource
-		 * *will* be loaded thanks to this generic handler, note that it will not be saveable.
+		 * Weshould never be here. There always is a local resource when comparing with CVS. this code will be
+		 * executed if we couldn't manage to handle thislocal resource as such. Though the resourcewill be
+		 * loaded thanks to this generic handler, note that it will not be saveable.
 		 */
 		boolean result = false;
 		if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
-			rightResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
+			leftResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(), left.getName(),
 					new ResourceSetImpl()).eResource();
-			leftResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
+			rightResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(), right.getName(),
 					new ResourceSetImpl()).eResource();
 			rightIsRemote = true;
 			leftIsRemote = true;
-			if (ancestor != null)
+			if (ancestor != null) {
 				ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 						ancestor.getName(), new ResourceSetImpl()).eResource();
+			}
 			result = true;
 		}
 		return result;
@@ -445,9 +453,11 @@ public final class ModelComparator {
 					new ResourceSetImpl()).eResource();
 			rightResource = EclipseModelUtils.load(((ResourceNode)right).getResource().getFullPath(),
 					new ResourceSetImpl()).eResource();
-			if (ancestor != null)
-				ancestorResource = EclipseModelUtils.load(((ResourceNode)ancestor).getResource().getFullPath(),
-						new ResourceSetImpl()).eResource();
+			if (ancestor != null) {
+				ancestorResource = EclipseModelUtils.load(
+						((ResourceNode)ancestor).getResource().getFullPath(), new ResourceSetImpl())
+						.eResource();
+			}
 			return true;
 		}
 		return false;
@@ -491,7 +501,7 @@ public final class ModelComparator {
 			if (handler == null) {
 				try {
 					handler = (AbstractTeamHandler)element.createExecutableExtension(ATTRIBUTE_HANDLER_CLASS);
-				} catch (CoreException e) {
+				} catch (final CoreException e) {
 					EMFComparePlugin.log(e, true);
 				}
 			}

@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Element;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.Match3Elements;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -72,11 +72,11 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 				inputEObject = match.getLeftElement();
 			} else if (partSide == EMFCompareConstants.RIGHT) {
 				inputEObject = match.getRightElement();
-			} else if (inputElement instanceof Match3Element) {
-				inputEObject = ((Match3Element)match).getOriginElement();
+			} else if (inputElement instanceof Match3Elements) {
+				inputEObject = ((Match3Elements)match).getOriginElement();
 			}
-		} else if (inputElement instanceof UnMatchElement) {
-			inputEObject = ((UnMatchElement)inputElement).getElement();
+		} else if (inputElement instanceof UnmatchElement) {
+			inputEObject = ((UnmatchElement)inputElement).getElement();
 		}
 		if (inputEObject != null) {
 			final List<List<Object>> inputElements = new ArrayList<List<Object>>();
@@ -86,7 +86,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 					IItemPropertySource.class);
 			// Iterates through the property descriptor to display only the "property" features of the input
 			// object
-			for (IItemPropertyDescriptor descriptor : inputPropertySource
+			for (final IItemPropertyDescriptor descriptor : inputPropertySource
 					.getPropertyDescriptors(inputEObject)) {
 				/*
 				 * Filtering out "advanced" properties can be done by hiding properties on which
