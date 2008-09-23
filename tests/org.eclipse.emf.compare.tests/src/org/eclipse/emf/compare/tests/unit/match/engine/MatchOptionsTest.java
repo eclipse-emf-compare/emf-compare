@@ -30,7 +30,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 @SuppressWarnings("nls")
 public class MatchOptionsTest extends TestCase {
 	/**
-	 * This will test the behavior of the match engine with different values of the option {@link MatchOptions#OPTION_DISTINCT_METAMODELS}.
+	 * This will test the behavior of the match engine with different values of the option
+	 * {@link MatchOptions#OPTION_DISTINCT_METAMODELS}.
 	 * <p>
 	 * We'll create two models here, each with a metamodel created through
 	 * {@link EcoreModelUtils#createMetaModel(boolean)}. The meta-models of each model will be in a different
@@ -59,7 +60,7 @@ public class MatchOptionsTest extends TestCase {
 		MatchModel match = MatchService.doResourceMatch(testResource, sameMetaModel, options);
 		assertEquals(
 				"There shouldn't have been a single unmatched element between a model and one using the same metamodel.",
-				0, match.getUnMatchedElements().size());
+				0, match.getUnmatchedElements().size());
 
 		// With distinct metamodels, EMF Compare will consider the roots as matched.
 		match = MatchService.doResourceMatch(testResource, distinctMetaModel, options);
@@ -74,11 +75,11 @@ public class MatchOptionsTest extends TestCase {
 		match = MatchService.doResourceMatch(testResource, sameMetaModel, options);
 		assertEquals(
 				"There shouldn't have been a single unmatched element between a model and one using the same metamodel.",
-				0, match.getUnMatchedElements().size());
+				0, match.getUnmatchedElements().size());
 
 		match = MatchService.doResourceMatch(testResource, distinctMetaModel, options);
 		assertEquals(
 				"There shouldn't have been a single unmatched element with OPTION_DISTINCT_METAMODELS set to true.",
-				0, match.getUnMatchedElements().size());
+				0, match.getUnmatchedElements().size());
 	}
 }

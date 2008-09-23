@@ -19,10 +19,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -47,8 +47,8 @@ public class TwoWayDiffTest extends TestCase {
 	private Resource testResource2;
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two distinct EObjects (a model
-	 * and its deep copy slightly modified).
+	 * Tests the behavior of the GenericDiffEngine with two distinct EObjects (a model and its deep copy
+	 * slightly modified).
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -67,8 +67,8 @@ public class TwoWayDiffTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two distinct EObjects (a model
-	 * and its deep copy slightly modified).
+	 * Tests the behavior of the GenericDiffEngine with two distinct EObjects (a model and its deep copy
+	 * slightly modified).
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -87,8 +87,7 @@ public class TwoWayDiffTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel) with two equal EObjects (a model and
-	 * its deep copy).
+	 * Tests the behavior of the GenericDiffEngine with two equal EObjects (a model and its deep copy).
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -107,8 +106,7 @@ public class TwoWayDiffTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with two equal EObjects (a model and
-	 * its deep copy).
+	 * Tests the behavior of the GenericDiffEngine with two equal EObjects (a model and its deep copy).
 	 * <p>
 	 * We're assuming that the matching process is returning the expected result as it has been tested through
 	 * the org.eclipse.emf.compare.tests.unit.match.* tests.
@@ -127,8 +125,7 @@ public class TwoWayDiffTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericDiffEngine#doDiff(MatchModel)} with a <code>null</code> match
-	 * model.
+	 * Tests the behavior of the GenericDiffEngine with a <code>null</code> match model.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
@@ -138,7 +135,7 @@ public class TwoWayDiffTest extends TestCase {
 		try {
 			DiffService.doDiff(null);
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
 		}
 	}
@@ -151,10 +148,12 @@ public class TwoWayDiffTest extends TestCase {
 	@Override
 	protected void tearDown() {
 		// voids the testResources (and hopes gc passes by ... should we hint at it here with System.gc?)
-		if (testResource1 != null)
+		if (testResource1 != null) {
 			testResource1.getContents().clear();
-		if (testResource2 != null)
+		}
+		if (testResource2 != null) {
 			testResource2.getContents().clear();
+		}
 		testResource1 = null;
 		testResource2 = null;
 	}
@@ -185,7 +184,7 @@ public class TwoWayDiffTest extends TestCase {
 		try {
 			EObject originalWriter = null;
 			EObject newElement = null;
-			for (EObject element : copyModel.eContents()) {
+			for (final EObject element : copyModel.eContents()) {
 				if ("Writer".equals(element.eClass().getName())) {
 					originalWriter = element;
 					newElement = EcoreUtil.copy(element);
@@ -197,13 +196,14 @@ public class TwoWayDiffTest extends TestCase {
 			// void books
 			final List<Object> values = new ArrayList<Object>();
 			values.addAll(EFactory.eGetAsList(newElement, "writtenBooks"));
-			for (Object aValue : values)
+			for (final Object aValue : values) {
 				EFactory.eRemove(newElement, "writtenBooks", aValue);
+			}
 			// add this new element to model
 			EFactory.eAdd(copyModel, "authors", newElement);
 			// modify existing element
 			EFactory.eSet(originalWriter, "name", "ModifiedAuthorName");
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			/*
 			 * Shouldn't have happened if we had found a Writer as expected. Consider it a failure
 			 */
@@ -225,7 +225,7 @@ public class TwoWayDiffTest extends TestCase {
 		MatchModel match = null;
 		try {
 			match = MatchService.doResourceMatch(testResource1, testResource2, getOptions());
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
 		assertNotNull("Failed to match the two models.", match);
@@ -235,18 +235,20 @@ public class TwoWayDiffTest extends TestCase {
 
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
-		int additionCount = 0;
+		int deletionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof AddModelElement)
-				additionCount++;
-			if (!(aDiff instanceof DiffGroup))
+			if (aDiff instanceof RemoveModelElement) {
+				deletionCount++;
+			}
+			if (!(aDiff instanceof DiffGroup)) {
 				elementCount++;
+			}
 		}
 
-		// We're expecting two changes, one of which being an addition
+		// We're expecting two changes, one of which being a deletion
 		assertEquals("Unexpected count of differences.", 2, elementCount);
-		assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
+		assertEquals("Unexpected count of additions in the DiffModel.", 1, deletionCount);
 	}
 
 	/**
@@ -261,20 +263,21 @@ public class TwoWayDiffTest extends TestCase {
 		MatchModel match = null;
 		try {
 			match = MatchService.doResourceMatch(testResource1, testResource2, getOptions());
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
 		assertNotNull("Failed to match the two models.", match);
 
 		final DiffModel diff = DiffService.doDiff(match);
 		assertNotNull("Failed to compute the two models' diff.", diff);
-		
+
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (!(aDiff instanceof DiffGroup))
+			if (!(aDiff instanceof DiffGroup)) {
 				elementCount++;
+			}
 		}
 
 		assertEquals("There shouldn't have been a single difference.", 0, elementCount);

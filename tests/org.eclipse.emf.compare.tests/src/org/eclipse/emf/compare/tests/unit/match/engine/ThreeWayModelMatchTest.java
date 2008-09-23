@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
@@ -31,10 +31,7 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Tests the behavior of
- * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}
- * and
- * {@link GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}.
+ * Tests the behavior of the GenericMatchEngine's implementation of the 3-way model match.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -50,10 +47,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 	private EObject testModel3;
 
 	/**
-	 * Tests the behavior of
-	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with three distinct
-	 * EObjects (a model and its deep copy slightly modified).
+	 * Tests the behavior with three distinct EObjects (a model and its deep copy slightly modified).
 	 * <p>
 	 * The compared models are flat and intended to be a little bigger for this test (150 to 600 elements).
 	 * Expects the matchModel to contain a mapping for each and every EObject of the test model, and an
@@ -75,10 +69,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of
-	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with three distinct
-	 * EObjects (a model and its deep copy slightly modified).
+	 * Tests the behavior with three distinct EObjects (a model and its deep copy slightly modified).
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
 	 * matchModel to contain a mapping for each and every EObject of the test model, and an
@@ -99,10 +90,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of
-	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with equal EObjects
-	 * (a model and its deep copies).
+	 * Tests the behavior with equal EObjects (a model and its deep copies).
 	 * <p>
 	 * The compared models are flat and intended to be a little bigger for this test (150 to 600 elements).
 	 * Expects the matchModel to contain a mapping for each and every EObject of the test model.
@@ -122,10 +110,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of
-	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with equal EObjects
-	 * (a model and its deep copies).
+	 * Tests the behavior with equal EObjects (a model and its deep copies).
 	 * <p>
 	 * The compared models are flat and intended to be small for this test (6 to 15 elements). Expects the
 	 * matchModel to contain a mapping for each and every EObject of the test model.
@@ -145,10 +130,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of
-	 * {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, org.eclipse.core.runtime.IProgressMonitor, java.util.Map)}
-	 * and {@link GenericMatchEngine#modelMatch(EObject, EObject, EObject, java.util.Map)} with
-	 * <code>null</code> as the compared EObjects.
+	 * Tests the behavior with <code>null</code> as the compared EObjects.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
@@ -159,33 +141,33 @@ public class ThreeWayModelMatchTest extends TestCase {
 		try {
 			MatchService.doMatch(null, EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 		try {
 			MatchService.doMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 		try {
 			MatchService.doMatch(null, EcoreFactory.eINSTANCE.createEObject(), (EObject)null, getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 		try {
 			MatchService.doMatch(null, null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 	}
@@ -198,12 +180,15 @@ public class ThreeWayModelMatchTest extends TestCase {
 	@Override
 	protected void tearDown() {
 		// voids the testModels (and hopes gc passes by ... should we hint at it here with System.gc?)
-		if (testModel1 != null)
+		if (testModel1 != null) {
 			EcoreUtil.remove(testModel1);
-		if (testModel2 != null)
+		}
+		if (testModel2 != null) {
 			EcoreUtil.remove(testModel2);
-		if (testModel3 != null)
+		}
+		if (testModel3 != null) {
 			EcoreUtil.remove(testModel3);
+		}
 		testModel1 = null;
 		testModel2 = null;
 		testModel3 = null;
@@ -235,7 +220,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		try {
 			EObject originalWriter = null;
 			EObject newElement = null;
-			for (EObject element : copyModel.eContents()) {
+			for (final EObject element : copyModel.eContents()) {
 				if ("Writer".equals(element.eClass().getName())) {
 					originalWriter = element;
 					newElement = EcoreUtil.copy(element);
@@ -247,13 +232,14 @@ public class ThreeWayModelMatchTest extends TestCase {
 			// void books
 			final List<Object> values = new ArrayList<Object>();
 			values.addAll(EFactory.eGetAsList(newElement, "writtenBooks"));
-			for (Object aValue : values)
+			for (final Object aValue : values) {
 				EFactory.eRemove(newElement, "writtenBooks", aValue);
+			}
 			// add this new element to model
 			EFactory.eAdd(copyModel, "authors", newElement);
 			// modify existing element
 			EFactory.eSet(originalWriter, "name", "ModifiedAuthorName");
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			/*
 			 * Shouldn't have happened if we had found a Writer as expected. Consider it a failure
 			 */
@@ -278,7 +264,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 		MatchModel match = null;
 		try {
 			match = MatchService.doMatch(testModel1, testModel2, testModel3, getOptions());
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException while comparing three models.");
 		}
 
@@ -296,22 +282,24 @@ public class ThreeWayModelMatchTest extends TestCase {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
-						|| (nextMatch instanceof UnMatchElement && ((UnMatchElement)nextMatch).getElement()
+						|| (nextMatch instanceof UnmatchElement && ((UnmatchElement)nextMatch).getElement()
 								.equals(next))) {
 					found = true;
 					break;
 				}
 			}
-			if (!found)
+			if (!found) {
 				fail("modelMatch() did not found a match for every element of the original model with three way comparison.");
+			}
 			elementCount++;
 		}
 
 		int matchElementCount = 0;
 		final TreeIterator<EObject> matchIterator = match.eAllContents();
 		while (matchIterator.hasNext()) {
-			if (matchIterator.next() instanceof Match2Elements)
+			if (matchIterator.next() instanceof Match2Elements) {
 				matchElementCount++;
+			}
 		}
 
 		/*
@@ -323,8 +311,8 @@ public class ThreeWayModelMatchTest extends TestCase {
 
 		// We should find one single UnMatchElement corresponding to the added modelElement
 		assertTrue("modelMatch() did not found the unmatched element we added in the right model.", match
-				.getUnMatchedElements() != null
-				&& match.getUnMatchedElements().size() == 1);
+				.getUnmatchedElements() != null
+				&& match.getUnmatchedElements().size() == 1);
 	}
 
 	/**
@@ -351,8 +339,9 @@ public class ThreeWayModelMatchTest extends TestCase {
 						break;
 					}
 				}
-				if (!found)
+				if (!found) {
 					fail("modelMatch() did not found a match for every element of two equal EObjects.");
+				}
 				elementCount++;
 			}
 
@@ -367,7 +356,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			// Note that we need to add 1 to the model element count since the root hasn't been counted yet.
 			assertEquals("modelMatch() found more matches than there are elements in the model.",
 					elementCount + 1, matchElementCount);
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail("modelMatch() threw an unexpected InterruptedException.");
 		}
 	}

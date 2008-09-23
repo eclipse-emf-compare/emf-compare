@@ -35,16 +35,4 @@ public class EnginesPriorityTest extends TestCase {
 		engine = MatchService.getBestMatchEngine("b"); //$NON-NLS-1$
 		assertEquals("BEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
 	}
-
-	/**
-	 * Test the engine picking with priority.
-	 * 
-	 * @throws ComparisonFailure
-	 *             Thrown when an assertEquals for String has failed.
-	 */
-	public void testEnginePriority() throws ComparisonFailure {
-		IMatchEngine engine = null;
-		engine = MatchService.getBestMatchEngine("c"); //$NON-NLS-1$
-		assertEquals("CHighEngine", engine.getClass().getSimpleName()); //$NON-NLS-1$
-	}
 }

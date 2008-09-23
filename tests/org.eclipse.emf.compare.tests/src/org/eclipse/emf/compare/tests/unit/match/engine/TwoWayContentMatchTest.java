@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -30,8 +30,7 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * Tests the behavior of
- * {@link GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)}.
+ * Tests the behavior ofthe GenericMatchEngine's implementation of the 2-way content match.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -47,8 +46,7 @@ public class TwoWayContentMatchTest extends TestCase {
 	private EObject testEObject2;
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
-	 * distinct EObjects.
+	 * Tests the behavior with two distinct EObjects.
 	 * <p>
 	 * A model and its slightly modified deep copy are taken as roots, then we iterate through their content
 	 * and match EObjects one after the other.
@@ -80,14 +78,16 @@ public class TwoWayContentMatchTest extends TestCase {
 		final TreeIterator<EObject> iteratorObj1 = testEObject1.eAllContents();
 		while (iteratorObj1.hasNext()) {
 			final EObject next = iteratorObj1.next();
-			if (next.eClass().getName().matches(WRITER_CLASS_NAME))
+			if (next.eClass().getName().matches(WRITER_CLASS_NAME)) {
 				eObjects1.add(next);
+			}
 		}
 		final TreeIterator<EObject> iteratorObj2 = testEObject2.eAllContents();
 		while (iteratorObj2.hasNext()) {
 			final EObject next = iteratorObj2.next();
-			if (next.eClass().getName().matches("Book"))
+			if (next.eClass().getName().matches("Book")) {
 				eObjects2.add(next);
+			}
 		}
 
 		// now tests the matching process
@@ -107,14 +107,15 @@ public class TwoWayContentMatchTest extends TestCase {
 					final TreeIterator<EObject> matchIterator = match.eAllContents();
 					while (matchIterator.hasNext()) {
 						final EObject nextMatch = matchIterator.next();
-						if (nextMatch instanceof UnMatchElement
-								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
+						if (nextMatch instanceof UnmatchElement
+								&& ((UnmatchElement)nextMatch).getElement().equals(next)) {
 							found = true;
 							break;
 						}
 					}
-					if (!found)
+					if (!found) {
 						fail("contentMatch() did not found an unmatch for every element of the original object.");
+					}
 					elementCount++;
 				}
 				final TreeIterator<EObject> iterator2 = obj2.eAllContents();
@@ -124,20 +125,21 @@ public class TwoWayContentMatchTest extends TestCase {
 					final TreeIterator<EObject> matchIterator = match.eAllContents();
 					while (matchIterator.hasNext()) {
 						final EObject nextMatch = matchIterator.next();
-						if (nextMatch instanceof UnMatchElement
-								&& ((UnMatchElement)nextMatch).getElement().equals(next)) {
+						if (nextMatch instanceof UnmatchElement
+								&& ((UnmatchElement)nextMatch).getElement().equals(next)) {
 							found = true;
 							break;
 						}
 					}
-					if (!found)
+					if (!found) {
 						fail("contentMatch() did not found an unmatch for every element of the original object.");
+					}
 					elementCount++;
 				}
 
 				// Note : need to add 2 to the element count this none of the two roots has been counted yet
 				assertEquals("contentMatch() found shouldn't have found a match element.", elementCount + 2,
-						match.getUnMatchedElements().size());
+						match.getUnmatchedElements().size());
 
 				// We shouldn't find a single MatchElement
 				assertTrue("contentMatch() found a matched element in the compared objects", match
@@ -148,8 +150,7 @@ public class TwoWayContentMatchTest extends TestCase {
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with two
-	 * equal EObjects.
+	 * Tests the behavior with two equal EObjects.
 	 * <p>
 	 * A model and its deep copy are taken as roots, then we iterate through their content and match EObjects
 	 * one after the other.
@@ -181,14 +182,16 @@ public class TwoWayContentMatchTest extends TestCase {
 		final TreeIterator<EObject> iterator1 = testEObject1.eAllContents();
 		while (iterator1.hasNext()) {
 			final EObject next = iterator1.next();
-			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
+			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book")) {
 				eObjects1.add(next);
+			}
 		}
 		final TreeIterator<EObject> iterator2 = testEObject2.eAllContents();
 		while (iterator2.hasNext()) {
 			final EObject next = iterator2.next();
-			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book"))
+			if (next.eClass().getName().matches(WRITER_CLASS_NAME + "|Book")) {
 				eObjects2.add(next);
+			}
 		}
 
 		assertEquals("There isn't the same number of element in both of the objects.", eObjects1.size(),
@@ -212,22 +215,24 @@ public class TwoWayContentMatchTest extends TestCase {
 					final EObject nextMatch = matchIterator.next();
 					if (nextMatch instanceof Match2Elements
 							&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
-							|| (nextMatch instanceof UnMatchElement && ((UnMatchElement)nextMatch)
+							|| (nextMatch instanceof UnmatchElement && ((UnmatchElement)nextMatch)
 									.getElement().equals(next))) {
 						found = true;
 						break;
 					}
 				}
-				if (!found)
+				if (!found) {
 					fail("contentMatch() did not found a match for every element of the original object.");
+				}
 				elementCount++;
 			}
 
 			int matchElementCount = 0;
 			final TreeIterator<EObject> matchIterator = match.eAllContents();
 			while (matchIterator.hasNext()) {
-				if (matchIterator.next() instanceof Match2Elements)
+				if (matchIterator.next() instanceof Match2Elements) {
 					matchElementCount++;
+				}
 			}
 
 			/*
@@ -239,14 +244,13 @@ public class TwoWayContentMatchTest extends TestCase {
 
 			// We shouldn't find a single UnMatchElement
 			assertTrue("contentMatch() found an unmatched element in the compared objects", match
-					.getUnMatchedElements() == null
-					|| match.getUnMatchedElements().size() == 0);
+					.getUnmatchedElements() == null
+					|| match.getUnmatchedElements().size() == 0);
 		}
 	}
 
 	/**
-	 * Tests the behavior of {@link GenericMatchEngine#contentMatch(EObject, EObject, java.util.Map)} with
-	 * <code>null</code> as the compared EObjects.
+	 * Tests the behavior with <code>null</code> as the compared EObjects.
 	 * <p>
 	 * Expects a {@link NullPointerException} to be thrown.
 	 * </p>
@@ -257,17 +261,17 @@ public class TwoWayContentMatchTest extends TestCase {
 		try {
 			MatchService.doContentMatch(null, EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 		try {
 			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
-		} catch (NullPointerException e) {
+		} catch (final NullPointerException e) {
 			// This was expected behavior
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			fail(failInterrupt);
 		}
 	}
@@ -280,10 +284,12 @@ public class TwoWayContentMatchTest extends TestCase {
 	@Override
 	protected void tearDown() {
 		// voids the testModels (and hopes gc passes by ... should we hint at it here with System.gc?)
-		if (testEObject1 != null)
+		if (testEObject1 != null) {
 			EcoreUtil.remove(testEObject1);
-		if (testEObject2 != null)
+		}
+		if (testEObject2 != null) {
 			EcoreUtil.remove(testEObject2);
+		}
 		testEObject1 = null;
 		testEObject2 = null;
 	}
