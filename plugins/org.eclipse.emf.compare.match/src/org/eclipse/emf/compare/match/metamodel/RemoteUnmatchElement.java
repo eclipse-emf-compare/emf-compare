@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,14 +11,13 @@
 package org.eclipse.emf.compare.match.metamodel;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '<em><b>Remote Un Match Element</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getRemoteUnMatchElement()
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Remote Unmatch Element</b></em>'. <!--
+ * end-user-doc -->
+ * 
+ * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getRemoteUnmatchElement()
  * @model
  * @generated
  */
-public interface RemoteUnMatchElement extends UnMatchElement {
-	// This class doesn't need any Overriding to be functional
-} // RemoteUnMatchElement
+public interface RemoteUnmatchElement extends UnmatchElement {
+	// RemoteUnmatchElement
+}

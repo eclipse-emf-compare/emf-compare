@@ -173,7 +173,7 @@ public class MatchElementItemProvider extends ItemProviderAdapter implements IEd
 				MatchFactory.eINSTANCE.createMatch2Elements()));
 
 		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_ELEMENT__SUB_MATCH_ELEMENTS,
-				MatchFactory.eINSTANCE.createMatch3Element()));
+				MatchFactory.eINSTANCE.createMatch3Elements()));
 	}
 
 }

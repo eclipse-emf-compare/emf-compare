@@ -17,7 +17,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchModel/rightModel"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchModel/originModel"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/matchedElements"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/unMatchedElements"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/unmatchedElements"/>
     </genClasses>
     <genClasses image="false" ecoreClass="match.ecore#//MatchElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchElement/similarity"/>
@@ -27,12 +27,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//Match2Elements/leftElement"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//Match2Elements/rightElement"/>
     </genClasses>
-    <genClasses ecoreClass="match.ecore#//Match3Element">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//Match3Element/originElement"/>
+    <genClasses ecoreClass="match.ecore#//Match3Elements">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//Match3Elements/originElement"/>
     </genClasses>
-    <genClasses ecoreClass="match.ecore#//UnMatchElement">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//UnMatchElement/element"/>
+    <genClasses ecoreClass="match.ecore#//UnmatchElement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//UnmatchElement/element"/>
     </genClasses>
-    <genClasses ecoreClass="match.ecore#//RemoteUnMatchElement"/>
+    <genClasses ecoreClass="match.ecore#//RemoteUnmatchElement"/>
   </genPackages>
 </genmodel:GenModel>

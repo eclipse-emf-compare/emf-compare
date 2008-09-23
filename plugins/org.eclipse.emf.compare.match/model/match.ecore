@@ -12,8 +12,8 @@
         unique="false" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="matchedElements" upperBound="-1"
         eType="#//MatchElement" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="unMatchedElements" upperBound="-1"
-        eType="#//UnMatchElement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unmatchedElements" upperBound="-1"
+        eType="#//UnmatchElement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MatchElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="similarity" ordered="false"
@@ -27,13 +27,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" ordered="false"
         lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Match3Element" eSuperTypes="#//Match2Elements">
+  <eClassifiers xsi:type="ecore:EClass" name="Match3Elements" eSuperTypes="#//Match2Elements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" ordered="false"
         lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UnMatchElement">
+  <eClassifiers xsi:type="ecore:EClass" name="UnmatchElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" ordered="false"
         lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RemoteUnMatchElement" eSuperTypes="#//UnMatchElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteUnmatchElement" eSuperTypes="#//UnmatchElement"/>
 </ecore:EPackage>

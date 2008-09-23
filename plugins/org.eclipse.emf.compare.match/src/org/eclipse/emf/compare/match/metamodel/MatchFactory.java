@@ -36,13 +36,31 @@ public interface MatchFactory extends EFactory {
 	Match2Elements createMatch2Elements();
 
 	/**
-	 * Returns a new object of class '<em>Match3 Element</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return a new object of class '<em>Match3 Element</em>'.
+	 * Returns a new object of class '<em>Match3 Elements</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Match3 Elements</em>'.
 	 * @generated
 	 */
-	Match3Element createMatch3Element();
+	Match3Elements createMatch3Elements();
+
+	/**
+	 * Returns a new object of class '<em>Unmatch Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Unmatch Element</em>'.
+	 * @generated
+	 */
+	UnmatchElement createUnmatchElement();
+
+	/**
+	 * Returns a new object of class '<em>Remote Unmatch Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Remote Unmatch Element</em>'.
+	 * @generated
+	 */
+	RemoteUnmatchElement createRemoteUnmatchElement();
 
 	/**
 	 * Returns a new object of class '<em>Model</em>'.
@@ -51,24 +69,6 @@ public interface MatchFactory extends EFactory {
 	 * @generated
 	 */
 	MatchModel createMatchModel();
-
-	/**
-	 * Returns a new object of class '<em>Remote Un Match Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Un Match Element</em>'.
-	 * @generated
-	 */
-	RemoteUnMatchElement createRemoteUnMatchElement();
-
-	/**
-	 * Returns a new object of class '<em>Un Match Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Un Match Element</em>'.
-	 * @generated
-	 */
-	UnMatchElement createUnMatchElement();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -72,17 +72,6 @@ public class Match2ElementsItemProvider extends MatchElementItemProvider impleme
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ResourceLocator getResourceLocator() {
-		return MatchEditPlugin.INSTANCE;
-	}
-
-	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated NOT

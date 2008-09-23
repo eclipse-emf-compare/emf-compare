@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel <em>Right Model</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel <em>Origin Model</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements <em>Matched Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getUnMatchedElements <em>Un Matched Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getUnmatchedElements <em>Unmatched Elements</em>}</li>
  * </ul>
  * </p>
  *
@@ -67,6 +67,22 @@ public interface MatchModel extends EObject {
 	EList<MatchElement> getMatchedElements();
 
 	/**
+	 * Returns the value of the '<em><b>Unmatched Elements</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.match.metamodel.UnmatchElement}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Unmatched Elements</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Unmatched Elements</em>' containment reference list.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_UnmatchedElements()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<UnmatchElement> getUnmatchedElements();
+
+	/**
 	 * Returns the value of the '<em><b>Origin Model</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
@@ -97,23 +113,6 @@ public interface MatchModel extends EObject {
 	 * @generated
 	 */
 	String getRightModel();
-
-	/**
-	 * Returns the value of the '<em><b>Un Matched Elements</b></em>' containment reference list. The
-	 * list contents are of type {@link org.eclipse.emf.compare.match.metamodel.UnMatchElement}. <!--
-	 * begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Un Matched Elements</em>' containment reference list isn't clear, there
-	 * really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * 
-	 * @return the value of the '<em>Un Matched Elements</em>' containment reference list.
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_UnMatchedElements()
-	 * @model type="org.eclipse.emf.compare.match.metamodel.UnMatchElement" containment="true"
-	 * @generated
-	 */
-	EList<UnMatchElement> getUnMatchedElements();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel <em>Left Model</em>}' attribute.

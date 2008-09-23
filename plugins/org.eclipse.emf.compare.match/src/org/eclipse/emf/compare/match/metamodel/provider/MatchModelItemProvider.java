@@ -61,7 +61,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
 			childrenFeatures.add(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS);
-			childrenFeatures.add(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS);
+			childrenFeatures.add(MatchPackage.Literals.MATCH_MODEL__UNMATCHED_ELEMENTS);
 		}
 		return childrenFeatures;
 	}
@@ -136,7 +136,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 						true));
 				return;
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
 						false));
 				return;
@@ -215,13 +215,13 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 				MatchFactory.eINSTANCE.createMatch2Elements()));
 
 		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createMatch3Element()));
+				MatchFactory.eINSTANCE.createMatch3Elements()));
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createUnMatchElement()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UNMATCHED_ELEMENTS,
+				MatchFactory.eINSTANCE.createUnmatchElement()));
 
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UN_MATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createRemoteUnMatchElement()));
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UNMATCHED_ELEMENTS,
+				MatchFactory.eINSTANCE.createRemoteUnmatchElement()));
 	}
 
 	/**

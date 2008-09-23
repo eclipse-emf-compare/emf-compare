@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2008 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,33 +11,35 @@
 package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
 import org.eclipse.emf.ecore.EClass;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Un Match Element</b></em>'.
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Remote Unmatch Element</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
-public class RemoteUnMatchElementImpl extends UnMatchElementImpl implements RemoteUnMatchElement {
+public class RemoteUnmatchElementImpl extends UnmatchElementImpl implements RemoteUnmatchElement {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	protected RemoteUnMatchElementImpl() {
+	protected RemoteUnmatchElementImpl() {
 		super();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return MatchPackage.Literals.REMOTE_UN_MATCH_ELEMENT;
+		return MatchPackage.Literals.REMOTE_UNMATCH_ELEMENT;
 	}
 
-} // RemoteUnMatchElementImpl
+} // RemoteUnmatchElementImpl

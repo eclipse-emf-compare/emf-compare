@@ -11,12 +11,12 @@
 package org.eclipse.emf.compare.match.metamodel.impl;
 
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Element;
+import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnMatchElement;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -25,12 +25,13 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	/**
-	 * Creates an instance of the factory.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public MatchFactoryImpl() {
@@ -39,6 +40,7 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -48,18 +50,17 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public static MatchFactory init() {
 		try {
-			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
+			final MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
 					.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$ 
-			if (theMatchFactory != null) {
+			if (theMatchFactory != null)
 				return theMatchFactory;
-			}
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new MatchFactoryImpl();
@@ -67,6 +68,7 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -76,12 +78,12 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 				return createMatchModel();
 			case MatchPackage.MATCH2_ELEMENTS:
 				return createMatch2Elements();
-			case MatchPackage.MATCH3_ELEMENT:
-				return createMatch3Element();
-			case MatchPackage.UN_MATCH_ELEMENT:
-				return createUnMatchElement();
-			case MatchPackage.REMOTE_UN_MATCH_ELEMENT:
-				return createRemoteUnMatchElement();
+			case MatchPackage.MATCH3_ELEMENTS:
+				return createMatch3Elements();
+			case MatchPackage.UNMATCH_ELEMENT:
+				return createUnmatchElement();
+			case MatchPackage.REMOTE_UNMATCH_ELEMENT:
+				return createRemoteUnmatchElement();
 			default:
 				throw new IllegalArgumentException(
 						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -90,51 +92,57 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Match2Elements createMatch2Elements() {
-		Match2ElementsImpl match2Elements = new Match2ElementsImpl();
+		final Match2ElementsImpl match2Elements = new Match2ElementsImpl();
 		return match2Elements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public Match3Element createMatch3Element() {
-		Match3ElementImpl match3Element = new Match3ElementImpl();
-		return match3Element;
+	public Match3Elements createMatch3Elements() {
+		final Match3ElementsImpl match3Elements = new Match3ElementsImpl();
+		return match3Elements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UnmatchElement createUnmatchElement() {
+		final UnmatchElementImpl unmatchElement = new UnmatchElementImpl();
+		return unmatchElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public RemoteUnmatchElement createRemoteUnmatchElement() {
+		final RemoteUnmatchElementImpl remoteUnmatchElement = new RemoteUnmatchElementImpl();
+		return remoteUnmatchElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public MatchModel createMatchModel() {
-		MatchModelImpl matchModel = new MatchModelImpl();
+		final MatchModelImpl matchModel = new MatchModelImpl();
 		return matchModel;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RemoteUnMatchElement createRemoteUnMatchElement() {
-		RemoteUnMatchElementImpl remoteUnMatchElement = new RemoteUnMatchElementImpl();
-		return remoteUnMatchElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UnMatchElement createUnMatchElement() {
-		UnMatchElementImpl unMatchElement = new UnMatchElementImpl();
-		return unMatchElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public MatchPackage getMatchPackage() {

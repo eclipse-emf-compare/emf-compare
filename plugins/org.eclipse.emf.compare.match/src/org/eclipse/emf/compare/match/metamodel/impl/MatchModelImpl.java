@@ -18,7 +18,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.UnMatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -36,7 +37,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getRightModel <em>Right Model</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getOriginModel <em>Origin Model</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getMatchedElements <em>Matched Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getUnMatchedElements <em>Un Matched Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.MatchModelImpl#getUnmatchedElements <em>Unmatched Elements</em>}</li>
  * </ul>
  * </p>
  *
@@ -113,13 +114,14 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	protected EList<MatchElement> matchedElements;
 
 	/**
-	 * The cached value of the '{@link #getUnMatchedElements() <em>Un Matched Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #getUnMatchedElements()
+	 * The cached value of the '{@link #getUnmatchedElements() <em>Unmatched Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getUnmatchedElements()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<UnMatchElement> unMatchedElements;
+	protected EList<UnmatchElement> unmatchedElements;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -144,8 +146,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 				return getOriginModel();
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 				return getMatchedElements();
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				return getUnMatchedElements();
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
+				return getUnmatchedElements();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -159,8 +161,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 		switch (featureID) {
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 				return ((InternalEList<?>)getMatchedElements()).basicRemove(otherEnd, msgs);
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				return ((InternalEList<?>)getUnMatchedElements()).basicRemove(otherEnd, msgs);
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
+				return ((InternalEList<?>)getUnmatchedElements()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -183,8 +185,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 						.equals(originModel);
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 				return matchedElements != null && !matchedElements.isEmpty();
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				return unMatchedElements != null && !unMatchedElements.isEmpty();
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
+				return unmatchedElements != null && !unmatchedElements.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -210,9 +212,9 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 				getMatchedElements().clear();
 				getMatchedElements().addAll((Collection<? extends MatchElement>)newValue);
 				return;
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				getUnMatchedElements().clear();
-				getUnMatchedElements().addAll((Collection<? extends UnMatchElement>)newValue);
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
+				getUnmatchedElements().clear();
+				getUnmatchedElements().addAll((Collection<? extends UnmatchElement>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -237,8 +239,8 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 				getMatchedElements().clear();
 				return;
-			case MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS:
-				getUnMatchedElements().clear();
+			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
+				getUnmatchedElements().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -265,6 +267,19 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<UnmatchElement> getUnmatchedElements() {
+		if (unmatchedElements == null) {
+			unmatchedElements = new EObjectContainmentEList<UnmatchElement>(UnmatchElement.class, this,
+					MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS);
+		}
+		return unmatchedElements;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -278,18 +293,6 @@ public class MatchModelImpl extends EObjectImpl implements MatchModel {
 	 */
 	public String getRightModel() {
 		return rightModel;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<UnMatchElement> getUnMatchedElements() {
-		if (unMatchedElements == null) {
-			unMatchedElements = new EObjectContainmentEList<UnMatchElement>(UnMatchElement.class, this,
-					MatchPackage.MATCH_MODEL__UN_MATCHED_ELEMENTS);
-		}
-		return unMatchedElements;
 	}
 
 	/**

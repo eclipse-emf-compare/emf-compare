@@ -65,18 +65,18 @@ public final class MatchService {
 	 * Matches three objects along with their content, then return the corresponding match model.
 	 * 
 	 * @param leftObject
-	 *            Left of the three objects to get compared.
+	 *            Left (local) of the three objects to get compared.
 	 * @param rightObject
-	 *            Right of the three objects to compare.
+	 *            Right (latest from repository) of the three objects to compare.
 	 * @param ancestor
 	 *            Common ancestor of the two others.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return {@link MatchModel} for these three objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -92,16 +92,16 @@ public final class MatchService {
 	 * Matches two objects along with their content, then return the corresponding match model.
 	 * 
 	 * @param leftObject
-	 *            Left of the two objects to get compared.
+	 *            Left (local) of the two objects to get compared.
 	 * @param rightObject
-	 *            Right of the two objects to compare.
+	 *            Right (latest from repository) of the two objects to compare.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -116,18 +116,18 @@ public final class MatchService {
 	 * Matches three models and returns the corresponding matching model.
 	 * 
 	 * @param leftRoot
-	 *            Left model of this comparison.
+	 *            Left (local) model of this comparison.
 	 * @param rightRoot
-	 *            Right model of this comparison.
+	 *            Right (latest from repository) model of this comparison.
 	 * @param ancestor
 	 *            Common ancestor of <code>leftRoot</code> and <code>rightRoot</code>.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
@@ -141,16 +141,16 @@ public final class MatchService {
 	 * Matches two models and returns the corresponding matching model.
 	 * 
 	 * @param leftRoot
-	 *            Left model of the comparison.
+	 *            Left (local) model of the comparison.
 	 * @param rightRoot
-	 *            Right model of the comparison.
+	 *            Right (latest from repository) model of the comparison.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> options)
 			throws InterruptedException {
@@ -163,16 +163,16 @@ public final class MatchService {
 	 * Matches two resources along with their content, then return the corresponding match model.
 	 * 
 	 * @param leftResource
-	 *            Left of the two resources to get compared.
+	 *            Left (local) of the two resources to get compared.
 	 * @param rightResource
-	 *            Right of the two resources to compare.
+	 *            Right (latest from repository) of the two resources to compare.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return {@link MatchModel} for these two resources' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -187,18 +187,18 @@ public final class MatchService {
 	 * Matches three resources and returns the corresponding matching model.
 	 * 
 	 * @param leftResource
-	 *            Left resource of this comparison.
+	 *            Left (local) resource of this comparison.
 	 * @param rightResource
-	 *            Right resource of this comparison.
+	 *            Right (latest from repository) resource of this comparison.
 	 * @param ancestorResource
 	 *            Common ancestor of <code>leftResource</code> and <code>rightResource</code>.
 	 * @param options
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or an empty map will result in
+	 *            the default options to be used.
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.api.MatchOptions
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
