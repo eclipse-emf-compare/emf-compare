@@ -56,6 +56,11 @@ public final class MergeFactory {
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_PROVIDER = "mergerprovider"; //$NON-NLS-1$
 
+	/** These are the possible priorities for the provided mergers. */
+	private static final int[] MERGER_PRIORITIES = {EngineConstants.PRIORITY_LOWEST,
+			EngineConstants.PRIORITY_LOW, EngineConstants.PRIORITY_NORMAL, EngineConstants.PRIORITY_HIGH,
+			EngineConstants.PRIORITY_HIGHEST, };
+
 	static {
 		parseExtensionMetadata();
 	}
@@ -72,8 +77,7 @@ public final class MergeFactory {
 	 * 
 	 * @param element
 	 *            {@link DiffElement} for which we need a merger.
-	 * @return The merger adapted to <code>element</code>, <code>null</code> if it cannot be
-	 *         instantiated.
+	 * @return The merger adapted to <code>element</code>, <code>null</code> if it cannot be instantiated.
 	 */
 	public static IMerger createMerger(DiffElement element) {
 		final Class<? extends IMerger> mergerClass = getBestMerger(element);
@@ -83,9 +87,9 @@ public final class MergeFactory {
 		try {
 			elementMerger = mergerClass.newInstance();
 			elementMerger.setDiffElement(element);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			EMFComparePlugin.log(e.getMessage(), false);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			EMFComparePlugin.log(e.getMessage(), false);
 		}
 
@@ -103,28 +107,32 @@ public final class MergeFactory {
 	private static Class<? extends IMerger> getBestMerger(DiffElement element) {
 		Class<? extends IMerger> mergerClass = DefaultMerger.class;
 
-		EObject leftElement = (EObject)ClassUtils.invokeMethod(element, "getLeftElement"); //$NON-NLS-1$
-		if (leftElement == null)
-			leftElement = (EObject)ClassUtils.invokeMethod(element, "getLeftParent"); //$NON-NLS-1$
+		EObject rightElement = (EObject)ClassUtils.invokeMethod(element, "getRightElement"); //$NON-NLS-1$
+		if (rightElement == null) {
+			rightElement = (EObject)ClassUtils.invokeMethod(element, "getRightParent"); //$NON-NLS-1$
+		}
 		String resourceFileExtension = null;
-		if (leftElement != null)
-			resourceFileExtension = leftElement.eResource().getURI().fileExtension();
+		if (rightElement != null) {
+			resourceFileExtension = rightElement.eResource().getURI().fileExtension();
+		}
 
-		if (resourceFileExtension == null)
+		if (resourceFileExtension == null) {
 			resourceFileExtension = ALL_EXTENSIONS;
+		}
 
 		final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergersMap;
-		if (EMFPlugin.IS_ECLIPSE_RUNNING)
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			mergersMap = getMergerTypes(resourceFileExtension);
-		else
+		} else {
 			mergersMap = MERGER_TYPES;
+		}
 
 		// If we know the merger for this class, we return it
 		if (mergersMap.containsKey(element.getClass())) {
 			mergerClass = mergersMap.get(element.getClass());
 			// Else we seek through the map if our element is an instance of one of the class keys.
 		} else {
-			for (Class<? extends DiffElement> clazz : mergersMap.keySet()) {
+			for (final Class<? extends DiffElement> clazz : mergersMap.keySet()) {
 				if (clazz.isInstance(element)) {
 					mergerClass = mergersMap.get(clazz);
 					break;
@@ -151,16 +159,13 @@ public final class MergeFactory {
 			 * TODO We'll iterate n times over all the parsed providers (one loop for each priority). See if
 			 * we can optimize this.
 			 */
-			final int[] priorities = {EngineConstants.PRIORITY_LOWEST, EngineConstants.PRIORITY_LOW,
-					EngineConstants.PRIORITY_NORMAL, EngineConstants.PRIORITY_HIGH,
-					EngineConstants.PRIORITY_HIGHEST, };
-			for (int priority : priorities) {
+			for (final int priority : MERGER_PRIORITIES) {
 				final Map<Class<? extends DiffElement>, Class<? extends IMerger>> mergers = new EMFCompareMap<Class<? extends DiffElement>, Class<? extends IMerger>>();
 				// Iterates through the list of providers registered for all extensions
 				if (PARSED_PROVIDERS.containsKey(ALL_EXTENSIONS)) {
 					final List<MergerProviderDescriptor> list = PARSED_PROVIDERS.get(ALL_EXTENSIONS);
 					Collections.sort(list);
-					for (MergerProviderDescriptor descriptor : list) {
+					for (final MergerProviderDescriptor descriptor : list) {
 						if (descriptor.getPriorityValue(descriptor.priority) == priority) {
 							mergers.putAll(descriptor.getMergerProviderInstance().getMergers());
 						}
@@ -169,7 +174,7 @@ public final class MergeFactory {
 				if (PARSED_PROVIDERS.containsKey(fileExtension)) {
 					final List<MergerProviderDescriptor> list = PARSED_PROVIDERS.get(fileExtension);
 					Collections.sort(list);
-					for (MergerProviderDescriptor descriptor : list) {
+					for (final MergerProviderDescriptor descriptor : list) {
 						if (descriptor.getPriorityValue(descriptor.priority) == priority) {
 							mergers.putAll(descriptor.getMergerProviderInstance().getMergers());
 						}
@@ -228,7 +233,7 @@ public final class MergeFactory {
 			return;
 
 		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
-		for (String mergerExtension : extensions) {
+		for (final String mergerExtension : extensions) {
 			if (!PARSED_PROVIDERS.containsKey(mergerExtension)) {
 				PARSED_PROVIDERS.put(mergerExtension, new ArrayList<MergerProviderDescriptor>());
 			}
