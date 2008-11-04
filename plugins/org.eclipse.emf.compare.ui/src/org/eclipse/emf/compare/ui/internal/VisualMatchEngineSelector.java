@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.ui.internal;
 
 import java.util.Set;
 
+import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.match.service.EngineDescriptor;
 import org.eclipse.emf.compare.match.service.IMatchEngineSelector;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -51,6 +52,8 @@ public class VisualMatchEngineSelector implements IMatchEngineSelector {
 					if (dialog.getResult().length > 0) {
 						result = dialog.getResult()[0];
 					}
+				} else {
+					throw new EMFCompareException("Match engine selection cancelled."); //$NON-NLS-1$
 				}
 
 				return result;

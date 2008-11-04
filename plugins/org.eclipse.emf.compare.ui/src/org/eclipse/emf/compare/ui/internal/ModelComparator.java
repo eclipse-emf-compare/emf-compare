@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -189,6 +190,10 @@ public final class ModelComparator {
 					}
 				});
 			} catch (final InterruptedException e) {
+				comparisonResult.setDate(Calendar.getInstance().getTime());
+				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
+				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
+			} catch (final EMFCompareException e) {
 				comparisonResult.setDate(Calendar.getInstance().getTime());
 				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
 				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
