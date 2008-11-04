@@ -13,7 +13,8 @@ package org.eclipse.emf.compare.match.api;
 /**
  * Defines constants for the different options available to tweak the matching process.
  * <p>
- * Available options include : <table>
+ * Available options include :
+ * <table>
  * <tr>
  * <td>Option</td>
  * <td>effect</td>
@@ -55,10 +56,10 @@ public interface MatchOptions {
 	/** Default value for the "distinct metamodel" option. */
 	boolean DEFAULT_DISTINCT_METAMODEL = false;
 
-	/** Default value for the "distinct metamodel" option. */
+	/** Default value for the "ignore functional id" option. */
 	boolean DEFAULT_IGNORE_ID = false;
 
-	/** Default value for the "distinct metamodel" option. */
+	/** Default value for the "ignore xmi id" option. */
 	boolean DEFAULT_IGNORE_XMI_ID = false;
 
 	/** Default value for the search window. */
