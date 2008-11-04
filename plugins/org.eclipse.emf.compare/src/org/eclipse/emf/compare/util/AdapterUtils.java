@@ -54,7 +54,7 @@ public final class AdapterUtils {
 	public static <T> T adapt(EObject eObj, Class<? extends T> type) {
 		return (T)getAdapterFactory().adapt(eObj, type);
 	}
-	
+
 	/**
 	 * Return a factory for a given instance.
 	 * 
@@ -83,8 +83,8 @@ public final class AdapterUtils {
 	 * 
 	 * @param eObj
 	 *            EObject we need an image for.
-	 * @return The Image provided by the IItemLabelProvider associated with <tt>eObj</tt>,
-	 *         <code>null</code> if it cannot be found.
+	 * @return The Image provided by the IItemLabelProvider associated with <tt>eObj</tt>, <code>null</code>
+	 *         if it cannot be found.
 	 * @see IItemLabelProvider#getImage(Object)
 	 * @since 0.8
 	 */
@@ -101,16 +101,24 @@ public final class AdapterUtils {
 	 * 
 	 * @param eObj
 	 *            EObject we need the text of.
-	 * @return The text provided by the IItemLabelProvider associated with <tt>eObj</tt>, <code>null</code>
-	 *         if it cannot be found.
+	 * @return The text provided by the IItemLabelProvider associated with <tt>eObj</tt>, <code>null</code> if
+	 *         it cannot be found.
 	 * @see IItemLabelProvider#getText(Object)
 	 * @since 0.8
 	 */
 	public static String getItemProviderText(EObject eObj) {
-		final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
-		if (labelProvider != null)
-			return labelProvider.getText(eObj);
-		return null;
+		final String text;
+		if (eObj == null) {
+			text = "null"; //$NON-NLS-1$
+		} else {
+			final IItemLabelProvider labelProvider = adapt(eObj, IItemLabelProvider.class);
+			if (labelProvider != null) {
+				text = labelProvider.getText(eObj);
+			} else {
+				text = ""; //$NON-NLS-1$
+			}
+		}
+		return text;
 	}
 
 	/**
