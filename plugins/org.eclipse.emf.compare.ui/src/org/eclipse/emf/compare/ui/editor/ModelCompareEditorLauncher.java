@@ -37,7 +37,7 @@ public class ModelCompareEditorLauncher implements IEditorLauncher {
 			if (snapshot instanceof ModelInputSnapshot)
 				CompareUI.openCompareEditor(new ModelCompareEditorInput((ModelInputSnapshot)snapshot));
 		} catch (IOException e) {
-			// Fichier non lisible
+			// file couldn't be read
 			assert false;
 		}
 	}
