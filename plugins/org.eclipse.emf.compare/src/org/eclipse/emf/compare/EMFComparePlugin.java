@@ -50,8 +50,8 @@ public class EMFComparePlugin extends Plugin {
 	 * @param e
 	 *            Exception to log.
 	 * @param blocker
-	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it
-	 *            as a warning.
+	 *            <code>True</code> if the exception must be logged as error, <code>False</code> to log it as
+	 *            a warning.
 	 */
 	public static void log(Exception e, boolean blocker) {
 		if (e == null)
@@ -64,14 +64,16 @@ public class EMFComparePlugin extends Plugin {
 			log(((CoreException)e).getStatus());
 		} else if (e instanceof NullPointerException) {
 			int severity = IStatus.WARNING;
-			if (blocker)
+			if (blocker) {
 				severity = IStatus.ERROR;
+			}
 			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
 					.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
 		} else {
 			int severity = IStatus.WARNING;
-			if (blocker)
+			if (blocker) {
 				severity = IStatus.ERROR;
+			}
 			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
 					.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
 		}
@@ -102,8 +104,8 @@ public class EMFComparePlugin extends Plugin {
 	 * @param message
 	 *            The message to put in the error log view.
 	 * @param blocker
-	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it
-	 *            as a warning.
+	 *            <code>True</code> if the message must be logged as error, <code>False</code> to log it as a
+	 *            warning.
 	 */
 	public static void log(String message, boolean blocker) {
 		if (plugin == null) {
@@ -111,11 +113,13 @@ public class EMFComparePlugin extends Plugin {
 			System.err.println(message);
 		} else {
 			int severity = IStatus.WARNING;
-			if (blocker)
+			if (blocker) {
 				severity = IStatus.ERROR;
+			}
 			String errorMessage = message;
-			if (errorMessage == null || "".equals(errorMessage)) //$NON-NLS-1$
-				errorMessage = EMFCompareMessages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$;
+			if (errorMessage == null || "".equals(errorMessage)) { //$NON-NLS-1$
+				errorMessage = EMFCompareMessages.getString("EMFComparePlugin.UnexpectedException"); //$NON-NLS-1$
+			}
 			log(new Status(severity, PLUGIN_ID, errorMessage));
 		}
 	}

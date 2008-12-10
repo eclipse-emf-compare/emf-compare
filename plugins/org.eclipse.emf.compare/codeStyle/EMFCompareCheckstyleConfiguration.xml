@@ -323,5 +323,17 @@
             <property name="ignoreComments" value="true"/>
             <property name="message" value="This kind of expression can easily throw NPEs. Receiver and argument should be inverted."/>
         </module>
+        <module name="GenericIllegalRegexp">
+            <property name="id" value="illegal.regex.redundantnullcheck"/>
+            <property name="format" value="([^\n]*?) != null &amp;&amp; \1 instanceof [^\n]*?"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="redundant null check"/>
+        </module>
+        <module name="GenericIllegalRegexp">
+            <property name="id" value="illegal.regex.badpractices"/>
+            <property name="format" value="^.*?(System\.(out|err)\.print|printStackTrace).*?$"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="message" value="These are for debug/batch applications launches only. Remove them from production build."/>
+        </module>
     </module>
 </module>
