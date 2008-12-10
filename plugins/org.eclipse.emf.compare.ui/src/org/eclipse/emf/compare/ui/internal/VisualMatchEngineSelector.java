@@ -15,6 +15,7 @@ import java.util.Set;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.match.service.EngineDescriptor;
 import org.eclipse.emf.compare.match.service.IMatchEngineSelector;
+import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
@@ -42,8 +43,8 @@ public class VisualMatchEngineSelector implements IMatchEngineSelector {
 				final ElementListSelectionDialog dialog = new ElementListSelectionDialog(Display.getDefault()
 						.getActiveShell(), new EngineDescriptorLabelProvider());
 
-				dialog.setMessage("Multiple engines found");
-				dialog.setTitle("Please select an engine");
+				dialog.setMessage(EMFCompareUIMessages.getString("VisualMatchEngineSelector.Dialog.Message")); //$NON-NLS-1$
+				dialog.setTitle(EMFCompareUIMessages.getString("VisualMatchEngineSelector.Dialog.Title")); //$NON-NLS-1$
 				dialog.setElements(engines.toArray());
 
 				Object result = null;
@@ -52,9 +53,9 @@ public class VisualMatchEngineSelector implements IMatchEngineSelector {
 					if (dialog.getResult().length > 0) {
 						result = dialog.getResult()[0];
 					}
-				} else {
-					throw new EMFCompareException("Match engine selection cancelled."); //$NON-NLS-1$
-				}
+				} else
+					throw new EMFCompareException(EMFCompareUIMessages
+							.getString("VisualMatchEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
 
 				return result;
 			}
