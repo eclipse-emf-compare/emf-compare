@@ -85,7 +85,9 @@ public final class MatchService {
 		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource(), ancestor
 				.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.contentMatch(leftObject, rightObject, ancestor, options);
+		final MatchModel result = engine.contentMatch(leftObject, rightObject, ancestor, options);
+		engine.reset();
+		return result;
 	}
 
 	/**
@@ -109,7 +111,9 @@ public final class MatchService {
 			Map<String, Object> options) throws InterruptedException {
 		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.contentMatch(leftObject, rightObject, options);
+		final MatchModel result = engine.contentMatch(leftObject, rightObject, options);
+		engine.reset();
+		return result;
 	}
 
 	/**
@@ -134,7 +138,9 @@ public final class MatchService {
 		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource(), ancestor
 				.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.modelMatch(leftRoot, rightRoot, ancestor, options);
+		final MatchModel result = engine.modelMatch(leftRoot, rightRoot, ancestor, options);
+		engine.reset();
+		return result;
 	}
 
 	/**
@@ -156,7 +162,9 @@ public final class MatchService {
 			throws InterruptedException {
 		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource());
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.modelMatch(leftRoot, rightRoot, options);
+		final MatchModel result = engine.modelMatch(leftRoot, rightRoot, options);
+		engine.reset();
+		return result;
 	}
 
 	/**
@@ -180,7 +188,9 @@ public final class MatchService {
 			Map<String, Object> options) throws InterruptedException {
 		final String extension = getBestExtension(leftResource, rightResource);
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.resourceMatch(leftResource, rightResource, options);
+		final MatchModel result = engine.resourceMatch(leftResource, rightResource, options);
+		engine.reset();
+		return result;
 	}
 
 	/**
@@ -204,7 +214,10 @@ public final class MatchService {
 			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
 		final String extension = getBestExtension(leftResource, rightResource, ancestorResource);
 		final IMatchEngine engine = getBestMatchEngine(extension);
-		return engine.resourceMatch(leftResource, rightResource, ancestorResource, options);
+		final MatchModel result = engine
+				.resourceMatch(leftResource, rightResource, ancestorResource, options);
+		engine.reset();
+		return result;
 	}
 
 	/**

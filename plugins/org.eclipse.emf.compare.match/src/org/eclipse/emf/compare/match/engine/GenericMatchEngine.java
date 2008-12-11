@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -129,6 +130,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * right model.
 	 */
 	private final List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
+
+	/** This map will allow us to cache the number of non-null features a given instance of EObject has. */
+	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
 
 	/**
 	 * The options map must be initialized to avoid potential NPEs. This initializer will take care of this
@@ -372,6 +376,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		matchedByID.clear();
 		matchedByXMIID.clear();
 		metricsCache.clear();
+		nonNullFeatureCounts.clear();
 		remainingUnmatchedElements.clear();
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
@@ -1359,9 +1364,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			curIndex += 1;
 			monitor.worked(1);
-			if (monitor.isCanceled()) {
+			if (monitor.isCanceled())
 				throw new InterruptedException();
-			}
 		}
 
 		// now putting the not found elements aside for later
@@ -1519,16 +1523,21 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @return The number of features initialized to <code>null</code> or the empty String.
 	 */
 	private int nonNullFeaturesCount(EObject eobj) {
-		// TODO should probably cache result here
-		int nonNullFeatures = 0;
-		final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures().iterator();
-		while (features.hasNext()) {
-			final EStructuralFeature feature = features.next();
-			if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) { //$NON-NLS-1$
-				nonNullFeatures++;
+		Integer nonNullFeatures = nonNullFeatureCounts.get(eobj);
+		if (nonNullFeatures == null) {
+			int count = 0;
+			final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures()
+					.iterator();
+			while (features.hasNext()) {
+				final EStructuralFeature feature = features.next();
+				if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) { //$NON-NLS-1$
+					count++;
+				}
 			}
+			nonNullFeatures = new Integer(count);
+			nonNullFeatureCounts.put(eobj, nonNullFeatures);
 		}
-		return nonNullFeatures;
+		return nonNullFeatures.intValue();
 	}
 
 	/**

@@ -71,11 +71,12 @@ public final class NameSimilarity {
 		}
 		eclassAttributes.remove(findNameFeature(current));
 		if (eclassAttributes.size() > 0) {
-			for (EStructuralFeature feature : eclassAttributes) {
+			for (final EStructuralFeature feature : eclassAttributes) {
 				if (feature instanceof EAttribute) {
 					final String value = EFactory.eGetAsString(current, feature.getName());
-					if (value != null && value.length() < MAX_FEATURE_VALUE_LENGTH)
+					if (value != null && value.length() < MAX_FEATURE_VALUE_LENGTH) {
 						result.append(value).append(" "); //$NON-NLS-1$
+					}
 				}
 			}
 		}
@@ -129,7 +130,7 @@ public final class NameSimilarity {
 			// first, find the eclass structural feature most similar with name
 			if (eClassAttributes.size() > 0) {
 				double max = 0d;
-				for (EAttribute attribute : eClassAttributes) {
+				for (final EAttribute attribute : eClassAttributes) {
 					final String attributeName = attribute.getName();
 					// if the attributeName is more similar with "name" than the other one
 					if (nameSimilarityMetric(attributeName, EOBJECT_NAME_FEATURE) > max) {
@@ -172,10 +173,12 @@ public final class NameSimilarity {
 				final int inter = pairs1.size();
 
 				result = inter * 2d / union;
-				if (result > 1)
+				if (result > 1) {
 					result = 1;
-				if (result == 1.0 && !str1.equals(str2))
+				}
+				if (result == 1d) {
 					result = almostEquals;
+				}
 			}
 		}
 		return result;
@@ -198,8 +201,9 @@ public final class NameSimilarity {
 		final List<String> result = new ArrayList<String>();
 		if (source != null) {
 			final int length = source.length();
-			for (int i = 0; i < length - 1; i++)
+			for (int i = 0; i < length - 1; i++) {
 				result.add(source.substring(i, i + 2));
+			}
 		}
 		return result;
 	}
