@@ -48,14 +48,16 @@ public class VisualMatchEngineSelector implements IMatchEngineSelector {
 				dialog.setElements(engines.toArray());
 
 				Object result = null;
+				dialog.open();
 
-				if (dialog.open() == Window.OK) {
+				if (dialog.getReturnCode() == Window.OK) {
 					if (dialog.getResult().length > 0) {
 						result = dialog.getResult()[0];
 					}
-				} else
+				} else {
 					throw new EMFCompareException(EMFCompareUIMessages
 							.getString("VisualMatchEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
+				}
 
 				return result;
 			}
