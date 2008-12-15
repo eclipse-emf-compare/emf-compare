@@ -112,8 +112,7 @@ public final class MergeFactory {
 			rightElement = (EObject)ClassUtils.invokeMethod(element, "getRightParent"); //$NON-NLS-1$
 		}
 		String resourceFileExtension = null;
-		// FIXME resource could be null! NPE spotted
-		if (rightElement != null) {
+		if (rightElement != null && rightElement.eResource() != null) {
 			resourceFileExtension = rightElement.eResource().getURI().fileExtension();
 		}
 
