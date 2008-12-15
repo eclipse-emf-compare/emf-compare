@@ -1139,7 +1139,7 @@ public class GenericDiffEngine implements IDiffEngine {
 			conflictingDiff.setLeftParent(mapping.getLeftElement());
 			conflictingDiff.setRightParent(mapping.getRightElement());
 			conflictingDiff.setOriginElement(mapping.getOriginElement());
-			for (final DiffElement subDiff : dummyGroup.getSubDiffElements()) {
+			for (final DiffElement subDiff : new ArrayList<DiffElement>(dummyGroup.getSubDiffElements())) {
 				conflictingDiff.getSubDiffElements().add(subDiff);
 			}
 			root.getSubDiffElements().add(conflictingDiff);
@@ -1173,7 +1173,7 @@ public class GenericDiffEngine implements IDiffEngine {
 			conflictingDiff.setLeftParent(mapping.getLeftElement());
 			conflictingDiff.setRightParent(mapping.getRightElement());
 			conflictingDiff.setOriginElement(mapping.getOriginElement());
-			for (final DiffElement subDiff : dummyGroup.getSubDiffElements()) {
+			for (final DiffElement subDiff : new ArrayList<DiffElement>(dummyGroup.getSubDiffElements())) {
 				conflictingDiff.getSubDiffElements().add(subDiff);
 			}
 			root.getSubDiffElements().add(conflictingDiff);
