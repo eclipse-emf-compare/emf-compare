@@ -10,19 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
-import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -32,27 +27,11 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public final class MatchService {
-	/** Wild card for file extensions. */
-	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
-
 	/** Default extension for EObjects not attached to a resource. */
 	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
 
-	/** Name of the extension point to parse for engines. */
-	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
-
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
-
-	/** Keeps track of all the engines we parsed. */
-	private static final List<EngineDescriptor> PARSED_ENGINES = new ArrayList<EngineDescriptor>();
-
 	/** Currently set match engine selector. */
 	private static IMatchEngineSelector matchEngineSelector = new DefaultMatchEngineSelector();
-
-	static {
-		parseExtensionMetadata();
-	}
 
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
@@ -228,20 +207,13 @@ public final class MatchService {
 	 * @return The best {@link IMatchEngine} for the given file extension.
 	 */
 	public static IMatchEngine getBestMatchEngine(String extension) {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+		if (EMFPlugin.IS_ECLIPSE_RUNNING
+				&& EMFComparePlugin.getDefault().getBoolean(
+						EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
 			final EngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
-		return new GenericMatchEngine();
-	}
-
-	/**
-	 * Returns the current match engine selector.
-	 * 
-	 * @return The current match engine selector.
-	 */
-	public static IMatchEngineSelector getMatchEngineSelector() {
-		return matchEngineSelector;
+		return EngineRegistry.INSTANCE.getHighestEngine(extension);
 	}
 
 	/**
@@ -262,21 +234,8 @@ public final class MatchService {
 	 * @return The best {@link EngineDescriptor}.
 	 */
 	private static EngineDescriptor getBestDescriptor(String extension) {
-		final Set<EngineDescriptor> engines = new HashSet<EngineDescriptor>();
-
-		for (final EngineDescriptor engine : PARSED_ENGINES) {
-			final String[] extensions = engine.getFileExtension().split(","); //$NON-NLS-1$
-
-			for (final String ext : extensions) {
-				if (ext.equals(extension) || ext.equals(ALL_EXTENSIONS)) {
-					engines.add(engine);
-				}
-			}
-
-		}
-
+		final List<EngineDescriptor> engines = EngineRegistry.INSTANCE.getDescriptors(extension);
 		EngineDescriptor engine = null;
-
 		if (engines.size() == 1) {
 			engine = engines.iterator().next();
 		} else if (engines.size() > 1) {
@@ -309,51 +268,5 @@ public final class MatchService {
 			}
 		}
 		return extension;
-	}
-
-	/**
-	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
-	 * for it if it describes and engine.
-	 * 
-	 * @param configElement
-	 *            Configuration element to parse.
-	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine,
-	 *         <code>null</code> otherwise.
-	 */
-	private static EngineDescriptor parseEngine(IConfigurationElement configElement) {
-		if (!configElement.getName().equals(TAG_ENGINE))
-			return null;
-		final EngineDescriptor desc = new EngineDescriptor(configElement);
-		return desc;
-	}
-
-	/**
-	 * This will parse the currently running platform for extensions and store all the match engines that can
-	 * be found.
-	 */
-	private static void parseExtensionMetadata() {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-					MATCH_ENGINES_EXTENSION_POINT).getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < configElements.length; j++) {
-					final EngineDescriptor desc = parseEngine(configElements[j]);
-					storeEngineDescriptor(desc);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Stores the given descriptor in the {@link List} of known {@link EngineDescriptor}s.
-	 * 
-	 * @param desc
-	 *            Descriptor to be added to the list of all know descriptors.
-	 */
-	private static void storeEngineDescriptor(EngineDescriptor desc) {
-		if (desc.getFileExtension() == null)
-			return;
-		PARSED_ENGINES.add(desc);
 	}
 }

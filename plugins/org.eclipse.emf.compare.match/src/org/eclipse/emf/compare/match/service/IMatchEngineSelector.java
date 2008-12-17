@@ -7,10 +7,11 @@
  * 
  * Contributors:
  *     Dimitrios Kolovos - initial API and implementation
+ *     Obeo
  *******************************************************************************/
 package org.eclipse.emf.compare.match.service;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Clients can subclass this in order to offer a specific match engine selector to users when more than one
@@ -27,5 +28,5 @@ public interface IMatchEngineSelector {
 	 *            List of all candidates.
 	 * @return The selected engine.
 	 */
-	EngineDescriptor selectMatchEngine(Set<EngineDescriptor> engines);
+	EngineDescriptor selectMatchEngine(List<EngineDescriptor> engines);
 }

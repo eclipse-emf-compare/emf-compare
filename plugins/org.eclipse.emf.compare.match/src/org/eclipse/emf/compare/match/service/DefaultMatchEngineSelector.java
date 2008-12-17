@@ -7,10 +7,11 @@
  * 
  * Contributors:
  *     Dimitrios Kolovos - initial API and implementation
+ *     Obeo
  *******************************************************************************/
 package org.eclipse.emf.compare.match.service;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * This class will allow the user to select the matching engine he wants to use for comparison when more than
@@ -23,13 +24,13 @@ public class DefaultMatchEngineSelector implements IMatchEngineSelector {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.service.IMatchEngineSelector#selectMatchEngine(java.util.ArrayList)
+	 * @see org.eclipse.emf.compare.match.service.IMatchEngineSelector#selectMatchEngine(java.util.List)
 	 */
-	public EngineDescriptor selectMatchEngine(Set<EngineDescriptor> engines) {
+	public EngineDescriptor selectMatchEngine(List<EngineDescriptor> engines) {
 		EngineDescriptor engine = null;
 
 		if (!engines.isEmpty()) {
-			engine = engines.iterator().next();
+			engine = engines.get(0);
 		}
 
 		return engine;

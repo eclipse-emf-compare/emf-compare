@@ -50,6 +50,9 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	 */
 	protected String priority;
 
+	/** Integer representation of the priority. */
+	private int priorityValue = -1;
+
 	/** {@link IMatchEngine} this descriptor describes. */
 	private IMatchEngine engine;
 
@@ -74,8 +77,8 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 	public int compareTo(EngineDescriptor other) {
-		final int nombre1 = getPriorityValue(other.getPriority());
-		final int nombre2 = getPriorityValue(getPriority());
+		final int nombre1 = other.getPriorityValue();
+		final int nombre2 = getPriorityValue();
 		return nombre2 - nombre1;
 	}
 
@@ -230,8 +233,8 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	}
 
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according
-	 * to <code>priorityString</code> value :
+	 * Returns the value of the priority of this engine.<br/>Returned values according to
+	 * <code>priority</code> :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
@@ -240,23 +243,20 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	 * <li>anything else =&gt; {@value EngineConstants#PRIORITY_NORMAL}</li>
 	 * </ul>
 	 * 
-	 * @param priorityString
-	 *            {@link String} value of the priority we seek.
-	 * @return <code>int</code> corresponding to the given priority {@link String}.
+	 * @return <code>int</code> corresponding to this engine priority.
 	 */
-	private int getPriorityValue(String priorityString) {
-		if (priorityString == null)
-			throw new IllegalArgumentException(EMFCompareMatchMessages
-					.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
-		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if ("lowest".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if ("low".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if ("high".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if ("highest".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGHEST;
+	public int getPriorityValue() {
+		if (priorityValue == -1) {
+			priorityValue = EngineConstants.PRIORITY_NORMAL;
+			if ("lowest".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_LOWEST;
+			} else if ("low".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_LOW;
+			} else if ("high".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_HIGH;
+			} else if ("highest".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_HIGHEST;
+			}
 		}
 		return priorityValue;
 	}
