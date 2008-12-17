@@ -287,7 +287,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		final EObject leftElement = matchElement.getLeftElement();
 		final EObject rightElement = matchElement.getRightElement();
 		final EObject originElement = matchElement.getOriginElement();
-		if (leftElement.eContainer() == null && rightElement.eContainer() == null
+		if (originElement == null || leftElement.eContainer() == null && rightElement.eContainer() == null
 				&& originElement.eContainer() == null)
 			return;
 
@@ -689,10 +689,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if <code>side</code> is invalid.
 	 */
 	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
 			throw new IllegalArgumentException(EMFCompareDiffMessages
 					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
-		}
 		EObject matchedEObject = null;
 		final Match2Elements matchElem = eObjectToMatch.get(from);
 		if (matchElem != null) {
