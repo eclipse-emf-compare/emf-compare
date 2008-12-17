@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -75,40 +76,47 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				"org.eclipse.ui.preferencePages.ContentTypes", //$NON-NLS-1$
 				EMFCompareUIMessages.getString("EMFComparePreferencesPage.contentTypesLink"), //$NON-NLS-1$
 				(IWorkbenchPreferenceContainer)getContainer(), null);
-		GridData gd = new GridData();
-		gd.horizontalSpan = 3;
+		final GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan = 3;
 		gd.horizontalAlignment = GridData.FILL;
 		link.getControl().setLayoutData(gd);
 
-		// Search window field
-		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
-				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, getFieldEditorParent());
-		addField(searchWindowEditor);
-		
-		// distinct meta model field
-		/* TODO uncomment this to show the option on the preferences page. should work
-		 * "out-of-the-box" but needs to be double-checked
-		 */
-//		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_DISTINCT_METAMODEL,
-//				EMFCompareConstants.PREFERENCES_DESCRIPTION_DISTINCT_METAMODEL, getFieldEditorParent()));
+		createMatchOptionsGroup();
+		createGUIOptionsGroup();
+		createColorGroup();
+	}
 
-		// ignore ID field
-		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
-				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_ID, getFieldEditorParent()));
-
-		// ignore XMI ID field
-		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
-				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_XMIID, getFieldEditorParent()));
+	/**
+	 * Creates the SWT group containing the fields for all UI specific options.
+	 */
+	public void createGUIOptionsGroup() {
+		final Group guiGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
+		guiGroup.setText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.guiGroupTitle")); //$NON-NLS-1$
+		final GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.horizontalSpan = 3;
+		guiGroup.setLayoutData(gd);
 
 		// draw differences field
 		addField(new BooleanFieldEditor(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES,
-				EMFCompareConstants.PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES, getFieldEditorParent()));
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES, guiGroup));
+		// present user with a coice of engines
+		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_ENGINE_SELECTION, guiGroup));
+	}
 
-		// color fields group
+	/**
+	 * Creates the SWT group containing the fields for all colors.
+	 */
+	public void createColorGroup() {
 		final Group colorGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
 		colorGroup.setText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.colorGroupTitle")); //$NON-NLS-1$
+		final GridData gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.horizontalSpan = 3;
+		colorGroup.setLayoutData(gd);
+
 		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_HIGHLIGHT_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_HIGHLIGHT_COLOR, colorGroup));
 		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR,
@@ -119,10 +127,44 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_ADDED_COLOR, colorGroup));
 		addField(new CompareColorFieldEditor(EMFCompareConstants.PREFERENCES_KEY_REMOVED_COLOR,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_REMOVED_COLOR, colorGroup));
-		gd = new GridData();
-		gd.horizontalSpan = 3;
+	}
+
+	/**
+	 * Creates the SWT group containing the fields for all match specific options.
+	 */
+	public void createMatchOptionsGroup() {
+		final Group matchGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
+		matchGroup.setText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.matchGroupTitle")); //$NON-NLS-1$
+		final GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
-		colorGroup.setLayoutData(gd);
+		gd.horizontalAlignment = GridData.FILL;
+		gd.horizontalSpan = 3;
+		matchGroup.setLayoutData(gd);
+
+		// distinct meta model field
+		// addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_DISTINCT_METAMODEL,
+		// EMFCompareConstants.PREFERENCES_DESCRIPTION_DISTINCT_METAMODEL, matchGroup));
+		// Search window field
+		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
+				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, matchGroup);
+		addField(searchWindowEditor);
+
+		// ignore ID field
+		final FieldEditor ignoreID = new BooleanFieldEditor(
+				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_ID, matchGroup);
+		// ignore XMI ID field
+		final FieldEditor ignoreXMIID = new BooleanFieldEditor(
+				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_XMIID, matchGroup);
+
+		addField(ignoreID);
+		addField(ignoreXMIID);
+
+		final GridLayout layout = (GridLayout)matchGroup.getLayout();
+		layout.numColumns = 3;
+		layout.makeColumnsEqualWidth = false;
 	}
 
 	/**
@@ -135,16 +177,19 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW)
 						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID)
-						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID)) {
+						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID)
+						|| event.getProperty().equals(
+								EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
 					reflectOnCore();
 				}
 			}
 		});
 	}
 
+	/* (non-javadoc) changes #init(IWorkbench) accordingly when adding preferences to this list. */
 	/**
-	 * Reflects the modifications to the search window and to the ignore booleans to
-	 * org.eclipse.emf.compare.EMFComparePlugin preferences store.
+	 * Reflects the modifications to the general options on the org.eclipse.emf.compare.EMFComparePlugin
+	 * preferences store.
 	 */
 	protected void reflectOnCore() {
 		final Preferences corePreferences = EMFComparePlugin.getDefault().getPluginPreferences();
@@ -157,6 +202,9 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		// XMI ID
 		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID, getPreferenceStore()
 				.getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
+		// Engine selection
+		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION,
+				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION));
 	}
 
 	/**
@@ -164,8 +212,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 */
 	private final class CompareColorFieldEditor extends ColorFieldEditor {
 		/**
-		 * Constructs a new field editor given the <code>label</code> to display, the <code>name</code> of
-		 * the preference it is affected to and its <code>parent</code> composite.
+		 * Constructs a new field editor given the <code>label</code> to display, the <code>name</code> of the
+		 * preference it is affected to and its <code>parent</code> composite.
 		 * 
 		 * @param name
 		 *            Key of the preference to affect this editor to.
@@ -265,7 +313,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		@Override
 		protected void adjustForNumColumns(int numColumns) {
 			final GridData gd = (GridData)image.getLayoutData();
-			gd.horizontalSpan = numColumns - 2;
+			gd.horizontalSpan = 1;
+			gd.grabExcessHorizontalSpace = false;
 		}
 
 		/**
@@ -276,15 +325,22 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		 */
 		@Override
 		protected void doFillIntoGrid(Composite parent, int numColumns) {
-			getLabelControl(parent);
-			createTextControl(parent);
-
-			GridData gd = new GridData();
-			final int charCount = 5;
-			final GC gc = new GC(textField);
+			final Label label = getLabelControl(parent);
+			final GC gc = new GC(label);
 			final Point extent = gc.textExtent("W"); //$NON-NLS-1$
 			gc.dispose();
+
+			GridData gd = new GridData();
+			gd.minimumWidth = label.getText().length() * extent.x;
+			gd.horizontalSpan = 1;
+			gd.grabExcessHorizontalSpace = true;
+			label.setLayoutData(gd);
+			createTextControl(parent);
+
+			final int charCount = 5;
 			gd.widthHint = charCount * extent.x;
+			gd.horizontalSpan = 1;
+			gd.grabExcessHorizontalSpace = false;
 			textField.setLayoutData(gd);
 
 			image = new Label(parent, SWT.NONE);
@@ -293,7 +349,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 					.setToolTipText(EMFCompareUIMessages
 							.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 			gd = new GridData();
-			gd.horizontalSpan = numColumns - 1;
+			gd.horizontalSpan = 1;
+			gd.grabExcessHorizontalSpace = false;
 			image.setLayoutData(gd);
 		}
 
@@ -348,7 +405,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			try {
 				Integer.parseInt(textField.getText());
 				isValid = true;
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				isValid = false;
 				showErrorMessage(EMFCompareUIMessages
 						.getString("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput")); //$NON-NLS-1$
@@ -413,7 +470,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 						.toFileURL(Platform.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry(
 								EMFCompareConstants.ICONS_PREFERENCES_HELP)));
 				helpIcon = descriptor.createImage();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// this try/catch block only keeps the compiler happy, we should never be here
 				assert false;
 			}

@@ -6,11 +6,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     Dimitrios Kolovos - initial API and implementation
+ *     Dimitrios Kolovos - initial API and implementation.
+ *     Obeo
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.internal;
 
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.match.service.EngineDescriptor;
@@ -34,9 +35,9 @@ public class VisualMatchEngineSelector implements IMatchEngineSelector {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.service.IMatchEngineSelector#selectMatchEngine(java.util.Set)
+	 * @see org.eclipse.emf.compare.match.service.IMatchEngineSelector#selectMatchEngine(java.util.List)
 	 */
-	public EngineDescriptor selectMatchEngine(final Set<EngineDescriptor> engines) {
+	public EngineDescriptor selectMatchEngine(final List<EngineDescriptor> engines) {
 		final AbstractReturningRunnable runnable = new AbstractReturningRunnable() {
 			@Override
 			public Object runImpl() {
