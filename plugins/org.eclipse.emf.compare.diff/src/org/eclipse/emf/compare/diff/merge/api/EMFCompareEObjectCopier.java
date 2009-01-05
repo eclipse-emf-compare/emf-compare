@@ -41,7 +41,7 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 0.8
  */
-public final class EMFCompareEObjectCopier extends Copier {
+public class EMFCompareEObjectCopier extends Copier {
 	/** This class' serial version UID. */
 	private static final long serialVersionUID = 2701874812215174395L;
 
