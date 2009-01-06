@@ -29,8 +29,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -94,21 +95,21 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		final MoveModelElement moveModelElement = (MoveModelElement)object;
 
 		final String elementLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftElement());
-		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
-		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
+		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
+		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
 
 		if (moveModelElement.isConflicting())
 			return getString("_UI_MoveModelElement_conflicting", new Object[] { //$NON-NLS-1$
-					elementLabel, oldParentLabel, newParentLabel,});
+					elementLabel, oldParentLabel, newParentLabel, });
 		return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
-				elementLabel, oldParentLabel, newParentLabel,});
+				elementLabel, oldParentLabel, newParentLabel, });
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -156,9 +157,9 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
