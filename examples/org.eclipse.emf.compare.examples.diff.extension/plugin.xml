@@ -3,10 +3,10 @@
 <plugin>
    <extension
          point="org.eclipse.emf.compare.diff.extension">
-      <diff_extension
+      <diffExtension
             extensionClass="org.eclipse.emf.compare.examples.diff.extension.extensions.AddUMLAssociationExtension"
             fileExtension="uml">
-      </diff_extension>
+      </diffExtension>
    </extension>
 
 </plugin>
