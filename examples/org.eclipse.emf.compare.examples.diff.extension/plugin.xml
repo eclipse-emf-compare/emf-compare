@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         point="org.eclipse.emf.compare.diff.diff_extension">
+         point="org.eclipse.emf.compare.diff.extension">
       <diff_extension
             extensionClass="org.eclipse.emf.compare.examples.diff.extension.extensions.AddUMLAssociationExtension"
             fileExtension="uml">
