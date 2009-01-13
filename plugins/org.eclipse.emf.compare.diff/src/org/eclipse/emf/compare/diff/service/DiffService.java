@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
-import org.eclipse.emf.compare.diff.DiffPlugin;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
@@ -50,7 +49,10 @@ public final class DiffService {
 	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new EMFCompareMap<String, ArrayList<EngineDescriptor>>();
 
 	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_DIFF_EXTENSION = "diff_extension"; //$NON-NLS-1$
+	private static final String DIFF_EXTENSION_EXTENSION_POINT = "org.eclipse.emf.compare.diff.extension"; //$NON-NLS-1$
+
+	/** Externalized here to avoid too many distinct usages. */
+	private static final String TAG_DIFF_EXTENSION = "diffExtension"; //$NON-NLS-1$
 
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_ENGINE = "diffengine"; //$NON-NLS-1$
@@ -83,21 +85,23 @@ public final class DiffService {
 	 * @param match
 	 *            the matching model
 	 * @param threeWay
-	 *            <code>True</code> if we're computing a three way comparison, <code>False</code>
-	 *            otherwise.
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
 	 * @return the corresponding diff model
 	 */
 	public static DiffModel doDiff(MatchModel match, boolean threeWay) {
 		String extension = DEFAULT_EXTENSION;
-		if (match.getLeftModel() != null && match.getLeftModel().lastIndexOf('.') > 0)
+		if (match.getLeftModel() != null && match.getLeftModel().lastIndexOf('.') > 0) {
 			extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf('.') + 1);
+		}
 		final IDiffEngine engine = getBestDiffEngine(extension);
 		final DiffModel diff = engine.doDiff(match, threeWay);
-		
-		final Collection<AbstractDiffExtension> extensions = DiffService.getCorrespondingDiffExtensions(extension);
-		for (AbstractDiffExtension ext : extensions) {
-			if (ext != null)
+
+		final Collection<AbstractDiffExtension> extensions = DiffService
+				.getCorrespondingDiffExtensions(extension);
+		for (final AbstractDiffExtension ext : extensions) {
+			if (ext != null) {
 				ext.visit(diff);
+			}
 		}
 		return diff;
 	}
@@ -128,13 +132,13 @@ public final class DiffService {
 		final Collection<AbstractDiffExtension> result = new ArrayList<AbstractDiffExtension>();
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			if (PARSED_DIFF_EXTENSIONS.containsKey(ALL_EXTENSIONS)) {
-				for (DiffExtensionDescriptor extensionDesc : PARSED_DIFF_EXTENSIONS.get(ALL_EXTENSIONS)) {
+				for (final DiffExtensionDescriptor extensionDesc : PARSED_DIFF_EXTENSIONS.get(ALL_EXTENSIONS)) {
 					result.add(extensionDesc.getDiffExtensionInstance());
 				}
 			}
 			final Collection<DiffExtensionDescriptor> descs = PARSED_DIFF_EXTENSIONS.get(extension);
 			if (descs != null) {
-				for (DiffExtensionDescriptor desc : descs) {
+				for (final DiffExtensionDescriptor desc : descs) {
 					result.add(desc.getDiffExtensionInstance());
 				}
 			}
@@ -224,8 +228,8 @@ public final class DiffService {
 			/*
 			 * Now parsing the diff extension extension point
 			 */
-			extensions = Platform.getExtensionRegistry().getExtensionPoint(DiffPlugin.PLUGIN_ID,
-					TAG_DIFF_EXTENSION).getExtensions();
+			extensions = Platform.getExtensionRegistry().getExtensionPoint(DIFF_EXTENSION_EXTENSION_POINT)
+					.getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
 				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < configElements.length; j++) {
@@ -247,7 +251,7 @@ public final class DiffService {
 			return;
 
 		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
-		for (String engineExtension : extensions) {
+		for (final String engineExtension : extensions) {
 			if (!PARSED_DIFF_EXTENSIONS.containsKey(engineExtension)) {
 				PARSED_DIFF_EXTENSIONS.put(engineExtension, new ArrayList<DiffExtensionDescriptor>());
 			}
@@ -267,7 +271,7 @@ public final class DiffService {
 			return;
 
 		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
-		for (String engineExtension : extensions) {
+		for (final String engineExtension : extensions) {
 			if (!PARSED_ENGINES.containsKey(engineExtension)) {
 				PARSED_ENGINES.put(engineExtension, new ArrayList<EngineDescriptor>());
 			}
