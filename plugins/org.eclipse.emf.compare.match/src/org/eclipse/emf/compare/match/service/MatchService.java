@@ -213,7 +213,7 @@ public final class MatchService {
 			final EngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
-		return EngineRegistry.INSTANCE.getHighestEngine(extension);
+		return MatchEngineRegistry.INSTANCE.getHighestEngine(extension);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public final class MatchService {
 	 * @return The best {@link EngineDescriptor}.
 	 */
 	private static EngineDescriptor getBestDescriptor(String extension) {
-		final List<EngineDescriptor> engines = EngineRegistry.INSTANCE.getDescriptors(extension);
+		final List<EngineDescriptor> engines = MatchEngineRegistry.INSTANCE.getDescriptors(extension);
 		EngineDescriptor engine = null;
 		if (engines.size() == 1) {
 			engine = engines.iterator().next();

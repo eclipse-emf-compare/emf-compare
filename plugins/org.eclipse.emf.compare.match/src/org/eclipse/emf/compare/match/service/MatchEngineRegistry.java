@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.EcoreMatchEngine;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 
-/* (non-javadoc) we make use of the ordering of the engines, do not change implementation. */
+/* (non-javadoc) we make use of the ordering of the engines, do not change Map and List implementations. */
 /**
  * This registry will be initialized with all the match engines that could be parsed from the extension points
  * if Eclipse is running according to {@link EMFPlugin#IS_ECLIPSE_RUNNING}, else it will contain only the two
@@ -30,9 +30,9 @@ import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class EngineRegistry extends HashMap<String, List<Object>> {
+public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	/** Singleton instance of the registry. */
-	public static final EngineRegistry INSTANCE = new EngineRegistry();
+	public static final MatchEngineRegistry INSTANCE = new MatchEngineRegistry();
 
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
@@ -53,7 +53,7 @@ public final class EngineRegistry extends HashMap<String, List<Object>> {
 	 * As this is a singleton, hide the default constructor. Access the instance through the field
 	 * {@link #INSTANCE}.
 	 */
-	private EngineRegistry() {
+	private MatchEngineRegistry() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
 			parseExtensionMetadata();
 		} else {
@@ -148,10 +148,9 @@ public final class EngineRegistry extends HashMap<String, List<Object>> {
 				values.add(value);
 				super.put(key, values);
 			}
-		} else {
+		} else
 			throw new IllegalArgumentException("Cannot add value of type " + value.getClass().getName()
 					+ " in the Match engines registry.");
-		}
 	}
 
 	/**
