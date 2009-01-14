@@ -320,6 +320,10 @@ public final class ModelComparator {
 				if (!result) {
 					result |= handleGenericResources(leftElement, rightElement, ancestorElement);
 				}
+				/*
+				 * The generic handler should work for any EMF resources. If we're here, no exception has been
+				 * thrown and loading ended accurately
+				 */
 				result = true;
 			} catch (final IOException e) {
 				EMFComparePlugin.log(e, true);
