@@ -15,12 +15,15 @@
          point="org.eclipse.emf.compare.diff.engine">
       <diffengine
             engineClass="org.eclipse.emf.compare.diff.engine.GenericDiffEngine"
-            priority="lowest"/>
+            priority="lowest"
+            icon="icons/DiffEngine.gif"
+            label="Generic Differencing Engine"/>
       <diffengine
             engineClass="org.eclipse.emf.compare.diff.engine.EcoreDiffEngine"
             fileExtension="ecore"
-            priority="lowest">
-      </diffengine>
+            priority="lowest"
+            icon="icons/DiffEngine.gif"
+            label="Ecore Differencing Engine"/>
    </extension>
   <extension
         point="org.eclipse.emf.compare.diff.mergerprovider">

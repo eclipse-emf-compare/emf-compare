@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.diff.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,17 +19,18 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
-import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.util.EMFCompareMap;
+import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 
 /**
  * Parses extension meta data to fetch the diff engine to use.
  * 
- * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class DiffService {
 	/** Wild card for file extensions. */
@@ -39,14 +39,8 @@ public final class DiffService {
 	/** Default extension for EObjects not attached to a resource. */
 	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
 
-	/** Name of the extension point to parse for engines. */
-	private static final String DIFF_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.diff.engine"; //$NON-NLS-1$
-
 	/** Keeps track of all the diff extensions we've parsed. */
 	private static final Map<String, ArrayList<DiffExtensionDescriptor>> PARSED_DIFF_EXTENSIONS = new EMFCompareMap<String, ArrayList<DiffExtensionDescriptor>>();
-
-	/** Keeps track of all the engines we've parsed. */
-	private static final Map<String, ArrayList<EngineDescriptor>> PARSED_ENGINES = new EMFCompareMap<String, ArrayList<EngineDescriptor>>();
 
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String DIFF_EXTENSION_EXTENSION_POINT = "org.eclipse.emf.compare.diff.extension"; //$NON-NLS-1$
@@ -54,8 +48,8 @@ public final class DiffService {
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_DIFF_EXTENSION = "diffExtension"; //$NON-NLS-1$
 
-	/** Externalized here to avoid too many distinct usages. */
-	private static final String TAG_ENGINE = "diffengine"; //$NON-NLS-1$
+	/** Currently set diff engine selector. */
+	private static IDiffEngineSelector diffEngineSelector = new DefaultDiffEngineSelector();
 
 	static {
 		parseExtensionMetadata();
@@ -103,22 +97,36 @@ public final class DiffService {
 				ext.visit(diff);
 			}
 		}
+
+		engine.reset();
 		return diff;
 	}
 
 	/**
-	 * Returns the best {@link IDiffEngine} for a file extension.
+	 * Returns the best {@link IDiffEngine} for a file given its extension.
 	 * 
 	 * @param extension
-	 *            The extension of the file we need a {@link IDiffEngine} for.
+	 *            The extension of the file we need an {@link IDiffEngine} for.
 	 * @return The best {@link IDiffEngine} for the given file extension.
 	 */
 	public static IDiffEngine getBestDiffEngine(String extension) {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			final EngineDescriptor desc = getBestDescriptor(extension);
+		if (EMFPlugin.IS_ECLIPSE_RUNNING
+				&& EMFComparePlugin.getDefault().getBoolean(
+						EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
+			final DiffEngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
-		return new GenericDiffEngine();
+		return DiffEngineRegistry.INSTANCE.getHighestEngine(extension);
+	}
+
+	/**
+	 * Sets the diff engine selector that is to be used.
+	 * 
+	 * @param selector
+	 *            the new engine selector.
+	 */
+	public static void setDiffEngineSelector(IDiffEngineSelector selector) {
+		diffEngineSelector = selector;
 	}
 
 	/**
@@ -147,34 +155,21 @@ public final class DiffService {
 	}
 
 	/**
-	 * Returns the best {@link EngineDescriptor}.
+	 * Returns the best {@link DiffEngineDescriptor}.
 	 * 
 	 * @param extension
 	 *            The file extension we need a diff engine for.
-	 * @return The best {@link EngineDescriptor}.
+	 * @return The best {@link DiffEngineDescriptor}.
 	 */
-	private static EngineDescriptor getBestDescriptor(String extension) {
-		EngineDescriptor descriptor = null;
-		if (PARSED_ENGINES.containsKey(extension)) {
-			descriptor = getHighestDescriptor(PARSED_ENGINES.get(extension));
-		} else if (PARSED_ENGINES.containsKey(ALL_EXTENSIONS)) {
-			descriptor = getHighestDescriptor(PARSED_ENGINES.get(ALL_EXTENSIONS));
+	private static DiffEngineDescriptor getBestDescriptor(String extension) {
+		final List<DiffEngineDescriptor> engines = DiffEngineRegistry.INSTANCE.getDescriptors(extension);
+		DiffEngineDescriptor engine = null;
+		if (engines.size() == 1) {
+			engine = engines.iterator().next();
+		} else if (engines.size() > 1) {
+			engine = diffEngineSelector.selectDiffEngine(engines);
 		}
-		return descriptor;
-	}
-
-	/**
-	 * Returns the highest {@link EngineDescriptor} from the given {@link List}.
-	 * 
-	 * @param set
-	 *            {@link List} of {@link EngineDescriptor} from which to find the highest one.
-	 * @return The highest {@link EngineDescriptor} from the given {@link List}.
-	 */
-	private static EngineDescriptor getHighestDescriptor(List<EngineDescriptor> set) {
-		Collections.sort(set, Collections.reverseOrder());
-		if (set.size() > 0)
-			return set.get(0);
-		return null;
+		return engine;
 	}
 
 	/**
@@ -194,42 +189,13 @@ public final class DiffService {
 	}
 
 	/**
-	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
-	 * for it if it describes an engine.
-	 * 
-	 * @param configElement
-	 *            Configuration element to parse.
-	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine,
-	 *         <code>null</code> otherwise.
-	 */
-	private static EngineDescriptor parseEngine(IConfigurationElement configElement) {
-		if (!configElement.getName().equals(TAG_ENGINE))
-			return null;
-		final EngineDescriptor desc = new EngineDescriptor(configElement);
-		return desc;
-	}
-
-	/**
 	 * This will parse the currently running platform for extensions and store all the diff engines and diff
 	 * extensions that can be found.
 	 */
 	private static void parseExtensionMetadata() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-					DIFF_ENGINES_EXTENSION_POINT).getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
-				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-				for (int j = 0; j < configElements.length; j++) {
-					final EngineDescriptor desc = parseEngine(configElements[j]);
-					storeEngineDescriptor(desc);
-				}
-			}
-
-			/*
-			 * Now parsing the diff extension extension point
-			 */
-			extensions = Platform.getExtensionRegistry().getExtensionPoint(DIFF_EXTENSION_EXTENSION_POINT)
-					.getExtensions();
+			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+					DIFF_EXTENSION_EXTENSION_POINT).getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
 				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < configElements.length; j++) {
@@ -256,26 +222,6 @@ public final class DiffService {
 				PARSED_DIFF_EXTENSIONS.put(engineExtension, new ArrayList<DiffExtensionDescriptor>());
 			}
 			final List<DiffExtensionDescriptor> set = PARSED_DIFF_EXTENSIONS.get(engineExtension);
-			set.add(desc);
-		}
-	}
-
-	/**
-	 * Stores the given descriptor in the {@link List} of known {@link EngineDescriptor}s.
-	 * 
-	 * @param desc
-	 *            Descriptor to be added to the list of all know descriptors.
-	 */
-	private static void storeEngineDescriptor(EngineDescriptor desc) {
-		if (desc.getFileExtension() == null)
-			return;
-
-		final String[] extensions = desc.getFileExtension().split(","); //$NON-NLS-1$
-		for (final String engineExtension : extensions) {
-			if (!PARSED_ENGINES.containsKey(engineExtension)) {
-				PARSED_ENGINES.put(engineExtension, new ArrayList<EngineDescriptor>());
-			}
-			final List<EngineDescriptor> set = PARSED_ENGINES.get(engineExtension);
 			set.add(desc);
 		}
 	}

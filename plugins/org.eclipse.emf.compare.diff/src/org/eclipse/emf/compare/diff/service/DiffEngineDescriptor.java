@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-/* package */class EngineDescriptor implements Comparable<EngineDescriptor> {
+public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
@@ -31,6 +31,12 @@ import org.eclipse.emf.compare.util.EngineConstants;
 
 	/** File extensions this engine takes into account. */
 	protected final String fileExtension;
+
+	/** Label of this engine. */
+	protected final String label;
+
+	/** Icon of this engine. */
+	protected final String icon;
 
 	/**
 	 * Priority of this descriptor. Should be one of
@@ -47,17 +53,22 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	/** {@link IDiffEngine} this descriptor describes. */
 	private IDiffEngine engine;
 
+	/** Integer representation of the priority. */
+	private int priorityValue = -1;
+
 	/**
 	 * Instantiate the descriptor given its configuration.
 	 * 
 	 * @param configuration
 	 *            {@link IConfigurationElement configuration element} of this descriptor.
 	 */
-	public EngineDescriptor(IConfigurationElement configuration) {
+	public DiffEngineDescriptor(IConfigurationElement configuration) {
 		element = configuration;
 		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
 		engineClassName = getAttribute("engineClass", null); //$NON-NLS-1$
+		label = getAttribute("label", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		icon = getAttribute("icon", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -65,9 +76,9 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(EngineDescriptor other) {
-		final int nombre1 = getPriorityValue(other.getPriority());
-		final int nombre2 = getPriorityValue(getPriority());
+	public int compareTo(DiffEngineDescriptor other) {
+		final int nombre1 = other.getPriorityValue();
+		final int nombre2 = getPriorityValue();
 		return nombre2 - nombre1;
 	}
 
@@ -84,7 +95,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		} else if (obj == null || getClass() != obj.getClass()) {
 			isEqual = false;
 		} else {
-			final EngineDescriptor other = (EngineDescriptor)obj;
+			final DiffEngineDescriptor other = (DiffEngineDescriptor)obj;
 			if (engineClassName == null && other.engineClassName != null) {
 				isEqual = false;
 			} else if (!engineClassName.equals(other.engineClassName)) {
@@ -103,6 +114,26 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/**
+	 * Returns the configuration element.
+	 * 
+	 * @return The configuration element.
+	 * @since 0.9
+	 */
+	public IConfigurationElement getElement() {
+		return element;
+	}
+
+	/**
+	 * Returns the qualified name of the engine's class.
+	 * 
+	 * @return Qualified name of the engine's class.
+	 * @since 0.9
+	 */
+	public String getEngineClassName() {
+		return engineClassName;
+	}
+
+	/**
 	 * Returns the engine instance.
 	 * 
 	 * @return The engine instance.
@@ -111,7 +142,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		if (engine == null) {
 			try {
 				engine = (IDiffEngine)element.createExecutableExtension("engineClass"); //$NON-NLS-1$
-			} catch (CoreException e) {
+			} catch (final CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}
 		}
@@ -126,6 +157,26 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 */
 	public String getFileExtension() {
 		return fileExtension;
+	}
+
+	/**
+	 * Returns the icon that represents the wrapped engine.
+	 * 
+	 * @return The icon that represents the wrapped engine.
+	 * @since 0.9
+	 */
+	public String getIcon() {
+		return icon;
+	}
+
+	/**
+	 * Returns the label that represents the wrapped engine.
+	 * 
+	 * @return The label that represents the wrapped engine.
+	 * @since 0.9
+	 */
+	public String getLabel() {
+		return label;
 	}
 
 	/**
@@ -146,28 +197,30 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	public int hashCode() {
 		final int prime = 31;
 		int classNameHash = 0;
-		if (engineClassName != null)
+		if (engineClassName != null) {
 			classNameHash = engineClassName.hashCode();
+		}
 		int extensionHash = 0;
-		if (fileExtension != null)
+		if (fileExtension != null) {
 			extensionHash = fileExtension.hashCode();
+		}
 		int priorityHash = 0;
-		if (priority != null)
+		if (priority != null) {
 			priorityHash = priority.hashCode();
+		}
 
 		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
 	}
 
 	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
-	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the
+	 * attribute hasn't been set, we'll return <code>defaultValue</code> instead.
 	 * 
 	 * @param name
 	 *            Name of the attribute we seek the value of.
 	 * @param defaultValue
 	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
-	 *         set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
 	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);
@@ -180,8 +233,8 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values
-	 * according to <code>priorityString</code> value :
+	 * Returns the value of the priority of this engine.<br/>Returned values according to
+	 * <code>priority</code> :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
@@ -190,22 +243,20 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * <li>anything else =&gt; {@value EngineConstants#PRIORITY_NORMAL}</li>
 	 * </ul>
 	 * 
-	 * @param priorityString
-	 *            {@link String} value of the priority we seek.
-	 * @return <code>int</code> corresponding to the given priority {@link String}.
+	 * @return <code>int</code> corresponding to this engine priority.
 	 */
-	private int getPriorityValue(String priorityString) {
-		if (priorityString == null)
-			throw new IllegalArgumentException(EMFCompareDiffMessages.getString("Descriptor.IllegalPriority")); //$NON-NLS-1$
-		int priorityValue = EngineConstants.PRIORITY_NORMAL;
-		if ("lowest".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOWEST;
-		} else if ("low".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_LOW;
-		} else if ("high".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGH;
-		} else if ("highest".equals(priorityString)) { //$NON-NLS-1$
-			priorityValue = EngineConstants.PRIORITY_HIGHEST;
+	public int getPriorityValue() {
+		if (priorityValue == -1) {
+			priorityValue = EngineConstants.PRIORITY_NORMAL;
+			if ("lowest".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_LOWEST;
+			} else if ("low".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_LOW;
+			} else if ("high".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_HIGH;
+			} else if ("highest".equals(priority)) { //$NON-NLS-1$
+				priorityValue = EngineConstants.PRIORITY_HIGHEST;
+			}
 		}
 		return priorityValue;
 	}
