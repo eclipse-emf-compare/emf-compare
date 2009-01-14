@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-public class EngineDescriptor implements Comparable<EngineDescriptor> {
+public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> {
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
@@ -62,7 +62,7 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	 * @param configuration
 	 *            {@link IConfigurationElement configuration element} of this descriptor.
 	 */
-	public EngineDescriptor(IConfigurationElement configuration) {
+	public MatchEngineDescriptor(IConfigurationElement configuration) {
 		element = configuration;
 		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
@@ -76,7 +76,7 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(EngineDescriptor other) {
+	public int compareTo(MatchEngineDescriptor other) {
 		final int nombre1 = other.getPriorityValue();
 		final int nombre2 = getPriorityValue();
 		return nombre2 - nombre1;
@@ -95,7 +95,7 @@ public class EngineDescriptor implements Comparable<EngineDescriptor> {
 		} else if (obj == null || getClass() != obj.getClass()) {
 			isEqual = false;
 		} else {
-			final EngineDescriptor other = (EngineDescriptor)obj;
+			final MatchEngineDescriptor other = (MatchEngineDescriptor)obj;
 			if (engineClassName == null && other.engineClassName != null) {
 				isEqual = false;
 			} else if (!engineClassName.equals(other.engineClassName)) {

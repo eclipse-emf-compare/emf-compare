@@ -21,7 +21,7 @@
             engineClass="org.eclipse.emf.compare.match.engine.EcoreMatchEngine"
             fileExtension="ecore"
             icon="icons/full/obj16/MatchModel.gif"
-            label="ECore Matching Engine"/>
+            label="Ecore Matching Engine"/>
    </extension>
 
  

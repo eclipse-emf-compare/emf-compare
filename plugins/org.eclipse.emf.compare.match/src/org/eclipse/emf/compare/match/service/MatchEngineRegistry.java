@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,17 +72,17 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	 *            Extension of the file we seek the matching engines for.
 	 * @return The list of available engines.
 	 */
-	public List<EngineDescriptor> getDescriptors(String fileExtension) {
+	public List<MatchEngineDescriptor> getDescriptors(String fileExtension) {
 		final List<Object> specific = get(fileExtension);
 		final List<Object> candidates = new ArrayList<Object>(get(ALL_EXTENSIONS));
 		if (specific != null) {
 			candidates.addAll(0, specific);
 		}
 
-		final List<EngineDescriptor> engines = new ArrayList<EngineDescriptor>(candidates.size());
+		final List<MatchEngineDescriptor> engines = new ArrayList<MatchEngineDescriptor>(candidates.size());
 		for (final Object value : candidates) {
-			if (value instanceof EngineDescriptor) {
-				engines.add((EngineDescriptor)value);
+			if (value instanceof MatchEngineDescriptor) {
+				engines.add((MatchEngineDescriptor)value);
 			}
 		}
 		return engines;
@@ -103,8 +103,8 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 		IMatchEngine highest = null;
 		if (engines != null) {
 			for (final Object engine : engines) {
-				if (engine instanceof EngineDescriptor) {
-					final EngineDescriptor desc = (EngineDescriptor)engine;
+				if (engine instanceof MatchEngineDescriptor) {
+					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
 					}
@@ -117,8 +117,8 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 		// couldn't find a specific engine, search through the generic ones
 		if (highest == null) {
 			for (final Object engine : get(ALL_EXTENSIONS)) {
-				if (engine instanceof EngineDescriptor) {
-					final EngineDescriptor desc = (EngineDescriptor)engine;
+				if (engine instanceof MatchEngineDescriptor) {
+					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
 					}
@@ -139,7 +139,7 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	 *            Engine to be added.
 	 */
 	public void putValue(String key, Object value) {
-		if (value instanceof IMatchEngine || value instanceof EngineDescriptor) {
+		if (value instanceof IMatchEngine || value instanceof MatchEngineDescriptor) {
 			List<Object> values = get(key);
 			if (values != null) {
 				values.add(value);
@@ -148,9 +148,10 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 				values.add(value);
 				super.put(key, values);
 			}
-		} else
+		} else {
 			throw new IllegalArgumentException("Cannot add value of type " + value.getClass().getName()
 					+ " in the Match engines registry.");
+		}
 	}
 
 	/**
@@ -159,13 +160,13 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	 * 
 	 * @param configElement
 	 *            Configuration element to parse.
-	 * @return {@link EngineDescriptor} wrapped around <code>configElement</code> if it describes an engine,
-	 *         <code>null</code> otherwise.
+	 * @return {@link MatchEngineDescriptor} wrapped around <code>configElement</code> if it describes an
+	 *         engine, <code>null</code> otherwise.
 	 */
-	private EngineDescriptor parseEngine(IConfigurationElement configElement) {
+	private MatchEngineDescriptor parseEngine(IConfigurationElement configElement) {
 		if (!configElement.getName().equals(TAG_ENGINE))
 			return null;
-		final EngineDescriptor desc = new EngineDescriptor(configElement);
+		final MatchEngineDescriptor desc = new MatchEngineDescriptor(configElement);
 		return desc;
 	}
 
@@ -179,7 +180,7 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 		for (int i = 0; i < extensions.length; i++) {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
-				final EngineDescriptor desc = parseEngine(configElements[j]);
+				final MatchEngineDescriptor desc = parseEngine(configElements[j]);
 				final String[] fileExtensions = desc.getFileExtension().split(","); //$NON-NLS-1$
 				for (final String ext : fileExtensions) {
 					putValue(ext, desc);

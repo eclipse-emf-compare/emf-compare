@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Dimitrios Kolovos.
+ * Copyright (c) 2008, 2009 Dimitrios Kolovos and other.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,8 +26,8 @@ public class DefaultMatchEngineSelector implements IMatchEngineSelector {
 	 * 
 	 * @see org.eclipse.emf.compare.match.service.IMatchEngineSelector#selectMatchEngine(java.util.List)
 	 */
-	public EngineDescriptor selectMatchEngine(List<EngineDescriptor> engines) {
-		EngineDescriptor engine = null;
+	public MatchEngineDescriptor selectMatchEngine(List<MatchEngineDescriptor> engines) {
+		MatchEngineDescriptor engine = null;
 
 		if (!engines.isEmpty()) {
 			engine = engines.get(0);

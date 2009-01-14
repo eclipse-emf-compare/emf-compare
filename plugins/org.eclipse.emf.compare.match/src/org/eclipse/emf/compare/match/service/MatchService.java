@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 /**
  * Service facade for matching models.
  * 
- * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class MatchService {
 	/** Default extension for EObjects not attached to a resource. */
@@ -203,14 +203,14 @@ public final class MatchService {
 	 * Returns the best {@link IMatchEngine} for a file given its extension.
 	 * 
 	 * @param extension
-	 *            The extension of the file we need a {@link IMatchEngine} for.
+	 *            The extension of the file we need an {@link IMatchEngine} for.
 	 * @return The best {@link IMatchEngine} for the given file extension.
 	 */
 	public static IMatchEngine getBestMatchEngine(String extension) {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault().getBoolean(
 						EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
-			final EngineDescriptor desc = getBestDescriptor(extension);
+			final MatchEngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
 		return MatchEngineRegistry.INSTANCE.getHighestEngine(extension);
@@ -227,15 +227,15 @@ public final class MatchService {
 	}
 
 	/**
-	 * Returns the best {@link EngineDescriptor} for a given file extension.
+	 * Returns the best {@link MatchEngineDescriptor} for a given file extension.
 	 * 
 	 * @param extension
 	 *            The file extension we need a match engine for.
-	 * @return The best {@link EngineDescriptor}.
+	 * @return The best {@link MatchEngineDescriptor}.
 	 */
-	private static EngineDescriptor getBestDescriptor(String extension) {
-		final List<EngineDescriptor> engines = MatchEngineRegistry.INSTANCE.getDescriptors(extension);
-		EngineDescriptor engine = null;
+	private static MatchEngineDescriptor getBestDescriptor(String extension) {
+		final List<MatchEngineDescriptor> engines = MatchEngineRegistry.INSTANCE.getDescriptors(extension);
+		MatchEngineDescriptor engine = null;
 		if (engines.size() == 1) {
 			engine = engines.iterator().next();
 		} else if (engines.size() > 1) {

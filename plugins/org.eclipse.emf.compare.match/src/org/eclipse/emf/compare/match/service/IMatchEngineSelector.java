@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Dimitrios Kolovos.
+ * Copyright (c) 2008, 2009 Dimitrios Kolovos and other.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,5 +28,5 @@ public interface IMatchEngineSelector {
 	 *            List of all candidates.
 	 * @return The selected engine.
 	 */
-	EngineDescriptor selectMatchEngine(List<EngineDescriptor> engines);
+	MatchEngineDescriptor selectMatchEngine(List<MatchEngineDescriptor> engines);
 }
