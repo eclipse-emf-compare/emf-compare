@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,11 +19,11 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -179,7 +179,7 @@ public class ThreeWayDiffTest extends TestCase {
 	public void test3WayDiffNullEObjects() {
 		final String failNPE = "The differencing process did not throw the expected NullPointerException.";
 		try {
-			DiffService.doDiff(null, true);
+			DiffService.doDiff((MatchModel)null, true);
 			fail(failNPE);
 		} catch (final NullPointerException e) {
 			// This was expected behavior
@@ -281,11 +281,11 @@ public class ThreeWayDiffTest extends TestCase {
 
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
-		int additionCount = 0;
+		int deletionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof RemoteAddModelElement) {
-				additionCount++;
+			if (aDiff instanceof RemoteRemoveModelElement) {
+				deletionCount++;
 			}
 			if (!(aDiff instanceof DiffGroup)) {
 				elementCount++;
@@ -294,7 +294,7 @@ public class ThreeWayDiffTest extends TestCase {
 
 		// We're expecting two changes, one of which being an addition
 		assertEquals("Unexpected count of differences.", 2, elementCount);
-		assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
+		assertEquals("Unexpected count of deletions in the DiffModel.", 1, deletionCount);
 	}
 
 	/**
@@ -321,11 +321,11 @@ public class ThreeWayDiffTest extends TestCase {
 
 		final TreeIterator<EObject> diffIterator = diff.eAllContents();
 		int elementCount = 0;
-		int deletionCount = 0;
+		int additionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof RemoveModelElement) {
-				deletionCount++;
+			if (aDiff instanceof AddModelElement) {
+				additionCount++;
 			}
 			if (!(aDiff instanceof DiffGroup)) {
 				elementCount++;
@@ -334,6 +334,6 @@ public class ThreeWayDiffTest extends TestCase {
 
 		// We're expecting two changes, one of which being a removal
 		assertEquals("Unexpected count of differences.", 2, elementCount);
-		assertEquals("Unexpected count of deletions in the DiffModel.", 1, deletionCount);
+		assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
 	}
 }

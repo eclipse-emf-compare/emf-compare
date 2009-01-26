@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -133,7 +133,7 @@ public class TwoWayDiffTest extends TestCase {
 	public void test2WayDiffNullEObjects() {
 		final String failNPE = "The differencing process did not throw the expected NullPointerException.";
 		try {
-			DiffService.doDiff(null);
+			DiffService.doDiff((MatchModel)null);
 			fail(failNPE);
 		} catch (final NullPointerException e) {
 			// This was expected behavior

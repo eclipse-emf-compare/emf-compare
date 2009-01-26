@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -132,10 +132,10 @@ public class NonRegressionModelsTest extends TestCase {
 				// Serializes current and expected match and diff as Strings
 				final String currentMatch = ModelUtils.serialize(inputMatch);
 				final String currentDiff = ModelUtils.serialize(inputDiff);
-				final String expectedMatch = ModelUtils.serialize(((ModelInputSnapshot)expectedSnapshot
+				final String expectedMatch = ModelUtils.serialize(((ComparisonResourceSnapshot)expectedSnapshot
 						.get(0)).getMatch());
 				final String expectedDiff = ModelUtils
-						.serialize(((ModelInputSnapshot)expectedSnapshot.get(0)).getDiff());
+						.serialize(((ComparisonResourceSnapshot)expectedSnapshot.get(0)).getDiff());
 
 				assertEquals(testedDir + ',' + "MatchModels don't match.",
 						suppressPathReferences(currentMatch), suppressPathReferences(expectedMatch));

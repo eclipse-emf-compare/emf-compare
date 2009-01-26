@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,9 +137,9 @@ public class TwoWayContentMatchTest extends TestCase {
 					elementCount++;
 				}
 
-				// Note : need to add 2 to the element count this none of the two roots has been counted yet
-				assertEquals("contentMatch() found shouldn't have found a match element.", elementCount + 2,
-						match.getUnmatchedElements().size());
+				// Note : need to add 2 to the element count since none of the two roots has been counted yet
+				assertEquals("contentMatch() shouldn't have found a match element.", elementCount + 2, match
+						.getUnmatchedElements().size());
 
 				// We shouldn't find a single MatchElement
 				assertTrue("contentMatch() found a matched element in the compared objects", match
