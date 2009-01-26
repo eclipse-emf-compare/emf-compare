@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,12 +54,15 @@ public class EMFComparePlugin extends Plugin {
 	 *            a warning.
 	 */
 	public static void log(Exception e, boolean blocker) {
-		if (e == null)
+		if (e == null) {
 			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullException")); //$NON-NLS-1$
+		}
 
 		if (plugin == null) {
 			// We are out of eclipse. Prints the stack trace on standard error.
+			// CHECKSTYLE:OFF
 			e.printStackTrace();
+			// CHECKSTYLE:ON
 		} else if (e instanceof CoreException) {
 			log(((CoreException)e).getStatus());
 		} else if (e instanceof NullPointerException) {
@@ -88,14 +91,14 @@ public class EMFComparePlugin extends Plugin {
 	public static void log(IStatus status) {
 		// Eclipse platform displays NullPointer on standard error instead of throwing it.
 		// We'll handle this by throwing it ourselves.
-		if (status == null)
+		if (status == null) {
 			throw new NullPointerException(EMFCompareMessages.getString("EMFComparePlugin.LogNullStatus")); //$NON-NLS-1$
+		}
 
 		if (getDefault() != null) {
 			getDefault().getLog().log(status);
-		} else {
+		} else
 			throw new EMFCompareException(status.getException());
-		}
 	}
 
 	/**
@@ -110,7 +113,9 @@ public class EMFComparePlugin extends Plugin {
 	public static void log(String message, boolean blocker) {
 		if (plugin == null) {
 			// We are out of eclipse. Prints the message on standard error.
+			// CHECKSTYLE:OFF
 			System.err.println(message);
+			// CHECKSTYLE:ON
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {

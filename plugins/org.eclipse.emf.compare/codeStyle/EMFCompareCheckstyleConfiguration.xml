@@ -10,6 +10,7 @@
 <module name="Checker">
     <property name="severity" value="warning"/>
     <module name="TreeWalker">
+        <module name="FileContentsHolder"/>
         <module name="JavadocMethod">
             <property name="severity" value="error"/>
             <property name="allowMissingPropertyJavadoc" value="true"/>
@@ -78,7 +79,7 @@
         </module>
         <module name="ExecutableStatementCount">
             <property name="severity" value="error"/>
-            <property name="max" value="55"/>
+            <property name="max" value="60"/>
             <property name="tokens" value="INSTANCE_INIT,STATIC_INIT,METHOD_DEF,CTOR_DEF"/>
         </module>
         <module name="FileLength">
@@ -307,7 +308,7 @@
         <module name="j2ee.ThisParameter"/>
         <module name="j2ee.ThisReturn"/>
         <module name="RequiredRegexp">
-            <metadata name="com.atlassw.tools.eclipse.checkstyle.customMessage" value="Le copyright doit figurer dans le fichier sous la forme &quot;Copyright (c) 2006, 2007, 2008 Obeo.&quot;"/>
+            <metadata name="com.atlassw.tools.eclipse.checkstyle.customMessage" value="Le copyright doit figurer dans le fichier sous la forme &quot;Copyright (c) 2006, 2009 Obeo.&quot;"/>
             <property name="severity" value="error"/>
             <property name="format" value="Copyright\s\(c\)\s(20[0-9]{2},?\s)+"/>
         </module>
@@ -336,4 +337,5 @@
             <property name="message" value="These are for debug/batch applications launches only. Remove them from production build."/>
         </module>
     </module>
+    <module name="SuppressionCommentFilter"/>
 </module>

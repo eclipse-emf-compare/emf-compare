@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,14 +46,6 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/** The load factor used when none specified in constructor. * */
 	protected static final float DEFAULT_LOAD_FACTOR = 0.6f;
 
-	/**
-	 * Primes that will be used one after the other when using an initial capacity of 31. This lists extends
-	 * up to {@link Integer#MAX_VALUE} as it is a prime.
-	 */
-	protected static final int[] DEFAULT_PRIME_LIST = new int[] {31, 67, 137, 277, 557, 1117, 2237, 4481,
-			8963, 17929, 35863, 71741, 143483, 286973, 573953, 1147921, 2295859, 4591721, 9183457, 18366923,
-			36733847, 73467739, 146935499, 293871013, 587742049, 1175484103, Integer.MAX_VALUE, };
-
 	/** Minimal allowed load factor for the map. */
 	protected static final float MINIMUM_LOAD_FACTOR = 0.05f;
 
@@ -66,6 +58,14 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	/** First hundred primes. Used to compute the next prime. */
 	private static final int[] FIRST_PRIMES = new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
 			47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, };
+
+	/**
+	 * Primes that will be used one after the other when using an initial capacity of 31. This lists extends
+	 * up to {@link Integer#MAX_VALUE} as it is a prime.
+	 */
+	private static final int[] DEFAULT_PRIME_LIST = new int[] {31, 67, 137, 277, 557, 1117, 2237, 4481, 8963,
+			17929, 35863, 71741, 143483, 286973, 573953, 1147921, 2295859, 4591721, 9183457, 18366923,
+			36733847, 73467739, 146935499, 293871013, 587742049, 1175484103, Integer.MAX_VALUE, };
 
 	/** Serial number of this map. Used for checks upon deserialization. */
 	private static final long serialVersionUID = -890704446117047482L;
@@ -105,9 +105,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and the default
-	 * load factor (0.75). This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code>
-	 * as the Map's initial capacity if <code>initialCapacity</code> is lower.
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and the default load
+	 * factor (0.75). This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the
+	 * Map's initial capacity if <code>initialCapacity</code> is lower.
 	 * 
 	 * @param initialCapacity
 	 *            Initial capacity of the Map.
@@ -117,9 +117,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and load
-	 * factor.This class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the Map's
-	 * initial capacity if <code>initialCapacity</code> is lower.
+	 * Constructs an empty <code>EMFCompareMap</code> with the specified initial capacity and load factor.This
+	 * class will automatically use <code>{@value #MINIMAL_INITIAL_CAPACITY}</code> as the Map's initial
+	 * capacity if <code>initialCapacity</code> is lower.
 	 * 
 	 * @param initialCapacity
 	 *            Initial capacity of the Map.
@@ -178,7 +178,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			final EMFCompareMap<K, V> map = (EMFCompareMap<K, V>)super.clone();
 			map.putAll(this);
 			return map;
-		} catch (CloneNotSupportedException e) {
+		} catch (final CloneNotSupportedException e) {
 			// should be supported
 			return null;
 		}
@@ -242,9 +242,10 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			result = true;
 		} else if (another instanceof Map && ((Map)another).size() == size()) {
 			// Two empty maps are considered equal regardless of the implementation
-			if (size() == 0)
+			if (size() == 0) {
 				result = true;
-			for (Map.Entry<K, V> entry : entrySet()) {
+			}
+			for (final Map.Entry<K, V> entry : entrySet()) {
 				if (((Map)another).containsKey(entry.getKey())) {
 					final Object otherValue = ((Map)another).get(entry.getKey());
 					result = equal(otherValue, entry.getValue());
@@ -276,8 +277,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	@Override
 	public int hashCode() {
 		int hash = 0;
-		for (Map.Entry<K, V> entry : entrySet())
+		for (final Map.Entry<K, V> entry : entrySet()) {
 			hash += entry.hashCode();
+		}
 		return hash;
 	}
 
@@ -307,14 +309,15 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 *            Key with which the value will be associated.
 	 * @param value
 	 *            Value to associate with the key.
-	 * @return The previous value associated with <code>key</code>. <code>Null</code> if there were none
-	 *         or <code>null</code> was associated.
+	 * @return The previous value associated with <code>key</code>. <code>Null</code> if there were none or
+	 *         <code>null</code> was associated.
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
 	public V put(K key, V value) {
 		K effectiveKey = key;
-		if (key == null)
+		if (key == null) {
 			effectiveKey = (K)NULL_KEY;
+		}
 
 		V oldValue = null;
 		boolean usedFreeSlot;
@@ -329,8 +332,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		usedFreeSlot = keys[index] == null;
 		keys[index] = effectiveKey;
 		values[index] = value;
-		if (isNewMapping)
+		if (isNewMapping) {
 			postInsert(usedFreeSlot);
+		}
 
 		return oldValue;
 	}
@@ -342,7 +346,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	public void putAll(Map<? extends K, ? extends V> map) {
 		checkCapacity(map.size());
-		for (Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
+		for (final Map.Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
@@ -356,8 +360,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	public V remove(Object key) {
 		Object effectiveKey = key;
-		if (key == null)
+		if (key == null) {
 			effectiveKey = NULL_KEY;
+		}
 
 		V oldValue = null;
 		final int index = indexOf(effectiveKey);
@@ -393,8 +398,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			final Map.Entry<K, V> e = i.next();
 			buf.append(e.toString());
 			hasNext = i.hasNext();
-			if (hasNext)
+			if (hasNext) {
 				buf.append(", "); //$NON-NLS-1$
+			}
 		}
 
 		buf.append("}"); //$NON-NLS-1$
@@ -428,8 +434,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	protected void changeCapacity(int newCapacity) {
 		threshold = newCapacity - 1;
 		final int candidate = (int)Math.floor(newCapacity * loadFactor);
-		if (candidate < threshold)
+		if (candidate < threshold) {
 			threshold = candidate;
+		}
 		freeSlots = newCapacity - usedSlots;
 	}
 
@@ -462,8 +469,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Finds the nearest pseudo-prime greater than <code>number</code>. Based on Rabin-Miller primality
-	 * test.
+	 * Finds the nearest pseudo-prime greater than <code>number</code>. Based on Rabin-Miller primality test.
 	 * 
 	 * @param number
 	 *            Number we will use as a starting point to find a greater prime.
@@ -475,10 +481,11 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 		// Any number below 2 will have its nearest prime equal to 2.
 		final int isPrime;
-		if (number <= 2)
+		if (number <= 2) {
 			isPrime = 2;
-		else
+		} else {
 			isPrime = Math.abs(number);
+		}
 		int nearestPrime = -1;
 
 		if (isPrime < 100 && Arrays.binarySearch(FIRST_PRIMES, isPrime) >= 0) {
@@ -488,7 +495,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		} else if (isPrime % 6 != 1 && isPrime % 6 != 5) {
 			nearestPrime = getNearestPrime(isPrime + 5 - (isPrime % 6));
 		} else {
-			for (int prime : FIRST_PRIMES) {
+			for (final int prime : FIRST_PRIMES) {
 				if (isPrime % prime == 0) {
 					nearestPrime = getNearestPrime(isPrime + 2);
 				}
@@ -512,8 +519,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 					int y = (int)Math.pow(Math.random() * isPrime + 1, d) % isPrime;
 
 					// if y equals 1, it passed the test
-					if (y == 1)
+					if (y == 1) {
 						continue;
+					}
 
 					boolean pass = false;
 					for (int j = 1; j < r; j++) {
@@ -524,13 +532,15 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 						y = (int)Math.pow(y, 2) % isPrime;
 					}
 					// number didn't pass the test. We'll test again with the next possible
-					if (!pass)
+					if (!pass) {
 						nearestPrime = getNearestPrime(isPrime + 2);
+					}
 				}
 			}
 			// If we are here, number passed the test 10 times. It is most likely a prime
-			if (nearestPrime == -1)
+			if (nearestPrime == -1) {
 				nearestPrime = isPrime;
+			}
 		}
 		return nearestPrime;
 	}
@@ -544,8 +554,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 */
 	protected int indexOf(Object key) {
 		Object effectiveKey = key;
-		if (key == null)
+		if (key == null) {
 			effectiveKey = NULL_KEY;
+		}
 
 		final int mask = 0x7fffffff;
 		final int hash = effectiveKey.hashCode() & mask;
@@ -558,8 +569,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 			while (current != null && (current == REMOVED_ENTRY || !equal(current, effectiveKey))) {
 				index -= hashProbe;
-				if (index < 0)
+				if (index < 0) {
 					index += length;
+				}
 				current = keys[index];
 			}
 		}
@@ -570,13 +582,13 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	}
 
 	/**
-	 * Returns the index at which <code>key</code> can be inserted. If such a key already exists, returns
-	 * its negative value minus 1.
+	 * Returns the index at which <code>key</code> can be inserted. If such a key already exists, returns its
+	 * negative value minus 1.
 	 * 
 	 * @param key
 	 *            Key to be inserted.
-	 * @return The index at which <code>key</code> can be inserted. If such a key already exists, returns
-	 *         its negative value minus 1.
+	 * @return The index at which <code>key</code> can be inserted. If such a key already exists, returns its
+	 *         negative value minus 1.
 	 */
 	protected int insertionIndexFor(K key) {
 		// Key cannot be null here, it is either an object or NULL_KEY
@@ -587,20 +599,21 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		int index = hash % length;
 		K current = keys[index];
 
-		if (current == null) {
+		if (current == null)
 			return index;
-		} else if (current != REMOVED_ENTRY && equal(current, key)) {
+		else if (current != REMOVED_ENTRY && equal(current, key))
 			// Key is already stored
 			return -index - 1;
-		} else {
+		else {
 			// This slot is already associated.
 			final int hashProbe = 1 + (hash % (length - 2));
 
 			if (current != REMOVED_ENTRY) {
 				while (current != null && current != REMOVED_ENTRY && !equal(current, key)) {
 					index -= hashProbe;
-					if (index < 0)
+					if (index < 0) {
 						index += length;
+					}
 					current = keys[index];
 				}
 			}
@@ -609,13 +622,15 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 				final int removedIndex = index;
 				while (current != null && (current == REMOVED_ENTRY || !equal(current, key))) {
 					index -= hashProbe;
-					if (index < 0)
+					if (index < 0) {
 						index += length;
+					}
 					current = keys[index];
 				}
 				// if we didn't find a free slot, we'll use a "removed" one
-				if (current == null)
+				if (current == null) {
 					index = removedIndex;
+				}
 			}
 		}
 		if (current != null)
@@ -630,8 +645,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 *            Indicates whether the insert used up a free slot.
 	 */
 	protected void postInsert(boolean usedFreeSlot) {
-		if (usedFreeSlot)
+		if (usedFreeSlot) {
 			freeSlots--;
+		}
 		usedSlots++;
 
 		// If there isn't any space left in the table, expand table.
@@ -655,10 +671,11 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		} else {
 			final Map.Entry<K, V> entry = (Map.Entry<K, V>)e;
 			final V oldValue = remove(entry.getKey());
-			if (oldValue == null && entry.getValue() != null)
+			if (oldValue == null && entry.getValue() != null) {
 				result = null;
-			else
+			} else {
 				result = entry;
+			}
 		}
 		return result;
 	}
@@ -776,10 +793,12 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		public final int hashCode() {
 			int keyHash = 0;
 			int valueHash = 0;
-			if (key != null)
+			if (key != null) {
 				keyHash = key.hashCode();
-			if (value != null)
+			}
+			if (value != null) {
 				valueHash = value.hashCode();
+			}
 			return keyHash ^ valueHash;
 		}
 
@@ -809,15 +828,17 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			// Note that we cannot have entries with key == FREE_ENTRY or key == REMOVED_ENTRY
 			// (see AbstractHashIterator#nextEntry)
 			final StringBuilder result = new StringBuilder();
-			if (key == NULL_KEY)
+			if (key == NULL_KEY) {
 				result.append("null"); //$NON-NLS-1$
-			else
+			} else {
 				result.append(key.toString());
+			}
 			result.append('=');
-			if (value == null)
+			if (value == null) {
 				result.append("null"); //$NON-NLS-1$
-			else
+			} else {
 				result.append(value.toString());
+			}
 			return result.toString();
 		}
 	}
@@ -850,8 +871,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		 */
 		public AbstractHashIterator() {
 			expectedSize = usedSlots;
-			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY)) {
 				nextIndex++;
+			}
 		}
 
 		/**
@@ -893,8 +915,9 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			currentEntry = new Entry(currentKey, currentValue, nextIndex);
 
 			nextIndex++;
-			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY))
+			while (nextIndex < keys.length && (keys[nextIndex] == null || keys[nextIndex] == REMOVED_ENTRY)) {
 				nextIndex++;
+			}
 		}
 	}
 
@@ -959,10 +982,11 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			final Map.Entry<K, V> entry = (Map.Entry<K, V>)e;
 			if (EMFCompareMap.this.containsKey(entry.getKey())) {
 				final V candidate = EMFCompareMap.this.get(entry.getKey());
-				if (candidate == null)
+				if (candidate == null) {
 					result = entry.getValue() == null;
-				else
+				} else {
 					result = entry.getValue().equals(candidate);
+				}
 			}
 
 			return result;
@@ -1028,15 +1052,16 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			final Iterator<?> it = c.iterator();
 			while (it.hasNext()) {
 				final Object entry = it.next();
-				if (entry instanceof Map.Entry)
+				if (entry instanceof Map.Entry) {
 					retainedKeys[indx++] = ((Map.Entry)entry).getKey();
+				}
 			}
 
 			final Iterator<?> e = iterator();
 			while (e.hasNext()) {
 				final Object entry = e.next();
 				boolean removeIt = true;
-				for (Object o : retainedKeys) {
+				for (final Object o : retainedKeys) {
 					if (((Map.Entry)entry).getKey() == o) {
 						removeIt = false;
 						break;

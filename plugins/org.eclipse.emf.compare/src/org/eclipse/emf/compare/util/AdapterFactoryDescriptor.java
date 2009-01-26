@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,14 @@ package org.eclipse.emf.compare.util;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.EMFComparePlugin;
 
 /**
- * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code>
- * and the {@link IConfigurationElement} it's been created from.
+ * Describes an {@link AdapterFactory}, keeping track of its <code>nsURI</code>, <code>className</code> and
+ * the {@link IConfigurationElement} it's been created from.
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
@@ -50,8 +53,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 		if (factory == null) {
 			try {
 				factory = (AdapterFactory)element.createExecutableExtension("class"); //$NON-NLS-1$
-			} catch (CoreException e) {
-				e.printStackTrace();
+			} catch (final CoreException e) {
+				EMFComparePlugin.log(new Status(IStatus.ERROR, EMFComparePlugin.PLUGIN_ID, e.getMessage()));
 			}
 		}
 		return factory;
