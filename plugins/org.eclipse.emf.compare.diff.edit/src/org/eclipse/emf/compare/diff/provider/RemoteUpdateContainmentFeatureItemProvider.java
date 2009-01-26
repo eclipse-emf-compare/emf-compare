@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,7 +77,7 @@ public class RemoteUpdateContainmentFeatureItemProvider extends UpdateContainmen
 		return getString(
 				"_UI_RemoteUpdateContainmentFeature_type", new Object[] {remoteUpdateContainmentFeature //$NON-NLS-1$
 						.getRightElement().eContainmentFeature().getName(),
-						remoteUpdateContainmentFeature.getLeftElement().eContainmentFeature().getName(),});
+						remoteUpdateContainmentFeature.getLeftElement().eContainmentFeature().getName(), });
 	}
 
 	/**

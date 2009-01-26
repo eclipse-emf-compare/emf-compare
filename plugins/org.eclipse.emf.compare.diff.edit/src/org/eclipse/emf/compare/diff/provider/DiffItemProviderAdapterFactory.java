@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,14 +144,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * @generated
 	 */
 	protected ModelElementChangeRightTargetItemProvider modelElementChangeRightTargetItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected ModelInputSnapshotItemProvider modelInputSnapshotItemProvider;
 
 	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} instances.
@@ -499,6 +491,52 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ComparisonResourceSnapshotItemProvider comparisonResourceSnapshotItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createComparisonResourceSnapshotAdapter() {
+		if (comparisonResourceSnapshotItemProvider == null) {
+			comparisonResourceSnapshotItemProvider = new ComparisonResourceSnapshotItemProvider(this);
+		}
+
+		return comparisonResourceSnapshotItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ComparisonResourceSetSnapshotItemProvider comparisonResourceSetSnapshotItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createComparisonResourceSetSnapshotAdapter() {
+		if (comparisonResourceSetSnapshotItemProvider == null) {
+			comparisonResourceSetSnapshotItemProvider = new ComparisonResourceSetSnapshotItemProvider(this);
+		}
+
+		return comparisonResourceSetSnapshotItemProvider;
+	}
+
+	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffModel}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -511,6 +549,29 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 		}
 
 		return diffModelItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.DiffResourceSet} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DiffResourceSetItemProvider diffResourceSetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffResourceSet}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDiffResourceSetAdapter() {
+		if (diffResourceSetItemProvider == null) {
+			diffResourceSetItemProvider = new DiffResourceSetItemProvider(this);
+		}
+
+		return diffResourceSetItemProvider;
 	}
 
 	/**
@@ -556,21 +617,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 		}
 
 		return modelElementChangeRightTargetItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createModelInputSnapshotAdapter() {
-		if (modelInputSnapshotItemProvider == null) {
-			modelInputSnapshotItemProvider = new ModelInputSnapshotItemProvider(this);
-		}
-
-		return modelInputSnapshotItemProvider;
 	}
 
 	/**
@@ -807,6 +853,144 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ResourceDiff} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ResourceDiffItemProvider resourceDiffItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ResourceDiff}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createResourceDiffAdapter() {
+		if (resourceDiffItemProvider == null) {
+			resourceDiffItemProvider = new ResourceDiffItemProvider(this);
+		}
+
+		return resourceDiffItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ResourceDependencyChangeItemProvider resourceDependencyChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createResourceDependencyChangeAdapter() {
+		if (resourceDependencyChangeItemProvider == null) {
+			resourceDependencyChangeItemProvider = new ResourceDependencyChangeItemProvider(this);
+		}
+
+		return resourceDependencyChangeItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddResourceDependency} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected AddResourceDependencyItemProvider addResourceDependencyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddResourceDependency}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAddResourceDependencyAdapter() {
+		if (addResourceDependencyItemProvider == null) {
+			addResourceDependencyItemProvider = new AddResourceDependencyItemProvider(this);
+		}
+
+		return addResourceDependencyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected RemoveResourceDependencyItemProvider removeResourceDependencyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createRemoveResourceDependencyAdapter() {
+		if (removeResourceDependencyItemProvider == null) {
+			removeResourceDependencyItemProvider = new RemoveResourceDependencyItemProvider(this);
+		}
+
+		return removeResourceDependencyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected RemoteAddResourceDependencyItemProvider remoteAddResourceDependencyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createRemoteAddResourceDependencyAdapter() {
+		if (remoteAddResourceDependencyItemProvider == null) {
+			remoteAddResourceDependencyItemProvider = new RemoteAddResourceDependencyItemProvider(this);
+		}
+
+		return remoteAddResourceDependencyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected RemoteRemoveResourceDependencyItemProvider remoteRemoveResourceDependencyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createRemoteRemoveResourceDependencyAdapter() {
+		if (remoteRemoveResourceDependencyItemProvider == null) {
+			remoteRemoveResourceDependencyItemProvider = new RemoteRemoveResourceDependencyItemProvider(this);
+		}
+
+		return remoteRemoveResourceDependencyItemProvider;
+	}
+
+	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -918,12 +1102,16 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	public void dispose() {
 		if (diffModelItemProvider != null)
 			diffModelItemProvider.dispose();
+		if (diffResourceSetItemProvider != null)
+			diffResourceSetItemProvider.dispose();
 		if (conflictingDiffElementItemProvider != null)
 			conflictingDiffElementItemProvider.dispose();
 		if (diffGroupItemProvider != null)
 			diffGroupItemProvider.dispose();
-		if (modelInputSnapshotItemProvider != null)
-			modelInputSnapshotItemProvider.dispose();
+		if (comparisonResourceSnapshotItemProvider != null)
+			comparisonResourceSnapshotItemProvider.dispose();
+		if (comparisonResourceSetSnapshotItemProvider != null)
+			comparisonResourceSetSnapshotItemProvider.dispose();
 		if (modelElementChangeItemProvider != null)
 			modelElementChangeItemProvider.dispose();
 		if (modelElementChangeLeftTargetItemProvider != null)
@@ -986,6 +1174,18 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			updateUniqueReferenceValueItemProvider.dispose();
 		if (remoteUpdateUniqueReferenceValueItemProvider != null)
 			remoteUpdateUniqueReferenceValueItemProvider.dispose();
+		if (resourceDiffItemProvider != null)
+			resourceDiffItemProvider.dispose();
+		if (resourceDependencyChangeItemProvider != null)
+			resourceDependencyChangeItemProvider.dispose();
+		if (addResourceDependencyItemProvider != null)
+			addResourceDependencyItemProvider.dispose();
+		if (removeResourceDependencyItemProvider != null)
+			removeResourceDependencyItemProvider.dispose();
+		if (remoteAddResourceDependencyItemProvider != null)
+			remoteAddResourceDependencyItemProvider.dispose();
+		if (remoteRemoveResourceDependencyItemProvider != null)
+			remoteRemoveResourceDependencyItemProvider.dispose();
 	}
 
 	/**

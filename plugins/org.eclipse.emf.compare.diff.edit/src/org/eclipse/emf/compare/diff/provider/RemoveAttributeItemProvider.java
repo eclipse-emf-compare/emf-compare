@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,7 +93,7 @@ public class RemoveAttributeItemProvider extends AttributeChangeRightTargetItemP
 		final String attributeLabel = AdapterUtils.getItemProviderText(removeOp.getAttribute());
 
 		return getString(
-				"_UI_RemoveAttribute_type", new Object[] {removeOp.getRightTarget(), attributeLabel, elementLabel,}); //$NON-NLS-1$
+				"_UI_RemoveAttribute_type", new Object[] {removeOp.getRightTarget(), attributeLabel, elementLabel, }); //$NON-NLS-1$
 	}
 
 	/**

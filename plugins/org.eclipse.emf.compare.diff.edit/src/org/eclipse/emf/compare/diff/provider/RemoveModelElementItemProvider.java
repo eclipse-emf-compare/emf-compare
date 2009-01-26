@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,8 +91,8 @@ public class RemoveModelElementItemProvider extends ModelElementChangeRightTarge
 
 		final String targetName = AdapterUtils.getItemProviderText(removeOp.getRightElement());
 		if (removeOp.isConflicting())
-			return getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$
-		return getString("_UI_RemoveModelElement_type", new Object[] {targetName}); //$NON-NLS-1$
+			return getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName }); //$NON-NLS-1$
+		return getString("_UI_RemoveModelElement_type", new Object[] {targetName }); //$NON-NLS-1$
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,9 +96,9 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 
 		if (updateOp.isConflicting())
 			return getString("_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, rightValue, //$NON-NLS-1$
-					leftValue,});
+					leftValue, });
 		return getString("_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, rightValue, //$NON-NLS-1$
-				leftValue,});
+				leftValue, });
 	}
 
 	/**

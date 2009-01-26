@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,7 +94,7 @@ public class RemoveReferenceValueItemProvider extends ReferenceChangeRightTarget
 		final String elementLabel = AdapterUtils.getItemProviderText(removeOp.getLeftElement());
 
 		return getString("_UI_RemoveReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
-				elementLabel,});
+				elementLabel, });
 	}
 
 	/**

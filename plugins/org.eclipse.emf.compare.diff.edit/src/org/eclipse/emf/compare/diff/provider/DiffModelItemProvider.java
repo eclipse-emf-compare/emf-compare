@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,11 +86,62 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftPropertyDescriptor(object);
-			addOriginPropertyDescriptor(object);
-			addRightPropertyDescriptor(object);
+			addLeftRootsPropertyDescriptor(object);
+			addRightRootsPropertyDescriptor(object);
+			addAncestorRootsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Left Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLeftRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_leftRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_leftRoots_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__LEFT_ROOTS, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addRightRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_rightRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_rightRoots_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__RIGHT_ROOTS, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Ancestor Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addAncestorRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffModel_ancestorRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffModel_ancestorRoots_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_MODEL__ANCESTOR_ROOTS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -111,9 +162,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((DiffModel)object).getLeft();
-		return label == null || label.length() == 0 ? getString("_UI_DiffModel_type") : //$NON-NLS-1$
-				getString("_UI_DiffModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_DiffModel_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -128,72 +177,12 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(DiffModel.class)) {
-			case DiffPackage.DIFF_MODEL__LEFT:
-			case DiffPackage.DIFF_MODEL__ORIGIN:
-			case DiffPackage.DIFF_MODEL__RIGHT:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
-						true));
-				return;
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
 						false));
 				return;
 		}
 		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds a property descriptor for the Left feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addLeftPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiffModel_left_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_DiffModel_left_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.DIFF_MODEL__LEFT, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Origin feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addOriginPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiffModel_origin_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_DiffModel_origin_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.DIFF_MODEL__ORIGIN, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right feature.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addRightPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiffModel_right_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_DiffModel_right_feature", "_UI_DiffModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						DiffPackage.Literals.DIFF_MODEL__RIGHT, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -304,6 +293,24 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createRemoteUpdateUniqueReferenceValue()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createResourceDiff()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createResourceDependencyChange()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createAddResourceDependency()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createRemoveResourceDependency()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createRemoteAddResourceDependency()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createRemoteRemoveResourceDependency()));
 	}
 
 	/**

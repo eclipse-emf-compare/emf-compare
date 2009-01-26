@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 		final UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)object;
 		return getString("_UI_UpdateContainmentFeature_type", new Object[] {updateContainmentFeature //$NON-NLS-1$
 				.getRightElement().eContainmentFeature().getName(),
-				updateContainmentFeature.getLeftElement().eContainmentFeature().getName(),});
+				updateContainmentFeature.getLeftElement().eContainmentFeature().getName(), });
 	}
 
 	/**
