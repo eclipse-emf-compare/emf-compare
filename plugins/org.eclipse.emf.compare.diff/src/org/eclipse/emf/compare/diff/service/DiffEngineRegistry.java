@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.engine.EcoreDiffEngine;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
@@ -149,8 +150,8 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 				super.put(key, values);
 			}
 		} else
-			throw new IllegalArgumentException("Cannot add value of type " + value.getClass().getName()
-					+ " in the Diff engines registry.");
+			throw new IllegalArgumentException(EMFCompareDiffMessages.getString(
+					"DiffEngineRegistry.IllegalEngine", value.getClass().getName())); //$NON-NLS-1$
 	}
 
 	/**

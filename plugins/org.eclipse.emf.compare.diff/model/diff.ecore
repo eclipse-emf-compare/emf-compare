@@ -4,11 +4,20 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="diff"
     nsURI="http://www.eclipse.org/emf/compare/diff/1.1" nsPrefix="diff">
   <eClassifiers xsi:type="ecore:EClass" name="DiffModel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="right" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" upperBound="-1"
         eType="#//DiffElement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftRoots" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightRoots" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ancestorRoots" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiffResourceSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diffModels" upperBound="-1"
+        eType="#//DiffModel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceDiffs" upperBound="-1"
+        eType="#//ResourceDiff" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffElement" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subDiffElements" upperBound="-1"
@@ -30,11 +39,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subchanges" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         transient="true" unsettable="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ModelInputSnapshot">
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonSnapshot" abstract="true"
+      interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonResourceSnapshot" eSuperTypes="#//ComparisonSnapshot">
     <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="#//DiffModel"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComparisonResourceSetSnapshot" eSuperTypes="#//ComparisonSnapshot">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diffResourceSet" eType="#//DiffResourceSet"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="matchResourceSet" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchResourceSet"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelElementChange" eSuperTypes="#//DiffElement"/>
@@ -113,6 +131,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isCollapsed" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceDiff" eSuperTypes="#//DiffElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceDependencyChange" eSuperTypes="#//ResourceDiff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roots" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AddResourceDependency" eSuperTypes="#//ResourceDependencyChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveResourceDependency" eSuperTypes="#//ResourceDependencyChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteAddResourceDependency" eSuperTypes="#//ResourceDependencyChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoteRemoveResourceDependency" eSuperTypes="#//ResourceDependencyChange"/>
   <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.IMerger"/>
   <eClassifiers xsi:type="ecore:EEnum" name="DifferenceKind">
     <eLiterals name="Addition"/>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,12 +98,39 @@ public interface DiffFactory extends EFactory {
 	DiffGroup createDiffGroup();
 
 	/**
+	 * Returns a new object of class '<em>Comparison Resource Snapshot</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Comparison Resource Snapshot</em>'.
+	 * @generated
+	 */
+	ComparisonResourceSnapshot createComparisonResourceSnapshot();
+
+	/**
+	 * Returns a new object of class '<em>Comparison Resource Set Snapshot</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Comparison Resource Set Snapshot</em>'.
+	 * @generated
+	 */
+	ComparisonResourceSetSnapshot createComparisonResourceSetSnapshot();
+
+	/**
 	 * Returns a new object of class '<em>Model</em>'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return a new object of class '<em>Model</em>'.
 	 * @generated
 	 */
 	DiffModel createDiffModel();
+
+	/**
+	 * Returns a new object of class '<em>Resource Set</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Resource Set</em>'.
+	 * @generated
+	 */
+	DiffResourceSet createDiffResourceSet();
 
 	/**
 	 * Returns a new object of class '<em>Model Element Change</em>'.
@@ -131,15 +158,6 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	ModelElementChangeRightTarget createModelElementChangeRightTarget();
-
-	/**
-	 * Returns a new object of class '<em>Model Input Snapshot</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Model Input Snapshot</em>'.
-	 * @generated
-	 */
-	ModelInputSnapshot createModelInputSnapshot();
 
 	/**
 	 * Returns a new object of class '<em>Move Model Element</em>'.
@@ -275,6 +293,60 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue();
+
+	/**
+	 * Returns a new object of class '<em>Resource Diff</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Resource Diff</em>'.
+	 * @generated
+	 */
+	ResourceDiff createResourceDiff();
+
+	/**
+	 * Returns a new object of class '<em>Resource Dependency Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Resource Dependency Change</em>'.
+	 * @generated
+	 */
+	ResourceDependencyChange createResourceDependencyChange();
+
+	/**
+	 * Returns a new object of class '<em>Add Resource Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Add Resource Dependency</em>'.
+	 * @generated
+	 */
+	AddResourceDependency createAddResourceDependency();
+
+	/**
+	 * Returns a new object of class '<em>Remove Resource Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Remove Resource Dependency</em>'.
+	 * @generated
+	 */
+	RemoveResourceDependency createRemoveResourceDependency();
+
+	/**
+	 * Returns a new object of class '<em>Remote Add Resource Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Remote Add Resource Dependency</em>'.
+	 * @generated
+	 */
+	RemoteAddResourceDependency createRemoteAddResourceDependency();
+
+	/**
+	 * Returns a new object of class '<em>Remote Remove Resource Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Remote Remove Resource Dependency</em>'.
+	 * @generated
+	 */
+	RemoteRemoveResourceDependency createRemoteRemoveResourceDependency();
 
 	/**
 	 * Returns a new object of class '<em>Remove Attribute</em>'.

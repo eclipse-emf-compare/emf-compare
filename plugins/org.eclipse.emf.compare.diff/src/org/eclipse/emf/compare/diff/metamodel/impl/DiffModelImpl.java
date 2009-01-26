@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,12 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
@@ -31,76 +33,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeft <em>Left</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOrigin <em>Origin</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getOwnedElements <em>Owned Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getLeftRoots <em>Left Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getRightRoots <em>Right Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl#getAncestorRoots <em>Ancestor Roots</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class DiffModelImpl extends EObjectImpl implements DiffModel {
-	/**
-	 * The default value of the '{@link #getLeft() <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @see #getLeft()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String LEFT_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getLeft() <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @see #getLeft()
-	 * @generated
-	 * @ordered
-	 */
-	protected String left = LEFT_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOrigin()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String ORIGIN_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getOrigin() <em>Origin</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOrigin()
-	 * @generated
-	 * @ordered
-	 */
-	protected String origin = ORIGIN_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getRight() <em>Right</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @see #getRight()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String RIGHT_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getRight() <em>Right</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @see #getRight()
-	 * @generated
-	 * @ordered
-	 */
-	protected String right = RIGHT_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getOwnedElements() <em>Owned Elements</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -109,6 +51,36 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 * @ordered
 	 */
 	protected EList<DiffElement> ownedElements;
+
+	/**
+	 * The cached value of the '{@link #getLeftRoots() <em>Left Roots</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLeftRoots()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<EObject> leftRoots;
+
+	/**
+	 * The cached value of the '{@link #getRightRoots() <em>Right Roots</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRightRoots()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<EObject> rightRoots;
+
+	/**
+	 * The cached value of the '{@link #getAncestorRoots() <em>Ancestor Roots</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAncestorRoots()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<EObject> ancestorRoots;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -125,14 +97,14 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case DiffPackage.DIFF_MODEL__LEFT:
-				return getLeft();
-			case DiffPackage.DIFF_MODEL__ORIGIN:
-				return getOrigin();
-			case DiffPackage.DIFF_MODEL__RIGHT:
-				return getRight();
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
 				return getOwnedElements();
+			case DiffPackage.DIFF_MODEL__LEFT_ROOTS:
+				return getLeftRoots();
+			case DiffPackage.DIFF_MODEL__RIGHT_ROOTS:
+				return getRightRoots();
+			case DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS:
+				return getAncestorRoots();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,14 +129,14 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case DiffPackage.DIFF_MODEL__LEFT:
-				return LEFT_EDEFAULT == null ? left != null : !LEFT_EDEFAULT.equals(left);
-			case DiffPackage.DIFF_MODEL__ORIGIN:
-				return ORIGIN_EDEFAULT == null ? origin != null : !ORIGIN_EDEFAULT.equals(origin);
-			case DiffPackage.DIFF_MODEL__RIGHT:
-				return RIGHT_EDEFAULT == null ? right != null : !RIGHT_EDEFAULT.equals(right);
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
 				return ownedElements != null && !ownedElements.isEmpty();
+			case DiffPackage.DIFF_MODEL__LEFT_ROOTS:
+				return leftRoots != null && !leftRoots.isEmpty();
+			case DiffPackage.DIFF_MODEL__RIGHT_ROOTS:
+				return rightRoots != null && !rightRoots.isEmpty();
+			case DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS:
+				return ancestorRoots != null && !ancestorRoots.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -177,18 +149,21 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case DiffPackage.DIFF_MODEL__LEFT:
-				setLeft((String)newValue);
-				return;
-			case DiffPackage.DIFF_MODEL__ORIGIN:
-				setOrigin((String)newValue);
-				return;
-			case DiffPackage.DIFF_MODEL__RIGHT:
-				setRight((String)newValue);
-				return;
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
 				getOwnedElements().clear();
 				getOwnedElements().addAll((Collection<? extends DiffElement>)newValue);
+				return;
+			case DiffPackage.DIFF_MODEL__LEFT_ROOTS:
+				getLeftRoots().clear();
+				getLeftRoots().addAll((Collection<? extends EObject>)newValue);
+				return;
+			case DiffPackage.DIFF_MODEL__RIGHT_ROOTS:
+				getRightRoots().clear();
+				getRightRoots().addAll((Collection<? extends EObject>)newValue);
+				return;
+			case DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS:
+				getAncestorRoots().clear();
+				getAncestorRoots().addAll((Collection<? extends EObject>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -201,36 +176,20 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case DiffPackage.DIFF_MODEL__LEFT:
-				setLeft(LEFT_EDEFAULT);
-				return;
-			case DiffPackage.DIFF_MODEL__ORIGIN:
-				setOrigin(ORIGIN_EDEFAULT);
-				return;
-			case DiffPackage.DIFF_MODEL__RIGHT:
-				setRight(RIGHT_EDEFAULT);
-				return;
 			case DiffPackage.DIFF_MODEL__OWNED_ELEMENTS:
 				getOwnedElements().clear();
 				return;
+			case DiffPackage.DIFF_MODEL__LEFT_ROOTS:
+				getLeftRoots().clear();
+				return;
+			case DiffPackage.DIFF_MODEL__RIGHT_ROOTS:
+				getRightRoots().clear();
+				return;
+			case DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS:
+				getAncestorRoots().clear();
+				return;
 		}
 		super.eUnset(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getLeft() {
-		return left;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getOrigin() {
-		return origin;
 	}
 
 	/**
@@ -246,66 +205,42 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getRight() {
-		return right;
+	public EList<EObject> getLeftRoots() {
+		if (leftRoots == null) {
+			leftRoots = new EObjectResolvingEList<EObject>(EObject.class, this,
+					DiffPackage.DIFF_MODEL__LEFT_ROOTS);
+		}
+		return leftRoots;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLeft(String newLeft) {
-		String oldLeft = left;
-		left = newLeft;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_MODEL__LEFT, oldLeft, left));
+	public EList<EObject> getRightRoots() {
+		if (rightRoots == null) {
+			rightRoots = new EObjectResolvingEList<EObject>(EObject.class, this,
+					DiffPackage.DIFF_MODEL__RIGHT_ROOTS);
+		}
+		return rightRoots;
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOrigin(String newOrigin) {
-		String oldOrigin = origin;
-		origin = newOrigin;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_MODEL__ORIGIN, oldOrigin,
-					origin));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setRight(String newRight) {
-		String oldRight = right;
-		right = newRight;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_MODEL__RIGHT, oldRight,
-					right));
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (left: "); //$NON-NLS-1$
-		result.append(left);
-		result.append(", origin: "); //$NON-NLS-1$
-		result.append(origin);
-		result.append(", right: "); //$NON-NLS-1$
-		result.append(right);
-		result.append(')');
-		return result.toString();
+	public EList<EObject> getAncestorRoots() {
+		if (ancestorRoots == null) {
+			ancestorRoots = new EObjectResolvingEList<EObject>(EObject.class, this,
+					DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS);
+		}
+		return ancestorRoots;
 	}
 
 	/**

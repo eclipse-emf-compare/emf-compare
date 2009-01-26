@@ -18,10 +18,14 @@
     </genEnums>
     <genDataTypes ecoreDataType="diff.ecore#//IMerger"/>
     <genClasses ecoreClass="diff.ecore#//DiffModel">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/left"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/origin"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffModel/right"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/ownedElements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/leftRoots"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/rightRoots"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/ancestorRoots"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//DiffResourceSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffResourceSet/diffModels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffResourceSet/resourceDiffs"/>
     </genClasses>
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>
@@ -38,10 +42,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffGroup/rightParent"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffGroup/subchanges"/>
     </genClasses>
-    <genClasses ecoreClass="diff.ecore#//ModelInputSnapshot">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//ModelInputSnapshot/date"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ModelInputSnapshot/diff"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ModelInputSnapshot/match"/>
+    <genClasses ecoreClass="diff.ecore#//ComparisonSnapshot">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//ComparisonSnapshot/date"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//ComparisonResourceSnapshot">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ComparisonResourceSnapshot/diff"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ComparisonResourceSnapshot/match"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//ComparisonResourceSetSnapshot">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ComparisonResourceSetSnapshot/diffResourceSet"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//ComparisonResourceSetSnapshot/matchResourceSet"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//ModelElementChange"/>
     <genClasses ecoreClass="diff.ecore#//ModelElementChangeLeftTarget">
@@ -117,5 +127,13 @@
       <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/getImage"/>
       <genOperations ecoreOperation="diff.ecore#//AbstractDiffExtension/provideMerger"/>
     </genClasses>
+    <genClasses ecoreClass="diff.ecore#//ResourceDiff"/>
+    <genClasses ecoreClass="diff.ecore#//ResourceDependencyChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ResourceDependencyChange/roots"/>
+    </genClasses>
+    <genClasses ecoreClass="diff.ecore#//AddResourceDependency"/>
+    <genClasses ecoreClass="diff.ecore#//RemoveResourceDependency"/>
+    <genClasses ecoreClass="diff.ecore#//RemoteAddResourceDependency"/>
+    <genClasses ecoreClass="diff.ecore#//RemoteRemoveResourceDependency"/>
   </genPackages>
 </genmodel:GenModel>

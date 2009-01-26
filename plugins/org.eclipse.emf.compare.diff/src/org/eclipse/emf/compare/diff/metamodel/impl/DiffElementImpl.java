@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
+import org.eclipse.emf.compare.diff.metamodel.AddResourceDependency;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -25,6 +26,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -34,25 +36,28 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Element</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getIsHiddenBy <em>Is Hidden By</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#isConflicting <em>Conflicting</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getKind <em>Kind</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getSubDiffElements <em>Sub Diff
+ * Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getIsHiddenBy <em>Is Hidden By</em>}
+ * </li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#isConflicting <em>Conflicting</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#getKind <em>Kind</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubDiffElements()
 	 * @generated
 	 * @ordered
@@ -70,8 +75,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected EList<AbstractDiffExtension> isHiddenBy;
 
 	/**
-	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #isConflicting()
 	 * @generated
@@ -80,8 +85,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final boolean CONFLICTING_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #isConflicting()
 	 * @generated
@@ -90,9 +95,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected boolean conflicting = CONFLICTING_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -100,9 +105,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final DifferenceKind KIND_EDEFAULT = DifferenceKind.ADDITION;
 
 	/**
-	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
+	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -111,6 +116,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected DiffElementImpl() {
@@ -119,6 +125,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -138,6 +145,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -153,6 +161,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -168,6 +177,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -187,6 +197,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -207,6 +218,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -224,6 +236,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<AbstractDiffExtension> getIsHiddenBy() {
@@ -241,24 +254,28 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * @generated NOT
 	 */
 	public DifferenceKind getKind() {
-		if (this instanceof AttributeChange || this instanceof ReferenceChange)
+		if (this instanceof AttributeChange || this instanceof ReferenceChange) {
 			kind = DifferenceKind.CHANGE;
-		else if (this instanceof RemoveModelElement || this instanceof RemoteRemoveModelElement)
+		} else if (this instanceof RemoveModelElement || this instanceof RemoteRemoveModelElement
+				|| this instanceof RemoveResourceDependency) {
 			kind = DifferenceKind.DELETION;
-		else if (this instanceof AddModelElement || this instanceof RemoteAddModelElement)
+		} else if (this instanceof AddModelElement || this instanceof RemoteAddModelElement
+				|| this instanceof AddResourceDependency) {
 			kind = DifferenceKind.ADDITION;
-		else if (this instanceof UpdateModelElement)
+		} else if (this instanceof UpdateModelElement) {
 			kind = DifferenceKind.MOVE;
-		else if (this instanceof ConflictingDiffElement)
+		} else if (this instanceof ConflictingDiffElement) {
 			kind = DifferenceKind.CONFLICT;
-		else
+		} else {
 			// fallthrough
 			kind = DifferenceKind.CHANGE;
+		}
 		return kind;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getSubDiffElements() {
@@ -275,15 +292,17 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	 * @generated NOT
 	 */
 	public boolean isConflicting() {
-		if (eContainer() instanceof ConflictingDiffElementImpl)
+		if (eContainer() instanceof ConflictingDiffElementImpl) {
 			conflicting = true;
-		else
+		} else {
 			conflicting = CONFLICTING_EDEFAULT;
+		}
 		return conflicting;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -291,7 +310,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		final StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (conflicting: "); //$NON-NLS-1$
 		result.append(conflicting);
 		result.append(", kind: "); //$NON-NLS-1$
@@ -302,6 +321,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,22 +11,25 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
+import org.eclipse.emf.compare.diff.metamodel.*;
 import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
@@ -58,13 +61,12 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffFactoryImpl() {
@@ -73,7 +75,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -83,17 +84,18 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static DiffFactory init() {
 		try {
-			final DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE
+			DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE
 					.getEFactory("http://www.eclipse.org/emf/compare/diff/1.1"); //$NON-NLS-1$ 
-			if (theDiffFactory != null)
+			if (theDiffFactory != null) {
 				return theDiffFactory;
-		} catch (final Exception exception) {
+			}
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new DiffFactoryImpl();
@@ -101,7 +103,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
@@ -111,7 +112,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertIMergerToString(EDataType eDataType, Object instanceValue) {
@@ -120,7 +120,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -138,7 +137,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -146,12 +144,16 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 		switch (eClass.getClassifierID()) {
 			case DiffPackage.DIFF_MODEL:
 				return createDiffModel();
+			case DiffPackage.DIFF_RESOURCE_SET:
+				return createDiffResourceSet();
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT:
 				return createConflictingDiffElement();
 			case DiffPackage.DIFF_GROUP:
 				return createDiffGroup();
-			case DiffPackage.MODEL_INPUT_SNAPSHOT:
-				return createModelInputSnapshot();
+			case DiffPackage.COMPARISON_RESOURCE_SNAPSHOT:
+				return createComparisonResourceSnapshot();
+			case DiffPackage.COMPARISON_RESOURCE_SET_SNAPSHOT:
+				return createComparisonResourceSetSnapshot();
 			case DiffPackage.MODEL_ELEMENT_CHANGE:
 				return createModelElementChange();
 			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET:
@@ -214,6 +216,18 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 				return createUpdateUniqueReferenceValue();
 			case DiffPackage.REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE:
 				return createRemoteUpdateUniqueReferenceValue();
+			case DiffPackage.RESOURCE_DIFF:
+				return createResourceDiff();
+			case DiffPackage.RESOURCE_DEPENDENCY_CHANGE:
+				return createResourceDependencyChange();
+			case DiffPackage.ADD_RESOURCE_DEPENDENCY:
+				return createAddResourceDependency();
+			case DiffPackage.REMOVE_RESOURCE_DEPENDENCY:
+				return createRemoveResourceDependency();
+			case DiffPackage.REMOTE_ADD_RESOURCE_DEPENDENCY:
+				return createRemoteAddResourceDependency();
+			case DiffPackage.REMOTE_REMOVE_RESOURCE_DEPENDENCY:
+				return createRemoteRemoveResourceDependency();
 			default:
 				throw new IllegalArgumentException(
 						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -222,111 +236,126 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddAttribute createAddAttribute() {
-		final AddAttributeImpl addAttribute = new AddAttributeImpl();
+		AddAttributeImpl addAttribute = new AddAttributeImpl();
 		return addAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddModelElement createAddModelElement() {
-		final AddModelElementImpl addModelElement = new AddModelElementImpl();
+		AddModelElementImpl addModelElement = new AddModelElementImpl();
 		return addModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AddReferenceValue createAddReferenceValue() {
-		final AddReferenceValueImpl addReferenceValue = new AddReferenceValueImpl();
+		AddReferenceValueImpl addReferenceValue = new AddReferenceValueImpl();
 		return addReferenceValue;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChange createAttributeChange() {
-		final AttributeChangeImpl attributeChange = new AttributeChangeImpl();
+		AttributeChangeImpl attributeChange = new AttributeChangeImpl();
 		return attributeChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
-		final AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
+		AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
 		return attributeChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
-		final AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
+		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
 		return attributeChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ConflictingDiffElement createConflictingDiffElement() {
-		final ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
+		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
 		return conflictingDiffElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
-		final DifferenceKind result = DifferenceKind.get(initialValue);
-		if (result == null) {
+		DifferenceKind result = DifferenceKind.get(initialValue);
+		if (result == null)
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffGroup createDiffGroup() {
-		final DiffGroupImpl diffGroup = new DiffGroupImpl();
+		DiffGroupImpl diffGroup = new DiffGroupImpl();
 		return diffGroup;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * @generated
+	 */
+	public ComparisonResourceSnapshot createComparisonResourceSnapshot() {
+		ComparisonResourceSnapshotImpl comparisonResourceSnapshot = new ComparisonResourceSnapshotImpl();
+		return comparisonResourceSnapshot;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComparisonResourceSetSnapshot createComparisonResourceSetSnapshot() {
+		ComparisonResourceSetSnapshotImpl comparisonResourceSetSnapshot = new ComparisonResourceSetSnapshotImpl();
+		return comparisonResourceSetSnapshot;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffModel createDiffModel() {
-		final DiffModelImpl diffModel = new DiffModelImpl();
+		DiffModelImpl diffModel = new DiffModelImpl();
 		return diffModel;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * @generated
+	 */
+	public DiffResourceSet createDiffResourceSet() {
+		DiffResourceSetImpl diffResourceSet = new DiffResourceSetImpl();
+		return diffResourceSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -344,7 +373,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IMerger createIMergerFromString(EDataType eDataType, String initialValue) {
@@ -353,267 +381,291 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChange createModelElementChange() {
-		final ModelElementChangeImpl modelElementChange = new ModelElementChangeImpl();
+		ModelElementChangeImpl modelElementChange = new ModelElementChangeImpl();
 		return modelElementChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeLeftTarget createModelElementChangeLeftTarget() {
-		final ModelElementChangeLeftTargetImpl modelElementChangeLeftTarget = new ModelElementChangeLeftTargetImpl();
+		ModelElementChangeLeftTargetImpl modelElementChangeLeftTarget = new ModelElementChangeLeftTargetImpl();
 		return modelElementChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeRightTarget createModelElementChangeRightTarget() {
-		final ModelElementChangeRightTargetImpl modelElementChangeRightTarget = new ModelElementChangeRightTargetImpl();
+		ModelElementChangeRightTargetImpl modelElementChangeRightTarget = new ModelElementChangeRightTargetImpl();
 		return modelElementChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ModelInputSnapshot createModelInputSnapshot() {
-		final ModelInputSnapshotImpl modelInputSnapshot = new ModelInputSnapshotImpl();
-		return modelInputSnapshot;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MoveModelElement createMoveModelElement() {
-		final MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
+		MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
 		return moveModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateContainmentFeature createUpdateContainmentFeature() {
-		final UpdateContainmentFeatureImpl updateContainmentFeature = new UpdateContainmentFeatureImpl();
+		UpdateContainmentFeatureImpl updateContainmentFeature = new UpdateContainmentFeatureImpl();
 		return updateContainmentFeature;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChange createReferenceChange() {
-		final ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
+		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
 		return referenceChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
-		final ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
+		ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
 		return referenceChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
-		final ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
+		ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
 		return referenceChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddAttribute createRemoteAddAttribute() {
-		final RemoteAddAttributeImpl remoteAddAttribute = new RemoteAddAttributeImpl();
+		RemoteAddAttributeImpl remoteAddAttribute = new RemoteAddAttributeImpl();
 		return remoteAddAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddModelElement createRemoteAddModelElement() {
-		final RemoteAddModelElementImpl remoteAddModelElement = new RemoteAddModelElementImpl();
+		RemoteAddModelElementImpl remoteAddModelElement = new RemoteAddModelElementImpl();
 		return remoteAddModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteAddReferenceValue createRemoteAddReferenceValue() {
-		final RemoteAddReferenceValueImpl remoteAddReferenceValue = new RemoteAddReferenceValueImpl();
+		RemoteAddReferenceValueImpl remoteAddReferenceValue = new RemoteAddReferenceValueImpl();
 		return remoteAddReferenceValue;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteMoveModelElement createRemoteMoveModelElement() {
-		final RemoteMoveModelElementImpl remoteMoveModelElement = new RemoteMoveModelElementImpl();
+		RemoteMoveModelElementImpl remoteMoveModelElement = new RemoteMoveModelElementImpl();
 		return remoteMoveModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUpdateContainmentFeature createRemoteUpdateContainmentFeature() {
-		final RemoteUpdateContainmentFeatureImpl remoteUpdateContainmentFeature = new RemoteUpdateContainmentFeatureImpl();
+		RemoteUpdateContainmentFeatureImpl remoteUpdateContainmentFeature = new RemoteUpdateContainmentFeatureImpl();
 		return remoteUpdateContainmentFeature;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveAttribute createRemoteRemoveAttribute() {
-		final RemoteRemoveAttributeImpl remoteRemoveAttribute = new RemoteRemoveAttributeImpl();
+		RemoteRemoveAttributeImpl remoteRemoveAttribute = new RemoteRemoveAttributeImpl();
 		return remoteRemoveAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveModelElement createRemoteRemoveModelElement() {
-		final RemoteRemoveModelElementImpl remoteRemoveModelElement = new RemoteRemoveModelElementImpl();
+		RemoteRemoveModelElementImpl remoteRemoveModelElement = new RemoteRemoveModelElementImpl();
 		return remoteRemoveModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteRemoveReferenceValue createRemoteRemoveReferenceValue() {
-		final RemoteRemoveReferenceValueImpl remoteRemoveReferenceValue = new RemoteRemoveReferenceValueImpl();
+		RemoteRemoveReferenceValueImpl remoteRemoveReferenceValue = new RemoteRemoveReferenceValueImpl();
 		return remoteRemoveReferenceValue;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUpdateAttribute createRemoteUpdateAttribute() {
-		final RemoteUpdateAttributeImpl remoteUpdateAttribute = new RemoteUpdateAttributeImpl();
+		RemoteUpdateAttributeImpl remoteUpdateAttribute = new RemoteUpdateAttributeImpl();
 		return remoteUpdateAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue() {
-		final RemoteUpdateUniqueReferenceValueImpl remoteUpdateUniqueReferenceValue = new RemoteUpdateUniqueReferenceValueImpl();
+		RemoteUpdateUniqueReferenceValueImpl remoteUpdateUniqueReferenceValue = new RemoteUpdateUniqueReferenceValueImpl();
 		return remoteUpdateUniqueReferenceValue;
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ResourceDiff createResourceDiff() {
+		ResourceDiffImpl resourceDiff = new ResourceDiffImpl();
+		return resourceDiff;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ResourceDependencyChange createResourceDependencyChange() {
+		ResourceDependencyChangeImpl resourceDependencyChange = new ResourceDependencyChangeImpl();
+		return resourceDependencyChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AddResourceDependency createAddResourceDependency() {
+		AddResourceDependencyImpl addResourceDependency = new AddResourceDependencyImpl();
+		return addResourceDependency;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RemoveResourceDependency createRemoveResourceDependency() {
+		RemoveResourceDependencyImpl removeResourceDependency = new RemoveResourceDependencyImpl();
+		return removeResourceDependency;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RemoteAddResourceDependency createRemoteAddResourceDependency() {
+		RemoteAddResourceDependencyImpl remoteAddResourceDependency = new RemoteAddResourceDependencyImpl();
+		return remoteAddResourceDependency;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RemoteRemoveResourceDependency createRemoteRemoveResourceDependency() {
+		RemoteRemoveResourceDependencyImpl remoteRemoveResourceDependency = new RemoteRemoveResourceDependencyImpl();
+		return remoteRemoveResourceDependency;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveAttribute createRemoveAttribute() {
-		final RemoveAttributeImpl removeAttribute = new RemoveAttributeImpl();
+		RemoveAttributeImpl removeAttribute = new RemoveAttributeImpl();
 		return removeAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveModelElement createRemoveModelElement() {
-		final RemoveModelElementImpl removeModelElement = new RemoveModelElementImpl();
+		RemoveModelElementImpl removeModelElement = new RemoveModelElementImpl();
 		return removeModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public RemoveReferenceValue createRemoveReferenceValue() {
-		final RemoveReferenceValueImpl removeReferenceValue = new RemoveReferenceValueImpl();
+		RemoveReferenceValueImpl removeReferenceValue = new RemoveReferenceValueImpl();
 		return removeReferenceValue;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateAttribute createUpdateAttribute() {
-		final UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
+		UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
 		return updateAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateModelElement createUpdateModelElement() {
-		final UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
+		UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
 		return updateModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateReference createUpdateReference() {
-		final UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
+		UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
 		return updateReference;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateUniqueReferenceValue createUpdateUniqueReferenceValue() {
-		final UpdateUniqueReferenceValueImpl updateUniqueReferenceValue = new UpdateUniqueReferenceValueImpl();
+		UpdateUniqueReferenceValueImpl updateUniqueReferenceValue = new UpdateUniqueReferenceValueImpl();
 		return updateUniqueReferenceValue;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffPackage getDiffPackage() {

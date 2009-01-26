@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAbstractDiffExtension()
 	 * @generated
 	 */
-	int ABSTRACT_DIFF_EXTENSION = 36;
+	int ABSTRACT_DIFF_EXTENSION = 39;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl <em>Element</em>}' class.
@@ -48,7 +48,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffElement()
 	 * @generated
 	 */
-	int DIFF_ELEMENT = 1;
+	int DIFF_ELEMENT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffGroupImpl <em>Group</em>}' class.
@@ -57,7 +57,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffGroup()
 	 * @generated
 	 */
-	int DIFF_GROUP = 3;
+	int DIFF_GROUP = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl <em>Model</em>}' class.
@@ -69,40 +69,40 @@ public interface DiffPackage extends EPackage {
 	int DIFF_MODEL = 0;
 
 	/**
-	 * The feature id for the '<em><b>Left</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int DIFF_MODEL__LEFT = 0;
-
-	/**
-	 * The feature id for the '<em><b>Origin</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIFF_MODEL__ORIGIN = 1;
-
-	/**
-	 * The feature id for the '<em><b>Right</b></em>' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIFF_MODEL__RIGHT = 2;
-
-	/**
 	 * The feature id for the '<em><b>Owned Elements</b></em>' containment reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_MODEL__OWNED_ELEMENTS = 3;
+	int DIFF_MODEL__OWNED_ELEMENTS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Left Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_MODEL__LEFT_ROOTS = 1;
+
+	/**
+	 * The feature id for the '<em><b>Right Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_MODEL__RIGHT_ROOTS = 2;
+
+	/**
+	 * The feature id for the '<em><b>Ancestor Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_MODEL__ANCESTOR_ROOTS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Model</em>' class.
@@ -112,6 +112,43 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIFF_MODEL_FEATURE_COUNT = 4;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffResourceSetImpl <em>Resource Set</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffResourceSetImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffResourceSet()
+	 * @generated
+	 */
+	int DIFF_RESOURCE_SET = 1;
+
+	/**
+	 * The feature id for the '<em><b>Diff Models</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_RESOURCE_SET__DIFF_MODELS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Resource Diffs</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_RESOURCE_SET__RESOURCE_DIFFS = 1;
+
+	/**
+	 * The number of structural features of the '<em>Resource Set</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIFF_RESOURCE_SET_FEATURE_COUNT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -165,7 +202,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getConflictingDiffElement()
 	 * @generated
 	 */
-	int CONFLICTING_DIFF_ELEMENT = 2;
+	int CONFLICTING_DIFF_ELEMENT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeImpl <em>Attribute Change</em>}' class.
@@ -174,7 +211,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChange()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE = 17;
+	int ATTRIBUTE_CHANGE = 20;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl <em>Attribute Change Left Target</em>}' class.
@@ -183,7 +220,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeLeftTarget()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE_LEFT_TARGET = 18;
+	int ATTRIBUTE_CHANGE_LEFT_TARGET = 21;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl <em>Attribute Change Right Target</em>}' class.
@@ -192,7 +229,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeChangeRightTarget()
 	 * @generated
 	 */
-	int ATTRIBUTE_CHANGE_RIGHT_TARGET = 19;
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET = 22;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddAttributeImpl <em>Add Attribute</em>}' class.
@@ -201,7 +238,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddAttribute()
 	 * @generated
 	 */
-	int ADD_ATTRIBUTE = 20;
+	int ADD_ATTRIBUTE = 23;
 
 	/**
 	 * The singleton instance of the package.
@@ -367,6 +404,126 @@ public interface DiffPackage extends EPackage {
 	int DIFF_GROUP_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot <em>Comparison Snapshot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonSnapshot()
+	 * @generated
+	 */
+	int COMPARISON_SNAPSHOT = 5;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_SNAPSHOT__DATE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Comparison Snapshot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_SNAPSHOT_FEATURE_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSnapshotImpl <em>Comparison Resource Snapshot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSnapshotImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonResourceSnapshot()
+	 * @generated
+	 */
+	int COMPARISON_RESOURCE_SNAPSHOT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SNAPSHOT__DATE = COMPARISON_SNAPSHOT__DATE;
+
+	/**
+	 * The feature id for the '<em><b>Diff</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SNAPSHOT__DIFF = COMPARISON_SNAPSHOT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Match</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SNAPSHOT__MATCH = COMPARISON_SNAPSHOT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Comparison Resource Snapshot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SNAPSHOT_FEATURE_COUNT = COMPARISON_SNAPSHOT_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSetSnapshotImpl <em>Comparison Resource Set Snapshot</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSetSnapshotImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonResourceSetSnapshot()
+	 * @generated
+	 */
+	int COMPARISON_RESOURCE_SET_SNAPSHOT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SET_SNAPSHOT__DATE = COMPARISON_SNAPSHOT__DATE;
+
+	/**
+	 * The feature id for the '<em><b>Diff Resource Set</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SET_SNAPSHOT__DIFF_RESOURCE_SET = COMPARISON_SNAPSHOT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Match Resource Set</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SET_SNAPSHOT__MATCH_RESOURCE_SET = COMPARISON_SNAPSHOT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Comparison Resource Set Snapshot</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPARISON_RESOURCE_SET_SNAPSHOT_FEATURE_COUNT = COMPARISON_SNAPSHOT_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '<em>IMerger</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
@@ -374,7 +531,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 	 * @generated
 	 */
-	int IMERGER = 38;
+	int IMERGER = 47;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -383,7 +540,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChange()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE = 5;
+	int MODEL_ELEMENT_CHANGE = 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl <em>Model Element Change Left Target</em>}' class.
@@ -392,7 +549,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeLeftTarget()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 6;
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET = 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl <em>Model Element Change Right Target</em>}' class.
@@ -401,7 +558,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelElementChangeRightTarget()
 	 * @generated
 	 */
-	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 7;
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET = 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddModelElementImpl <em>Add Model Element</em>}' class.
@@ -410,52 +567,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddModelElement()
 	 * @generated
 	 */
-	int ADD_MODEL_ELEMENT = 8;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl
-	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
-	 * @generated
-	 */
-	int MODEL_INPUT_SNAPSHOT = 4;
-
-	/**
-	 * The feature id for the '<em><b>Date</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__DATE = 0;
-
-	/**
-	 * The feature id for the '<em><b>Diff</b></em>' containment reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__DIFF = 1;
-
-	/**
-	 * The feature id for the '<em><b>Match</b></em>' containment reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT__MATCH = 2;
-
-	/**
-	 * The number of structural features of the '<em>Model Input Snapshot</em>' class.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODEL_INPUT_SNAPSHOT_FEATURE_COUNT = 3;
+	int ADD_MODEL_ELEMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -698,7 +810,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChange()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE = 26;
+	int REFERENCE_CHANGE = 29;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl <em>Reference Change Left Target</em>}' class.
@@ -707,7 +819,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeLeftTarget()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE_LEFT_TARGET = 27;
+	int REFERENCE_CHANGE_LEFT_TARGET = 30;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeRightTargetImpl <em>Reference Change Right Target</em>}' class.
@@ -716,7 +828,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceChangeRightTarget()
 	 * @generated
 	 */
-	int REFERENCE_CHANGE_RIGHT_TARGET = 28;
+	int REFERENCE_CHANGE_RIGHT_TARGET = 31;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddReferenceValueImpl <em>Add Reference Value</em>}' class.
@@ -725,7 +837,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddReferenceValue()
 	 * @generated
 	 */
-	int ADD_REFERENCE_VALUE = 29;
+	int ADD_REFERENCE_VALUE = 32;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddAttributeImpl <em>Remote Add Attribute</em>}' class.
@@ -734,7 +846,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddAttribute()
 	 * @generated
 	 */
-	int REMOTE_ADD_ATTRIBUTE = 21;
+	int REMOTE_ADD_ATTRIBUTE = 24;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddModelElementImpl <em>Remote Add Model Element</em>}' class.
@@ -743,7 +855,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddModelElement()
 	 * @generated
 	 */
-	int REMOTE_ADD_MODEL_ELEMENT = 9;
+	int REMOTE_ADD_MODEL_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -815,7 +927,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_ADD_REFERENCE_VALUE = 30;
+	int REMOTE_ADD_REFERENCE_VALUE = 33;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveAttributeImpl <em>Remote Remove Attribute</em>}' class.
@@ -824,7 +936,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveAttribute()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_ATTRIBUTE = 23;
+	int REMOTE_REMOVE_ATTRIBUTE = 26;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveModelElementImpl <em>Remote Remove Model Element</em>}' class.
@@ -833,7 +945,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveModelElement()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_MODEL_ELEMENT = 11;
+	int REMOTE_REMOVE_MODEL_ELEMENT = 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveReferenceValueImpl <em>Remote Remove Reference Value</em>}' class.
@@ -842,7 +954,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_REMOVE_REFERENCE_VALUE = 32;
+	int REMOTE_REMOVE_REFERENCE_VALUE = 35;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveAttributeImpl <em>Remove Attribute</em>}' class.
@@ -851,7 +963,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveAttribute()
 	 * @generated
 	 */
-	int REMOVE_ATTRIBUTE = 22;
+	int REMOVE_ATTRIBUTE = 25;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveModelElementImpl <em>Remove Model Element</em>}' class.
@@ -860,7 +972,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveModelElement()
 	 * @generated
 	 */
-	int REMOVE_MODEL_ELEMENT = 10;
+	int REMOVE_MODEL_ELEMENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -995,7 +1107,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveReferenceValue()
 	 * @generated
 	 */
-	int REMOVE_REFERENCE_VALUE = 31;
+	int REMOVE_REFERENCE_VALUE = 34;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateAttributeImpl <em>Update Attribute</em>}' class.
@@ -1004,7 +1116,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateAttribute()
 	 * @generated
 	 */
-	int UPDATE_ATTRIBUTE = 24;
+	int UPDATE_ATTRIBUTE = 27;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl <em>Update Model Element</em>}' class.
@@ -1013,7 +1125,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateModelElement()
 	 * @generated
 	 */
-	int UPDATE_MODEL_ELEMENT = 12;
+	int UPDATE_MODEL_ELEMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1085,7 +1197,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateReference()
 	 * @generated
 	 */
-	int UPDATE_REFERENCE = 33;
+	int UPDATE_REFERENCE = 36;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateUniqueReferenceValueImpl <em>Update Unique Reference Value</em>}' class.
@@ -1094,7 +1206,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateUniqueReferenceValue()
 	 * @generated
 	 */
-	int UPDATE_UNIQUE_REFERENCE_VALUE = 34;
+	int UPDATE_UNIQUE_REFERENCE_VALUE = 37;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.
@@ -1103,7 +1215,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getMoveModelElement()
 	 * @generated
 	 */
-	int MOVE_MODEL_ELEMENT = 13;
+	int MOVE_MODEL_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1194,7 +1306,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getUpdateContainmentFeature()
 	 * @generated
 	 */
-	int UPDATE_CONTAINMENT_FEATURE = 14;
+	int UPDATE_CONTAINMENT_FEATURE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1284,7 +1396,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteMoveModelElement()
 	 * @generated
 	 */
-	int REMOTE_MOVE_MODEL_ELEMENT = 15;
+	int REMOTE_MOVE_MODEL_ELEMENT = 18;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -1375,7 +1487,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateContainmentFeature()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_CONTAINMENT_FEATURE = 16;
+	int REMOTE_UPDATE_CONTAINMENT_FEATURE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -2095,7 +2207,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateAttribute()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_ATTRIBUTE = 25;
+	int REMOTE_UPDATE_ATTRIBUTE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -2950,7 +3062,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteUpdateUniqueReferenceValue()
 	 * @generated
 	 */
-	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 35;
+	int REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE = 38;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list. <!--
@@ -3069,13 +3181,388 @@ public interface DiffPackage extends EPackage {
 	int ABSTRACT_DIFF_EXTENSION_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDiffImpl <em>Resource Diff</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ResourceDiffImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDiff()
+	 * @generated
+	 */
+	int RESOURCE_DIFF = 40;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DIFF__SUB_DIFF_ELEMENTS = DIFF_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DIFF__IS_HIDDEN_BY = DIFF_ELEMENT__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DIFF__CONFLICTING = DIFF_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DIFF__KIND = DIFF_ELEMENT__KIND;
+
+	/**
+	 * The number of structural features of the '<em>Resource Diff</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DIFF_FEATURE_COUNT = DIFF_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl <em>Resource Dependency Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDependencyChange()
+	 * @generated
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE = 41;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__SUB_DIFF_ELEMENTS = RESOURCE_DIFF__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__IS_HIDDEN_BY = RESOURCE_DIFF__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__CONFLICTING = RESOURCE_DIFF__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__KIND = RESOURCE_DIFF__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__ROOTS = RESOURCE_DIFF_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Resource Dependency Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE_FEATURE_COUNT = RESOURCE_DIFF_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddResourceDependencyImpl <em>Add Resource Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddResourceDependencyImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddResourceDependency()
+	 * @generated
+	 */
+	int ADD_RESOURCE_DEPENDENCY = 42;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY__SUB_DIFF_ELEMENTS = RESOURCE_DEPENDENCY_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY__IS_HIDDEN_BY = RESOURCE_DEPENDENCY_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY__CONFLICTING = RESOURCE_DEPENDENCY_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY__KIND = RESOURCE_DEPENDENCY_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY__ROOTS = RESOURCE_DEPENDENCY_CHANGE__ROOTS;
+
+	/**
+	 * The number of structural features of the '<em>Add Resource Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_RESOURCE_DEPENDENCY_FEATURE_COUNT = RESOURCE_DEPENDENCY_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveResourceDependencyImpl <em>Remove Resource Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveResourceDependencyImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveResourceDependency()
+	 * @generated
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY = 43;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY__SUB_DIFF_ELEMENTS = RESOURCE_DEPENDENCY_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY__IS_HIDDEN_BY = RESOURCE_DEPENDENCY_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY__CONFLICTING = RESOURCE_DEPENDENCY_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY__KIND = RESOURCE_DEPENDENCY_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY__ROOTS = RESOURCE_DEPENDENCY_CHANGE__ROOTS;
+
+	/**
+	 * The number of structural features of the '<em>Remove Resource Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOVE_RESOURCE_DEPENDENCY_FEATURE_COUNT = RESOURCE_DEPENDENCY_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddResourceDependencyImpl <em>Remote Add Resource Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddResourceDependencyImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddResourceDependency()
+	 * @generated
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY = 44;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY__SUB_DIFF_ELEMENTS = RESOURCE_DEPENDENCY_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY__IS_HIDDEN_BY = RESOURCE_DEPENDENCY_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY__CONFLICTING = RESOURCE_DEPENDENCY_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY__KIND = RESOURCE_DEPENDENCY_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY__ROOTS = RESOURCE_DEPENDENCY_CHANGE__ROOTS;
+
+	/**
+	 * The number of structural features of the '<em>Remote Add Resource Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_ADD_RESOURCE_DEPENDENCY_FEATURE_COUNT = RESOURCE_DEPENDENCY_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveResourceDependencyImpl <em>Remote Remove Resource Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveResourceDependencyImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveResourceDependency()
+	 * @generated
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY = 45;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY__SUB_DIFF_ELEMENTS = RESOURCE_DEPENDENCY_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY__IS_HIDDEN_BY = RESOURCE_DEPENDENCY_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY__CONFLICTING = RESOURCE_DEPENDENCY_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY__KIND = RESOURCE_DEPENDENCY_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Roots</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY__ROOTS = RESOURCE_DEPENDENCY_CHANGE__ROOTS;
+
+	/**
+	 * The number of structural features of the '<em>Remote Remove Resource Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REMOTE_REMOVE_RESOURCE_DEPENDENCY_FEATURE_COUNT = RESOURCE_DEPENDENCY_CHANGE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}' enum.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDifferenceKind()
 	 * @generated
 	 */
-	int DIFFERENCE_KIND = 37;
+	int DIFFERENCE_KIND = 46;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension <em>Abstract Diff Extension</em>}'.
@@ -3105,6 +3592,77 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getAbstractDiffExtension_IsCollapsed();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ResourceDiff <em>Resource Diff</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Resource Diff</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ResourceDiff
+	 * @generated
+	 */
+	EClass getResourceDiff();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange <em>Resource Dependency Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Resource Dependency Change</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange
+	 * @generated
+	 */
+	EClass getResourceDependencyChange();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange#getRoots <em>Roots</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Roots</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange#getRoots()
+	 * @see #getResourceDependencyChange()
+	 * @generated
+	 */
+	EReference getResourceDependencyChange_Roots();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AddResourceDependency <em>Add Resource Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Add Resource Dependency</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AddResourceDependency
+	 * @generated
+	 */
+	EClass getAddResourceDependency();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency <em>Remove Resource Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Remove Resource Dependency</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency
+	 * @generated
+	 */
+	EClass getRemoveResourceDependency();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency <em>Remote Add Resource Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Remote Add Resource Dependency</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency
+	 * @generated
+	 */
+	EClass getRemoteAddResourceDependency();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency <em>Remote Remove Resource Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Remote Remove Resource Dependency</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency
+	 * @generated
+	 */
+	EClass getRemoteRemoveResourceDependency();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}'.
@@ -3347,6 +3905,91 @@ public interface DiffPackage extends EPackage {
 	EAttribute getDiffGroup_Subchanges();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot <em>Comparison Snapshot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Comparison Snapshot</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot
+	 * @generated
+	 */
+	EClass getComparisonSnapshot();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot#getDate <em>Date</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Date</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot#getDate()
+	 * @see #getComparisonSnapshot()
+	 * @generated
+	 */
+	EAttribute getComparisonSnapshot_Date();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot <em>Comparison Resource Snapshot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Comparison Resource Snapshot</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot
+	 * @generated
+	 */
+	EClass getComparisonResourceSnapshot();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot#getDiff <em>Diff</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Diff</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot#getDiff()
+	 * @see #getComparisonResourceSnapshot()
+	 * @generated
+	 */
+	EReference getComparisonResourceSnapshot_Diff();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot#getMatch <em>Match</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Match</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot#getMatch()
+	 * @see #getComparisonResourceSnapshot()
+	 * @generated
+	 */
+	EReference getComparisonResourceSnapshot_Match();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot <em>Comparison Resource Set Snapshot</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Comparison Resource Set Snapshot</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot
+	 * @generated
+	 */
+	EClass getComparisonResourceSetSnapshot();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot#getDiffResourceSet <em>Diff Resource Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Diff Resource Set</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot#getDiffResourceSet()
+	 * @see #getComparisonResourceSetSnapshot()
+	 * @generated
+	 */
+	EReference getComparisonResourceSetSnapshot_DiffResourceSet();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot#getMatchResourceSet <em>Match Resource Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Match Resource Set</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot#getMatchResourceSet()
+	 * @see #getComparisonResourceSetSnapshot()
+	 * @generated
+	 */
+	EReference getComparisonResourceSetSnapshot_MatchResourceSet();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel <em>Model</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Model</em>'.
@@ -3354,26 +3997,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getDiffModel();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft <em>Left</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Left</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft()
-	 * @see #getDiffModel()
-	 * @generated
-	 */
-	EAttribute getDiffModel_Left();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Origin</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin()
-	 * @see #getDiffModel()
-	 * @generated
-	 */
-	EAttribute getDiffModel_Origin();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOwnedElements <em>Owned Elements</em>}'.
@@ -3386,14 +4009,69 @@ public interface DiffPackage extends EPackage {
 	EReference getDiffModel_OwnedElements();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRight <em>Right</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Right</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getRight()
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeftRoots <em>Left Roots</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Left Roots</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeftRoots()
 	 * @see #getDiffModel()
 	 * @generated
 	 */
-	EAttribute getDiffModel_Right();
+	EReference getDiffModel_LeftRoots();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRightRoots <em>Right Roots</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Right Roots</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getRightRoots()
+	 * @see #getDiffModel()
+	 * @generated
+	 */
+	EReference getDiffModel_RightRoots();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getAncestorRoots <em>Ancestor Roots</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Ancestor Roots</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffModel#getAncestorRoots()
+	 * @see #getDiffModel()
+	 * @generated
+	 */
+	EReference getDiffModel_AncestorRoots();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.DiffResourceSet <em>Resource Set</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Resource Set</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffResourceSet
+	 * @generated
+	 */
+	EClass getDiffResourceSet();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffResourceSet#getDiffModels <em>Diff Models</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Diff Models</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffResourceSet#getDiffModels()
+	 * @see #getDiffResourceSet()
+	 * @generated
+	 */
+	EReference getDiffResourceSet_DiffModels();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffResourceSet#getResourceDiffs <em>Resource Diffs</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Resource Diffs</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffResourceSet#getResourceDiffs()
+	 * @see #getDiffResourceSet()
+	 * @generated
+	 */
+	EReference getDiffResourceSet_ResourceDiffs();
 
 	/**
 	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.diff.merge.api.IMerger <em>IMerger</em>}'.
@@ -3471,45 +4149,6 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModelElementChangeRightTarget_RightElement();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot <em>Model Input Snapshot</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Model Input Snapshot</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot
-	 * @generated
-	 */
-	EClass getModelInputSnapshot();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate <em>Date</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Date</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDate()
-	 * @see #getModelInputSnapshot()
-	 * @generated
-	 */
-	EAttribute getModelInputSnapshot_Date();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff <em>Diff</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Diff</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getDiff()
-	 * @see #getModelInputSnapshot()
-	 * @generated
-	 */
-	EReference getModelInputSnapshot_Diff();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch <em>Match</em>}'.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Match</em>'.
-	 * @see org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot#getMatch()
-	 * @see #getModelInputSnapshot()
-	 * @generated
-	 */
-	EReference getModelInputSnapshot_Match();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement <em>Move Model Element</em>}'.
@@ -3884,6 +4523,74 @@ public interface DiffPackage extends EPackage {
 		EAttribute ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED = eINSTANCE.getAbstractDiffExtension_IsCollapsed();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDiffImpl <em>Resource Diff</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ResourceDiffImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDiff()
+		 * @generated
+		 */
+		EClass RESOURCE_DIFF = eINSTANCE.getResourceDiff();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl <em>Resource Dependency Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDependencyChange()
+		 * @generated
+		 */
+		EClass RESOURCE_DEPENDENCY_CHANGE = eINSTANCE.getResourceDependencyChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Roots</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RESOURCE_DEPENDENCY_CHANGE__ROOTS = eINSTANCE.getResourceDependencyChange_Roots();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.AddResourceDependencyImpl <em>Add Resource Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.AddResourceDependencyImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAddResourceDependency()
+		 * @generated
+		 */
+		EClass ADD_RESOURCE_DEPENDENCY = eINSTANCE.getAddResourceDependency();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoveResourceDependencyImpl <em>Remove Resource Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoveResourceDependencyImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoveResourceDependency()
+		 * @generated
+		 */
+		EClass REMOVE_RESOURCE_DEPENDENCY = eINSTANCE.getRemoveResourceDependency();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddResourceDependencyImpl <em>Remote Add Resource Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteAddResourceDependencyImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteAddResourceDependency()
+		 * @generated
+		 */
+		EClass REMOTE_ADD_RESOURCE_DEPENDENCY = eINSTANCE.getRemoteAddResourceDependency();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveResourceDependencyImpl <em>Remote Remove Resource Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.RemoteRemoveResourceDependencyImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getRemoteRemoveResourceDependency()
+		 * @generated
+		 */
+		EClass REMOTE_REMOVE_RESOURCE_DEPENDENCY = eINSTANCE.getRemoteRemoveResourceDependency();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.DifferenceKind <em>Difference Kind</em>}' enum.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.diff.metamodel.DifferenceKind
@@ -4088,6 +4795,78 @@ public interface DiffPackage extends EPackage {
 		EAttribute DIFF_GROUP__SUBCHANGES = eINSTANCE.getDiffGroup_Subchanges();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot <em>Comparison Snapshot</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonSnapshot()
+		 * @generated
+		 */
+		EClass COMPARISON_SNAPSHOT = eINSTANCE.getComparisonSnapshot();
+
+		/**
+		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute COMPARISON_SNAPSHOT__DATE = eINSTANCE.getComparisonSnapshot_Date();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSnapshotImpl <em>Comparison Resource Snapshot</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSnapshotImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonResourceSnapshot()
+		 * @generated
+		 */
+		EClass COMPARISON_RESOURCE_SNAPSHOT = eINSTANCE.getComparisonResourceSnapshot();
+
+		/**
+		 * The meta object literal for the '<em><b>Diff</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPARISON_RESOURCE_SNAPSHOT__DIFF = eINSTANCE.getComparisonResourceSnapshot_Diff();
+
+		/**
+		 * The meta object literal for the '<em><b>Match</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPARISON_RESOURCE_SNAPSHOT__MATCH = eINSTANCE.getComparisonResourceSnapshot_Match();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSetSnapshotImpl <em>Comparison Resource Set Snapshot</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ComparisonResourceSetSnapshotImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getComparisonResourceSetSnapshot()
+		 * @generated
+		 */
+		EClass COMPARISON_RESOURCE_SET_SNAPSHOT = eINSTANCE.getComparisonResourceSetSnapshot();
+
+		/**
+		 * The meta object literal for the '<em><b>Diff Resource Set</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPARISON_RESOURCE_SET_SNAPSHOT__DIFF_RESOURCE_SET = eINSTANCE
+				.getComparisonResourceSetSnapshot_DiffResourceSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Match Resource Set</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPARISON_RESOURCE_SET_SNAPSHOT__MATCH_RESOURCE_SET = eINSTANCE
+				.getComparisonResourceSetSnapshot_MatchResourceSet();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl <em>Model</em>}' class.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffModelImpl
@@ -4097,22 +4876,6 @@ public interface DiffPackage extends EPackage {
 		EClass DIFF_MODEL = eINSTANCE.getDiffModel();
 
 		/**
-		 * The meta object literal for the '<em><b>Left</b></em>' attribute feature.
-		 * <!-- begin-user-doc
-		 * --> <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute DIFF_MODEL__LEFT = eINSTANCE.getDiffModel_Left();
-
-		/**
-		 * The meta object literal for the '<em><b>Origin</b></em>' attribute feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EAttribute DIFF_MODEL__ORIGIN = eINSTANCE.getDiffModel_Origin();
-
-		/**
 		 * The meta object literal for the '<em><b>Owned Elements</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * @generated
@@ -4120,12 +4883,54 @@ public interface DiffPackage extends EPackage {
 		EReference DIFF_MODEL__OWNED_ELEMENTS = eINSTANCE.getDiffModel_OwnedElements();
 
 		/**
-		 * The meta object literal for the '<em><b>Right</b></em>' attribute feature.
-		 * <!-- begin-user-doc
-		 * --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Left Roots</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DIFF_MODEL__RIGHT = eINSTANCE.getDiffModel_Right();
+		EReference DIFF_MODEL__LEFT_ROOTS = eINSTANCE.getDiffModel_LeftRoots();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Roots</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF_MODEL__RIGHT_ROOTS = eINSTANCE.getDiffModel_RightRoots();
+
+		/**
+		 * The meta object literal for the '<em><b>Ancestor Roots</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF_MODEL__ANCESTOR_ROOTS = eINSTANCE.getDiffModel_AncestorRoots();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffResourceSetImpl <em>Resource Set</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffResourceSetImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDiffResourceSet()
+		 * @generated
+		 */
+		EClass DIFF_RESOURCE_SET = eINSTANCE.getDiffResourceSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Diff Models</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF_RESOURCE_SET__DIFF_MODELS = eINSTANCE.getDiffResourceSet_DiffModels();
+
+		/**
+		 * The meta object literal for the '<em><b>Resource Diffs</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIFF_RESOURCE_SET__RESOURCE_DIFFS = eINSTANCE.getDiffResourceSet_ResourceDiffs();
 
 		/**
 		 * The meta object literal for the '<em>IMerger</em>' data type.
@@ -4199,39 +5004,6 @@ public interface DiffPackage extends EPackage {
 		 */
 		EReference MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT = eINSTANCE
 				.getModelElementChangeRightTarget_RightElement();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl <em>Model Input Snapshot</em>}' class.
-		 * <!-- begin-user-doc --> <!-- end-user-doc -->
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ModelInputSnapshotImpl
-		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getModelInputSnapshot()
-		 * @generated
-		 */
-		EClass MODEL_INPUT_SNAPSHOT = eINSTANCE.getModelInputSnapshot();
-
-		/**
-		 * The meta object literal for the '<em><b>Date</b></em>' attribute feature.
-		 * <!-- begin-user-doc
-		 * --> <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MODEL_INPUT_SNAPSHOT__DATE = eINSTANCE.getModelInputSnapshot_Date();
-
-		/**
-		 * The meta object literal for the '<em><b>Diff</b></em>' containment reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference MODEL_INPUT_SNAPSHOT__DIFF = eINSTANCE.getModelInputSnapshot_Diff();
-
-		/**
-		 * The meta object literal for the '<em><b>Match</b></em>' containment reference feature. <!--
-		 * begin-user-doc --> <!-- end-user-doc -->
-		 * 
-		 * @generated
-		 */
-		EReference MODEL_INPUT_SNAPSHOT__MATCH = eINSTANCE.getModelInputSnapshot_Match();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl <em>Move Model Element</em>}' class.

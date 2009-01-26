@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,10 +20,10 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft <em>Left</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRight <em>Right</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOwnedElements <em>Owned Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeftRoots <em>Left Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRightRoots <em>Right Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getAncestorRoots <em>Ancestor Roots</em>}</li>
  * </ul>
  * </p>
  *
@@ -32,38 +32,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface DiffModel extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Left</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Left</em>' attribute isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left</em>' attribute.
-	 * @see #setLeft(String)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_Left()
-	 * @model
-	 * @generated
-	 */
-	String getLeft();
-
-	/**
-	 * Returns the value of the '<em><b>Origin</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Origin</em>' attribute isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Origin</em>' attribute.
-	 * @see #setOrigin(String)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_Origin()
-	 * @model
-	 * @generated
-	 */
-	String getOrigin();
-
 	/**
 	 * Returns the value of the '<em><b>Owned Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.emf.compare.diff.metamodel.DiffElement}.
@@ -82,46 +50,51 @@ public interface DiffModel extends EObject {
 	EList<DiffElement> getOwnedElements();
 
 	/**
-	 * Returns the value of the '<em><b>Right</b></em>' attribute.
+	 * Returns the value of the '<em><b>Left Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right</em>' attribute isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Left Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right</em>' attribute.
-	 * @see #setRight(String)
-	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_Right()
+	 * @return the value of the '<em>Left Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_LeftRoots()
 	 * @model
 	 * @generated
 	 */
-	String getRight();
+	EList<EObject> getLeftRoots();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getLeft <em>Left</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left</em>' attribute.
-	 * @see #getLeft()
+	 * Returns the value of the '<em><b>Right Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Right Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Right Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_RightRoots()
+	 * @model
 	 * @generated
 	 */
-	void setLeft(String value);
+	EList<EObject> getRightRoots();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getOrigin <em>Origin</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Origin</em>' attribute.
-	 * @see #getOrigin()
+	 * Returns the value of the '<em><b>Ancestor Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Ancestor Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ancestor Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffModel_AncestorRoots()
+	 * @model
 	 * @generated
 	 */
-	void setOrigin(String value);
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffModel#getRight <em>Right</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right</em>' attribute.
-	 * @see #getRight()
-	 * @generated
-	 */
-	void setRight(String value);
+	EList<EObject> getAncestorRoots();
 
 } // DiffModel

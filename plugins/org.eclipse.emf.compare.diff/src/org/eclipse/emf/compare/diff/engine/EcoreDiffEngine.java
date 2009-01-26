@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 
@@ -53,5 +60,40 @@ public class EcoreDiffEngine extends GenericDiffEngine {
 		if (!(leftElement instanceof EGenericType || rightElement instanceof EGenericType || originElement instanceof EGenericType)) {
 			super.checkMoves(root, matchElement);
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#processUnmatchedElements(org.eclipse.emf.compare.diff.metamodel.DiffGroup,
+	 *      java.util.List)
+	 */
+	@Override
+	protected void processUnmatchedElements(DiffGroup diffRoot, List<UnmatchElement> unmatched) {
+		final List<UnmatchElement> filteredUnmatched = new ArrayList<UnmatchElement>(unmatched.size());
+		for (final UnmatchElement element : unmatched) {
+			if (!(element.getElement() instanceof EGenericType)) {
+				filteredUnmatched.add(element);
+			}
+		}
+		super.processUnmatchedElements(diffRoot, filteredUnmatched);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.GenericDiffEngine#processUnmatchedElements(org.eclipse.emf.compare.diff.metamodel.DiffGroup,
+	 *      java.util.Map)
+	 */
+	@Override
+	protected void processUnmatchedElements(DiffGroup diffRoot, Map<UnmatchElement, Boolean> unmatched) {
+		final Map<UnmatchElement, Boolean> filteredUnmatched = new HashMap<UnmatchElement, Boolean>(unmatched
+				.size());
+		for (final Entry<UnmatchElement, Boolean> element : unmatched.entrySet()) {
+			if (!(element.getKey().getElement() instanceof EGenericType)) {
+				filteredUnmatched.put(element.getKey(), element.getValue());
+			}
+		}
+		super.processUnmatchedElements(diffRoot, unmatched);
 	}
 }

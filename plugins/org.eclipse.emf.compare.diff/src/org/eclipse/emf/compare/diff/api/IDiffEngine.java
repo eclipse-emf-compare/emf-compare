@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff.api;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
  * A Diff engine has the responsability to provide a diff (or delta) model from a matching model.
@@ -34,11 +35,25 @@ public interface IDiffEngine {
 	 * @param match
 	 *            the matching model
 	 * @param threeWay
-	 *            <code>True</code> if we're computing a three way comparison, <code>False</code>
-	 *            otherwise.
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
 	 * @return the corresponding diff model
 	 */
 	DiffModel doDiff(MatchModel match, boolean threeWay);
+
+	/**
+	 * Return a diffmodel created using the given match model. <code>crossReferencer</code> has been
+	 * initialized on the whole MatchResourceSet.
+	 * 
+	 * @param match
+	 *            the matching model
+	 * @param threeWay
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
+	 * @param crossReferencer
+	 *            This cross referencer has been initialized with the whole MatchResourceSet and can be used
+	 *            to retrieve matched EObjects towards other resources.
+	 * @return the corresponding diff model
+	 */
+	DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, CrossReferencer crossReferencer);
 
 	/**
 	 * This will be called with each access from the service to the singleton instance of this engine. Clients

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,17 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
+import org.eclipse.emf.compare.match.metamodel.Side;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
  * Parses extension meta data to fetch the diff engine to use.
@@ -84,8 +91,9 @@ public final class DiffService {
 	 */
 	public static DiffModel doDiff(MatchModel match, boolean threeWay) {
 		String extension = DEFAULT_EXTENSION;
-		if (match.getLeftModel() != null && match.getLeftModel().lastIndexOf('.') > 0) {
-			extension = match.getLeftModel().substring(match.getLeftModel().lastIndexOf('.') + 1);
+		if (!match.getLeftRoots().isEmpty() && match.getLeftRoots().get(0).eResource() != null
+				&& match.getLeftRoots().get(0).eResource().getURI() != null) {
+			extension = match.getLeftRoots().get(0).eResource().getURI().fileExtension();
 		}
 		final IDiffEngine engine = getBestDiffEngine(extension);
 		final DiffModel diff = engine.doDiff(match, threeWay);
@@ -99,6 +107,79 @@ public final class DiffService {
 		}
 
 		engine.reset();
+		return diff;
+	}
+
+	/**
+	 * Returns a DiffResourceSet created by differencing all MatchModels contained by <code>match</code>. This
+	 * will call for a two-way differencing.
+	 * 
+	 * @param matchResourceSet
+	 *            Contains the MatchModels for all compared resources.
+	 * @return DiffResourceSet created by differencing all MatchModels.
+	 */
+	public static DiffResourceSet doDiff(MatchResourceSet matchResourceSet) {
+		return doDiff(matchResourceSet, false);
+	}
+
+	/**
+	 * Returns a DiffResourceSet created by differencing all MatchModels contained by <code>match</code>.
+	 * Depending on the value of <code>threeWay</code>, this will call for either two- or three-way
+	 * differencing.
+	 * 
+	 * @param matchResourceSet
+	 *            Contains the MatchModels for all compared resources.
+	 * @param threeWay
+	 *            <code>True</code> if we're computing a three way comparison, <code>False</code> otherwise.
+	 * @return DiffResourceSet created by differencing all MatchModels.
+	 */
+	public static DiffResourceSet doDiff(MatchResourceSet matchResourceSet, boolean threeWay) {
+		final DiffResourceSet diff = DiffFactory.eINSTANCE.createDiffResourceSet();
+		final CrossReferencer crossReferencer = new CrossReferencer(matchResourceSet) {
+			private static final long serialVersionUID = 1L;
+
+			/** initializer. */
+			{
+				crossReference();
+			}
+		};
+		for (final MatchModel match : matchResourceSet.getMatchModels()) {
+			String extension = DEFAULT_EXTENSION;
+			if (!match.getLeftRoots().isEmpty() && match.getLeftRoots().get(0).eResource() != null) {
+				extension = match.getLeftRoots().get(0).eResource().getURI().fileExtension();
+			}
+			final IDiffEngine engine = getBestDiffEngine(extension);
+			final DiffModel diffmodel = engine.doDiffResourceSet(match, threeWay, crossReferencer);
+
+			final Collection<AbstractDiffExtension> extensions = DiffService
+					.getCorrespondingDiffExtensions(extension);
+			for (final AbstractDiffExtension ext : extensions) {
+				if (ext != null) {
+					ext.visit(diffmodel);
+				}
+			}
+
+			engine.reset();
+			diff.getDiffModels().add(diffmodel);
+		}
+		for (final UnmatchModel unmatch : matchResourceSet.getUnmatchedModels()) {
+			ResourceDependencyChange dependencyChange;
+			if (unmatch.getSide() == Side.LEFT) {
+				if (unmatch.isRemote()) {
+					dependencyChange = DiffFactory.eINSTANCE.createRemoteRemoveResourceDependency();
+				} else {
+					dependencyChange = DiffFactory.eINSTANCE.createAddResourceDependency();
+				}
+			} else {
+				if (unmatch.isRemote()) {
+					dependencyChange = DiffFactory.eINSTANCE.createRemoteAddResourceDependency();
+				} else {
+					dependencyChange = DiffFactory.eINSTANCE.createRemoveResourceDependency();
+				}
+			}
+			dependencyChange.getRoots().addAll(unmatch.getRoots());
+			diff.getResourceDiffs().add(dependencyChange);
+		}
 		return diff;
 	}
 

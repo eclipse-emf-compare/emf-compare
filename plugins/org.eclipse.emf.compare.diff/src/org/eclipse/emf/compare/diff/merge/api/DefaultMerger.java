@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
@@ -111,7 +111,7 @@ public class DefaultMerger implements IMerger {
 	protected void cleanDiffGroup(DiffGroup diffGroup) {
 		if (diffGroup != null && diffGroup.getSubchanges() == 0) {
 			final EObject parent = diffGroup.eContainer();
-			if (parent != null && parent instanceof DiffGroup) {
+			if (parent instanceof DiffGroup) {
 				EcoreUtil.remove(diffGroup);
 				cleanDiffGroup((DiffGroup)parent);
 			}
@@ -141,7 +141,8 @@ public class DefaultMerger implements IMerger {
 	 */
 	protected Resource findLeftResource() {
 		if (leftResource == null) {
-			final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+			final MatchModel match = ((ComparisonResourceSnapshot)EcoreUtil.getRootContainer(diff))
+					.getMatch();
 			final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator();
 			while (matchIterator.hasNext()) {
 				final Match2Elements element = (Match2Elements)matchIterator.next();
@@ -160,7 +161,8 @@ public class DefaultMerger implements IMerger {
 	 */
 	protected Resource findRightResource() {
 		if (rightResource == null) {
-			final MatchModel match = ((ModelInputSnapshot)EcoreUtil.getRootContainer(diff)).getMatch();
+			final MatchModel match = ((ComparisonResourceSnapshot)EcoreUtil.getRootContainer(diff))
+					.getMatch();
 			final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator();
 			while (matchIterator.hasNext()) {
 				final Match2Elements element = (Match2Elements)matchIterator.next();
@@ -210,8 +212,8 @@ public class DefaultMerger implements IMerger {
 	 */
 	protected void removeDanglingReferences(EObject deletedObject) {
 		EObject root = EcoreUtil.getRootContainer(deletedObject);
-		if (root instanceof ModelInputSnapshot) {
-			root = ((ModelInputSnapshot)root).getDiff();
+		if (root instanceof ComparisonResourceSnapshot) {
+			root = ((ComparisonResourceSnapshot)root).getDiff();
 		}
 		if (root != null) {
 			final EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
