@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ import java.io.IOException;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.compare.ui.internal.AbstractTeamHandler;
+import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -23,7 +23,9 @@ import org.eclipse.team.svn.core.connector.SVNRevision;
 import org.eclipse.team.svn.ui.compare.ResourceCompareInput.ResourceElement;
 
 /**
- * This class will handle the specific parts of loading resources for a comparison via subversive.
+ * This class will handle the specific parts of loading resources for a comparison via subversive. We needed
+ * this in order to use subversive-specific classes to retrieve the exact URIs of the resource and not load
+ * them from streams (which wouldn't be mergeable).
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -34,7 +36,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#isLeftRemote()
+	 * @see org.eclipse.emf.compare.ui.team.AbstractTeamHandler#isLeftRemote()
 	 */
 	@Override
 	public boolean isLeftRemote() {
@@ -44,7 +46,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.ui.internal.AbstractTeamHandler#loadResources(org.eclipse.compare.structuremergeviewer.ICompareInput)
+	 * @see org.eclipse.emf.compare.ui.team.AbstractTeamHandler#loadResources(org.eclipse.compare.structuremergeviewer.ICompareInput)
 	 */
 	@Override
 	public boolean loadResources(ICompareInput input) throws IOException, CoreException {
