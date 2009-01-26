@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.export;
 
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -30,7 +30,7 @@ public interface IExportAction {
 	 * @param snapshot
 	 *            This represents the contents that should be exported.
 	 */
-	void exportSnapshot(ModelInputSnapshot snapshot);
+	void exportSnapshot(ComparisonSnapshot snapshot);
 
 	/**
 	 * Returns the action's display icon when disabled.

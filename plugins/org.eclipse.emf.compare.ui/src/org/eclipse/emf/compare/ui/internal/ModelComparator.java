@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008, 2009 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,15 +33,16 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
@@ -68,10 +69,10 @@ public final class ModelComparator {
 	private static final Map<CompareConfiguration, ModelComparator> INSTANCES = new HashMap<CompareConfiguration, ModelComparator>();
 
 	/** Name of the extension point to parse for team handlers. */
-	private static final String TEAM_HANDLERS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.internal.team.handler"; //$NON-NLS-1$
+	private static final String TEAM_HANDLERS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.team.handler"; //$NON-NLS-1$
 
 	/** This will hold the result of these resources' comparison. */
-	protected ModelInputSnapshot comparisonResult;
+	protected ComparisonResourceSetSnapshot comparisonResult;
 
 	/** Keeps a reference to the last "ancestor" element of the input. */
 	private ITypedElement ancestorElement;
@@ -162,9 +163,9 @@ public final class ModelComparator {
 	 *            data.
 	 * @return Result of the comparison of the loaded resources.
 	 */
-	public ModelInputSnapshot compare(CompareConfiguration configuration) {
+	public ComparisonResourceSetSnapshot compare(CompareConfiguration configuration) {
 		if (comparisonResult == null) {
-			comparisonResult = DiffFactory.eINSTANCE.createModelInputSnapshot();
+			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
 			final Date start = Calendar.getInstance().getTime();
 
 			MatchService.setMatchEngineSelector(new VisualEngineSelector());
@@ -175,29 +176,30 @@ public final class ModelComparator {
 					public void run(IProgressMonitor monitor) throws InterruptedException {
 						final Map<String, Object> options = new EMFCompareMap<String, Object>();
 						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-						final MatchModel match;
+						final MatchResourceSet match;
 						if (getAncestorResource() == null) {
-							match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
-									options);
+							match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
+									getRightResource().getResourceSet(), options);
 						} else {
-							match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
-									getAncestorResource(), options);
+							match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
+									getRightResource().getResourceSet(), getAncestorResource()
+											.getResourceSet(), options);
 						}
-						final DiffModel diff = DiffService.doDiff(match, getAncestorResource() != null);
+						final DiffResourceSet diff = DiffService.doDiff(match, getAncestorResource() != null);
 
 						comparisonResult.setDate(Calendar.getInstance().getTime());
-						comparisonResult.setDiff(diff);
-						comparisonResult.setMatch(match);
+						comparisonResult.setDiffResourceSet(diff);
+						comparisonResult.setMatchResourceSet(match);
 					}
 				});
 			} catch (final InterruptedException e) {
 				comparisonResult.setDate(Calendar.getInstance().getTime());
-				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
-				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
+				comparisonResult.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
+				comparisonResult.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
 			} catch (final EMFCompareException e) {
 				comparisonResult.setDate(Calendar.getInstance().getTime());
-				comparisonResult.setDiff(DiffFactory.eINSTANCE.createDiffModel());
-				comparisonResult.setMatch(MatchFactory.eINSTANCE.createMatchModel());
+				comparisonResult.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
+				comparisonResult.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
 			} catch (final InvocationTargetException e) {
 				EMFComparePlugin.log(e, true);
 			}
@@ -232,7 +234,7 @@ public final class ModelComparator {
 	 * @return The comparison result. <code>null</code> if no comparison has been done since last loading
 	 *         resources.
 	 */
-	public ModelInputSnapshot getComparisonResult() {
+	public ComparisonResourceSetSnapshot getComparisonResult() {
 		return comparisonResult;
 	}
 
@@ -371,8 +373,10 @@ public final class ModelComparator {
 
 	/**
 	 * This generic handler should be able to load resources passed by any team plug-in. Using this handler
-	 * instead of {@link #handleSubversiveResources(ITypedElement, ITypedElement, ITypedElement)} for
-	 * comparison via subversive will result in unsaveable merge operations.
+	 * instead of the subversive specific handler in plugin org.eclipse.emf.compare.team.subversive will
+	 * result in unsaveable merge operations for example. Users of specific team plugins should write their
+	 * own handler to avoid going through this method in order for their files to be saveable (thus
+	 * mergeable).
 	 * 
 	 * @param left
 	 *            Handler of the left compared model.

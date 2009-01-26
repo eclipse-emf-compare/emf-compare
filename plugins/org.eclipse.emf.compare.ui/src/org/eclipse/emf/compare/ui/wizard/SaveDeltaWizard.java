@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,10 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -38,7 +40,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	private final String fileExtension;
 
 	/** Result of the comparison this wizard is meant to save. */
-	private ModelInputSnapshot input;
+	private ComparisonSnapshot input;
 
 	/**
 	 * Creates a new file wizard given the file extension to use.
@@ -48,10 +50,11 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	 */
 	public SaveDeltaWizard(String extension) {
 		super();
-		if (extension == null)
+		if (extension == null) {
 			fileExtension = "emfdiff"; //$NON-NLS-1$
-		else
+		} else {
 			fileExtension = extension;
+		}
 	}
 
 	/**
@@ -74,10 +77,10 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	 * @param inputSnapshot
 	 *            The {@link ModelInputSnapshot} to save.
 	 */
-	public void init(IWorkbench workbench, ModelInputSnapshot inputSnapshot) {
+	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
 		// ensures no modification will be made to the input
-		input = (ModelInputSnapshot)EcoreUtil.copy(inputSnapshot);
+		input = (ComparisonSnapshot)EcoreUtil.copy(inputSnapshot);
 	}
 
 	/**
@@ -91,19 +94,31 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 		final String page = "newFilePage1"; //$NON-NLS-1$
 
 		final String fileName = ((WizardNewFileCreationPage)getPage(page)).getFileName();
-		if (!fileName.endsWith(fileExtension))
+		if (!fileName.endsWith(fileExtension)) {
 			((WizardNewFileCreationPage)getPage(page)).setFileName(fileName + '.' + fileExtension);
+		}
 
 		final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
 		if (createdFile != null) {
 			try {
-				final ModelInputSnapshot modelInputSnapshot = DiffFactory.eINSTANCE
-						.createModelInputSnapshot();
-				modelInputSnapshot.setDiff(input.getDiff());
-				modelInputSnapshot.setMatch(input.getMatch());
-				modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
-				ModelUtils.save(modelInputSnapshot, createdFile.getLocation().toOSString());
-			} catch (IOException e) {
+				if (input instanceof ComparisonResourceSnapshot) {
+					final ComparisonResourceSnapshot modelInputSnapshot = DiffFactory.eINSTANCE
+							.createComparisonResourceSnapshot();
+					modelInputSnapshot.setDiff(((ComparisonResourceSnapshot)input).getDiff());
+					modelInputSnapshot.setMatch(((ComparisonResourceSnapshot)input).getMatch());
+					modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
+					ModelUtils.save(modelInputSnapshot, createdFile.getLocation().toOSString());
+				} else {
+					final ComparisonResourceSetSnapshot modelInputSnapshot = DiffFactory.eINSTANCE
+							.createComparisonResourceSetSnapshot();
+					modelInputSnapshot.setDiffResourceSet(((ComparisonResourceSetSnapshot)input)
+							.getDiffResourceSet());
+					modelInputSnapshot.setMatchResourceSet(((ComparisonResourceSetSnapshot)input)
+							.getMatchResourceSet());
+					modelInputSnapshot.setDate(Calendar.getInstance(Locale.getDefault()).getTime());
+					ModelUtils.save(modelInputSnapshot, createdFile.getLocation().toOSString());
+				}
+			} catch (final IOException e) {
 				EMFComparePlugin.log(e, false);
 			}
 			result = true;

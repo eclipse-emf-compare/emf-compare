@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,11 @@ import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
-import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
@@ -44,8 +44,8 @@ public class ModelCompareInput implements ICompareInput {
 	/** Resource containing the ancestor object of this comparison. */
 	private Resource ancestorResource;
 
-	/** {@link DiffModel} result of the underlying comparison. */
-	private final DiffModel diff;
+	/** Diff result of the underlying comparison. Can be either a DiffModel or a DiffResourceSet. */
+	private final Object diff;
 
 	/** Keeps a list of all the differences (without DiffGroup) detected. */
 	private List<DiffElement> diffList;
@@ -56,24 +56,38 @@ public class ModelCompareInput implements ICompareInput {
 	/** Resource containing the left compared object. */
 	private Resource leftResource;
 
-	/** {@link MatchModel} result of the underlying comparison. */
-	private final MatchModel match;
+	/** match result of the underlying comparison. Can be either a MatchModel or a MatchResourceSet. */
+	private final Object match;
 
 	/** Resource containing the right compared object. */
 	private Resource rightResource;
 
 	/**
-	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel
-	 * match} and {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
+	 * Creates a CompareInput given the resulting {@link MatchModel match} and {@link DiffModel diff} of the
+	 * comparison.
 	 * 
 	 * @param matchModel
-	 *            {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} of the comparison.
+	 *            {@link MatchModel match} of the comparison.
 	 * @param diffModel
-	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
+	 *            {@link DiffModel diff} of the comparison.
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel) {
 		match = matchModel;
 		diff = diffModel;
+	}
+
+	/**
+	 * Creates a CompareInput given the resulting {@link MatchResourceSet match} and {@link DiffResourceSet
+	 * diff} of the comparison.
+	 * 
+	 * @param matchResourceset
+	 *            {@link MatchResourceSet match} of the comparison.
+	 * @param diffResourceSet
+	 *            {@link DiffResourceSet diff} of the comparison.
+	 */
+	public ModelCompareInput(MatchResourceSet matchResourceset, DiffResourceSet diffResourceSet) {
+		match = matchResourceset;
+		diff = diffResourceSet;
 	}
 
 	/**
@@ -95,6 +109,25 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
+	 * Creates a CompareInput given the resulting {@link MatchResourceSet match} and {@link DiffResourceSet
+	 * diff} of the comparison.
+	 * 
+	 * @param matchResourceset
+	 *            {@link MatchResourceSet match} of the comparison.
+	 * @param diffResourceSet
+	 *            {@link DiffResourceSet diff} of the comparison.
+	 * @param comparator
+	 *            The comparator which has been used for this comparison.
+	 */
+	public ModelCompareInput(MatchResourceSet matchResourceset, DiffResourceSet diffResourceSet,
+			ModelComparator comparator) {
+		this(matchResourceset, diffResourceSet);
+		leftResource = comparator.getLeftResource();
+		rightResource = comparator.getRightResource();
+		ancestorResource = comparator.getAncestorResource();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see ICompareInput#addCompareInputChangeListener(ICompareInputChangeListener)
@@ -109,7 +142,14 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#copy(boolean)
 	 */
 	public void copy(boolean leftToRight) {
-		final List<DiffElement> differences = new ArrayList<DiffElement>(diff.getOwnedElements());
+		final List<DiffElement> differences = new ArrayList<DiffElement>();
+		if (diff instanceof DiffModel) {
+			differences.addAll(((DiffModel)diff).getOwnedElements());
+		} else {
+			for (final DiffModel aDiff : ((DiffResourceSet)diff).getDiffModels()) {
+				differences.addAll(aDiff.getOwnedElements());
+			}
+		}
 		doCopy(differences, leftToRight);
 		fireCompareInputChanged();
 	}
@@ -152,28 +192,27 @@ public class ModelCompareInput implements ICompareInput {
 				ancestor = new TypedElementWrapper(ancestorResource.getContents().get(0));
 			}
 		} else {
-			// Seeks a resource from the MatchModel
-			// Assumes that some elements have been matched
-			final TreeIterator<EObject> matchIterator = match.eAllContents();
-			EObject root = null;
-			while (matchIterator.hasNext()) {
-				final EObject matchElement = matchIterator.next();
-				if (matchElement instanceof Match3Elements) {
-					root = ((Match3Elements)matchElement).getOriginElement().eResource().getContents().get(0);
-					break;
-				}
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			ancestor = new TypedElementWrapper(root);
+			if (matchModel.getAncestorRoots().isEmpty()) {
+				ancestor = new TypedElementWrapper(null);
+			} else {
+				ancestor = new TypedElementWrapper(matchModel.getAncestorRoots().get(0));
+			}
 		}
 		return ancestor;
 	}
 
 	/**
-	 * Returns this ModelCompareInput's DiffModel.
+	 * Returns this ModelCompareInput's diff.
 	 * 
-	 * @return This ModelCompareInput's DiffModel.
+	 * @return This ModelCompareInput's diff.
 	 */
-	public DiffModel getDiff() {
+	public Object getDiff() {
 		return diff;
 	}
 
@@ -191,17 +230,17 @@ public class ModelCompareInput implements ICompareInput {
 			final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
 			final List<AttributeChange> attributeChangeDiffs = new ArrayList<AttributeChange>();
 			final List<ReferenceChange> referenceChangeDiffs = new ArrayList<ReferenceChange>();
-			final TreeIterator<EObject> iterator = getDiff().eAllContents();
+			final TreeIterator<EObject> iterator = ((EObject)getDiff()).eAllContents();
 			while (iterator.hasNext()) {
-				final DiffElement aDiff = (DiffElement)iterator.next();
-				if (aDiff instanceof ModelElementChange) {
-					modelElementDiffs.add((ModelElementChange)aDiff);
-				} else if (aDiff instanceof AttributeChange) {
-					attributeChangeDiffs.add((AttributeChange)aDiff);
-				} else if (aDiff instanceof ReferenceChange) {
-					referenceChangeDiffs.add((ReferenceChange)aDiff);
-				} else if (!(aDiff instanceof DiffGroup)) {
-					diffList.add(aDiff);
+				final EObject next = iterator.next();
+				if (next instanceof ModelElementChange) {
+					modelElementDiffs.add((ModelElementChange)next);
+				} else if (next instanceof AttributeChange) {
+					attributeChangeDiffs.add((AttributeChange)next);
+				} else if (next instanceof ReferenceChange) {
+					referenceChangeDiffs.add((ReferenceChange)next);
+				} else if (next instanceof DiffElement && !(next instanceof DiffGroup)) {
+					diffList.add((DiffElement)next);
 				}
 			}
 			diffList.addAll(modelElementDiffs);
@@ -224,9 +263,9 @@ public class ModelCompareInput implements ICompareInput {
 		Image image = null;
 
 		if (getMatch() != null) {
-			image = EMFCompareEObjectUtils.computeObjectImage(getMatch());
+			image = EMFCompareEObjectUtils.computeObjectImage((EObject)getMatch());
 		} else if (getDiff() != null) {
-			image = EMFCompareEObjectUtils.computeObjectImage(getDiff());
+			image = EMFCompareEObjectUtils.computeObjectImage((EObject)getDiff());
 		}
 
 		return image;
@@ -255,28 +294,27 @@ public class ModelCompareInput implements ICompareInput {
 				left = new TypedElementWrapper(leftResource.getContents().get(0));
 			}
 		} else {
-			// Seeks a resource from the MatchModel
-			// Assumes that some elements have been matched
-			final TreeIterator<EObject> matchIterator = match.eAllContents();
-			EObject root = null;
-			while (matchIterator.hasNext()) {
-				final EObject matchElement = matchIterator.next();
-				if (matchElement instanceof Match2Elements) {
-					root = ((Match2Elements)matchElement).getLeftElement().eResource().getContents().get(0);
-					break;
-				}
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			left = new TypedElementWrapper(root);
+			if (matchModel.getLeftRoots().isEmpty()) {
+				left = new TypedElementWrapper(null);
+			} else {
+				left = new TypedElementWrapper(matchModel.getLeftRoots().get(0));
+			}
 		}
 		return left;
 	}
 
 	/**
-	 * Returns this ModelCompareInput's MatchModel.
+	 * Returns this ModelCompareInput's match.
 	 * 
-	 * @return This ModelCompareInput's MatchModel.
+	 * @return This ModelCompareInput's match.
 	 */
-	public MatchModel getMatch() {
+	public Object getMatch() {
 		return match;
 	}
 
@@ -288,10 +326,10 @@ public class ModelCompareInput implements ICompareInput {
 	public String getName() {
 		String name = null;
 
-		if (getMatch() != null) {
-			name = EMFCompareEObjectUtils.computeObjectName(getMatch());
-		} else if (getDiff() != null) {
-			name = EMFCompareEObjectUtils.computeObjectName(getDiff());
+		if (getMatch() instanceof EObject) {
+			name = EMFCompareEObjectUtils.computeObjectName((EObject)getMatch());
+		} else if (getDiff() instanceof EObject) {
+			name = EMFCompareEObjectUtils.computeObjectName((EObject)getDiff());
 		}
 
 		return name;
@@ -309,18 +347,17 @@ public class ModelCompareInput implements ICompareInput {
 				right = new TypedElementWrapper(rightResource.getContents().get(0));
 			}
 		} else {
-			// Seeks a resource from the MatchModel
-			// Assumes that some elements have been matched
-			final TreeIterator<EObject> matchIterator = match.eAllContents();
-			EObject root = null;
-			while (matchIterator.hasNext()) {
-				final EObject matchElement = matchIterator.next();
-				if (matchElement instanceof Match2Elements) {
-					root = ((Match2Elements)matchElement).getRightElement().eResource().getContents().get(0);
-					break;
-				}
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			right = new TypedElementWrapper(root);
+			if (matchModel.getRightRoots().isEmpty()) {
+				right = new TypedElementWrapper(null);
+			} else {
+				right = new TypedElementWrapper(matchModel.getRightRoots().get(0));
+			}
 		}
 		return right;
 	}

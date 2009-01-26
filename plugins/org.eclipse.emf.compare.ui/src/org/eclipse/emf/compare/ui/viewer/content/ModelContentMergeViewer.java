@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,11 +23,16 @@ import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
@@ -63,7 +68,6 @@ import org.eclipse.swt.widgets.Scrollable;
 
 /**
  * Compare and merge viewer with two side-by-side content areas and an optional content area for the ancestor.
- * getKind
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -134,8 +138,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private EditorPartListener partListener;
 
 	/**
-	 * This will listen for changes made on this plug-in's {@link PreferenceStore} to update the GUI colors as
-	 * needed.
+	 * This will listen for changes made on this plug-in's
+	 * {@link org.eclipse.jface.preference.PreferenceStore} to update the GUI colors as needed.
 	 */
 	private final IPropertyChangeListener preferenceListener;
 
@@ -178,8 +182,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					for (int i = 0; i < elements.size(); i++) {
 						if (elements.get(i) instanceof DiffElement
 								&& !(elements.get(i) instanceof DiffGroup && ((DiffGroup)elements.get(i))
-										.getSubDiffElements().size() == 0))
+										.getSubDiffElements().size() == 0)) {
 							selectedDiffs.add((DiffElement)elements.get(i));
+						}
 					}
 					setSelection(selectedDiffs);
 				}
@@ -224,7 +229,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @return The center {@link Canvas}.
 	 */
 	public Canvas getCenterPart() {
-		if (canvas == null && !getControl().isDisposed())
+		if (canvas == null && !getControl().isDisposed()) {
 			canvas = new AbstractCenterPart((Composite)getControl()) {
 				@Override
 				public void doPaint(GC gc) {
@@ -234,20 +239,24 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 					final List<ModelContentMergeTabItem> rightVisible = rightPart.getVisibleElements();
 					final List<DiffElement> visibleDiffs = retainVisibleDiffs(leftVisible, rightVisible);
 					// we don't clear selection when the last diff is merged so this could happen
-					if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null)
+					if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null) {
 						visibleDiffs.addAll(currentSelection);
+					}
 					for (final DiffElement diff : visibleDiffs) {
 						if (!(diff instanceof DiffGroup)) {
 							final ModelContentMergeTabItem leftUIItem = leftPart.getUIItem(diff);
 							final ModelContentMergeTabItem rightUIItem = rightPart.getUIItem(diff);
-							if (leftUIItem != null && rightUIItem != null)
+							if (leftUIItem != null && rightUIItem != null) {
 								drawLine(gc, leftUIItem, rightUIItem);
+							}
 						}
 					}
 				}
 			};
-		if (canvas != null)
+		}
+		if (canvas != null) {
 			canvas.moveAbove(null);
+		}
 		return canvas;
 	}
 
@@ -265,20 +274,27 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	public void setInput(Object input) {
-		// This would be a lot faster if the comparison wasn't replayed each time, yet we cannot rely on the HistoryItem interface ; replace with => history does not make use of this interface.
-		if (input instanceof ICompareInput && ((ICompareInput)input).getAncestor() != null)
+		// This would be a lot faster if the comparison wasn't replayed each time, yet we cannot rely on the
+		// HistoryItem interface ; replace with => history does not make use of this interface.
+		if (input instanceof ICompareInput && ((ICompareInput)input).getAncestor() != null) {
 			isThreeWay = true;
+		}
 		final ModelComparator comparator = ModelComparator.getComparator(configuration);
-		if (input instanceof ModelInputSnapshot) {
-			final ModelInputSnapshot snapshot = (ModelInputSnapshot)input;
+		if (input instanceof ComparisonResourceSnapshot) {
+			final ComparisonResourceSnapshot snapshot = (ComparisonResourceSnapshot)input;
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
+		} else if (input instanceof ComparisonResourceSetSnapshot) {
+			final ComparisonResourceSetSnapshot snapshot = (ComparisonResourceSetSnapshot)input;
+			super.setInput(new ModelCompareInput(snapshot.getMatchResourceSet(), snapshot
+					.getDiffResourceSet(), comparator));
 		} else if (input instanceof ModelCompareInput) {
 			// if there is already a ModelCompareInput provided, no reloading of resources should be done.
 			super.setInput(input);
 		} else if (input instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)input);
-			final ModelInputSnapshot snapshot = comparator.compare(configuration);
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
+			final ComparisonResourceSetSnapshot snapshot = comparator.compare(configuration);
+			super.setInput(new ModelCompareInput(snapshot.getMatchResourceSet(), snapshot
+					.getDiffResourceSet(), comparator));
 		}
 	}
 
@@ -304,12 +320,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		currentSelection.clear();
 		if (diffs.size() > 0) {
 			currentSelection.addAll(diffs);
-			if (leftPart != null)
+			if (leftPart != null) {
 				leftPart.navigateToDiff(diffs);
-			if (rightPart != null)
+			}
+			if (rightPart != null) {
 				rightPart.navigateToDiff(diffs);
-			if (isThreeWay)
+			}
+			if (isThreeWay) {
 				ancestorPart.navigateToDiff(diffs.get(0));
+			}
 			switchCopyState(true);
 		}
 	}
@@ -318,8 +337,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws this viewer.
 	 */
 	public void update() {
-		if (isThreeWay)
+		if (isThreeWay) {
 			ancestorPart.layout();
+		}
 		rightPart.layout();
 		leftPart.layout();
 		updateCenter();
@@ -330,8 +350,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws the center Control.
 	 */
 	public void updateCenter() {
-		if (getCenterPart() != null)
+		if (getCenterPart() != null) {
 			getCenterPart().redraw();
+		}
 	}
 
 	/**
@@ -347,10 +368,19 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			setLeftDirty(false);
 
 			((ModelCompareInput)getInput()).copy(leftToRight);
-			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
-			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
-			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			if (((ModelCompareInput)getInput()).getDiff() instanceof DiffModel) {
+				final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE
+						.createComparisonResourceSnapshot();
+				snap.setDiff((DiffModel)((ModelCompareInput)getInput()).getDiff());
+				snap.setMatch((MatchModel)((ModelCompareInput)getInput()).getMatch());
+				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			} else {
+				final ComparisonResourceSetSnapshot snap = DiffFactory.eINSTANCE
+						.createComparisonResourceSetSnapshot();
+				snap.setDiffResourceSet((DiffResourceSet)((ModelCompareInput)getInput()).getDiff());
+				snap.setMatchResourceSet((MatchResourceSet)((ModelCompareInput)getInput()).getMatch());
+				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			}
 			leftDirty |= !leftToRight;
 			rightDirty |= leftToRight;
 			setLeftDirty(leftDirty);
@@ -376,10 +406,19 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			setLeftDirty(false);
 
 			((ModelCompareInput)getInput()).copy(diffs, leftToRight);
-			final ModelInputSnapshot snap = DiffFactory.eINSTANCE.createModelInputSnapshot();
-			snap.setDiff(((ModelCompareInput)getInput()).getDiff());
-			snap.setMatch(((ModelCompareInput)getInput()).getMatch());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			if (((ModelCompareInput)getInput()).getDiff() instanceof DiffModel) {
+				final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE
+						.createComparisonResourceSnapshot();
+				snap.setDiff((DiffModel)((ModelCompareInput)getInput()).getDiff());
+				snap.setMatch((MatchModel)((ModelCompareInput)getInput()).getMatch());
+				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			} else {
+				final ComparisonResourceSetSnapshot snap = DiffFactory.eINSTANCE
+						.createComparisonResourceSetSnapshot();
+				snap.setDiffResourceSet((DiffResourceSet)((ModelCompareInput)getInput()).getDiff());
+				snap.setMatchResourceSet((MatchResourceSet)((ModelCompareInput)getInput()).getMatch());
+				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			}
 			leftDirty |= !leftToRight && configuration.isLeftEditable();
 			rightDirty |= leftToRight && configuration.isRightEditable();
 			setLeftDirty(leftDirty);
@@ -392,8 +431,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Undoes the changes implied by the currently selected {@link DiffElement diff}.
 	 */
 	protected void copyDiffLeftToRight() {
-		if (currentSelection != null)
+		if (currentSelection != null) {
 			copy(currentSelection, true);
+		}
 		currentSelection.clear();
 		switchCopyState(false);
 	}
@@ -402,8 +442,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Applies the changes implied by the currently selected {@link DiffElement diff}.
 	 */
 	protected void copyDiffRightToLeft() {
-		if (currentSelection != null)
+		if (currentSelection != null) {
 			copy(currentSelection, false);
+		}
 		currentSelection.clear();
 		switchCopyState(false);
 	}
@@ -508,15 +549,16 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
 				.getLeftContent(getInput())).getObject();
-		if (!left)
+		if (!left) {
 			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
 					.getRightContent(getInput())).getObject();
+		}
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
 			root.eResource().save(stream, null);
 			contents = stream.toByteArray();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			EMFComparePlugin.log(e, false);
 		}
 
@@ -534,8 +576,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(diffs.size());
 
 		for (int i = 0; i < diffs.size(); i++) {
-			if (!DiffAdapterFactory.shouldBeHidden(diffs.get(i)))
+			if (!DiffAdapterFactory.shouldBeHidden(diffs.get(i))) {
 				visibleDiffs.add(diffs.get(i));
+			}
 		}
 
 		return visibleDiffs;
@@ -584,8 +627,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	@Override
 	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth,
 			int height) {
-		if (getCenterPart() != null)
+		if (getCenterPart() != null) {
 			getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
+		}
 		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
 		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
 		update();
@@ -602,14 +646,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final List<DiffElement> diffs = getVisibleDiffs();
 		if (diffs.size() != 0) {
 			final DiffElement theDiff;
-			if (currentSelection.size() > 0 && !(currentSelection.get(0) instanceof DiffGroup))
+			if (currentSelection.size() > 0 && !(currentSelection.get(0) instanceof DiffGroup)) {
 				theDiff = currentSelection.get(0);
-			else if (diffs.size() == 1)
+			} else if (diffs.size() == 1) {
 				theDiff = diffs.get(0);
-			else if (down)
+			} else if (down) {
 				theDiff = diffs.get(diffs.size() - 1);
-			else
+			} else {
 				theDiff = diffs.get(1);
+			}
 			for (int i = 0; i < diffs.size(); i++) {
 				if (diffs.get(i).equals(theDiff) && down) {
 					DiffElement next = diffs.get(0);
@@ -635,10 +680,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	}
 
 	/**
-	 * This will enable or disable the toolbar's copy actions according to the given <code>boolean</code>.
-	 * The "copy diff left to right" action will be enabled if <code>enable</code> is <code>True</code>,
-	 * but the "copy diff right to left" action will only be activated if <code>enable</code> is
-	 * <code>True</code> AND the left model isn't a remote model.
+	 * This will enable or disable the toolbar's copy actions according to the given <code>boolean</code>. The
+	 * "copy diff left to right" action will be enabled if <code>enable</code> is <code>True</code>, but the
+	 * "copy diff right to left" action will only be activated if <code>enable</code> is <code>True</code> AND
+	 * the left model isn't a remote model.
 	 * 
 	 * @param enabled
 	 *            <code>True</code> if we seek to enable the actions, <code>False</code> otherwise.
@@ -646,10 +691,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected void switchCopyState(boolean enabled) {
 		final boolean leftIsRemote = ModelComparator.getComparator(configuration).isLeftRemote();
 		final boolean rightIsRemote = ModelComparator.getComparator(configuration).isRightRemote();
-		if (copyDiffLeftToRight != null)
+		if (copyDiffLeftToRight != null) {
 			copyDiffLeftToRight.setEnabled(!rightIsRemote && enabled);
-		if (copyDiffRightToLeft != null)
+		}
+		if (copyDiffRightToLeft != null) {
 			copyDiffRightToLeft.setEnabled(!leftIsRemote && enabled);
+		}
 	}
 
 	/**
@@ -662,19 +709,30 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		Object ancestorObject = ancestor;
 		Object leftObject = left;
 		Object rightObject = right;
-		if (ancestorObject instanceof TypedElementWrapper)
-			ancestorObject = ((TypedElementWrapper)ancestorObject).getObject();
-		if (leftObject instanceof TypedElementWrapper)
-			leftObject = ((TypedElementWrapper)leftObject).getObject();
-		if (rightObject instanceof TypedElementWrapper)
-			rightObject = ((TypedElementWrapper)rightObject).getObject();
+		if (ancestorObject instanceof TypedElementWrapper) {
+			if (((TypedElementWrapper)ancestorObject).getObject() == null) {
+				ancestorObject = null;
+			} else {
+				ancestorObject = ((TypedElementWrapper)ancestorObject).getObject().eResource()
+						.getResourceSet();
+			}
+		}
+		if (leftObject instanceof TypedElementWrapper) {
+			leftObject = ((TypedElementWrapper)leftObject).getObject().eResource().getResourceSet();
+		}
+		if (rightObject instanceof TypedElementWrapper) {
+			rightObject = ((TypedElementWrapper)rightObject).getObject().eResource().getResourceSet();
+		}
 
-		if (ancestorObject != null)
+		if (ancestorObject != null) {
 			ancestorPart.setInput(ancestorObject);
-		if (leftObject != null)
+		}
+		if (leftObject != null) {
 			leftPart.setInput(leftObject);
-		if (rightObject != null)
+		}
+		if (rightObject != null) {
 			rightPart.setInput(rightObject);
+		}
 		update();
 	}
 
@@ -746,10 +804,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final Scrollable scroll1 = (Scrollable)parts[0].getControl();
 		final Scrollable scroll2 = (Scrollable)parts[1].getControl();
 		final Scrollable scroll3;
-		if (parts.length > 2)
+		if (parts.length > 2) {
 			scroll3 = (Scrollable)parts[2].getControl();
-		else
+		} else {
 			scroll3 = null;
+		}
 		final ScrollBar scrollBar1 = scroll1.getHorizontalBar();
 
 		scrollBar1.addSelectionListener(new SelectionAdapter() {
@@ -757,8 +816,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			public void widgetSelected(final SelectionEvent e) {
 				final int max = scrollBar1.getMaximum() - scrollBar1.getThumb();
 				double v = 0.0;
-				if (max > 0)
+				if (max > 0) {
 					v = (double)scrollBar1.getSelection() / (double)max;
+				}
 				if (scroll2.isVisible()) {
 					final ScrollBar scrollBar2 = scroll2.getHorizontalBar();
 					scrollBar2.setSelection((int)((scrollBar2.getMaximum() - scrollBar2.getThumb()) * v));
@@ -786,10 +846,11 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final Scrollable table1 = (Scrollable)parts[0].getControl();
 		final Scrollable table2 = (Scrollable)parts[1].getControl();
 		final Scrollable table3;
-		if (parts.length > 2)
+		if (parts.length > 2) {
 			table3 = (Scrollable)parts[2].getControl();
-		else
+		} else {
 			table3 = null;
+		}
 		final ScrollBar scrollBar1 = table1.getVerticalBar();
 
 		scrollBar1.addSelectionListener(new SelectionAdapter() {
@@ -797,8 +858,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			public void widgetSelected(final SelectionEvent e) {
 				final int max = scrollBar1.getMaximum() - scrollBar1.getThumb();
 				double v = 0.0;
-				if (max > 0)
+				if (max > 0) {
 					v = (double)scrollBar1.getSelection() / (double)max;
+				}
 				if (table2.isVisible()) {
 					final ScrollBar scrollBar2 = table2.getVerticalBar();
 					scrollBar2.setSelection((int)((scrollBar2.getMaximum() - scrollBar2.getThumb()) * v));

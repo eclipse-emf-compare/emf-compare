@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
@@ -102,9 +101,8 @@ public class ModelContentMergeTabFolder {
 	 */
 	public ModelContentMergeTabFolder(ModelContentMergeViewer viewer, Composite composite, int side) {
 		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
-				&& side != EMFCompareConstants.ANCESTOR) {
+				&& side != EMFCompareConstants.ANCESTOR)
 			throw new IllegalArgumentException(EMFCompareUIMessages.getString("IllegalSide", side)); //$NON-NLS-1$
-		}
 
 		parentViewer = viewer;
 		partSide = side;
@@ -380,7 +378,7 @@ public class ModelContentMergeTabFolder {
 	 */
 	protected EObject findMatchFromElement(EObject element) {
 		EObject theElement = null;
-		final MatchModel match = ((ModelCompareInput)parentViewer.getInput()).getMatch();
+		final EObject match = (EObject)((ModelCompareInput)parentViewer.getInput()).getMatch();
 
 		final TreeIterator<EObject> iterator = match.eAllContents();
 		while (iterator.hasNext()) {

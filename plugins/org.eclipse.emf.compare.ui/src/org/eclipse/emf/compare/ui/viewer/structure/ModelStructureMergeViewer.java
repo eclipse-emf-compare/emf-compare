@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,13 +18,14 @@ import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.AdapterUtils;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -80,8 +81,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * Returns the compare configuration of this viewer, or <code>null</code> if this viewer does not yet
-	 * have a configuration.
+	 * Returns the compare configuration of this viewer, or <code>null</code> if this viewer does not yet have
+	 * a configuration.
 	 * 
 	 * @return the compare configuration, or <code>null</code> if none
 	 */
@@ -105,8 +106,9 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	protected void createToolItems() {
 		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
-		if (exportMenu == null)
+		if (exportMenu == null) {
 			exportMenu = new ExportMenu(tbm.getControl(), this);
+		}
 		tbm.add(new Separator("IO")); //$NON-NLS-1$
 		tbm.appendToGroup("IO", exportMenu); //$NON-NLS-1$
 		tbm.update(true);
@@ -155,13 +157,13 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
 		final TreePath[] expandedPaths = getExpandedTreePaths();
-		
+
 		super.inputChanged(input, oldInput);
-		if (!(input instanceof ModelInputSnapshot) && input != oldInput) {
+		if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
 			setInput(ModelComparator.getComparator(configuration).getComparisonResult());
 		}
 		updateToolItems();
-		
+
 		setExpandedTreePaths(expandedPaths);
 	}
 
@@ -210,9 +212,10 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			public void widgetSelected(SelectionEvent e) {
 				final List<DiffElement> selectedElements = new ArrayList<DiffElement>(getTree()
 						.getSelection().length);
-				for (TreeItem item : getTree().getSelection())
-					if (item.getData() instanceof DiffElement)
+				for (final TreeItem item : getTree().getSelection())
+					if (item.getData() instanceof DiffElement) {
 						selectedElements.add((DiffElement)item.getData());
+					}
 				ignoreContentSelection = true;
 				configuration.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_SELECTION, selectedElements);
 			}
@@ -242,9 +245,9 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		 */
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(EMFCompareConstants.PROPERTY_CONTENT_SELECTION)) {
-				if (ignoreContentSelection)
+				if (ignoreContentSelection) {
 					ignoreContentSelection = false;
-				else {
+				} else {
 					TreeItem item = (TreeItem)find(event.getNewValue());
 					/*
 					 * if we could not find the item, we need to expand the whole tree to try and get it. This
@@ -329,6 +332,8 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			} else {
 				if (object instanceof IFile) {
 					text = ((IFile)object).getName();
+				} else if (object instanceof Resource) {
+					text = ((Resource)object).getURI().lastSegment();
 				} else {
 					text = adapterProvider.getText(object);
 				}
