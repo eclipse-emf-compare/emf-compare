@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,13 +54,13 @@ public interface MatchFactory extends EFactory {
 	UnmatchElement createUnmatchElement();
 
 	/**
-	 * Returns a new object of class '<em>Remote Unmatch Element</em>'.
+	 * Returns a new object of class '<em>Resource Set</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Unmatch Element</em>'.
+	 * @return a new object of class '<em>Resource Set</em>'.
 	 * @generated
 	 */
-	RemoteUnmatchElement createRemoteUnmatchElement();
+	MatchResourceSet createMatchResourceSet();
 
 	/**
 	 * Returns a new object of class '<em>Model</em>'.
@@ -69,6 +69,15 @@ public interface MatchFactory extends EFactory {
 	 * @generated
 	 */
 	MatchModel createMatchModel();
+
+	/**
+	 * Returns a new object of class '<em>Unmatch Model</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Unmatch Model</em>'.
+	 * @generated
+	 */
+	UnmatchModel createUnmatchModel();
 
 	/**
 	 * Returns the package supported by this factory.

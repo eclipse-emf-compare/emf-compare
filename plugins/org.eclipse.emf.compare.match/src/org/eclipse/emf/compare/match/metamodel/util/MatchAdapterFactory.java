@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,9 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -50,6 +51,16 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseUnmatchModel(UnmatchModel object) {
+			return createUnmatchModelAdapter();
+		}
+
+		@Override
+		public Adapter caseMatchResourceSet(MatchResourceSet object) {
+			return createMatchResourceSetAdapter();
+		}
+
+		@Override
 		public Adapter caseMatchElement(MatchElement object) {
 			return createMatchElementAdapter();
 		}
@@ -67,11 +78,6 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 		@Override
 		public Adapter caseUnmatchElement(UnmatchElement object) {
 			return createUnmatchElementAdapter();
-		}
-
-		@Override
-		public Adapter caseRemoteUnmatchElement(RemoteUnmatchElement object) {
-			return createRemoteUnmatchElementAdapter();
 		}
 
 		@Override
@@ -159,15 +165,15 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * Creates a new adapter for an object of class '
-	 * {@link org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement <em>Remote Unmatch Element</em>}'.
-	 * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * {@link org.eclipse.emf.compare.match.metamodel.MatchResourceSet <em>Resource Set</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchResourceSet
 	 * @generated
 	 */
-	public Adapter createRemoteUnmatchElementAdapter() {
+	public Adapter createMatchResourceSetAdapter() {
 		return null;
 	}
 
@@ -196,6 +202,20 @@ public class MatchAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMatchModelAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link org.eclipse.emf.compare.match.metamodel.UnmatchModel <em>Unmatch Model</em>}'. <!--
+	 * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.match.metamodel.UnmatchModel
+	 * @generated
+	 */
+	public Adapter createUnmatchModelAdapter() {
 		return null;
 	}
 

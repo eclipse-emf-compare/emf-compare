@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,11 +87,63 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addLeftModelPropertyDescriptor(object);
-			addRightModelPropertyDescriptor(object);
-			addOriginModelPropertyDescriptor(object);
+			addLeftRootsPropertyDescriptor(object);
+			addRightRootsPropertyDescriptor(object);
+			addAncestorRootsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Left Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addLeftRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_leftRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchModel_leftRoots_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.MATCH_MODEL__LEFT_ROOTS, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addRightRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_rightRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchModel_rightRoots_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.MATCH_MODEL__RIGHT_ROOTS, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Ancestor Roots feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addAncestorRootsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_MatchModel_ancestorRoots_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_MatchModel_ancestorRoots_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.MATCH_MODEL__ANCESTOR_ROOTS, true, false, true, null, null,
+						null));
 	}
 
 	/**
@@ -112,9 +164,7 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((MatchModel)object).getLeftModel();
-		return label == null || label.length() == 0 ? getString("_UI_MatchModel_type") : //$NON-NLS-1$
-				getString("_UI_MatchModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_MatchModel_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -129,12 +179,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(MatchModel.class)) {
-			case MatchPackage.MATCH_MODEL__LEFT_MODEL:
-			case MatchPackage.MATCH_MODEL__RIGHT_MODEL:
-			case MatchPackage.MATCH_MODEL__ORIGIN_MODEL:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
-						true));
-				return;
 			case MatchPackage.MATCH_MODEL__MATCHED_ELEMENTS:
 			case MatchPackage.MATCH_MODEL__UNMATCHED_ELEMENTS:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
@@ -142,63 +186,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 				return;
 		}
 		super.notifyChanged(notification);
-	}
-
-	/**
-	 * This adds a property descriptor for the Left Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addLeftModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_leftModel_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_MatchModel_leftModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.MATCH_MODEL__LEFT_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Origin Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addOriginModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_originModel_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_MatchModel_originModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.MATCH_MODEL__ORIGIN_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Right Model feature. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unused")
-	protected void addRightModelPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_MatchModel_rightModel_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_MatchModel_rightModel_feature", "_UI_MatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.MATCH_MODEL__RIGHT_MODEL, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -219,9 +206,6 @@ public class MatchModelItemProvider extends ItemProviderAdapter implements IEdit
 
 		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UNMATCHED_ELEMENTS,
 				MatchFactory.eINSTANCE.createUnmatchElement()));
-
-		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_MODEL__UNMATCHED_ELEMENTS,
-				MatchFactory.eINSTANCE.createRemoteUnmatchElement()));
 	}
 
 	/**

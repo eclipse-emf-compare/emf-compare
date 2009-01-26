@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Obeo.
+ * Copyright (c) 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,40 +10,43 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.metamodel.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.compare.match.metamodel.Side;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Unmatch Element</b></em>'. <!--
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Unmatch Model</b></em>'. <!--
  * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#getElement <em>Element</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#isRemote <em>Remote</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#getSide <em>Side</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchModelImpl#getRoots <em>Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchModelImpl#isRemote <em>Remote</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchModelImpl#getSide <em>Side</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
+public class UnmatchModelImpl extends EObjectImpl implements UnmatchModel {
 	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
+	 * The cached value of the '{@link #getRoots() <em>Roots</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getElement()
+	 * @see #getRoots()
 	 * @generated
 	 * @ordered
 	 */
-	protected EObject element;
+	protected EList<EObject> roots;
 
 	/**
 	 * The default value of the '{@link #isRemote() <em>Remote</em>}' attribute.
@@ -67,8 +70,8 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 
 	/**
 	 * The default value of the '{@link #getSide() <em>Side</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getSide()
 	 * @generated
 	 * @ordered
@@ -77,8 +80,8 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 
 	/**
 	 * The cached value of the '{@link #getSide() <em>Side</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * @see #getSide()
 	 * @generated
 	 * @ordered
@@ -89,7 +92,7 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected UnmatchElementImpl() {
+	protected UnmatchModelImpl() {
 		super();
 	}
 
@@ -99,44 +102,18 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return MatchPackage.Literals.UNMATCH_ELEMENT;
+		return MatchPackage.Literals.UNMATCH_MODEL;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EObject getElement() {
-		if (element != null && element.eIsProxy()) {
-			InternalEObject oldElement = (InternalEObject)element;
-			element = eResolveProxy(oldElement);
-			if (element != oldElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							MatchPackage.UNMATCH_ELEMENT__ELEMENT, oldElement, element));
-			}
+	public EList<EObject> getRoots() {
+		if (roots == null) {
+			roots = new EObjectResolvingEList<EObject>(EObject.class, this, MatchPackage.UNMATCH_MODEL__ROOTS);
 		}
-		return element;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EObject basicGetElement() {
-		return element;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setElement(EObject newElement) {
-		EObject oldElement = element;
-		element = newElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_ELEMENT__ELEMENT,
-					oldElement, element));
+		return roots;
 	}
 
 	/**
@@ -157,13 +134,12 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 		boolean oldRemote = remote;
 		remote = newRemote;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_ELEMENT__REMOTE,
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_MODEL__REMOTE,
 					oldRemote, remote));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public Side getSide() {
@@ -171,16 +147,15 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setSide(Side newSide) {
 		Side oldSide = side;
 		side = newSide == null ? SIDE_EDEFAULT : newSide;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_ELEMENT__SIDE,
-					oldSide, side));
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_MODEL__SIDE, oldSide,
+					side));
 	}
 
 	/**
@@ -190,13 +165,11 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
-				if (resolve)
-					return getElement();
-				return basicGetElement();
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
+			case MatchPackage.UNMATCH_MODEL__ROOTS:
+				return getRoots();
+			case MatchPackage.UNMATCH_MODEL__REMOTE:
 				return isRemote() ? Boolean.TRUE : Boolean.FALSE;
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
+			case MatchPackage.UNMATCH_MODEL__SIDE:
 				return getSide();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -206,16 +179,18 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
-				setElement((EObject)newValue);
+			case MatchPackage.UNMATCH_MODEL__ROOTS:
+				getRoots().clear();
+				getRoots().addAll((Collection<? extends EObject>)newValue);
 				return;
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
+			case MatchPackage.UNMATCH_MODEL__REMOTE:
 				setRemote(((Boolean)newValue).booleanValue());
 				return;
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
+			case MatchPackage.UNMATCH_MODEL__SIDE:
 				setSide((Side)newValue);
 				return;
 		}
@@ -229,13 +204,13 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
-				setElement((EObject)null);
+			case MatchPackage.UNMATCH_MODEL__ROOTS:
+				getRoots().clear();
 				return;
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
+			case MatchPackage.UNMATCH_MODEL__REMOTE:
 				setRemote(REMOTE_EDEFAULT);
 				return;
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
+			case MatchPackage.UNMATCH_MODEL__SIDE:
 				setSide(SIDE_EDEFAULT);
 				return;
 		}
@@ -249,19 +224,18 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
-				return element != null;
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
+			case MatchPackage.UNMATCH_MODEL__ROOTS:
+				return roots != null && !roots.isEmpty();
+			case MatchPackage.UNMATCH_MODEL__REMOTE:
 				return remote != REMOTE_EDEFAULT;
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
+			case MatchPackage.UNMATCH_MODEL__SIDE:
 				return side != SIDE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -278,4 +252,4 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 		return result.toString();
 	}
 
-} // UnmatchElementImpl
+} // UnmatchModelImpl

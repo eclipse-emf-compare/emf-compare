@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Obeo.
+ * Copyright (c) 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,32 +16,32 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
-import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnmatchElement} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.MatchResourceSet} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class UnmatchElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class MatchResourceSetItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 */
-	public UnmatchElementItemProvider(AdapterFactory adapterFactory) {
+	public MatchResourceSetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -56,73 +56,48 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addElementPropertyDescriptor(object);
-			addRemotePropertyDescriptor(object);
-			addSidePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Element feature.
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(MatchPackage.Literals.MATCH_RESOURCE_SET__MATCH_MODELS);
+			childrenFeatures.add(MatchPackage.Literals.MATCH_RESOURCE_SET__UNMATCHED_MODELS);
+		}
+		return childrenFeatures;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addElementPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
-						.getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UnmatchElement_element_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_element_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__ELEMENT, true, false, true, null, null, null));
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
-	 * This adds a property descriptor for the Remote feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addRemotePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UnmatchElement_remote_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_remote_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__REMOTE, true, false, false,
-						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Side feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addSidePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_UnmatchElement_side_feature"), //$NON-NLS-1$
-						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_side_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__SIDE, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This returns UnmatchElement.gif.
+	 * This returns MatchResourceSet.gif.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnmatchElement")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/MatchResourceSet")); //$NON-NLS-1$
 	}
 
 	/**
@@ -132,8 +107,7 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	 */
 	@Override
 	public String getText(Object object) {
-		UnmatchElement unmatchElement = (UnmatchElement)object;
-		return getString("_UI_UnmatchElement_type") + " " + unmatchElement.isRemote(); //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_MatchResourceSet_type"); //$NON-NLS-1$
 	}
 
 	/**
@@ -147,11 +121,11 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(UnmatchElement.class)) {
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
-				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
-						true));
+		switch (notification.getFeatureID(MatchResourceSet.class)) {
+			case MatchPackage.MATCH_RESOURCE_SET__MATCH_MODELS:
+			case MatchPackage.MATCH_RESOURCE_SET__UNMATCHED_MODELS:
+				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true,
+						false));
 				return;
 		}
 		super.notifyChanged(notification);
@@ -166,6 +140,13 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add(createChildParameter(MatchPackage.Literals.MATCH_RESOURCE_SET__MATCH_MODELS,
+				MatchFactory.eINSTANCE.createMatchModel()));
+
+		newChildDescriptors.add(createChildParameter(
+				MatchPackage.Literals.MATCH_RESOURCE_SET__UNMATCHED_MODELS, MatchFactory.eINSTANCE
+						.createUnmatchModel()));
 	}
 
 	/**

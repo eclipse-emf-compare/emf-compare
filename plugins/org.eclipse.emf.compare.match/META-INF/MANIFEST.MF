@@ -23,3 +23,4 @@ Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
 Eclipse-LazyStart: true
 Bundle-Activator: org.eclipse.emf.compare.match.MatchPlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy

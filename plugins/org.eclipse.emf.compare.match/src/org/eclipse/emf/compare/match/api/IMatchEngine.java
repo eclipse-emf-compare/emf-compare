@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,13 +15,7 @@ import java.util.Map;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 
-/* FIXME ResourceSetMatch **CANNOT** be implemented in a match engine! The
- * MatchService needs to parse its extension point and call the accurate match
- * method on each model (distinct extension!!!) for each resource contained
- * by the resource set!
- */ 
 /**
  * A Match Engine is responsible for returning a match model from a set of models. The resulting match model
  * is then used to create a diff between the two models.
@@ -40,8 +34,8 @@ public interface IMatchEngine {
 	 * @param ancestor
 	 *            Common ancestor of the two others.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return {@link MatchModel} for these three objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -61,8 +55,8 @@ public interface IMatchEngine {
 	 * @param rightRoot
 	 *            Right of the two objects to compare.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -83,8 +77,8 @@ public interface IMatchEngine {
 	 * @param ancestor
 	 *            Common ancestor of the right and left models.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -103,8 +97,8 @@ public interface IMatchEngine {
 	 * @param rightRoot
 	 *            Right model for the comparison.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -129,8 +123,8 @@ public interface IMatchEngine {
 	 * @param rightResource
 	 *            Right compared resource.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -151,8 +145,8 @@ public interface IMatchEngine {
 	 * @param ancestorResource
 	 *            Common ancestor of the two compared resources.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
+	 *            will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
@@ -162,46 +156,4 @@ public interface IMatchEngine {
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException;
-
-	/**
-	 * This method returns a MatchModel for two resourceSets.
-	 * 
-	 * @param leftResourceSet
-	 *            Left compared resourceSet.
-	 * @param rightResourceSet
-	 *            Right compared resourceSet.
-	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
-	 * @return The corresponding {@link MatchModel}.
-	 * @throws InterruptedException
-	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
-	 *             somehow.
-	 * @see MatchOptions
-	 * @since 0.9.0
-	 */
-	MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
-			Map<String, Object> optionMap) throws InterruptedException;
-
-	/**
-	 * This method returns a MatchModel for three resourceSets.
-	 * 
-	 * @param leftResourceSet
-	 *            Left compared resourceSet.
-	 * @param rightResourceSet
-	 *            Right compared resourceSet.
-	 * @param ancestorResourceSet
-	 *            Common ancestor of the two compared resources.
-	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or
-	 *            {@link Collections#EMPTY_MAP} will result in the default options to be used.
-	 * @return The corresponding {@link MatchModel}.
-	 * @throws InterruptedException
-	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
-	 *             somehow.
-	 * @see MatchOptions
-	 * @since 0.9.0
-	 */
-	MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
-			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) throws InterruptedException;
 }

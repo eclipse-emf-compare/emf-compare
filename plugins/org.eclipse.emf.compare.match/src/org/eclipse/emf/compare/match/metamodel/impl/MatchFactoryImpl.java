@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,12 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
+import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
@@ -76,17 +79,51 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 		switch (eClass.getClassifierID()) {
 			case MatchPackage.MATCH_MODEL:
 				return createMatchModel();
+			case MatchPackage.UNMATCH_MODEL:
+				return createUnmatchModel();
+			case MatchPackage.MATCH_RESOURCE_SET:
+				return createMatchResourceSet();
 			case MatchPackage.MATCH2_ELEMENTS:
 				return createMatch2Elements();
 			case MatchPackage.MATCH3_ELEMENTS:
 				return createMatch3Elements();
 			case MatchPackage.UNMATCH_ELEMENT:
 				return createUnmatchElement();
-			case MatchPackage.REMOTE_UNMATCH_ELEMENT:
-				return createRemoteUnmatchElement();
 			default:
 				throw new IllegalArgumentException(
 						"The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object createFromString(EDataType eDataType, String initialValue) {
+		switch (eDataType.getClassifierID()) {
+			case MatchPackage.SIDE:
+				return createSideFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String convertToString(EDataType eDataType, Object instanceValue) {
+		switch (eDataType.getClassifierID()) {
+			case MatchPackage.SIDE:
+				return convertSideToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException(
+						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -125,9 +162,32 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	 * 
 	 * @generated
 	 */
-	public RemoteUnmatchElement createRemoteUnmatchElement() {
-		final RemoteUnmatchElementImpl remoteUnmatchElement = new RemoteUnmatchElementImpl();
-		return remoteUnmatchElement;
+	public MatchResourceSet createMatchResourceSet() {
+		final MatchResourceSetImpl matchResourceSet = new MatchResourceSetImpl();
+		return matchResourceSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Side createSideFromString(EDataType eDataType, String initialValue) {
+		final Side result = Side.get(initialValue);
+		if (result == null) {
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertSideToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**
@@ -138,6 +198,16 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	public MatchModel createMatchModel() {
 		final MatchModelImpl matchModel = new MatchModelImpl();
 		return matchModel;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public UnmatchModel createUnmatchModel() {
+		final UnmatchModelImpl unmatchModel = new UnmatchModelImpl();
+		return unmatchModel;
 	}
 
 	/**

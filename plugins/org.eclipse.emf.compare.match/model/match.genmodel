@@ -12,12 +12,25 @@
       interfacePackageSuffix="metamodel" metaDataPackageSuffix="metamodel" classPackageSuffix="metamodel.impl"
       utilityPackageSuffix="metamodel.util" providerPackageSuffix="metamodel.provider"
       ecorePackage="match.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="match.ecore#//Side">
+      <genEnumLiterals ecoreEnumLiteral="match.ecore#//Side/Left"/>
+      <genEnumLiterals ecoreEnumLiteral="match.ecore#//Side/Right"/>
+    </genEnums>
     <genClasses ecoreClass="match.ecore#//MatchModel">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchModel/leftModel"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchModel/rightModel"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchModel/originModel"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/matchedElements"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/unmatchedElements"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/leftRoots"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/rightRoots"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//MatchModel/ancestorRoots"/>
+    </genClasses>
+    <genClasses ecoreClass="match.ecore#//UnmatchModel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//UnmatchModel/roots"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchModel/remote"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchModel/side"/>
+    </genClasses>
+    <genClasses ecoreClass="match.ecore#//MatchResourceSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchResourceSet/matchModels"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference match.ecore#//MatchResourceSet/unmatchedModels"/>
     </genClasses>
     <genClasses image="false" ecoreClass="match.ecore#//MatchElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//MatchElement/similarity"/>
@@ -32,7 +45,8 @@
     </genClasses>
     <genClasses ecoreClass="match.ecore#//UnmatchElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//UnmatchElement/element"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchElement/remote"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchElement/side"/>
     </genClasses>
-    <genClasses ecoreClass="match.ecore#//RemoteUnmatchElement"/>
   </genPackages>
 </genmodel:GenModel>

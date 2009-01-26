@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -161,6 +161,20 @@ public final class NameSimilarity {
 		if (str1 != null && str2 != null) {
 			if (str1.equals(str2)) {
 				result = 1d;
+			} else if (str1.length() <= 2 && str2.length() <= 2) {
+				int equalChars = 0;
+				final char[] str1Value = str1.toCharArray();
+				final char[] str2Value = str2.toCharArray();
+				for (int i = 0; i < Math.max(str1Value.length, str2Value.length); i++) {
+					if (str1Value[i] == str2Value[i]) {
+						equalChars++;
+					}
+				}
+				if (str1Value.length != str2Value.length) {
+					result = equalChars / (str1Value.length + str2Value.length);
+				} else {
+					result = equalChars * 2d / (str1Value.length + str2Value.length);
+				}
 			} else if (str1.length() != 1 && str2.length() != 1) {
 				final String string1 = str1.toLowerCase();
 				final String string2 = str2.toLowerCase();

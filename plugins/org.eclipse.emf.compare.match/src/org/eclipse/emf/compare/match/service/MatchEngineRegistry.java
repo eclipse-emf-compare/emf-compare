@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.EcoreMatchEngine;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
@@ -148,10 +149,9 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 				values.add(value);
 				super.put(key, values);
 			}
-		} else {
-			throw new IllegalArgumentException("Cannot add value of type " + value.getClass().getName()
-					+ " in the Match engines registry.");
-		}
+		} else
+			throw new IllegalArgumentException(EMFCompareMatchMessages.getString(
+					"MatchEngineRegistry.IllegalEngine", value.getClass().getName())); //$NON-NLS-1$
 	}
 
 	/**

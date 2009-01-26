@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementsImpl#getOriginElement <em>Origin
- * Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.Match3ElementsImpl#getOriginElement <em>Origin Element</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elements {
@@ -44,7 +43,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected Match3ElementsImpl() {
@@ -53,7 +51,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -63,18 +60,16 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getOriginElement() {
 		if (originElement != null && originElement.eIsProxy()) {
-			final InternalEObject oldOriginElement = (InternalEObject)originElement;
+			InternalEObject oldOriginElement = (InternalEObject)originElement;
 			originElement = eResolveProxy(oldOriginElement);
 			if (originElement != oldOriginElement) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							MatchPackage.MATCH3_ELEMENTS__ORIGIN_ELEMENT, oldOriginElement, originElement));
-				}
 			}
 		}
 		return originElement;
@@ -82,7 +77,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetOriginElement() {
@@ -91,21 +85,18 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setOriginElement(EObject newOriginElement) {
-		final EObject oldOriginElement = originElement;
+		EObject oldOriginElement = originElement;
 		originElement = newOriginElement;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					MatchPackage.MATCH3_ELEMENTS__ORIGIN_ELEMENT, oldOriginElement, originElement));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -121,7 +112,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -136,7 +126,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,7 +140,6 @@ public class Match3ElementsImpl extends Match2ElementsImpl implements Match3Elem
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

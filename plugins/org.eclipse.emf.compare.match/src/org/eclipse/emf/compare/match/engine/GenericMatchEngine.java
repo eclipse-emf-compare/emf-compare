@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
@@ -44,7 +44,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
@@ -232,11 +231,13 @@ public class GenericMatchEngine implements IMatchEngine {
 			final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
 			for (final EObject unmatch : stillToFindFromModel1) {
 				unmatchedElements.put(unmatch, false);
+				createThreeWayUnmatchElements(root, unmatchedElements, true);
 			}
+			unmatchedElements.clear();
 			for (final EObject remoteUnmatch : stillToFindFromModel2) {
 				unmatchedElements.put(remoteUnmatch, true);
+				createThreeWayUnmatchElements(root, unmatchedElements, false);
 			}
-			createThreeWayUnmatchElements(root, unmatchedElements);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		} catch (final InterruptedException e) {
@@ -287,14 +288,15 @@ public class GenericMatchEngine implements IMatchEngine {
 						new ArrayList<EObject>(stillToFindFromModel2), monitor);
 				still1.addAll(stillToFindFromModel1);
 				still2.addAll(stillToFindFromModel2);
-				createUnmatchElements(root, still1);
-				createUnmatchElements(root, still2);
+				createUnmatchElements(root, still1, true, false);
+				createUnmatchElements(root, still2, false, false);
 			} else {
 				// The two objects passed as this method's parameters are not
 				// similar. Creates unmatch root.
 				still1.add(leftObject);
-				still1.add(rightObject);
-				createUnmatchElements(root, still1);
+				still2.add(rightObject);
+				createUnmatchElements(root, still1, true, false);
+				createUnmatchElements(root, still2, false, false);
 			}
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
@@ -328,7 +330,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				size++;
 			}
 		}
-		startMonitor(monitor, size * 2);
+		startMonitor(monitor, size << 1);
 
 		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
 
@@ -437,37 +439,10 @@ public class GenericMatchEngine implements IMatchEngine {
 				size++;
 			}
 		}
-		startMonitor(monitor, size * 2);
+		startMonitor(monitor, size << 1);
 
 		result = doMatch(leftResource, rightResource, ancestorResource, monitor);
 		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceSetMatch(org.eclipse.emf.ecore.resource.ResourceSet,
-	 *      org.eclipse.emf.ecore.resource.ResourceSet, java.util.Map)
-	 */
-	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
-			Map<String, Object> optionMap) {
-		// TODO this should be implemented. It will break both match and diff
-		// MMs so wait till 0.9/1.0.
-		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceSetMatch(org.eclipse.emf.ecore.resource.ResourceSet,
-	 *      org.eclipse.emf.ecore.resource.ResourceSet, org.eclipse.emf.ecore.resource.ResourceSet,
-	 *      java.util.Map)
-	 */
-	public MatchModel resourceSetMatch(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
-			ResourceSet ancestorResourceSet, Map<String, Object> optionMap) {
-		// TODO this should be implemented. It will break both match and diff
-		// MMs so wait till 0.9/1.0.
-		throw new UnsupportedOperationException("Not implemented yet."); //$NON-NLS-1$
 	}
 
 	/**
@@ -899,22 +874,27 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Root of the {@link MatchModel} under which to insert all these elements.
 	 * @param unmatchedElements
 	 *            {@link List} containing all the elements we haven't been able to match.
+	 * @param leftSide
+	 *            If set to <code>true</code>, the unmatched element will be set to be from the left side.
 	 * @throws FactoryException
 	 *             Thrown if we cannot add elements under the given {@link MatchModel root}.
 	 */
-	private void createThreeWayUnmatchElements(MatchModel root, Map<EObject, Boolean> unmatchedElements)
-			throws FactoryException {
+	private void createThreeWayUnmatchElements(MatchModel root, Map<EObject, Boolean> unmatchedElements,
+			boolean leftSide) throws FactoryException {
 		for (final EObject element : unmatchedElements.keySet()) {
 			// We will only consider the highest level of an unmatched element
 			// hierarchy
 			if (!unmatchedElements.containsKey(element.eContainer())) {
-				final UnmatchElement unMap;
-				if (unmatchedElements.get(element)) {
-					unMap = MatchFactory.eINSTANCE.createRemoteUnmatchElement();
-				} else {
-					unMap = MatchFactory.eINSTANCE.createUnmatchElement();
-				}
+				final UnmatchElement unMap = MatchFactory.eINSTANCE.createUnmatchElement();
 				unMap.setElement(element);
+				if (unmatchedElements.get(element)) {
+					unMap.setRemote(true);
+				}
+				if (leftSide) {
+					unMap.setSide(Side.LEFT);
+				} else {
+					unMap.setSide(Side.RIGHT);
+				}
 				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
 			}
 		}
@@ -928,14 +908,24 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Root of the {@link MatchModel} under which to insert all these {@link UnmatchElement}s.
 	 * @param unmatchedElements
 	 *            {@link Set} containing all the elements we haven't been able to match.
+	 * @param leftSide
+	 *            If set to <code>true</code>, the unmatched elements will be set to be from the left side.
+	 * @param remote
+	 *            If <code>true</code>, the unmatched elements will be set to reflect a remote change.
 	 * @throws FactoryException
 	 *             Thrown if we cannot add elements under the given {@link MatchModel root}.
 	 */
-	private void createUnmatchElements(MatchModel root, Set<EObject> unmatchedElements)
-			throws FactoryException {
+	private void createUnmatchElements(MatchModel root, Set<EObject> unmatchedElements, boolean leftSide,
+			boolean remote) throws FactoryException {
 		for (final EObject element : unmatchedElements) {
 			final UnmatchElement unMap = MatchFactory.eINSTANCE.createUnmatchElement();
 			unMap.setElement(element);
+			unMap.setRemote(remote);
+			if (leftSide) {
+				unMap.setSide(Side.LEFT);
+			} else {
+				unMap.setSide(Side.RIGHT);
+			}
 			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
 		}
 		unmatchedElements.clear();
@@ -1041,8 +1031,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			// Now takes care of remaining unfound elements
 			still1.addAll(stillToFindFromModel1);
 			still2.addAll(stillToFindFromModel2);
-			createUnmatchElements(root, still1);
-			createUnmatchElements(root, still2);
+			createUnmatchElements(root, still1, true, false);
+			createUnmatchElements(root, still2, false, false);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
@@ -1138,11 +1128,13 @@ public class GenericMatchEngine implements IMatchEngine {
 			final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
 			for (final EObject unmatch : stillToFindFromModel1) {
 				unmatchedElements.put(unmatch, false);
+				createThreeWayUnmatchElements(root, unmatchedElements, true);
 			}
+			unmatchedElements.clear();
 			for (final EObject remoteUnmatch : stillToFindFromModel2) {
 				unmatchedElements.put(remoteUnmatch, true);
+				createThreeWayUnmatchElements(root, unmatchedElements, false);
 			}
-			createThreeWayUnmatchElements(root, unmatchedElements);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
@@ -1174,7 +1166,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	@SuppressWarnings("unchecked")
 	private List<EObject> getContents(EObject eObject) {
 		// TODO can this be cached (Map<EClass, List<EReference>>)?
-		final List<EObject> result = new ArrayList(eObject.eContents());
+		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
 		for (final EReference reference : eObject.eClass().getEAllReferences()) {
 			if (reference.isContainment() && reference.isDerived()) {
 				final Object value = eObject.eGet(reference);
@@ -1520,7 +1512,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * 
 	 * @param eobj
 	 *            {@link EObject} we need to count the empty features of.
-	 * @return The number of features initialized to <code>null</code> or the empty String.
+	 * @return The number of features not initialized to <code>null</code> or the empty String.
 	 */
 	private int nonNullFeaturesCount(EObject eobj) {
 		Integer nonNullFeatures = nonNullFeatureCounts.get(eobj);
@@ -1622,8 +1614,10 @@ public class GenericMatchEngine implements IMatchEngine {
 		for (final EObject eObj : new ArrayList<EObject>(stillToFindFromModel1)) {
 			if (eObj instanceof Match2Elements) {
 				final Match2Elements nextRightNotFound = (Match2Elements)eObj;
-				final RemoteUnmatchElement unmatch = MatchFactory.eINSTANCE.createRemoteUnmatchElement();
+				final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
 				unmatch.setElement(nextRightNotFound.getLeftElement());
+				unmatch.setSide(Side.LEFT);
+				unmatch.setRemote(true);
 				remainingUnmatchedElements.remove(nextRightNotFound.getLeftElement());
 				remainingUnmatchedElements.remove(nextRightNotFound.getRightElement());
 				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
@@ -1634,6 +1628,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements nextLeftNotFound = (Match2Elements)eObj;
 				final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
 				unmatch.setElement(nextLeftNotFound.getLeftElement());
+				unmatch.setSide(Side.RIGHT);
 				remainingUnmatchedElements.remove(nextLeftNotFound.getLeftElement());
 				remainingUnmatchedElements.remove(nextLeftNotFound.getRightElement());
 				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
@@ -1750,14 +1745,14 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void setModelURIs(MatchModel modelRoot, Resource left, Resource right, Resource ancestor) {
 		// Sets values of left, right and ancestor model URIs
-		if (left != null && left.getURI() != null) {
-			modelRoot.setLeftModel(left.getURI().toString());
+		if (left != null) {
+			modelRoot.getLeftRoots().addAll(left.getContents());
 		}
-		if (right != null && right.getURI() != null) {
-			modelRoot.setRightModel(right.getURI().toString());
+		if (right != null) {
+			modelRoot.getRightRoots().addAll(right.getContents());
 		}
-		if (ancestor != null && ancestor.getURI() != null) {
-			modelRoot.setOriginModel(ancestor.getURI().toString());
+		if (ancestor != null) {
+			modelRoot.getAncestorRoots().addAll(ancestor.getContents());
 		}
 	}
 

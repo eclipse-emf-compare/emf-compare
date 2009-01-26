@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,9 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.RemoteUnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
@@ -97,17 +98,17 @@ public class MatchSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Remote Unmatch Element</em>'. <!--
+	 * Returns the result of interpreting the object as an instance of '<em>Resource Set</em>'. <!--
 	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
 	 * switch. <!-- end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Remote Unmatch Element</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Resource Set</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseRemoteUnmatchElement(RemoteUnmatchElement object) {
+	public T caseMatchResourceSet(MatchResourceSet object) {
 		return null;
 	}
 
@@ -128,18 +129,33 @@ public class MatchSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpretting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
-	 * @return the result of interpretting the object as an instance of '<em>Model</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
 	public T caseMatchModel(MatchModel object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Unmatch Model</em>'. <!--
+	 * begin-user-doc --> This implementation returns null; returning a non-null result will terminate the
+	 * switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Unmatch Model</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUnmatchModel(UnmatchModel object) {
 		return null;
 	}
 
@@ -203,6 +219,22 @@ public class MatchSwitch<T> {
 				}
 				return result;
 			}
+			case MatchPackage.UNMATCH_MODEL: {
+				final UnmatchModel unmatchModel = (UnmatchModel)theEObject;
+				T result = caseUnmatchModel(unmatchModel);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
+			case MatchPackage.MATCH_RESOURCE_SET: {
+				final MatchResourceSet matchResourceSet = (MatchResourceSet)theEObject;
+				T result = caseMatchResourceSet(matchResourceSet);
+				if (result == null) {
+					result = defaultCase(theEObject);
+				}
+				return result;
+			}
 			case MatchPackage.MATCH_ELEMENT: {
 				final MatchElement matchElement = (MatchElement)theEObject;
 				T result = caseMatchElement(matchElement);
@@ -239,17 +271,6 @@ public class MatchSwitch<T> {
 			case MatchPackage.UNMATCH_ELEMENT: {
 				final UnmatchElement unmatchElement = (UnmatchElement)theEObject;
 				T result = caseUnmatchElement(unmatchElement);
-				if (result == null) {
-					result = defaultCase(theEObject);
-				}
-				return result;
-			}
-			case MatchPackage.REMOTE_UNMATCH_ELEMENT: {
-				final RemoteUnmatchElement remoteUnmatchElement = (RemoteUnmatchElement)theEObject;
-				T result = caseRemoteUnmatchElement(remoteUnmatchElement);
-				if (result == null) {
-					result = caseUnmatchElement(remoteUnmatchElement);
-				}
 				if (result == null) {
 					result = defaultCase(theEObject);
 				}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel <em>Left Model</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel <em>Right Model</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel <em>Origin Model</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getMatchedElements <em>Matched Elements</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getUnmatchedElements <em>Unmatched Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftRoots <em>Left Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightRoots <em>Right Roots</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getAncestorRoots <em>Ancestor Roots</em>}</li>
  * </ul>
  * </p>
  *
@@ -33,22 +33,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface MatchModel extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Left Model</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Left Model</em>' attribute isn't clear, there really should be more of a
-	 * description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Left Model</em>' attribute.
-	 * @see #setLeftModel(String)
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_LeftModel()
-	 * @model unique="false" required="true" ordered="false"
-	 * @generated
-	 */
-	String getLeftModel();
-
 	/**
 	 * Returns the value of the '<em><b>Matched Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.emf.compare.match.metamodel.MatchElement}.
@@ -83,62 +67,51 @@ public interface MatchModel extends EObject {
 	EList<UnmatchElement> getUnmatchedElements();
 
 	/**
-	 * Returns the value of the '<em><b>Origin Model</b></em>' attribute.
+	 * Returns the value of the '<em><b>Left Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Origin Model</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Left Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Origin Model</em>' attribute.
-	 * @see #setOriginModel(String)
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_OriginModel()
-	 * @model unique="false" required="true" ordered="false"
+	 * @return the value of the '<em>Left Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_LeftRoots()
+	 * @model
 	 * @generated
 	 */
-	String getOriginModel();
+	EList<EObject> getLeftRoots();
 
 	/**
-	 * Returns the value of the '<em><b>Right Model</b></em>' attribute.
+	 * Returns the value of the '<em><b>Right Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Right Model</em>' attribute isn't clear, there really should be more of
-	 * a description here...
+	 * If the meaning of the '<em>Right Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Right Model</em>' attribute.
-	 * @see #setRightModel(String)
-	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_RightModel()
-	 * @model unique="false" required="true" ordered="false"
+	 * @return the value of the '<em>Right Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_RightRoots()
+	 * @model
 	 * @generated
 	 */
-	String getRightModel();
+	EList<EObject> getRightRoots();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getLeftModel <em>Left Model</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Left Model</em>' attribute.
-	 * @see #getLeftModel()
+	 * Returns the value of the '<em><b>Ancestor Roots</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Ancestor Roots</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ancestor Roots</em>' reference list.
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getMatchModel_AncestorRoots()
+	 * @model
 	 * @generated
 	 */
-	void setLeftModel(String value);
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getOriginModel <em>Origin Model</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Origin Model</em>' attribute.
-	 * @see #getOriginModel()
-	 * @generated
-	 */
-	void setOriginModel(String value);
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.MatchModel#getRightModel <em>Right Model</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Right Model</em>' attribute.
-	 * @see #getRightModel()
-	 * @generated
-	 */
-	void setRightModel(String value);
+	EList<EObject> getAncestorRoots();
 
 } // MatchModel

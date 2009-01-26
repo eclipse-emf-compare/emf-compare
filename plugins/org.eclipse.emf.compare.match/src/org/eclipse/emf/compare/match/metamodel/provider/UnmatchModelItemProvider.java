@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 Obeo.
+ * Copyright (c) 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.match.metamodel.Side;
+import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -30,18 +31,18 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnmatchElement} object.
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.match.metamodel.UnmatchModel} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * @generated
  */
-public class UnmatchElementItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class UnmatchModelItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 */
-	public UnmatchElementItemProvider(AdapterFactory adapterFactory) {
+	public UnmatchModelItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -56,7 +57,7 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addElementPropertyDescriptor(object);
+			addRootsPropertyDescriptor(object);
 			addRemotePropertyDescriptor(object);
 			addSidePropertyDescriptor(object);
 		}
@@ -64,19 +65,19 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
-	 * This adds a property descriptor for the Element feature.
+	 * This adds a property descriptor for the Roots feature.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addElementPropertyDescriptor(Object object) {
+	protected void addRootsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
 						.getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_UnmatchElement_element_feature"), //$NON-NLS-1$
+						getString("_UI_UnmatchModel_roots_feature"), //$NON-NLS-1$
 						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_element_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__ELEMENT, true, false, true, null, null, null));
+								"_UI_PropertyDescriptor_description", "_UI_UnmatchModel_roots_feature", "_UI_UnmatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.UNMATCH_MODEL__ROOTS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -90,17 +91,16 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_UnmatchElement_remote_feature"), //$NON-NLS-1$
+						getString("_UI_UnmatchModel_remote_feature"), //$NON-NLS-1$
 						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_remote_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__REMOTE, true, false, false,
+								"_UI_PropertyDescriptor_description", "_UI_UnmatchModel_remote_feature", "_UI_UnmatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.UNMATCH_MODEL__REMOTE, true, false, false,
 						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**
 	 * This adds a property descriptor for the Side feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected void addSidePropertyDescriptor(Object object) {
@@ -108,21 +108,21 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 				.add(createItemPropertyDescriptor(
 						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 						getResourceLocator(),
-						getString("_UI_UnmatchElement_side_feature"), //$NON-NLS-1$
+						getString("_UI_UnmatchModel_side_feature"), //$NON-NLS-1$
 						getString(
-								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_side_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-						MatchPackage.Literals.UNMATCH_ELEMENT__SIDE, true, false, false,
+								"_UI_PropertyDescriptor_description", "_UI_UnmatchModel_side_feature", "_UI_UnmatchModel_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.UNMATCH_MODEL__SIDE, true, false, false,
 						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
-	 * This returns UnmatchElement.gif.
+	 * This returns UnmatchModel.gif.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnmatchElement")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/UnmatchModel")); //$NON-NLS-1$
 	}
 
 	/**
@@ -132,8 +132,8 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	 */
 	@Override
 	public String getText(Object object) {
-		UnmatchElement unmatchElement = (UnmatchElement)object;
-		return getString("_UI_UnmatchElement_type") + " " + unmatchElement.isRemote(); //$NON-NLS-1$ //$NON-NLS-2$
+		UnmatchModel unmatchModel = (UnmatchModel)object;
+		return getString("_UI_UnmatchModel_type") + " " + unmatchModel.isRemote(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -147,9 +147,9 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
 
-		switch (notification.getFeatureID(UnmatchElement.class)) {
-			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
-			case MatchPackage.UNMATCH_ELEMENT__SIDE:
+		switch (notification.getFeatureID(UnmatchModel.class)) {
+			case MatchPackage.UNMATCH_MODEL__REMOTE:
+			case MatchPackage.UNMATCH_MODEL__SIDE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,
 						true));
 				return;
