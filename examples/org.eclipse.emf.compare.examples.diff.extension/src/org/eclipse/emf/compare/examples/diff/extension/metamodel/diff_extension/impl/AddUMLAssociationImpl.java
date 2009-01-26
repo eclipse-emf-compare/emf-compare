@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright (c) 2006, 2007, 2008 Obeo.
+ *  Copyright (c) 2006, 2009 Obeo.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: AddUMLAssociationImpl.java,v 1.5 2008/09/23 16:00:15 lgoubet Exp $
+ * $Id: AddUMLAssociationImpl.java,v 1.6 2009/01/26 19:57:42 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -65,7 +65,7 @@ public class AddUMLAssociationImpl extends UMLAssociationDiffImpl implements Add
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static final String copyright = "\n Copyright (c) 2006, 2007, 2008 Obeo.\n All rights reserved. This program and the accompanying materials\n are made available under the terms of the Eclipse Public License v1.0\n which accompanies this distribution, and is available at\n http://www.eclipse.org/legal/epl-v10.html\n \n Contributors:\n     Obeo - initial API and implementation\n";
+	public static final String copyright = "\n Copyright (c) 2006, 2009 Obeo.\n All rights reserved. This program and the accompanying materials\n are made available under the terms of the Eclipse Public License v1.0\n which accompanies this distribution, and is available at\n http://www.eclipse.org/legal/epl-v10.html\n \n Contributors:\n     Obeo - initial API and implementation\n";
 
 	/**
 	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list.
