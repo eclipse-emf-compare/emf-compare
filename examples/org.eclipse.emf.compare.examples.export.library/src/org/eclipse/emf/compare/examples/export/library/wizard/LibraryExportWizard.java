@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
 import org.eclipse.emf.compare.examples.export.library.Book;
@@ -30,6 +33,7 @@ import org.eclipse.emf.compare.examples.export.library.LibraryPackage;
 import org.eclipse.emf.compare.examples.export.library.Member;
 import org.eclipse.emf.compare.examples.export.library.provider.LibraryEditPlugin;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -45,8 +49,11 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class LibraryExportWizard extends BasicNewResourceWizard {
-	/** Result of the comparison this wizard is meant to export. */
-	private ModelInputSnapshot input;
+	/** Match of the comparison this wizard is meant to export. */
+	private MatchModel match;
+
+	/** Diff of the comparison this wizard is meant to export. */
+	private DiffModel diff;
 
 	/** References the page displayed by this wizard. */
 	private LibraryExportWizardPage page;
@@ -59,12 +66,20 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 * @param inputSnapshot
 	 *            The {@link ModelInputSnapshot} that is to be exported by this wizard.
 	 */
-	public void init(IWorkbench workbench, ModelInputSnapshot inputSnapshot) {
+	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
 		setWindowTitle("New File");
 		setNeedsProgressMonitor(true);
 		// ensures no modification will be made to the input
-		input = (ModelInputSnapshot)EcoreUtil.copy(inputSnapshot);
+		if (inputSnapshot instanceof ComparisonResourceSnapshot) {
+			match = (MatchModel)EcoreUtil.copy(((ComparisonResourceSnapshot)inputSnapshot).getMatch());
+			diff = (DiffModel)EcoreUtil.copy(((ComparisonResourceSnapshot)inputSnapshot).getDiff());
+		} else {
+			match = (MatchModel)EcoreUtil.copy(((ComparisonResourceSetSnapshot)inputSnapshot)
+					.getMatchResourceSet().getMatchModels().get(0));
+			diff = (DiffModel)EcoreUtil.copy(((ComparisonResourceSetSnapshot)inputSnapshot)
+					.getDiffResourceSet().getDiffModels().get(0));
+		}
 	}
 
 	/**
@@ -98,8 +113,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 			buffer.append(generateCSS());
 			buffer.append("</head><body><h1>Library "); //$NON-NLS-1$
 			// Will retrieve the "Library" object to get its name
-			final Match2Elements match = (Match2Elements)input.getMatch().getMatchedElements().get(0);
-			buffer.append(((Library)match.getLeftElement()).getName());
+			final Match2Elements matchElem = (Match2Elements)match.getMatchedElements().get(0);
+			buffer.append(((Library)matchElem.getLeftElement()).getName());
 			buffer.append("</h1>"); //$NON-NLS-1$
 
 			// Handles the member changes
@@ -176,7 +191,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateNewMemberTable() {
 		String newMembers = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof AddModelElement) {
@@ -210,7 +225,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateNewBookTable() {
 		String newBooks = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof AddModelElement) {
@@ -244,7 +259,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateBorrowedTable() {
 		String borrowedBooks = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof AddReferenceValue) {
@@ -280,7 +295,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateReturnedTable() {
 		String returnedBooks = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof RemoveReferenceValue) {
@@ -316,7 +331,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateRemovedMemberTable() {
 		String removedMembers = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof RemoveModelElement) {
@@ -350,7 +365,7 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 	 */
 	private String generateRemovedBookTable() {
 		String removedBooks = "";
-		final TreeIterator<EObject> iterator = input.getDiff().eAllContents();
+		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
 			if (next instanceof RemoveModelElement) {

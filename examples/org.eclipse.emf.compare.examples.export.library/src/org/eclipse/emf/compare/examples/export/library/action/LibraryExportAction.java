@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Obeo.
+ * Copyright (c) 2008, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.examples.export.library.action;
 
 import java.net.URL;
 
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.examples.export.library.provider.LibraryEditPlugin;
 import org.eclipse.emf.compare.examples.export.library.wizard.LibraryExportWizard;
 import org.eclipse.emf.compare.ui.export.IExportAction;
@@ -31,13 +31,13 @@ import org.eclipse.ui.PlatformUI;
 public class LibraryExportAction implements IExportAction {
 	/** Text that will be displayed for the action. */
 	private final String text;
-	
+
 	/** Text that will be used as tool tip for this action. */
 	private final String toolTipText;
-	
+
 	/** Image used as this action's icon. We'll use the same icon for enabled and disabled state. */
 	private final Image image;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -47,14 +47,14 @@ public class LibraryExportAction implements IExportAction {
 		final URL imageURL = LibraryEditPlugin.getPlugin().getBundle().getEntry("icons/libraryexport.gif"); //$NON-NLS-1$
 		image = ImageDescriptor.createFromURL(imageURL).createImage();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.ui.export.IExportAction#getText()
 	 */
 	public String getText() {
-		return text; 
+		return text;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class LibraryExportAction implements IExportAction {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.ui.export.IExportAction#getDisabledImage()
 	 */
 	public Image getDisabledImage() {
@@ -77,7 +77,7 @@ public class LibraryExportAction implements IExportAction {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.ui.export.IExportAction#getEnabledImage()
 	 */
 	public Image getEnabledImage() {
@@ -86,13 +86,13 @@ public class LibraryExportAction implements IExportAction {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.ui.export.IExportAction#exportSnapshot(org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot)
 	 */
-	public void exportSnapshot(ModelInputSnapshot snapshot) {
+	public void exportSnapshot(ComparisonSnapshot snapshot) {
 		final LibraryExportWizard wizard = new LibraryExportWizard();
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-		
+
 		wizard.init(workbench, snapshot);
 		final WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.open();
