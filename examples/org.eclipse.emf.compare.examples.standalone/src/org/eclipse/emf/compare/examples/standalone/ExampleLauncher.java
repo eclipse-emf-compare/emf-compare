@@ -18,10 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
@@ -54,9 +54,9 @@ public final class ExampleLauncher {
 			// Creates the resourceSet where we'll load the models
 			final ResourceSet resourceSet = new ResourceSetImpl();
 			// Register additionnal packages here. For UML2 for instance :
-//			Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
-//					UMLResource.Factory.INSTANCE);
-//			resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+			// Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
+			// UMLResource.Factory.INSTANCE);
+			// resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
 
 			try {
 				System.out.println("Loading resources.\n"); //$NON-NLS-1$
@@ -70,7 +70,7 @@ public final class ExampleLauncher {
 						.<String, Object> emptyMap());
 				System.out.println("Differencing models.\n"); //$NON-NLS-1$
 				final DiffModel diff = DiffService.doDiff(match, false);
-				
+
 				System.out.println("Merging difference to args[1].\n"); //$NON-NLS-1$
 				final List<DiffElement> differences = new ArrayList<DiffElement>(diff.getOwnedElements());
 				// This will merge all references to the right model (second argument).
@@ -82,21 +82,22 @@ public final class ExampleLauncher {
 					System.out.println(ModelUtils.serialize(match));
 					System.out.println("DiffModel :\n"); //$NON-NLS-1$
 					System.out.println(ModelUtils.serialize(diff));
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					e.printStackTrace();
 				}
 
 				// Serializes the result as "result.emfdiff" in the directory this class has been called from.
 				System.out.println("saving emfdiff as \"result.emfdiff\""); //$NON-NLS-1$
-				final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+				final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE
+						.createComparisonResourceSnapshot();
 				snapshot.setDate(Calendar.getInstance().getTime());
 				snapshot.setMatch(match);
 				snapshot.setDiff(diff);
 				ModelUtils.save(snapshot, "result.emfdiff"); //$NON-NLS-1$
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// shouldn't be thrown
 				e.printStackTrace();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
 		} else {
