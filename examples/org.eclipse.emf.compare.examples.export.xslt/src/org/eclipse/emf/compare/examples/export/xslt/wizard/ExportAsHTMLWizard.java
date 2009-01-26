@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.examples.export.xslt.XSLTExportPlugin;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -35,13 +36,14 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 
 /**
- * Wizard used by the "export as html" action. It will transform the emfdiff result of a comparison to an HTML file according to xslt/EMF-DIFF2HTML.xslt.
+ * Wizard used by the "export as html" action. It will transform the emfdiff result of a comparison to an HTML
+ * file according to xslt/EMF-DIFF2HTML.xslt.
  * 
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public class ExportAsHTMLWizard extends BasicNewFileResourceWizard {
 	/** Result of the comparison this wizard is meant to export. */
-	private ModelInputSnapshot input;
+	private ComparisonSnapshot input;
 
 	/**
 	 * initalizes the wizard.
@@ -51,12 +53,12 @@ public class ExportAsHTMLWizard extends BasicNewFileResourceWizard {
 	 * @param inputSnapshot
 	 *            The {@link ModelInputSnapshot} to export.
 	 */
-	public void init(IWorkbench workbench, ModelInputSnapshot inputSnapshot) {
+	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
 		// ensures no modification will be made to the input
-		input = (ModelInputSnapshot)EcoreUtil.copy(inputSnapshot);
+		input = (ComparisonResourceSnapshot)EcoreUtil.copy(inputSnapshot);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -66,34 +68,38 @@ public class ExportAsHTMLWizard extends BasicNewFileResourceWizard {
 	public boolean performFinish() {
 		boolean result = false;
 		final String page = "newFilePage1"; //$NON-NLS-1$
-		
+
 		final String fileName = ((WizardNewFileCreationPage)getPage(page)).getFileName();
-		if (!fileName.endsWith(".html")) //$NON-NLS-1$
+		if (!fileName.endsWith(".html")) { //$NON-NLS-1$
 			((WizardNewFileCreationPage)getPage(page)).setFileName(fileName + ".html"); //$NON-NLS-1$
-		
+		}
+
 		final IFile createdFile = ((WizardNewFileCreationPage)getPage(page)).createNewFile();
 		if (createdFile != null) {
 			try {
-				final File xslTransform = new File(FileLocator.toFileURL(XSLTExportPlugin.getDefault().getBundle().getEntry("templates/xslt/EMF-DIFF2HTML.xslt")).getPath()); //$NON-NLS-1$
+				final File xslTransform = new File(FileLocator.toFileURL(
+						XSLTExportPlugin.getDefault().getBundle().getEntry(
+								"templates/xslt/EMF-DIFF2HTML.xslt")).getPath()); //$NON-NLS-1$
 				final File htmlResult = new File(createdFile.getLocationURI());
-				final BufferedReader emfdiffReader = new BufferedReader(new StringReader(ModelUtils.serialize(input)));
-				
+				final BufferedReader emfdiffReader = new BufferedReader(new StringReader(ModelUtils
+						.serialize(input)));
+
 				final TransformerFactory factory = TransformerFactory.newInstance();
 				final Transformer htmlTransformer = factory.newTransformer(new StreamSource(xslTransform));
 				htmlTransformer.transform(new StreamSource(emfdiffReader), new StreamResult(htmlResult));
 				emfdiffReader.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				EMFComparePlugin.log(e, false);
-			} catch (TransformerConfigurationException e) {
+			} catch (final TransformerConfigurationException e) {
 				EMFComparePlugin.log(e, false);
-			} catch (TransformerException e) {
+			} catch (final TransformerException e) {
 				EMFComparePlugin.log(e, false);
 			}
 			result = true;
 		}
 		return result;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 

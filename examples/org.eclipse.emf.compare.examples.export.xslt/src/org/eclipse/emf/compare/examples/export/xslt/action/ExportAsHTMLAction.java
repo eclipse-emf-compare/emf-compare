@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007, 2008 Obeo.
+ * Copyright (c) 2006, 2009 Obeo.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.diff.metamodel.ModelInputSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.examples.export.xslt.Messages;
 import org.eclipse.emf.compare.examples.export.xslt.XSLTExportPlugin;
 import org.eclipse.emf.compare.examples.export.xslt.wizard.ExportAsHTMLWizard;
@@ -34,45 +34,47 @@ import org.eclipse.ui.PlatformUI;
 public class ExportAsHTMLAction implements IExportAction {
 	/** Text that will be displayed for the action. */
 	private final String text;
-	
+
 	/** Text that will be used as tool tip for this action. */
 	private final String toolTipText;
-	
+
 	/** Image used as this action's icon when enabled. */
 	private final Image enabledImage;
-	
+
 	/** Image used as this action's icon when disabled. */
 	private final Image disabledImage;
-	
+
 	/**
 	 * Default constructor. Instantiates this action by setting its text, tooltip and image.
 	 */
 	public ExportAsHTMLAction() {
 		text = Messages.getString("ExportAsHTMLAction.action.label"); //$NON-NLS-1$
 		toolTipText = Messages.getString("ExportAsHTMLAction.action.tooltip"); //$NON-NLS-1$
-		
+
 		final String imagePath = Messages.getString("ExportAsHTMLAction.action.image"); //$NON-NLS-1$
-		
+
 		ImageDescriptor disabledImageDescriptor = null;
 		ImageDescriptor enabledImageDescriptor = null;
 		final URL imageURL = XSLTExportPlugin.getDefault().getBundle().getEntry("icons/full/" + imagePath); //$NON-NLS-1$
 		try {
 			disabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(imageURL));
 			enabledImageDescriptor = ImageDescriptor.createFromURL(FileLocator.toFileURL(imageURL));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			EMFComparePlugin.log(e.getMessage(), false);
 		}
-		
-		if (disabledImageDescriptor != null)
+
+		if (disabledImageDescriptor != null) {
 			disabledImage = disabledImageDescriptor.createImage();
-		else
+		} else {
 			disabledImage = ImageDescriptor.getMissingImageDescriptor().createImage();
-		if (enabledImageDescriptor != null)
+		}
+		if (enabledImageDescriptor != null) {
 			enabledImage = enabledImageDescriptor.createImage();
-		else
+		} else {
 			enabledImage = ImageDescriptor.getMissingImageDescriptor().createImage();
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -81,7 +83,7 @@ public class ExportAsHTMLAction implements IExportAction {
 	public String getText() {
 		return text;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -90,7 +92,7 @@ public class ExportAsHTMLAction implements IExportAction {
 	public String getToolTipText() {
 		return toolTipText;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -99,7 +101,7 @@ public class ExportAsHTMLAction implements IExportAction {
 	public Image getDisabledImage() {
 		return disabledImage;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -108,16 +110,16 @@ public class ExportAsHTMLAction implements IExportAction {
 	public Image getEnabledImage() {
 		return enabledImage;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see IExportAction#exportSnapshot(ModelInputSnapshot)
 	 */
-	public void exportSnapshot(ModelInputSnapshot snapshot) {
+	public void exportSnapshot(ComparisonSnapshot snapshot) {
 		final ExportAsHTMLWizard wizard = new ExportAsHTMLWizard();
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-		
+
 		wizard.init(workbench, snapshot);
 		final WizardDialog dialog = new WizardDialog(workbench.getActiveWorkbenchWindow().getShell(), wizard);
 		dialog.open();
