@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.EMFPlugin;
@@ -881,13 +882,13 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void createThreeWayUnmatchElements(MatchModel root, Map<EObject, Boolean> unmatchedElements,
 			boolean leftSide) throws FactoryException {
-		for (final EObject element : unmatchedElements.keySet()) {
+		for (final Entry<EObject, Boolean> entry : unmatchedElements.entrySet()) {
 			// We will only consider the highest level of an unmatched element
 			// hierarchy
-			if (!unmatchedElements.containsKey(element.eContainer())) {
+			if (!unmatchedElements.containsKey(entry.getKey().eContainer())) {
 				final UnmatchElement unMap = MatchFactory.eINSTANCE.createUnmatchElement();
-				unMap.setElement(element);
-				if (unmatchedElements.get(element)) {
+				unMap.setElement(entry.getKey());
+				if (entry.getValue()) {
 					unMap.setRemote(true);
 				}
 				if (leftSide) {
@@ -1356,8 +1357,9 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 			curIndex += 1;
 			monitor.worked(1);
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				throw new InterruptedException();
+			}
 		}
 
 		// now putting the not found elements aside for later
@@ -1526,7 +1528,7 @@ public class GenericMatchEngine implements IMatchEngine {
 					count++;
 				}
 			}
-			nonNullFeatures = new Integer(count);
+			nonNullFeatures = Integer.valueOf(count);
 			nonNullFeatureCounts.put(eobj, nonNullFeatures);
 		}
 		return nonNullFeatures.intValue();

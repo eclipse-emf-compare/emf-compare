@@ -122,8 +122,7 @@ public final class NameSimilarity {
 		EAttribute bestFeature = NAME_FEATURE_CACHE.get(eclass.getName() + eclass.hashCode());
 
 		if (bestFeature == null) {
-			List<EAttribute> eClassAttributes = new ArrayList<EAttribute>();
-			eClassAttributes = eclass.getEAllAttributes();
+			final List<EAttribute> eClassAttributes = eclass.getEAllAttributes();
 			if (eClassAttributes.size() > 0) {
 				bestFeature = eClassAttributes.get(0);
 			}
@@ -171,7 +170,7 @@ public final class NameSimilarity {
 					}
 				}
 				if (str1Value.length != str2Value.length) {
-					result = equalChars / (str1Value.length + str2Value.length);
+					result = (double)equalChars / (double)(str1Value.length + str2Value.length);
 				} else {
 					result = equalChars * 2d / (str1Value.length + str2Value.length);
 				}
@@ -188,9 +187,8 @@ public final class NameSimilarity {
 
 				result = inter * 2d / union;
 				if (result > 1) {
-					result = 1;
-				}
-				if (result == 1d) {
+					result = 1d;
+				} else if (result > almostEquals) {
 					result = almostEquals;
 				}
 			}
