@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -132,9 +133,10 @@ public final class MergeFactory {
 			mergerClass = mergersMap.get(element.getClass());
 			// Else we seek through the map if our element is an instance of one of the class keys.
 		} else {
-			for (final Class<? extends DiffElement> clazz : mergersMap.keySet()) {
-				if (clazz.isInstance(element)) {
-					mergerClass = mergersMap.get(clazz);
+			for (final Entry<Class<? extends DiffElement>, Class<? extends IMerger>> entry : mergersMap
+					.entrySet()) {
+				if (entry.getKey().isInstance(element)) {
+					mergerClass = entry.getValue();
 					break;
 				}
 			}

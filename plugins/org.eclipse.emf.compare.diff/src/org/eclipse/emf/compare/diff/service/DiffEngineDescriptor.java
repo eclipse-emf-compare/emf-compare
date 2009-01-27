@@ -98,15 +98,15 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 			final DiffEngineDescriptor other = (DiffEngineDescriptor)obj;
 			if (engineClassName == null && other.engineClassName != null) {
 				isEqual = false;
-			} else if (!engineClassName.equals(other.engineClassName)) {
+			} else if (engineClassName != null && !engineClassName.equals(other.engineClassName)) {
 				isEqual = false;
 			} else if (fileExtension == null && other.fileExtension != null) {
 				isEqual = false;
-			} else if (!fileExtension.equals(other.fileExtension)) {
+			} else if (fileExtension != null && !fileExtension.equals(other.fileExtension)) {
 				isEqual = false;
 			} else if (priority == null && other.priority != null) {
 				isEqual = false;
-			} else if (!priority.equals(other.priority)) {
+			} else if (priority != null && !priority.equals(other.priority)) {
 				isEqual = false;
 			}
 		}
@@ -146,7 +146,10 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 				EMFComparePlugin.log(e, false);
 			}
 		}
-		engine.reset();
+		// engine could have thrown an exception during its initialization
+		if (engine != null) {
+			engine.reset();
+		}
 		return engine;
 	}
 

@@ -88,15 +88,16 @@ import org.eclipse.emf.compare.util.EngineConstants;
 			final MergerProviderDescriptor other = (MergerProviderDescriptor)obj;
 			if (mergerProviderClassName == null && other.mergerProviderClassName != null) {
 				isEqual = false;
-			} else if (!mergerProviderClassName.equals(other.mergerProviderClassName)) {
+			} else if (mergerProviderClassName != null
+					&& !mergerProviderClassName.equals(other.mergerProviderClassName)) {
 				isEqual = false;
 			} else if (fileExtension == null && other.fileExtension != null) {
 				isEqual = false;
-			} else if (!fileExtension.equals(other.fileExtension)) {
+			} else if (fileExtension != null && !fileExtension.equals(other.fileExtension)) {
 				isEqual = false;
 			} else if (priority == null && other.priority != null) {
 				isEqual = false;
-			} else if (!priority.equals(other.priority)) {
+			} else if (priority != null && !priority.equals(other.priority)) {
 				isEqual = false;
 			}
 		} else {
@@ -123,7 +124,7 @@ import org.eclipse.emf.compare.util.EngineConstants;
 		if (mergerProvider == null) {
 			try {
 				mergerProvider = (IMergerProvider)element.createExecutableExtension("mergerProviderClass"); //$NON-NLS-1$
-			} catch (CoreException e) {
+			} catch (final CoreException e) {
 				EMFComparePlugin.log(e, false);
 			}
 		}
@@ -148,14 +149,17 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	public int hashCode() {
 		final int prime = 31;
 		int classNameHash = 0;
-		if (mergerProviderClassName != null)
+		if (mergerProviderClassName != null) {
 			classNameHash = mergerProviderClassName.hashCode();
+		}
 		int extensionHash = 0;
-		if (fileExtension != null)
+		if (fileExtension != null) {
 			extensionHash = fileExtension.hashCode();
+		}
 		int priorityHash = 0;
-		if (priority != null)
+		if (priority != null) {
 			priorityHash = priority.hashCode();
+		}
 
 		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
 	}
@@ -164,8 +168,8 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	 * created as package visibility method to allow access from MergeFactory
 	 */
 	/**
-	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values
-	 * according to <code>priorityString</code> value :
+	 * Returns the value of the priority described by the given {@link String}.<br/>Returned values according
+	 * to <code>priorityString</code> value :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
@@ -195,15 +199,14 @@ import org.eclipse.emf.compare.util.EngineConstants;
 	}
 
 	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if
-	 * the attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the
+	 * attribute hasn't been set, we'll return <code>defaultValue</code> instead.
 	 * 
 	 * @param name
 	 *            Name of the attribute we seek the value of.
 	 * @param defaultValue
 	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been
-	 *         set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
 	 */
 	private String getAttribute(String name, String defaultValue) {
 		final String value = element.getAttribute(name);

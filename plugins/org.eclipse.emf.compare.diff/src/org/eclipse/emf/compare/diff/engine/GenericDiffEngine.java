@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -60,7 +61,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
-import org.eclipse.emf.ecore.util.FeatureMap.Entry;
 
 /**
  * This class is useful when one wants to determine a diff from a matching model.
@@ -707,9 +707,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if <code>side</code> is invalid.
 	 */
 	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
 			throw new IllegalArgumentException(EMFCompareDiffMessages
 					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
+		}
 		EObject matchedEObject = null;
 		if (matchCrossReferencer != null) {
 			for (final Setting setting : matchCrossReferencer.get(from)) {
@@ -795,16 +796,15 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The MatchModel's {@link UnmatchElement}s.
 	 */
 	protected void processUnmatchedElements(DiffGroup diffRoot, Map<UnmatchElement, Boolean> unmatched) {
-		for (final UnmatchElement unmatchElement : unmatched.keySet()) {
-
-			if (unmatched.get(unmatchElement)) {
-				processConflictingUnmatchedElement(diffRoot, unmatchElement);
+		for (final Entry<UnmatchElement, Boolean> entry : unmatched.entrySet()) {
+			if (entry.getValue().booleanValue()) {
+				processConflictingUnmatchedElement(diffRoot, entry.getKey());
 			} else {
-				final EObject element = unmatchElement.getElement();
+				final EObject element = entry.getKey().getElement();
 				final EObject matchedParent = getMatchedEObject(element.eContainer());
 
-				if (unmatchElement.isRemote()) {
-					if (unmatchElement.getSide() == Side.LEFT) {
+				if (entry.getKey().isRemote()) {
+					if (entry.getKey().getSide() == Side.LEFT) {
 						final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE
 								.createRemoteAddModelElement();
 						addOperation.setRightElement(element);
@@ -818,7 +818,7 @@ public class GenericDiffEngine implements IDiffEngine {
 						addInContainerPackage(diffRoot, removeOperation, element.eContainer());
 					}
 				} else {
-					if (unmatchElement.getSide() == Side.LEFT) {
+					if (entry.getKey().getSide() == Side.LEFT) {
 						final RemoveModelElement removeOperation = DiffFactory.eINSTANCE
 								.createRemoveModelElement();
 						removeOperation.setRightElement(element);
@@ -1645,7 +1645,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            {@link Match2Elements root} of the {@link MatchModel} to analyze.
 	 */
 	private void doDiffDelegate(DiffGroup root, Match2Elements match) {
-		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
+		final DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
 		current.setRightParent(match.getRightElement());
 		try {
 			checkForDiffs(current, match);
@@ -1666,8 +1666,6 @@ public class GenericDiffEngine implements IDiffEngine {
 			for (final DiffElement diff : shouldAddToList) {
 				addInContainerPackage(root, diff, current.getRightParent());
 			}
-		} else {
-			current = root;
 		}
 		// taking care of our children
 		final Iterator<MatchElement> it = match.getSubMatchElements().iterator();
@@ -1687,7 +1685,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            {@link Match3Elements root} of the {@link MatchModel} to analyze.
 	 */
 	private void doDiffDelegate(DiffGroup root, Match3Elements match) {
-		DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
+		final DiffGroup current = DiffFactory.eINSTANCE.createDiffGroup();
 		current.setRightParent(match.getRightElement());
 		try {
 			checkForDiffs(current, match);
@@ -1708,8 +1706,6 @@ public class GenericDiffEngine implements IDiffEngine {
 			for (final DiffElement diff : shouldAddToList) {
 				addInContainerPackage(root, diff, current.getRightParent());
 			}
-		} else {
-			current = root;
 		}
 		// taking care of our children
 		final Iterator<MatchElement> it = match.getSubMatchElements().iterator();
