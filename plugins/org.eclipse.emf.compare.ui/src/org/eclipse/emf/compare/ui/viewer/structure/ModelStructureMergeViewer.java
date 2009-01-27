@@ -19,7 +19,6 @@ import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
@@ -166,11 +165,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 				final ComparisonSnapshot snapshot = ModelComparator.getComparator(configuration)
 						.getComparisonResult();
 				final Object match;
-				if (snapshot instanceof ComparisonResourceSetSnapshot) {
-					match = ((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet();
-				} else {
-					match = ((ComparisonResourceSnapshot)snapshot).getMatch();
-				}
+				match = ((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet();
 				if (match != null) {
 					setInput(snapshot);
 				} else {

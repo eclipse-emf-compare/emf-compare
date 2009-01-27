@@ -45,15 +45,6 @@ public abstract class AbstractCenterPart extends Canvas {
 	 */
 	private double[] baseCenterCurve;
 
-	/** Keeps track of the last "left visible" items list. */
-	private List<ModelContentMergeTabItem> lastLeftVisible;
-
-	/** Keeps track of the last "right visible" items list. */
-	private List<ModelContentMergeTabItem> lastRightVisible;
-
-	/** Keeps track of the last visible diffs. */
-	private List<DiffElement> lastVisibleDiffs;
-
 	/**
 	 * Default constructor, instantiates the canvas given its parent.
 	 * 
@@ -119,9 +110,11 @@ public abstract class AbstractCenterPart extends Canvas {
 
 		final Rectangle drawingBounds = getBounds();
 		RGB color = ModelContentMergeViewer.getColor(leftItem.getCurveColor());
+		// Curve color is a constant and can be compared with != instead of equals
 		if (rightItem.getCurveColor() != leftItem.getCurveColor()
-				&& rightItem.getCurveColor() != EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR)
+				&& rightItem.getCurveColor() != EMFCompareConstants.PREFERENCES_KEY_CHANGED_COLOR) {
 			color = ModelContentMergeViewer.getColor(rightItem.getCurveColor());
+		}
 
 		// Defines all variables needed for drawing the line.
 		final int treeTabBorder = 5;
@@ -159,16 +152,15 @@ public abstract class AbstractCenterPart extends Canvas {
 	 */
 	protected List<DiffElement> retainVisibleDiffs(List<ModelContentMergeTabItem> leftVisible,
 			List<ModelContentMergeTabItem> rightVisible) {
-		if (!leftVisible.equals(lastLeftVisible) || !rightVisible.equals(lastRightVisible)) {
-			lastVisibleDiffs = new ArrayList<DiffElement>(leftVisible.size() + rightVisible.size());
-			for (ModelContentMergeTabItem left : leftVisible) {
-				lastVisibleDiffs.add(left.getDiff());
-			}
-			for (ModelContentMergeTabItem right : rightVisible) {
-				lastVisibleDiffs.add(right.getDiff());
-			}
+		final List<DiffElement> visibleDiffs = new ArrayList<DiffElement>(leftVisible.size()
+				+ rightVisible.size());
+		for (final ModelContentMergeTabItem left : leftVisible) {
+			visibleDiffs.add(left.getDiff());
 		}
-		return lastVisibleDiffs;
+		for (final ModelContentMergeTabItem right : rightVisible) {
+			visibleDiffs.add(right.getDiff());
+		}
+		return visibleDiffs;
 	}
 
 	/**
@@ -191,8 +183,9 @@ public abstract class AbstractCenterPart extends Canvas {
 			}
 		}
 
-		if (buffer == null)
+		if (buffer == null) {
 			buffer = new Image(getDisplay(), size.x, size.y);
+		}
 
 		final GC gc = new GC(buffer);
 		// Draw lines on the left and right edges

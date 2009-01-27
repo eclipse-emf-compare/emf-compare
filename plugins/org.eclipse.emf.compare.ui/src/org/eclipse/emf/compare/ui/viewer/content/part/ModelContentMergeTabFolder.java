@@ -81,9 +81,6 @@ public class ModelContentMergeTabFolder {
 	/** This is the content of the tree tab for this viewer part. */
 	protected IModelContentMergeViewerTab tree;
 
-	/** Indicates that the tree has been expanded since last time we mapped the TreeItems. */
-	/* package */boolean expanded = true;
-
 	/** This contains all the listeners registered for this viewer part. */
 	private final List<ICompareEditorPartListener> editorPartListeners = new ArrayList<ICompareEditorPartListener>();
 
@@ -101,8 +98,9 @@ public class ModelContentMergeTabFolder {
 	 */
 	public ModelContentMergeTabFolder(ModelContentMergeViewer viewer, Composite composite, int side) {
 		if (side != EMFCompareConstants.RIGHT && side != EMFCompareConstants.LEFT
-				&& side != EMFCompareConstants.ANCESTOR)
+				&& side != EMFCompareConstants.ANCESTOR) {
 			throw new IllegalArgumentException(EMFCompareUIMessages.getString("IllegalSide", side)); //$NON-NLS-1$
+		}
 
 		parentViewer = viewer;
 		partSide = side;
@@ -257,8 +255,6 @@ public class ModelContentMergeTabFolder {
 		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
 				diffs.get(0));
 		parentViewer.updateCenter();
-		// We'll assume the tree has been expanded or collapsed during the process
-		expanded = true;
 	}
 
 	/**
@@ -506,14 +502,12 @@ public class ModelContentMergeTabFolder {
 				((TreeItem)e.item).setExpanded(false);
 				e.doit = false;
 				parentViewer.update();
-				expanded = true;
 			}
 
 			public void treeExpanded(TreeEvent e) {
 				((TreeItem)e.item).setExpanded(true);
 				e.doit = false;
 				parentViewer.update();
-				expanded = true;
 			}
 		});
 

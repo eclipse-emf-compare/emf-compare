@@ -433,7 +433,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
 			} else {
 				curveY = ((TreeItem)item.getVisibleItem()).getBounds().y
-						+ ((TreeItem)item.getVisibleItem()).getBounds().height;
+						+ ((TreeItem)item.getVisibleItem()).getBounds().height / 2;
 			}
 			item.setCurveY(curveY);
 		}
