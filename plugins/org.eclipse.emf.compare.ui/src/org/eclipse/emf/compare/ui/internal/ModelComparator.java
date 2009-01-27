@@ -21,15 +21,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareEditorInput;
+import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
+import org.eclipse.compare.internal.ICompareAsText;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -42,6 +47,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.EMFCompareMap;
@@ -50,7 +56,12 @@ import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -79,6 +90,9 @@ public final class ModelComparator {
 
 	/** Resource of the ancestor model used in this comparison. */
 	private Resource ancestorResource;
+
+	/** Keeps a reference to the root CompareConfiguration. */
+	private final CompareConfiguration compareConfiguration;
 
 	/** This will keep track of the handler used by this comparison. */
 	private AbstractTeamHandler comparisonHandler;
@@ -111,10 +125,13 @@ public final class ModelComparator {
 	}
 
 	/**
-	 * Model comparators will only be instantiated via {@link #getComparator(CompareConfiguration)}.
+	 * Instantiates a ModelComparator given its root CompareConfiguration.
+	 * 
+	 * @param configuration
+	 *            CompareConfiguration of this comparator.
 	 */
-	private ModelComparator() {
-		// prevents external instantiation
+	private ModelComparator(CompareConfiguration configuration) {
+		compareConfiguration = configuration;
 	}
 
 	/**
@@ -126,7 +143,7 @@ public final class ModelComparator {
 	 */
 	public static ModelComparator getComparator(CompareConfiguration configuration) {
 		if (!INSTANCES.containsKey(configuration)) {
-			INSTANCES.put(configuration, new ModelComparator());
+			INSTANCES.put(configuration, new ModelComparator(configuration));
 		}
 		return INSTANCES.get(configuration);
 	}
@@ -328,7 +345,19 @@ public final class ModelComparator {
 				 */
 				result = true;
 			} catch (final IOException e) {
-				EMFComparePlugin.log(e, true);
+				final Dialog dialog = new CompareErrorDialog(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						"Comparison failed", "Comparison through EMF Compare failed", new Status(IStatus.ERROR, EMFCompareUIPlugin.PLUGIN_ID, e.getMessage(), e)); //$NON-NLS-1$ //$NON-NLS-2$
+				final int buttonPressed = dialog.open();
+				if (buttonPressed == CompareErrorDialog.COMPARE_AS_TEXT_ID) {
+					final Set<Object> set = new HashSet<Object>();
+					final CompareEditorInput editorInput = (CompareEditorInput)compareConfiguration
+							.getContainer();
+					compareConfiguration.setProperty(ICompareAsText.PROP_TEXT_INPUTS, set);
+					set.add(editorInput);
+					set.add(editorInput.getCompareResult());
+					CompareUI.openCompareEditorOnPage(editorInput, null);
+				}
 			} catch (final CoreException e) {
 				EMFComparePlugin.log(e.getStatus());
 			}
@@ -520,6 +549,61 @@ public final class ModelComparator {
 				}
 			}
 			return handler;
+		}
+	}
+
+	/**
+	 * This implementation of an ErrorDialog allows us to display comparison failures to the user along with a
+	 * way for them to force a text comparison of the offending files.
+	 * 
+	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+	 */
+	class CompareErrorDialog extends ErrorDialog {
+		/** ID of the "Compare As Text" button. Not intended to be either subclassed or accessed externally. */
+		static final int COMPARE_AS_TEXT_ID = IDialogConstants.CLIENT_ID + 1;
+
+		/**
+		 * Delegates to the super constructor.
+		 * 
+		 * @param parentShell
+		 *            Parent Shell of this viewer.
+		 * @param dialogTitle
+		 *            Title of this error dialog.
+		 * @param dialogMessage
+		 *            Message to display to the user.
+		 * @param status
+		 *            The error to show to the user.
+		 */
+		public CompareErrorDialog(Shell parentShell, String dialogTitle, String dialogMessage, IStatus status) {
+			super(parentShell, dialogTitle, dialogMessage, status, IStatus.OK | IStatus.INFO
+					| IStatus.WARNING | IStatus.ERROR);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.dialogs.ErrorDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+		 */
+		@Override
+		protected void createButtonsForButtonBar(Composite parent) {
+			createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, true);
+			createButton(parent, COMPARE_AS_TEXT_ID, "Compare As Text", false); //$NON-NLS-1$
+			createDetailsButton(parent);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.dialogs.ErrorDialog#buttonPressed(int)
+		 */
+		@Override
+		protected void buttonPressed(int id) {
+			if (id == COMPARE_AS_TEXT_ID) {
+				setReturnCode(COMPARE_AS_TEXT_ID);
+				close();
+			} else {
+				super.buttonPressed(id);
+			}
 		}
 	}
 }

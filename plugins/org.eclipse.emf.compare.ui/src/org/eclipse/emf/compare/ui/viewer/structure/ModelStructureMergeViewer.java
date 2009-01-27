@@ -18,6 +18,8 @@ import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.CompareViewerPane;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
@@ -159,12 +161,36 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		final TreePath[] expandedPaths = getExpandedTreePaths();
 
 		super.inputChanged(input, oldInput);
-		if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
-			setInput(ModelComparator.getComparator(configuration).getComparisonResult());
-		}
-		updateToolItems();
+		if (input != null) {
+			if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
+				final ComparisonSnapshot snapshot = ModelComparator.getComparator(configuration)
+						.getComparisonResult();
+				final Object match;
+				if (snapshot instanceof ComparisonResourceSetSnapshot) {
+					match = ((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet();
+				} else {
+					match = ((ComparisonResourceSnapshot)snapshot).getMatch();
+				}
+				if (match != null) {
+					setInput(snapshot);
+				} else {
+					setInput(null);
+				}
+			}
+			updateToolItems();
 
-		setExpandedTreePaths(expandedPaths);
+			setExpandedTreePaths(expandedPaths);
+		} else {
+			hideStructurePane();
+		}
+	}
+
+	/**
+	 * This will be called when the input of this viewer is set to <code>null</code> and hide the whole
+	 * viewer.
+	 */
+	private void hideStructurePane() {
+		getControl().getParent().getParent().setVisible(false);
 	}
 
 	/**

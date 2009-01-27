@@ -63,13 +63,13 @@ public class ModelCompareInput implements ICompareInput {
 	private Resource rightResource;
 
 	/**
-	 * Creates a CompareInput given the resulting {@link MatchModel match} and {@link DiffModel diff} of the
-	 * comparison.
+	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel
+	 * match} and {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 * 
 	 * @param matchModel
-	 *            {@link MatchModel match} of the comparison.
+	 *            {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} of the comparison.
 	 * @param diffModel
-	 *            {@link DiffModel diff} of the comparison.
+	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel) {
 		match = matchModel;
@@ -208,9 +208,9 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Returns this ModelCompareInput's diff.
+	 * Returns this ModelCompareInput's DiffModel.
 	 * 
-	 * @return This ModelCompareInput's diff.
+	 * @return This ModelCompareInput's DiffModel.
 	 */
 	public Object getDiff() {
 		return diff;
@@ -225,6 +225,8 @@ public class ModelCompareInput implements ICompareInput {
 	public List<DiffElement> getDiffAsList() {
 		if (diffList == null) {
 			diffList = new ArrayList<DiffElement>();
+			if (getDiff() == null)
+				return diffList;
 			// ordering is needed in order to merge modelElement diffs before references change
 			// We'll order the diffs by class (modelElementChange, attributechange then referenceChange)
 			final List<ModelElementChange> modelElementDiffs = new ArrayList<ModelElementChange>();
@@ -310,9 +312,9 @@ public class ModelCompareInput implements ICompareInput {
 	}
 
 	/**
-	 * Returns this ModelCompareInput's match.
+	 * Returns this ModelCompareInput's MatchModel.
 	 * 
-	 * @return This ModelCompareInput's match.
+	 * @return This ModelCompareInput's MatchModel.
 	 */
 	public Object getMatch() {
 		return match;
