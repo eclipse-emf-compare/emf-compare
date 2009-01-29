@@ -164,7 +164,7 @@ public final class NameSimilarity {
 				int equalChars = 0;
 				final char[] str1Value = str1.toCharArray();
 				final char[] str2Value = str2.toCharArray();
-				for (int i = 0; i < Math.max(str1Value.length, str2Value.length); i++) {
+				for (int i = 0; i < Math.min(str1Value.length, str2Value.length); i++) {
 					if (str1Value[i] == str2Value[i]) {
 						equalChars++;
 					}
