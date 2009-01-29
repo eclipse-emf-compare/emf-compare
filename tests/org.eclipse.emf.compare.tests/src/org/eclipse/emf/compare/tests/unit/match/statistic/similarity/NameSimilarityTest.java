@@ -156,7 +156,8 @@ public class NameSimilarityTest extends TestCase {
 	/**
 	 * Tests {@link NameSimilarity#nameSimilarityMetric(String, String)}.
 	 * <p>
-	 * Expected results : <table>
+	 * Expected results :
+	 * <table>
 	 * <tr>
 	 * <td>arg1</td>
 	 * <td>arg2</td>
@@ -217,15 +218,26 @@ public class NameSimilarityTest extends TestCase {
 	 * <td>&quot;aaaa&quot;</td>
 	 * <td><code>2/4</code></td>
 	 * </tr>
+	 * <tr>
+	 * <td>&quot;v1&quot;</td>
+	 * <td>&quot;v2&quot;</td>
+	 * <td><code>2/4</code></td>
+	 * </tr>
+	 * <tr>
+	 * <td>&quot;v&quot;</td>
+	 * <td>&quot;v1&quot;</td>
+	 * <td><code>1/3</code></td>
+	 * </tr>
 	 * </table>
 	 * </p>
 	 */
 	public void testNameSimilarityMetric() {
 		final String[] data = new String[] {null, null, null, "string", "string", null, "ceString",
 				"ceString", "classe", "Classe", "Classe", "UneClasse", "package", "packagedeux", "",
-				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", };
+				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", "v1",
+				"v2", "v", "v1", };
 		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d,
-				6d / 11d, 0d, 1d / 2d, };
+				6d / 11d, 0d, 1d / 2d, 1d / 2d, 1d / 3d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of nameSimilarityMetric for str1 = " + data[i] + " and str2 = "
 					+ data[i + 1], similarities[i / 2], NameSimilarity.nameSimilarityMetric(data[i],
@@ -305,7 +317,7 @@ public class NameSimilarityTest extends TestCase {
 		final StringBuilder buffer = new StringBuilder();
 		final List<EAttribute> classAttrib = new ArrayList<EAttribute>(class1.eClass().getEAllAttributes());
 		classAttrib.remove(NameSimilarity.findNameFeature(class1));
-		for (EAttribute attribute : classAttrib) {
+		for (final EAttribute attribute : classAttrib) {
 			if (attribute != null && EFactory.eGet(class1, attribute.getName()) != null) {
 				buffer.append(EFactory.eGetAsString(class1, attribute.getName())).append(" ");
 			}
