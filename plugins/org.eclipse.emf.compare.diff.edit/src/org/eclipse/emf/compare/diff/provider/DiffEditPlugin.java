@@ -31,9 +31,9 @@ public final class DiffEditPlugin extends EMFPlugin {
 	/**
 	 * Keep track of the singleton.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
-	/* package */private static Implementation plugin;
+	/* package */static Implementation plugin;
 
 	/**
 	 * Create the instance.
