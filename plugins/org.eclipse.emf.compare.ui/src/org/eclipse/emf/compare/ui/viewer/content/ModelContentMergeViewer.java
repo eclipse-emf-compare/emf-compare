@@ -689,13 +689,15 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            <code>True</code> if we seek to enable the actions, <code>False</code> otherwise.
 	 */
 	protected void switchCopyState(boolean enabled) {
-		final boolean leftIsRemote = ModelComparator.getComparator(configuration).isLeftRemote();
-		final boolean rightIsRemote = ModelComparator.getComparator(configuration).isRightRemote();
+		final boolean leftEditable = !ModelComparator.getComparator(configuration).isLeftRemote()
+				&& configuration.isLeftEditable();
+		final boolean rightEditable = !ModelComparator.getComparator(configuration).isRightRemote()
+				&& configuration.isRightEditable();
 		if (copyDiffLeftToRight != null) {
-			copyDiffLeftToRight.setEnabled(!rightIsRemote && enabled);
+			copyDiffLeftToRight.setEnabled(rightEditable && enabled);
 		}
 		if (copyDiffRightToLeft != null) {
-			copyDiffRightToLeft.setEnabled(!leftIsRemote && enabled);
+			copyDiffRightToLeft.setEnabled(leftEditable && enabled);
 		}
 	}
 
@@ -763,9 +765,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            The other parts to synchronize with.
 	 */
 	private void createPropertiesSyncHandlers(ModelContentMergeTabFolder... parts) {
-		if (parts.length < 2)
+		if (parts.length < 2) {
 			throw new IllegalArgumentException(EMFCompareUIMessages
 					.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
+		}
 
 		// horizontal synchronization
 		handleHSync(leftPart.getPropertyPart(), rightPart.getPropertyPart(), ancestorPart.getPropertyPart());
@@ -784,9 +787,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            The other parts to synchronize with.
 	 */
 	private void createTreeSyncHandlers(ModelContentMergeTabFolder... parts) {
-		if (parts.length < 2)
+		if (parts.length < 2) {
 			throw new IllegalArgumentException(EMFCompareUIMessages
 					.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
+		}
 
 		handleHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
 		handleHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());

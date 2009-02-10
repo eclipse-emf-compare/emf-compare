@@ -224,8 +224,8 @@ public final class ModelComparator {
 			final Date end = Calendar.getInstance().getTime();
 			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
 					- start.getTime());
-			configuration.setLeftEditable(!isLeftRemote());
-			configuration.setRightEditable(!isRightRemote());
+			configuration.setLeftEditable(configuration.isLeftEditable() && !isLeftRemote());
+			configuration.setRightEditable(configuration.isRightEditable() && !isRightRemote());
 			if (isLeftRemote()) {
 				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
 				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
