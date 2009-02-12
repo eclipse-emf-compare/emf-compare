@@ -18,8 +18,11 @@ import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Merger for an {@link ReferenceChangeRightTarget} operation.<br/>
@@ -88,6 +91,13 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
 						&& link.getLeftTarget().equals(element)) {
 					removeFromContainer(link);
+				}
+			} else if (op instanceof ResourceDependencyChange) {
+				final ResourceDependencyChange link = (ResourceDependencyChange)op;
+				final Resource res = link.getRoots().get(0).eResource();
+				if (res == rightTarget.eResource()) {
+					EcoreUtil.remove(link);
+					res.unload();
 				}
 			}
 		}

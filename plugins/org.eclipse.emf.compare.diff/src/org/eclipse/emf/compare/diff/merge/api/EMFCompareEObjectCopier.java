@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.merge.api;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +21,16 @@ import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
@@ -41,13 +45,16 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 0.8
  */
-public class EMFCompareEObjectCopier extends Copier {
+public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUtil.Copier {
 	/** This class' serial version UID. */
 	private static final long serialVersionUID = 2701874812215174395L;
 
 	/* (non-javadoc) defined transient since not serializable. */
 	/** The DiffModel on which differences this copier will be used. */
 	private final transient DiffModel diffModel;
+
+	/** If there are any ResourceDependencyChanges in the diffModel, they'll be cached in this. */
+	private final List<ResourceDependencyChange> dependencyChanges = new ArrayList<ResourceDependencyChange>();
 
 	/**
 	 * Creates a Copier given the DiffModel it will be used for.
@@ -58,6 +65,13 @@ public class EMFCompareEObjectCopier extends Copier {
 	public EMFCompareEObjectCopier(DiffModel diff) {
 		super();
 		diffModel = diff;
+		if (diffModel.eContainer() instanceof DiffResourceSet) {
+			for (final EObject child : diffModel.eContainer().eContents()) {
+				if (child instanceof ResourceDependencyChange) {
+					dependencyChanges.add((ResourceDependencyChange)child);
+				}
+			}
+		}
 	}
 
 	/**
@@ -122,17 +136,22 @@ public class EMFCompareEObjectCopier extends Copier {
 	 * @param value
 	 *            The value that is to be copied.
 	 * @param matchedValue
-	 *            Matched value of <tt>value</tt> if it is know. Will behave like
+	 *            Matched value of <tt>value</tt> if it is known. Will behave like
 	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
 	public void copyReferenceValue(EReference targetReference, EObject target, EObject value,
 			EObject matchedValue) {
+		EObject actualValue = value;
+		if (value == null && matchedValue != null) {
+			handleLinkedResourceDependencyChange(matchedValue);
+			actualValue = get(matchedValue);
+		}
 		if (matchedValue != null) {
-			put(value, matchedValue);
+			put(actualValue, matchedValue);
 			((List<Object>)target.eGet(targetReference)).add(matchedValue);
 		} else {
-			copyReferenceValue(targetReference, target, value);
+			copyReferenceValue(targetReference, target, actualValue);
 		}
 	}
 
@@ -252,6 +271,27 @@ public class EMFCompareEObjectCopier extends Copier {
 				}
 			} else {
 				copyFeatureMap.add(featureMap.get(k));
+			}
+		}
+	}
+
+	/**
+	 * This will be called when merging reference changes in order to remove linked dependency changes.
+	 * 
+	 * @param element
+	 *            The element that is being merged.
+	 */
+	private void handleLinkedResourceDependencyChange(EObject element) {
+		for (final ResourceDependencyChange dependencyChange : new ArrayList<ResourceDependencyChange>(
+				dependencyChanges)) {
+			final Resource resource = dependencyChange.getRoots().get(0).eResource();
+			if (resource == element.eResource() && dependencyChange.eContainer() != null) {
+				// There are no explicit mergers for resource addition/removal.
+				EcoreUtil.remove(dependencyChange);
+				dependencyChanges.remove(dependencyChange);
+				// map the element to itself : we wish a direct link to the same resource.
+				put(element, element);
+				break;
 			}
 		}
 	}
