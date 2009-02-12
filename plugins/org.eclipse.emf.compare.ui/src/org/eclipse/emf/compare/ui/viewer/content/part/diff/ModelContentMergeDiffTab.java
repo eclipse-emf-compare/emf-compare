@@ -384,7 +384,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			if (data instanceof EObject) {
 				widget = findItemForEObject((EObject)data);
 			} else if (data instanceof TreePath) {
-				widget = findItemForEObject((EObject)((TreePath)data).getLastSegment());
+				final Object target = ((TreePath)data).getLastSegment();
+				if (target instanceof EObject) {
+					widget = findItemForEObject((EObject)target);
+				} else {
+					widget = findItem(target);
+				}
 			} else if (data != null) {
 				widget = findItem(data);
 			}
