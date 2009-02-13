@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.wizard;
+package org.eclipse.emf.compare.ui.internal.wizard;
 
 import java.io.IOException;
 import java.util.Calendar;

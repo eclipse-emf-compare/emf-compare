@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.ui.preferences;
+package org.eclipse.emf.compare.ui.internal.preferences;
 
 import java.io.IOException;
 

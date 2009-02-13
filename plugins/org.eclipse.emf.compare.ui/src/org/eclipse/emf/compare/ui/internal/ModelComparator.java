@@ -42,7 +42,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;

@@ -10,6 +10,7 @@
  *     Obeo - initial API and implementation
  */
 /**
- * Provides the classes used by compare to add its own preferences page to eclipse.
+ * Provides the wizard allowing for the serialization of a comparison result as an
+ * emfdiff file.
  */
-package org.eclipse.emf.compare.ui.preferences;
+package org.eclipse.emf.compare.ui.internal.wizard;

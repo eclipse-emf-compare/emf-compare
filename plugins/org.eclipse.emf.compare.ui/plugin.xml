@@ -49,13 +49,13 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
+            class="org.eclipse.emf.compare.ui.internal.preferences.EMFComparePreferencesPage"
             id="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
             name="%preferencePageName"/>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesInitializer"/>
+      <initializer class="org.eclipse.emf.compare.ui.internal.preferences.EMFComparePreferencesInitializer"/>
    </extension>
    <extension
          point="org.eclipse.core.runtime.contentTypes">
