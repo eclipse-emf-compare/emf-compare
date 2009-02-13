@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: DiffExtensionPackageImpl.java,v 1.6 2009/01/26 19:57:42 lgoubet Exp $
+ * $Id: DiffExtensionPackageImpl.java,v 1.7 2009/02/13 11:33:07 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl;
 
@@ -224,7 +224,7 @@ public class DiffExtensionPackageImpl extends EPackageImpl implements DiffExtens
 
 		// Add supertypes to classes
 		addUMLAssociationEClass.getESuperTypes().add(this.getUMLAssociationDiff());
-		addUMLAssociationEClass.getESuperTypes().add(theDiffPackage.getAddModelElement());
+		addUMLAssociationEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
 		umlAssociationDiffEClass.getESuperTypes().add(theDiffPackage.getAbstractDiffExtension());
 
 		// Initialize classes and features; add operations and parameters

@@ -15,10 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.examples.diff.extension.DiffExtensionPlugin;
 import org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.impl.AddUMLAssociationImpl;
 import org.eclipse.emf.compare.util.EFactory;
@@ -76,9 +76,9 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 		final Iterator<EObject> it = diff.eAllContents();
 		while (it.hasNext()) {
 			final DiffElement element = (DiffElement)it.next();
-			if (element instanceof AddModelElement
-					&& isAssociation(((AddModelElement)element).getLeftElement())) {
-				final EObject assoc = ((AddModelElement)element).getLeftElement();
+			if (element instanceof ModelElementChangeLeftTarget
+					&& isAssociation(((ModelElementChangeLeftTarget)element).getLeftElement())) {
+				final EObject assoc = ((ModelElementChangeLeftTarget)element).getLeftElement();
 				/*
 				 * We have an association, let's add our new higher level delta and hide the others...
 				 */
@@ -104,16 +104,16 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 							final Iterator<EObject> diffIt = element.eContainer().eAllContents();
 							while (diffIt.hasNext()) {
 								final EObject childElem = diffIt.next();
-								if (childElem instanceof AddModelElement
-										&& ((AddModelElement)childElem).getLeftElement() == member) {
-									getHideElements().add((AddModelElement)childElem);
+								if (childElem instanceof ModelElementChangeLeftTarget
+										&& ((ModelElementChangeLeftTarget)childElem).getLeftElement() == member) {
+									getHideElements().add((ModelElementChangeLeftTarget)childElem);
 								}
 								getProperties().add(childElem);
 							}
 						}
 						if (isNavigable) {
 							getHideElements().add(element);
-							copyAssociationData((AddModelElement)element);
+							copyAssociationData((ModelElementChangeLeftTarget)element);
 							if (element.eContainer() instanceof DiffGroup) {
 								final DiffGroup group = (DiffGroup)element.eContainer();
 								group.getSubDiffElements().add(this);
@@ -135,7 +135,7 @@ public class AddUMLAssociationExtension extends AddUMLAssociationImpl {
 	 * @param element
 	 *            comment.
 	 */
-	private void copyAssociationData(AddModelElement element) {
+	private void copyAssociationData(ModelElementChangeLeftTarget element) {
 		setRightParent(element.getRightParent());
 		setLeftElement(element.getLeftElement());
 	}

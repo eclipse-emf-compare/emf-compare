@@ -10,7 +10,7 @@
  *      Obeo - initial API and implementation
  * 
  *
- * $Id: DiffExtensionPackage.java,v 1.6 2009/01/26 19:57:42 lgoubet Exp $
+ * $Id: DiffExtensionPackage.java,v 1.7 2009/02/13 11:33:07 lgoubet Exp $
  */
 package org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension;
 
@@ -224,13 +224,22 @@ public interface DiffExtensionPackage extends EPackage {
 	int ADD_UML_ASSOCIATION__KIND = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ADD_UML_ASSOCIATION__REMOTE = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_UML_ASSOCIATION__RIGHT_PARENT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 4;
+	int ADD_UML_ASSOCIATION__RIGHT_PARENT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Left Element</b></em>' reference.
@@ -239,7 +248,7 @@ public interface DiffExtensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_UML_ASSOCIATION__LEFT_ELEMENT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 5;
+	int ADD_UML_ASSOCIATION__LEFT_ELEMENT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Add UML Association</em>' class.
@@ -248,7 +257,7 @@ public interface DiffExtensionPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ADD_UML_ASSOCIATION_FEATURE_COUNT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 6;
+	int ADD_UML_ASSOCIATION_FEATURE_COUNT = UML_ASSOCIATION_DIFF_FEATURE_COUNT + 7;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.examples.diff.extension.metamodel.diff_extension.AddUMLAssociation <em>Add UML Association</em>}'.
