@@ -211,18 +211,6 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 				DiffFactory.eINSTANCE.createModelElementChangeRightTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteAddModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteRemoveModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateModelElement()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
@@ -230,12 +218,6 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateContainmentFeature()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteMoveModelElement()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteUpdateContainmentFeature()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createAttributeChange()));
@@ -247,22 +229,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 				DiffFactory.eINSTANCE.createAttributeChangeRightTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteAddAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteRemoveAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateAttribute()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteUpdateAttribute()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createReferenceChange()));
@@ -274,25 +241,7 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 				DiffFactory.eINSTANCE.createReferenceChangeRightTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteAddReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteRemoveReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateReference()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteUpdateUniqueReferenceValue()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createResourceDiff()));
@@ -301,16 +250,10 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 				DiffFactory.eINSTANCE.createResourceDependencyChange()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createAddResourceDependency()));
+				DiffFactory.eINSTANCE.createResourceDependencyChangeLeftTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoveResourceDependency()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteAddResourceDependency()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
-				DiffFactory.eINSTANCE.createRemoteRemoveResourceDependency()));
+				DiffFactory.eINSTANCE.createResourceDependencyChangeRightTarget()));
 	}
 
 	/**

@@ -1,13 +1,9 @@
-/*******************************************************************************
- * Copyright (c) 2009 Obeo.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Obeo - initial API and implementation
- *******************************************************************************/
+/**
+ * <copyright>
+ * </copyright>
+ *
+ * $Id: ResourceDependencyChangeRightTargetItemProvider.java,v 1.1 2009/02/13 11:33:33 lgoubet Exp $
+ */
 package org.eclipse.emf.compare.diff.provider;
 
 import java.util.Collection;
@@ -15,7 +11,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -25,19 +21,19 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
  * This is the item provider adapter for a
- * {@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency} object. <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
-public class RemoveResourceDependencyItemProvider extends ResourceDependencyChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ResourceDependencyChangeRightTargetItemProvider extends ResourceDependencyChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 */
-	public RemoveResourceDependencyItemProvider(AdapterFactory adapterFactory) {
+	public ResourceDependencyChangeRightTargetItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -57,13 +53,14 @@ public class RemoveResourceDependencyItemProvider extends ResourceDependencyChan
 	}
 
 	/**
-	 * This returns RemoveResourceDependency.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns ResourceDependencyChangeRightTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/RemoveResourceDependency")); //$NON-NLS-1$
+		return overlayImage(object, getResourceLocator().getImage(
+				"full/obj16/ResourceDependencyChangeRightTarget")); //$NON-NLS-1$
 	}
 
 	/**
@@ -73,9 +70,12 @@ public class RemoveResourceDependencyItemProvider extends ResourceDependencyChan
 	 */
 	@Override
 	public String getText(Object object) {
-		final RemoveResourceDependency removeResourceDependency = (RemoveResourceDependency)object;
-		return getString("_UI_RemoveResourceDependency_type", new Object[] {removeResourceDependency //$NON-NLS-1$
-				.getRoots().get(0).eResource().getURI().lastSegment() });
+		final ResourceDependencyChangeRightTarget operation = (ResourceDependencyChangeRightTarget)object;
+
+		final String resourceName = operation.getRoots().get(0).eResource().getURI().lastSegment();
+		if (operation.isRemote())
+			return getString("_UI_RemoteAddResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
+		return getString("_UI_RemoveResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
 	}
 
 	/**

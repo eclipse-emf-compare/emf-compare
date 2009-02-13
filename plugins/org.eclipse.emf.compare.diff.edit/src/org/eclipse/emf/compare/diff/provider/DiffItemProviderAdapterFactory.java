@@ -39,30 +39,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  */
 public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddAttribute} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected AddAttributeItemProvider addAttributeItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected AddModelElementItemProvider addModelElementItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected AddReferenceValueItemProvider addReferenceValueItemProvider;
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AttributeChange} instances.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -187,104 +163,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	protected ReferenceChangeRightTargetItemProvider referenceChangeRightTargetItemProvider;
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteAddAttributeItemProvider remoteAddAttributeItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteAddModelElementItemProvider remoteAddModelElementItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteAddReferenceValueItemProvider remoteAddReferenceValueItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteMoveModelElementItemProvider remoteMoveModelElementItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteRemoveAttributeItemProvider remoteRemoveAttributeItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement} instances.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteRemoveModelElementItemProvider remoteRemoveModelElementItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected RemoteRemoveReferenceValueItemProvider remoteRemoveReferenceValueItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteUpdateAttributeItemProvider remoteUpdateAttributeItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected RemoteUpdateUniqueReferenceValueItemProvider remoteUpdateUniqueReferenceValueItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute} instances.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @generated
-	 */
-	protected RemoveAttributeItemProvider removeAttributeItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveModelElement} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoveModelElementItemProvider removeModelElementItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoveReferenceValueItemProvider removeReferenceValueItemProvider;
-
-	/**
 	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -314,15 +192,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 * @generated
 	 */
 	protected UpdateReferenceItemProvider updateReferenceItemProvider;
-
-	/**
-	 * This keeps track of the one adapter used for all
-	 * {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected UpdateUniqueReferenceValueItemProvider updateUniqueReferenceValueItemProvider;
 
 	/**
 	 * This constructs an instance.
@@ -371,51 +240,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	 */
 	public void addListener(INotifyChangedListener notifyChangedListener) {
 		changeNotifier.addListener(notifyChangedListener);
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddAttribute}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createAddAttributeAdapter() {
-		if (addAttributeItemProvider == null) {
-			addAttributeItemProvider = new AddAttributeItemProvider(this);
-		}
-
-		return addAttributeItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddModelElement}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createAddModelElementAdapter() {
-		if (addModelElementItemProvider == null) {
-			addModelElementItemProvider = new AddModelElementItemProvider(this);
-		}
-
-		return addModelElementItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddReferenceValue}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createAddReferenceValueAdapter() {
-		if (addReferenceValueItemProvider == null) {
-			addReferenceValueItemProvider = new AddReferenceValueItemProvider(this);
-		}
-
-		return addReferenceValueItemProvider;
 	}
 
 	/**
@@ -701,158 +525,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteAddAttributeAdapter() {
-		if (remoteAddAttributeItemProvider == null) {
-			remoteAddAttributeItemProvider = new RemoteAddAttributeItemProvider(this);
-		}
-
-		return remoteAddAttributeItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteAddModelElementAdapter() {
-		if (remoteAddModelElementItemProvider == null) {
-			remoteAddModelElementItemProvider = new RemoteAddModelElementItemProvider(this);
-		}
-
-		return remoteAddModelElementItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteAddReferenceValueAdapter() {
-		if (remoteAddReferenceValueItemProvider == null) {
-			remoteAddReferenceValueItemProvider = new RemoteAddReferenceValueItemProvider(this);
-		}
-
-		return remoteAddReferenceValueItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteMoveModelElementAdapter() {
-		if (remoteMoveModelElementItemProvider == null) {
-			remoteMoveModelElementItemProvider = new RemoteMoveModelElementItemProvider(this);
-		}
-
-		return remoteMoveModelElementItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateContainmentFeature} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteUpdateContainmentFeatureItemProvider remoteUpdateContainmentFeatureItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateContainmentFeature}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteUpdateContainmentFeatureAdapter() {
-		if (remoteUpdateContainmentFeatureItemProvider == null) {
-			remoteUpdateContainmentFeatureItemProvider = new RemoteUpdateContainmentFeatureItemProvider(this);
-		}
-
-		return remoteUpdateContainmentFeatureItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteRemoveAttributeAdapter() {
-		if (remoteRemoveAttributeItemProvider == null) {
-			remoteRemoveAttributeItemProvider = new RemoteRemoveAttributeItemProvider(this);
-		}
-
-		return remoteRemoveAttributeItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteRemoveModelElementAdapter() {
-		if (remoteRemoveModelElementItemProvider == null) {
-			remoteRemoveModelElementItemProvider = new RemoteRemoveModelElementItemProvider(this);
-		}
-
-		return remoteRemoveModelElementItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteRemoveReferenceValueAdapter() {
-		if (remoteRemoveReferenceValueItemProvider == null) {
-			remoteRemoveReferenceValueItemProvider = new RemoteRemoveReferenceValueItemProvider(this);
-		}
-
-		return remoteRemoveReferenceValueItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteUpdateAttributeAdapter() {
-		if (remoteUpdateAttributeItemProvider == null) {
-			remoteUpdateAttributeItemProvider = new RemoteUpdateAttributeItemProvider(this);
-		}
-
-		return remoteUpdateAttributeItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue}.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteUpdateUniqueReferenceValueAdapter() {
-		if (remoteUpdateUniqueReferenceValueItemProvider == null) {
-			remoteUpdateUniqueReferenceValueItemProvider = new RemoteUpdateUniqueReferenceValueItemProvider(
-					this);
-		}
-
-		return remoteUpdateUniqueReferenceValueItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ResourceDiff} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -899,139 +571,51 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AddResourceDependency} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AddResourceDependencyItemProvider addResourceDependencyItemProvider;
+	protected ResourceDependencyChangeLeftTargetItemProvider resourceDependencyChangeLeftTargetItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AddResourceDependency}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createAddResourceDependencyAdapter() {
-		if (addResourceDependencyItemProvider == null) {
-			addResourceDependencyItemProvider = new AddResourceDependencyItemProvider(this);
+	public Adapter createResourceDependencyChangeLeftTargetAdapter() {
+		if (resourceDependencyChangeLeftTargetItemProvider == null) {
+			resourceDependencyChangeLeftTargetItemProvider = new ResourceDependencyChangeLeftTargetItemProvider(
+					this);
 		}
 
-		return addResourceDependencyItemProvider;
+		return resourceDependencyChangeLeftTargetItemProvider;
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency} instances.
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected RemoveResourceDependencyItemProvider removeResourceDependencyItemProvider;
+	protected ResourceDependencyChangeRightTargetItemProvider resourceDependencyChangeRightTargetItemProvider;
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoveResourceDependencyAdapter() {
-		if (removeResourceDependencyItemProvider == null) {
-			removeResourceDependencyItemProvider = new RemoveResourceDependencyItemProvider(this);
-		}
-
-		return removeResourceDependencyItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteAddResourceDependencyItemProvider remoteAddResourceDependencyItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency}.
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public Adapter createRemoteAddResourceDependencyAdapter() {
-		if (remoteAddResourceDependencyItemProvider == null) {
-			remoteAddResourceDependencyItemProvider = new RemoteAddResourceDependencyItemProvider(this);
+	public Adapter createResourceDependencyChangeRightTargetAdapter() {
+		if (resourceDependencyChangeRightTargetItemProvider == null) {
+			resourceDependencyChangeRightTargetItemProvider = new ResourceDependencyChangeRightTargetItemProvider(
+					this);
 		}
 
-		return remoteAddResourceDependencyItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected RemoteRemoveResourceDependencyItemProvider remoteRemoveResourceDependencyItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoteRemoveResourceDependencyAdapter() {
-		if (remoteRemoveResourceDependencyItemProvider == null) {
-			remoteRemoveResourceDependencyItemProvider = new RemoteRemoveResourceDependencyItemProvider(this);
-		}
-
-		return remoteRemoveResourceDependencyItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveAttribute}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoveAttributeAdapter() {
-		if (removeAttributeItemProvider == null) {
-			removeAttributeItemProvider = new RemoveAttributeItemProvider(this);
-		}
-
-		return removeAttributeItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveModelElement}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoveModelElementAdapter() {
-		if (removeModelElementItemProvider == null) {
-			removeModelElementItemProvider = new RemoveModelElementItemProvider(this);
-		}
-
-		return removeModelElementItemProvider;
-	}
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createRemoveReferenceValueAdapter() {
-		if (removeReferenceValueItemProvider == null) {
-			removeReferenceValueItemProvider = new RemoveReferenceValueItemProvider(this);
-		}
-
-		return removeReferenceValueItemProvider;
+		return resourceDependencyChangeRightTargetItemProvider;
 	}
 
 	/**
@@ -1080,20 +664,6 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createUpdateUniqueReferenceValueAdapter() {
-		if (updateUniqueReferenceValueItemProvider == null) {
-			updateUniqueReferenceValueItemProvider = new UpdateUniqueReferenceValueItemProvider(this);
-		}
-
-		return updateUniqueReferenceValueItemProvider;
-	}
-
-	/**
 	 * This disposes all of the item providers created by this factory. 
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1118,74 +688,36 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			modelElementChangeLeftTargetItemProvider.dispose();
 		if (modelElementChangeRightTargetItemProvider != null)
 			modelElementChangeRightTargetItemProvider.dispose();
-		if (addModelElementItemProvider != null)
-			addModelElementItemProvider.dispose();
-		if (remoteAddModelElementItemProvider != null)
-			remoteAddModelElementItemProvider.dispose();
-		if (removeModelElementItemProvider != null)
-			removeModelElementItemProvider.dispose();
-		if (remoteRemoveModelElementItemProvider != null)
-			remoteRemoveModelElementItemProvider.dispose();
 		if (updateModelElementItemProvider != null)
 			updateModelElementItemProvider.dispose();
 		if (moveModelElementItemProvider != null)
 			moveModelElementItemProvider.dispose();
 		if (updateContainmentFeatureItemProvider != null)
 			updateContainmentFeatureItemProvider.dispose();
-		if (remoteMoveModelElementItemProvider != null)
-			remoteMoveModelElementItemProvider.dispose();
-		if (remoteUpdateContainmentFeatureItemProvider != null)
-			remoteUpdateContainmentFeatureItemProvider.dispose();
 		if (attributeChangeItemProvider != null)
 			attributeChangeItemProvider.dispose();
 		if (attributeChangeLeftTargetItemProvider != null)
 			attributeChangeLeftTargetItemProvider.dispose();
 		if (attributeChangeRightTargetItemProvider != null)
 			attributeChangeRightTargetItemProvider.dispose();
-		if (addAttributeItemProvider != null)
-			addAttributeItemProvider.dispose();
-		if (remoteAddAttributeItemProvider != null)
-			remoteAddAttributeItemProvider.dispose();
-		if (removeAttributeItemProvider != null)
-			removeAttributeItemProvider.dispose();
-		if (remoteRemoveAttributeItemProvider != null)
-			remoteRemoveAttributeItemProvider.dispose();
 		if (updateAttributeItemProvider != null)
 			updateAttributeItemProvider.dispose();
-		if (remoteUpdateAttributeItemProvider != null)
-			remoteUpdateAttributeItemProvider.dispose();
 		if (referenceChangeItemProvider != null)
 			referenceChangeItemProvider.dispose();
 		if (referenceChangeLeftTargetItemProvider != null)
 			referenceChangeLeftTargetItemProvider.dispose();
 		if (referenceChangeRightTargetItemProvider != null)
 			referenceChangeRightTargetItemProvider.dispose();
-		if (addReferenceValueItemProvider != null)
-			addReferenceValueItemProvider.dispose();
-		if (remoteAddReferenceValueItemProvider != null)
-			remoteAddReferenceValueItemProvider.dispose();
-		if (removeReferenceValueItemProvider != null)
-			removeReferenceValueItemProvider.dispose();
-		if (remoteRemoveReferenceValueItemProvider != null)
-			remoteRemoveReferenceValueItemProvider.dispose();
 		if (updateReferenceItemProvider != null)
 			updateReferenceItemProvider.dispose();
-		if (updateUniqueReferenceValueItemProvider != null)
-			updateUniqueReferenceValueItemProvider.dispose();
-		if (remoteUpdateUniqueReferenceValueItemProvider != null)
-			remoteUpdateUniqueReferenceValueItemProvider.dispose();
 		if (resourceDiffItemProvider != null)
 			resourceDiffItemProvider.dispose();
 		if (resourceDependencyChangeItemProvider != null)
 			resourceDependencyChangeItemProvider.dispose();
-		if (addResourceDependencyItemProvider != null)
-			addResourceDependencyItemProvider.dispose();
-		if (removeResourceDependencyItemProvider != null)
-			removeResourceDependencyItemProvider.dispose();
-		if (remoteAddResourceDependencyItemProvider != null)
-			remoteAddResourceDependencyItemProvider.dispose();
-		if (remoteRemoveResourceDependencyItemProvider != null)
-			remoteRemoveResourceDependencyItemProvider.dispose();
+		if (resourceDependencyChangeLeftTargetItemProvider != null)
+			resourceDependencyChangeLeftTargetItemProvider.dispose();
+		if (resourceDependencyChangeRightTargetItemProvider != null)
+			resourceDependencyChangeRightTargetItemProvider.dispose();
 	}
 
 	/**

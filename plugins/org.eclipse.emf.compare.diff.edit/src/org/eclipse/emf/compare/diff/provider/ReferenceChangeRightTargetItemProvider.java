@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -27,9 +29,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -45,13 +48,29 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	}
 
 	/**
-	 * This returns ReferenceChangeRightTarget.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns ReferenceChangeRightTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ReferenceChangeRightTarget")); //$NON-NLS-1$
+		final ReferenceChangeRightTarget operation = (ReferenceChangeRightTarget)object;
+
+		final Object labelImage = AdapterUtils.getItemProviderImage(operation.getRightTarget());
+		final Object operationImage;
+		if (operation.isRemote()) {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoteAddReferenceValue"); //$NON-NLS-1$
+		} else {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoveReferenceValue"); //$NON-NLS-1$
+		}
+
+		if (labelImage != null) {
+			final List<Object> images = new ArrayList<Object>(2);
+			images.add(labelImage);
+			images.add(operationImage);
+			return new ComposedImage(images);
+		}
+		return operationImage;
 	}
 
 	/**
@@ -72,9 +91,9 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	}
 
 	/**
-	 * This adds a property descriptor for the Right Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Right Target feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addRightTargetPropertyDescriptor(Object object) {
@@ -90,9 +109,9 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	}
 
 	/**
-	 * This adds a property descriptor for the Left Target feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * This adds a property descriptor for the Left Target feature. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
 	 * @generated
 	 */
 	protected void addLeftTargetPropertyDescriptor(Object object) {
@@ -108,21 +127,30 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)object;
-		return getString("_UI_ReferenceChangeRightTarget_type") + " " + referenceChangeRightTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
+		final ReferenceChangeRightTarget operation = (ReferenceChangeRightTarget)object;
+
+		final String valueLabel = AdapterUtils.getItemProviderText(operation.getRightTarget());
+		final String referenceLabel = AdapterUtils.getItemProviderText(operation.getReference());
+		final String elementLabel = AdapterUtils.getItemProviderText(operation.getLeftElement());
+
+		if (operation.isRemote())
+			return getString("_UI_RemoteAddReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
+					elementLabel, });
+		return getString("_UI_RemoveReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
+				elementLabel, });
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -132,9 +160,9 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

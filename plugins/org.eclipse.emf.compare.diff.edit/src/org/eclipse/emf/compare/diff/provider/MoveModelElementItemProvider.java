@@ -29,8 +29,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.MoveModelElement}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class MoveModelElementItemProvider extends UpdateModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -52,19 +53,23 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		final MoveModelElement moveModelElement = (MoveModelElement)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(moveModelElement.getLeftElement());
+		final MoveModelElement operation = (MoveModelElement)object;
+
+		final Object labelImage = AdapterUtils.getItemProviderImage(operation.getLeftElement());
+		final Object operationImage;
+		if (operation.isRemote()) {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoteMoveModelElement"); //$NON-NLS-1$
+		} else {
+			operationImage = getResourceLocator().getImage("full/obj16/MoveModelElement"); //$NON-NLS-1$
+		}
 
 		if (labelImage != null) {
 			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/MoveModelElement")); //$NON-NLS-1$
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/MoveModelElement"); //$NON-NLS-1$
+			images.add(operationImage);
+			return new ComposedImage(images);
 		}
-
-		return labelImage;
+		return operationImage;
 	}
 
 	/**
@@ -91,24 +96,33 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final MoveModelElement moveModelElement = (MoveModelElement)object;
+		final MoveModelElement operation = (MoveModelElement)object;
 
-		final String elementLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftElement());
-		final String oldParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getLeftTarget());
-		final String newParentLabel = AdapterUtils.getItemProviderText(moveModelElement.getRightTarget());
+		final String elementLabel = AdapterUtils.getItemProviderText(operation.getLeftElement());
+		final String oldParentLabel = AdapterUtils.getItemProviderText(operation.getLeftTarget());
+		final String newParentLabel = AdapterUtils.getItemProviderText(operation.getRightTarget());
 
-		if (moveModelElement.isConflicting())
-			return getString("_UI_MoveModelElement_conflicting", new Object[] { //$NON-NLS-1$
-					elementLabel, oldParentLabel, newParentLabel, });
-		return getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
-				elementLabel, oldParentLabel, newParentLabel, });
+		final String diffLabel;
+		if (operation.isRemote()) {
+			diffLabel = getString("_UI_RemoteMoveModelElement_type", new Object[] {elementLabel, //$NON-NLS-1$
+					oldParentLabel, newParentLabel, });
+		} else {
+			if (operation.isConflicting()) {
+				diffLabel = getString("_UI_MoveModelElement_conflicting", new Object[] { //$NON-NLS-1$
+						elementLabel, oldParentLabel, newParentLabel, });
+			} else {
+				diffLabel = getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
+						elementLabel, oldParentLabel, newParentLabel, });
+			}
+		}
+		return diffLabel;
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -156,9 +170,9 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

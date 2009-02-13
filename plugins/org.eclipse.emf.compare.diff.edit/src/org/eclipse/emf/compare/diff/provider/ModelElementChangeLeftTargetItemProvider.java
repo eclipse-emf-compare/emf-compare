@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -27,9 +29,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class ModelElementChangeLeftTargetItemProvider extends ModelElementChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -45,13 +48,29 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	}
 
 	/**
-	 * This returns ModelElementChangeLeftTarget.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns ModelElementChangeLeftTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelElementChangeLeftTarget")); //$NON-NLS-1$
+		final ModelElementChangeLeftTarget operation = (ModelElementChangeLeftTarget)object;
+
+		final Object labelImage = AdapterUtils.getItemProviderImage(operation.getLeftElement());
+		final Object operationImage;
+		if (operation.isRemote()) {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoteRemoveModelElement"); //$NON-NLS-1$
+		} else {
+			operationImage = getResourceLocator().getImage("full/obj16/AddModelElement"); //$NON-NLS-1$
+		}
+
+		if (labelImage != null) {
+			final List<Object> images = new ArrayList<Object>(2);
+			images.add(labelImage);
+			images.add(operationImage);
+			return new ComposedImage(images);
+		}
+		return operationImage;
 	}
 
 	/**
@@ -72,21 +91,35 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		ModelElementChangeLeftTarget modelElementChangeLeftTarget = (ModelElementChangeLeftTarget)object;
-		return getString("_UI_ModelElementChangeLeftTarget_type") + " " + modelElementChangeLeftTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
+		final ModelElementChangeLeftTarget operation = (ModelElementChangeLeftTarget)object;
+
+		final String targetName = AdapterUtils.getItemProviderText(operation.getLeftElement());
+
+		final String diffLabel;
+		if (operation.isRemote()) {
+			if (operation.isConflicting()) {
+				diffLabel = getString("_UI_RemoteRemoveModelElement_conflicting", new Object[] {targetName }); //$NON-NLS-1$
+			} else {
+				diffLabel = getString("_UI_RemoteRemoveModelElement_type", new Object[] {targetName }); //$NON-NLS-1$
+			}
+		} else {
+			diffLabel = getString("_UI_AddModelElement_type", new Object[] {targetName, }); //$NON-NLS-1$
+		}
+
+		return diffLabel;
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -134,9 +167,9 @@ public class ModelElementChangeLeftTargetItemProvider extends ModelElementChange
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

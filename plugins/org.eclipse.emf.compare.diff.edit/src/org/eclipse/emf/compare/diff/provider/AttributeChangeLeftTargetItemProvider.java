@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -28,9 +30,10 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -46,13 +49,30 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	}
 
 	/**
-	 * This returns AttributeChangeLeftTarget.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns AttributeChangeLeftTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeChangeLeftTarget")); //$NON-NLS-1$
+		final AttributeChangeLeftTarget operation = (AttributeChangeLeftTarget)object;
+
+		final Object targetImage = AdapterUtils.getItemProviderImage(operation.getAttribute());
+		final Object operationImage;
+		if (operation.isRemote()) {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoteRemoveAttribute"); //$NON-NLS-1$
+		} else {
+			operationImage = getResourceLocator().getImage("full/obj16/AddAttribute"); //$NON-NLS-1$
+		}
+
+		if (targetImage != null) {
+			final List<Object> images = new ArrayList<Object>(2);
+			images.add(targetImage);
+			images.add(operationImage);
+			return new ComposedImage(images);
+		}
+
+		return operationImage;
 	}
 
 	/**
@@ -72,21 +92,29 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	}
 
 	/**
-	 * This returns the label text for the adapted class.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)object;
-		return getString("_UI_AttributeChangeLeftTarget_type") + " " + attributeChangeLeftTarget.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
+		final AttributeChangeLeftTarget operation = (AttributeChangeLeftTarget)object;
+
+		final String attributeLabel = AdapterUtils.getItemProviderText(operation.getAttribute());
+		final String elementLabel = AdapterUtils.getItemProviderText(operation.getRightElement());
+
+		if (operation.isRemote())
+			return getString("_UI_RemoteRemoveAttribute_type", new Object[] {operation.getLeftTarget(), //$NON-NLS-1$
+					attributeLabel, elementLabel, });
+		return getString("_UI_AddAttribute_type", new Object[] {operation.getLeftTarget(), //$NON-NLS-1$
+				attributeLabel, elementLabel, });
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -115,9 +143,9 @@ public class AttributeChangeLeftTargetItemProvider extends AttributeChangeItemPr
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

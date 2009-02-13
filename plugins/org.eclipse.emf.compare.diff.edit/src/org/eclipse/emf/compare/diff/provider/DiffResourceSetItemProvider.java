@@ -151,16 +151,10 @@ public class DiffResourceSetItemProvider extends ItemProviderAdapter implements 
 				DiffFactory.eINSTANCE.createResourceDependencyChange()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_RESOURCE_SET__RESOURCE_DIFFS,
-				DiffFactory.eINSTANCE.createAddResourceDependency()));
+				DiffFactory.eINSTANCE.createResourceDependencyChangeLeftTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_RESOURCE_SET__RESOURCE_DIFFS,
-				DiffFactory.eINSTANCE.createRemoveResourceDependency()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_RESOURCE_SET__RESOURCE_DIFFS,
-				DiffFactory.eINSTANCE.createRemoteAddResourceDependency()));
-
-		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_RESOURCE_SET__RESOURCE_DIFFS,
-				DiffFactory.eINSTANCE.createRemoteRemoveResourceDependency()));
+				DiffFactory.eINSTANCE.createResourceDependencyChangeRightTarget()));
 	}
 
 	/**

@@ -24,9 +24,10 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature} object.
- * <!-- begin-user-doc -->
+ * This is the item provider adapter for a
+ * {@link org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature} object. <!-- begin-user-doc -->
  * <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -41,12 +42,17 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	}
 
 	/**
-	 * This returns UpdateContainmentFeature.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * This returns UpdateContainmentFeature.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
+		final UpdateContainmentFeature operation = (UpdateContainmentFeature)object;
+
+		if (operation.isRemote())
+			return overlayImage(object, getResourceLocator().getImage(
+					"full/obj16/RemoteUpdateContainmentFeature")); //$NON-NLS-1$
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/UpdateContainmentFeature")); //$NON-NLS-1$
 	}
 
@@ -72,17 +78,23 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	 */
 	@Override
 	public String getText(Object object) {
-		final UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)object;
-		return getString("_UI_UpdateContainmentFeature_type", new Object[] {updateContainmentFeature //$NON-NLS-1$
-				.getRightElement().eContainmentFeature().getName(),
-				updateContainmentFeature.getLeftElement().eContainmentFeature().getName(), });
+		final UpdateContainmentFeature operation = (UpdateContainmentFeature)object;
+
+		final String leftContainmentFeature = operation.getLeftElement().eContainmentFeature().getName();
+		final String rightContainmentFeature = operation.getRightElement().eContainmentFeature().getName();
+
+		if (operation.isRemote())
+			return getString("_UI_RemoteUpdateContainmentFeature_type", new Object[] { //$NON-NLS-1$
+					rightContainmentFeature, leftContainmentFeature, });
+		return getString("_UI_UpdateContainmentFeature_type", new Object[] {rightContainmentFeature, //$NON-NLS-1$
+				leftContainmentFeature, });
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -92,9 +104,9 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

@@ -27,8 +27,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateAttribute}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateAttributeItemProvider extends AttributeChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -51,18 +52,21 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	@Override
 	public Object getImage(Object object) {
 		final UpdateAttribute updateAttribute = (UpdateAttribute)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(updateAttribute.getAttribute());
+		final Object labelImage = AdapterUtils.getItemProviderImage(updateAttribute.getAttribute());
+		final Object operationImage;
+		if (updateAttribute.isRemote()) {
+			operationImage = getResourceLocator().getImage("full/obj16/RemoteUpdateAttribute"); //$NON-NLS-1$
+		} else {
+			operationImage = getResourceLocator().getImage("full/obj16/UpdateAttribute"); //$NON-NLS-1$
+		}
 
 		if (labelImage != null) {
 			final List<Object> images = new ArrayList<Object>(2);
 			images.add(labelImage);
-			images.add(getResourceLocator().getImage("full/obj16/UpdateAttribute")); //$NON-NLS-1$
-			labelImage = new ComposedImage(images);
-		} else {
-			labelImage = getResourceLocator().getImage("full/obj16/UpdateAttribute"); //$NON-NLS-1$
+			images.add(operationImage);
+			return new ComposedImage(images);
 		}
-
-		return labelImage;
+		return getResourceLocator().getImage("full/obj16/UpdateAttribute"); //$NON-NLS-1$
 	}
 
 	/**
@@ -94,18 +98,29 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 		final Object leftValue = updateOp.getLeftElement().eGet(updateOp.getAttribute());
 		final Object rightValue = updateOp.getRightElement().eGet(updateOp.getAttribute());
 
-		if (updateOp.isConflicting())
-			return getString("_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, rightValue, //$NON-NLS-1$
-					leftValue, });
-		return getString("_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, rightValue, //$NON-NLS-1$
-				leftValue, });
+		final String diffLabel;
+		if (updateOp.isRemote()) {
+			diffLabel = getString("_UI_RemoteUpdateAttribute_type", new Object[] {attributeLabel, //$NON-NLS-1$
+					elementLabel, leftValue, rightValue, });
+		} else {
+			if (updateOp.isConflicting()) {
+				diffLabel = getString(
+						"_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, rightValue, //$NON-NLS-1$
+								leftValue, });
+			} else {
+				diffLabel = getString(
+						"_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, rightValue, //$NON-NLS-1$
+								leftValue, });
+			}
+		}
+		return diffLabel;
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -115,9 +130,9 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
