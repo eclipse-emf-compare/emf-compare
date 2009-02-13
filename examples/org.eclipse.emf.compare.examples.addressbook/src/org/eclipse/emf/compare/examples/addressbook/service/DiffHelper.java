@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  */
 public class DiffHelper {
 
-	public static AddModelElement isAdded(EObject instance, DiffModel diff) {
+	public static ModelElementChangeLeftTarget isAdded(EObject instance, DiffModel diff) {
 		final EcoreUtil.CrossReferencer referencer = getCrossReferencer(instance, diff);
 		final Collection<EStructuralFeature.Setting> references = referencer.get(instance);
 		if (references != null && references.size() > 0) {
@@ -36,8 +36,9 @@ public class DiffHelper {
 			while (it.hasNext()) {
 				final EStructuralFeature.Setting setting = it.next();
 				final EObject eObj = setting.getEObject();
-				if (eObj instanceof AddModelElement && ((AddModelElement)eObj).getLeftElement() == instance)
-					return (AddModelElement)eObj;
+				if (eObj instanceof ModelElementChangeLeftTarget
+						&& ((ModelElementChangeLeftTarget)eObj).getLeftElement() == instance)
+					return (ModelElementChangeLeftTarget)eObj;
 			}
 		}
 		return null;
