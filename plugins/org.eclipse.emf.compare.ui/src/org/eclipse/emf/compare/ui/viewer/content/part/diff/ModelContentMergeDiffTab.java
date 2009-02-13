@@ -684,7 +684,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			// and now the color which should be used for this kind of
 			// differences
 			final String color;
-			if (diff.getKind() == DifferenceKind.CONFLICT || diff.isConflicting()) {
+			if (diff.isConflicting()) {
 				color = EMFCompareConstants.PREFERENCES_KEY_CONFLICTING_COLOR;
 			} else if (diff.getKind() == DifferenceKind.ADDITION) {
 				color = EMFCompareConstants.PREFERENCES_KEY_ADDED_COLOR;

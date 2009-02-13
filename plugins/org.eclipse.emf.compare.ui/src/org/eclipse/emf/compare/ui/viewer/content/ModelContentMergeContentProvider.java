@@ -10,14 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.content;
 
-import java.io.IOException;
-import java.util.Collections;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
-import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -175,17 +170,17 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			final ICompareInput input = (ICompareInput)element;
-			if (input.getLeft() instanceof TypedElementWrapper) {
-				final TypedElementWrapper left = (TypedElementWrapper)input.getLeft();
-				try {
-					left.getObject().eResource().save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					EMFComparePlugin.log(e.getMessage(), false);
-				}
-			}
-		}
+		// if (element instanceof ICompareInput) {
+		// final ICompareInput input = (ICompareInput)element;
+		// if (input.getLeft() instanceof TypedElementWrapper) {
+		// final TypedElementWrapper left = (TypedElementWrapper)input.getLeft();
+		// try {
+		// left.getObject().eResource().save(Collections.EMPTY_MAP);
+		// } catch (IOException e) {
+		// EMFComparePlugin.log(e.getMessage(), false);
+		// }
+		// }
+		// }
 	}
 
 	/**
@@ -195,17 +190,17 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveRightContent(Object element, byte[] bytes) {
-		if (element instanceof ICompareInput) {
-			final ICompareInput input = (ICompareInput)element;
-			if (input.getRight() instanceof TypedElementWrapper) {
-				final TypedElementWrapper right = (TypedElementWrapper)input.getRight();
-				try {
-					right.getObject().eResource().save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					EMFComparePlugin.log(e.getMessage(), false);
-				}
-			}
-		}
+		// if (element instanceof ICompareInput) {
+		// final ICompareInput input = (ICompareInput)element;
+		// if (input.getRight() instanceof TypedElementWrapper) {
+		// final TypedElementWrapper right = (TypedElementWrapper)input.getRight();
+		// try {
+		// right.getObject().eResource().save(Collections.EMPTY_MAP);
+		// } catch (IOException e) {
+		// EMFComparePlugin.log(e.getMessage(), false);
+		// }
+		// }
+		// }
 	}
 
 	/**
