@@ -8,22 +8,29 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.internal.impl;
+package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.diff.merge.DefaultMerger;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for an {@link UpdateAttribute}.
+ * Merger for an {@link AttributeChangeRightTarget} operation.<br/>
+ * <p>
+ * Are considered for this merger :
+ * <ul>
+ * <li>{@link AddAttribute}</li>
+ * <li>{@link RemoteRemoveAttribute}</li>
+ * </ul>
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class UpdateAttributeMerger extends DefaultMerger {
+public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -31,12 +38,12 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
-		final EObject element = theDiff.getRightElement();
+		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
 		final EObject origin = theDiff.getLeftElement();
+		final Object value = theDiff.getRightTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eSet(origin, attr.getName(), EFactory.eGet(element, attr.getName()));
+			EFactory.eAdd(origin, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -50,16 +57,15 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
-		final EObject element = theDiff.getRightElement();
-		final EObject origin = theDiff.getLeftElement();
+		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final EObject target = theDiff.getRightElement();
+		final Object value = theDiff.getRightTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eSet(element, attr.getName(), EFactory.eGet(origin, attr.getName()));
+			EFactory.eRemove(target, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();
 	}
-
 }

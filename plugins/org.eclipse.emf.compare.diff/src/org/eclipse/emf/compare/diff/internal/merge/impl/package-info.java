@@ -17,4 +17,4 @@
  * 
  * @since 0.8
  */
-package org.eclipse.emf.compare.diff.merge.internal.impl;
+package org.eclipse.emf.compare.diff.internal.merge.impl;

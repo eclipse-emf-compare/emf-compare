@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.api;
+package org.eclipse.emf.compare.diff.merge;
 
 /**
  * An abstract implementation of a listener to receive merge events. All methods in this class are empty,
@@ -21,7 +21,7 @@ public abstract class AbstractMergeListener implements IMergeListener {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMergeListener#mergeDiffEnd(org.eclipse.emf.compare.diff.merge.api.MergeEvent)
+	 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeDiffEnd(org.eclipse.emf.compare.diff.merge.MergeEvent)
 	 */
 	public void mergeDiffEnd(MergeEvent event) {
 		// empty implementation
@@ -30,7 +30,7 @@ public abstract class AbstractMergeListener implements IMergeListener {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMergeListener#mergeDiffStart(org.eclipse.emf.compare.diff.merge.api.MergeEvent)
+	 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeDiffStart(org.eclipse.emf.compare.diff.merge.MergeEvent)
 	 */
 	public void mergeDiffStart(MergeEvent event) {
 		// empty implementation
@@ -39,7 +39,7 @@ public abstract class AbstractMergeListener implements IMergeListener {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMergeListener#mergeOperationEnd(org.eclipse.emf.compare.diff.merge.api.MergeEvent)
+	 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeOperationEnd(org.eclipse.emf.compare.diff.merge.MergeEvent)
 	 */
 	public void mergeOperationEnd(MergeEvent event) {
 		// empty implementation
@@ -48,7 +48,7 @@ public abstract class AbstractMergeListener implements IMergeListener {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMergeListener#mergeOperationStart(org.eclipse.emf.compare.diff.merge.api.MergeEvent)
+	 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeOperationStart(org.eclipse.emf.compare.diff.merge.MergeEvent)
 	 */
 	public void mergeOperationStart(MergeEvent event) {
 		// empty implementation

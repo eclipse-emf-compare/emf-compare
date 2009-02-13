@@ -29,7 +29,7 @@
         point="org.eclipse.emf.compare.diff.mergerprovider">
      <mergerprovider
            fileExtension="*"
-           mergerProviderClass="org.eclipse.emf.compare.diff.merge.internal.DefaultMergerProvider"
+           mergerProviderClass="org.eclipse.emf.compare.diff.internal.merge.DefaultMergerProvider"
            priority="lowest">
      </mergerprovider>
   </extension>

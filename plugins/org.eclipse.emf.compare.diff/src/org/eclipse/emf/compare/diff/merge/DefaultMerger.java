@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.api;
+package org.eclipse.emf.compare.diff.merge;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -57,7 +57,7 @@ public class DefaultMerger implements IMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger#applyInOrigin()
 	 */
 	public void applyInOrigin() {
 		handleMutuallyDerivedReferences();
@@ -67,7 +67,7 @@ public class DefaultMerger implements IMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#canApplyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger#canApplyInOrigin()
 	 */
 	public boolean canApplyInOrigin() {
 		return true;
@@ -76,7 +76,7 @@ public class DefaultMerger implements IMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#canUndoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger#canUndoInTarget()
 	 */
 	public boolean canUndoInTarget() {
 		return true;
@@ -85,7 +85,7 @@ public class DefaultMerger implements IMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#setDiffElement(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger#setDiffElement(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public void setDiffElement(DiffElement element) {
 		diff = element;
@@ -94,7 +94,7 @@ public class DefaultMerger implements IMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger#undoInTarget()
 	 */
 	public void undoInTarget() {
 		handleMutuallyDerivedReferences();

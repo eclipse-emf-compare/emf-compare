@@ -8,29 +8,29 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.internal.impl;
+package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.merge.DefaultMerger;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * Merger for an {@link AttributeChangeRightTarget} operation.<br/>
+ * Merger for an {@link AttributeChangeLeftTarget} operation.<br/>
  * <p>
  * Are considered for this merger :
  * <ul>
- * <li>{@link AddAttribute}</li>
- * <li>{@link RemoteRemoveAttribute}</li>
+ * <li>{@link RemoveAttribute}</li>
+ * <li>{@link RemoteAddAttribute}</li>
  * </ul>
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class AttributeChangeRightTargetMerger extends DefaultMerger {
+public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -38,12 +38,12 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject origin = theDiff.getLeftElement();
-		final Object value = theDiff.getRightTarget();
+		final Object value = theDiff.getLeftTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eAdd(origin, attr.getName(), value);
+			EFactory.eRemove(origin, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
@@ -57,12 +57,12 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final AttributeChangeRightTarget theDiff = (AttributeChangeRightTarget)this.diff;
+		final AttributeChangeLeftTarget theDiff = (AttributeChangeLeftTarget)this.diff;
 		final EObject target = theDiff.getRightElement();
-		final Object value = theDiff.getRightTarget();
+		final Object value = theDiff.getLeftTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eRemove(target, attr.getName(), value);
+			EFactory.eAdd(target, attr.getName(), value);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}

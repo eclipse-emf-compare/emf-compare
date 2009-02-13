@@ -545,7 +545,7 @@ public interface DiffPackage extends EPackage {
 	 * The meta object id for the '<em>IMerger</em>' data type. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 	 * @generated
 	 */
@@ -2614,10 +2614,10 @@ public interface DiffPackage extends EPackage {
 	EReference getDiffResourceSet_ResourceDiffs();
 
 	/**
-	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.diff.merge.api.IMerger <em>IMerger</em>}'.
+	 * Returns the meta object for data type '{@link org.eclipse.emf.compare.diff.merge.IMerger <em>IMerger</em>}'.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>IMerger</em>'.
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMerger
+	 * @see org.eclipse.emf.compare.diff.merge.IMerger
 	 * @model instanceClass="org.eclipse.emf.compare.diff.merge.api.IMerger"
 	 * @generated
 	 */
@@ -3312,7 +3312,7 @@ public interface DiffPackage extends EPackage {
 		 * The meta object literal for the '<em>IMerger</em>' data type.
 		 * <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
-		 * @see org.eclipse.emf.compare.diff.merge.api.IMerger
+		 * @see org.eclipse.emf.compare.diff.merge.IMerger
 		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 		 * @generated
 		 */

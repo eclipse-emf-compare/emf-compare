@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.engine.EcoreDiffEngine;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
+import org.eclipse.emf.compare.diff.engine.IDiffEngine;
 
 /* (non-javadoc) we make use of the ordering of the engines, do not change Map and List implementations. */
 /**

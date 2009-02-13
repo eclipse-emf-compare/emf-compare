@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.api.IDiffEngine;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
@@ -86,7 +85,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel)
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel)
 	 */
 	public DiffModel doDiff(MatchModel match) {
 		return doDiff(match, false);
@@ -95,7 +94,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean)
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
@@ -120,7 +119,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#doDiffResourceSet(org.eclipse.emf.compare.match.metamodel.MatchModel,
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#doDiffResourceSet(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean, org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
 	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, CrossReferencer crossReferencer) {
@@ -145,7 +144,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.api.IDiffEngine#reset()
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#reset()
 	 */
 	public void reset() {
 		unmatchedElements.clear();

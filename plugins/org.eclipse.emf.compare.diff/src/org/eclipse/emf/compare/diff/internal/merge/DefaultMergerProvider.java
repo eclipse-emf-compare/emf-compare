@@ -8,22 +8,22 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.internal;
+package org.eclipse.emf.compare.diff.internal.merge;
 
 import java.util.Map;
 
-import org.eclipse.emf.compare.diff.merge.api.IMerger;
-import org.eclipse.emf.compare.diff.merge.api.IMergerProvider;
-import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.AttributeChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.DiffGroupMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.ModelElementChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.MoveModelElementMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeLeftTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeRightTargetMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateAttributeMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateReferenceMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.AttributeChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.AttributeChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.DiffGroupMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.ModelElementChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.ModelElementChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.MoveModelElementMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.ReferenceChangeLeftTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.ReferenceChangeRightTargetMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.UpdateAttributeMerger;
+import org.eclipse.emf.compare.diff.internal.merge.impl.UpdateReferenceMerger;
+import org.eclipse.emf.compare.diff.merge.IMerger;
+import org.eclipse.emf.compare.diff.merge.IMergerProvider;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -52,7 +52,7 @@ public class DefaultMergerProvider implements IMergerProvider {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.IMergerProvider#getMergers()
+	 * @see org.eclipse.emf.compare.diff.merge.IMergerProvider#getMergers()
 	 */
 	public Map<Class<? extends DiffElement>, Class<? extends IMerger>> getMergers() {
 		if (mergerTypes == null) {

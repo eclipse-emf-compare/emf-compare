@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.api;
+package org.eclipse.emf.compare.diff.merge;
 
 import java.util.Map;
 

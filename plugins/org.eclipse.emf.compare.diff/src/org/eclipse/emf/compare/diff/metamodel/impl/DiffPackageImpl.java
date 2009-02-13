@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
-import org.eclipse.emf.compare.diff.merge.api.IMerger;
+import org.eclipse.emf.compare.diff.merge.IMerger;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;

@@ -19,7 +19,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;

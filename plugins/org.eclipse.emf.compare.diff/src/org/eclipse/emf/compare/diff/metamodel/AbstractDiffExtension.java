@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.diff.merge.api.IMerger;
+import org.eclipse.emf.compare.diff.merge.IMerger;
 import org.eclipse.emf.ecore.EObject;
 
 /**

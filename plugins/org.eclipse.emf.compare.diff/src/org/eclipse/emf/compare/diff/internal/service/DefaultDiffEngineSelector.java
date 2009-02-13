@@ -8,9 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.service;
+package org.eclipse.emf.compare.diff.internal.service;
 
 import java.util.List;
+
+import org.eclipse.emf.compare.diff.service.DiffEngineDescriptor;
+import org.eclipse.emf.compare.diff.service.IDiffEngineSelector;
 
 /**
  * This default implementation of an {@link IDiffEngineSelector} simply selects the first diff engine of the

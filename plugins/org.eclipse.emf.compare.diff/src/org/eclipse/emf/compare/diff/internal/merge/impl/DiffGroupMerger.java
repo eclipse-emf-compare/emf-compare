@@ -8,12 +8,12 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.diff.merge.internal.impl;
+package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
+import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 
@@ -26,7 +26,7 @@ public class DiffGroupMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.diff.merge.api.DefaultMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
@@ -39,7 +39,7 @@ public class DiffGroupMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.diff.merge.api.DefaultMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {

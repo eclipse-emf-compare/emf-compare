@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-import org.eclipse.emf.compare.diff.merge.api.EMFCompareEObjectCopier;
-import org.eclipse.emf.compare.diff.merge.api.IMergeListener;
-import org.eclipse.emf.compare.diff.merge.api.IMerger;
-import org.eclipse.emf.compare.diff.merge.api.MergeEvent;
+import org.eclipse.emf.compare.diff.merge.EMFCompareEObjectCopier;
+import org.eclipse.emf.compare.diff.merge.IMergeListener;
+import org.eclipse.emf.compare.diff.merge.IMerger;
+import org.eclipse.emf.compare.diff.merge.MergeEvent;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;

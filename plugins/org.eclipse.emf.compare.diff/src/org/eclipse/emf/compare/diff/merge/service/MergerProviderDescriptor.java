@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.merge.api.IMergerProvider;
+import org.eclipse.emf.compare.diff.merge.IMergerProvider;
 import org.eclipse.emf.compare.util.EngineConstants;
 
 /**

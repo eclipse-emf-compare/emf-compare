@@ -14,7 +14,7 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
+import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 
 /**
