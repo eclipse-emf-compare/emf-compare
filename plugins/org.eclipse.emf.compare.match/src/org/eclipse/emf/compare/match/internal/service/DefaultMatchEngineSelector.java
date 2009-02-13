@@ -9,9 +9,12 @@
  *     Dimitrios Kolovos - initial API and implementation
  *     Obeo
  *******************************************************************************/
-package org.eclipse.emf.compare.match.service;
+package org.eclipse.emf.compare.match.internal.service;
 
 import java.util.List;
+
+import org.eclipse.emf.compare.match.service.IMatchEngineSelector;
+import org.eclipse.emf.compare.match.service.MatchEngineDescriptor;
 
 /**
  * This class will allow the user to select the matching engine he wants to use for comparison when more than

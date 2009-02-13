@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.statistic.similarity;
+package org.eclipse.emf.compare.match.internal.statistic;
 
 import java.util.ArrayList;
 import java.util.List;

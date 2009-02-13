@@ -15,9 +15,9 @@
  * The metrics and similarity computation features are all provided by the classes
  * within these packages. {@link MetamodelFilter} allows us to filter unused 
  * attributes/references of the models, 
- * {@link org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity} is in
+ * {@link org.eclipse.emf.compare.match.internal.statistic.NameSimilarity} is in
  * charge of computing String similarities and 
- * {@link org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity} is
+ * {@link org.eclipse.emf.compare.match.internal.statistic.StructureSimilarity} is
  * used to compute structural similarities on the EObjects.
  * </p>
  */

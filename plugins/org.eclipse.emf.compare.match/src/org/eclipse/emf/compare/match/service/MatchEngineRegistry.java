@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.api.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.EcoreMatchEngine;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
+import org.eclipse.emf.compare.match.engine.IMatchEngine;
 
 /* (non-javadoc) we make use of the ordering of the engines, do not change Map and List implementations. */
 /**

@@ -26,8 +26,9 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.internal.runtime.CompareProgressMonitor;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.api.IMatchEngine;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
+import org.eclipse.emf.compare.match.internal.statistic.StructureSimilarity;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
@@ -36,8 +37,6 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
-import org.eclipse.emf.compare.match.statistic.similarity.StructureSimilarity;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
@@ -145,7 +144,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
@@ -251,7 +250,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
@@ -310,7 +309,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
@@ -341,7 +340,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
@@ -371,7 +370,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#reset()
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#reset()
 	 */
 	public void reset() {
 		filter.clear();
@@ -389,7 +388,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
 	 *      org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
@@ -419,7 +418,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
 	 *      org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,

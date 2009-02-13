@@ -17,13 +17,14 @@ import java.util.Map;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.IMatchEngine;
+import org.eclipse.emf.compare.match.internal.service.DefaultMatchEngineSelector;
+import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -64,7 +65,7 @@ public final class MatchService {
 	 * @return {@link MatchModel} for these three objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -91,7 +92,7 @@ public final class MatchService {
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -119,7 +120,7 @@ public final class MatchService {
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
@@ -144,7 +145,7 @@ public final class MatchService {
 	 * @return Matching model result of these two models' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> options)
 			throws InterruptedException {
@@ -168,7 +169,7 @@ public final class MatchService {
 	 * @return {@link MatchModel} for these two resources' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
 	 * @since 0.9.0
 	 */
@@ -196,7 +197,7 @@ public final class MatchService {
 	 * @return Matching model result of the comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the matching is interrupted somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
@@ -224,7 +225,7 @@ public final class MatchService {
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
@@ -338,7 +339,7 @@ public final class MatchService {
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see org.eclipse.emf.compare.match.api.MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,

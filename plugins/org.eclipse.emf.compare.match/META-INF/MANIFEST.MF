@@ -6,15 +6,19 @@ Bundle-Version: 0.9.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.emf.compare.match.api,
+Export-Package: org.eclipse.emf.compare.match,
  org.eclipse.emf.compare.match.engine,
+ org.eclipse.emf.compare.match.internal.statistic;
+  x-friends:="org.eclipse.emf.compare.diff.edit,
+   org.eclipse.emf.compare.ui,
+   org.eclipse.emf.compare.tests,
+   org.eclipse.emf.compare.diff",
  org.eclipse.emf.compare.match.metamodel,
  org.eclipse.emf.compare.match.metamodel.impl,
  org.eclipse.emf.compare.match.metamodel.provider,
  org.eclipse.emf.compare.match.metamodel.util,
  org.eclipse.emf.compare.match.service,
- org.eclipse.emf.compare.match.statistic,
- org.eclipse.emf.compare.match.statistic.similarity;x-friends:="org.eclipse.emf.compare.diff.edit,org.eclipse.emf.compare.ui,org.eclipse.emf.compare.tests,org.eclipse.emf.compare.diff"
+ org.eclipse.emf.compare.match.statistic
 Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
  org.eclipse.emf.compare,
  org.eclipse.emf.ecore,

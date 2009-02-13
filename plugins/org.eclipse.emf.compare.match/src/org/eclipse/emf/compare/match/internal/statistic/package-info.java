@@ -10,11 +10,6 @@
  *     Obeo - initial API and implementation
  */
 /**
- * Provides the API that can be used for clients in order to implement their own
- * matching engine.
- * <p>
- * All of the fields featured by {@link MatchOptions} can be used with the generic
- * match engine to alter the result of the matching process.
- * </p>
+ * Provides classes to compute String similarities and EObjects structural similarity.
  */
-package org.eclipse.emf.compare.match.api;
+package org.eclipse.emf.compare.match.internal.statistic;

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.api;
+package org.eclipse.emf.compare.match.engine;
 
 import java.util.Map;
 
@@ -34,13 +34,13 @@ public interface IMatchEngine {
 	 * @param ancestor
 	 *            Common ancestor of the two others.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return {@link MatchModel} for these three objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
@@ -55,13 +55,13 @@ public interface IMatchEngine {
 	 * @param rightRoot
 	 *            Right of the two objects to compare.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap)
@@ -77,13 +77,13 @@ public interface IMatchEngine {
 	 * @param ancestor
 	 *            Common ancestor of the right and left models.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, Map<String, Object> optionMap)
@@ -97,13 +97,13 @@ public interface IMatchEngine {
 	 * @param rightRoot
 	 *            Right model for the comparison.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
@@ -123,13 +123,13 @@ public interface IMatchEngine {
 	 * @param rightResource
 	 *            Right compared resource.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Map<String, Object> optionMap)
@@ -145,13 +145,13 @@ public interface IMatchEngine {
 	 * @param ancestorResource
 	 *            Common ancestor of the two compared resources.
 	 * @param optionMap
-	 *            Options to tweak the matching procedure. <code>null</code> or {@link Collections#EMPTY_MAP}
-	 *            will result in the default options to be used.
+	 *            Options to tweak the matching procedure. <code>null</code> or
+	 *            {@link java.util.Collections#EMPTY_MAP} will result in the default options to be used.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
-	 * @see MatchOptions
+	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 0.9.0
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,

@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.match.api;
+package org.eclipse.emf.compare.match;
 
 /**
  * Defines constants for the different options available to tweak the matching process.
