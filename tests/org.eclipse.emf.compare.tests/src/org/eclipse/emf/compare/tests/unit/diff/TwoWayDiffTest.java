@@ -22,7 +22,7 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -238,7 +238,7 @@ public class TwoWayDiffTest extends TestCase {
 		int deletionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof RemoveModelElement) {
+			if (aDiff instanceof ModelElementChangeRightTarget) {
 				deletionCount++;
 			}
 			if (!(aDiff instanceof DiffGroup)) {

@@ -19,11 +19,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.api.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -284,7 +283,7 @@ public class ThreeWayDiffTest extends TestCase {
 		int deletionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof RemoteRemoveModelElement) {
+			if (aDiff instanceof ModelElementChangeLeftTarget) {
 				deletionCount++;
 			}
 			if (!(aDiff instanceof DiffGroup)) {
@@ -292,7 +291,7 @@ public class ThreeWayDiffTest extends TestCase {
 			}
 		}
 
-		// We're expecting two changes, one of which being an addition
+		// We're expecting two changes, one of which being a removal
 		assertEquals("Unexpected count of differences.", 2, elementCount);
 		assertEquals("Unexpected count of deletions in the DiffModel.", 1, deletionCount);
 	}
@@ -324,7 +323,7 @@ public class ThreeWayDiffTest extends TestCase {
 		int additionCount = 0;
 		while (diffIterator.hasNext()) {
 			final DiffElement aDiff = (DiffElement)diffIterator.next();
-			if (aDiff instanceof AddModelElement) {
+			if (aDiff instanceof ModelElementChangeLeftTarget) {
 				additionCount++;
 			}
 			if (!(aDiff instanceof DiffGroup)) {
@@ -332,7 +331,7 @@ public class ThreeWayDiffTest extends TestCase {
 			}
 		}
 
-		// We're expecting two changes, one of which being a removal
+		// We're expecting two changes, one of which being an addition
 		assertEquals("Unexpected count of differences.", 2, elementCount);
 		assertEquals("Unexpected count of additions in the DiffModel.", 1, additionCount);
 	}
