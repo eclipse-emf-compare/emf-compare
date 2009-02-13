@@ -19,14 +19,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.examples.export.library.Book;
 import org.eclipse.emf.compare.examples.export.library.Library;
 import org.eclipse.emf.compare.examples.export.library.LibraryPackage;
@@ -194,8 +194,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof AddModelElement) {
-				final EObject addedElement = ((AddModelElement)next).getLeftElement();
+			if (next instanceof ModelElementChangeLeftTarget) {
+				final EObject addedElement = ((ModelElementChangeLeftTarget)next).getLeftElement();
 				if (addedElement instanceof Member) {
 					// We need to create the table headers
 					if (newMembers.length() == 0) {
@@ -228,8 +228,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof AddModelElement) {
-				final EObject addedElement = ((AddModelElement)next).getLeftElement();
+			if (next instanceof ModelElementChangeLeftTarget) {
+				final EObject addedElement = ((ModelElementChangeLeftTarget)next).getLeftElement();
 				if (addedElement instanceof Book) {
 					// We need to create the table headers
 					if (newBooks.length() == 0) {
@@ -262,8 +262,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof AddReferenceValue) {
-				final EReference target = ((AddReferenceValue)next).getReference();
+			if (next instanceof ReferenceChangeLeftTarget) {
+				final EReference target = ((ReferenceChangeLeftTarget)next).getReference();
 				if (target.getFeatureID() == LibraryPackage.MEMBER__BORROWED_BOOKS) {
 					// We need to create the table headers
 					if (borrowedBooks.length() == 0) {
@@ -271,8 +271,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 						borrowedBooks += "<td class=\"header\" colspan=\"2\">Borrowed Books</td></tr>"; //$NON-NLS-1$
 						borrowedBooks += "<tr><td class=\"header\">Title</td><td class=\"header\">Member</td></tr>"; //$NON-NLS-1$
 					}
-					final Book borrowed = (Book)((AddReferenceValue)next).getLeftTarget();
-					final Member member = (Member)((AddReferenceValue)next).getRightElement();
+					final Book borrowed = (Book)((ReferenceChangeLeftTarget)next).getLeftTarget();
+					final Member member = (Member)((ReferenceChangeLeftTarget)next).getRightElement();
 					borrowedBooks += "<tr><td>"; //$NON-NLS-1$
 					borrowedBooks += borrowed.getTitle();
 					borrowedBooks += "</td><td>"; //$NON-NLS-1$
@@ -298,8 +298,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof RemoveReferenceValue) {
-				final EReference target = ((RemoveReferenceValue)next).getReference();
+			if (next instanceof ReferenceChangeRightTarget) {
+				final EReference target = ((ReferenceChangeRightTarget)next).getReference();
 				if (target.getFeatureID() == LibraryPackage.MEMBER__BORROWED_BOOKS) {
 					// We need to create the table headers
 					if (returnedBooks.length() == 0) {
@@ -307,8 +307,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 						returnedBooks += "<td class=\"header\" colspan=\"2\">Returned Books</td></tr>"; //$NON-NLS-1$
 						returnedBooks += "<tr><td class=\"header\">Title</td><td class=\"header\">Member</td></tr>"; //$NON-NLS-1$
 					}
-					final Book returned = (Book)((RemoveReferenceValue)next).getLeftTarget();
-					final Member member = (Member)((RemoveReferenceValue)next).getRightElement();
+					final Book returned = (Book)((ReferenceChangeRightTarget)next).getLeftTarget();
+					final Member member = (Member)((ReferenceChangeRightTarget)next).getRightElement();
 					returnedBooks += "<tr><td>"; //$NON-NLS-1$
 					returnedBooks += returned.getTitle();
 					returnedBooks += "</td><td>"; //$NON-NLS-1$
@@ -334,8 +334,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof RemoveModelElement) {
-				final EObject removedElement = ((RemoveModelElement)next).getRightElement();
+			if (next instanceof ModelElementChangeRightTarget) {
+				final EObject removedElement = ((ModelElementChangeRightTarget)next).getRightElement();
 				if (removedElement instanceof Member) {
 					// We need to create the table headers
 					if (removedMembers.length() == 0) {
@@ -368,8 +368,8 @@ public class LibraryExportWizard extends BasicNewResourceWizard {
 		final TreeIterator<EObject> iterator = diff.eAllContents();
 		while (iterator.hasNext()) {
 			final EObject next = iterator.next();
-			if (next instanceof RemoveModelElement) {
-				final EObject removedElement = ((RemoveModelElement)next).getRightElement();
+			if (next instanceof ModelElementChangeRightTarget) {
+				final EObject removedElement = ((ModelElementChangeRightTarget)next).getRightElement();
 				if (removedElement instanceof Book) {
 					// We need to create the table headers
 					if (removedBooks.length() == 0) {
