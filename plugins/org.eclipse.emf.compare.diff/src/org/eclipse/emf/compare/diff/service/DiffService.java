@@ -165,17 +165,12 @@ public final class DiffService {
 		for (final UnmatchModel unmatch : matchResourceSet.getUnmatchedModels()) {
 			ResourceDependencyChange dependencyChange;
 			if (unmatch.getSide() == Side.LEFT) {
-				if (unmatch.isRemote()) {
-					dependencyChange = DiffFactory.eINSTANCE.createRemoteRemoveResourceDependency();
-				} else {
-					dependencyChange = DiffFactory.eINSTANCE.createAddResourceDependency();
-				}
+				dependencyChange = DiffFactory.eINSTANCE.createResourceDependencyChangeRightTarget();
 			} else {
-				if (unmatch.isRemote()) {
-					dependencyChange = DiffFactory.eINSTANCE.createRemoteAddResourceDependency();
-				} else {
-					dependencyChange = DiffFactory.eINSTANCE.createRemoveResourceDependency();
-				}
+				dependencyChange = DiffFactory.eINSTANCE.createResourceDependencyChangeLeftTarget();
+			}
+			if (unmatch.isRemote()) {
+				dependencyChange.setRemote(true);
 			}
 			dependencyChange.getRoots().addAll(unmatch.getRoots());
 			diff.getResourceDiffs().add(dependencyChange);

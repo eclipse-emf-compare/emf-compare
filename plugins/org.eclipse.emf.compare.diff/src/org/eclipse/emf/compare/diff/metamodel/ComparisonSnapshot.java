@@ -18,6 +18,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Comparison Snapshot</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Superclass for classes allowing the serialization of comparison results.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

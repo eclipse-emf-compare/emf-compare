@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.ecore.EClass;
@@ -19,8 +20,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change Left Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Model Element Change Left Target</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -203,6 +204,19 @@ public class ModelElementChangeLeftTargetImpl extends ModelElementChangeImpl imp
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT, oldRightParent, rightParent));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		if (isRemote())
+			return EMFCompareDiffMessages.getString("RemoteRemoveModelElementImpl.ToString", leftElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("AddModelElementImpl.ToString", leftElement); //$NON-NLS-1$
 	}
 
 	/**

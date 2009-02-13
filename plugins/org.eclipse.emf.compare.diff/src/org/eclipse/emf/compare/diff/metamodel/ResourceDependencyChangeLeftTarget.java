@@ -12,12 +12,14 @@ package org.eclipse.emf.compare.diff.metamodel;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>Remote Add Resource Dependency</b></em>'. <!-- end-user-doc -->
+ * <em><b>Resource Dependency Change Left Target</b></em>'. <!-- end-user-doc --> <!-- begin-model-doc --> A
+ * "LeftTarget" element change describes a difference involving the left ResourceSet. These differences can be
+ * used to describe additions or remote removals of third-party resources dependencies. <!-- end-model-doc -->
  * 
- * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoteAddResourceDependency()
+ * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getResourceDependencyChangeLeftTarget()
  * @model
  * @generated
  */
-public interface RemoteAddResourceDependency extends ResourceDependencyChange {
-	// RemoteAddResourceDependency
+public interface ResourceDependencyChangeLeftTarget extends ResourceDependencyChange {
+	// ResourceDependencyChangeLeftTarget
 }

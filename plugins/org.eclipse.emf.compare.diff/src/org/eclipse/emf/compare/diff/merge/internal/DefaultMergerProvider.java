@@ -23,7 +23,7 @@ import org.eclipse.emf.compare.diff.merge.internal.impl.MoveModelElementMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeLeftTargetMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.ReferenceChangeRightTargetMerger;
 import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateAttributeMerger;
-import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateUniqueReferenceValueMerger;
+import org.eclipse.emf.compare.diff.merge.internal.impl.UpdateReferenceMerger;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -34,7 +34,7 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
-import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 
 /**
@@ -63,7 +63,7 @@ public class DefaultMergerProvider implements IMergerProvider {
 			mergerTypes.put(MoveModelElement.class, MoveModelElementMerger.class);
 			mergerTypes.put(ReferenceChangeRightTarget.class, ReferenceChangeRightTargetMerger.class);
 			mergerTypes.put(ReferenceChangeLeftTarget.class, ReferenceChangeLeftTargetMerger.class);
-			mergerTypes.put(UpdateUniqueReferenceValue.class, UpdateUniqueReferenceValueMerger.class);
+			mergerTypes.put(UpdateReference.class, UpdateReferenceMerger.class);
 			mergerTypes.put(AttributeChangeRightTarget.class, AttributeChangeRightTargetMerger.class);
 			mergerTypes.put(AttributeChangeLeftTarget.class, AttributeChangeLeftTargetMerger.class);
 			mergerTypes.put(UpdateAttribute.class, UpdateAttributeMerger.class);

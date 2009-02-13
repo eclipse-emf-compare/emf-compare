@@ -12,10 +12,6 @@ package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.compare.diff.merge.api.IMerger;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
-import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.AddResourceDependency;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
@@ -37,29 +33,14 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddResourceDependency;
-import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveResourceDependency;
-import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateContainmentFeature;
-import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateUniqueReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDiff;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -73,332 +54,242 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass abstractDiffExtensionEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass resourceDiffEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass resourceDependencyChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private EClass addResourceDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass removeResourceDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteAddResourceDependencyEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteRemoveResourceDependencyEClass = null;
+	private EClass resourceDependencyChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	private EClass addAttributeEClass = null;
+	private EClass resourceDependencyChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass addModelElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass addReferenceValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass attributeChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass conflictingDiffElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass diffElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EEnum differenceKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass diffGroupEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass comparisonSnapshotEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass comparisonResourceSnapshotEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass comparisonResourceSetSnapshotEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass diffModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass diffResourceSetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EDataType iMergerEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass modelElementChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass moveModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass updateContainmentFeatureEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeLeftTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass referenceChangeRightTargetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteAddAttributeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteAddModelElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteAddReferenceValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteMoveModelElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteUpdateContainmentFeatureEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteRemoveAttributeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteRemoveModelElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteRemoveReferenceValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteUpdateAttributeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass remoteUpdateUniqueReferenceValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass removeAttributeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass removeModelElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass removeReferenceValueEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass updateAttributeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass updateModelElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	private EClass updateReferenceEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass updateUniqueReferenceValueEClass = null;
-
-	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	 * package URI value.
-	 * <p>Note: the correct way to create the package is via the static
-	 * factory method {@link #init init()}, which also performs
-	 * initialization of the package, or returns the registered package,
-	 * if one already exists.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
+	 * <p>
+	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
+	 * which also performs initialization of the package, or returns the registered package, if one already
+	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#eNS_URI
 	 * @see #init()
@@ -432,9 +323,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 			return (DiffPackage)EPackage.Registry.INSTANCE.getEPackage(DiffPackage.eNS_URI);
 
 		// Obtain or create and register package
-		DiffPackageImpl theDiffPackage = (DiffPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof DiffPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI)
-				: new DiffPackageImpl());
+		final DiffPackageImpl theDiffPackage = (DiffPackageImpl)(EPackage.Registry.INSTANCE
+				.getEPackage(eNS_URI) instanceof DiffPackageImpl ? EPackage.Registry.INSTANCE
+				.getEPackage(eNS_URI) : new DiffPackageImpl());
 
 		isInited = true;
 
@@ -455,9 +346,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * Creates the meta-model objects for the package.  This method is
-	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
+	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -481,6 +372,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(diffElementEClass, DIFF_ELEMENT__IS_HIDDEN_BY);
 		createEAttribute(diffElementEClass, DIFF_ELEMENT__CONFLICTING);
 		createEAttribute(diffElementEClass, DIFF_ELEMENT__KIND);
+		createEAttribute(diffElementEClass, DIFF_ELEMENT__REMOTE);
 
 		conflictingDiffElementEClass = createEClass(CONFLICTING_DIFF_ELEMENT);
 		createEReference(conflictingDiffElementEClass, CONFLICTING_DIFF_ELEMENT__LEFT_PARENT);
@@ -515,14 +407,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(modelElementChangeRightTargetEClass,
 				MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT);
 
-		addModelElementEClass = createEClass(ADD_MODEL_ELEMENT);
-
-		remoteAddModelElementEClass = createEClass(REMOTE_ADD_MODEL_ELEMENT);
-
-		removeModelElementEClass = createEClass(REMOVE_MODEL_ELEMENT);
-
-		remoteRemoveModelElementEClass = createEClass(REMOTE_REMOVE_MODEL_ELEMENT);
-
 		updateModelElementEClass = createEClass(UPDATE_MODEL_ELEMENT);
 		createEReference(updateModelElementEClass, UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT);
 		createEReference(updateModelElementEClass, UPDATE_MODEL_ELEMENT__LEFT_ELEMENT);
@@ -532,10 +416,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(moveModelElementEClass, MOVE_MODEL_ELEMENT__RIGHT_TARGET);
 
 		updateContainmentFeatureEClass = createEClass(UPDATE_CONTAINMENT_FEATURE);
-
-		remoteMoveModelElementEClass = createEClass(REMOTE_MOVE_MODEL_ELEMENT);
-
-		remoteUpdateContainmentFeatureEClass = createEClass(REMOTE_UPDATE_CONTAINMENT_FEATURE);
 
 		attributeChangeEClass = createEClass(ATTRIBUTE_CHANGE);
 		createEReference(attributeChangeEClass, ATTRIBUTE_CHANGE__ATTRIBUTE);
@@ -548,17 +428,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		attributeChangeRightTargetEClass = createEClass(ATTRIBUTE_CHANGE_RIGHT_TARGET);
 		createEAttribute(attributeChangeRightTargetEClass, ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET);
 
-		addAttributeEClass = createEClass(ADD_ATTRIBUTE);
-
-		remoteAddAttributeEClass = createEClass(REMOTE_ADD_ATTRIBUTE);
-
-		removeAttributeEClass = createEClass(REMOVE_ATTRIBUTE);
-
-		remoteRemoveAttributeEClass = createEClass(REMOTE_REMOVE_ATTRIBUTE);
-
 		updateAttributeEClass = createEClass(UPDATE_ATTRIBUTE);
-
-		remoteUpdateAttributeEClass = createEClass(REMOTE_UPDATE_ATTRIBUTE);
 
 		referenceChangeEClass = createEClass(REFERENCE_CHANGE);
 		createEReference(referenceChangeEClass, REFERENCE_CHANGE__REFERENCE);
@@ -573,21 +443,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEReference(referenceChangeRightTargetEClass, REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET);
 		createEReference(referenceChangeRightTargetEClass, REFERENCE_CHANGE_RIGHT_TARGET__LEFT_TARGET);
 
-		addReferenceValueEClass = createEClass(ADD_REFERENCE_VALUE);
-
-		remoteAddReferenceValueEClass = createEClass(REMOTE_ADD_REFERENCE_VALUE);
-
-		removeReferenceValueEClass = createEClass(REMOVE_REFERENCE_VALUE);
-
-		remoteRemoveReferenceValueEClass = createEClass(REMOTE_REMOVE_REFERENCE_VALUE);
-
 		updateReferenceEClass = createEClass(UPDATE_REFERENCE);
-
-		updateUniqueReferenceValueEClass = createEClass(UPDATE_UNIQUE_REFERENCE_VALUE);
-		createEReference(updateUniqueReferenceValueEClass, UPDATE_UNIQUE_REFERENCE_VALUE__LEFT_TARGET);
-		createEReference(updateUniqueReferenceValueEClass, UPDATE_UNIQUE_REFERENCE_VALUE__RIGHT_TARGET);
-
-		remoteUpdateUniqueReferenceValueEClass = createEClass(REMOTE_UPDATE_UNIQUE_REFERENCE_VALUE);
+		createEReference(updateReferenceEClass, UPDATE_REFERENCE__LEFT_TARGET);
+		createEReference(updateReferenceEClass, UPDATE_REFERENCE__RIGHT_TARGET);
 
 		abstractDiffExtensionEClass = createEClass(ABSTRACT_DIFF_EXTENSION);
 		createEReference(abstractDiffExtensionEClass, ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS);
@@ -598,13 +456,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		resourceDependencyChangeEClass = createEClass(RESOURCE_DEPENDENCY_CHANGE);
 		createEReference(resourceDependencyChangeEClass, RESOURCE_DEPENDENCY_CHANGE__ROOTS);
 
-		addResourceDependencyEClass = createEClass(ADD_RESOURCE_DEPENDENCY);
+		resourceDependencyChangeLeftTargetEClass = createEClass(RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET);
 
-		removeResourceDependencyEClass = createEClass(REMOVE_RESOURCE_DEPENDENCY);
-
-		remoteAddResourceDependencyEClass = createEClass(REMOTE_ADD_RESOURCE_DEPENDENCY);
-
-		remoteRemoveResourceDependencyEClass = createEClass(REMOTE_REMOVE_RESOURCE_DEPENDENCY);
+		resourceDependencyChangeRightTargetEClass = createEClass(RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET);
 
 		// Create enums
 		differenceKindEEnum = createEEnum(DIFFERENCE_KIND);
@@ -615,6 +469,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getAbstractDiffExtension() {
@@ -623,6 +478,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getAbstractDiffExtension_HideElements() {
@@ -631,6 +487,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getAbstractDiffExtension_IsCollapsed() {
@@ -638,8 +495,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getResourceDiff() {
@@ -647,8 +504,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getResourceDependencyChange() {
@@ -656,8 +513,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getResourceDependencyChange_Roots() {
@@ -665,67 +522,26 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EClass getAddResourceDependency() {
-		return addResourceDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoveResourceDependency() {
-		return removeResourceDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteAddResourceDependency() {
-		return remoteAddResourceDependencyEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteRemoveResourceDependency() {
-		return remoteRemoveResourceDependencyEClass;
+	public EClass getResourceDependencyChangeLeftTarget() {
+		return resourceDependencyChangeLeftTargetEClass;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EClass getAddAttribute() {
-		return addAttributeEClass;
+	public EClass getResourceDependencyChangeRightTarget() {
+		return resourceDependencyChangeRightTargetEClass;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getAddModelElement() {
-		return addModelElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getAddReferenceValue() {
-		return addReferenceValueEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChange() {
@@ -734,6 +550,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_Attribute() {
@@ -742,6 +559,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_LeftElement() {
@@ -750,6 +568,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getAttributeChange_RightElement() {
@@ -758,6 +577,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChangeLeftTarget() {
@@ -766,6 +586,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getAttributeChangeLeftTarget_LeftTarget() {
@@ -774,6 +595,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getAttributeChangeRightTarget() {
@@ -782,6 +604,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getAttributeChangeRightTarget_RightTarget() {
@@ -790,6 +613,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getConflictingDiffElement() {
@@ -798,6 +622,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_LeftParent() {
@@ -806,6 +631,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_OriginElement() {
@@ -814,6 +640,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getConflictingDiffElement_RightParent() {
@@ -822,6 +649,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDiffElement() {
@@ -830,6 +658,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffElement_Conflicting() {
@@ -838,6 +667,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffElement_IsHiddenBy() {
@@ -846,6 +676,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffElement_Kind() {
@@ -854,6 +685,16 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getDiffElement_Remote() {
+		return (EAttribute)diffElementEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffElement_SubDiffElements() {
@@ -862,6 +703,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EEnum getDifferenceKind() {
@@ -870,6 +712,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public DiffFactory getDiffFactory() {
@@ -878,6 +721,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDiffGroup() {
@@ -886,6 +730,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffGroup_RightParent() {
@@ -894,6 +739,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getDiffGroup_Subchanges() {
@@ -901,8 +747,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getComparisonSnapshot() {
@@ -910,8 +756,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EAttribute getComparisonSnapshot_Date() {
@@ -920,6 +766,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getComparisonResourceSnapshot() {
@@ -928,6 +775,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getComparisonResourceSnapshot_Diff() {
@@ -936,6 +784,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getComparisonResourceSnapshot_Match() {
@@ -944,6 +793,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getComparisonResourceSetSnapshot() {
@@ -952,6 +802,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getComparisonResourceSetSnapshot_DiffResourceSet() {
@@ -960,6 +811,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getComparisonResourceSetSnapshot_MatchResourceSet() {
@@ -968,6 +820,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDiffModel() {
@@ -976,6 +829,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffModel_OwnedElements() {
@@ -983,8 +837,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffModel_LeftRoots() {
@@ -992,8 +846,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffModel_RightRoots() {
@@ -1001,8 +855,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffModel_AncestorRoots() {
@@ -1011,6 +865,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getDiffResourceSet() {
@@ -1019,6 +874,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffResourceSet_DiffModels() {
@@ -1026,8 +882,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getDiffResourceSet_ResourceDiffs() {
@@ -1036,6 +892,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EDataType getIMerger() {
@@ -1044,6 +901,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChange() {
@@ -1052,6 +910,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChangeLeftTarget() {
@@ -1060,6 +919,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeLeftTarget_LeftElement() {
@@ -1068,6 +928,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeLeftTarget_RightParent() {
@@ -1076,6 +937,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getModelElementChangeRightTarget() {
@@ -1084,6 +946,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeRightTarget_LeftParent() {
@@ -1092,6 +955,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getModelElementChangeRightTarget_RightElement() {
@@ -1100,6 +964,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getMoveModelElement() {
@@ -1108,6 +973,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getMoveModelElement_LeftTarget() {
@@ -1116,6 +982,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getMoveModelElement_RightTarget() {
@@ -1124,6 +991,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getUpdateContainmentFeature() {
@@ -1132,6 +1000,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChange() {
@@ -1140,6 +1009,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_LeftElement() {
@@ -1148,6 +1018,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_Reference() {
@@ -1156,6 +1027,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChange_RightElement() {
@@ -1164,6 +1036,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChangeLeftTarget() {
@@ -1172,6 +1045,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeLeftTarget_LeftTarget() {
@@ -1180,6 +1054,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeLeftTarget_RightTarget() {
@@ -1188,6 +1063,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getReferenceChangeRightTarget() {
@@ -1196,6 +1072,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeRightTarget_RightTarget() {
@@ -1204,6 +1081,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getReferenceChangeRightTarget_LeftTarget() {
@@ -1212,110 +1090,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteAddAttribute() {
-		return remoteAddAttributeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteAddModelElement() {
-		return remoteAddModelElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteAddReferenceValue() {
-		return remoteAddReferenceValueEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteMoveModelElement() {
-		return remoteMoveModelElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteUpdateContainmentFeature() {
-		return remoteUpdateContainmentFeatureEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteRemoveAttribute() {
-		return remoteRemoveAttributeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteRemoveModelElement() {
-		return remoteRemoveModelElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteRemoveReferenceValue() {
-		return remoteRemoveReferenceValueEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteUpdateAttribute() {
-		return remoteUpdateAttributeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoteUpdateUniqueReferenceValue() {
-		return remoteUpdateUniqueReferenceValueEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoveAttribute() {
-		return removeAttributeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoveModelElement() {
-		return removeModelElementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getRemoveReferenceValue() {
-		return removeReferenceValueEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getUpdateAttribute() {
@@ -1324,6 +1099,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getUpdateModelElement() {
@@ -1332,6 +1108,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getUpdateModelElement_LeftElement() {
@@ -1340,6 +1117,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EReference getUpdateModelElement_RightElement() {
@@ -1348,6 +1126,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getUpdateReference() {
@@ -1356,32 +1135,26 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EClass getUpdateUniqueReferenceValue() {
-		return updateUniqueReferenceValueEClass;
+	public EReference getUpdateReference_LeftTarget() {
+		return (EReference)updateReferenceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
-	public EReference getUpdateUniqueReferenceValue_LeftTarget() {
-		return (EReference)updateUniqueReferenceValueEClass.getEStructuralFeatures().get(0);
+	public EReference getUpdateReference_RightTarget() {
+		return (EReference)updateReferenceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getUpdateUniqueReferenceValue_RightTarget() {
-		return (EReference)updateUniqueReferenceValueEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * Complete the initialization of the package and its meta-model.  This
-	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
+	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -1395,9 +1168,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE
+		final EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE
 				.getEPackage(EcorePackage.eNS_URI);
-		MatchPackage theMatchPackage = (MatchPackage)EPackage.Registry.INSTANCE
+		final MatchPackage theMatchPackage = (MatchPackage)EPackage.Registry.INSTANCE
 				.getEPackage(MatchPackage.eNS_URI);
 
 		// Create type parameters
@@ -1412,40 +1185,21 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		modelElementChangeEClass.getESuperTypes().add(this.getDiffElement());
 		modelElementChangeLeftTargetEClass.getESuperTypes().add(this.getModelElementChange());
 		modelElementChangeRightTargetEClass.getESuperTypes().add(this.getModelElementChange());
-		addModelElementEClass.getESuperTypes().add(this.getModelElementChangeLeftTarget());
-		remoteAddModelElementEClass.getESuperTypes().add(this.getModelElementChangeRightTarget());
-		removeModelElementEClass.getESuperTypes().add(this.getModelElementChangeRightTarget());
-		remoteRemoveModelElementEClass.getESuperTypes().add(this.getModelElementChangeLeftTarget());
 		updateModelElementEClass.getESuperTypes().add(this.getModelElementChange());
 		moveModelElementEClass.getESuperTypes().add(this.getUpdateModelElement());
 		updateContainmentFeatureEClass.getESuperTypes().add(this.getMoveModelElement());
-		remoteMoveModelElementEClass.getESuperTypes().add(this.getMoveModelElement());
-		remoteUpdateContainmentFeatureEClass.getESuperTypes().add(this.getUpdateContainmentFeature());
 		attributeChangeEClass.getESuperTypes().add(this.getDiffElement());
 		attributeChangeLeftTargetEClass.getESuperTypes().add(this.getAttributeChange());
 		attributeChangeRightTargetEClass.getESuperTypes().add(this.getAttributeChange());
-		addAttributeEClass.getESuperTypes().add(this.getAttributeChangeLeftTarget());
-		remoteAddAttributeEClass.getESuperTypes().add(this.getAttributeChangeRightTarget());
-		removeAttributeEClass.getESuperTypes().add(this.getAttributeChangeRightTarget());
-		remoteRemoveAttributeEClass.getESuperTypes().add(this.getAttributeChangeLeftTarget());
 		updateAttributeEClass.getESuperTypes().add(this.getAttributeChange());
-		remoteUpdateAttributeEClass.getESuperTypes().add(this.getUpdateAttribute());
 		referenceChangeEClass.getESuperTypes().add(this.getDiffElement());
 		referenceChangeLeftTargetEClass.getESuperTypes().add(this.getReferenceChange());
 		referenceChangeRightTargetEClass.getESuperTypes().add(this.getReferenceChange());
-		addReferenceValueEClass.getESuperTypes().add(this.getReferenceChangeLeftTarget());
-		remoteAddReferenceValueEClass.getESuperTypes().add(this.getReferenceChangeRightTarget());
-		removeReferenceValueEClass.getESuperTypes().add(this.getReferenceChangeRightTarget());
-		remoteRemoveReferenceValueEClass.getESuperTypes().add(this.getReferenceChangeLeftTarget());
 		updateReferenceEClass.getESuperTypes().add(this.getReferenceChange());
-		updateUniqueReferenceValueEClass.getESuperTypes().add(this.getUpdateReference());
-		remoteUpdateUniqueReferenceValueEClass.getESuperTypes().add(this.getUpdateUniqueReferenceValue());
 		resourceDiffEClass.getESuperTypes().add(this.getDiffElement());
 		resourceDependencyChangeEClass.getESuperTypes().add(this.getResourceDiff());
-		addResourceDependencyEClass.getESuperTypes().add(this.getResourceDependencyChange());
-		removeResourceDependencyEClass.getESuperTypes().add(this.getResourceDependencyChange());
-		remoteAddResourceDependencyEClass.getESuperTypes().add(this.getResourceDependencyChange());
-		remoteRemoveResourceDependencyEClass.getESuperTypes().add(this.getResourceDependencyChange());
+		resourceDependencyChangeLeftTargetEClass.getESuperTypes().add(this.getResourceDependencyChange());
+		resourceDependencyChangeRightTargetEClass.getESuperTypes().add(this.getResourceDependencyChange());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(diffModelEClass, DiffModel.class,
@@ -1504,6 +1258,10 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				getDiffElement_Kind(),
 				this.getDifferenceKind(),
 				"kind", "", 0, 1, DiffElement.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
+		initEAttribute(
+				getDiffElement_Remote(),
+				ecorePackage.getEBoolean(),
+				"remote", null, 0, 1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(conflictingDiffElementEClass, ConflictingDiffElement.class,
 				"ConflictingDiffElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1597,18 +1355,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				null,
 				"rightElement", null, 0, 1, ModelElementChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addModelElementEClass, AddModelElement.class,
-				"AddModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteAddModelElementEClass, RemoteAddModelElement.class,
-				"RemoteAddModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(removeModelElementEClass, RemoveModelElement.class,
-				"RemoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteRemoveModelElementEClass, RemoteRemoveModelElement.class,
-				"RemoteRemoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
 		initEClass(updateModelElementEClass, UpdateModelElement.class,
 				"UpdateModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -1637,12 +1383,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		initEClass(updateContainmentFeatureEClass, UpdateContainmentFeature.class,
 				"UpdateContainmentFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteMoveModelElementEClass, RemoteMoveModelElement.class,
-				"RemoteMoveModelElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteUpdateContainmentFeatureEClass, RemoteUpdateContainmentFeature.class,
-				"RemoteUpdateContainmentFeature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(attributeChangeEClass, AttributeChange.class,
 				"AttributeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1676,23 +1416,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				theEcorePackage.getEJavaObject(),
 				"rightTarget", null, 0, 1, AttributeChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addAttributeEClass, AddAttribute.class,
-				"AddAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteAddAttributeEClass, RemoteAddAttribute.class,
-				"RemoteAddAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(removeAttributeEClass, RemoveAttribute.class,
-				"RemoveAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteRemoveAttributeEClass, RemoteRemoveAttribute.class,
-				"RemoteRemoveAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
 		initEClass(updateAttributeEClass, UpdateAttribute.class,
 				"UpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteUpdateAttributeEClass, RemoteUpdateAttribute.class,
-				"RemoteUpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(referenceChangeEClass, ReferenceChange.class,
 				"ReferenceChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1738,36 +1463,18 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				null,
 				"leftTarget", null, 0, 1, ReferenceChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addReferenceValueEClass, AddReferenceValue.class,
-				"AddReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteAddReferenceValueEClass, RemoteAddReferenceValue.class,
-				"RemoteAddReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(removeReferenceValueEClass, RemoveReferenceValue.class,
-				"RemoveReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteRemoveReferenceValueEClass, RemoteRemoveReferenceValue.class,
-				"RemoteRemoveReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
 		initEClass(updateReferenceEClass, UpdateReference.class,
 				"UpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(updateUniqueReferenceValueEClass, UpdateUniqueReferenceValue.class,
-				"UpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
-				getUpdateUniqueReferenceValue_LeftTarget(),
+				getUpdateReference_LeftTarget(),
 				ecorePackage.getEObject(),
 				null,
-				"leftTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"leftTarget", null, 0, 1, UpdateReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEReference(
-				getUpdateUniqueReferenceValue_RightTarget(),
+				getUpdateReference_RightTarget(),
 				ecorePackage.getEObject(),
 				null,
-				"rightTarget", null, 0, 1, UpdateUniqueReferenceValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
-
-		initEClass(remoteUpdateUniqueReferenceValueEClass, RemoteUpdateUniqueReferenceValue.class,
-				"RemoteUpdateUniqueReferenceValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+				"rightTarget", null, 0, 1, UpdateReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(abstractDiffExtensionEClass, AbstractDiffExtension.class,
 				"AbstractDiffExtension", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1781,7 +1488,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				ecorePackage.getEBoolean(),
 				"isCollapsed", "false", 0, 1, AbstractDiffExtension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-		EOperation op = addEOperation(abstractDiffExtensionEClass, null, "visit", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		final EOperation op = addEOperation(abstractDiffExtensionEClass, null,
+				"visit", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, this.getDiffModel(), "diffModel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEString(),
@@ -1804,17 +1512,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				null,
 				"roots", null, 0, -1, ResourceDependencyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(addResourceDependencyEClass, AddResourceDependency.class,
-				"AddResourceDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(
+				resourceDependencyChangeLeftTargetEClass,
+				ResourceDependencyChangeLeftTarget.class,
+				"ResourceDependencyChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(removeResourceDependencyEClass, RemoveResourceDependency.class,
-				"RemoveResourceDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteAddResourceDependencyEClass, RemoteAddResourceDependency.class,
-				"RemoteAddResourceDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
-
-		initEClass(remoteRemoveResourceDependencyEClass, RemoteRemoveResourceDependency.class,
-				"RemoteRemoveResourceDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEClass(
+				resourceDependencyChangeRightTargetEClass,
+				ResourceDependencyChangeRightTarget.class,
+				"ResourceDependencyChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
 		initEEnum(differenceKindEEnum, DifferenceKind.class, "DifferenceKind"); //$NON-NLS-1$
@@ -1822,7 +1528,6 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		addEEnumLiteral(differenceKindEEnum, DifferenceKind.DELETION);
 		addEEnumLiteral(differenceKindEEnum, DifferenceKind.CHANGE);
 		addEEnumLiteral(differenceKindEEnum, DifferenceKind.MOVE);
-		addEEnumLiteral(differenceKindEEnum, DifferenceKind.CONFLICT);
 
 		// Initialize data types
 		initEDataType(iMergerEDataType, IMerger.class,

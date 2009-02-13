@@ -11,27 +11,31 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Change Left Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Change Left Target</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left
+ * Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implements AttributeChangeLeftTarget {
 	/**
-	 * The default value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The default value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLeftTarget()
 	 * @generated
@@ -40,8 +44,8 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	protected static final Object LEFT_TARGET_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @see #getLeftTarget()
 	 * @generated
@@ -51,6 +55,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeLeftTargetImpl() {
@@ -59,6 +64,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -72,6 +78,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -86,22 +93,35 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (leftTarget: "); //$NON-NLS-1$
-		result.append(leftTarget);
-		result.append(')');
-		return result.toString();
+		String toString = null;
+		if (isRemote()) {
+			try {
+				toString = EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", //$NON-NLS-1$
+						leftTarget, attribute.getName(), NameSimilarity.findName(leftElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", //$NON-NLS-1$
+						leftTarget, attribute.getName(), leftElement.eClass().getName());
+			}
+		} else {
+			try {
+				toString = EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", //$NON-NLS-1$
+						leftTarget, attribute.getName(), NameSimilarity.findName(leftElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", leftTarget, //$NON-NLS-1$
+						attribute.getName(), leftElement.eClass().getName());
+			}
+		}
+		return toString;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -116,6 +136,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,6 +151,7 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Object getLeftTarget() {
@@ -138,18 +160,21 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(Object newLeftTarget) {
-		Object oldLeftTarget = leftTarget;
+		final Object oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

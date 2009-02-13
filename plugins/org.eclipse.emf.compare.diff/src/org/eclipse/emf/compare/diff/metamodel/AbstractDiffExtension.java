@@ -18,6 +18,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Abstract Diff Extension</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * These can be used to extend the DiffModel so that DiffElements can be collapsed under a single high level difference
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

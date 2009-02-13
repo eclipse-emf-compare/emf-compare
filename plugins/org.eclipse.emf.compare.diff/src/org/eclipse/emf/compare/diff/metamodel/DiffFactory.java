@@ -27,33 +27,6 @@ public interface DiffFactory extends EFactory {
 	DiffFactory eINSTANCE = org.eclipse.emf.compare.diff.metamodel.impl.DiffFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Add Attribute</em>'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @return a new object of class '<em>Add Attribute</em>'.
-	 * @generated
-	 */
-	AddAttribute createAddAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Add Model Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Add Model Element</em>'.
-	 * @generated
-	 */
-	AddModelElement createAddModelElement();
-
-	/**
-	 * Returns a new object of class '<em>Add Reference Value</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Add Reference Value</em>'.
-	 * @generated
-	 */
-	AddReferenceValue createAddReferenceValue();
-
-	/**
 	 * Returns a new object of class '<em>Attribute Change</em>'.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -205,96 +178,6 @@ public interface DiffFactory extends EFactory {
 	ReferenceChangeRightTarget createReferenceChangeRightTarget();
 
 	/**
-	 * Returns a new object of class '<em>Remote Add Attribute</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Add Attribute</em>'.
-	 * @generated
-	 */
-	RemoteAddAttribute createRemoteAddAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Remote Add Model Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Add Model Element</em>'.
-	 * @generated
-	 */
-	RemoteAddModelElement createRemoteAddModelElement();
-
-	/**
-	 * Returns a new object of class '<em>Remote Add Reference Value</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Add Reference Value</em>'.
-	 * @generated
-	 */
-	RemoteAddReferenceValue createRemoteAddReferenceValue();
-
-	/**
-	 * Returns a new object of class '<em>Remote Move Model Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Move Model Element</em>'.
-	 * @generated
-	 */
-	RemoteMoveModelElement createRemoteMoveModelElement();
-
-	/**
-	 * Returns a new object of class '<em>Remote Update Containment Feature</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Update Containment Feature</em>'.
-	 * @generated
-	 */
-	RemoteUpdateContainmentFeature createRemoteUpdateContainmentFeature();
-
-	/**
-	 * Returns a new object of class '<em>Remote Remove Attribute</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Remove Attribute</em>'.
-	 * @generated
-	 */
-	RemoteRemoveAttribute createRemoteRemoveAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Remote Remove Model Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Remove Model Element</em>'.
-	 * @generated
-	 */
-	RemoteRemoveModelElement createRemoteRemoveModelElement();
-
-	/**
-	 * Returns a new object of class '<em>Remote Remove Reference Value</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Remove Reference Value</em>'.
-	 * @generated
-	 */
-	RemoteRemoveReferenceValue createRemoteRemoveReferenceValue();
-
-	/**
-	 * Returns a new object of class '<em>Remote Update Attribute</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remote Update Attribute</em>'.
-	 * @generated
-	 */
-	RemoteUpdateAttribute createRemoteUpdateAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Remote Update Unique Reference Value</em>'.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Update Unique Reference Value</em>'.
-	 * @generated
-	 */
-	RemoteUpdateUniqueReferenceValue createRemoteUpdateUniqueReferenceValue();
-
-	/**
 	 * Returns a new object of class '<em>Resource Diff</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -313,67 +196,22 @@ public interface DiffFactory extends EFactory {
 	ResourceDependencyChange createResourceDependencyChange();
 
 	/**
-	 * Returns a new object of class '<em>Add Resource Dependency</em>'.
+	 * Returns a new object of class '<em>Resource Dependency Change Left Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Add Resource Dependency</em>'.
+	 * @return a new object of class '<em>Resource Dependency Change Left Target</em>'.
 	 * @generated
 	 */
-	AddResourceDependency createAddResourceDependency();
+	ResourceDependencyChangeLeftTarget createResourceDependencyChangeLeftTarget();
 
 	/**
-	 * Returns a new object of class '<em>Remove Resource Dependency</em>'.
+	 * Returns a new object of class '<em>Resource Dependency Change Right Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remove Resource Dependency</em>'.
+	 * @return a new object of class '<em>Resource Dependency Change Right Target</em>'.
 	 * @generated
 	 */
-	RemoveResourceDependency createRemoveResourceDependency();
-
-	/**
-	 * Returns a new object of class '<em>Remote Add Resource Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Add Resource Dependency</em>'.
-	 * @generated
-	 */
-	RemoteAddResourceDependency createRemoteAddResourceDependency();
-
-	/**
-	 * Returns a new object of class '<em>Remote Remove Resource Dependency</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Remote Remove Resource Dependency</em>'.
-	 * @generated
-	 */
-	RemoteRemoveResourceDependency createRemoteRemoveResourceDependency();
-
-	/**
-	 * Returns a new object of class '<em>Remove Attribute</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remove Attribute</em>'.
-	 * @generated
-	 */
-	RemoveAttribute createRemoveAttribute();
-
-	/**
-	 * Returns a new object of class '<em>Remove Model Element</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remove Model Element</em>'.
-	 * @generated
-	 */
-	RemoveModelElement createRemoveModelElement();
-
-	/**
-	 * Returns a new object of class '<em>Remove Reference Value</em>'.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * @return a new object of class '<em>Remove Reference Value</em>'.
-	 * @generated
-	 */
-	RemoveReferenceValue createRemoveReferenceValue();
+	ResourceDependencyChangeRightTarget createResourceDependencyChangeRightTarget();
 
 	/**
 	 * Returns a new object of class '<em>Update Attribute</em>'.
@@ -401,15 +239,6 @@ public interface DiffFactory extends EFactory {
 	 * @generated
 	 */
 	UpdateReference createUpdateReference();
-
-	/**
-	 * Returns a new object of class '<em>Update Unique Reference Value</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Update Unique Reference Value</em>'.
-	 * @generated
-	 */
-	UpdateUniqueReferenceValue createUpdateUniqueReferenceValue();
 
 	/**
 	 * Returns the package supported by this factory.

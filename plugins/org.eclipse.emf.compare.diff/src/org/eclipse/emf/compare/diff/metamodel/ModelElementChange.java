@@ -14,6 +14,10 @@ package org.eclipse.emf.compare.diff.metamodel;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Element Change</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Superclass of DiffElements used to describe element additions or removals.
+ * <!-- end-model-doc -->
+ *
  *
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getModelElementChange()
  * @model

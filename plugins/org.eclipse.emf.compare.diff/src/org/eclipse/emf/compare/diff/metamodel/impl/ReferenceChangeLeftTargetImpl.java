@@ -11,31 +11,36 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Reference Change Left Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Reference Change Left Target</b></em>
+ * '. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftTarget <em>Left
+ * Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightTarget <em>
+ * Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implements ReferenceChangeLeftTarget {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -43,9 +48,9 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	protected EObject leftTarget;
 
 	/**
-	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRightTarget() <em>Right Target</em>}' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getRightTarget()
 	 * @generated
 	 * @ordered
@@ -54,6 +59,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeLeftTargetImpl() {
@@ -62,6 +68,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -81,6 +88,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -96,6 +104,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -113,6 +122,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,6 +140,7 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -138,26 +149,27 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
 		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			final InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
+				}
 			}
 		}
 		return leftTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -165,40 +177,42 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
+		final EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
 		if (rightTarget != null && rightTarget.eIsProxy()) {
-			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			final InternalEObject oldRightTarget = (InternalEObject)rightTarget;
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET, oldRightTarget,
 							rightTarget));
+				}
 			}
 		}
 		return rightTarget;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -206,16 +220,47 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
-		EObject oldRightTarget = rightTarget;
+		final EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET, oldRightTarget, rightTarget));
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		String toString = null;
+		if (isRemote()) {
+			try {
+				toString = EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(rightTarget), reference.getName(), NameSimilarity
+								.findName(leftElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", //$NON-NLS-1$
+						rightTarget.eClass().getName(), reference.getName(), leftElement.eClass().getName());
+			}
+		} else {
+			try {
+				toString = EMFCompareDiffMessages.getString("AddReferenceValueImpl.ToString", NameSimilarity //$NON-NLS-1$
+						.findName(rightTarget), reference.getName(), NameSimilarity.findName(leftElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("AddReferenceValueImpl.ToString", rightTarget //$NON-NLS-1$
+						.eClass().getName(), reference.getName(), leftElement.eClass().getName());
+			}
+		}
+		return toString;
 	}
 
 } // ReferenceChangeLeftTargetImpl

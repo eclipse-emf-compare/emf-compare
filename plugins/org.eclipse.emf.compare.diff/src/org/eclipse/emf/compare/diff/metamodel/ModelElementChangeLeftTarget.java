@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Element Change Left Target</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A "LeftTarget" element change describes a difference involving the left element/resource. In the case of ModelElementChanges, this can describe either the addition of an element or the remote removal of an element (for three way comparisons).
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

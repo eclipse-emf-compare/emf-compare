@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Conflicting Diff Element</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This will act as a container for conflictual changes.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.diff.merge.internal.impl;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.api.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
+public class UpdateReferenceMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -30,12 +30,12 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void applyInOrigin() {
-		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
+		final UpdateReference theDiff = (UpdateReference)this.diff;
 		final EObject element = theDiff.getLeftElement();
 		final EObject leftTarget = theDiff.getLeftTarget();
 		try {
 			EFactory.eSet(element, theDiff.getReference().getName(), leftTarget);
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		super.applyInOrigin();
@@ -48,12 +48,12 @@ public class UpdateUniqueReferenceValueMerger extends DefaultMerger {
 	 */
 	@Override
 	public void undoInTarget() {
-		final UpdateUniqueReferenceValue theDiff = (UpdateUniqueReferenceValue)this.diff;
+		final UpdateReference theDiff = (UpdateReference)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject rightTarget = theDiff.getRightTarget();
 		try {
 			EFactory.eSet(element, theDiff.getReference().getName(), rightTarget);
-		} catch (FactoryException e) {
+		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
 		super.undoInTarget();

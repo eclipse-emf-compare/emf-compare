@@ -12,12 +12,15 @@ package org.eclipse.emf.compare.diff.metamodel;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>Remote Remove Resource Dependency</b></em>'. <!-- end-user-doc -->
+ * <em><b>Resource Dependency Change Right Target</b></em>'. <!-- end-user-doc --> <!-- begin-model-doc --> A
+ * "RightTarget" element change describes a difference involving the right ResourceSet. These differences can
+ * be used to describe deletions or remote additions of third-party resources dependencies. <!-- end-model-doc
+ * -->
  * 
- * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getRemoteRemoveResourceDependency()
+ * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getResourceDependencyChangeRightTarget()
  * @model
  * @generated
  */
-public interface RemoteRemoveResourceDependency extends ResourceDependencyChange {
-	// RemoteRemoveResourceDependency
+public interface ResourceDependencyChangeRightTarget extends ResourceDependencyChange {
+	// ResourceDependencyChangeRightTarget
 }

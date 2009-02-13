@@ -25,18 +25,17 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl#getRoots <em>Roots
- * </em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ResourceDependencyChangeImpl#getRoots <em>Roots</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements ResourceDependencyChange {
 	/**
-	 * The cached value of the '{@link #getRoots() <em>Roots</em>}' reference list. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRoots() <em>Roots</em>}' reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRoots()
 	 * @generated
 	 * @ordered
@@ -45,7 +44,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ResourceDependencyChangeImpl() {
@@ -54,7 +52,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -64,7 +61,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<EObject> getRoots() {
@@ -77,7 +73,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -91,7 +86,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -108,7 +102,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -123,7 +116,6 @@ public class ResourceDependencyChangeImpl extends ResourceDiffImpl implements Re
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

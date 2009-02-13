@@ -16,6 +16,10 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Comparison Snapshot</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This can be used to hold the result of single-elements comparison (Resource with Resource, EObject with EObject, ...).
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

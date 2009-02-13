@@ -14,6 +14,10 @@ package org.eclipse.emf.compare.diff.metamodel;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Update Containment Feature</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This particular kind of move operation describe a change of containment reference of a given element within the same container.
+ * <!-- end-model-doc -->
+ *
  *
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getUpdateContainmentFeature()
  * @model

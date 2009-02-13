@@ -13,7 +13,12 @@ package org.eclipse.emf.compare.diff.metamodel;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Resource Diff</b></em>'. <!--
  * end-user-doc -->
- * 
+ *
+ * <!-- begin-model-doc -->
+ * Differences of this kind represent changes regarding a third-party resource.
+ * <!-- end-model-doc -->
+ *
+ *
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getResourceDiff()
  * @model
  * @generated

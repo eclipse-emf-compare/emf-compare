@@ -19,6 +19,9 @@ import org.eclipse.emf.common.util.Enumerator;
 /**
  * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Difference Kind</b></em>',
  * and utility methods for working with them. <!-- end-user-doc -->
+ * <!-- begin-model-doc -->
+ * These flags will be used to describe the kind of a DiffElement.
+ * <!-- end-model-doc -->
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDifferenceKind()
  * @model
  * @generated
@@ -58,16 +61,7 @@ public enum DifferenceKind implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MOVE(3, "Move", "Move"), //$NON-NLS-1$ //$NON-NLS-2$
-
-	/**
-	 * The '<em><b>Conflict</b></em>' literal object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #CONFLICT_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	CONFLICT(4, "Conflict", "Conflict"); //$NON-NLS-1$ //$NON-NLS-2$
+	MOVE(3, "Move", "Move"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * The '<em><b>Addition</b></em>' literal value.
@@ -130,28 +124,13 @@ public enum DifferenceKind implements Enumerator {
 	public static final int MOVE_VALUE = 3;
 
 	/**
-	 * The '<em><b>Conflict</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of '<em><b>Conflict</b></em>' literal object isn't clear, there really should be
-	 * more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @see #CONFLICT
-	 * @model name="Conflict"
-	 * @generated
-	 * @ordered
-	 */
-	public static final int CONFLICT_VALUE = 4;
-
-	/**
 	 * An array of all the '<em><b>Difference Kind</b></em>' enumerators.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * @generated
 	 */
 	private static final DifferenceKind[] VALUES_ARRAY = new DifferenceKind[] {ADDITION, DELETION, CHANGE,
-			MOVE, CONFLICT, };
+			MOVE, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Difference Kind</b></em>' enumerators. <!--
@@ -210,8 +189,6 @@ public enum DifferenceKind implements Enumerator {
 				return CHANGE;
 			case MOVE_VALUE:
 				return MOVE;
-			case CONFLICT_VALUE:
-				return CONFLICT;
 		}
 		return null;
 	}

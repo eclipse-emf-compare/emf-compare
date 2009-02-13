@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Update Model Element</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Superclass of DiffElements used to describe "move" types of differences. This includes both Moving from a container to another and changing the containment reference of an element. These changes imply both an addition and a removal.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

@@ -12,24 +12,23 @@ package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddResourceDependency;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
-import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveResourceDependency;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
@@ -115,6 +114,26 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected DifferenceKind kind = KIND_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #isRemote() <em>Remote</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isRemote()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean REMOTE_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isRemote() <em>Remote</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isRemote()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean remote = REMOTE_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -139,6 +158,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return isConflicting() ? Boolean.TRUE : Boolean.FALSE;
 			case DiffPackage.DIFF_ELEMENT__KIND:
 				return getKind();
+			case DiffPackage.DIFF_ELEMENT__REMOTE:
+				return isRemote() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,6 +212,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return conflicting != CONFLICTING_EDEFAULT;
 			case DiffPackage.DIFF_ELEMENT__KIND:
 				return kind != KIND_EDEFAULT;
+			case DiffPackage.DIFF_ELEMENT__REMOTE:
+				return remote != REMOTE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -212,6 +235,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				getIsHiddenBy().clear();
 				getIsHiddenBy().addAll((Collection<? extends AbstractDiffExtension>)newValue);
 				return;
+			case DiffPackage.DIFF_ELEMENT__REMOTE:
+				setRemote(((Boolean)newValue).booleanValue());
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -229,6 +255,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return;
 			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
 				getIsHiddenBy().clear();
+				return;
+			case DiffPackage.DIFF_ELEMENT__REMOTE:
+				setRemote(REMOTE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -256,21 +285,42 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	public DifferenceKind getKind() {
 		if (this instanceof AttributeChange || this instanceof ReferenceChange) {
 			kind = DifferenceKind.CHANGE;
-		} else if (this instanceof RemoveModelElement || this instanceof RemoteRemoveModelElement
-				|| this instanceof RemoveResourceDependency) {
+		} else if (this instanceof ModelElementChangeRightTarget
+				|| this instanceof ResourceDependencyChangeRightTarget) {
 			kind = DifferenceKind.DELETION;
-		} else if (this instanceof AddModelElement || this instanceof RemoteAddModelElement
-				|| this instanceof AddResourceDependency) {
+		} else if (this instanceof ModelElementChangeLeftTarget
+				|| this instanceof ResourceDependencyChangeLeftTarget) {
 			kind = DifferenceKind.ADDITION;
 		} else if (this instanceof UpdateModelElement) {
 			kind = DifferenceKind.MOVE;
-		} else if (this instanceof ConflictingDiffElement) {
-			kind = DifferenceKind.CONFLICT;
 		} else {
-			// fallthrough
+			// default to DifferenceKind.CHANGE
 			kind = DifferenceKind.CHANGE;
 		}
 		return kind;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isRemote() {
+		return remote;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRemote(boolean newRemote) {
+		final boolean oldRemote = remote;
+		remote = newRemote;
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_ELEMENT__REMOTE,
+					oldRemote, remote));
+		}
 	}
 
 	/**
@@ -315,6 +365,8 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 		result.append(conflicting);
 		result.append(", kind: "); //$NON-NLS-1$
 		result.append(kind);
+		result.append(", remote: "); //$NON-NLS-1$
+		result.append(remote);
 		result.append(')');
 		return result.toString();
 	}

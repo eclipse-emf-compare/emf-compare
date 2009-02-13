@@ -27,19 +27,21 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getLeftTarget <em>Left Target
+ * </em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.MoveModelElementImpl#getRightTarget <em>Right Target
+ * </em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 
 public class MoveModelElementImpl extends UpdateModelElementImpl implements MoveModelElement {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -58,6 +60,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected MoveModelElementImpl() {
@@ -66,6 +69,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -74,6 +78,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -82,6 +87,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -101,6 +107,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -116,6 +123,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -133,6 +141,7 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -150,16 +159,18 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
 		if (leftTarget != null && leftTarget.eIsProxy()) {
-			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			final InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
+				}
 			}
 		}
 		return leftTarget;
@@ -167,16 +178,18 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
 		if (rightTarget != null && rightTarget.eIsProxy()) {
-			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			final InternalEObject oldRightTarget = (InternalEObject)rightTarget;
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired())
+				if (eNotificationRequired()) {
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+				}
 			}
 		}
 		return rightTarget;
@@ -184,26 +197,30 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
-		EObject oldLeftTarget = leftTarget;
+		final EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MOVE_MODEL_ELEMENT__LEFT_TARGET, oldLeftTarget, leftTarget));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
-		EObject oldRightTarget = rightTarget;
+		final EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MOVE_MODEL_ELEMENT__RIGHT_TARGET, oldRightTarget, rightTarget));
+		}
 	}
 
 	/**
@@ -214,19 +231,31 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 	 */
 	@Override
 	public String toString() {
-		try {
-			return EMFCompareDiffMessages
-					.getString(
-							"MoveModelElementImpl.ToString", NameSimilarity.findName(leftElement), rightElement.eContainer(), leftElement.eContainer()); //$NON-NLS-1$
-		} catch (final FactoryException e) {
-			return EMFCompareDiffMessages
-					.getString(
-							"MoveModelElementImpl.ToString", leftElement.eClass().getName(), rightElement.eContainer(), leftElement.eContainer()); //$NON-NLS-1$
+		String toString = null;
+		if (isRemote()) {
+			try {
+				toString = EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement
+								.eContainer());
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", //$NON-NLS-1$
+						leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer());
+			}
+		} else {
+			try {
+				toString = EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", NameSimilarity //$NON-NLS-1$
+						.findName(leftElement), rightElement.eContainer(), leftElement.eContainer());
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("MoveModelElementImpl.ToString", leftElement //$NON-NLS-1$
+						.eClass().getName(), rightElement.eContainer(), leftElement.eContainer());
+			}
 		}
+		return toString;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

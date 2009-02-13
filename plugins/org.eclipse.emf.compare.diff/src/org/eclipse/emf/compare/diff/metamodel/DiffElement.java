@@ -17,6 +17,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Element</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This is the superclass of all types of differences EMF Compare can detect.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -24,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getIsHiddenBy <em>Is Hidden By</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isConflicting <em>Conflicting</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getKind <em>Kind</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isRemote <em>Remote</em>}</li>
  * </ul>
  * </p>
  *
@@ -82,6 +87,32 @@ public interface DiffElement extends EObject {
 	 * @generated
 	 */
 	DifferenceKind getKind();
+
+	/**
+	 * Returns the value of the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Remote</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Remote</em>' attribute.
+	 * @see #setRemote(boolean)
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_Remote()
+	 * @model
+	 * @generated
+	 */
+	boolean isRemote();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isRemote <em>Remote</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Remote</em>' attribute.
+	 * @see #isRemote()
+	 * @generated
+	 */
+	void setRemote(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Sub Diff Elements</b></em>' containment reference list.

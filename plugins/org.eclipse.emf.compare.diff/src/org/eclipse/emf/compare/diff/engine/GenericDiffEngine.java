@@ -21,29 +21,21 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.api.IDiffEngine;
-import org.eclipse.emf.compare.diff.metamodel.AddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.AddReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteAddReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoteMoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoteRemoveReferenceValue;
-import org.eclipse.emf.compare.diff.metamodel.RemoteUpdateContainmentFeature;
-import org.eclipse.emf.compare.diff.metamodel.RemoveAttribute;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
-import org.eclipse.emf.compare.diff.metamodel.RemoveReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
-import org.eclipse.emf.compare.diff.metamodel.UpdateUniqueReferenceValue;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
@@ -756,7 +748,8 @@ public class GenericDiffEngine implements IDiffEngine {
 			final EObject element = unmatchElement.getElement();
 			if (unmatchElement.getSide() == Side.RIGHT) {
 				// add RemoveModelElement
-				final RemoveModelElement operation = DiffFactory.eINSTANCE.createRemoveModelElement();
+				final ModelElementChangeRightTarget operation = DiffFactory.eINSTANCE
+						.createModelElementChangeRightTarget();
 				operation.setRightElement(element);
 				// Container will be null if we're adding a root
 				if (element.eContainer() != null) {
@@ -768,7 +761,8 @@ public class GenericDiffEngine implements IDiffEngine {
 				}
 			} else {
 				// add AddModelElement
-				final AddModelElement operation = DiffFactory.eINSTANCE.createAddModelElement();
+				final ModelElementChangeLeftTarget operation = DiffFactory.eINSTANCE
+						.createModelElementChangeLeftTarget();
 				operation.setLeftElement(element);
 				// Container will be null if we're adding a root
 				if (element.eContainer() != null) {
@@ -803,33 +797,24 @@ public class GenericDiffEngine implements IDiffEngine {
 				final EObject element = entry.getKey().getElement();
 				final EObject matchedParent = getMatchedEObject(element.eContainer());
 
-				if (entry.getKey().isRemote()) {
-					if (entry.getKey().getSide() == Side.LEFT) {
-						final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE
-								.createRemoteAddModelElement();
-						addOperation.setRightElement(element);
-						addOperation.setLeftParent(matchedParent);
-						addInContainerPackage(diffRoot, addOperation, matchedParent);
-					} else {
-						final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE
-								.createRemoteRemoveModelElement();
-						removeOperation.setLeftElement(element);
-						removeOperation.setRightParent(matchedParent);
-						addInContainerPackage(diffRoot, removeOperation, element.eContainer());
+				if (entry.getKey().getSide() == Side.LEFT) {
+					final ModelElementChangeRightTarget operation = DiffFactory.eINSTANCE
+							.createModelElementChangeRightTarget();
+					operation.setRightElement(element);
+					operation.setLeftParent(matchedParent);
+					if (entry.getKey().isRemote()) {
+						operation.setRemote(true);
 					}
+					addInContainerPackage(diffRoot, operation, matchedParent);
 				} else {
-					if (entry.getKey().getSide() == Side.LEFT) {
-						final RemoveModelElement removeOperation = DiffFactory.eINSTANCE
-								.createRemoveModelElement();
-						removeOperation.setRightElement(element);
-						removeOperation.setLeftParent(matchedParent);
-						addInContainerPackage(diffRoot, removeOperation, matchedParent);
-					} else {
-						final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
-						addOperation.setLeftElement(element);
-						addOperation.setRightParent(matchedParent);
-						addInContainerPackage(diffRoot, addOperation, element.eContainer());
+					final ModelElementChangeLeftTarget operation = DiffFactory.eINSTANCE
+							.createModelElementChangeLeftTarget();
+					operation.setLeftElement(element);
+					operation.setRightParent(matchedParent);
+					if (entry.getKey().isRemote()) {
+						operation.setRemote(true);
 					}
+					addInContainerPackage(diffRoot, operation, element.eContainer());
 				}
 			}
 		}
@@ -844,66 +829,35 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The conflicting diff element that is to be created.
 	 */
 	private void processConflictingUnmatchedElement(DiffGroup diffRoot, UnmatchElement unmatch) {
-		final DiffElement operation;
-
 		final EObject element = unmatch.getElement();
 		final EObject matchedParent = getMatchedEObject(element.eContainer());
 		final EObject matchedAncestor = getMatchedEObject(element, ANCESTOR_OBJECT);
 
-		if (unmatch.isRemote()) {
-			if (unmatch.getSide() == Side.LEFT) {
-				operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
-				((ConflictingDiffElement)operation).setLeftParent(matchedParent);
-				((ConflictingDiffElement)operation).setRightParent(element);
-				((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
+		final ConflictingDiffElement operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
+		operation.setLeftParent(matchedParent);
+		operation.setRightParent(element);
+		operation.setOriginElement(matchedAncestor);
 
-				final RemoteAddModelElement addOperation = DiffFactory.eINSTANCE
-						.createRemoteAddModelElement();
-				addOperation.setRightElement(element);
-				addOperation.setLeftParent(matchedParent);
-
-				operation.getSubDiffElements().add(addOperation);
-				addInContainerPackage(diffRoot, operation, matchedParent);
-			} else {
-				operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
-				((ConflictingDiffElement)operation).setLeftParent(element);
-				((ConflictingDiffElement)operation).setRightParent(matchedParent);
-				((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
-
-				final RemoteRemoveModelElement removeOperation = DiffFactory.eINSTANCE
-						.createRemoteRemoveModelElement();
-				removeOperation.setLeftElement(element);
-				removeOperation.setRightParent(matchedParent);
-
-				operation.getSubDiffElements().add(removeOperation);
-				addInContainerPackage(diffRoot, operation, element.eContainer());
+		if (unmatch.getSide() == Side.LEFT) {
+			final ModelElementChangeRightTarget modelOperation = DiffFactory.eINSTANCE
+					.createModelElementChangeRightTarget();
+			modelOperation.setRightElement(element);
+			modelOperation.setLeftParent(matchedParent);
+			if (unmatch.isRemote()) {
+				modelOperation.setRemote(true);
 			}
+			operation.getSubDiffElements().add(modelOperation);
+			addInContainerPackage(diffRoot, operation, matchedParent);
 		} else {
-			if (unmatch.getSide() == Side.LEFT) {
-				operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
-				((ConflictingDiffElement)operation).setLeftParent(matchedParent);
-				((ConflictingDiffElement)operation).setRightParent(element);
-				((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
-
-				final AddModelElement addOperation = DiffFactory.eINSTANCE.createAddModelElement();
-				addOperation.setLeftElement(element);
-				addOperation.setRightParent(matchedParent);
-
-				operation.getSubDiffElements().add(addOperation);
-				addInContainerPackage(diffRoot, operation, element.eContainer());
-			} else {
-				operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
-				((ConflictingDiffElement)operation).setLeftParent(element);
-				((ConflictingDiffElement)operation).setRightParent(matchedParent);
-				((ConflictingDiffElement)operation).setOriginElement(matchedAncestor);
-
-				final RemoveModelElement removeOperation = DiffFactory.eINSTANCE.createRemoveModelElement();
-				removeOperation.setRightElement(element);
-				removeOperation.setLeftParent(matchedParent);
-
-				operation.getSubDiffElements().add(removeOperation);
-				addInContainerPackage(diffRoot, operation, matchedParent);
+			final ModelElementChangeLeftTarget modelOperation = DiffFactory.eINSTANCE
+					.createModelElementChangeLeftTarget();
+			modelOperation.setLeftElement(element);
+			modelOperation.setRightParent(matchedParent);
+			if (unmatch.isRemote()) {
+				modelOperation.setRemote(true);
 			}
+			operation.getSubDiffElements().add(modelOperation);
+			addInContainerPackage(diffRoot, operation, element.eContainer());
 		}
 	}
 
@@ -1015,20 +969,12 @@ public class GenericDiffEngine implements IDiffEngine {
 
 			for (final Object aValue : leftValue) {
 				final boolean rightHasValue = rightValue.contains(aValue);
-				if (!rightHasValue && !ancestorValue.contains(aValue)) {
-					// If an object from the left is neither in the right nor in the
-					// origin, it's been added since last checkout
-					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				} else if (!rightHasValue) {
-					// If the object from the left is not in the right values,
-					// it's been removed remotely.
-					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
-							.createRemoteRemoveAttribute();
+				if (!rightHasValue) {
+					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeLeftTarget();
+					if (ancestorValue.contains(aValue)) {
+						operation.setRemote(true);
+					}
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
@@ -1038,19 +984,12 @@ public class GenericDiffEngine implements IDiffEngine {
 			}
 			for (final Object aValue : rightValue) {
 				final boolean leftHasValue = leftValue.contains(aValue);
-				if (!leftHasValue && !ancestorValue.contains(aValue)) {
-					// If an object from the right is neither in the left nor in the
-					// origin, it's a remotely added attribute
-					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				} else if (!leftHasValue) {
-					// If the object from the right is not in the left values
-					// yet present in the origin, it's been removed since last checkout
-					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
+				if (!leftHasValue) {
+					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeRightTarget();
+					if (ancestorValue.contains(aValue)) {
+						operation.setRemote(true);
+					}
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
@@ -1243,7 +1182,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		final Iterator<EObject> addedReferenceIterator = addedReferences.iterator();
 		while (addedReferenceIterator.hasNext()) {
 			final EObject eobj = addedReferenceIterator.next();
-			final AddReferenceValue addOperation = DiffFactory.eINSTANCE.createAddReferenceValue();
+			final ReferenceChangeLeftTarget addOperation = DiffFactory.eINSTANCE
+					.createReferenceChangeLeftTarget();
 			addOperation.setRightElement(right);
 			addOperation.setLeftElement(left);
 			addOperation.setReference(reference);
@@ -1277,7 +1217,8 @@ public class GenericDiffEngine implements IDiffEngine {
 			final List<?> rightValue = EFactory.eGetAsList(rightElement, attribute.getName());
 			for (final Object aValue : leftValue) {
 				if (!rightValue.contains(aValue)) {
-					final AddAttribute operation = DiffFactory.eINSTANCE.createAddAttribute();
+					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeLeftTarget();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
@@ -1287,7 +1228,8 @@ public class GenericDiffEngine implements IDiffEngine {
 			}
 			for (final Object aValue : rightValue) {
 				if (!leftValue.contains(aValue)) {
-					final RemoveAttribute operation = DiffFactory.eINSTANCE.createRemoveAttribute();
+					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeRightTarget();
 					operation.setAttribute(attribute);
 					operation.setRightElement(rightElement);
 					operation.setLeftElement(leftElement);
@@ -1394,8 +1336,9 @@ public class GenericDiffEngine implements IDiffEngine {
 				// if the value is present in the right (latest) but not in the
 				// left (working copy), it's been removed remotely
 				if (!rightValue.contains(aValue)) {
-					final RemoteRemoveAttribute operation = DiffFactory.eINSTANCE
-							.createRemoteRemoveAttribute();
+					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeLeftTarget();
+					operation.setRemote(true);
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
@@ -1407,7 +1350,9 @@ public class GenericDiffEngine implements IDiffEngine {
 				// if the value is present in the left (working copy) but not
 				// in the right (latest), it's been added remotely
 				if (!leftValue.contains(aValue)) {
-					final RemoteAddAttribute operation = DiffFactory.eINSTANCE.createRemoteAddAttribute();
+					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeRightTarget();
+					operation.setRemote(true);
 					operation.setAttribute(attribute);
 					operation.setRightElement(mapping.getRightElement());
 					operation.setLeftElement(mapping.getLeftElement());
@@ -1416,7 +1361,8 @@ public class GenericDiffEngine implements IDiffEngine {
 				}
 			}
 		} else {
-			final UpdateAttribute operation = DiffFactory.eINSTANCE.createRemoteUpdateAttribute();
+			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
+			operation.setRemote(true);
 			operation.setRightElement(mapping.getRightElement());
 			operation.setLeftElement(mapping.getLeftElement());
 			operation.setAttribute(attribute);
@@ -1437,7 +1383,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            Element of the right model corresponding to the left one.
 	 */
 	private void createRemoteMoveOperation(DiffGroup root, EObject left, EObject right) {
-		final RemoteMoveModelElement operation = DiffFactory.eINSTANCE.createRemoteMoveModelElement();
+		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
+		operation.setRemote(true);
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
 		operation.setRightTarget(getMatchedEObject(left.eContainer()));
@@ -1469,8 +1416,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	private void createRemoteReferencesUpdate(DiffGroup root, EReference reference, Match3Elements mapping,
 			List<EObject> remotelyAdded, List<EObject> remotelyDeleted) {
 		if (!reference.isMany() && remotelyAdded.size() > 0 && remotelyDeleted.size() > 0) {
-			final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE
-					.createRemoteUpdateUniqueReferenceValue();
+			final UpdateReference operation = DiffFactory.eINSTANCE.createUpdateReference();
+			operation.setRemote(true);
 			operation.setLeftElement(mapping.getLeftElement());
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
@@ -1493,8 +1440,9 @@ public class GenericDiffEngine implements IDiffEngine {
 			final Iterator<EObject> addedReferenceIterator = remotelyAdded.iterator();
 			while (addedReferenceIterator.hasNext()) {
 				final EObject eobj = addedReferenceIterator.next();
-				final RemoteAddReferenceValue addOperation = DiffFactory.eINSTANCE
-						.createRemoteAddReferenceValue();
+				final ReferenceChangeRightTarget addOperation = DiffFactory.eINSTANCE
+						.createReferenceChangeRightTarget();
+				addOperation.setRemote(true);
 				addOperation.setRightElement(mapping.getRightElement());
 				addOperation.setLeftElement(mapping.getLeftElement());
 				addOperation.setReference(reference);
@@ -1507,8 +1455,9 @@ public class GenericDiffEngine implements IDiffEngine {
 			final Iterator<EObject> deletedReferenceIterator = remotelyDeleted.iterator();
 			while (deletedReferenceIterator.hasNext()) {
 				final EObject eobj = deletedReferenceIterator.next();
-				final RemoteRemoveReferenceValue delOperation = DiffFactory.eINSTANCE
-						.createRemoteRemoveReferenceValue();
+				final ReferenceChangeLeftTarget delOperation = DiffFactory.eINSTANCE
+						.createReferenceChangeLeftTarget();
+				delOperation.setRemote(true);
 				delOperation.setRightElement(mapping.getRightElement());
 				delOperation.setLeftElement(mapping.getLeftElement());
 				delOperation.setReference(reference);
@@ -1533,8 +1482,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            two-way comparison) version.
 	 */
 	private void createRemoteUpdateContainmentOperation(DiffGroup root, EObject left, EObject right) {
-		final RemoteUpdateContainmentFeature updateContainment = DiffFactory.eINSTANCE
-				.createRemoteUpdateContainmentFeature();
+		final UpdateContainmentFeature updateContainment = DiffFactory.eINSTANCE
+				.createUpdateContainmentFeature();
+		updateContainment.setRemote(true);
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
 		updateContainment.setRightTarget(getMatchedEObject(left.eContainer()));
@@ -1564,7 +1514,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		final Iterator<EObject> deletedReferenceIterator = deletedReferences.iterator();
 		while (deletedReferenceIterator.hasNext()) {
 			final EObject eobj = deletedReferenceIterator.next();
-			final RemoveReferenceValue delOperation = DiffFactory.eINSTANCE.createRemoveReferenceValue();
+			final ReferenceChangeRightTarget delOperation = DiffFactory.eINSTANCE
+					.createReferenceChangeRightTarget();
 			delOperation.setRightElement(right);
 			delOperation.setLeftElement(left);
 			delOperation.setReference(reference);
@@ -1612,9 +1563,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            Value that has been deleted from the reference.
 	 * @return The {@link DiffElement} corresponding to an unique reference's value update
 	 */
-	private UpdateUniqueReferenceValue createUpdatedReferenceOperation(EObject left, EObject right,
+	private UpdateReference createUpdatedReferenceOperation(EObject left, EObject right,
 			EReference reference, EObject addedValue, EObject deletedValue) {
-		final UpdateUniqueReferenceValue operation = DiffFactory.eINSTANCE.createUpdateUniqueReferenceValue();
+		final UpdateReference operation = DiffFactory.eINSTANCE.createUpdateReference();
 		operation.setLeftElement(left);
 		operation.setRightElement(right);
 		operation.setReference(reference);
@@ -1788,6 +1739,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The object we need a valued of.
 	 * @return The first value of <tt>data</tt> that is not an instance of FeatureMapEntry.
 	 */
+	@SuppressWarnings("unchecked")
 	private EObject internalFindActualEObject(Object data) {
 		if (data instanceof Entry)
 			return internalFindActualEObject(((Entry)data).getValue());

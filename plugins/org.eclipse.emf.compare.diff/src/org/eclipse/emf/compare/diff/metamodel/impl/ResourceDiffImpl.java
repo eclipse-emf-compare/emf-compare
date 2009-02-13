@@ -19,13 +19,12 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class ResourceDiffImpl extends DiffElementImpl implements ResourceDiff {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ResourceDiffImpl() {
@@ -34,7 +33,6 @@ public class ResourceDiffImpl extends DiffElementImpl implements ResourceDiff {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

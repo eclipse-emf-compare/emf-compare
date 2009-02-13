@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Model Element Change Right Target</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A "RightTarget" element change describes a difference involving the right element/resource. In the case of ModelElementChanges, this can describe either the removal of an element or the remote addition of an element (for three way comparisons).
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

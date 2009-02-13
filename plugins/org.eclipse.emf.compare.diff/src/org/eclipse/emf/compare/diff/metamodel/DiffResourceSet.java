@@ -17,6 +17,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Resource Set</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Root of the differences model for ResourceSet-wide differencing.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

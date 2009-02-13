@@ -14,6 +14,10 @@ package org.eclipse.emf.compare.diff.metamodel;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Attribute Change Left Target</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A "LeftTarget" element change describes a difference involving the left element/resource. In the case of AttributeChanges, these describe differences within multi-valued attributes. Specifically, the addition of a value or the remote removal of a value (for three way comparisons).
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

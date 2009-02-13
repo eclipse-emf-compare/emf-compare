@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Group</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * DiffGroups are used as container for differences so that we can maintain the original models' hierarchy within the differences model.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

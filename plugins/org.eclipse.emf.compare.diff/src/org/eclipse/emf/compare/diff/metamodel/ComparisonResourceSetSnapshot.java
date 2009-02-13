@@ -16,6 +16,10 @@ import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
  * <!-- begin-user-doc --> A representation of the model object '
  * <em><b>Comparison Resource Set Snapshot</b></em>'. <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * This can be used to hold the result of ResourceSet-wide comparisons.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

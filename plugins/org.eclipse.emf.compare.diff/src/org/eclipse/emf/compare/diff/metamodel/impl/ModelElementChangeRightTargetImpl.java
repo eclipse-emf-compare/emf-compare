@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EClass;
@@ -19,8 +20,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Model Element Change Right Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Model Element Change Right Target</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -34,9 +35,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl implements ModelElementChangeRightTarget {
 	/**
-	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getLeftParent() <em>Left Parent</em>}' reference.
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #getLeftParent()
 	 * @generated
 	 * @ordered
@@ -204,6 +205,19 @@ public class ModelElementChangeRightTargetImpl extends ModelElementChangeImpl im
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, oldRightElement,
 					rightElement));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @generated NOT
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl#toString()
+	 */
+	@Override
+	public String toString() {
+		if (isRemote())
+			return EMFCompareDiffMessages.getString("RemoteAddModelElementImpl.ToString", rightElement); //$NON-NLS-1$
+		return EMFCompareDiffMessages.getString("RemoveModelElementImpl.ToString", rightElement); //$NON-NLS-1$
 	}
 
 	/**

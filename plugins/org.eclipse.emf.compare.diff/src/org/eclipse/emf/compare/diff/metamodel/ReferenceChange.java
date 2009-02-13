@@ -17,6 +17,10 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Reference Change</b></em>'. <!--
  * end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Superclass of elements describing difference between the values of a given reference.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>

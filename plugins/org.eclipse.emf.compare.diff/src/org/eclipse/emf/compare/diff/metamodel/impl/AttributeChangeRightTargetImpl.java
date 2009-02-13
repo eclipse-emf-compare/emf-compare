@@ -11,21 +11,25 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Change Right Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Attribute Change Right Target</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>Right Target</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeRightTargetImpl#getRightTarget <em>
+ * Right Target</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implements AttributeChangeRightTarget {
@@ -51,6 +55,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AttributeChangeRightTargetImpl() {
@@ -59,6 +64,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -72,6 +78,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -86,22 +93,35 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
+	 * 
+	 * @generated NOT
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (rightTarget: "); //$NON-NLS-1$
-		result.append(rightTarget);
-		result.append(')');
-		return result.toString();
+		String toString = null;
+		if (isRemote()) {
+			try {
+				toString = EMFCompareDiffMessages.getString("RemoteRemoveAttributeValueImpl.ToString", //$NON-NLS-1$
+						rightTarget, attribute.getName(), NameSimilarity.findName(rightElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("RemoteRemoveAttributeValueImpl.ToString", //$NON-NLS-1$
+						rightTarget, attribute.getName(), rightElement.eClass().getName());
+			}
+		} else {
+			try {
+				toString = EMFCompareDiffMessages.getString("AddAttributeValueImpl.ToString", //$NON-NLS-1$
+						rightTarget, attribute.getName(), NameSimilarity.findName(rightElement));
+			} catch (final FactoryException e) {
+				toString = EMFCompareDiffMessages.getString("AddAttributeValueImpl.ToString", rightTarget, //$NON-NLS-1$
+						attribute.getName(), rightElement.eClass().getName());
+			}
+		}
+		return toString;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -116,6 +136,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -130,6 +151,7 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Object getRightTarget() {
@@ -138,18 +160,21 @@ public class AttributeChangeRightTargetImpl extends AttributeChangeImpl implemen
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setRightTarget(Object newRightTarget) {
-		Object oldRightTarget = rightTarget;
+		final Object oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, oldRightTarget, rightTarget));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

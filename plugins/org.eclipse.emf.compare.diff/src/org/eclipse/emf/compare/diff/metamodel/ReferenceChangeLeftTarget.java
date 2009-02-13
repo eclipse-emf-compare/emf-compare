@@ -16,6 +16,10 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Reference Change Left Target</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A "LeftTarget" element change describes a difference involving the left element/resource. In the case of ReferenceChanges, these describe differences within multi-valued references. Specifically, the addition of a value or the remote removal of a value (for three way comparisons).
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
