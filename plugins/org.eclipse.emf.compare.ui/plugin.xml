@@ -76,4 +76,11 @@
          </enablement>
       </changePreviewViewer>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.team.handler">
+      <handler
+            class="org.eclipse.emf.compare.ui.internal.RevisionComparisonHandler"
+            id="org.eclipse.emf.compare.ui.internal.HistoryComparisonHandler">
+      </handler>
+   </extension>
 </plugin>

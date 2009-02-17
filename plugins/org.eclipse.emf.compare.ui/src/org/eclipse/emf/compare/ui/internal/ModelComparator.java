@@ -164,12 +164,19 @@ public final class ModelComparator {
 	private static void parseExtensionMetaData() {
 		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
 				TEAM_HANDLERS_EXTENSION_POINT).getExtensions();
+		// The RevisionComparisonHandler will be added last in the registry to allow clients override
+		TeamHandlerDescriptor revisionHandler = null;
 		for (final IExtension extension : extensions) {
 			for (final IConfigurationElement configElement : extension.getConfigurationElements()) {
 				final TeamHandlerDescriptor descriptor = new TeamHandlerDescriptor(configElement);
-				CACHED_HANDLERS.add(descriptor);
+				if (RevisionComparisonHandler.class.getName().equals(descriptor.getHandlerClass())) {
+					revisionHandler = descriptor;
+				} else {
+					CACHED_HANDLERS.add(descriptor);
+				}
 			}
 		}
+		CACHED_HANDLERS.add(revisionHandler);
 	}
 
 	/**
@@ -454,9 +461,9 @@ public final class ModelComparator {
 			return true;
 		}
 		/*
-		 * Weshould never be here. There always is a local resource when comparing with CVS. this code will be
-		 * executed if we couldn't manage to handle thislocal resource as such. Though the resourcewill be
-		 * loaded thanks to this generic handler, note that it will not be saveable.
+		 * We should never be here. There always is a local resource when comparing with CVS. this code will
+		 * be executed if we couldn't manage to handle this local resource as such. Though the resource will
+		 * be loaded thanks to this generic handler, note that it will not be saveable.
 		 */
 		boolean result = false;
 		if (left instanceof IStreamContentAccessor && right instanceof IStreamContentAccessor) {
@@ -549,6 +556,16 @@ public final class ModelComparator {
 				}
 			}
 			return handler;
+		}
+
+		/**
+		 * Returns the class of the wrapped AbstractTeamHandler. This is only used internally to set the
+		 * RevisionComparisonHandler last.
+		 * 
+		 * @return The class of the wrapped AbstractTeamHandler.
+		 */
+		String getHandlerClass() {
+			return element.getAttribute(ATTRIBUTE_HANDLER_CLASS);
 		}
 	}
 
