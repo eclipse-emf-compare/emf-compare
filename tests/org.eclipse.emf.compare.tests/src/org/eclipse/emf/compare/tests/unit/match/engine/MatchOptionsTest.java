@@ -16,7 +16,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.api.MatchOptions;
+import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;

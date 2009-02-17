@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
-import org.eclipse.emf.compare.match.statistic.similarity.NameSimilarity;
 import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.ModelUtils;

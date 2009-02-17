@@ -12,7 +12,7 @@ package org.eclipse.emf.compare.tests.unit.match.engine.mock;
 
 import java.util.Map;
 
-import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.IMatchEngine;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,7 +26,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
@@ -37,7 +37,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap) {
@@ -47,7 +47,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
@@ -58,7 +58,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap) {
@@ -68,7 +68,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#reset()
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#reset()
 	 */
 	public void reset() {
 		// no reset needed here
@@ -77,7 +77,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
 	 *      org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
@@ -88,7 +88,7 @@ public class AEngine implements IMatchEngine {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.match.api.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
 	 *      org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.resource.Resource, java.util.Map)
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,

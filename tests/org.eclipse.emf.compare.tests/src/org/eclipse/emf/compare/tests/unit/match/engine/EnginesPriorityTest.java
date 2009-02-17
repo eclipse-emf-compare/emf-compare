@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.tests.unit.match.engine;
 import junit.framework.ComparisonFailure;
 import junit.framework.TestCase;
 
-import org.eclipse.emf.compare.match.api.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.IMatchEngine;
 import org.eclipse.emf.compare.match.service.MatchService;
 
 /**
