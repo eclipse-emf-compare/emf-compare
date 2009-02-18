@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.examples.export.xslt;
 
 import org.eclipse.core.runtime.Plugin;
@@ -12,7 +22,7 @@ public class XSLTExportPlugin extends Plugin {
 
 	/** This plug-in's shared instance. */
 	private static XSLTExportPlugin plugin;
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -22,7 +32,7 @@ public class XSLTExportPlugin extends Plugin {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -33,7 +43,7 @@ public class XSLTExportPlugin extends Plugin {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -44,7 +54,7 @@ public class XSLTExportPlugin extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static XSLTExportPlugin getDefault() {
