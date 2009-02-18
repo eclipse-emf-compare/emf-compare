@@ -1,40 +1,41 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: Book.java,v 1.1 2008/04/21 09:43:18 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2007, 2009 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.examples.export.library;
 
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Book</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Book</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getTitle <em>Title</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getPages <em>Pages</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getAuthor <em>Author</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getTitle <em>Title</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getPages <em>Pages</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.Book#getAuthor <em>Author</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.eclipse.emf.compare.examples.export.library.LibraryPackage#getBook()
  * @model
  * @generated
  */
 public interface Book extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Title</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Title</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Title</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Title</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Title</em>' attribute.
 	 * @see #setTitle(String)
 	 * @see org.eclipse.emf.compare.examples.export.library.LibraryPackage#getBook_Title()
@@ -44,23 +45,24 @@ public interface Book extends EObject {
 	String getTitle();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getTitle <em>Title</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Title</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getTitle
+	 * <em>Title</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Title</em>' attribute.
 	 * @see #getTitle()
 	 * @generated
 	 */
 	void setTitle(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Pages</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Pages</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Pages</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Pages</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Pages</em>' attribute.
 	 * @see #setPages(int)
 	 * @see org.eclipse.emf.compare.examples.export.library.LibraryPackage#getBook_Pages()
@@ -70,24 +72,26 @@ public interface Book extends EObject {
 	int getPages();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getPages <em>Pages</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Pages</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getPages
+	 * <em>Pages</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Pages</em>' attribute.
 	 * @see #getPages()
 	 * @generated
 	 */
 	void setPages(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Author</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.examples.export.library.Writer#getBooks <em>Books</em>}'.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Author</b></em>' reference. It is bidirectional and its opposite is '
+	 * {@link org.eclipse.emf.compare.examples.export.library.Writer#getBooks <em>Books</em>}'. <!--
+	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Author</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Author</em>' reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Author</em>' reference.
 	 * @see #setAuthor(Writer)
 	 * @see org.eclipse.emf.compare.examples.export.library.LibraryPackage#getBook_Author()
@@ -98,10 +102,11 @@ public interface Book extends EObject {
 	Writer getAuthor();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getAuthor <em>Author</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Author</em>' reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.examples.export.library.Book#getAuthor
+	 * <em>Author</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Author</em>' reference.
 	 * @see #getAuthor()
 	 * @generated
 	 */

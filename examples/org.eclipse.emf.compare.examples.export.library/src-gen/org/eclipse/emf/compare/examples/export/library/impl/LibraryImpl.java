@@ -1,54 +1,52 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: LibraryImpl.java,v 1.1 2008/04/21 09:43:18 lgoubet Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2007, 2009 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.examples.export.library.impl;
 
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.compare.examples.export.library.Book;
 import org.eclipse.emf.compare.examples.export.library.Library;
 import org.eclipse.emf.compare.examples.export.library.LibraryPackage;
 import org.eclipse.emf.compare.examples.export.library.Member;
 import org.eclipse.emf.compare.examples.export.library.Writer;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Library</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Library</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getBooks <em>Books</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getWriters <em>Writers</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getMembers <em>Members</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getBooks <em>Books</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getWriters <em>Writers</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.examples.export.library.impl.LibraryImpl#getMembers <em>Members</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class LibraryImpl extends EObjectImpl implements Library {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -56,9 +54,9 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -66,9 +64,9 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getBooks() <em>Books</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBooks() <em>Books</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBooks()
 	 * @generated
 	 * @ordered
@@ -76,9 +74,9 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	protected EList<Book> books;
 
 	/**
-	 * The cached value of the '{@link #getWriters() <em>Writers</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getWriters() <em>Writers</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getWriters()
 	 * @generated
 	 * @ordered
@@ -86,9 +84,9 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	protected EList<Writer> writers;
 
 	/**
-	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getMembers() <em>Members</em>}' containment reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getMembers()
 	 * @generated
 	 * @ordered
@@ -96,8 +94,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	protected EList<Member> members;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected LibraryImpl() {
@@ -105,8 +103,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -115,8 +113,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -124,20 +122,21 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
-		String oldName = name;
+		final String oldName = name;
 		name = newName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, LibraryPackage.LIBRARY__NAME, oldName, name));
+		}
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Book> getBooks() {
@@ -148,8 +147,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Writer> getWriters() {
@@ -160,8 +159,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Member> getMembers() {
@@ -172,8 +171,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -190,8 +189,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -210,8 +209,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -238,8 +237,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -262,8 +261,8 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -282,19 +281,20 @@ public class LibraryImpl extends EObjectImpl implements Library {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		final StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: "); //$NON-NLS-1$
 		result.append(name);
 		result.append(')');
 		return result.toString();
 	}
 
-} //LibraryImpl
+} // LibraryImpl
