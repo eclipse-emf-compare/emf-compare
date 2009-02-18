@@ -1,19 +1,21 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id: Contact.java,v 1.1 2008/04/11 14:56:48 cbrun Exp $
- */
+/*******************************************************************************
+ * Copyright (c) 2008, 2009 Obeo.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Obeo - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.examples.addressbook.addressbook;
 
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Contact</b></em>'.
- * <!-- end-user-doc -->
- *
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Contact</b></em>'. <!-- end-user-doc
+ * -->
+ * 
  * @see org.eclipse.emf.compare.examples.addressbook.addressbook.AddressbookPackage#getContact()
  * @model abstract="true"
  * @generated
