@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.EMFPlugin;
@@ -150,7 +149,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftObject.eResource(), rightObject.eResource(), ancestor.eResource());
+		setModelRoots(root, leftObject.eResource(), rightObject.eResource(), ancestor.eResource());
 		final CompareProgressMonitor monitor = new CompareProgressMonitor();
 		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
 		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
@@ -261,7 +260,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final CompareProgressMonitor monitor = new CompareProgressMonitor();
 
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftObject.eResource(), rightObject.eResource());
+		setModelRoots(root, leftObject.eResource(), rightObject.eResource());
 
 		/*
 		 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots of
@@ -881,7 +880,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void createThreeWayUnmatchElements(MatchModel root, Map<EObject, Boolean> unmatchedElements,
 			boolean leftSide) throws FactoryException {
-		for (final Entry<EObject, Boolean> entry : unmatchedElements.entrySet()) {
+		for (final Map.Entry<EObject, Boolean> entry : unmatchedElements.entrySet()) {
 			// We will only consider the highest level of an unmatched element
 			// hierarchy
 			if (!unmatchedElements.containsKey(entry.getKey().eContainer())) {
@@ -947,7 +946,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor)
 			throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftResource, rightResource);
+		setModelRoots(root, leftResource, rightResource);
 
 		// filters unused features
 		filterUnused(leftResource);
@@ -1057,7 +1056,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			CompareProgressMonitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelURIs(root, leftResource, rightResource, ancestorResource);
+		setModelRoots(root, leftResource, rightResource, ancestorResource);
 		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor);
 		final MatchModel root2AncestorMatch = doMatch(rightResource, ancestorResource, monitor);
 
@@ -1728,8 +1727,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param right
 	 *            Element from which to resolve the right model URI.
 	 */
-	private void setModelURIs(MatchModel modelRoot, Resource left, Resource right) {
-		setModelURIs(modelRoot, left, right, null);
+	private void setModelRoots(MatchModel modelRoot, Resource left, Resource right) {
+		setModelRoots(modelRoot, left, right, null);
 	}
 
 	/**
@@ -1744,7 +1743,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param ancestor
 	 *            Element from which to resolve the ancestor model URI. Can be <code>null</code>.
 	 */
-	private void setModelURIs(MatchModel modelRoot, Resource left, Resource right, Resource ancestor) {
+	private void setModelRoots(MatchModel modelRoot, Resource left, Resource right, Resource ancestor) {
 		// Sets values of left, right and ancestor model URIs
 		if (left != null) {
 			modelRoot.getLeftRoots().addAll(left.getContents());
