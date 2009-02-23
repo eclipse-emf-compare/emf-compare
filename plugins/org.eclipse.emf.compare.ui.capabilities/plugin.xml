@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.activities">
+      <activity
+            description="%compareActivityDescription"
+            id="org.eclipse.emf.compare.ui.capabilities"
+            name="%compareActivityName">
+      </activity>
+      <activityPatternBinding
+            activityId="org.eclipse.emf.compare.ui.capabilities"
+            pattern="org\.eclipse\.emf\.compare\.ui/.*">
+      </activityPatternBinding>
+      <categoryActivityBinding
+            activityId="org.eclipse.emf.compare.ui.capabilities"
+            categoryId="org.eclipse.categories.teamCategory">
+      </categoryActivityBinding>
+   </extension>
+</plugin>
