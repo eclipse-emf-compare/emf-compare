@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.emf.compare.ui.capabilities_feature"
+      label="%featureName"
+      version="0.9.0.qualifier"
+      provider-name="%providerName">
+
+   <description url="http://www.example.com/description">
+      UI Capability definitions for EMF Compare
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      /*  
+* Copyright (c) 2009 Obeo.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License
+v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+*/
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Entrez la description de la licence ici.]
+   </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://download.eclipse.org/modeling/emft/updates/"/>
+      <discovery label="%updateSiteName" url="http://download.eclipse.org/modeling/emft/updates/"/>
+   </url>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.emf.compare.ui.capabilities"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
