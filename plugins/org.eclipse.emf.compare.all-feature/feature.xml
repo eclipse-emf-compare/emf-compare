@@ -249,26 +249,4 @@ litigation.
          id="org.eclipse.emf.compare.source"
          version="0.0.0"/>
 
-   <requires>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.ecore.xmi"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.emf.ecore.edit"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.team.svn.core"/>
-      <import plugin="org.eclipse.team.svn.ui"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.team.core" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.filesystem" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.ecore" version="2.2.0" match="compatible"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.junit" version="3.8.1" match="compatible"/>
-      <import plugin="org.eclipse.emf.ecore.editor"/>
-      <import plugin="org.eclipse.ltk.ui.refactoring"/>
-      <import plugin="org.eclipse.ltk.core.refactoring"/>
-      <import plugin="org.eclipse.team.ui" version="3.4.0" match="greaterOrEqual"/>
-   </requires>
-
 </feature>
