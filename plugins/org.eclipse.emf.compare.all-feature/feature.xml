@@ -237,16 +237,4 @@ litigation.
          id="org.eclipse.emf.compare.team.subversive"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.emf.compare"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.compare.doc"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.compare.source"
-         version="0.0.0"/>
-
 </feature>
