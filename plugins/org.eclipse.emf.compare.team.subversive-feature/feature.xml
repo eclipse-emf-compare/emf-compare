@@ -244,5 +244,9 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+   <includes
+         id="org.eclipse.emf.compare.team.subversive.source"
+         version="0.0.0"/>
 
 </feature>
