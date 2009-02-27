@@ -236,4 +236,8 @@ litigation.
          version="0.0.0"
          unpack="false"/>
 
+    <includes
+         id="org.eclipse.emf.compare.ui.capabilities.source"
+         version="0.0.0"/>
+         
 </feature>
