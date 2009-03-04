@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.engine.EcoreMatchEngine;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.engine.IMatchEngine;
 
@@ -37,9 +36,6 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
-
-	/** Default extension for EObjects not attached to a resource. */
-	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
 
 	/** Name of the extension point to parse for engines. */
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
@@ -60,7 +56,6 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 		} else {
 			// Add both generic engines
 			putValue(ALL_EXTENSIONS, new GenericMatchEngine());
-			putValue(DEFAULT_EXTENSION, new EcoreMatchEngine());
 		}
 	}
 

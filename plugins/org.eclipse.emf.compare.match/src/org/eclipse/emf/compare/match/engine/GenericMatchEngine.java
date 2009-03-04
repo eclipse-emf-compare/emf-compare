@@ -39,6 +39,7 @@ import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -610,7 +611,9 @@ public class GenericMatchEngine implements IMatchEngine {
 		final int obj1NonNullFeatures = nonNullFeaturesCount(obj1);
 		final int obj2NonNullFeatures = nonNullFeaturesCount(obj2);
 
-		if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
+		if (obj1 instanceof EGenericType || obj2 instanceof EGenericType) {
+			similar = isSimilar(obj1.eContainer(), obj2.eContainer());
+		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
 				&& obj1.eClass() != obj2.eClass()) {
 			similar = false;
 		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID) && haveDistinctID(obj1, obj2)) {
