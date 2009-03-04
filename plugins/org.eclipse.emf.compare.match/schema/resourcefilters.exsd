@@ -76,7 +76,9 @@
          <meta.section type="examples"/>
       </appinfo>
       <documentation>
-         [Entrez ici un exemple d&apos;utilisation du point d&apos;extension.]
+         &lt;extension point=&quot;org.eclipse.emf.compare.match.resourcefilters&quot;&gt;
+  &lt;filter class=&quot;org.eclipse.emf.compare.match.internal.filter.BinaryIdenticalResourceFilter&quot;/&gt;
+&lt;/extension&gt;
       </documentation>
    </annotation>
 
