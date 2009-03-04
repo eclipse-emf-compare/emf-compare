@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -403,11 +405,14 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            This contains the mapping information about the elements we need to check for a move.
 	 */
 	protected void checkMoves(DiffGroup root, Match2Elements matchElement) {
-		if (matchElement.getLeftElement().eContainer() != null
-				&& matchElement.getRightElement().eContainer() != null
-				&& getMatchedEObject(matchElement.getLeftElement().eContainer()) != matchElement
-						.getRightElement().eContainer()) {
-			createMoveOperation(root, matchElement.getLeftElement(), matchElement.getRightElement());
+		final EObject left = matchElement.getLeftElement();
+		final EObject right = matchElement.getRightElement();
+
+		if (left instanceof EGenericType || right instanceof EGenericType)
+			return;
+		if (left.eContainer() != null && right.eContainer() != null
+				&& getMatchedEObject(left.eContainer()) != right.eContainer()) {
+			createMoveOperation(root, left, right);
 		}
 	}
 
@@ -427,6 +432,9 @@ public class GenericDiffEngine implements IDiffEngine {
 		final EObject originElement = matchElement.getOriginElement();
 		if (leftElement.eContainer() == null && rightElement.eContainer() == null
 				&& originElement.eContainer() == null)
+			return;
+		if (leftElement instanceof EGenericType || rightElement instanceof EGenericType
+				|| originElement instanceof EGenericType)
 			return;
 
 		final boolean leftMoved = originElement != null
@@ -698,10 +706,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if <code>side</code> is invalid.
 	 */
 	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
 			throw new IllegalArgumentException(EMFCompareDiffMessages
 					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
-		}
 		EObject matchedEObject = null;
 		if (matchCrossReferencer != null) {
 			for (final Setting setting : matchCrossReferencer.get(from)) {
@@ -743,7 +750,13 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The MatchModel's {@link UnmatchElement}s.
 	 */
 	protected void processUnmatchedElements(DiffGroup diffRoot, List<UnmatchElement> unmatched) {
-		for (final UnmatchElement unmatchElement : unmatched) {
+		final List<UnmatchElement> filteredUnmatched = new ArrayList<UnmatchElement>(unmatched.size());
+		for (final UnmatchElement element : unmatched) {
+			if (!(element.getElement() instanceof EGenericType)) {
+				filteredUnmatched.add(element);
+			}
+		}
+		for (final UnmatchElement unmatchElement : filteredUnmatched) {
 			final EObject element = unmatchElement.getElement();
 			if (unmatchElement.getSide() == Side.RIGHT) {
 				// add RemoveModelElement
@@ -789,7 +802,14 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The MatchModel's {@link UnmatchElement}s.
 	 */
 	protected void processUnmatchedElements(DiffGroup diffRoot, Map<UnmatchElement, Boolean> unmatched) {
-		for (final Entry<UnmatchElement, Boolean> entry : unmatched.entrySet()) {
+		final Map<UnmatchElement, Boolean> filteredUnmatched = new HashMap<UnmatchElement, Boolean>(unmatched
+				.size());
+		for (final Entry<UnmatchElement, Boolean> element : unmatched.entrySet()) {
+			if (!(element.getKey().getElement() instanceof EGenericType)) {
+				filteredUnmatched.put(element.getKey(), element.getValue());
+			}
+		}
+		for (final Entry<UnmatchElement, Boolean> entry : filteredUnmatched.entrySet()) {
 			if (entry.getValue().booleanValue()) {
 				processConflictingUnmatchedElement(diffRoot, entry.getKey());
 			} else {
