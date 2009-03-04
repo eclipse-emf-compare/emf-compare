@@ -12,6 +12,7 @@ Contributors:
 -->
 <plugin>
    <extension-point id="org.eclipse.emf.compare.match.engine" name="org.eclipse.emf.compare.match.engine" schema="schema/org.eclipse.emf.compare.match.engine.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.match.resourcefilters" name="org.eclipse.emf.compare.match.resourcefilters" schema="schema/resourcefilters.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
     <package 
@@ -40,6 +41,12 @@ Contributors:
           org.eclipse.emf.edit.provider.ITreeItemContentProvider
           org.eclipse.emf.edit.provider.IItemLabelProvider
           org.eclipse.emf.edit.provider.IItemPropertySource" />
+  </extension>
+  <extension
+        point="org.eclipse.emf.compare.match.resourcefilters">
+     <filter
+           class="org.eclipse.emf.compare.match.internal.filter.BinaryIdenticalResourceFilter">
+     </filter>
   </extension>
 
 </plugin>
