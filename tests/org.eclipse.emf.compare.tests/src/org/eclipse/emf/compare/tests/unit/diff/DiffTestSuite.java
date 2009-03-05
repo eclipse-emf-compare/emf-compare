@@ -40,13 +40,13 @@ public class DiffTestSuite extends TestCase {
 	 * @return The testsuite containing all the tests
 	 */
 	public static Test suite() {
+		final TestSuite suite = new TestSuite("Tests for the diff plugin."); //$NON-NLS-1$
 		// These tests are too long/costly to be run with too low memory
 		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING) {
-			final TestSuite suite = new TestSuite("Tests for the diff plugin."); //$NON-NLS-1$
 			suite.addTestSuite(ThreeWayDiffTest.class);
 			suite.addTestSuite(TwoWayDiffTest.class);
-			return suite;
 		}
-		return null;
+		suite.addTestSuite(MessagesTest.class);
+		return suite;
 	}
 }
