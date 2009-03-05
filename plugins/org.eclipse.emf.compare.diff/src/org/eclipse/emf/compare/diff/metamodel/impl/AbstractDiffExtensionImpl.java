@@ -33,11 +33,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#getHideElements <em>Hide
+ * Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AbstractDiffExtensionImpl#isIsCollapsed <em>Is
+ * Collapsed</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements AbstractDiffExtension {
@@ -62,9 +64,9 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -73,6 +75,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected AbstractDiffExtensionImpl() {
@@ -81,6 +84,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -96,6 +100,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -111,6 +116,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -124,6 +130,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -139,6 +146,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -158,6 +166,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -175,6 +184,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
@@ -208,6 +218,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -216,6 +227,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IMerger provideMerger() {
@@ -226,18 +238,21 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
-		boolean oldIsCollapsed = isCollapsed;
+		final boolean oldIsCollapsed = isCollapsed;
 		isCollapsed = newIsCollapsed;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -245,7 +260,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		final StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (isCollapsed: "); //$NON-NLS-1$
 		result.append(isCollapsed);
 		result.append(')');
@@ -264,6 +279,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override

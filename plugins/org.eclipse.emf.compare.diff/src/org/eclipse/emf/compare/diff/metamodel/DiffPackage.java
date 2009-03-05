@@ -39,7 +39,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAbstractDiffExtension()
 	 * @generated
 	 */
-	int ABSTRACT_DIFF_EXTENSION = 22;
+	int ABSTRACT_DIFF_EXTENSION = 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.DiffElementImpl <em>Element</em>}' class.
@@ -549,7 +549,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getIMerger()
 	 * @generated
 	 */
-	int IMERGER = 28;
+	int IMERGER = 29;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeImpl <em>Model Element Change</em>}' class.
@@ -1822,6 +1822,97 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_REFERENCE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceOrderChangeImpl <em>Reference Order Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceOrderChangeImpl
+	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceOrderChange()
+	 * @generated
+	 */
+	int REFERENCE_ORDER_CHANGE = 22;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__SUB_DIFF_ELEMENTS = REFERENCE_CHANGE__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__IS_HIDDEN_BY = REFERENCE_CHANGE__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__CONFLICTING = REFERENCE_CHANGE__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__KIND = REFERENCE_CHANGE__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__REMOTE = REFERENCE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__REFERENCE = REFERENCE_CHANGE__REFERENCE;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__RIGHT_ELEMENT = REFERENCE_CHANGE__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
+
+	/**
+	 * The number of structural features of the '<em>Reference Order Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1856,7 +1947,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDiff()
 	 * @generated
 	 */
-	int RESOURCE_DIFF = 23;
+	int RESOURCE_DIFF = 24;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1920,7 +2011,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDependencyChange()
 	 * @generated
 	 */
-	int RESOURCE_DEPENDENCY_CHANGE = 24;
+	int RESOURCE_DEPENDENCY_CHANGE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -1993,7 +2084,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDependencyChangeLeftTarget()
 	 * @generated
 	 */
-	int RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET = 25;
+	int RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET = 26;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -2066,7 +2157,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getResourceDependencyChangeRightTarget()
 	 * @generated
 	 */
-	int RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET = 26;
+	int RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET = 27;
 
 	/**
 	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
@@ -2138,7 +2229,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getDifferenceKind()
 	 * @generated
 	 */
-	int DIFFERENCE_KIND = 27;
+	int DIFFERENCE_KIND = 28;
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension <em>Abstract Diff Extension</em>}'.
@@ -2618,7 +2709,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>IMerger</em>'.
 	 * @see org.eclipse.emf.compare.diff.merge.IMerger
-	 * @model instanceClass="org.eclipse.emf.compare.diff.merge.api.IMerger"
+	 * @model instanceClass="org.eclipse.emf.compare.diff.merge.IMerger"
 	 * @generated
 	 */
 	EDataType getIMerger();
@@ -2898,6 +2989,16 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getUpdateReference_RightTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange <em>Reference Order Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference Order Change</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange
+	 * @generated
+	 */
+	EClass getReferenceOrderChange();
 
 	/**
 	 * <!-- begin-user-doc --> Defines literals for the meta objects that represent
@@ -3561,6 +3662,16 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EReference UPDATE_REFERENCE__RIGHT_TARGET = eINSTANCE.getUpdateReference_RightTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceOrderChangeImpl <em>Reference Order Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.ReferenceOrderChangeImpl
+		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getReferenceOrderChange()
+		 * @generated
+		 */
+		EClass REFERENCE_ORDER_CHANGE = eINSTANCE.getReferenceOrderChange();
 
 	}
 

@@ -25,18 +25,17 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left
- * Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.AttributeChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implements AttributeChangeLeftTarget {
 	/**
-	 * The default value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute. <!-- begin-user-doc
+	 * The default value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -44,9 +43,9 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 	protected static final Object LEFT_TARGET_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -55,7 +54,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AttributeChangeLeftTargetImpl() {
@@ -64,7 +62,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -78,7 +75,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -121,7 +117,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -136,7 +131,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -151,7 +145,6 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Object getLeftTarget() {
@@ -160,21 +153,18 @@ public class AttributeChangeLeftTargetImpl extends AttributeChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(Object newLeftTarget) {
-		final Object oldLeftTarget = leftTarget;
+		Object oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

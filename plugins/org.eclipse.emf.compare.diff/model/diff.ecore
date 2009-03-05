@@ -10,11 +10,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" upperBound="-1"
         eType="#//DiffElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftRoots" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightRoots" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ancestorRoots" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffResourceSet">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -33,7 +33,7 @@
         eType="#//DiffElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="isHiddenBy" upperBound="-1"
         eType="#//AbstractDiffExtension" eOpposite="#//AbstractDiffExtension/hideElements"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflicting" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflicting" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EBoolean"
         changeable="false" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//DifferenceKind"
         changeable="false" transient="true" defaultValueLiteral="" derived="true"/>
@@ -45,7 +45,7 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="originElement" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiffGroup" eSuperTypes="#//DiffElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -68,7 +68,7 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="#//DiffModel"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass ../../org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="match" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchModel"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ComparisonResourceSetSnapshot" eSuperTypes="#//ComparisonSnapshot">
@@ -77,7 +77,7 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diffResourceSet" eType="#//DiffResourceSet"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="matchResourceSet" eType="ecore:EClass ../../org.eclipse.emf.compare.match/model/match.ecore#//MatchResourceSet"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="matchResourceSet" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare.match/model/match.ecore#//MatchResourceSet"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelElementChange" eSuperTypes="#//DiffElement">
@@ -122,7 +122,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Superclass of elements describing difference between the values of a given attribute."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EAttribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
@@ -130,13 +130,13 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A &quot;LeftTarget&quot; element change describes a difference involving the left element/resource. In the case of AttributeChanges, these describe differences within multi-valued attributes. Specifically, the addition of a value or the remote removal of a value (for three way comparisons)."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="leftTarget" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="leftTarget" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AttributeChangeRightTarget" eSuperTypes="#//AttributeChange">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A &quot;RightTarget&quot; element change describes a difference involving the right element/resource. In the case of AttributeChanges, these describe differences within multi-valued attributes. Specifically, the removal of a value or the remote addition of a value (for three way comparisons)."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rightTarget" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rightTarget" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateAttribute" eSuperTypes="#//AttributeChange">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -147,7 +147,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Superclass of elements describing difference between the values of a given reference."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
@@ -172,6 +172,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceOrderChange" eSuperTypes="#//ReferenceChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractDiffExtension" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="These can be used to extend the DiffModel so that DiffElements can be collapsed under a single high level difference"/>
@@ -179,8 +180,8 @@
     <eOperations name="visit">
       <eParameters name="diffModel" eType="#//DiffModel"/>
     </eOperations>
-    <eOperations name="getText" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
-    <eOperations name="getImage" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+    <eOperations name="getText" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eOperations name="getImage" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
     <eOperations name="provideMerger" eType="#//IMerger"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="hideElements" upperBound="-1"
         eType="#//DiffElement" eOpposite="#//DiffElement/isHiddenBy"/>
@@ -197,7 +198,7 @@
       <details key="documentation" value="Superclass of DiffElements representing additions or removals of references towards a third-party resource."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roots" upperBound="-1"
-        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResourceDependencyChangeLeftTarget"
       eSuperTypes="#//ResourceDependencyChange">
@@ -211,7 +212,7 @@
       <details key="documentation" value="A &quot;RightTarget&quot; element change describes a difference involving the right ResourceSet. These differences can be used to describe deletions or remote additions of third-party resources dependencies."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.api.IMerger">
+  <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.IMerger">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Can represent mergers provided by a given DiffExtension."/>
     </eAnnotations>

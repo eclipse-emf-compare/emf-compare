@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.diff.metamodel.util;
 
 import java.util.List;
 
+import org.eclipse.emf.compare.diff.metamodel.*;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
@@ -48,22 +49,21 @@ import org.eclipse.emf.ecore.EObject;
  * {@link #doSwitch(EObject) doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the
  * model, starting with the actual class of the object and proceeding up the inheritance hierarchy until a
  * non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
- * 
  * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage
  * @generated
  */
 
 public class DiffSwitch<T> {
 	/**
-	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static DiffPackage modelPackage;
 
 	/**
-	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffSwitch() {
@@ -76,9 +76,7 @@ public class DiffSwitch<T> {
 	 * Returns the result of interpreting the object as an instance of '<em>Abstract Diff Extension</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Abstract Diff Extension</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -107,9 +105,7 @@ public class DiffSwitch<T> {
 	 * Returns the result of interpreting the object as an instance of '<em>Resource Dependency Change</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Resource Dependency Change</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -119,14 +115,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Resource Dependency Change Left Target</em>'. <!-- begin-user-doc --> This implementation returns
+	 * Returns the result of interpreting the object as an instance of '<em>Resource Dependency Change Left Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Resource Dependency Change Left Target</em>'.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Resource Dependency Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -135,14 +128,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Resource Dependency Change Right Target</em>'. <!-- begin-user-doc --> This implementation returns
+	 * Returns the result of interpreting the object as an instance of '<em>Resource Dependency Change Right Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns
 	 * null; returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Resource Dependency Change Right Target</em>'.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Resource Dependency Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -167,14 +157,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>
-	 * '. <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>
-	 *         '.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -184,14 +171,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>
-	 * '. <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>
-	 *         '.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -204,9 +188,7 @@ public class DiffSwitch<T> {
 	 * Returns the result of interpreting the object as an instance of '<em>Conflicting Diff Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Conflicting Diff Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -217,12 +199,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Element</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -233,12 +214,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Group</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Group</em>'.
+	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Group</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -279,14 +259,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Comparison Resource Set Snapshot</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * Returns the result of interpreting the object as an instance of '<em>Comparison Resource Set Snapshot</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null;
 	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Comparison Resource Set Snapshot</em>'.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Comparison Resource Set Snapshot</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -295,12 +272,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -342,14 +318,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Model Element Change Left Target</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * Returns the result of interpreting the object as an instance of '<em>Model Element Change Left Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null;
 	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Model Element Change Left Target</em>'.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Model Element Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -359,14 +332,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Model Element Change Right Target</em>'. <!-- begin-user-doc --> This implementation returns null;
+	 * Returns the result of interpreting the object as an instance of '<em>Model Element Change Right Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null;
 	 * returning a non-null result will terminate the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Model Element Change Right Target</em>'.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Model Element Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -395,9 +365,7 @@ public class DiffSwitch<T> {
 	 * Returns the result of interpreting the object as an instance of '<em>Update Containment Feature</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Update Containment Feature</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -423,14 +391,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>
-	 * '. <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>
-	 *         '.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -440,14 +405,11 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>
-	 * '. <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>
-	 *         '.
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
@@ -505,12 +467,26 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Order Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferenceOrderChange(ReferenceOrderChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>EObject</em>'.
+	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch, but this
 	 * is the last case anyway. <!-- end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>EObject</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
@@ -521,9 +497,8 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -532,367 +507,308 @@ public class DiffSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected T doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage)
+		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		else {
-			final List<EClass> eSuperTypes = theEClass.getESuperTypes();
+		} else {
+			List<EClass> eSuperTypes = theEClass.getESuperTypes();
 			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 		}
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case DiffPackage.DIFF_MODEL: {
-				final DiffModel diffModel = (DiffModel)theEObject;
+				DiffModel diffModel = (DiffModel)theEObject;
 				T result = caseDiffModel(diffModel);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.DIFF_RESOURCE_SET: {
-				final DiffResourceSet diffResourceSet = (DiffResourceSet)theEObject;
+				DiffResourceSet diffResourceSet = (DiffResourceSet)theEObject;
 				T result = caseDiffResourceSet(diffResourceSet);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.DIFF_ELEMENT: {
-				final DiffElement diffElement = (DiffElement)theEObject;
+				DiffElement diffElement = (DiffElement)theEObject;
 				T result = caseDiffElement(diffElement);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.CONFLICTING_DIFF_ELEMENT: {
-				final ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)theEObject;
+				ConflictingDiffElement conflictingDiffElement = (ConflictingDiffElement)theEObject;
 				T result = caseConflictingDiffElement(conflictingDiffElement);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(conflictingDiffElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.DIFF_GROUP: {
-				final DiffGroup diffGroup = (DiffGroup)theEObject;
+				DiffGroup diffGroup = (DiffGroup)theEObject;
 				T result = caseDiffGroup(diffGroup);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(diffGroup);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.COMPARISON_SNAPSHOT: {
-				final ComparisonSnapshot comparisonSnapshot = (ComparisonSnapshot)theEObject;
+				ComparisonSnapshot comparisonSnapshot = (ComparisonSnapshot)theEObject;
 				T result = caseComparisonSnapshot(comparisonSnapshot);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.COMPARISON_RESOURCE_SNAPSHOT: {
-				final ComparisonResourceSnapshot comparisonResourceSnapshot = (ComparisonResourceSnapshot)theEObject;
+				ComparisonResourceSnapshot comparisonResourceSnapshot = (ComparisonResourceSnapshot)theEObject;
 				T result = caseComparisonResourceSnapshot(comparisonResourceSnapshot);
-				if (result == null) {
+				if (result == null)
 					result = caseComparisonSnapshot(comparisonResourceSnapshot);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.COMPARISON_RESOURCE_SET_SNAPSHOT: {
-				final ComparisonResourceSetSnapshot comparisonResourceSetSnapshot = (ComparisonResourceSetSnapshot)theEObject;
+				ComparisonResourceSetSnapshot comparisonResourceSetSnapshot = (ComparisonResourceSetSnapshot)theEObject;
 				T result = caseComparisonResourceSetSnapshot(comparisonResourceSetSnapshot);
-				if (result == null) {
+				if (result == null)
 					result = caseComparisonSnapshot(comparisonResourceSetSnapshot);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE: {
-				final ModelElementChange modelElementChange = (ModelElementChange)theEObject;
+				ModelElementChange modelElementChange = (ModelElementChange)theEObject;
 				T result = caseModelElementChange(modelElementChange);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(modelElementChange);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET: {
-				final ModelElementChangeLeftTarget modelElementChangeLeftTarget = (ModelElementChangeLeftTarget)theEObject;
+				ModelElementChangeLeftTarget modelElementChangeLeftTarget = (ModelElementChangeLeftTarget)theEObject;
 				T result = caseModelElementChangeLeftTarget(modelElementChangeLeftTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseModelElementChange(modelElementChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(modelElementChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET: {
-				final ModelElementChangeRightTarget modelElementChangeRightTarget = (ModelElementChangeRightTarget)theEObject;
+				ModelElementChangeRightTarget modelElementChangeRightTarget = (ModelElementChangeRightTarget)theEObject;
 				T result = caseModelElementChangeRightTarget(modelElementChangeRightTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseModelElementChange(modelElementChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(modelElementChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.UPDATE_MODEL_ELEMENT: {
-				final UpdateModelElement updateModelElement = (UpdateModelElement)theEObject;
+				UpdateModelElement updateModelElement = (UpdateModelElement)theEObject;
 				T result = caseUpdateModelElement(updateModelElement);
-				if (result == null) {
+				if (result == null)
 					result = caseModelElementChange(updateModelElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(updateModelElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.MOVE_MODEL_ELEMENT: {
-				final MoveModelElement moveModelElement = (MoveModelElement)theEObject;
+				MoveModelElement moveModelElement = (MoveModelElement)theEObject;
 				T result = caseMoveModelElement(moveModelElement);
-				if (result == null) {
+				if (result == null)
 					result = caseUpdateModelElement(moveModelElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseModelElementChange(moveModelElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(moveModelElement);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.UPDATE_CONTAINMENT_FEATURE: {
-				final UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)theEObject;
+				UpdateContainmentFeature updateContainmentFeature = (UpdateContainmentFeature)theEObject;
 				T result = caseUpdateContainmentFeature(updateContainmentFeature);
-				if (result == null) {
+				if (result == null)
 					result = caseMoveModelElement(updateContainmentFeature);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseUpdateModelElement(updateContainmentFeature);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseModelElementChange(updateContainmentFeature);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(updateContainmentFeature);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE: {
-				final AttributeChange attributeChange = (AttributeChange)theEObject;
+				AttributeChange attributeChange = (AttributeChange)theEObject;
 				T result = caseAttributeChange(attributeChange);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(attributeChange);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET: {
-				final AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)theEObject;
+				AttributeChangeLeftTarget attributeChangeLeftTarget = (AttributeChangeLeftTarget)theEObject;
 				T result = caseAttributeChangeLeftTarget(attributeChangeLeftTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseAttributeChange(attributeChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(attributeChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET: {
-				final AttributeChangeRightTarget attributeChangeRightTarget = (AttributeChangeRightTarget)theEObject;
+				AttributeChangeRightTarget attributeChangeRightTarget = (AttributeChangeRightTarget)theEObject;
 				T result = caseAttributeChangeRightTarget(attributeChangeRightTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseAttributeChange(attributeChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(attributeChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.UPDATE_ATTRIBUTE: {
-				final UpdateAttribute updateAttribute = (UpdateAttribute)theEObject;
+				UpdateAttribute updateAttribute = (UpdateAttribute)theEObject;
 				T result = caseUpdateAttribute(updateAttribute);
-				if (result == null) {
+				if (result == null)
 					result = caseAttributeChange(updateAttribute);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(updateAttribute);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.REFERENCE_CHANGE: {
-				final ReferenceChange referenceChange = (ReferenceChange)theEObject;
+				ReferenceChange referenceChange = (ReferenceChange)theEObject;
 				T result = caseReferenceChange(referenceChange);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(referenceChange);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.REFERENCE_CHANGE_LEFT_TARGET: {
-				final ReferenceChangeLeftTarget referenceChangeLeftTarget = (ReferenceChangeLeftTarget)theEObject;
+				ReferenceChangeLeftTarget referenceChangeLeftTarget = (ReferenceChangeLeftTarget)theEObject;
 				T result = caseReferenceChangeLeftTarget(referenceChangeLeftTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseReferenceChange(referenceChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(referenceChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET: {
-				final ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)theEObject;
+				ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)theEObject;
 				T result = caseReferenceChangeRightTarget(referenceChangeRightTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseReferenceChange(referenceChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(referenceChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.UPDATE_REFERENCE: {
-				final UpdateReference updateReference = (UpdateReference)theEObject;
+				UpdateReference updateReference = (UpdateReference)theEObject;
 				T result = caseUpdateReference(updateReference);
-				if (result == null) {
+				if (result == null)
 					result = caseReferenceChange(updateReference);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(updateReference);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
+				return result;
+			}
+			case DiffPackage.REFERENCE_ORDER_CHANGE: {
+				ReferenceOrderChange referenceOrderChange = (ReferenceOrderChange)theEObject;
+				T result = caseReferenceOrderChange(referenceOrderChange);
+				if (result == null)
+					result = caseReferenceChange(referenceOrderChange);
+				if (result == null)
+					result = caseDiffElement(referenceOrderChange);
+				if (result == null)
+					result = defaultCase(theEObject);
 				return result;
 			}
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION: {
-				final AbstractDiffExtension abstractDiffExtension = (AbstractDiffExtension)theEObject;
+				AbstractDiffExtension abstractDiffExtension = (AbstractDiffExtension)theEObject;
 				T result = caseAbstractDiffExtension(abstractDiffExtension);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.RESOURCE_DIFF: {
-				final ResourceDiff resourceDiff = (ResourceDiff)theEObject;
+				ResourceDiff resourceDiff = (ResourceDiff)theEObject;
 				T result = caseResourceDiff(resourceDiff);
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(resourceDiff);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.RESOURCE_DEPENDENCY_CHANGE: {
-				final ResourceDependencyChange resourceDependencyChange = (ResourceDependencyChange)theEObject;
+				ResourceDependencyChange resourceDependencyChange = (ResourceDependencyChange)theEObject;
 				T result = caseResourceDependencyChange(resourceDependencyChange);
-				if (result == null) {
+				if (result == null)
 					result = caseResourceDiff(resourceDependencyChange);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(resourceDependencyChange);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET: {
-				final ResourceDependencyChangeLeftTarget resourceDependencyChangeLeftTarget = (ResourceDependencyChangeLeftTarget)theEObject;
+				ResourceDependencyChangeLeftTarget resourceDependencyChangeLeftTarget = (ResourceDependencyChangeLeftTarget)theEObject;
 				T result = caseResourceDependencyChangeLeftTarget(resourceDependencyChangeLeftTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseResourceDependencyChange(resourceDependencyChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseResourceDiff(resourceDependencyChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(resourceDependencyChangeLeftTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case DiffPackage.RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET: {
-				final ResourceDependencyChangeRightTarget resourceDependencyChangeRightTarget = (ResourceDependencyChangeRightTarget)theEObject;
+				ResourceDependencyChangeRightTarget resourceDependencyChangeRightTarget = (ResourceDependencyChangeRightTarget)theEObject;
 				T result = caseResourceDependencyChangeRightTarget(resourceDependencyChangeRightTarget);
-				if (result == null) {
+				if (result == null)
 					result = caseResourceDependencyChange(resourceDependencyChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseResourceDiff(resourceDependencyChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseDiffElement(resourceDependencyChangeRightTarget);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			default:

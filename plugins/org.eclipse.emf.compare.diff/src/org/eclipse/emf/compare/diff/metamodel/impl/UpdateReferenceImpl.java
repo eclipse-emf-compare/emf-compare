@@ -27,21 +27,19 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl#getLeftTarget <em>Left Target
- * </em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl#getRightTarget <em>Right Target
- * </em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.UpdateReferenceImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 
 public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateReference {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -60,7 +58,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UpdateReferenceImpl() {
@@ -69,7 +66,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -79,18 +75,16 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
 		if (leftTarget != null && leftTarget.eIsProxy()) {
-			final InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.UPDATE_REFERENCE__LEFT_TARGET, oldLeftTarget, leftTarget));
-				}
 			}
 		}
 		return leftTarget;
@@ -98,7 +92,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -107,32 +100,28 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
-		final EObject oldLeftTarget = leftTarget;
+		EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_REFERENCE__LEFT_TARGET,
 					oldLeftTarget, leftTarget));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
 		if (rightTarget != null && rightTarget.eIsProxy()) {
-			final InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.UPDATE_REFERENCE__RIGHT_TARGET, oldRightTarget, rightTarget));
-				}
 			}
 		}
 		return rightTarget;
@@ -140,7 +129,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -149,21 +137,18 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
-		final EObject oldRightTarget = rightTarget;
+		EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.UPDATE_REFERENCE__RIGHT_TARGET,
 					oldRightTarget, rightTarget));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -183,7 +168,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -201,7 +185,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -219,7 +202,6 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

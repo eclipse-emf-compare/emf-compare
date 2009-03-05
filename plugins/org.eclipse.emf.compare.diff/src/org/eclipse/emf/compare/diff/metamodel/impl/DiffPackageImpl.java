@@ -33,6 +33,7 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget;
@@ -283,6 +284,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	private EClass updateReferenceEClass = null;
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass referenceOrderChangeEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
 	 * <p>
@@ -446,6 +454,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		updateReferenceEClass = createEClass(UPDATE_REFERENCE);
 		createEReference(updateReferenceEClass, UPDATE_REFERENCE__LEFT_TARGET);
 		createEReference(updateReferenceEClass, UPDATE_REFERENCE__RIGHT_TARGET);
+
+		referenceOrderChangeEClass = createEClass(REFERENCE_ORDER_CHANGE);
 
 		abstractDiffExtensionEClass = createEClass(ABSTRACT_DIFF_EXTENSION);
 		createEReference(abstractDiffExtensionEClass, ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS);
@@ -1152,6 +1162,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	}
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getReferenceOrderChange() {
+		return referenceOrderChangeEClass;
+	}
+
+	/**
 	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
 	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -1196,6 +1215,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		referenceChangeLeftTargetEClass.getESuperTypes().add(this.getReferenceChange());
 		referenceChangeRightTargetEClass.getESuperTypes().add(this.getReferenceChange());
 		updateReferenceEClass.getESuperTypes().add(this.getReferenceChange());
+		referenceOrderChangeEClass.getESuperTypes().add(this.getReferenceChange());
 		resourceDiffEClass.getESuperTypes().add(this.getDiffElement());
 		resourceDependencyChangeEClass.getESuperTypes().add(this.getResourceDiff());
 		resourceDependencyChangeLeftTargetEClass.getESuperTypes().add(this.getResourceDependencyChange());
@@ -1475,6 +1495,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				ecorePackage.getEObject(),
 				null,
 				"rightTarget", null, 0, 1, UpdateReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(referenceOrderChangeEClass, ReferenceOrderChange.class,
+				"ReferenceOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(abstractDiffExtensionEClass, AbstractDiffExtension.class,
 				"AbstractDiffExtension", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

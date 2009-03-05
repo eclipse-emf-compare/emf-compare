@@ -27,20 +27,18 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftTarget <em>Left
- * Target</em>}</li>
- * <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightTarget <em>
- * Right Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getLeftTarget <em>Left Target</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.impl.ReferenceChangeLeftTargetImpl#getRightTarget <em>Right Target</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implements ReferenceChangeLeftTarget {
 	/**
-	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getLeftTarget() <em>Left Target</em>}' reference.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftTarget()
 	 * @generated
 	 * @ordered
@@ -59,7 +57,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ReferenceChangeLeftTargetImpl() {
@@ -68,7 +65,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -88,7 +84,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -104,7 +99,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -122,7 +116,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -140,7 +133,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -150,18 +142,16 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getLeftTarget() {
 		if (leftTarget != null && leftTarget.eIsProxy()) {
-			final InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
+			InternalEObject oldLeftTarget = (InternalEObject)leftTarget;
 			leftTarget = eResolveProxy(oldLeftTarget);
 			if (leftTarget != oldLeftTarget) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
-				}
 			}
 		}
 		return leftTarget;
@@ -169,7 +159,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetLeftTarget() {
@@ -178,33 +167,29 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftTarget(EObject newLeftTarget) {
-		final EObject oldLeftTarget = leftTarget;
+		EObject oldLeftTarget = leftTarget;
 		leftTarget = newLeftTarget;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, oldLeftTarget, leftTarget));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject getRightTarget() {
 		if (rightTarget != null && rightTarget.eIsProxy()) {
-			final InternalEObject oldRightTarget = (InternalEObject)rightTarget;
+			InternalEObject oldRightTarget = (InternalEObject)rightTarget;
 			rightTarget = eResolveProxy(oldRightTarget);
 			if (rightTarget != oldRightTarget) {
-				if (eNotificationRequired()) {
+				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
 							DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET, oldRightTarget,
 							rightTarget));
-				}
 			}
 		}
 		return rightTarget;
@@ -212,7 +197,6 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EObject basicGetRightTarget() {
@@ -221,16 +205,14 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightTarget(EObject newRightTarget) {
-		final EObject oldRightTarget = rightTarget;
+		EObject oldRightTarget = rightTarget;
 		rightTarget = newRightTarget;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__RIGHT_TARGET, oldRightTarget, rightTarget));
-		}
 	}
 
 	/**

@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeRightTarget;
@@ -173,6 +174,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 				return createReferenceChangeRightTarget();
 			case DiffPackage.UPDATE_REFERENCE:
 				return createUpdateReference();
+			case DiffPackage.REFERENCE_ORDER_CHANGE:
+				return createReferenceOrderChange();
 			case DiffPackage.RESOURCE_DIFF:
 				return createResourceDiff();
 			case DiffPackage.RESOURCE_DEPENDENCY_CHANGE:
@@ -466,6 +469,16 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public UpdateReference createUpdateReference() {
 		final UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
 		return updateReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ReferenceOrderChange createReferenceOrderChange() {
+		final ReferenceOrderChangeImpl referenceOrderChange = new ReferenceOrderChangeImpl();
+		return referenceOrderChange;
 	}
 
 	/**

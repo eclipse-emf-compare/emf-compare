@@ -54,9 +54,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 public abstract class DiffElementImpl extends EObjectImpl implements DiffElement {
 	/**
-	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment
-	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached value of the '{@link #getSubDiffElements() <em>Sub Diff Elements</em>}' containment reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #getSubDiffElements()
 	 * @generated
 	 * @ordered
@@ -74,9 +73,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected EList<AbstractDiffExtension> isHiddenBy;
 
 	/**
-	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!-- begin-user-doc
+	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #isConflicting()
 	 * @generated
 	 * @ordered
@@ -84,9 +83,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final boolean CONFLICTING_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute. <!-- begin-user-doc
+	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #isConflicting()
 	 * @generated
 	 * @ordered
@@ -94,9 +93,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected boolean conflicting = CONFLICTING_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -104,9 +103,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final DifferenceKind KIND_EDEFAULT = DifferenceKind.ADDITION;
 
 	/**
-	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getKind()
 	 * @generated
 	 * @ordered
@@ -114,9 +113,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected DifferenceKind kind = KIND_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isRemote() <em>Remote</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #isRemote() <em>Remote</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #isRemote()
 	 * @generated
 	 * @ordered
@@ -124,9 +123,9 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected static final boolean REMOTE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isRemote() <em>Remote</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #isRemote() <em>Remote</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #isRemote()
 	 * @generated
 	 * @ordered
@@ -135,7 +134,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected DiffElementImpl() {
@@ -144,7 +142,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -166,7 +163,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -182,7 +178,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -198,7 +193,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -220,7 +214,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -244,7 +237,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -265,7 +257,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<AbstractDiffExtension> getIsHiddenBy() {
@@ -302,7 +293,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isRemote() {
@@ -311,21 +301,18 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRemote(boolean newRemote) {
-		final boolean oldRemote = remote;
+		boolean oldRemote = remote;
 		remote = newRemote;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_ELEMENT__REMOTE,
 					oldRemote, remote));
-		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getSubDiffElements() {
@@ -352,7 +339,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -360,7 +346,7 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 		if (eIsProxy())
 			return super.toString();
 
-		final StringBuffer result = new StringBuffer(super.toString());
+		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (conflicting: "); //$NON-NLS-1$
 		result.append(conflicting);
 		result.append(", kind: "); //$NON-NLS-1$
@@ -373,7 +359,6 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
