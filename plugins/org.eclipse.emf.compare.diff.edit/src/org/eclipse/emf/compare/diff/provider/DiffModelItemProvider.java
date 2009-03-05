@@ -34,7 +34,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 /**
  * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.DiffModel} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
- * 
  * @generated
  */
 public class DiffModelItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -50,11 +49,11 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for
-	 * an {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand}
-	 * or {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc -->
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -67,8 +66,8 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This returns DiffModel.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This returns DiffModel.gif.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -129,9 +128,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This adds a property descriptor for the Ancestor Roots feature. <!-- begin-user-doc --> <!--
+	 * This adds a property descriptor for the Ancestor Roots feature.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected void addAncestorRootsPropertyDescriptor(Object object) {
@@ -146,9 +145,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!--
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -172,10 +171,10 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
-	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -192,9 +191,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
-	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -250,6 +249,9 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 				DiffFactory.eINSTANCE.createUpdateReference()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
+				DiffFactory.eINSTANCE.createReferenceOrderChange()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
 				DiffFactory.eINSTANCE.createResourceDiff()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_MODEL__OWNED_ELEMENTS,
@@ -264,7 +266,6 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

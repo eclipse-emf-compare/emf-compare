@@ -664,6 +664,29 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ReferenceOrderChangeItemProvider referenceOrderChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createReferenceOrderChangeAdapter() {
+		if (referenceOrderChangeItemProvider == null) {
+			referenceOrderChangeItemProvider = new ReferenceOrderChangeItemProvider(this);
+		}
+
+		return referenceOrderChangeItemProvider;
+	}
+
+	/**
 	 * This disposes all of the item providers created by this factory. 
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -710,6 +733,8 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			referenceChangeRightTargetItemProvider.dispose();
 		if (updateReferenceItemProvider != null)
 			updateReferenceItemProvider.dispose();
+		if (referenceOrderChangeItemProvider != null)
+			referenceOrderChangeItemProvider.dispose();
 		if (resourceDiffItemProvider != null)
 			resourceDiffItemProvider.dispose();
 		if (resourceDependencyChangeItemProvider != null)
