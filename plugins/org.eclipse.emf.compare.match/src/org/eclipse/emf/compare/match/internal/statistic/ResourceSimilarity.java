@@ -66,6 +66,57 @@ public final class ResourceSimilarity {
 	}
 
 	/**
+	 * This will compute the similarity between the two given URIs.
+	 * 
+	 * @param reference
+	 *            The reference URI.
+	 * @param candidate
+	 *            Candidate we wish compared to the reference.
+	 * @return A double comprised between <code>0</code> and <code>1</code> included, <code>1</code> being
+	 *         equal and <code>0</code> different.
+	 */
+	public static double computeURISimilarity(URI reference, URI candidate) {
+		final double segmentsWeight = 0.4;
+		final double fragmentWeight = 0.6;
+		final double almostEqual = 0.999;
+
+		double similarity = 0;
+
+		if (reference.fileExtension().equals(candidate.fileExtension())) {
+			final String referenceFragment = reference.fragment();
+			final String candidateFragment = candidate.fragment();
+			final String[] referenceSegments = reference.trimFileExtension().segments();
+			final String[] candidateSegments = candidate.trimFileExtension().segments();
+			final double segmentSimilarity = resourceURISimilarity(referenceSegments, candidateSegments);
+			final double fragmentSimilarity;
+			if (referenceFragment != null && candidateFragment != null) {
+				fragmentSimilarity = fragmentURISimilarity(referenceFragment, candidateFragment);
+			} else {
+				fragmentSimilarity = 1d;
+			}
+
+			similarity = segmentSimilarity * segmentsWeight + fragmentSimilarity * fragmentWeight;
+		}
+		if (similarity > almostEqual)
+			return 1d;
+		return similarity;
+	}
+
+	/**
+	 * This will compute the similarity of two URI fragments.
+	 * 
+	 * @param reference
+	 *            The reference fragment.
+	 * @param candidate
+	 *            Candidate for which the similarity to <code>reference</code> is to be computed.
+	 * @return A double comprised between <code>0</code> and <code>1</code> included, <code>1</code> being
+	 *         equal and <code>0</code> different.
+	 */
+	private static double fragmentURISimilarity(String reference, String candidate) {
+		return NameSimilarity.nameSimilarityMetric(reference, candidate);
+	}
+
+	/**
 	 * This will compute the similarity of two URIs based on their segments (minus file extension).
 	 * 
 	 * @param reference
@@ -78,10 +129,14 @@ public final class ResourceSimilarity {
 	private static double resourceURISimilarity(String[] reference, String[] candidate) {
 		final double nameWeight = 0.6;
 		final double equalSegmentWeight = 0.4;
+		final double almostEqual = 0.999;
 
 		final String referenceName = reference[reference.length - 1];
 		final String candidateName = candidate[candidate.length - 1];
 		final double nameSimilarity = NameSimilarity.nameSimilarityMetric(referenceName, candidateName);
+
+		if (reference.length == 1 || candidate.length == 1 || nameSimilarity > almostEqual)
+			return nameSimilarity;
 
 		double equalSegments = 0d;
 		int referenceIndex = reference.length - 2;
@@ -93,8 +148,6 @@ public final class ResourceSimilarity {
 			referenceIndex--;
 			candidateIndex--;
 		}
-		if (reference.length == 1 || candidate.length == 1)
-			return nameSimilarity;
 		return nameSimilarity * nameWeight + (equalSegments * 2 / (reference.length + candidate.length - 2))
 				* equalSegmentWeight;
 	}
