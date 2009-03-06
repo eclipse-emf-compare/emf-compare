@@ -26,5 +26,8 @@ Contributors:
             activityId="org.eclipse.emf.compare.ui.capabilities"
             categoryId="org.eclipse.categories.teamCategory">
       </categoryActivityBinding>
+      <defaultEnablement
+            id="org.eclipse.emf.compare.ui.capabilities">
+      </defaultEnablement>
    </extension>
 </plugin>
