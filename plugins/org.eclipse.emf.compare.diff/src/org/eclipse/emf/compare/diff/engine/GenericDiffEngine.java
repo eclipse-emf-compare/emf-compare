@@ -773,9 +773,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if <code>side</code> is invalid.
 	 */
 	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT)
+		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
 			throw new IllegalArgumentException(EMFCompareDiffMessages
 					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
+		}
 		EObject matchedEObject = null;
 		if (matchCrossReferencer != null) {
 			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : matchCrossReferencer
@@ -1076,14 +1077,20 @@ public class GenericDiffEngine implements IDiffEngine {
 		// have no matching "right" counterpart
 		addedReferences.removeAll(matchedOldReferences);
 
-		// Double check for objects defined in a different model and thus not
-		// matched but plain equal
+		// Double check for objects not matched with the matchCrossReferencer
 		for (final EObject added : new ArrayList<EObject>(addedReferences)) {
 			for (final EObject deleted : deletedReferences) {
-				final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil.getURI(added),
-						EcoreUtil.getURI(deleted));
-				if (uriSimilarity > similarReferenceURIThreshold) {
-					addedReferences.remove(added);
+				final EObject matched = getMatchedEObject(added);
+				if (matched != null) {
+					if (matched == deleted) {
+						addedReferences.remove(added);
+					}
+				} else {
+					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
+							.getURI(added), EcoreUtil.getURI(deleted));
+					if (uriSimilarity > similarReferenceURIThreshold) {
+						addedReferences.remove(added);
+					}
 				}
 			}
 		}
@@ -1120,14 +1127,20 @@ public class GenericDiffEngine implements IDiffEngine {
 		// have no counterpart in the left element
 		deletedReferences.removeAll(matchedNewReferences);
 
-		// Double check for objects defined in a different model and thus not
-		// matched
+		// Double check for objects not matched with the matchCrossReferencer
 		for (final EObject deleted : new ArrayList<EObject>(deletedReferences)) {
 			for (final EObject added : addedReferences) {
-				final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil.getURI(added),
-						EcoreUtil.getURI(deleted));
-				if (uriSimilarity > similarReferenceURIThreshold) {
-					deletedReferences.remove(deleted);
+				final EObject matched = getMatchedEObject(deleted);
+				if (matched != null) {
+					if (matched == added) {
+						deletedReferences.remove(deleted);
+					}
+				} else {
+					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
+							.getURI(added), EcoreUtil.getURI(deleted));
+					if (uriSimilarity > similarReferenceURIThreshold) {
+						deletedReferences.remove(deleted);
+					}
 				}
 			}
 		}
