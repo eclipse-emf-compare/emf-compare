@@ -13,9 +13,7 @@ package org.eclipse.emf.compare.match;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IRegistryEventListener;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -44,11 +42,12 @@ public class MatchPlugin extends Plugin {
 	/** Name of the "filter" tag of the resource filters extension point. */
 	private static final String RESOURCE_FILTERS_FILTER_TAG = "filter"; //$NON-NLS-1$
 
-	/**
-	 * Instance of the listener that will be registered against the plugin registry to listen to changes
-	 * concerning the resource filters extension point.
-	 */
-	private final IRegistryEventListener resourceFiltersListener = new ResourceFiltersRegistryListener();
+	// FIXME 3.4 specific
+//	/**
+//	 * Instance of the listener that will be registered against the plugin registry to listen to changes
+//	 * concerning the resource filters extension point.
+//	 */
+//	private final IRegistryChangeListener resourceFiltersListener = new ResourceFiltersRegistryListener();
 
 	/**
 	 * Default constructor.
@@ -74,8 +73,8 @@ public class MatchPlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.addListener(resourceFiltersListener, RESOURCE_FILTERS_EXTENSION_POINT);
+//		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+//		registry.addListener(resourceFiltersListener, RESOURCE_FILTERS_EXTENSION_POINT);
 		parseInitialContributions();
 	}
 
@@ -87,8 +86,8 @@ public class MatchPlugin extends Plugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		registry.removeListener(resourceFiltersListener);
+//		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+//		registry.removeListener(resourceFiltersListener);
 		ResourceFilterRegistryEclipseUtil.clearRegistry();
 		super.stop(context);
 	}
@@ -114,67 +113,67 @@ public class MatchPlugin extends Plugin {
 		}
 	}
 
-	/**
-	 * This registry listener will allow us to be aware of changes regarding the resource filters extension
-	 * point.
-	 * 
-	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 */
-	final class ResourceFiltersRegistryListener implements IRegistryEventListener {
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.core.runtime.IRegistryEventListener#added(org.eclipse.core.runtime.IExtension[])
-		 */
-		public void added(IExtension[] extensions) {
-			for (final IExtension extension : extensions) {
-				for (final IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-					if (RESOURCE_FILTERS_FILTER_TAG.equals(configurationElement.getName())) {
-						try {
-							ResourceFilterRegistryEclipseUtil.addFilter((IResourceFilter)configurationElement
-									.createExecutableExtension(RESOURCE_FILTERS_CLASS_ATTRIBUTE));
-						} catch (final CoreException e) {
-							EMFComparePlugin.log(e, false);
-						}
-					}
-				}
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.core.runtime.IRegistryEventListener#added(org.eclipse.core.runtime.IExtensionPoint[])
-		 */
-		public void added(IExtensionPoint[] extensionPoints) {
-			// No need to listen to extension point additions
-
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.core.runtime.IRegistryEventListener#removed(org.eclipse.core.runtime.IExtension[])
-		 */
-		public void removed(IExtension[] extensions) {
-			for (final IExtension extension : extensions) {
-				for (final IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-					if (RESOURCE_FILTERS_FILTER_TAG.equals(configurationElement.getName())) {
-						ResourceFilterRegistryEclipseUtil.removeFilter(configurationElement
-								.getAttribute(RESOURCE_FILTERS_CLASS_ATTRIBUTE));
-					}
-				}
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.core.runtime.IRegistryEventListener#removed(org.eclipse.core.runtime.IExtensionPoint[])
-		 */
-		public void removed(IExtensionPoint[] extensionPoints) {
-			// No need to listen to extension point removals
-		}
-
-	}
+	// FIXME 3.4 specific
+//	/**
+//	 * This registry listener will allow us to be aware of changes regarding the resource filters extension
+//	 * point.
+//	 * 
+//	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+//	 */
+//	final class ResourceFiltersRegistryListener implements IRegistryEventListener {
+//		/**
+//		 * {@inheritDoc}
+//		 * 
+//		 * @see org.eclipse.core.runtime.IRegistryEventListener#added(org.eclipse.core.runtime.IExtension[])
+//		 */
+//		public void added(IExtension[] extensions) {
+//			for (final IExtension extension : extensions) {
+//				for (final IConfigurationElement configurationElement : extension.getConfigurationElements()) {
+//					if (RESOURCE_FILTERS_FILTER_TAG.equals(configurationElement.getName())) {
+//						try {
+//							ResourceFilterRegistryEclipseUtil.addFilter((IResourceFilter)configurationElement
+//									.createExecutableExtension(RESOURCE_FILTERS_CLASS_ATTRIBUTE));
+//						} catch (final CoreException e) {
+//							EMFComparePlugin.log(e, false);
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		/**
+//		 * {@inheritDoc}
+//		 * 
+//		 * @see org.eclipse.core.runtime.IRegistryEventListener#added(org.eclipse.core.runtime.IExtensionPoint[])
+//		 */
+//		public void added(IExtensionPoint[] extensionPoints) {
+//			// No need to listen to extension point additions
+//
+//		}
+//
+//		/**
+//		 * {@inheritDoc}
+//		 * 
+//		 * @see org.eclipse.core.runtime.IRegistryEventListener#removed(org.eclipse.core.runtime.IExtension[])
+//		 */
+//		public void removed(IExtension[] extensions) {
+//			for (final IExtension extension : extensions) {
+//				for (final IConfigurationElement configurationElement : extension.getConfigurationElements()) {
+//					if (RESOURCE_FILTERS_FILTER_TAG.equals(configurationElement.getName())) {
+//						ResourceFilterRegistryEclipseUtil.removeFilter(configurationElement
+//								.getAttribute(RESOURCE_FILTERS_CLASS_ATTRIBUTE));
+//					}
+//				}
+//			}
+//		}
+//
+//		/**
+//		 * {@inheritDoc}
+//		 * 
+//		 * @see org.eclipse.core.runtime.IRegistryEventListener#removed(org.eclipse.core.runtime.IExtensionPoint[])
+//		 */
+//		public void removed(IExtensionPoint[] extensionPoints) {
+//			// No need to listen to extension point removals
+//		}
+//	}
 }
