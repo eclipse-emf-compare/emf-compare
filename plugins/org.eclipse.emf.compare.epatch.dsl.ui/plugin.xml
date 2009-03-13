@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+<!-- adding resource factories -->
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.eclipse.emf.compare.epatch.dsl.EpatchExecutableExtensionFactory:org.eclipse.xtext.resource.XtextResourceFactory"
+			type="epatch">
+		</parser>
+	</extension>
+
+
+	<extension
+			point="org.eclipse.ui.editors">
+		<editor
+			class="org.eclipse.emf.compare.epatch.dsl.EpatchExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.XtextEditor"
+			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+			default="true"
+			extensions="epatch"
+			id="org.eclipse.emf.compare.epatch.dsl.Epatch"
+			name="Epatch Editor">
+		</editor>
+	</extension>
+	<extension
+			point="org.eclipse.ui.preferencePages">
+		<page
+			class="org.eclipse.emf.compare.epatch.dsl.EpatchExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+			id="org.eclipse.emf.compare.epatch.dsl.Epatch"
+			name="Epatch">
+			<keywordReference
+				id="org.eclipse.emf.compare.epatch.dsl.ui.keyword_Epatch">
+			</keywordReference>
+		</page>
+		<page
+			category="org.eclipse.emf.compare.epatch.dsl.Epatch"
+			class="org.eclipse.emf.compare.epatch.dsl.EpatchExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.EditorPreferencePage"
+			id="org.eclipse.emf.compare.epatch.dsl.Epatch.editor"
+			name="Editor">
+			<keywordReference 
+				id="org.eclipse.xtext.keyword.editor">
+			</keywordReference>
+		</page>
+	</extension>
+	<extension
+		point="org.eclipse.ui.keywords">
+		<keyword
+			id="org.eclipse.emf.compare.epatch.dsl.ui.keyword_Epatch"
+			label="Epatch">
+		</keyword>
+		<keyword
+			id="org.eclipse.emf.compare.epatch.dsl.Epatch.tasktags"
+			label="Task Tags">
+		</keyword>
+	</extension>
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.emf.compare.epatch.dsl.EpatchExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclarationHandler"
+			commandId="org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclaration">
+			<activeWhen>
+				<reference
+					definitionId="isActiveEditorAnInstanceOfXtextEditor">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+
+</plugin>
