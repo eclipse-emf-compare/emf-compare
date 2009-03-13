@@ -16,7 +16,6 @@ import org.eclipse.emf.mwe.core.WorkflowFacade;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class GenerateEpatchGrammar {
-
 	public static void main(String... args) {
 		final String wf = "org/eclipse/emf/compare/epatch/dsl/runGenerator.mwe";
 		try {
@@ -25,5 +24,4 @@ public class GenerateEpatchGrammar {
 			e.printStackTrace();
 		}
 	}
-
 }

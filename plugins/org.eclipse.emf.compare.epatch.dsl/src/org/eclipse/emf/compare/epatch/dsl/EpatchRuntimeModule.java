@@ -17,7 +17,6 @@ import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EpatchRuntimeModule extends AbstractEpatchRuntimeModule {
-
 	@Override
 	public Class<? extends ITokenSerializer> bindITokenSerializer() {
 		return EpatchFormatter.class;
@@ -27,5 +26,4 @@ public class EpatchRuntimeModule extends AbstractEpatchRuntimeModule {
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return EpatchValueConverter.class;
 	}
-
 }

@@ -25,20 +25,21 @@ public class EpatchStandaloneSetup implements ISetup {
 		register(injector);
 		return injector;
 	}
-	
+
 	public Injector createInjector() {
 		return Guice.createInjector(new org.eclipse.emf.compare.epatch.dsl.EpatchRuntimeModule());
 	}
-	
-	public void register(Injector injector) {
-	if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/emf/compare/epatch/0.1")) {
-		EPackage.Registry.INSTANCE.put("http://www.eclipse.org/emf/compare/epatch/0.1", org.eclipse.emf.compare.epatch.EpatchPackage.eINSTANCE);
-	}
-	//TODO registration of EValidators should be added here, too
 
-		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
+	public void register(Injector injector) {
+		if (!EPackage.Registry.INSTANCE.containsKey("http://www.eclipse.org/emf/compare/epatch/0.1")) {
+			EPackage.Registry.INSTANCE.put("http://www.eclipse.org/emf/compare/epatch/0.1",
+					org.eclipse.emf.compare.epatch.EpatchPackage.eINSTANCE);
+		}
+		// TODO registration of EValidators should be added here, too
+
+		org.eclipse.xtext.resource.IResourceFactory resourceFactory = injector
+				.getInstance(org.eclipse.xtext.resource.IResourceFactory.class);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("epatch", resourceFactory);
-		
 
 	}
 }

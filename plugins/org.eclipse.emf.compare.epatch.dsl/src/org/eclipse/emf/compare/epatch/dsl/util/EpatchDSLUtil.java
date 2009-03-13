@@ -30,7 +30,7 @@ public class EpatchDSLUtil {
 	public static Epatch loadEpatch(String file) {
 		XtextResourceSet rs = new XtextResourceSet();
 		Resource r = rs.getResource(URI.createURI(file), true);
-		return (Epatch) r.getContents().get(0);
+		return (Epatch)r.getContents().get(0);
 	}
 
 	public static Epatch parseEpatch(String resURI, String patch) {
@@ -46,7 +46,7 @@ public class EpatchDSLUtil {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return (Epatch) r.getContents().get(0);
+		return (Epatch)r.getContents().get(0);
 	}
 
 	public static Epatch loadEpatch(Class<?> ctx, String file) {
@@ -65,15 +65,15 @@ public class EpatchDSLUtil {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		return (Epatch) r.getContents().get(0);
+		return (Epatch)r.getContents().get(0);
 	}
 
 	public static String serializeEpatch(Epatch patch) {
 		return epatchSerializer.serialize(patch);
 	}
 
-	private static SerializerUtil epatchSerializer = Guice.createInjector(
-			new EpatchRuntimeModule()).getInstance(SerializerUtil.class);
+	private static SerializerUtil epatchSerializer = Guice.createInjector(new EpatchRuntimeModule())
+			.getInstance(SerializerUtil.class);
 
 	public static String serializeEpatchUnformatted(Epatch patch) {
 		return serializeEpatch(patch);
@@ -91,5 +91,4 @@ public class EpatchDSLUtil {
 		// }
 		// return out.toString();
 	}
-
 }

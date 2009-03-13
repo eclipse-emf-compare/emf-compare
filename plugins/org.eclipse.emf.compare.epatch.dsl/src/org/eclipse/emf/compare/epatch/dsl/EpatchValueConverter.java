@@ -18,15 +18,16 @@ import org.eclipse.xtext.parsetree.AbstractNode;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EpatchValueConverter extends DefaultTerminalConverters {
-
 	@ValueConverter(rule = "FRAGMENT")
 	public IValueConverter<String> FRAGMENT() {
 		return new AbstractNullSafeConverter<String>() {
 
+			@Override
 			protected String internalToString(String arg0) {
 				return "#" + arg0.toString();
 			}
 
+			@Override
 			protected String internalToValue(String string, AbstractNode node) {
 				if (string.length() > 0)
 					return string.substring(1);

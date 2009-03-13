@@ -31,21 +31,20 @@ import com.google.inject.Inject;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EpatchFormatter extends FormattingTokenSerializer {
-
 	@Inject
 	protected EpatchFormatter(IGrammarAccess grammarAccess) {
 		super(grammarAccess);
 	}
 
+	@Override
 	protected void configureFormatting(FormattingConfig cfg) {
-		EpatchGrammarAccess g = (EpatchGrammarAccess) getGrammarAccess();
+		EpatchGrammarAccess g = (EpatchGrammarAccess)getGrammarAccess();
 
 		// epatch
 		EpatchElements ep = g.getEpatchAccess();
 		cfg.setLinewrap().after(ep.getLeftCurlyBracketKeyword_2());
 		cfg.setLinewrap().before(ep.getRightCurlyBracketKeyword_6());
-		cfg.setIndentation(ep.getLeftCurlyBracketKeyword_2(), ep
-				.getRightCurlyBracketKeyword_6());
+		cfg.setIndentation(ep.getLeftCurlyBracketKeyword_2(), ep.getRightCurlyBracketKeyword_6());
 
 		// package
 		ImportElements pr = g.getImportAccess();
@@ -55,8 +54,7 @@ public class EpatchFormatter extends FormattingTokenSerializer {
 		NamedResourceElements nr = g.getNamedResourceAccess();
 		cfg.setLinewrap().after(nr.getLeftCurlyBracketKeyword_2());
 		cfg.setLinewrap().before(nr.getRightCurlyBracketKeyword_9());
-		cfg.setIndentation(nr.getLeftCurlyBracketKeyword_2(), nr
-				.getRightCurlyBracketKeyword_9());
+		cfg.setIndentation(nr.getLeftCurlyBracketKeyword_2(), nr.getRightCurlyBracketKeyword_9());
 		cfg.setLinewrap().after(nr.getSemicolonKeyword_5());
 		cfg.setLinewrap().after(nr.getSemicolonKeyword_8());
 		cfg.setNoSpace().before(nr.getSemicolonKeyword_5());
@@ -67,8 +65,7 @@ public class EpatchFormatter extends FormattingTokenSerializer {
 		ObjectRefElements or = g.getObjectRefAccess();
 		cfg.setLinewrap().after(or.getLeftCurlyBracketKeyword_3_0());
 		cfg.setLinewrap().before(or.getRightCurlyBracketKeyword_3_2());
-		cfg.setIndentation(or.getLeftCurlyBracketKeyword_3_0(), or
-				.getRightCurlyBracketKeyword_3_2());
+		cfg.setIndentation(or.getLeftCurlyBracketKeyword_3_0(), or.getRightCurlyBracketKeyword_3_2());
 		cfg.setLinewrap(2).after(or.getGroup());
 		cfg.setNoSpace().before(or.getLeftFragAssignment_2_0_1());
 		cfg.setNoSpace().before(or.getLeftFragAssignment_2_1_2());
@@ -115,16 +112,13 @@ public class EpatchFormatter extends FormattingTokenSerializer {
 		cfg.setNoSpace().before(oc.getFragmentAssignment_2());
 		cfg.setLinewrap().after(oc.getLeftCurlyBracketKeyword_4_0());
 		cfg.setLinewrap().before(oc.getRightCurlyBracketKeyword_4_2());
-		cfg.setIndentation(oc.getLeftCurlyBracketKeyword_4_0(), oc
-				.getRightCurlyBracketKeyword_4_2());
+		cfg.setIndentation(oc.getLeftCurlyBracketKeyword_4_0(), oc.getRightCurlyBracketKeyword_4_2());
 
 		// ObjectNew
 		ObjectNewElements on = g.getObjectNewAccess();
 		cfg.setNoSpace().before(on.getImpFragAssignment_2());
 		cfg.setLinewrap().after(on.getLeftCurlyBracketKeyword_4_0());
 		cfg.setLinewrap().before(on.getRightCurlyBracketKeyword_4_2());
-		cfg.setIndentation(on.getLeftCurlyBracketKeyword_4_0(), on
-				.getRightCurlyBracketKeyword_4_2());
+		cfg.setIndentation(on.getLeftCurlyBracketKeyword_4_0(), on.getRightCurlyBracketKeyword_4_2());
 	}
-
 }
