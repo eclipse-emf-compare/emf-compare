@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.eclipse.org/emf/compare/epatch/0.1" 
+       class = "org.eclipse.emf.compare.epatch.EpatchPackage"
+       genModel = "org/eclipse/emf/compare/epatch/dsl/Epatch.genmodel" /> 
+	
+  </extension>
+
+
+  <extension
+		point="org.eclipse.xtend.typesystem.emf.checks">
+		<metaModel
+			nsURI="http://www.eclipse.org/emf/compare/epatch/0.1">
+			<checkFile
+				path="org/eclipse/emf/compare/epatch/dsl/EpatchChecks.chk">
+			</checkFile>
+		</metaModel>
+	
+	</extension>
+
+
+</plugin>

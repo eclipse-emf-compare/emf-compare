@@ -1,0 +1,57 @@
+<!-- ***************************************************************************
+ * Copyright (c) 2009 itemis AG (http://www.itemis.eu) and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ **************************************************************************** -->
+ 
+ <!-- @author Moritz Eysholdt - Initial contribution and API -->
+ 
+<workflow>
+	<property name="grammarURI" value="classpath:/org/eclipse/emf/compare/epatch/dsl/Epatch.xtext"/>
+	<property name="file.extensions" value="epatch"/>
+	<property name="mdProjectName" value="org.eclipse.emf.compare.epatch"/>
+	<property name="rtProjectName" value="org.eclipse.emf.compare.epatch.dsl"/>
+	<property name="uiProjectName" value="org.eclipse.emf.compare.epatch.dsl.ui"/>
+	
+	<property name="mdProject" value="../${mdProjectName}"/>
+	<property name="rtProject" value="../${rtProjectName}"/>
+	<property name="uiProject" value="../${uiProjectName}"/>
+	
+	<property name="javaModelDirectory" value="${mdProject}/src-gen"/>
+	<property name="xmiModelDirectory" value="${mdProject}/model-gen"/>
+	<property name="basePackage" value="org.eclipse.emf.compare"/>
+	
+	<bean class="org.eclipse.emf.mwe.utils.StandaloneSetup">
+		<platformUri value="${rtProject}/.."/>
+	</bean> 
+	
+	<component class="org.eclipse.emf.mwe.utils.DirectoryCleaner" directory="${javaModelDirectory}"/>
+	<component class="org.eclipse.emf.mwe.utils.DirectoryCleaner" directory="${xmiModelDirectory}"/>
+	<component class="org.eclipse.emf.mwe.utils.DirectoryCleaner" directory="${rtProject}/src-gen"/>
+	<component class="org.eclipse.emf.mwe.utils.DirectoryCleaner" directory="${uiProject}/src-gen"/>
+	
+	<component class="org.eclipse.emf.compare.epatch.dsl.util.Echo">
+		<file value="${xmiModelDirectory}/readme.txt"/>
+		<line value="Attention: The models in this directory have been generated automatically by"/>	
+		<line value="${rtProjectName}"/>	
+		<line value=""/>	
+		<line value="Do not modify manually!"/>	
+	</component>
+	
+	<component class="org.eclipse.xtext.generator.Generator">
+		<pathRtProject value="${rtProject}"/>
+		<pathUiProject value="${uiProject}"/>
+		<projectNameRt value="${rtProjectName}"/>
+		<projectNameUi value="${uiProjectName}"/>
+		
+		<language uri="${grammarURI}">
+			<fragments file="org/eclipse/xtext/ui/generator/StandardUiAndRuntime.mwe" inheritAll="true">
+				<file.extensions value="${file.extensions}"/>
+			</fragments>
+		</language>
+	</component>
+	
+</workflow>
