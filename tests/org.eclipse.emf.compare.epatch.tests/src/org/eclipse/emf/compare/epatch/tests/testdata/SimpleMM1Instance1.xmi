@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mm:RootType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mm="http://www.itemis.de/emf/epatch/testmm1" xsi:schemaLocation="http://www.itemis.de/emf/epatch/testmm1 SimpleMM1.ecore" intval="10" strval="MyStringValue" reflist="//@tree //@tree/@children.0/@children.0">
+  <tree name="RootNode">
+    <children xsi:type="mm:CompositeNode" name="CompositeNode1">
+      <children xsi:type="mm:ChildNode" name="Child11"/>
+    </children>
+    <children xsi:type="mm:ChildNode" name="ChildWithRef" friend="//@tree/@children.0"/>
+    <children xsi:type="mm:ChildNode" name="ChildWithoutRef"/>
+  </tree>
+  <intlist>2</intlist>
+  <intlist>4</intlist>
+  <intlist>6</intlist>
+  <intlist>8</intlist>
+  <intlist>10</intlist>
+</mm:RootType>
