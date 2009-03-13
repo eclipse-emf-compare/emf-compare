@@ -33,7 +33,6 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public class EpatchRecorderTest {
-
 	static {
 		EpatchPackage.eINSTANCE.getEFactoryInstance();
 		EpatchStandaloneSetup.doSetup();
@@ -55,20 +54,17 @@ public class EpatchRecorderTest {
 		Epatch patch = parseEpatch(change + ".epatch", change.asPatch());
 		String actual = serializeEpatch(patch);
 		// TODO: fix string quotes so that no replacement is needed
-		EmfAssert.assertTokensEqual(change.toString(), change.asPatch()
-				.replace("'", "\""), actual);
+		EmfAssert.assertTokensEqual(change.toString(), change.asPatch().replace("'", "\""), actual);
 	}
 
 	@Test
 	public void testRecordedHasCorrectModel() {
 		ResourceSet rs = change.getResourceSet();
-		System.out.println(EmfFormatter.objToStr(rs.getResources().get(0)
-				.getContents().get(0)));
+		System.out.println(EmfFormatter.objToStr(rs.getResources().get(0).getContents().get(0)));
 		EpatchRecorder rec = new EpatchRecorder(rs, change.toString());
 		change.apply(rs);
 		Epatch recorded = rec.endRecording();
-		System.out.println(EmfFormatter.objToStr(rs.getResources().get(0)
-				.getContents().get(0)));
+		System.out.println(EmfFormatter.objToStr(rs.getResources().get(0).getContents().get(0)));
 		System.out.println(EpatchDSLUtil.serializeEpatch(recorded));
 		Epatch expected = parseEpatch(change + ".epatch", change.asPatch());
 		System.out.println(EmfFormatter.objToStr(expected));
