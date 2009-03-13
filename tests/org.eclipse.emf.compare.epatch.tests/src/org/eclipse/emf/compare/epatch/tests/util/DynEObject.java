@@ -52,8 +52,7 @@ public class DynEObject {
 		ArrayList<String> features = new ArrayList<String>();
 		for (EStructuralFeature sf : obj.eClass().getEAllStructuralFeatures())
 			features.add(sf.getName());
-		throw new RuntimeException("Feature '" + name
-				+ "' not found. Available features: " + features
+		throw new RuntimeException("Feature '" + name + "' not found. Available features: " + features
 				+ " for class " + obj.eClass().getName());
 	}
 
@@ -64,8 +63,7 @@ public class DynEObject {
 		throw new RuntimeException("Resource " + part + " not found!");
 	};
 
-	public static Resource eLoadResource(ResourceSet rs, Class<?> loader,
-			String model) {
+	public static Resource eLoadResource(ResourceSet rs, Class<?> loader, String model) {
 		final String path = loader.getPackage().getName().replace('.', '/');
 		// final String file = "/" + path + "/" + model;
 		// final URL url = loader.getResource(file);
@@ -79,12 +77,10 @@ public class DynEObject {
 		return rs.getResource(file, true);
 	}
 
-	public static ResourceSet eCreateResourceSet(Class<?> loader,
-			String... models) {
+	public static ResourceSet eCreateResourceSet(Class<?> loader, String... models) {
 		// final String path = loader.getPackage().getName().replace('.', '/');
 		final ResourceSet rs = new ResourceSetImpl();
-		Map<String, Object> map = rs.getResourceFactoryRegistry()
-				.getExtensionToFactoryMap();
+		Map<String, Object> map = rs.getResourceFactoryRegistry().getExtensionToFactoryMap();
 		map.put("ecore", new XMIResourceFactoryImpl());
 		map.put("xmi", new XMIResourceFactoryImpl());
 		for (String m : models)
@@ -103,13 +99,11 @@ public class DynEObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	public DynEObject eGetObj(String feature, String matchFeature,
-			String matchValue) {
+	public DynEObject eGetObj(String feature, String matchFeature, String matchValue) {
 		Object list = eGetVal(feature);
 		if (list instanceof List) {
-			for (EObject o : (List<EObject>) list) {
-				EStructuralFeature f = o.eClass().getEStructuralFeature(
-						matchFeature);
+			for (EObject o : (List<EObject>)list) {
+				EStructuralFeature f = o.eClass().getEStructuralFeature(matchFeature);
 				if (f != null && matchValue.equals(o.eGet(f)))
 					return new DynEObject(o);
 			}
@@ -121,16 +115,16 @@ public class DynEObject {
 	@SuppressWarnings("unchecked")
 	private Object listGet(Object list, int index) {
 		if (list instanceof List)
-			return ((List<Object>) list).get(index);
+			return ((List<Object>)list).get(index);
 		throw new RuntimeException("This is not a list: " + list);
 	}
 
 	private DynEObject toDynObj(Object o, String feat) {
 		if (o instanceof EObject)
-			return new DynEObject((EObject) o);
+			return new DynEObject((EObject)o);
 		String t = (o != null) ? o.getClass().getName() : "null";
-		throw new RuntimeException("The from " + obj.eClass().getName() + "."
-				+ feat + " is not an EObject, but a " + t);
+		throw new RuntimeException("The from " + obj.eClass().getName() + "." + feat
+				+ " is not an EObject, but a " + t);
 
 	}
 
@@ -166,33 +160,32 @@ public class DynEObject {
 
 	@SuppressWarnings("unchecked")
 	public void eAdd(String feat, Object value) {
-		((EList<Object>) obj.eGet(eGetFeature(feat))).add(value);
+		((EList<Object>)obj.eGet(eGetFeature(feat))).add(value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void eAdd(String feat, int index, Object value) {
-		((EList<Object>) obj.eGet(eGetFeature(feat))).add(index, value);
+		((EList<Object>)obj.eGet(eGetFeature(feat))).add(index, value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void eSet(String feat, int index, Object value) {
-		((EList<Object>) obj.eGet(eGetFeature(feat))).set(index, value);
+		((EList<Object>)obj.eGet(eGetFeature(feat))).set(index, value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void eMove(String feat, int newPosition, int oldPosition) {
-		((EList<Object>) obj.eGet(eGetFeature(feat))).move(newPosition,
-				oldPosition);
+		((EList<Object>)obj.eGet(eGetFeature(feat))).move(newPosition, oldPosition);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void eRemove(String feat, int index) {
-		((EList<Object>) obj.eGet(eGetFeature(feat))).remove(index);
+		((EList<Object>)obj.eGet(eGetFeature(feat))).remove(index);
 	}
 
 	@SuppressWarnings("unchecked")
 	public void eRemove(String feat, String feature, String matchValue) {
-		EList<EObject> list = (EList<EObject>) obj.eGet(eGetFeature(feat));
+		EList<EObject> list = (EList<EObject>)obj.eGet(eGetFeature(feat));
 		for (Iterator<EObject> i = list.iterator(); i.hasNext();) {
 			EObject o = i.next();
 			EStructuralFeature f = o.eClass().getEStructuralFeature(feature);
@@ -214,10 +207,8 @@ public class DynEObject {
 			ArrayList<String> types = new ArrayList<String>();
 			for (EClassifier c : pkg.getEClassifiers())
 				types.add(c.getName());
-			throw new RuntimeException("Type '" + typeName
-					+ "' not found in package " + pkg.getName()
-					+ ". Available types:" + types + " Package namespace:"
-					+ pkg.getNsURI());
+			throw new RuntimeException("Type '" + typeName + "' not found in package " + pkg.getName()
+					+ ". Available types:" + types + " Package namespace:" + pkg.getNsURI());
 		}
 		return cls;
 	}
@@ -225,11 +216,10 @@ public class DynEObject {
 	public DynEObject newObj(String typeName) {
 		EClassifier cls = eGetType(typeName);
 		if (cls instanceof EClass) {
-			return new DynEObject(cls.getEPackage().getEFactoryInstance()
-					.create((EClass) cls));
+			return new DynEObject(cls.getEPackage().getEFactoryInstance().create((EClass)cls));
 		} else
-			throw new RuntimeException("Type '" + typeName
-					+ " is not an EClass, but an " + cls.eClass().getName());
+			throw new RuntimeException("Type '" + typeName + " is not an EClass, but an "
+					+ cls.eClass().getName());
 	}
 
 }

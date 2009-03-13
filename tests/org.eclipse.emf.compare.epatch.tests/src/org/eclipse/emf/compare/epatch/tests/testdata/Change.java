@@ -20,11 +20,11 @@ public interface Change {
 		public static ArrayList<Object[]> getAllChanges() {
 			ArrayList<Object[]> r = new ArrayList<Object[]>();
 			for (Change c : ListChanges.values())
-				r.add(new Object[] { c });
+				r.add(new Object[] {c});
 			for (Change c : SingleChanges.values())
-				r.add(new Object[] { c });
+				r.add(new Object[] {c});
 			for (Change c : ObjectChanges.values())
-				r.add(new Object[] { c });
+				r.add(new Object[] {c});
 			// for (Change c : BookChanges.values())
 			// r.add(new Object[] { c });
 			return r;
@@ -44,8 +44,8 @@ public interface Change {
 		}
 	}
 
-	public final static Class<?>[] ALL_CHANGES = new Class<?>[] {
-			SingleChanges.class, ListChanges.class, ObjectChanges.class,
+	public final static Class<?>[] ALL_CHANGES = new Class<?>[] {SingleChanges.class, ListChanges.class,
+			ObjectChanges.class,
 	/* BookChanges.class */};
 
 	public void apply(ResourceSet rs);

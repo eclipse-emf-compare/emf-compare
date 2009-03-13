@@ -43,14 +43,12 @@ public enum ListChanges implements Change {
 		}
 
 		public String getL2RDocu() {
-			return "From the attribute 'intlist', first "
-					+ "the value at index 2 is removed "
+			return "From the attribute 'intlist', first " + "the value at index 2 is removed "
 					+ "and then value '1' is inserted at index 4";
 		}
 
 		public String getR2LDocu() {
-			return "From the attribute 'intlist', first "
-					+ "the value at index 4 is removed "
+			return "From the attribute 'intlist', first " + "the value at index 4 is removed "
 					+ "and then value '6' is inserted at index 2";
 		}
 
@@ -162,26 +160,18 @@ public enum ListChanges implements Change {
 			return "intlist = [ 2:'6' | ];";
 		}
 	}/*
-	 * , SWAP_INT { public void apply(ResourceSet rs) { DynEObject o =
-	 * inst1(rs); o.eMove("intlist", 1, 3); o.eMove("intlist", 3, 2); }
-	 * 
-	 * public String getL2RDocu() { return
-	 * "The values at index 1 and 3 are swapped."; }
-	 * 
-	 * public String getR2LDocu() { return
-	 * "The values at index 1 and 3 are swapped."; }
-	 * 
-	 * protected String patch() { return
+	 * , SWAP_INT { public void apply(ResourceSet rs) { DynEObject o = inst1(rs); o.eMove("intlist", 1, 3);
+	 * o.eMove("intlist", 3, 2); } public String getL2RDocu() { return
+	 * "The values at index 1 and 3 are swapped."; } public String getR2LDocu() { return
+	 * "The values at index 1 and 3 are swapped."; } protected String patch() { return
 	 * "intlist = [ 3:[1], 1:[3] | 1:[3], 3:[1] ];"; } }
 	 */;
 
 	private static final String inst1 = "SimpleMM1Instance1.xmi";
 
 	public String asPatch() {
-		return "epatch " + name() + " {\n resource res0 {\n"
-				+ "  left uri 'SimpleMM1Instance1.xmi';\n"
-				+ " right uri 'SimpleMM1Instance11.xmi';\n}\n"
-				+ "object res0#/ {\n" + patch() + " } }\n";
+		return "epatch " + name() + " {\n resource res0 {\n" + "  left uri 'SimpleMM1Instance1.xmi';\n"
+				+ " right uri 'SimpleMM1Instance11.xmi';\n}\n" + "object res0#/ {\n" + patch() + " } }\n";
 	}
 
 	public ResourceSet getResourceSet() {

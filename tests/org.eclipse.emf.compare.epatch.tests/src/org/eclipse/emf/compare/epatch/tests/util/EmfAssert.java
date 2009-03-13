@@ -29,8 +29,7 @@ public class EmfAssert {
 
 	static final Pattern SPACE = Pattern.compile("[\\s\\n\\r]+");
 
-	public static void assertTokensEqual(String msg, String expected,
-			String actual) {
+	public static void assertTokensEqual(String msg, String expected, String actual) {
 		if (expected == null)
 			fail("expected is null");
 		if (actual == null)
@@ -80,81 +79,66 @@ public class EmfAssert {
 		assertEquals(e, a);
 	}
 
-	private static Resource findResource(ResourceSet resources,
-			String matchURIpart) {
+	private static Resource findResource(ResourceSet resources, String matchURIpart) {
 		for (Resource r : resources.getResources())
-			if (r.getURI() != null
-					&& r.getURI().toString().contains(matchURIpart))
+			if (r.getURI() != null && r.getURI().toString().contains(matchURIpart))
 				return r;
 		throw new RuntimeException("No Resource with '" + matchURIpart
 				+ "' in it's URI found in ResourceSet.");
 	}
 
-	public static void assertResourcesEqual(ResourceSet expected,
-			ResourceSet actual, String matchURIpart) {
-		assertResourcesEqual(findResource(expected, matchURIpart),
-				findResource(actual, matchURIpart));
+	public static void assertResourcesEqual(ResourceSet expected, ResourceSet actual, String matchURIpart) {
+		assertResourcesEqual(findResource(expected, matchURIpart), findResource(actual, matchURIpart));
 	}
 
 	public static void assertResourcesEqual(Resource expected, Resource actual) {
-		assertEquals("Resources have different ammounts of root objects.",
-				expected.getContents().size(), actual.getContents().size());
+		assertEquals("Resources have different ammounts of root objects.", expected.getContents().size(),
+				actual.getContents().size());
 		for (int i = 0; i < expected.getContents().size(); i++)
-			assertEObjectsEqual(expected.getContents().get(i), actual
-					.getContents().get(i));
+			assertEObjectsEqual(expected.getContents().get(i), actual.getContents().get(i));
 	}
 
-	public static void assertResourceSetsEqual(ResourceSet expected,
-			ResourceSet actual) {
-		assertEquals("Resources have different ammounts of root objects.",
-				expected.getResources().size(), actual.getResources().size());
+	public static void assertResourceSetsEqual(ResourceSet expected, ResourceSet actual) {
+		assertEquals("Resources have different ammounts of root objects.", expected.getResources().size(),
+				actual.getResources().size());
 		for (int i = 0; i < expected.getResources().size(); i++)
-			assertResourcesEqual(expected.getResources().get(i), actual
-					.getResources().get(i));
+			assertResourcesEqual(expected.getResources().get(i), actual.getResources().get(i));
 	}
 
-	public static void assertNoCrossRefsLeaveReources(EObject model,
-			Resource... allowedResources) {
-		assertNoCrossRefsLeaveReources(model, new HashSet<Resource>(Arrays
-				.asList(allowedResources)));
+	public static void assertNoCrossRefsLeaveReources(EObject model, Resource... allowedResources) {
+		assertNoCrossRefsLeaveReources(model, new HashSet<Resource>(Arrays.asList(allowedResources)));
 	}
 
-	private static void assertObjectResource(EObject parent, EReference ref,
-			EObject model, Set<Resource> allowedResources) {
-		String id = parent.eClass().getName() + "("
-				+ ref.getEContainingClass().getName() + ")." + ref.getName();
+	private static void assertObjectResource(EObject parent, EReference ref, EObject model,
+			Set<Resource> allowedResources) {
+		String id = parent.eClass().getName() + "(" + ref.getEContainingClass().getName() + ")."
+				+ ref.getName();
 		// String p = "Parent: " + parent.eResource().getURIFragment(parent);
 		// String r = "Reference: " + ;
 		assertNotNull("Has no Resource " + id + ": " + model, model.eResource());
-		assertTrue("Resource not Allowed: " + model.eResource().getURI() + "\n"
-				+ id + " -> " + model.eClass().getName() + " "
-				+ model.eResource().getURIFragment(model), allowedResources
+		assertTrue("Resource not Allowed: " + model.eResource().getURI() + "\n" + id + " -> "
+				+ model.eClass().getName() + " " + model.eResource().getURIFragment(model), allowedResources
 				.contains(model.eResource()));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void assertNoCrossRefsLeaveReources(EObject model,
-			Set<Resource> allowedResources) {
+	public static void assertNoCrossRefsLeaveReources(EObject model, Set<Resource> allowedResources) {
 		assertNotNull(model);
 		for (EReference ref : model.eClass().getEAllReferences()) {
 			if (ref.isTransient() || !model.eIsSet(ref))
 				continue;
 			if (ref.isContainment()) {
 				if (ref.isMany())
-					for (Object o : (EList<Object>) model.eGet(ref))
-						assertNoCrossRefsLeaveReources((EObject) o,
-								allowedResources);
+					for (Object o : (EList<Object>)model.eGet(ref))
+						assertNoCrossRefsLeaveReources((EObject)o, allowedResources);
 				else
-					assertNoCrossRefsLeaveReources((EObject) model.eGet(ref),
-							allowedResources);
+					assertNoCrossRefsLeaveReources((EObject)model.eGet(ref), allowedResources);
 			} else {
 				if (ref.isMany())
-					for (Object o : (EList<Object>) model.eGet(ref))
-						assertObjectResource(model, ref, (EObject) o,
-								allowedResources);
+					for (Object o : (EList<Object>)model.eGet(ref))
+						assertObjectResource(model, ref, (EObject)o, allowedResources);
 				else
-					assertObjectResource(model, ref, (EObject) model.eGet(ref),
-							allowedResources);
+					assertObjectResource(model, ref, (EObject)model.eGet(ref), allowedResources);
 			}
 		}
 	}

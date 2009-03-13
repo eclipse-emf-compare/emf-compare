@@ -23,17 +23,16 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
-
 /**
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EmfFormatter {
 
 	private static final char SPACE = ' ';
+
 	private static final String INDENT = "    ";
 
-	public static String objToStr(Object obj,
-			EStructuralFeature... ignoredFeatures) {
+	public static String objToStr(Object obj, EStructuralFeature... ignoredFeatures) {
 		Appendable buf = new StringBuilder(1024);
 		Set<EStructuralFeature> ignoreUs = (ignoredFeatures != null && ignoredFeatures.length != 0) ? (ignoredFeatures.length > 1 ? new HashSet<EStructuralFeature>(
 				Arrays.asList(ignoredFeatures))
@@ -51,15 +50,14 @@ public class EmfFormatter {
 			Set<EStructuralFeature> ignoreUs) throws Exception {
 		String innerIdent = INDENT + indent;
 		if (obj instanceof EObject) {
-			EObject eobj = (EObject) obj;
+			EObject eobj = (EObject)obj;
 			buf.append(eobj.eClass().getName()).append(" {\n");
-			for (EStructuralFeature f : eobj.eClass()
-					.getEAllStructuralFeatures()) {
+			for (EStructuralFeature f : eobj.eClass().getEAllStructuralFeatures()) {
 				if (!eobj.eIsSet(f) || ignoreUs.contains(f))
 					continue;
 				buf.append(innerIdent);
 				if (f instanceof EReference) {
-					EReference r = (EReference) f;
+					EReference r = (EReference)f;
 					if (r.isContainment()) {
 						buf.append("cref ");
 						buf.append(f.getEType().getName()).append(SPACE);
@@ -93,7 +91,7 @@ public class EmfFormatter {
 		}
 		if (obj instanceof Collection) {
 			int counter = 0;
-			Collection<?> coll = (Collection<?>) obj;
+			Collection<?> coll = (Collection<?>)obj;
 			buf.append("[\n");
 			for (Object o : coll) {
 				buf.append(innerIdent);
@@ -113,15 +111,13 @@ public class EmfFormatter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void refToStr(EObject obj, EReference ref, String indent,
-			Appendable buf) throws Exception {
+	private static void refToStr(EObject obj, EReference ref, String indent, Appendable buf) throws Exception {
 		Object o = obj.eGet(ref);
 		if (o instanceof EObject) {
-			EObject eo = (EObject) o;
+			EObject eo = (EObject)o;
 
 			if (eo instanceof ENamedElement)
-				buf.append("'").append(((ENamedElement) eo).getName()).append(
-						"' ");
+				buf.append("'").append(((ENamedElement)eo).getName()).append("' ");
 			buf.append("ref: ");
 			getURI(obj, eo, buf);
 			return;
@@ -130,15 +126,15 @@ public class EmfFormatter {
 			String innerIndent = indent + INDENT;
 			buf.append("[");
 			int counter = 0;
-			Collection coll = (Collection) o;
+			Collection coll = (Collection)o;
 			for (Iterator i = coll.iterator(); i.hasNext();) {
-				Object item = (Object) i.next();
+				Object item = (Object)i.next();
 				if (counter == 0)
 					buf.append('\n');
 				buf.append(innerIndent);
 				printInt(counter++, coll.size(), buf);
 				buf.append(": ");
-				getURI(obj, (EObject) item, buf);
+				getURI(obj, (EObject)item, buf);
 				if (i.hasNext())
 					buf.append(",\n");
 				else
@@ -150,8 +146,7 @@ public class EmfFormatter {
 		buf.append("?????");
 	}
 
-	private static void printInt(int current, int max, Appendable buffer)
-			throws IOException {
+	private static void printInt(int current, int max, Appendable buffer) throws IOException {
 		int length = getNumberOfDigits(current);
 		int maxLength = getNumberOfDigits(max);
 		buffer.append(Integer.toString(current));
@@ -161,11 +156,10 @@ public class EmfFormatter {
 	}
 
 	private static int getNumberOfDigits(int number) {
-		return number <= 1 ? 1 : (int) Math.floor(Math.log10(number + 0.5)) + 1;
+		return number <= 1 ? 1 : (int)Math.floor(Math.log10(number + 0.5)) + 1;
 	}
 
-	private static void getURI(EObject parent, EObject target, Appendable buf)
-			throws Exception {
+	private static void getURI(EObject parent, EObject target, Appendable buf) throws Exception {
 		Resource r = target.eResource();
 		if (r == null)
 			buf.append("(resource null)");

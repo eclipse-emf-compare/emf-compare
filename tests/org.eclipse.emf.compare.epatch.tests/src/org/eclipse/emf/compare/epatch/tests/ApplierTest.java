@@ -56,13 +56,10 @@ public class ApplierTest {
 		EpatchRecorder rec = new EpatchRecorder(rs1, change.toString());
 		change.apply(rs1);
 		Epatch patch = rec.endRecording();
-		CopyingEpatchApplier app = new CopyingEpatchApplier(RIGHT_TO_LEFT,
-				patch, rs1);
+		CopyingEpatchApplier app = new CopyingEpatchApplier(RIGHT_TO_LEFT, patch, rs1);
 		app.apply();
-		String name = rs1.getResources().get(0).getURI().trimFileExtension()
-				.lastSegment();
-		EmfAssert.assertResourcesEqual(change.getResourceSet(), app
-				.getOutputResourceSet(), name);
+		String name = rs1.getResources().get(0).getURI().trimFileExtension().lastSegment();
+		EmfAssert.assertResourcesEqual(change.getResourceSet(), app.getOutputResourceSet(), name);
 	}
 
 	@Test
@@ -74,17 +71,14 @@ public class ApplierTest {
 		change.apply(rs1);
 		Epatch patch = rec.endRecording();
 
-		CopyingEpatchApplier app = new CopyingEpatchApplier(LEFT_TO_RIGHT,
-				patch, rs2);
+		CopyingEpatchApplier app = new CopyingEpatchApplier(LEFT_TO_RIGHT, patch, rs2);
 		app.apply();
 
 		Resource r1 = rs1.getResources().get(0);
-		Resource r2 = app.getMap().getDstResources().get(
-				patch.getResources().get(0));
+		Resource r2 = app.getMap().getDstResources().get(patch.getResources().get(0));
 		r2.setURI(r1.getURI());
 
-		EmfAssert.assertEObjectsEqual(r1.getContents().get(0), r2.getContents()
-				.get(0));
+		EmfAssert.assertEObjectsEqual(r1.getContents().get(0), r2.getContents().get(0));
 	}
 
 	private Epatch getPatch() {
@@ -98,8 +92,7 @@ public class ApplierTest {
 		ResourceSet rs2 = change.getResourceSet();
 		Epatch patch = getPatch();
 
-		CopyingEpatchApplier app = new CopyingEpatchApplier(LEFT_TO_RIGHT,
-				patch, rs2);
+		CopyingEpatchApplier app = new CopyingEpatchApplier(LEFT_TO_RIGHT, patch, rs2);
 		app.apply();
 		return app;
 	}
@@ -107,10 +100,8 @@ public class ApplierTest {
 	@Test
 	public void testAllObjectsAreCopied() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
-		Resource r2 = app.getMap().getSrcResources().get(
-				app.getEpatch().getResources().get(0));
-		Resource r3 = app.getMap().getDstResources().get(
-				app.getEpatch().getResources().get(0));
+		Resource r2 = app.getMap().getSrcResources().get(app.getEpatch().getResources().get(0));
+		Resource r3 = app.getMap().getDstResources().get(app.getEpatch().getResources().get(0));
 		Set<EObject> orig = new HashSet<EObject>();
 		System.out.println("src");
 		for (TreeIterator<EObject> i = r2.getAllContents(); i.hasNext();) {
@@ -130,8 +121,7 @@ public class ApplierTest {
 	@Test
 	public void testAllSrcObjectsAreInSrc() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
-		Resource r2 = app.getMap().getSrcResources().get(
-				app.getEpatch().getResources().get(0));
+		Resource r2 = app.getMap().getSrcResources().get(app.getEpatch().getResources().get(0));
 		Set<EObject> orig = new HashSet<EObject>();
 		System.out.println("src");
 		for (TreeIterator<EObject> i = r2.getAllContents(); i.hasNext();) {
@@ -151,8 +141,7 @@ public class ApplierTest {
 	@Test
 	public void testAllDstObjectsAreInDst() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
-		Resource r3 = app.getMap().getDstResources().get(
-				app.getEpatch().getResources().get(0));
+		Resource r3 = app.getMap().getDstResources().get(app.getEpatch().getResources().get(0));
 		Set<EObject> orig = new HashSet<EObject>();
 		System.out.println("dst");
 		for (TreeIterator<EObject> i = r3.getAllContents(); i.hasNext();) {

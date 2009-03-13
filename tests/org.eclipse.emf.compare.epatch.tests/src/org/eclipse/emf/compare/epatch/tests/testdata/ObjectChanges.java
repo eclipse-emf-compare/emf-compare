@@ -17,8 +17,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 public enum ObjectChanges implements Change {
 	ADD_OBJECT {
 		public void apply(ResourceSet rs) {
-			inst1(rs).eGetObj("tree").eAddNew("children", "CompositeNode")
-					.eSet("name", "MyNewCompositeNode");
+			inst1(rs).eGetObj("tree").eAddNew("children", "CompositeNode").eSet("name", "MyNewCompositeNode");
 		}
 
 		public String getL2RDocu() {
@@ -33,15 +32,14 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#//@tree {\n"
-					+ "children = [ | 3:new mm#//CompositeNode {\n"
+			return "object res0#//@tree {\n" + "children = [ | 3:new mm#//CompositeNode {\n"
 					+ "name = 'MyNewCompositeNode'; } ]; }";
 		}
 	},
 	ADD_OBJECT_WITH_LIST {
 		public void apply(ResourceSet rs) {
-			DynEObject cn = inst1(rs).eGetObj("tree").eAddNew("children",
-					"CompositeNode").eSet("name", "MyRoot");
+			DynEObject cn = inst1(rs).eGetObj("tree").eAddNew("children", "CompositeNode").eSet("name",
+					"MyRoot");
 			cn.eAddNew("children", "CompositeNode").eSet("name", "MyComp1");
 			cn.eAddNew("children", "ChildNode").eSet("name", "MyLeaf1");
 			cn.eAddNew("children", "ChildNode").eSet("name", "MyLeaf2");
@@ -62,8 +60,7 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#//@tree {\n"
-					+ "children = [ | 3:new mm#//CompositeNode {\n"
+			return "object res0#//@tree {\n" + "children = [ | 3:new mm#//CompositeNode {\n"
 					+ "children = [ new mm#//CompositeNode {\n"
 					+ "name = 'MyComp1'; }, new mm#//ChildNode {\n"
 					+ "name = 'MyLeaf1'; }, new mm#//ChildNode {\n"
@@ -72,8 +69,7 @@ public enum ObjectChanges implements Change {
 	},
 	ADD_REFERENCE {
 		public void apply(ResourceSet rs) {
-			DynEObject o = inst1(rs).eGetObj("tree").eGetObj("children",
-					"name", "ChildWithRef");
+			DynEObject o = inst1(rs).eGetObj("tree").eGetObj("children", "name", "ChildWithRef");
 			inst1(rs).eAdd("reflist", o.eObj());
 		}
 
@@ -89,8 +85,7 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#/ {\n"
-					+ "    reflist = [ | 2:ChildWithRef ];\n" + "  }\n"
+			return "object res0#/ {\n" + "    reflist = [ | 2:ChildWithRef ];\n" + "  }\n"
 					+ "  object ChildWithRef res0#//@tree/@children.1 { }";
 		}
 	},
@@ -137,13 +132,9 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#/ {\n"
-					+ "    tree = RootNode | new mm#//CompositeNode {\n"
-					+ "      children = [ RootNode ];\n"
-					+ "      name = 'newTreeRoot';\n"
-					+ "    };\n"
-					+ "  }\n"
-					+ "  object RootNode left res0#//@tree right res0#//@tree/@children.0 { }";
+			return "object res0#/ {\n" + "    tree = RootNode | new mm#//CompositeNode {\n"
+					+ "      children = [ RootNode ];\n" + "      name = 'newTreeRoot';\n" + "    };\n"
+					+ "  }\n" + "  object RootNode left res0#//@tree right res0#//@tree/@children.0 { }";
 		}
 	},
 	REMOVE_REFERENCE {
@@ -152,8 +143,7 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#/ {\n" + "    reflist = [ 1:Child11 | ];\n"
-					+ "  }\n"
+			return "object res0#/ {\n" + "    reflist = [ 1:Child11 | ];\n" + "  }\n"
 					+ "  object Child11 res0#//@tree/@children.0/@children.0 { }";
 		}
 	},
@@ -165,69 +155,51 @@ public enum ObjectChanges implements Change {
 		}
 
 		protected String patch() {
-			return "object res0#/ {\n"
-					+ "    reflist = [ 1:Child11, 0:RootNode | ];\n"
+			return "object res0#/ {\n" + "    reflist = [ 1:Child11, 0:RootNode | ];\n"
 					+ "    tree = new mm#//CompositeNode RootNode {\n"
 					+ "      children = [ new mm#//CompositeNode CompositeNode1 {\n"
-					+ "        children = [ new mm#//ChildNode Child11 {\n"
-					+ "          name = 'Child11';\n" + "        } ];\n"
-					+ "        name = 'CompositeNode1';\n"
-					+ "      }, new mm#//ChildNode {\n"
-					+ "        friend = CompositeNode1;\n"
-					+ "        name = 'ChildWithRef';\n"
-					+ "      }, new mm#//ChildNode {\n"
-					+ "        name = 'ChildWithoutRef';\n" + "      } ];\n"
-					+ "      name = 'RootNode';\n" + "    } | null;\n" + "  }";
+					+ "        children = [ new mm#//ChildNode Child11 {\n" + "          name = 'Child11';\n"
+					+ "        } ];\n" + "        name = 'CompositeNode1';\n"
+					+ "      }, new mm#//ChildNode {\n" + "        friend = CompositeNode1;\n"
+					+ "        name = 'ChildWithRef';\n" + "      }, new mm#//ChildNode {\n"
+					+ "        name = 'ChildWithoutRef';\n" + "      } ];\n" + "      name = 'RootNode';\n"
+					+ "    } | null;\n" + "  }";
 		}
 	},
 	UNSET_OBJECT_COMPOSITE {
 		public void apply(ResourceSet rs) {
-			inst1(rs).eGetObj("tree").eRemove("children", "name",
-					"CompositeNode1");
-			inst1(rs).eGetObj("tree").eGetObj("children", "name",
-					"ChildWithRef").eUnset("friend");
+			inst1(rs).eGetObj("tree").eRemove("children", "name", "CompositeNode1");
+			inst1(rs).eGetObj("tree").eGetObj("children", "name", "ChildWithRef").eUnset("friend");
 			inst1(rs).eRemove("reflist", "name", "Child11");
 		}
 
 		protected String patch() {
-			return "object res0#/ {\n"
-					+ "    reflist = [ 1:Child11 | ];\n"
-					+ "  }\n"
-					+ "\n"
+			return "object res0#/ {\n" + "    reflist = [ 1:Child11 | ];\n" + "  }\n" + "\n"
 					+ "  object res0#//@tree {\n"
 					+ "    children = [ 0:new mm#//CompositeNode CompositeNode1 {\n"
-					+ "      children = [ new mm#//ChildNode Child11 {\n"
-					+ "        name = 'Child11';\n"
-					+ "      } ];\n"
-					+ "      name = 'CompositeNode1';\n"
-					+ "    } | ];\n"
-					+ "  }\n"
-					+ "\n"
+					+ "      children = [ new mm#//ChildNode Child11 {\n" + "        name = 'Child11';\n"
+					+ "      } ];\n" + "      name = 'CompositeNode1';\n" + "    } | ];\n" + "  }\n" + "\n"
 					+ "  object left res0#//@tree/@children.1 right res0#//@tree/@children.0 {\n"
 					+ "    friend = CompositeNode1 | null;\n" + "  }";
 		}
 	},
 	UNSET_OBJECT_SIMPLE {
 		public void apply(ResourceSet rs) {
-			inst1(rs).eGetObj("tree").eRemove("children", "name",
-					"ChildWithoutRef");
+			inst1(rs).eGetObj("tree").eRemove("children", "name", "ChildWithoutRef");
 		}
 
 		protected String patch() {
-			return "object res0#//@tree {\n"
-					+ "children = [ 2:new mm#//ChildNode {\n"
+			return "object res0#//@tree {\n" + "children = [ 2:new mm#//ChildNode {\n"
 					+ "name = 'ChildWithoutRef'; } | ];\n" + "}";
 		}
 	},
 	UNSET_OBJECT_WITH_REF {
 		public void apply(ResourceSet rs) {
-			inst1(rs).eGetObj("tree").eRemove("children", "name",
-					"ChildWithRef");
+			inst1(rs).eGetObj("tree").eRemove("children", "name", "ChildWithRef");
 		}
 
 		protected String patch() {
-			return "object res0#//@tree {\n"
-					+ "children = [ 1:new mm#//ChildNode {\n"
+			return "object res0#//@tree {\n" + "children = [ 1:new mm#//ChildNode {\n"
 					+ "friend = CompositeNode1; name = 'ChildWithRef'; } | ];\n }\n"
 					+ "object CompositeNode1 res0#//@tree/@children.0 { }";
 		}
@@ -237,10 +209,8 @@ public enum ObjectChanges implements Change {
 
 	public String asPatch() {
 		String p = patch();
-		String m = p.contains("mm#") ? "import mm ns 'http://www.itemis.de/emf/epatch/testmm1'\n"
-				: "";
-		return "epatch " + name() + " {\n" + m + "resource res0 {\n"
-				+ "left uri 'SimpleMM1Instance1.xmi';\n"
+		String m = p.contains("mm#") ? "import mm ns 'http://www.itemis.de/emf/epatch/testmm1'\n" : "";
+		return "epatch " + name() + " {\n" + m + "resource res0 {\n" + "left uri 'SimpleMM1Instance1.xmi';\n"
 				+ "right uri 'SimpleMM1Instance11.xmi';\n" + "}\n" + p + " }";
 	}
 

@@ -103,10 +103,8 @@ public enum SingleChanges implements Change {
 	private static final String inst1 = "SimpleMM1Instance1.xmi";
 
 	public String asPatch() {
-		return "epatch " + name() + " {\n resource res0 {\n"
-				+ "  left uri 'SimpleMM1Instance1.xmi';\n"
-				+ " right uri 'SimpleMM1Instance11.xmi';\n}\n"
-				+ "object res0#/ {\n" + patch() + " } }\n";
+		return "epatch " + name() + " {\n resource res0 {\n" + "  left uri 'SimpleMM1Instance1.xmi';\n"
+				+ " right uri 'SimpleMM1Instance11.xmi';\n}\n" + "object res0#/ {\n" + patch() + " } }\n";
 	}
 
 	public String getL2RDocu() {
