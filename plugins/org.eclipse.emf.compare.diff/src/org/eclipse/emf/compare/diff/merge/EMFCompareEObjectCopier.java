@@ -305,7 +305,6 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 */
 	private boolean mergeLinkedDiff(EObject element) {
 		boolean hasMerged = false;
-		// TODO We should probably cache the concerned differences, keep in mind some can be removed
 		final TreeIterator<EObject> diffIterator = diffModel.eAllContents();
 		while (diffIterator.hasNext()) {
 			final EObject next = diffIterator.next();

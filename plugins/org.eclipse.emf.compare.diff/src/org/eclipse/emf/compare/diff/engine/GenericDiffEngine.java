@@ -62,7 +62,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-// FIXME this engine should be refactored (e.g create checkers for 'checkxxDiff')
+// TODO this engine should be refactored (e.g create checkers for 'checkxxDiff')
 public class GenericDiffEngine implements IDiffEngine {
 	/** Allows retrieval of the ancestor matched object. */
 	protected static final int ANCESTOR_OBJECT = 0;
