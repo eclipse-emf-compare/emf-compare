@@ -36,6 +36,7 @@ import org.eclipse.team.svn.core.connector.SVNConnectorException;
 import org.eclipse.team.svn.core.connector.SVNLogEntry;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 import org.eclipse.team.svn.core.operation.SVNNullProgressMonitor;
+import org.eclipse.team.svn.core.resource.ILocalResource;
 import org.eclipse.team.svn.core.resource.IRepositoryLocation;
 import org.eclipse.team.svn.core.resource.IRepositoryResource;
 import org.eclipse.team.svn.core.utility.SVNUtility;
@@ -91,7 +92,8 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 				rightResource = ModelUtils.load(((ResourceElement)right).getContents(), right.getName(),
 						rightResourceSet).eResource();
 				final IRepositoryResource resource = ((ResourceElement)right).getRepositoryResource();
-				rightResourceSet.setURIConverter(new RevisionedURIConverter(resource));
+				final ILocalResource local = ((ResourceElement)ancestor).getLocalResource();
+				rightResourceSet.setURIConverter(new RevisionedURIConverter(resource, local));
 			} catch (final IOException e) {
 				// We couldn't load the remote resource. Considers it has been added to the repository
 				rightResource = ModelUtils.createResource(URI.createURI(right.getName()));
@@ -105,7 +107,8 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), ancestorResourceSet).eResource();
 					final IRepositoryResource resource = ((ResourceElement)ancestor).getRepositoryResource();
-					ancestorResourceSet.setURIConverter(new RevisionedURIConverter(resource));
+					final ILocalResource local = ((ResourceElement)ancestor).getLocalResource();
+					ancestorResourceSet.setURIConverter(new RevisionedURIConverter(resource, local));
 				} catch (final IOException e) {
 					// Couldn't load ancestor resource, create an empty one
 					ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
@@ -129,10 +132,12 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 		 * 
 		 * @param revision
 		 *            Revision of the base model.
+		 * @param local
+		 *            Local resource currently being compared.
 		 */
-		public RevisionedURIConverter(IRepositoryResource revision) {
+		public RevisionedURIConverter(IRepositoryResource revision, ILocalResource local) {
 			super();
-			uriHandlers.add(0, new RevisionedURIHandler(revision));
+			uriHandlers.add(0, new RevisionedURIHandler(revision, local));
 		}
 	}
 
@@ -147,14 +152,20 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */
 		private final IRepositoryResource baseRevision;
 
+		/** The local resource currently compared. */
+		private final ILocalResource localResource;
+
 		/**
 		 * Instantiates an URIHandler given the base file revision.
 		 * 
 		 * @param revision
 		 *            Revision of the base model.
+		 * @param local
+		 *            Local resource currently being compared.
 		 */
-		public RevisionedURIHandler(IRepositoryResource revision) {
+		public RevisionedURIHandler(IRepositoryResource revision, ILocalResource local) {
 			baseRevision = revision;
+			localResource = local;
 		}
 
 		/**
@@ -199,6 +210,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 					}
 				} else {
 					// FIXME find a way to determine revision number or timestamp of the BASE revision
+					final long baseRevisionNumber = localResource.getBaseRevision();
 					stream = new StringOutputStream();
 					final int bufferSize = 2048;
 					proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target), bufferSize, stream,
