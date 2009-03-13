@@ -47,9 +47,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class DiffEpatchService extends AbstractEpatchBuilder {
-
-	public static Epatch createEpatch(MatchModel match, DiffModel diff,
-			String name) {
+	public static Epatch createEpatch(MatchModel match, DiffModel diff, String name) {
 		DiffEpatchService dt = new DiffEpatchService(match, diff, name);
 		return dt.convert();
 	}
@@ -76,38 +74,37 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 		fillUnmatchSet(match.getUnmatchedElements());
 		for (TreeIterator<EObject> i = diff.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
-			
+
 			// model elements
 			if (o instanceof ModelElementChangeLeftTarget)
-				handleEleChangeLeft((ModelElementChangeLeftTarget) o);
+				handleEleChangeLeft((ModelElementChangeLeftTarget)o);
 			else if (o instanceof ModelElementChangeRightTarget)
-				handleEleChangeRight((ModelElementChangeRightTarget) o);
+				handleEleChangeRight((ModelElementChangeRightTarget)o);
 			else if (o instanceof MoveModelElement)
-				handleEleMove((MoveModelElement) o);
-			
+				handleEleMove((MoveModelElement)o);
+
 			// attributes
 			else if (o instanceof AttributeChangeLeftTarget)
-				handleAttrChangeLeft((AttributeChangeLeftTarget) o);
+				handleAttrChangeLeft((AttributeChangeLeftTarget)o);
 			else if (o instanceof AttributeChangeRightTarget)
-				handleAttrChangeRight((AttributeChangeRightTarget) o);
+				handleAttrChangeRight((AttributeChangeRightTarget)o);
 			else if (o instanceof UpdateAttribute)
-				handleAttrUpdate((UpdateAttribute) o);
-			
+				handleAttrUpdate((UpdateAttribute)o);
+
 			// references
 			else if (o instanceof ReferenceChangeRightTarget)
-				handleRefChangeRight((ReferenceChangeRightTarget) o);
+				handleRefChangeRight((ReferenceChangeRightTarget)o);
 			else if (o instanceof ReferenceChangeLeftTarget)
-				handleRefChangeLeft((ReferenceChangeLeftTarget) o);
+				handleRefChangeLeft((ReferenceChangeLeftTarget)o);
 			else if (o instanceof UpdateReference)
-				handleRefUpdate((UpdateReference) o);
-			
+				handleRefUpdate((UpdateReference)o);
+
 			// other
 			else if (o instanceof DiffGroup)
 				; // do nothing
 			else
-				throw new RuntimeException("Warning: Didn't handle "
-						+ o.eClass().getName() + ": " + o);
-			
+				throw new RuntimeException("Warning: Didn't handle " + o.eClass().getName() + ": " + o);
+
 			// TODO: support moving of references... and more?
 		}
 		generateNames();
@@ -133,36 +130,32 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 	protected NamedResource createResource() {
 		NamedResource r = fc.createNamedResource();
 		// TODO: support multiple roots
-		r.setLeftUri(diff.getLeftRoots().get(0).eResource().getURI()
-				.lastSegment());
-		r.setRightUri(diff.getRightRoots().get(0).eResource().getURI()
-				.lastSegment());
+		r.setLeftUri(diff.getLeftRoots().get(0).eResource().getURI().lastSegment());
+		r.setRightUri(diff.getRightRoots().get(0).eResource().getURI().lastSegment());
 		r.setName("res0");
 		return r;
 	}
 
-	protected void doAdd(EObject left, EObject right, EStructuralFeature feat,
-			Object val) {
+	protected void doAdd(EObject left, EObject right, EStructuralFeature feat, Object val) {
 		if (feat.isMany()) {
 			if (ignoreFeature(feat))
 				return;
 			NamedObject o = getNamedObject(left, right);
 			ListAssignment ass = getListAssignment(o, feat);
-			EList<?> list = (EList<?>) right.eGet(feat);
+			EList<?> list = (EList<?>)right.eGet(feat);
 			int index = list.indexOf(val);
 			ass.getRightValues().add(getListAssignmentValue(feat, val, index));
 		} else
 			doSet(left, right, feat);
 	}
 
-	protected void doRemove(EObject left, EObject right,
-			EStructuralFeature feat, Object value) {
+	protected void doRemove(EObject left, EObject right, EStructuralFeature feat, Object value) {
 		if (feat.isMany()) {
 			if (ignoreFeature(feat))
 				return;
 			NamedObject o = getNamedObject(left, right);
 			ListAssignment ass = getListAssignment(o, feat);
-			EList<?> list = (EList<?>) left.eGet(feat);
+			EList<?> list = (EList<?>)left.eGet(feat);
 			int index = list.indexOf(value);
 			ass.getLeftValues().add(getListAssignmentValue(feat, value, index));
 		} else
@@ -185,7 +178,7 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 	protected void fillMatchMap(EList<MatchElement> elements) {
 		for (MatchElement e : elements) {
 			if (e instanceof Match2Elements) {
-				Match2Elements e2 = (Match2Elements) e;
+				Match2Elements e2 = (Match2Elements)e;
 				matchMap.put(e2.getLeftElement(), e2);
 				matchMap.put(e2.getRightElement(), e2);
 			}
@@ -196,26 +189,25 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 	protected void fillUnmatchSet(EList<UnmatchElement> elements) {
 		for (UnmatchElement e : elements) {
 			unmatches.add(e.getElement());
-			for (TreeIterator<EObject> i = e.getElement().eAllContents(); i
-					.hasNext();)
+			for (TreeIterator<EObject> i = e.getElement().eAllContents(); i.hasNext();)
 				unmatches.add(i.next());
 		}
 	}
 
-	protected AssignmentValue getAssignmentValueEObject(EReference ref,
-			EObject eobj) {
+	@Override
+	protected AssignmentValue getAssignmentValueEObject(EReference ref, EObject eobj) {
 		AssignmentValue ass = fc.createAssignmentValue();
 
-//		if (eobj.eIsProxy())
-//			eobj = EcoreUtil.resolve(eobj, ref);
-//		if (eobj.eIsProxy()) // FIXME: is there a better resource set available?
-//			eobj = EcoreUtil.resolve(eobj, diff.getRightRoots().get(0));
+		// if (eobj.eIsProxy())
+		// eobj = EcoreUtil.resolve(eobj, ref);
+		// if (eobj.eIsProxy()) // FIXME: is there a better resource set available?
+		// eobj = EcoreUtil.resolve(eobj, diff.getRightRoots().get(0));
 
 		NamedObject no = getNamedObject(eobj);
 		if (no != null) {
 			if (ref.isContainment()) {
 				if (no instanceof CreatedObject)
-					ass.setNewObject((CreatedObject) no);
+					ass.setNewObject((CreatedObject)no);
 				else
 					ass.setRefObject(no);
 			} else {
@@ -235,8 +227,7 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 
 		Match2Elements m = matchMap.get(object);
 		if (m != null) {
-			if (object != m.getLeftElement()
-					&& (o = objMap.get(m.getLeftElement())) != null)
+			if (object != m.getLeftElement() && (o = objMap.get(m.getLeftElement())) != null)
 				return o;
 			return createObjectRef(m.getLeftElement(), m.getRightElement());
 		} else if (unmatches.contains(object))
@@ -252,13 +243,11 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 	}
 
 	protected void handleAttrChangeLeft(AttributeChangeLeftTarget ele) {
-		doRemove(ele.getLeftElement(), ele.getRightElement(), ele
-				.getAttribute(), ele.getLeftTarget());
+		doRemove(ele.getLeftElement(), ele.getRightElement(), ele.getAttribute(), ele.getLeftTarget());
 	}
 
 	protected void handleAttrChangeRight(AttributeChangeRightTarget ele) {
-		doAdd(ele.getLeftElement(), ele.getRightElement(), ele.getAttribute(),
-				ele.getRightTarget());
+		doAdd(ele.getLeftElement(), ele.getRightElement(), ele.getAttribute(), ele.getRightTarget());
 	}
 
 	protected void handleAttrUpdate(UpdateAttribute ele) {
@@ -290,17 +279,14 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 	}
 
 	protected void handleRefChangeLeft(ReferenceChangeLeftTarget ele) {
-		doRemove(ele.getLeftElement(), ele.getRightElement(), ele
-				.getReference(), ele.getLeftTarget());
+		doRemove(ele.getLeftElement(), ele.getRightElement(), ele.getReference(), ele.getLeftTarget());
 	}
 
 	protected void handleRefChangeRight(ReferenceChangeRightTarget ele) {
-		doAdd(ele.getLeftElement(), ele.getRightElement(), ele.getReference(),
-				ele.getRightTarget());
+		doAdd(ele.getLeftElement(), ele.getRightElement(), ele.getReference(), ele.getRightTarget());
 	}
 
-	protected void handleRefUpdate(
-			UpdateReference ele) {
+	protected void handleRefUpdate(UpdateReference ele) {
 		doSet(ele.getLeftElement(), ele.getRightElement(), ele.getReference());
 	}
 

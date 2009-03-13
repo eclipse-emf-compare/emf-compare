@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.resource.Resource;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public interface EpatchMapping {
-
 	public interface EpatchMappingEntry {
 		public EObject getDst();
 
@@ -44,7 +43,7 @@ public interface EpatchMapping {
 
 	public Map<EObject, EObject> getDstToSrcMap();
 
-	public Map<Import, Resource> getImpotedResources();
+	public Map<Import, Resource> getImportedResources();
 
 	public Map<NamedResource, Resource> getSrcResources();
 

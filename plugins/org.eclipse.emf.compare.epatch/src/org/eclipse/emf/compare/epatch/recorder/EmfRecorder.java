@@ -29,13 +29,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EmfRecorder implements Adapter.Internal {
-
 	public interface RecorderListener {
-//		public void addRootObject(Notifier obj);
+		// public void addRootObject(Notifier obj);
 
-		public void handleFeature(EStructuralFeature feature,
-				EReference containment, Notification notification,
-				EObject object);
+		public void handleFeature(EStructuralFeature feature, EReference containment,
+				Notification notification, EObject object);
 	}
 
 	protected RecorderListener listener;
@@ -66,12 +64,12 @@ public class EmfRecorder implements Adapter.Internal {
 		rootObjects.add(obj);
 		if (recording)
 			addAdapter(obj, true);
-//		listener.addRootObject(obj);
+		// listener.addRootObject(obj);
 	}
 
 	public void beginRecording() {
 		for (Object rootObject : rootObjects) {
-			Notifier notifier = (Notifier) rootObject;
+			Notifier notifier = (Notifier)rootObject;
 			addAdapter(notifier, true);
 		}
 		recording = true;
@@ -83,8 +81,7 @@ public class EmfRecorder implements Adapter.Internal {
 		for (Notifier r : rootObjects.toArray(new Notifier[rootObjects.size()]))
 			removeRootObject(r);
 
-		Notifier[] notifiers = targetObjects.toArray(new Notifier[targetObjects
-				.size()]);
+		Notifier[] notifiers = targetObjects.toArray(new Notifier[targetObjects.size()]);
 		targetObjects.clear();
 		for (Notifier n : notifiers)
 			removeAdapter(n, false);
@@ -103,8 +100,8 @@ public class EmfRecorder implements Adapter.Internal {
 		return null;
 	}
 
-	protected void handleFeature(EStructuralFeature feature,
-			EReference containment, Notification notification, EObject eObject) {
+	protected void handleFeature(EStructuralFeature feature, EReference containment,
+			Notification notification, EObject eObject) {
 
 		listener.handleFeature(feature, containment, notification, eObject);
 
@@ -112,101 +109,96 @@ public class EmfRecorder implements Adapter.Internal {
 			return;
 
 		switch (notification.getEventType()) {
-		case Notification.RESOLVE:
-		case Notification.SET:
-		case Notification.UNSET:
-			Object newValue = notification.getNewValue();
-			if (newValue != null && newValue != Boolean.TRUE
-					&& newValue != Boolean.FALSE)
-				addAdapter((Notifier) newValue, false);
-			break;
+			case Notification.RESOLVE:
+			case Notification.SET:
+			case Notification.UNSET:
+				Object newValue = notification.getNewValue();
+				if (newValue != null && newValue != Boolean.TRUE && newValue != Boolean.FALSE)
+					addAdapter((Notifier)newValue, false);
+				break;
 
-		case Notification.ADD:
-			Notifier newValue1 = (Notifier) notification.getNewValue();
-			addAdapter(newValue1, false);
-			break;
+			case Notification.ADD:
+				Notifier newValue1 = (Notifier)notification.getNewValue();
+				addAdapter(newValue1, false);
+				break;
 
-		case Notification.ADD_MANY:
-			@SuppressWarnings("unchecked")
-			Collection<Notifier> newValues = (Collection<Notifier>) notification
-					.getNewValue();
-			for (Notifier newValue2 : newValues) {
-				addAdapter(newValue2, false);
-			}
-			break;
+			case Notification.ADD_MANY:
+				@SuppressWarnings("unchecked")
+				Collection<Notifier> newValues = (Collection<Notifier>)notification.getNewValue();
+				for (Notifier newValue2 : newValues) {
+					addAdapter(newValue2, false);
+				}
+				break;
 
-		case Notification.REMOVE:
-			// do anything here?
-			break;
+			case Notification.REMOVE:
+				// do anything here?
+				break;
 
-		case Notification.REMOVE_MANY:
-			// do anything here?
-			break;
+			case Notification.REMOVE_MANY:
+				// do anything here?
+				break;
 
-		case Notification.MOVE:
-			break;
+			case Notification.MOVE:
+				break;
 
 		}
 	}
 
 	protected void handleResource(Resource resource, Notification notification) {
 		switch (notification.getFeatureID(Resource.class)) {
-		case Resource.RESOURCE__CONTENTS:
-			if (!((Resource.Internal) resource).isLoading()) {
-				int eventType = notification.getEventType();
-				switch (eventType) {
-				case Notification.SET:
-				case Notification.UNSET:
-					Notifier newValue = (Notifier) notification.getNewValue();
-					if (newValue != null)
-						addAdapter(newValue, false);
-					break;
-				case Notification.ADD:
-					Notifier newValue1 = (Notifier) notification.getNewValue();
-					addAdapter(newValue1, false);
-					break;
-				case Notification.ADD_MANY:
-					@SuppressWarnings("unchecked")
-					Collection<Notifier> newValues = (Collection<Notifier>) notification
-							.getNewValue();
-					for (Notifier newValue2 : newValues)
-						addAdapter(newValue2, false);
-					break;
-				case Notification.REMOVE:
-					// do anything?
-					break;
-				case Notification.REMOVE_MANY:
-					// do anything?
-					break;
+			case Resource.RESOURCE__CONTENTS:
+				if (!((Resource.Internal)resource).isLoading()) {
+					int eventType = notification.getEventType();
+					switch (eventType) {
+						case Notification.SET:
+						case Notification.UNSET:
+							Notifier newValue = (Notifier)notification.getNewValue();
+							if (newValue != null)
+								addAdapter(newValue, false);
+							break;
+						case Notification.ADD:
+							Notifier newValue1 = (Notifier)notification.getNewValue();
+							addAdapter(newValue1, false);
+							break;
+						case Notification.ADD_MANY:
+							@SuppressWarnings("unchecked")
+							Collection<Notifier> newValues = (Collection<Notifier>)notification.getNewValue();
+							for (Notifier newValue2 : newValues)
+								addAdapter(newValue2, false);
+							break;
+						case Notification.REMOVE:
+							// do anything?
+							break;
+						case Notification.REMOVE_MANY:
+							// do anything?
+							break;
 
-				case Notification.MOVE:
-					break;
+						case Notification.MOVE:
+							break;
+					}
 				}
-			}
-		case Resource.RESOURCE__IS_LOADED:
-			for (Notifier content : resource.getContents())
-				addAdapter(content, false);
-			break;
+			case Resource.RESOURCE__IS_LOADED:
+				for (Notifier content : resource.getContents())
+					addAdapter(content, false);
+				break;
 		}
 	}
 
-	protected void handleResourceSet(ResourceSet resourceSet,
-			Notification notification) {
+	protected void handleResourceSet(ResourceSet resourceSet, Notification notification) {
 		if (notification.getFeatureID(ResourceSet.class) == ResourceSet.RESOURCE_SET__RESOURCES) {
 			switch (notification.getEventType()) {
-			case Notification.ADD:
-			case Notification.SET:
-				// case Notification.REMOVE:
-				Resource resource = (Resource) notification.getNewValue();
-				addAdapter(resource, false);
-				break;
-			case Notification.ADD_MANY:
-				// case Notification.REMOVE_MANY:
-				@SuppressWarnings("unchecked")
-				Collection<Resource> resources = (Collection<Resource>) notification
-						.getNewValue();
-				for (Resource resource1 : resources)
-					addAdapter(resource1, false);
+				case Notification.ADD:
+				case Notification.SET:
+					// case Notification.REMOVE:
+					Resource resource = (Resource)notification.getNewValue();
+					addAdapter(resource, false);
+					break;
+				case Notification.ADD_MANY:
+					// case Notification.REMOVE_MANY:
+					@SuppressWarnings("unchecked")
+					Collection<Resource> resources = (Collection<Resource>)notification.getNewValue();
+					for (Resource resource1 : resources)
+						addAdapter(resource1, false);
 			}
 		}
 
@@ -233,18 +225,16 @@ public class EmfRecorder implements Adapter.Internal {
 		if (notifier instanceof EObject) {
 			Object feature = notification.getFeature();
 			if (feature instanceof EReference) {
-				EReference eReference = (EReference) feature;
-				handleFeature(eReference,
-						eReference.isContainment() ? eReference : null,
-						notification, (EObject) notifier);
+				EReference eReference = (EReference)feature;
+				handleFeature(eReference, eReference.isContainment() ? eReference : null, notification,
+						(EObject)notifier);
 			} else if (feature != null) {
-				handleFeature((EStructuralFeature) feature, null, notification,
-						(EObject) notifier);
+				handleFeature((EStructuralFeature)feature, null, notification, (EObject)notifier);
 			}
 		} else if (notifier instanceof Resource)
-			handleResource((Resource) notifier, notification);
+			handleResource((Resource)notifier, notification);
 		else if (notifier instanceof ResourceSet)
-			handleResourceSet((ResourceSet) notifier, notification);
+			handleResourceSet((ResourceSet)notifier, notification);
 	}
 
 	protected void removeAdapter(Notifier notifier, boolean isRoot) {
@@ -263,21 +253,16 @@ public class EmfRecorder implements Adapter.Internal {
 
 	public void setTarget(Notifier target) {
 		if (!targetObjects.add(target))
-			throw new IllegalStateException(
-					"The target should not be set more than once");
+			throw new IllegalStateException("The target should not be set more than once");
 
-		Iterator<?> contents = target instanceof EObject ? resolveProxies ? ((EObject) target)
-				.eContents().iterator()
-				: ((InternalEList<?>) ((EObject) target).eContents())
-						.basicIterator()
-				: target instanceof ResourceSet ? ((ResourceSet) target)
-						.getResources().iterator()
-						: target instanceof Resource ? ((Resource) target)
-								.getContents().iterator() : null;
+		Iterator<?> contents = target instanceof EObject ? resolveProxies ? ((EObject)target).eContents()
+				.iterator() : ((InternalEList<?>)((EObject)target).eContents()).basicIterator()
+				: target instanceof ResourceSet ? ((ResourceSet)target).getResources().iterator()
+						: target instanceof Resource ? ((Resource)target).getContents().iterator() : null;
 
 		if (contents != null)
 			while (contents.hasNext()) {
-				Notifier notifier = (Notifier) contents.next();
+				Notifier notifier = (Notifier)contents.next();
 				addAdapter(notifier, false);
 			}
 	}

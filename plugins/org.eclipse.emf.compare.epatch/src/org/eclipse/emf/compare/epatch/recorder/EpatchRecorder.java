@@ -48,9 +48,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 /**
  * @author Moritz Eysholdt - Initial contribution and API
  */
-public class EpatchRecorder extends AbstractEpatchBuilder implements
-		RecorderListener {
-
+public class EpatchRecorder extends AbstractEpatchBuilder implements RecorderListener {
 	protected Map<EObject, String> fragMap = new HashMap<EObject, String>();
 
 	protected EmfRecorder recorder = new EmfRecorder(this);
@@ -68,11 +66,9 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		epatch = createEpatch(name);
 	}
 
-	protected void addListAddAssignments(ListAssignment ass,
-			Collection<AssignmentValue> addValues) {
-		boolean c = isCreate((NamedObject) ass.eContainer());
-		EList<AssignmentValue> list = c ? ass.getLeftValues() : ass
-				.getRightValues();
+	protected void addListAddAssignments(ListAssignment ass, Collection<AssignmentValue> addValues) {
+		boolean c = isCreate((NamedObject)ass.eContainer());
+		EList<AssignmentValue> list = c ? ass.getLeftValues() : ass.getRightValues();
 		for (AssignmentValue newV : addValues)
 			if (c)
 				newV.setIndex(0);
@@ -85,15 +81,13 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 			ECollections.sort(list, EpatchUtil.ASS_VAL_SORTER_ASC);
 	}
 
-	protected void addListRemoveAssignments(ListAssignment ass,
-			Collection<AssignmentValue> values) {
+	protected void addListRemoveAssignments(ListAssignment ass, Collection<AssignmentValue> values) {
 		for (AssignmentValue newV : values) {
 			int oldindex;
 			for (AssignmentValue oldV : ass.getRightValues())
 				if (oldV.getIndex() > newV.getIndex())
 					oldV.setIndex(oldV.getIndex() - 1);
-			List<AssignmentValue> vals = new ArrayList<AssignmentValue>(ass
-					.getLeftValues());
+			List<AssignmentValue> vals = new ArrayList<AssignmentValue>(ass.getLeftValues());
 			do {
 				oldindex = newV.getIndex();
 				for (Iterator<AssignmentValue> i = vals.iterator(); i.hasNext();)
@@ -110,17 +104,16 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 	public void addRootObject(Notifier obj) {
 		recorder.addRootObject(obj);
 		if (obj instanceof ResourceSet)
-			for (Resource r : ((ResourceSet) obj).getResources())
+			for (Resource r : ((ResourceSet)obj).getResources())
 				for (EObject o : r.getContents())
 					addToFragMap(o);
 		else if (obj instanceof Resource)
-			for (EObject o : ((Resource) obj).getContents())
+			for (EObject o : ((Resource)obj).getContents())
 				addToFragMap(o);
 		else if (obj instanceof EObject)
-			addToFragMap((EObject) obj);
+			addToFragMap((EObject)obj);
 		else
-			throw new RuntimeException("Unknown observable type "
-					+ obj.getClass());
+			throw new RuntimeException("Unknown observable type " + obj.getClass());
 	}
 
 	protected void addToFragMap(EObject obj) {
@@ -141,7 +134,7 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 	protected void consolidateObjectRefs() {
 		for (Entry<EObject, NamedObject> e : objMap.entrySet()) {
 			if (e.getValue() instanceof ObjectRef) {
-				ObjectRef or = (ObjectRef) e.getValue();
+				ObjectRef or = (ObjectRef)e.getValue();
 				EObject eo = e.getKey();
 				NamedResource nres = getResource(eo.eResource());
 				String nfrag = eo.eResource().getURIFragment(eo);
@@ -169,16 +162,15 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		return getRecorded();
 	}
 
-	protected AssignmentValue getAssignmentMoveValue(EStructuralFeature feat,
-			int index, int refIndex) {
+	protected AssignmentValue getAssignmentMoveValue(EStructuralFeature feat, int index, int refIndex) {
 		AssignmentValue ass = fc.createAssignmentValue();
 		ass.setIndex(index);
 		ass.setRefIndex(refIndex);
 		return ass;
 	}
 
-	protected AssignmentValue getAssignmentValueEObject(EReference ref,
-			EObject eobj) {
+	@Override
+	protected AssignmentValue getAssignmentValueEObject(EReference ref, EObject eobj) {
 		AssignmentValue ass = fc.createAssignmentValue();
 		// if (eobj.eIsProxy())
 		// eobj = EcoreUtil.resolve(eobj, ref);
@@ -197,7 +189,7 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 	}
 
 	protected ObjectNew getObjectNew(EObject obj) {
-		ObjectNew o = (ObjectNew) objMap.get(obj);
+		ObjectNew o = (ObjectNew)objMap.get(obj);
 		return o == null ? createObjectNew(obj) : o;
 	}
 
@@ -209,11 +201,11 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 			objMap.remove(eobj);
 			NamedObject r = getObjectRef(eobj);
 			if (o.eContainer() instanceof AssignmentValue) {
-				AssignmentValue oldAss = (AssignmentValue) o.eContainer();
+				AssignmentValue oldAss = (AssignmentValue)o.eContainer();
 				oldAss.eUnset(o.eContainmentFeature());
 				oldAss.setRefObject(r);
 			}
-			removeIfNotNeededAnymore(((ObjectNew) o).getImport());
+			removeIfNotNeededAnymore(((ObjectNew)o).getImport());
 			removeUnneededObjectRefs();
 			removeUnneededResources();
 			return r;
@@ -250,8 +242,8 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		return r;
 	}
 
-	public void handleFeature(EStructuralFeature feature,
-			EReference containment, Notification notification, EObject object) {
+	public void handleFeature(EStructuralFeature feature, EReference containment, Notification notification,
+			EObject object) {
 
 		if (notification.isTouch() || feature.isTransient())
 			return;
@@ -269,79 +261,69 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		if (feature.isMany()) {
 			ListAssignment a = getListAssignment(obj, feature);
 			switch (notification.getEventType()) {
-			case Notification.RESOLVE:
-				break;
-			case Notification.SET:
-				addListRemoveAssignments(a, Collections
-						.singleton(getListAssignmentValue(feature, oldv, pos)));
-				addListAddAssignments(a, Collections
-						.singleton(getListAssignmentValue(feature, newv, pos)));
-				break;
-			case Notification.UNSET:
-				throw new RuntimeException(
-						"unhandeled Notification.UNSET for multi-features");
-			case Notification.ADD:
-				addListAddAssignments(a, Collections
-						.singleton(getListAssignmentValue(feature, newv, pos)));
-				break;
-			case Notification.ADD_MANY:
-				// TODO: implement
-				throw new RuntimeException(
-						"unhandeled Notification.ADD_MANY for multi-features");
-			case Notification.REMOVE:
-				addListRemoveAssignments(a, Collections
-						.singleton(getListAssignmentValue(feature, oldv, pos)));
-				break;
-			case Notification.REMOVE_MANY:
-				// TODO: implement
-				throw new RuntimeException(
-						"unhandeled Notification.REMOVE_MANY for multi-features");
-			case Notification.MOVE:
-				int oldPos = (Integer) oldv;
-				addListRemoveAssignments(a,
-						Collections.singleton(getAssignmentMoveValue(feature,
-								oldPos, pos)));
-				addListAddAssignments(a,
-						Collections.singleton(getAssignmentMoveValue(feature,
-								pos, oldPos)));
+				case Notification.RESOLVE:
+					break;
+				case Notification.SET:
+					addListRemoveAssignments(a, Collections.singleton(getListAssignmentValue(feature, oldv,
+							pos)));
+					addListAddAssignments(a, Collections
+							.singleton(getListAssignmentValue(feature, newv, pos)));
+					break;
+				case Notification.UNSET:
+					throw new RuntimeException("unhandeled Notification.UNSET for multi-features");
+				case Notification.ADD:
+					addListAddAssignments(a, Collections
+							.singleton(getListAssignmentValue(feature, newv, pos)));
+					break;
+				case Notification.ADD_MANY:
+					// TODO: implement
+					throw new RuntimeException("unhandeled Notification.ADD_MANY for multi-features");
+				case Notification.REMOVE:
+					addListRemoveAssignments(a, Collections.singleton(getListAssignmentValue(feature, oldv,
+							pos)));
+					break;
+				case Notification.REMOVE_MANY:
+					// TODO: implement
+					throw new RuntimeException("unhandeled Notification.REMOVE_MANY for multi-features");
+				case Notification.MOVE:
+					int oldPos = (Integer)oldv;
+					addListRemoveAssignments(a, Collections.singleton(getAssignmentMoveValue(feature, oldPos,
+							pos)));
+					addListAddAssignments(a, Collections.singleton(getAssignmentMoveValue(feature, pos,
+							oldPos)));
 			}
 		} else {
 			SingleAssignment a = getSingleAssignment(obj, feature);
 			switch (notification.getEventType()) {
-			case Notification.RESOLVE:
-				break;
-			case Notification.SET:
-				if (isCreate(obj))
-					a.setLeftValue(getAssignmentValue(feature, newv));
-				else {
-					if (a.getLeftValue() == null)
+				case Notification.RESOLVE:
+					break;
+				case Notification.SET:
+					if (isCreate(obj))
+						a.setLeftValue(getAssignmentValue(feature, newv));
+					else {
+						if (a.getLeftValue() == null)
+							a.setLeftValue(getAssignmentValue(feature, oldv));
+						a.setRightValue(getAssignmentValue(feature, newv));
+					}
+					break;
+				case Notification.UNSET:
+					if (isCreate(obj))
+						a.setLeftValue(getAssignmentValue(feature, null));
+					else {
 						a.setLeftValue(getAssignmentValue(feature, oldv));
-					a.setRightValue(getAssignmentValue(feature, newv));
-				}
-				break;
-			case Notification.UNSET:
-				if (isCreate(obj))
-					a.setLeftValue(getAssignmentValue(feature, null));
-				else {
-					a.setLeftValue(getAssignmentValue(feature, oldv));
-					a.setRightValue(getAssignmentValue(feature, null));
-				}
-				break;
-			case Notification.ADD:
-				throw new RuntimeException(
-						"unhandeled Notification.ADD for single-features");
-			case Notification.ADD_MANY:
-				throw new RuntimeException(
-						"unhandeled Notification.ADD_MANY for single-features");
-			case Notification.REMOVE:
-				throw new RuntimeException(
-						"unhandeled Notification.REMOVE for single-features");
-			case Notification.REMOVE_MANY:
-				throw new RuntimeException(
-						"unhandeled Notification.REMOVE_MANY for single-features");
-			case Notification.MOVE:
-				throw new RuntimeException(
-						"unhandeled Notification.MOVE for single-features");
+						a.setRightValue(getAssignmentValue(feature, null));
+					}
+					break;
+				case Notification.ADD:
+					throw new RuntimeException("unhandeled Notification.ADD for single-features");
+				case Notification.ADD_MANY:
+					throw new RuntimeException("unhandeled Notification.ADD_MANY for single-features");
+				case Notification.REMOVE:
+					throw new RuntimeException("unhandeled Notification.REMOVE for single-features");
+				case Notification.REMOVE_MANY:
+					throw new RuntimeException("unhandeled Notification.REMOVE_MANY for single-features");
+				case Notification.MOVE:
+					throw new RuntimeException("unhandeled Notification.MOVE for single-features");
 			}
 		}
 
@@ -357,8 +339,7 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 			return false;
 		EReference r = o.eContainer().eContainmentFeature();
 		EpatchPackage p = EpatchPackage.eINSTANCE;
-		return r == p.getSingleAssignment_LeftValue()
-				|| r == p.getListAssignment_LeftValues();
+		return r == p.getSingleAssignment_LeftValue() || r == p.getListAssignment_LeftValues();
 	}
 
 	protected String newURI(String uri) {
@@ -372,10 +353,9 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 	protected void removeIfNotNeededAnymore(Import imp) {
 		for (TreeIterator<EObject> i = epatch.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
-			if (o instanceof ObjectNew && ((ObjectNew) o).getImport() == imp)
+			if (o instanceof ObjectNew && ((ObjectNew)o).getImport() == imp)
 				return;
-			if (o instanceof AssignmentValue
-					&& ((AssignmentValue) o).getImport() == imp)
+			if (o instanceof AssignmentValue && ((AssignmentValue)o).getImport() == imp)
 				return;
 		}
 		epatch.getImports().remove(imp);
@@ -386,13 +366,12 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		for (TreeIterator<EObject> i = epatch.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
 			if (o instanceof AssignmentValue) {
-				NamedObject n = ((AssignmentValue) o).getRefObject();
+				NamedObject n = ((AssignmentValue)o).getRefObject();
 				if (n != null)
 					refs.add(n);
 			}
 		}
-		for (Iterator<ObjectRef> i = epatch.getObjects().iterator(); i
-				.hasNext();) {
+		for (Iterator<ObjectRef> i = epatch.getObjects().iterator(); i.hasNext();) {
 			ObjectRef o = i.next();
 			if (o.getAssignments().size() == 0 && !refs.contains(o))
 				i.remove();
@@ -404,19 +383,17 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements
 		for (TreeIterator<EObject> i = epatch.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
 			if (o instanceof ObjectRef) {
-				ObjectRef r = (ObjectRef) o;
+				ObjectRef r = (ObjectRef)o;
 				if (r.getLeftRes() != null)
 					refs.add(r.getLeftRes());
 				if (r.getRightRes() != null)
 					refs.add(r.getRightRes());
 			} else if (o instanceof ObjectCopy)
-				refs.add(((ObjectCopy) o).getResource());
+				refs.add(((ObjectCopy)o).getResource());
 		}
-		for (Iterator<NamedResource> i = epatch.getResources().iterator(); i
-				.hasNext();) {
+		for (Iterator<NamedResource> i = epatch.getResources().iterator(); i.hasNext();) {
 			NamedResource o = i.next();
-			if (o.getLeftRoot() == null && o.getRightRoot() == null
-					&& !refs.contains(o))
+			if (o.getLeftRoot() == null && o.getRightRoot() == null && !refs.contains(o))
 				i.remove();
 		}
 	}

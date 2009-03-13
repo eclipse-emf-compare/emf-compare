@@ -20,9 +20,7 @@ import org.eclipse.emf.compare.epatch.SingleAssignment;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public interface EpatchApplyStrategy {
-
 	public static class EpatchLeftToRightStrategy implements EpatchApplyStrategy {
-
 		protected EpatchLeftToRightStrategy() {
 		}
 
@@ -60,20 +58,17 @@ public interface EpatchApplyStrategy {
 	}
 
 	public static class EpatchRightToLeftStrategy implements EpatchApplyStrategy {
-
 		protected EpatchRightToLeftStrategy() {
 		}
 
 		public String getInputFragment(ObjectRef obj) {
-			return (obj.getRightFrag() != null && obj.getRightRes() != null) ? obj
-					.getRightFrag()
-					: obj.getLeftFrag();
+			return obj.getRightFrag() != null && obj.getRightRes() != null ? obj.getRightFrag() : obj
+					.getLeftFrag();
 		}
 
 		public NamedResource getInputResource(ObjectRef obj) {
-			return (obj.getRightFrag() != null && obj.getRightRes() != null) ? obj
-					.getRightRes()
-					: obj.getLeftRes();
+			return obj.getRightFrag() != null && obj.getRightRes() != null ? obj.getRightRes() : obj
+					.getLeftRes();
 		}
 
 		public String getInputURI(NamedResource res) {
@@ -108,12 +103,12 @@ public interface EpatchApplyStrategy {
 
 		public final static EpatchApplyStrategy get(ApplyStrategy strategy) {
 			switch (strategy) {
-			case LEFT_TO_RIGHT:
-				return LEFT_TO_RIGHT;
-			case RIGHT_TO_LEFT:
-				return RIGHT_TO_LEFT;
-			default:
-				throw new RuntimeException();
+				case LEFT_TO_RIGHT:
+					return LEFT_TO_RIGHT;
+				case RIGHT_TO_LEFT:
+					return RIGHT_TO_LEFT;
+				default:
+					throw new RuntimeException();
 			}
 		}
 	}

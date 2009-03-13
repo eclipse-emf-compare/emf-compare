@@ -34,30 +34,26 @@ public class EpatchUtil {
 		}
 
 		public int compare(AssignmentValue o1, AssignmentValue o2) {
-			return (o1.getIndex() < o2.getIndex()) ? up : ((o1.getIndex() == o2
-					.getIndex()) ? 0 : down);
+			return o1.getIndex() < o2.getIndex() ? up : o1.getIndex() == o2.getIndex() ? 0 : down;
 		}
 	}
 
 	public static class ObjSorter implements Comparator<NamedObject> {
-
 		public int compare(NamedObject o1, NamedObject o2) {
 			int r = 0;
 			if (o1.getName() != null && o2.getName() != null)
 				r = o1.getName().compareToIgnoreCase(o2.getName());
-			else if ((o1.getName() == null) != (o2.getName() == null))
+			else if (o1.getName() == null != (o2.getName() == null))
 				return o1.getName() != null ? 1 : -1;
 			if (r != 0)
 				return r;
 
 			if (o1 instanceof ObjectRef && o2 instanceof ObjectRef) {
-				ObjectRef r1 = (ObjectRef) o1;
-				ObjectRef r2 = (ObjectRef) o2;
+				ObjectRef r1 = (ObjectRef)o1;
+				ObjectRef r2 = (ObjectRef)o2;
 				if (r1.getLeftRes() != null && r2.getLeftRes() != null) {
-					r = r1.getLeftRes().getName().compareTo(
-							r2.getLeftRes().getName());
-					return r != 0 ? r : r1.getLeftFrag().compareTo(
-							r2.getLeftFrag());
+					r = r1.getLeftRes().getName().compareTo(r2.getLeftRes().getName());
+					return r != 0 ? r : r1.getLeftFrag().compareTo(r2.getLeftFrag());
 				}
 			}
 			return 0;

@@ -36,10 +36,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public abstract class AbstractEpatchBuilder {
-
 	protected static class NamingTool<T> {
 		private String def;
+
 		private Map<String, List<T>> nameMap = new HashMap<String, List<T>>();
+
 		private Map<T, String> objMap = new HashMap<T, String>();
 
 		public NamingTool(String def) {
@@ -117,7 +118,7 @@ public abstract class AbstractEpatchBuilder {
 				continue;
 			if (f.isMany()) {
 				ListAssignment ass = getListAssignment(o, f);
-				for (Object v : (List<?>) obj.eGet(f))
+				for (Object v : (List<?>)obj.eGet(f))
 					ass.getLeftValues().add(getAssignmentValue(f, v));
 			} else {
 				SingleAssignment ass = getSingleAssignment(o, f);
@@ -132,7 +133,7 @@ public abstract class AbstractEpatchBuilder {
 		for (TreeIterator<EObject> i = epatch.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
 			if (o instanceof AssignmentValue) {
-				AssignmentValue la = (AssignmentValue) o;
+				AssignmentValue la = (AssignmentValue)o;
 				if (la.getRefObject() != null)
 					needName.add(la.getRefObject());
 			}
@@ -150,19 +151,17 @@ public abstract class AbstractEpatchBuilder {
 			objMap.get(e.getKey()).setName(e.getValue());
 	}
 
-	protected AssignmentValue getAssignmentValue(EStructuralFeature feat,
-			Object value) {
+	protected AssignmentValue getAssignmentValue(EStructuralFeature feat, Object value) {
 		if (value == null)
 			return getAssignmentValueNull();
 		else if (feat instanceof EAttribute)
-			return getAssignmentValueDataType((EAttribute) feat, value);
+			return getAssignmentValueDataType((EAttribute)feat, value);
 		else if (feat instanceof EReference)
-			return getAssignmentValueEObject((EReference) feat, (EObject) value);
+			return getAssignmentValueEObject((EReference)feat, (EObject)value);
 		throw new RuntimeException("UnknownfFeature type:" + feat);
 	}
 
-	protected AssignmentValue getAssignmentValueDataType(EAttribute attr,
-			Object value) {
+	protected AssignmentValue getAssignmentValueDataType(EAttribute attr, Object value) {
 		AssignmentValue ass = fc.createAssignmentValue();
 		EFactory f = attr.getEType().getEPackage().getEFactoryInstance();
 		String strVal = f.convertToString(attr.getEAttributeType(), value);
@@ -170,8 +169,7 @@ public abstract class AbstractEpatchBuilder {
 		return ass;
 	}
 
-	protected abstract AssignmentValue getAssignmentValueEObject(
-			EReference ref, EObject eobj);
+	protected abstract AssignmentValue getAssignmentValueEObject(EReference ref, EObject eobj);
 
 	protected AssignmentValue getAssignmentValueNull() {
 		AssignmentValue ass = fc.createAssignmentValue();
@@ -181,7 +179,7 @@ public abstract class AbstractEpatchBuilder {
 
 	protected String getFragment(EObject obj) {
 		if (obj.eIsProxy())
-			return ((InternalEObject) obj).eProxyURI().fragment();
+			return ((InternalEObject)obj).eProxyURI().fragment();
 		return obj.eResource().getURIFragment(obj);
 	}
 
@@ -192,11 +190,10 @@ public abstract class AbstractEpatchBuilder {
 		int counter = -1;
 		String name;
 		do {
-			name = (counter++ == -1) ? base : base + counter;
+			name = counter++ == -1 ? base : base + counter;
 			found = false;
 			for (Import i : epatch.getImports())
-				if (i instanceof ModelImport
-						&& ((ModelImport) i).getName().equals(name)) {
+				if (i instanceof ModelImport && ((ModelImport)i).getName().equals(name)) {
 					found = true;
 					break;
 				}
@@ -204,12 +201,10 @@ public abstract class AbstractEpatchBuilder {
 		return name;
 	}
 
-	protected ListAssignment getListAssignment(NamedObject obj,
-			EStructuralFeature feat) {
+	protected ListAssignment getListAssignment(NamedObject obj, EStructuralFeature feat) {
 		for (Assignment a : obj.getAssignments())
-			if (a instanceof ListAssignment
-					&& a.getFeature().equals(feat.getName()))
-				return (ListAssignment) a;
+			if (a instanceof ListAssignment && a.getFeature().equals(feat.getName()))
+				return (ListAssignment)a;
 
 		ListAssignment a = fc.createListAssignment();
 		a.setFeature(feat.getName());
@@ -217,8 +212,7 @@ public abstract class AbstractEpatchBuilder {
 		return a;
 	}
 
-	protected AssignmentValue getListAssignmentValue(EStructuralFeature feat,
-			Object value, int index) {
+	protected AssignmentValue getListAssignmentValue(EStructuralFeature feat, Object value, int index) {
 		AssignmentValue ass = getAssignmentValue(feat, value);
 		ass.setIndex(index);
 		return ass;
@@ -232,8 +226,8 @@ public abstract class AbstractEpatchBuilder {
 	}
 
 	protected Import getImportRef(EObject obj) {
-		URI uri = obj.eIsProxy() ? ((InternalEObject) obj).eProxyURI()
-				.trimFragment() : obj.eResource().getURI();
+		URI uri = obj.eIsProxy() ? ((InternalEObject)obj).eProxyURI().trimFragment() : obj.eResource()
+				.getURI();
 		System.out.println("requesting " + uri);
 		Import imp = importMap.get(uri);
 		if (imp != null)
@@ -246,15 +240,15 @@ public abstract class AbstractEpatchBuilder {
 		} else {
 			EObject p = obj.eResource().getContents().get(0);
 			if (p instanceof EPackage
-					&& ("file".equals(uri.scheme()) || ((EPackage) p)
-							.getNsURI().equals(uri.toString()))) { // FIXME:
-																	// find a
-																	// better
-																	// criteria
-																	// for this
-																	// decision
+					&& ("file".equals(uri.scheme()) || ((EPackage)p).getNsURI().equals(uri.toString()))) { // FIXME
+				// :
+				// find a
+				// better
+				// criteria
+				// for this
+				// decision
 				EPackageImport ei = fc.createEPackageImport();
-				EPackage ep = (EPackage) p;
+				EPackage ep = (EPackage)p;
 				ei.setName(getImportName(ep.getNsPrefix()));
 				ei.setNsURI(ep.getNsURI());
 				imp = ei;
@@ -270,12 +264,10 @@ public abstract class AbstractEpatchBuilder {
 		return imp;
 	}
 
-	protected SingleAssignment getSingleAssignment(NamedObject obj,
-			EStructuralFeature feat) {
+	protected SingleAssignment getSingleAssignment(NamedObject obj, EStructuralFeature feat) {
 		for (Assignment a : obj.getAssignments())
-			if (a instanceof SingleAssignment
-					&& a.getFeature().equals(feat.getName()))
-				return (SingleAssignment) a;
+			if (a instanceof SingleAssignment && a.getFeature().equals(feat.getName()))
+				return (SingleAssignment)a;
 
 		SingleAssignment a = fc.createSingleAssignment();
 		a.setFeature(feat.getName());
@@ -285,8 +277,7 @@ public abstract class AbstractEpatchBuilder {
 
 	protected boolean ignoreFeature(EStructuralFeature feat) {
 		return feat == EcorePackage.eINSTANCE.getEClass_EGenericSuperTypes()
-				|| feat == EcorePackage.eINSTANCE
-						.getETypedElement_EGenericType();
+				|| feat == EcorePackage.eINSTANCE.getETypedElement_EGenericType();
 	}
 
 	protected void sortAssignmentValue(AssignmentValue av) {
@@ -304,17 +295,15 @@ public abstract class AbstractEpatchBuilder {
 		ECollections.sort(obj.getAssignments(), EpatchUtil.ASS_SORTER);
 		for (Assignment a : obj.getAssignments()) {
 			if (a instanceof ListAssignment) {
-				ListAssignment la = (ListAssignment) a;
-				ECollections.sort(la.getLeftValues(),
-						EpatchUtil.ASS_VAL_SORTER_DESC);
-				ECollections.sort(la.getRightValues(),
-						EpatchUtil.ASS_VAL_SORTER_ASC);
+				ListAssignment la = (ListAssignment)a;
+				ECollections.sort(la.getLeftValues(), EpatchUtil.ASS_VAL_SORTER_DESC);
+				ECollections.sort(la.getRightValues(), EpatchUtil.ASS_VAL_SORTER_ASC);
 				for (AssignmentValue av : la.getLeftValues())
 					sortAssignmentValue(av);
 				for (AssignmentValue av : la.getRightValues())
 					sortAssignmentValue(av);
 			} else {
-				SingleAssignment sa = (SingleAssignment) a;
+				SingleAssignment sa = (SingleAssignment)a;
 				sortAssignmentValue(sa.getLeftValue());
 				sortAssignmentValue(sa.getRightValue());
 			}

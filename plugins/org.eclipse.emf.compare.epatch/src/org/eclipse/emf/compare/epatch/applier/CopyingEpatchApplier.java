@@ -49,15 +49,15 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class CopyingEpatchApplier {
-
 	public class TriMap implements EpatchMapping {
 		private Map<EObject, TriMapEntry> dst = new HashMap<EObject, TriMapEntry>();
+
 		private Map<NamedObject, TriMapEntry> ptc = new HashMap<NamedObject, TriMapEntry>();
+
 		private Map<EObject, TriMapEntry> src = new HashMap<EObject, TriMapEntry>();
 
 		public Set<EpatchMappingEntry> getAllEntries() {
-			Set<EpatchMappingEntry> entries = new HashSet<EpatchMappingEntry>(
-					src.values());
+			Set<EpatchMappingEntry> entries = new HashSet<EpatchMappingEntry>(src.values());
 			entries.addAll(dst.values());
 			entries.addAll(ptc.values());
 			return entries;
@@ -103,7 +103,7 @@ public class CopyingEpatchApplier {
 			return outputResources;
 		}
 
-		public Map<Import, Resource> getImpotedResources() {
+		public Map<Import, Resource> getImportedResources() {
 			return imports;
 		}
 
@@ -118,7 +118,9 @@ public class CopyingEpatchApplier {
 
 	public class TriMapEntry implements EpatchMappingEntry {
 		private EObject dst;
+
 		private NamedObject ptc;
+
 		private EObject src;
 
 		public TriMapEntry(EObject src, EObject dst, NamedObject ptc) {
@@ -157,6 +159,7 @@ public class CopyingEpatchApplier {
 	}
 
 	protected EpatchApplyStrategy dir;
+
 	protected ApplyStrategy strategy;
 
 	protected Epatch epatch;
@@ -171,10 +174,8 @@ public class CopyingEpatchApplier {
 
 	protected EpatchMapping triMap;
 
-	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch,
-			Map<Import, Resource> imports,
-			Map<NamedResource, Resource> inputResources,
-			ResourceSet outputResourceSet) {
+	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch, Map<Import, Resource> imports,
+			Map<NamedResource, Resource> inputResources, ResourceSet outputResourceSet) {
 		super();
 		this.strategy = strategy;
 		this.dir = EpatchApplyStrategy.Util.get(strategy);
@@ -184,8 +185,7 @@ public class CopyingEpatchApplier {
 		this.outputResourceSet = outputResourceSet;
 	}
 
-	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch,
-			ResourceSet inputResourceSet) {
+	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch, ResourceSet inputResourceSet) {
 		super();
 		this.strategy = strategy;
 		this.dir = EpatchApplyStrategy.Util.get(strategy);
@@ -206,8 +206,7 @@ public class CopyingEpatchApplier {
 		for (NamedResource nr : epatch.getResources()) {
 			Resource res = outputResources.get(nr);
 			EObject src = inputResources.get(nr).getContents().get(0);
-			res.getContents().add(
-					getDestObject(src, dir.getOutputRoot(nr), true));
+			res.getContents().add(getDestObject(src, dir.getOutputRoot(nr), true));
 		}
 	}
 
@@ -218,17 +217,16 @@ public class CopyingEpatchApplier {
 				mapObject(r.getRightRoot());
 		}
 		for (ObjectRef nobj : epatch.getObjects()) {
-			EObject eobj = getEObject(dir.getInputResource(nobj), dir
-					.getInputFragment(nobj));
+			EObject eobj = getEObject(dir.getInputResource(nobj), dir.getInputFragment(nobj));
 			mapObject(eobj, nobj);
 			for (Assignment ass : nobj.getAssignments()) {
 				if (ass instanceof SingleAssignment) {
-					SingleAssignment sa = (SingleAssignment) ass;
+					SingleAssignment sa = (SingleAssignment)ass;
 					CreatedObject co = dir.getOutputValue(sa).getNewObject();
 					if (co != null)
 						mapObject(co);
 				} else if (ass instanceof ListAssignment) {
-					ListAssignment la = (ListAssignment) ass;
+					ListAssignment la = (ListAssignment)ass;
 					for (AssignmentValue av : dir.getOutputValues(la)) {
 						CreatedObject co = av.getNewObject();
 						if (co != null)
@@ -246,8 +244,7 @@ public class CopyingEpatchApplier {
 				URI uri = URI.createURI(dir.getOutputURI(res));
 				Resource r = outputResourceSet.createResource(uri);
 				if (r == null)
-					throw new RuntimeException(
-							"Failed to create resource for URI " + uri);
+					throw new RuntimeException("Failed to create resource for URI " + uri);
 				outputResources.put(res, r);
 			}
 	}
@@ -260,27 +257,22 @@ public class CopyingEpatchApplier {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected Object getAssignmentValue(EStructuralFeature feat,
-			AssignmentValue val) {
+	protected Object getAssignmentValue(EStructuralFeature feat, AssignmentValue val) {
 		if (val.getKeyword() != null)
 			return null;
 		if (val.getNewObject() != null)
-			return getDestObject(null, val.getNewObject(), ((EReference) feat)
-					.isContainment());
+			return getDestObject(null, val.getNewObject(), ((EReference)feat).isContainment());
 		if (val.getValue() != null) {
-			EDataType dt = (EDataType) feat.getEType();
-			return dt.getEPackage().getEFactoryInstance().createFromString(dt,
-					val.getValue());
+			EDataType dt = (EDataType)feat.getEType();
+			return dt.getEPackage().getEFactoryInstance().createFromString(dt, val.getValue());
 		}
 		if (val.getRefObject() != null) {
-			EObject eobj = getDestObject(null, val.getRefObject(),
-					((EReference) feat).isContainment());
+			EObject eobj = getDestObject(null, val.getRefObject(), ((EReference)feat).isContainment());
 			if (val.getRefFeature() != null) {
-				EStructuralFeature rf = eobj.eClass().getEStructuralFeature(
-						val.getRefFeature());
+				EStructuralFeature rf = eobj.eClass().getEStructuralFeature(val.getRefFeature());
 				Object obj = eobj.eGet(rf);
 				if (rf.isMany())
-					return ((EList<Object>) obj).get(val.getRefIndex());
+					return ((EList<Object>)obj).get(val.getRefIndex());
 				else
 					return obj;
 			} else
@@ -332,8 +324,7 @@ public class CopyingEpatchApplier {
 		EObject o = r.getEObject(fragment);
 		if (o != null)
 			return o;
-		throw new RuntimeException("EObject for " + fragment + " not found in "
-				+ r.getURI());
+		throw new RuntimeException("EObject for " + fragment + " not found in " + r.getURI());
 	}
 
 	public Epatch getEpatch() {
@@ -364,26 +355,26 @@ public class CopyingEpatchApplier {
 
 	protected void mapObject(CreatedObject obj) {
 		if (obj instanceof ObjectCopy) {
-			ObjectCopy oc = (ObjectCopy) obj;
+			ObjectCopy oc = (ObjectCopy)obj;
 			EObject src = getEObject(oc.getResource(), oc.getFragment());
 			EObject dst = objectClone(src);
 			triMap.put(obj, dst, obj);
 		} else if (obj instanceof ObjectNew) {
-			ObjectNew on = (ObjectNew) obj;
+			ObjectNew on = (ObjectNew)obj;
 			Resource res = getImport(on.getImport());
-			EClass cls = (EClass) res.getEObject(on.getImpFrag());
+			EClass cls = (EClass)res.getEObject(on.getImpFrag());
 			EObject dst = cls.getEPackage().getEFactoryInstance().create(cls);
 			triMap.put(null, dst, obj);
 		} else
 			throw new RuntimeException("Unknown CreatObject: " + obj);
 		for (Assignment ass : obj.getAssignments()) {
 			if (ass instanceof SingleAssignment) {
-				SingleAssignment sa = (SingleAssignment) ass;
+				SingleAssignment sa = (SingleAssignment)ass;
 				CreatedObject co = sa.getLeftValue().getNewObject();
 				if (co != null)
 					mapObject(co);
 			} else if (ass instanceof ListAssignment) {
-				ListAssignment la = (ListAssignment) ass;
+				ListAssignment la = (ListAssignment)ass;
 				for (AssignmentValue av : la.getLeftValues()) {
 					CreatedObject co = av.getNewObject();
 					if (co != null)
@@ -402,37 +393,35 @@ public class CopyingEpatchApplier {
 		Map<Import, Resource> map = new HashMap<Import, Resource>();
 		for (Import imp : epatch.getImports())
 			if (imp instanceof ModelImport)
-				map.put(imp, matchImports(rs, (ModelImport) imp));
+				map.put(imp, matchImports(rs, (ModelImport)imp));
 		return map;
 	}
 
 	protected Resource matchImports(ResourceSet rs, ModelImport imp) {
 		if (imp instanceof EPackageImport) {
-			EPackageImport ei = (EPackageImport) imp;
+			EPackageImport ei = (EPackageImport)imp;
 			EPackage pkg = rs.getPackageRegistry().getEPackage(ei.getNsURI());
 			if (pkg != null)
 				return pkg.eResource();
 			for (Resource r : rs.getResources())
 				for (EObject o : r.getContents())
 					if (o instanceof EPackage) {
-						EPackage p = (EPackage) o;
+						EPackage p = (EPackage)o;
 						if (ei.getNsURI().equals(p.getNsURI()))
 							return r;
 					}
 		} else if (imp instanceof ResourceImport) {
-			ResourceImport ri = (ResourceImport) imp;
+			ResourceImport ri = (ResourceImport)imp;
 			Resource res = rs.getResource(URI.createURI(ri.getUri()), true);
 			if (res != null)
 				return res;
 			for (Resource r : rs.getResources())
-				if (r.getURI() != null
-						&& r.getURI().toString().endsWith(ri.getUri())) {
+				if (r.getURI() != null && r.getURI().toString().endsWith(ri.getUri())) {
 					return r;
 				}
 		}
-		throw new RuntimeException(
-				"No Resource found in ResourceSet for Import :" + imp
-						+ " ResourceSet:" + rs);
+		throw new RuntimeException("No Resource found in ResourceSet for Import :" + imp + " ResourceSet:"
+				+ rs);
 	}
 
 	protected boolean matchResource(NamedResource res, Resource resources) {
@@ -443,8 +432,7 @@ public class CopyingEpatchApplier {
 			if (o == null)
 				return false;
 			for (Assignment ass : obj.getAssignments()) {
-				EStructuralFeature f = o.eClass().getEStructuralFeature(
-						ass.getFeature());
+				EStructuralFeature f = o.eClass().getEStructuralFeature(ass.getFeature());
 				if (f == null)
 					return false;
 			}
@@ -456,8 +444,7 @@ public class CopyingEpatchApplier {
 		for (Resource r : resources.getResources())
 			if (matchResource(res, r))
 				return r;
-		throw new RuntimeException("No Resource found in ResourceSet for "
-				+ dir.getInputURI(res));
+		throw new RuntimeException("No Resource found in ResourceSet for " + dir.getInputURI(res));
 	}
 
 	protected Map<NamedResource, Resource> matchResources(ResourceSet input) {
@@ -476,19 +463,17 @@ public class CopyingEpatchApplier {
 
 	protected void objectClone(EObject src, EObject dst) {
 		for (EStructuralFeature f : src.eClass().getEAllStructuralFeatures()) {
-			if (!f.isChangeable() || f.isDerived() || f.isTransient()
-					|| !src.eIsSet(f))
+			if (!f.isChangeable() || f.isDerived() || f.isTransient() || !src.eIsSet(f))
 				continue;
 			objectCloneFeature(src, dst, f);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void objectCloneFeature(EObject src, EObject dst,
-			EStructuralFeature f) {
+	protected void objectCloneFeature(EObject src, EObject dst, EStructuralFeature f) {
 		if (f.isMany()) {
-			EList<Object> s = (EList<Object>) src.eGet(f);
-			EList<Object> d = (EList<Object>) dst.eGet(f);
+			EList<Object> s = (EList<Object>)src.eGet(f);
+			EList<Object> d = (EList<Object>)dst.eGet(f);
 			for (Object o : s)
 				d.add(objectCopyValue(f, o));
 		} else
@@ -497,8 +482,8 @@ public class CopyingEpatchApplier {
 
 	protected Object objectCopyValue(EStructuralFeature feature, Object src) {
 		if (feature instanceof EReference) {
-			EReference r = (EReference) feature;
-			return getDestObject((EObject) src, null, r.isContainment());
+			EReference r = (EReference)feature;
+			return getDestObject((EObject)src, null, r.isContainment());
 		} else
 			return src;
 	}
@@ -506,15 +491,14 @@ public class CopyingEpatchApplier {
 	@SuppressWarnings("unchecked")
 	protected void objectCreate(EObject dst, NamedObject ptc) {
 		for (Assignment ass : ptc.getAssignments()) {
-			EStructuralFeature f = dst.eClass().getEStructuralFeature(
-					ass.getFeature());
+			EStructuralFeature f = dst.eClass().getEStructuralFeature(ass.getFeature());
 			if (ass instanceof ListAssignment) {
-				ListAssignment li = (ListAssignment) ass;
-				EList<Object> vals = (EList<Object>) dst.eGet(f);
+				ListAssignment li = (ListAssignment)ass;
+				EList<Object> vals = (EList<Object>)dst.eGet(f);
 				for (AssignmentValue av : li.getLeftValues())
 					vals.add(getAssignmentValue(f, av));
 			} else if (ass instanceof SingleAssignment) {
-				SingleAssignment si = (SingleAssignment) ass;
+				SingleAssignment si = (SingleAssignment)ass;
 				dst.eSet(f, getAssignmentValue(f, si.getLeftValue()));
 			}
 		}
@@ -532,31 +516,29 @@ public class CopyingEpatchApplier {
 			if (!src.eIsSet(f) && ass == null)
 				continue;
 			if (ass instanceof ListAssignment) {
-				objectModifyMergeLists(f, (EList<Object>) src.eGet(f),
-						(EList<Object>) dst.eGet(f), (ListAssignment) ass);
+				objectModifyMergeLists(f, (EList<Object>)src.eGet(f), (EList<Object>)dst.eGet(f),
+						(ListAssignment)ass);
 			} else if (ass instanceof SingleAssignment) {
-				SingleAssignment si = (SingleAssignment) ass;
+				SingleAssignment si = (SingleAssignment)ass;
 				dst.eSet(f, getAssignmentValue(f, dir.getOutputValue(si)));
 			} else
 				objectCloneFeature(src, dst, f);
 		}
 	}
 
-	protected void objectModifyMergeLists(EStructuralFeature fest,
-			EList<Object> src, EList<Object> dst, ListAssignment ass) {
+	protected void objectModifyMergeLists(EStructuralFeature fest, EList<Object> src, EList<Object> dst,
+			ListAssignment ass) {
 		ArrayList<Object> items = new ArrayList<Object>(src);
 
 		// backup values that are to be moved
 		Map<AssignmentValue, Object> backup = new HashMap<AssignmentValue, Object>();
 		for (AssignmentValue a : dir.getOutputValues(ass))
-			if (a.getRefObject() == null && a.getKeyword() == null
-					&& a.getNewObject() == null && a.getValue() == null
-					&& a.getImport() == null)
+			if (a.getRefObject() == null && a.getKeyword() == null && a.getNewObject() == null
+					&& a.getValue() == null && a.getImport() == null)
 				backup.put(a, src.get(a.getRefIndex()));
 
 		// remove input values
-		ArrayList<AssignmentValue> toRemove = new ArrayList<AssignmentValue>(
-				dir.getInputValues(ass));
+		ArrayList<AssignmentValue> toRemove = new ArrayList<AssignmentValue>(dir.getInputValues(ass));
 		Collections.sort(toRemove, EpatchUtil.ASS_VAL_SORTER_DESC);
 		for (AssignmentValue i : toRemove)
 			items.remove(i.getIndex());
@@ -566,8 +548,7 @@ public class CopyingEpatchApplier {
 			items.set(i, objectCopyValue(fest, items.get(i)));
 
 		// add output values
-		ArrayList<AssignmentValue> toAdd = new ArrayList<AssignmentValue>(dir
-				.getOutputValues(ass));
+		ArrayList<AssignmentValue> toAdd = new ArrayList<AssignmentValue>(dir.getOutputValues(ass));
 		Collections.sort(toAdd, EpatchUtil.ASS_VAL_SORTER_ASC);
 		for (AssignmentValue i : toAdd) {
 			Object o = backup.get(i);
@@ -584,13 +565,11 @@ public class CopyingEpatchApplier {
 	protected void printMaps() {
 		System.out.println("inputResources:");
 		for (Entry<NamedResource, Resource> e : inputResources.entrySet())
-			System.out.println(e.getKey().getName() + " -> "
-					+ e.getValue().getURI());
+			System.out.println(e.getKey().getName() + " -> " + e.getValue().getURI());
 
 		System.out.println("outputResources:");
 		for (Entry<NamedResource, Resource> e : outputResources.entrySet())
-			System.out.println(e.getKey().getName() + " -> "
-					+ e.getValue().getURI());
+			System.out.println(e.getKey().getName() + " -> " + e.getValue().getURI());
 
 		System.out.println("triMap:");
 		for (EpatchMappingEntry e : triMap.getAllEntries())
