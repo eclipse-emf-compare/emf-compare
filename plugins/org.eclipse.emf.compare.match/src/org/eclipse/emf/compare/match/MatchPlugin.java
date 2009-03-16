@@ -40,7 +40,7 @@ public class MatchPlugin extends Plugin {
 	private static final String RESOURCE_FILTERS_CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
 	/** ID of the resource filters extension point. */
-	private static final String RESOURCE_FILTERS_EXTENSION_POINT = "resourcefilters"; //$NON-NLS-1$
+	private static final String RESOURCE_FILTERS_EXTENSION_POINT = "org.eclipse.emf.compare.match.resourcefilters"; //$NON-NLS-1$
 
 	/** Name of the "filter" tag of the resource filters extension point. */
 	private static final String RESOURCE_FILTERS_FILTER_TAG = "filter"; //$NON-NLS-1$
@@ -122,6 +122,8 @@ public class MatchPlugin extends Plugin {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
 	final class ResourceFiltersRegistryListener implements IRegistryChangeListener {
+		/** Short name of the resource filters extension point. */
+		private static final String RESOURCE_FILTERS_EP_SHORT = "resourcefilters"; //$NON-NLS-1$
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -129,7 +131,7 @@ public class MatchPlugin extends Plugin {
 		 */
 		public void registryChanged(IRegistryChangeEvent event) {
 			for (IExtensionDelta delta : event
-					.getExtensionDeltas(PLUGIN_ID, RESOURCE_FILTERS_EXTENSION_POINT)) {
+					.getExtensionDeltas(PLUGIN_ID, RESOURCE_FILTERS_EP_SHORT)) {
 				final IExtension extension = delta.getExtension();
 				if (delta.getKind() == IExtensionDelta.ADDED) {
 					for (final IConfigurationElement configurationElement : extension
