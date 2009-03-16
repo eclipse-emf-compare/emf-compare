@@ -10,15 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.internal;
 
-import java.io.File;
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Map;
 
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
@@ -29,8 +22,6 @@ import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -38,12 +29,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.URIMappingRegistryImpl;
-import org.eclipse.emf.ecore.resource.impl.URIConverterImpl.URIMap;
+import org.eclipse.emf.ecore.resource.impl.URIConverterImpl;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
 import org.eclipse.team.core.history.IFileHistoryProvider;
@@ -133,17 +121,9 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 * @since 0.9
 	 */
-	private class RevisionedURIConverter implements URIConverter {
-		/**
-		 * The URI map.
-		 */
-		protected URIMap uriMap;
-
+	private class RevisionedURIConverter extends URIConverterImpl {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */
 		private final IFileRevision baseRevision;
-
-		/** Resolve the workspace root once and only. */
-		private final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		/**
 		 * This default constructor will add our own URI Handler to the top of the handlers list.
@@ -161,6 +141,7 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 		 * 
 		 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI)
 		 */
+		@Override
 		public InputStream createInputStream(URI uri) {
 			try {
 				// We'll have to change the EMF URI to find the IFile it points to
@@ -189,120 +170,6 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 				// FIXME log this
 			}
 			return null;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.ecore.resource.URIConverter#createOutputStream(org.eclipse.emf.common.util.URI)
-		 */
-		public OutputStream createOutputStream(URI uri) throws IOException {
-			try {
-				URL url = new URL(uri.toString());
-				final URLConnection urlConnection = url.openConnection();
-				urlConnection.setDoOutput(true);
-				if (urlConnection instanceof HttpURLConnection) {
-					final HttpURLConnection httpURLConnection = (HttpURLConnection)urlConnection;
-					httpURLConnection.setRequestMethod("PUT"); //$NON-NLS-1$
-					return new FilterOutputStream(urlConnection.getOutputStream()) {
-						@Override
-						public void close() throws IOException {
-							super.close();
-							int responseCode = httpURLConnection.getResponseCode();
-							switch (responseCode) {
-								case HttpURLConnection.HTTP_OK:
-								case HttpURLConnection.HTTP_CREATED:
-								case HttpURLConnection.HTTP_NO_CONTENT: {
-									break;
-								}
-								default: {
-									throw new IOException("PUT failed with HTTP response code " //$NON-NLS-1$
-											+ responseCode);
-								}
-							}
-						}
-					};
-				}
-				OutputStream result = urlConnection.getOutputStream();
-				return result;
-			} catch (RuntimeException exception) {
-				throw new Resource.IOWrappedException(exception);
-			}
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.ecore.resource.URIConverter#getURIMap()
-		 */
-		public Map<URI, URI> getURIMap() {
-			return getInternalURIMap();
-		}
-
-		/**
-		 * Returns the normalized form of the URI.
-		 * <p>
-		 * This implementation does precisely and only the {@link URIConverter#normalize typical} thing. It
-		 * calls itself recursively so that mapped chains are followed.
-		 * </p>
-		 * 
-		 * @param uri
-		 *            the URI to normalize.
-		 * @return the normalized form.
-		 * @see org.eclipse.emf.ecore.plugin.EcorePlugin#getPlatformResourceMap
-		 */
-		public URI normalize(URI uri) {
-			String fragment = uri.fragment();
-			URI result = fragment == null ? getInternalURIMap().getURI(uri) : getInternalURIMap().getURI(
-					uri.trimFragment()).appendFragment(fragment);
-			String scheme = result.scheme();
-			if (scheme == null) {
-				if (workspaceRoot != null) {
-					if (result.hasAbsolutePath()) {
-						result = URI.createPlatformResourceURI(result.trimFragment().toString(), false);
-						if (fragment != null) {
-							result = result.appendFragment(fragment);
-						}
-					}
-				} else {
-					if (result.hasAbsolutePath()) {
-						result = URI.createURI("file:" + result); //$NON-NLS-1$
-					} else {
-						result = URI.createFileURI(new File(result.trimFragment().toString())
-								.getAbsolutePath());
-						if (fragment != null) {
-							result = result.appendFragment(fragment);
-						}
-					}
-				}
-			}
-
-			if (result.equals(uri)) {
-				return uri;
-			}
-			return normalize(result);
-		}
-
-		/**
-		 * Returns the internal version of the URI map.
-		 * 
-		 * @return the internal version of the URI map.
-		 */
-		protected URIMap getInternalURIMap() {
-			if (uriMap == null) {
-				URIMappingRegistryImpl mappingRegistryImpl = new URIMappingRegistryImpl() {
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					protected URI delegatedGetURI(URI uri) {
-						return URIMappingRegistryImpl.INSTANCE.getURI(uri);
-					}
-				};
-
-				uriMap = (URIMap)mappingRegistryImpl.map();
-			}
-
-			return uriMap;
 		}
 
 		/**
