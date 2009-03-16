@@ -76,6 +76,8 @@ public final class ResourceSimilarity {
 	 *         equal and <code>0</code> different.
 	 */
 	public static double computeURISimilarity(URI reference, URI candidate) {
+		if (reference.equals(candidate))
+			return 1d;
 		final double segmentsWeight = 0.4;
 		final double fragmentWeight = 0.6;
 		final double almostEqual = 0.999;
@@ -148,7 +150,7 @@ public final class ResourceSimilarity {
 			referenceIndex--;
 			candidateIndex--;
 		}
-		return nameSimilarity * nameWeight + (equalSegments * 2 / (reference.length + candidate.length - 2))
+		return nameSimilarity * nameWeight + equalSegments * 2 / (reference.length + candidate.length - 2)
 				* equalSegmentWeight;
 	}
 }
