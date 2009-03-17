@@ -219,8 +219,8 @@ public class GenericDiffEngine implements IDiffEngine {
 						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
 								.getRightElement());
 					}
-				} else if ((leftValue != null && !leftValue.equals(rightValue))
-						|| (leftValue == null && leftValue != rightValue)) {
+				} else if (leftValue != null && !leftValue.equals(rightValue) || leftValue == null
+						&& leftValue != rightValue) {
 					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
 							.getRightElement());
 				}
@@ -273,7 +273,7 @@ public class GenericDiffEngine implements IDiffEngine {
 				} else if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
 					createRemoteAttributeChange(root, next, mapping);
 					// conflicting
-				} else if ((rightDistinctFromOrigin && leftDistinctFromOrigin) || rightDistinctFromLeft) {
+				} else if (rightDistinctFromOrigin && leftDistinctFromOrigin || rightDistinctFromLeft) {
 					checkConflictingAttributesUpdate(root, next, mapping);
 				}
 			}
@@ -501,6 +501,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		final List<EObject> rightElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
 				.eGetAsList(rightElement, reference.getName()));
 		final List<Integer> removedIndices = new ArrayList<Integer>(removedReferences.size());
+		// Purge "left" list of all reference values that have been added to it
 		for (final ReferenceChangeLeftTarget added : addedReferences) {
 			leftElementReferences.remove(added.getLeftTarget());
 		}
@@ -521,6 +522,19 @@ public class GenericDiffEngine implements IDiffEngine {
 				refChange.setReference(reference);
 				refChange.setLeftElement(leftElement);
 				refChange.setRightElement(rightElement);
+
+				// The loop will be broken here. Initialize left and right "target" lists for the diff
+				for (int j = removedIndices.size() - 1; j >= 0; j--) {
+					rightElementReferences.remove(removedIndices.get(j).intValue());
+				}
+				final List<EObject> leftTarget = new ArrayList<EObject>(
+						getMatchedReferences(rightElementReferences));
+				final List<EObject> rightTarget = new ArrayList<EObject>(
+						getMatchedReferences(leftElementReferences));
+
+				refChange.getLeftTarget().addAll(leftTarget);
+				refChange.getRightTarget().addAll(rightTarget);
+
 				root.getSubDiffElements().add(refChange);
 				break;
 			}
@@ -640,10 +654,9 @@ public class GenericDiffEngine implements IDiffEngine {
 						removedReferencesDiffs.addAll(createRemovedReferencesOperation(root, mapping
 								.getLeftElement(), mapping.getRightElement(), next, deletedReferences));
 					}
-					// FIXME bypassed for now : merger not up and running
 					// Check for references order changes
-					// checkReferenceOrderChange(root, next, mapping.getLeftElement(),
-					// mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
+					checkReferenceOrderChange(root, next, mapping.getLeftElement(),
+							mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
 				}
 			}
 		}
@@ -674,7 +687,7 @@ public class GenericDiffEngine implements IDiffEngine {
 			boolean isChild = false;
 			boolean isAncestor = false;
 			for (final Object object : match.getUnmatchedElements()) {
-				if (unmatchElement != ((UnmatchElement)object)) {
+				if (unmatchElement != (UnmatchElement)object) {
 					if (EcoreUtil.isAncestor(unmatchElement.getElement(), ((UnmatchElement)object)
 							.getElement())) {
 						isAncestor = true;
@@ -1236,7 +1249,8 @@ public class GenericDiffEngine implements IDiffEngine {
 
 	/**
 	 * Creates the {@link DiffGroup} corresponding to a reference's value addition under the given
-	 * {@link DiffGroup}.<br/>The parameters include the list of added references which can be computed using
+	 * {@link DiffGroup}.<br/>
+	 * The parameters include the list of added references which can be computed using
 	 * {@link #computeAddedReferences(List, List)}.
 	 * 
 	 * @param root
@@ -1397,18 +1411,17 @@ public class GenericDiffEngine implements IDiffEngine {
 				removedReferencesDiffs.addAll(createRemovedReferencesOperation(root, leftElement,
 						rightElement, reference, deletedReferences));
 			}
-			// FIXME bypassed for now : merger not up and running
 			// Check for references order changes
-			// checkReferenceOrderChange(root, reference, leftElement, rightElement, addedReferencesDiffs,
-			// removedReferencesDiffs);
+			checkReferenceOrderChange(root, reference, leftElement, rightElement, addedReferencesDiffs,
+					removedReferencesDiffs);
 		}
 	}
 
 	/**
 	 * This will create the needed remote attribute change {@link DiffElement} under the given
-	 * {@link DiffGroup root}.<br/>An attribute is &quot;remotely changed&quot; if it has been added, updated
-	 * or deleted in the right (latest from head) version but it has kept its former value in the left
-	 * (working copy) version.
+	 * {@link DiffGroup root}.<br/>
+	 * An attribute is &quot;remotely changed&quot; if it has been added, updated or deleted in the right
+	 * (latest from head) version but it has kept its former value in the left (working copy) version.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
@@ -1463,8 +1476,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will create the {@link RemoteMoveModelElement} under the given {@link DiffGroup root}.<br/>A
-	 * {@link RemoteMoveModelElement} represents the fact that an element has been remotely moved since the
+	 * This will create the {@link RemoteMoveModelElement} under the given {@link DiffGroup root}.<br/>
+	 * A {@link RemoteMoveModelElement} represents the fact that an element has been remotely moved since the
 	 * ancestor model, but the right model has kept the element in its former place.
 	 * 
 	 * @param root
@@ -1539,7 +1552,7 @@ public class GenericDiffEngine implements IDiffEngine {
 				addOperation.setLeftElement(mapping.getLeftElement());
 				addOperation.setReference(reference);
 				addOperation.setRightTarget(eobj);
-				if ((getMatchedEObject(eobj)) != null) {
+				if (getMatchedEObject(eobj) != null) {
 					addOperation.setLeftTarget(getMatchedEObject(eobj));
 				}
 				root.getSubDiffElements().add(addOperation);
@@ -1554,7 +1567,7 @@ public class GenericDiffEngine implements IDiffEngine {
 				delOperation.setLeftElement(mapping.getLeftElement());
 				delOperation.setReference(reference);
 				delOperation.setLeftTarget(eobj);
-				if ((getMatchedEObject(eobj)) != null) {
+				if (getMatchedEObject(eobj) != null) {
 					delOperation.setRightTarget(getMatchedEObject(eobj));
 				}
 				root.getSubDiffElements().add(delOperation);
@@ -1586,8 +1599,9 @@ public class GenericDiffEngine implements IDiffEngine {
 
 	/**
 	 * Creates the {@link DiffGroup} corresponding to a reference's value removal under the given
-	 * {@link DiffGroup}.<br/>The parameters include the list of removed references which can be computed
-	 * using {@link #computeDeletedReferences(List, List)}.
+	 * {@link DiffGroup}.<br/>
+	 * The parameters include the list of removed references which can be computed using
+	 * {@link #computeDeletedReferences(List, List)}.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup root} of the {@link DiffElement}s to create.

@@ -130,7 +130,7 @@ public enum DifferenceKind implements Enumerator {
 	 * @generated
 	 */
 	private static final DifferenceKind[] VALUES_ARRAY = new DifferenceKind[] {ADDITION, DELETION, CHANGE,
-			MOVE, };
+			MOVE,};
 
 	/**
 	 * A public read-only list of all the '<em><b>Difference Kind</b></em>' enumerators. <!--

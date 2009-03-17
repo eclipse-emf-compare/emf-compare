@@ -1904,13 +1904,31 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_ORDER_CHANGE__LEFT_ELEMENT = REFERENCE_CHANGE__LEFT_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Left Target</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__LEFT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Right Target</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_ORDER_CHANGE__RIGHT_TARGET = REFERENCE_CHANGE_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Reference Order Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REFERENCE_ORDER_CHANGE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 0;
+	int REFERENCE_ORDER_CHANGE_FEATURE_COUNT = REFERENCE_CHANGE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
@@ -3001,6 +3019,28 @@ public interface DiffPackage extends EPackage {
 	EClass getReferenceOrderChange();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange#getLeftTarget <em>Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Left Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange#getLeftTarget()
+	 * @see #getReferenceOrderChange()
+	 * @generated
+	 */
+	EReference getReferenceOrderChange_LeftTarget();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange#getRightTarget <em>Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Right Target</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange#getRightTarget()
+	 * @see #getReferenceOrderChange()
+	 * @generated
+	 */
+	EReference getReferenceOrderChange_RightTarget();
+
+	/**
 	 * <!-- begin-user-doc --> Defines literals for the meta objects that represent
 	 * <ul>
 	 * <li>each class,</li>
@@ -3672,6 +3712,22 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass REFERENCE_ORDER_CHANGE = eINSTANCE.getReferenceOrderChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Target</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_ORDER_CHANGE__LEFT_TARGET = eINSTANCE.getReferenceOrderChange_LeftTarget();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Target</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE_ORDER_CHANGE__RIGHT_TARGET = eINSTANCE.getReferenceOrderChange_RightTarget();
 
 	}
 

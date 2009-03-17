@@ -172,7 +172,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReferenceOrderChange" eSuperTypes="#//ReferenceChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceOrderChange" eSuperTypes="#//ReferenceChange">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftTarget" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightTarget" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractDiffExtension" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="These can be used to extend the DiffModel so that DiffElements can be collapsed under a single high level difference"/>

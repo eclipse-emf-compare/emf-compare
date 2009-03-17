@@ -40,7 +40,7 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
 	 */
 	@Override
 	public void applyInOrigin() {
@@ -78,7 +78,7 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
 	 */
 	@Override
 	public void undoInTarget() {

@@ -54,7 +54,6 @@ public interface AbstractDiffExtension extends EObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
@@ -62,21 +61,20 @@ public interface AbstractDiffExtension extends EObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model kind="operation"
 	 * @generated
 	 */
 	String getText();
 
 	/**
-	 * Returns the value of the '<em><b>Is Collapsed</b></em>' attribute. The default value is
-	 * <code>"false"</code>. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Is Collapsed</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Is Collapsed</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Is Collapsed</em>' attribute.
 	 * @see #setIsCollapsed(boolean)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getAbstractDiffExtension_IsCollapsed()
@@ -87,19 +85,15 @@ public interface AbstractDiffExtension extends EObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model dataType="org.eclipse.emf.compare.diff.metamodel.IMerger"
 	 * @generated
 	 */
 	IMerger provideMerger();
 
 	/**
-	 * Sets the value of the '
-	 * {@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension#isIsCollapsed
-	 * <em>Is Collapsed</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Is Collapsed</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension#isIsCollapsed <em>Is Collapsed</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Is Collapsed</em>' attribute.
 	 * @see #isIsCollapsed()
 	 * @generated
 	 */
@@ -107,7 +101,6 @@ public interface AbstractDiffExtension extends EObject {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @model
 	 * @generated
 	 */

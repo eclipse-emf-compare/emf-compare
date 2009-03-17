@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
 import org.eclipse.emf.compare.diff.merge.IMerger;
+import org.eclipse.emf.compare.diff.metamodel.*;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
@@ -48,13 +49,12 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public DiffFactoryImpl() {
@@ -63,7 +63,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -73,17 +72,18 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static DiffFactory init() {
 		try {
-			final DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE
+			DiffFactory theDiffFactory = (DiffFactory)EPackage.Registry.INSTANCE
 					.getEFactory("http://www.eclipse.org/emf/compare/diff/1.1"); //$NON-NLS-1$ 
-			if (theDiffFactory != null)
+			if (theDiffFactory != null) {
 				return theDiffFactory;
-		} catch (final Exception exception) {
+			}
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new DiffFactoryImpl();
@@ -91,7 +91,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unused")
@@ -101,7 +100,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertIMergerToString(EDataType eDataType, Object instanceValue) {
@@ -110,7 +108,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -128,7 +125,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -192,111 +188,99 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChange createAttributeChange() {
-		final AttributeChangeImpl attributeChange = new AttributeChangeImpl();
+		AttributeChangeImpl attributeChange = new AttributeChangeImpl();
 		return attributeChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeLeftTarget createAttributeChangeLeftTarget() {
-		final AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
+		AttributeChangeLeftTargetImpl attributeChangeLeftTarget = new AttributeChangeLeftTargetImpl();
 		return attributeChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
-		final AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
+		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
 		return attributeChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ConflictingDiffElement createConflictingDiffElement() {
-		final ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
+		ConflictingDiffElementImpl conflictingDiffElement = new ConflictingDiffElementImpl();
 		return conflictingDiffElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DifferenceKind createDifferenceKindFromString(EDataType eDataType, String initialValue) {
-		final DifferenceKind result = DifferenceKind.get(initialValue);
-		if (result == null) {
+		DifferenceKind result = DifferenceKind.get(initialValue);
+		if (result == null)
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffGroup createDiffGroup() {
-		final DiffGroupImpl diffGroup = new DiffGroupImpl();
+		DiffGroupImpl diffGroup = new DiffGroupImpl();
 		return diffGroup;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ComparisonResourceSnapshot createComparisonResourceSnapshot() {
-		final ComparisonResourceSnapshotImpl comparisonResourceSnapshot = new ComparisonResourceSnapshotImpl();
+		ComparisonResourceSnapshotImpl comparisonResourceSnapshot = new ComparisonResourceSnapshotImpl();
 		return comparisonResourceSnapshot;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ComparisonResourceSetSnapshot createComparisonResourceSetSnapshot() {
-		final ComparisonResourceSetSnapshotImpl comparisonResourceSetSnapshot = new ComparisonResourceSetSnapshotImpl();
+		ComparisonResourceSetSnapshotImpl comparisonResourceSetSnapshot = new ComparisonResourceSetSnapshotImpl();
 		return comparisonResourceSetSnapshot;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffModel createDiffModel() {
-		final DiffModelImpl diffModel = new DiffModelImpl();
+		DiffModelImpl diffModel = new DiffModelImpl();
 		return diffModel;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffResourceSet createDiffResourceSet() {
-		final DiffResourceSetImpl diffResourceSet = new DiffResourceSetImpl();
+		DiffResourceSetImpl diffResourceSet = new DiffResourceSetImpl();
 		return diffResourceSet;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -314,7 +298,6 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public IMerger createIMergerFromString(EDataType eDataType, String initialValue) {
@@ -323,167 +306,150 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChange createModelElementChange() {
-		final ModelElementChangeImpl modelElementChange = new ModelElementChangeImpl();
+		ModelElementChangeImpl modelElementChange = new ModelElementChangeImpl();
 		return modelElementChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeLeftTarget createModelElementChangeLeftTarget() {
-		final ModelElementChangeLeftTargetImpl modelElementChangeLeftTarget = new ModelElementChangeLeftTargetImpl();
+		ModelElementChangeLeftTargetImpl modelElementChangeLeftTarget = new ModelElementChangeLeftTargetImpl();
 		return modelElementChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ModelElementChangeRightTarget createModelElementChangeRightTarget() {
-		final ModelElementChangeRightTargetImpl modelElementChangeRightTarget = new ModelElementChangeRightTargetImpl();
+		ModelElementChangeRightTargetImpl modelElementChangeRightTarget = new ModelElementChangeRightTargetImpl();
 		return modelElementChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MoveModelElement createMoveModelElement() {
-		final MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
+		MoveModelElementImpl moveModelElement = new MoveModelElementImpl();
 		return moveModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateContainmentFeature createUpdateContainmentFeature() {
-		final UpdateContainmentFeatureImpl updateContainmentFeature = new UpdateContainmentFeatureImpl();
+		UpdateContainmentFeatureImpl updateContainmentFeature = new UpdateContainmentFeatureImpl();
 		return updateContainmentFeature;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChange createReferenceChange() {
-		final ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
+		ReferenceChangeImpl referenceChange = new ReferenceChangeImpl();
 		return referenceChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeLeftTarget createReferenceChangeLeftTarget() {
-		final ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
+		ReferenceChangeLeftTargetImpl referenceChangeLeftTarget = new ReferenceChangeLeftTargetImpl();
 		return referenceChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceChangeRightTarget createReferenceChangeRightTarget() {
-		final ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
+		ReferenceChangeRightTargetImpl referenceChangeRightTarget = new ReferenceChangeRightTargetImpl();
 		return referenceChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ResourceDiff createResourceDiff() {
-		final ResourceDiffImpl resourceDiff = new ResourceDiffImpl();
+		ResourceDiffImpl resourceDiff = new ResourceDiffImpl();
 		return resourceDiff;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ResourceDependencyChange createResourceDependencyChange() {
-		final ResourceDependencyChangeImpl resourceDependencyChange = new ResourceDependencyChangeImpl();
+		ResourceDependencyChangeImpl resourceDependencyChange = new ResourceDependencyChangeImpl();
 		return resourceDependencyChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ResourceDependencyChangeLeftTarget createResourceDependencyChangeLeftTarget() {
-		final ResourceDependencyChangeLeftTargetImpl resourceDependencyChangeLeftTarget = new ResourceDependencyChangeLeftTargetImpl();
+		ResourceDependencyChangeLeftTargetImpl resourceDependencyChangeLeftTarget = new ResourceDependencyChangeLeftTargetImpl();
 		return resourceDependencyChangeLeftTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ResourceDependencyChangeRightTarget createResourceDependencyChangeRightTarget() {
-		final ResourceDependencyChangeRightTargetImpl resourceDependencyChangeRightTarget = new ResourceDependencyChangeRightTargetImpl();
+		ResourceDependencyChangeRightTargetImpl resourceDependencyChangeRightTarget = new ResourceDependencyChangeRightTargetImpl();
 		return resourceDependencyChangeRightTarget;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateAttribute createUpdateAttribute() {
-		final UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
+		UpdateAttributeImpl updateAttribute = new UpdateAttributeImpl();
 		return updateAttribute;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateModelElement createUpdateModelElement() {
-		final UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
+		UpdateModelElementImpl updateModelElement = new UpdateModelElementImpl();
 		return updateModelElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UpdateReference createUpdateReference() {
-		final UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
+		UpdateReferenceImpl updateReference = new UpdateReferenceImpl();
 		return updateReference;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public ReferenceOrderChange createReferenceOrderChange() {
-		final ReferenceOrderChangeImpl referenceOrderChange = new ReferenceOrderChangeImpl();
+		ReferenceOrderChangeImpl referenceOrderChange = new ReferenceOrderChangeImpl();
 		return referenceOrderChange;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public DiffPackage getDiffPackage() {
