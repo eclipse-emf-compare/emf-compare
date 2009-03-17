@@ -104,9 +104,9 @@ public class AttributeChangeRightTargetItemProvider extends AttributeChangeItemP
 
 		if (operation.isRemote())
 			return getString("_UI_RemoteAddAttribute_type", new Object[] {operation.getRightTarget(), //$NON-NLS-1$
-					attributeLabel, elementLabel, });
+					attributeLabel, elementLabel,});
 		return getString("_UI_RemoveAttribute_type", new Object[] {operation.getRightTarget(), //$NON-NLS-1$
-				attributeLabel, elementLabel, });
+				attributeLabel, elementLabel,});
 	}
 
 	/**

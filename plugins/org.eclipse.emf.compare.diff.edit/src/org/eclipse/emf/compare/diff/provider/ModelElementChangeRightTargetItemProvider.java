@@ -102,12 +102,12 @@ public class ModelElementChangeRightTargetItemProvider extends ModelElementChang
 
 		final String diffLabel;
 		if (operation.isRemote()) {
-			diffLabel = getString("_UI_RemoteAddModelElement_type", new Object[] {targetName }); //$NON-NLS-1$
+			diffLabel = getString("_UI_RemoteAddModelElement_type", new Object[] {targetName}); //$NON-NLS-1$
 		} else {
 			if (operation.isConflicting()) {
-				diffLabel = getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName }); //$NON-NLS-1$
+				diffLabel = getString("_UI_RemoveModelElement_conflicting", new Object[] {targetName}); //$NON-NLS-1$
 			} else {
-				diffLabel = getString("_UI_RemoveModelElement_type", new Object[] {targetName, }); //$NON-NLS-1$
+				diffLabel = getString("_UI_RemoveModelElement_type", new Object[] {targetName,}); //$NON-NLS-1$
 			}
 		}
 

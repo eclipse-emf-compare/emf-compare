@@ -104,14 +104,14 @@ public class MoveModelElementItemProvider extends UpdateModelElementItemProvider
 		final String diffLabel;
 		if (operation.isRemote()) {
 			diffLabel = getString("_UI_RemoteMoveModelElement_type", new Object[] {elementLabel, //$NON-NLS-1$
-					oldParentLabel, newParentLabel, });
+					oldParentLabel, newParentLabel,});
 		} else {
 			if (operation.isConflicting()) {
 				diffLabel = getString("_UI_MoveModelElement_conflicting", new Object[] { //$NON-NLS-1$
-						elementLabel, oldParentLabel, newParentLabel, });
+						elementLabel, oldParentLabel, newParentLabel,});
 			} else {
 				diffLabel = getString("_UI_MoveModelElement_type", new Object[] { //$NON-NLS-1$
-						elementLabel, oldParentLabel, newParentLabel, });
+						elementLabel, oldParentLabel, newParentLabel,});
 			}
 		}
 		return diffLabel;

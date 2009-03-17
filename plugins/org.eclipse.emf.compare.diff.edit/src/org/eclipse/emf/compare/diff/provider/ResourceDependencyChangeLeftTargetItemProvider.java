@@ -78,8 +78,8 @@ public class ResourceDependencyChangeLeftTargetItemProvider extends ResourceDepe
 
 		final String resourceName = operation.getRoots().get(0).eResource().getURI().lastSegment();
 		if (operation.isRemote())
-			return getString("_UI_RemoteRemoveResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
-		return getString("_UI_AddResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
+			return getString("_UI_RemoteRemoveResourceDependency_type", new Object[] {resourceName,}); //$NON-NLS-1$
+		return getString("_UI_AddResourceDependency_type", new Object[] {resourceName,}); //$NON-NLS-1$
 	}
 
 	/**

@@ -41,7 +41,7 @@ public final class DiffEditPlugin extends EMFPlugin {
 	 * @generated
 	 */
 	public DiffEditPlugin() {
-		super(new ResourceLocator[] {EcoreEditPlugin.INSTANCE, MatchEditPlugin.INSTANCE, });
+		super(new ResourceLocator[] {EcoreEditPlugin.INSTANCE, MatchEditPlugin.INSTANCE,});
 	}
 
 	/**

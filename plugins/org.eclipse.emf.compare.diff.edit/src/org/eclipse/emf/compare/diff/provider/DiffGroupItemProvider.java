@@ -120,9 +120,9 @@ public class DiffGroupItemProvider extends DiffElementItemProvider implements IE
 		if (parent != null) {
 			final String parentLabel = AdapterUtils.getItemProviderText(parent);
 			return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), //$NON-NLS-1$
-					parentLabel });
+					parentLabel});
 		}
-		return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "model" }); //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_DiffGroup_type", new Object[] {group.getSubchanges(), "model"}); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
