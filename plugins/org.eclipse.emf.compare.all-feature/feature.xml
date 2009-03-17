@@ -236,5 +236,7 @@ litigation.
    <includes
          id="org.eclipse.emf.compare.team.subversive"
          version="0.0.0"/>
+         
+   <!-- TODOLGO include epatch.dsl -->
 
 </feature>
