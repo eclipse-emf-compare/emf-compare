@@ -252,7 +252,7 @@ public class ExportMenu extends AbstractCompareAction implements IMenuCreator {
 			final Action action = new AbstractCompareAction(actionDescriptor) {
 				@Override
 				public void run() {
-					actionDescriptor.exportSnapshot((ComparisonResourceSnapshot)parentViewer.getInput());
+					actionDescriptor.exportSnapshot((ComparisonSnapshot)parentViewer.getInput());
 				}
 			};
 			addActionToMenu(action);
