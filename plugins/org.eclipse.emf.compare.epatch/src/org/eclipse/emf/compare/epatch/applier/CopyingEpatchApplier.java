@@ -281,7 +281,7 @@ public class CopyingEpatchApplier {
 		if (val.getImport() != null) {
 			EObject e = getImport(val.getImport()).getEObject(val.getImpFrag());
 			if (e == null)
-				System.out.println("import not resolved!");
+				throw new RuntimeException("import not resolved!");
 			return e;
 		}
 		return null;

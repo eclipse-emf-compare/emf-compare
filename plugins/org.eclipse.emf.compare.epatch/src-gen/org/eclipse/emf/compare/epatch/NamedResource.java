@@ -10,30 +10,31 @@ import org.eclipse.emf.ecore.EObject;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Named Resource</b></em>'. <!--
  * end-user-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftUri <em>Left Uri</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftRoot <em>Left Root</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getRightUri <em>Right Uri</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getRightRoot <em>Right Root</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftUri <em>Left Uri</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftRoot <em>Left Root</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getRightUri <em>Right Uri</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.NamedResource#getRightRoot <em>Right Root</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource()
  * @model
  * @generated
  */
 public interface NamedResource extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource_Name()
@@ -43,24 +44,22 @@ public interface NamedResource extends EObject {
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getName <em>Name</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
 	 * @see #getName()
 	 * @generated
 	 */
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Left Uri</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Left Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Uri</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Left Uri</em>' attribute.
 	 * @see #setLeftUri(String)
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource_LeftUri()
@@ -70,24 +69,22 @@ public interface NamedResource extends EObject {
 	String getLeftUri();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftUri
-	 * <em>Left Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Left Uri</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftUri <em>Left Uri</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Uri</em>' attribute.
 	 * @see #getLeftUri()
 	 * @generated
 	 */
 	void setLeftUri(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Left Root</b></em>' containment reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Left Root</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Left Root</em>' containment reference isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Left Root</em>' containment reference.
 	 * @see #setLeftRoot(CreatedObject)
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource_LeftRoot()
@@ -97,24 +94,22 @@ public interface NamedResource extends EObject {
 	CreatedObject getLeftRoot();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftRoot
-	 * <em>Left Root</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Left Root</em>' containment reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getLeftRoot <em>Left Root</em>}' containment reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Left Root</em>' containment reference.
 	 * @see #getLeftRoot()
 	 * @generated
 	 */
 	void setLeftRoot(CreatedObject value);
 
 	/**
-	 * Returns the value of the '<em><b>Right Uri</b></em>' attribute. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Right Uri</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Uri</em>' attribute isn't clear, there really should be more of a
 	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Right Uri</em>' attribute.
 	 * @see #setRightUri(String)
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource_RightUri()
@@ -124,24 +119,22 @@ public interface NamedResource extends EObject {
 	String getRightUri();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getRightUri
-	 * <em>Right Uri</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Right Uri</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getRightUri <em>Right Uri</em>}' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Uri</em>' attribute.
 	 * @see #getRightUri()
 	 * @generated
 	 */
 	void setRightUri(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Right Root</b></em>' containment reference. <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Right Root</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Right Root</em>' containment reference isn't clear, there really should be
 	 * more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * 
 	 * @return the value of the '<em>Right Root</em>' containment reference.
 	 * @see #setRightRoot(CreatedObject)
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#getNamedResource_RightRoot()
@@ -151,11 +144,9 @@ public interface NamedResource extends EObject {
 	CreatedObject getRightRoot();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getRightRoot
-	 * <em>Right Root</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Right Root</em>' containment reference.
+	 * Sets the value of the '{@link org.eclipse.emf.compare.epatch.NamedResource#getRightRoot <em>Right Root</em>}' containment reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Right Root</em>' containment reference.
 	 * @see #getRightRoot()
 	 * @generated
 	 */

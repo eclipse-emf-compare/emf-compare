@@ -7,18 +7,15 @@ package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.Import;
 import org.eclipse.emf.compare.epatch.NamedObject;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Assignment Value</b></em>'. <!--
@@ -26,25 +23,25 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getValue <em>Value</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefObject <em>Ref Object</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefFeature <em>Ref Feature</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefIndex <em>Ref Index</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getNewObject <em>New Object</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getImport <em>Import</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getImpFrag <em>Imp Frag</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getIndex <em>Index</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getKeyword <em>Keyword</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefObject <em>Ref Object</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefFeature <em>Ref Feature</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getRefIndex <em>Ref Index</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getNewObject <em>New Object</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getImport <em>Import</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getImpFrag <em>Imp Frag</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getIndex <em>Index</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.AssignmentValueImpl#getKeyword <em>Keyword</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
-public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements AssignmentValue {
+public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue {
 	/**
-	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
@@ -52,9 +49,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final String VALUE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
@@ -62,9 +59,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected String value = VALUE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getRefObject() <em>Ref Object</em>}' reference. <!-- begin-user-doc
+	 * The cached value of the '{@link #getRefObject() <em>Ref Object</em>}' reference.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getRefObject()
 	 * @generated
 	 * @ordered
@@ -72,9 +69,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected NamedObject refObject;
 
 	/**
-	 * The default value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute. <!-- begin-user-doc
+	 * The default value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getRefFeature()
 	 * @generated
 	 * @ordered
@@ -82,9 +79,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final String REF_FEATURE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute. <!-- begin-user-doc
+	 * The cached value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #getRefFeature()
 	 * @generated
 	 * @ordered
@@ -92,9 +89,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected String refFeature = REF_FEATURE_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRefIndex()
 	 * @generated
 	 * @ordered
@@ -102,9 +99,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final int REF_INDEX_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRefIndex()
 	 * @generated
 	 * @ordered
@@ -122,9 +119,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected CreatedObject newObject;
 
 	/**
-	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getImport()
 	 * @generated
 	 * @ordered
@@ -132,9 +129,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected Import import_;
 
 	/**
-	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
@@ -142,9 +139,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final String IMP_FRAG_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
@@ -152,9 +149,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected String impFrag = IMP_FRAG_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getIndex()
 	 * @generated
 	 * @ordered
@@ -162,9 +159,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final int INDEX_EDEFAULT = 0;
 
 	/**
-	 * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getIndex()
 	 * @generated
 	 * @ordered
@@ -172,9 +169,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected int index = INDEX_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getKeyword() <em>Keyword</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getKeyword() <em>Keyword</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getKeyword()
 	 * @generated
 	 * @ordered
@@ -182,9 +179,9 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 	protected static final String KEYWORD_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getKeyword() <em>Keyword</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getKeyword() <em>Keyword</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getKeyword()
 	 * @generated
 	 * @ordered
@@ -193,7 +190,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected AssignmentValueImpl() {
@@ -202,7 +198,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -212,7 +207,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getValue() {
@@ -221,20 +215,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setValue(String newValue) {
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__VALUE,
-					oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__VALUE, oldValue, value));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NamedObject getRefObject() {
@@ -243,8 +234,7 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 			refObject = (NamedObject)eResolveProxy(oldRefObject);
 			if (refObject != oldRefObject) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT, oldRefObject, refObject));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT, oldRefObject, refObject));
 			}
 		}
 		return refObject;
@@ -252,7 +242,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NamedObject basicGetRefObject() {
@@ -261,20 +250,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRefObject(NamedObject newRefObject) {
 		NamedObject oldRefObject = refObject;
 		refObject = newRefObject;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT,
-					oldRefObject, refObject));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT, oldRefObject, refObject));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getRefFeature() {
@@ -283,20 +269,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRefFeature(String newRefFeature) {
 		String oldRefFeature = refFeature;
 		refFeature = newRefFeature;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE, oldRefFeature, refFeature));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE, oldRefFeature, refFeature));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public int getRefIndex() {
@@ -305,20 +288,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRefIndex(int newRefIndex) {
 		int oldRefIndex = refIndex;
 		refIndex = newRefIndex;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX,
-					oldRefIndex, refIndex));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX, oldRefIndex, refIndex));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CreatedObject getNewObject() {
@@ -327,48 +307,38 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetNewObject(CreatedObject newNewObject, NotificationChain msgs) {
 		CreatedObject oldNewObject = newObject;
 		newObject = newNewObject;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, oldNewObject, newNewObject);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, oldNewObject, newNewObject);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setNewObject(CreatedObject newNewObject) {
 		if (newNewObject != newObject) {
 			NotificationChain msgs = null;
 			if (newObject != null)
-				msgs = ((InternalEObject)newObject).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, null, msgs);
+				msgs = ((InternalEObject)newObject).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, null, msgs);
 			if (newNewObject != null)
-				msgs = ((InternalEObject)newNewObject).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, null, msgs);
+				msgs = ((InternalEObject)newNewObject).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, null, msgs);
 			msgs = basicSetNewObject(newNewObject, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT,
-					newNewObject, newNewObject));
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, newNewObject, newNewObject));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Import getImport() {
@@ -377,8 +347,7 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 			import_ = (Import)eResolveProxy(oldImport);
 			if (import_ != oldImport) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							EpatchPackage.ASSIGNMENT_VALUE__IMPORT, oldImport, import_));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.ASSIGNMENT_VALUE__IMPORT, oldImport, import_));
 			}
 		}
 		return import_;
@@ -386,7 +355,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Import basicGetImport() {
@@ -395,20 +363,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setImport(Import newImport) {
 		Import oldImport = import_;
 		import_ = newImport;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMPORT,
-					oldImport, import_));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMPORT, oldImport, import_));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getImpFrag() {
@@ -417,20 +382,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setImpFrag(String newImpFrag) {
 		String oldImpFrag = impFrag;
 		impFrag = newImpFrag;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG,
-					oldImpFrag, impFrag));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG, oldImpFrag, impFrag));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public int getIndex() {
@@ -439,20 +401,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setIndex(int newIndex) {
 		int oldIndex = index;
 		index = newIndex;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__INDEX,
-					oldIndex, index));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__INDEX, oldIndex, index));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getKeyword() {
@@ -461,20 +420,17 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setKeyword(String newKeyword) {
 		String oldKeyword = keyword;
 		keyword = newKeyword;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__KEYWORD,
-					oldKeyword, keyword));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__KEYWORD, oldKeyword, keyword));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -488,7 +444,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -497,23 +452,21 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 			case EpatchPackage.ASSIGNMENT_VALUE__VALUE:
 				return getValue();
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT:
-				if (resolve)
-					return getRefObject();
+				if (resolve) return getRefObject();
 				return basicGetRefObject();
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE:
 				return getRefFeature();
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				return getRefIndex();
+				return new Integer(getRefIndex());
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				return getNewObject();
 			case EpatchPackage.ASSIGNMENT_VALUE__IMPORT:
-				if (resolve)
-					return getImport();
+				if (resolve) return getImport();
 				return basicGetImport();
 			case EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG:
 				return getImpFrag();
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				return getIndex();
+				return new Integer(getIndex());
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				return getKeyword();
 		}
@@ -522,7 +475,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -538,7 +490,7 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 				setRefFeature((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				setRefIndex((Integer)newValue);
+				setRefIndex(((Integer)newValue).intValue());
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				setNewObject((CreatedObject)newValue);
@@ -550,7 +502,7 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 				setImpFrag((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				setIndex((Integer)newValue);
+				setIndex(((Integer)newValue).intValue());
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				setKeyword((String)newValue);
@@ -561,7 +513,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -600,7 +551,6 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -611,8 +561,7 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT:
 				return refObject != null;
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE:
-				return REF_FEATURE_EDEFAULT == null ? refFeature != null : !REF_FEATURE_EDEFAULT
-						.equals(refFeature);
+				return REF_FEATURE_EDEFAULT == null ? refFeature != null : !REF_FEATURE_EDEFAULT.equals(refFeature);
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
 				return refIndex != REF_INDEX_EDEFAULT;
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
@@ -631,13 +580,11 @@ public class AssignmentValueImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (value: ");

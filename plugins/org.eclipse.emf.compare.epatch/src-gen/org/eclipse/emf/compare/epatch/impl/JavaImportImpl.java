@@ -8,12 +8,9 @@ package org.eclipse.emf.compare.epatch.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.JavaImport;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 /**
@@ -22,17 +19,17 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.JavaImportImpl#getPath <em>Path</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.JavaImportImpl#getPath <em>Path</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class JavaImportImpl extends ImportImpl implements JavaImport {
 	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute list. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute list.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getPath()
 	 * @generated
 	 * @ordered
@@ -41,7 +38,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected JavaImportImpl() {
@@ -50,7 +46,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -60,7 +55,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<String> getPath() {
@@ -72,7 +66,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -86,7 +79,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -103,7 +95,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -118,7 +109,6 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -132,13 +122,11 @@ public class JavaImportImpl extends ImportImpl implements JavaImport {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (path: ");

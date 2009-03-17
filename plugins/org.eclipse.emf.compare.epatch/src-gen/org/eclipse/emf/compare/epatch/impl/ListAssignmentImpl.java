@@ -8,16 +8,12 @@ package org.eclipse.emf.compare.epatch.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.ListAssignment;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -27,18 +23,17 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ListAssignmentImpl#getLeftValues <em>Left Values</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ListAssignmentImpl#getRightValues <em>Right Values</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ListAssignmentImpl#getLeftValues <em>Left Values</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ListAssignmentImpl#getRightValues <em>Right Values</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment {
 	/**
 	 * The cached value of the '{@link #getLeftValues() <em>Left Values</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftValues()
 	 * @generated
 	 * @ordered
@@ -48,7 +43,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 	/**
 	 * The cached value of the '{@link #getRightValues() <em>Right Values</em>}' containment reference list.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @see #getRightValues()
 	 * @generated
 	 * @ordered
@@ -57,7 +51,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ListAssignmentImpl() {
@@ -66,7 +59,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -76,33 +68,28 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<AssignmentValue> getLeftValues() {
 		if (leftValues == null) {
-			leftValues = new EObjectContainmentEList<AssignmentValue>(AssignmentValue.class, this,
-					EpatchPackage.LIST_ASSIGNMENT__LEFT_VALUES);
+			leftValues = new EObjectContainmentEList<AssignmentValue>(AssignmentValue.class, this, EpatchPackage.LIST_ASSIGNMENT__LEFT_VALUES);
 		}
 		return leftValues;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<AssignmentValue> getRightValues() {
 		if (rightValues == null) {
-			rightValues = new EObjectContainmentEList<AssignmentValue>(AssignmentValue.class, this,
-					EpatchPackage.LIST_ASSIGNMENT__RIGHT_VALUES);
+			rightValues = new EObjectContainmentEList<AssignmentValue>(AssignmentValue.class, this, EpatchPackage.LIST_ASSIGNMENT__RIGHT_VALUES);
 		}
 		return rightValues;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -118,7 +105,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -134,7 +120,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -155,7 +140,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -173,7 +157,6 @@ public class ListAssignmentImpl extends AssignmentImpl implements ListAssignment
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

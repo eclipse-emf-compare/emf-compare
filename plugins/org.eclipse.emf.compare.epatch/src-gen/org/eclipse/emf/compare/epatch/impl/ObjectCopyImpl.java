@@ -6,14 +6,11 @@
 package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.compare.epatch.ObjectCopy;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -22,18 +19,18 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectCopyImpl#getResource <em>Resource</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectCopyImpl#getFragment <em>Fragment</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectCopyImpl#getResource <em>Resource</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectCopyImpl#getFragment <em>Fragment</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 	/**
-	 * The cached value of the '{@link #getResource() <em>Resource</em>}' reference. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getResource() <em>Resource</em>}' reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getResource()
 	 * @generated
 	 * @ordered
@@ -41,9 +38,9 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 	protected NamedResource resource;
 
 	/**
-	 * The default value of the '{@link #getFragment() <em>Fragment</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getFragment() <em>Fragment</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getFragment()
 	 * @generated
 	 * @ordered
@@ -51,9 +48,9 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 	protected static final String FRAGMENT_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getFragment() <em>Fragment</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFragment() <em>Fragment</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getFragment()
 	 * @generated
 	 * @ordered
@@ -62,7 +59,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ObjectCopyImpl() {
@@ -71,7 +67,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -81,7 +76,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NamedResource getResource() {
@@ -90,8 +84,7 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 			resource = (NamedResource)eResolveProxy(oldResource);
 			if (resource != oldResource) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							EpatchPackage.OBJECT_COPY__RESOURCE, oldResource, resource));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.OBJECT_COPY__RESOURCE, oldResource, resource));
 			}
 		}
 		return resource;
@@ -99,7 +92,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NamedResource basicGetResource() {
@@ -108,20 +100,17 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setResource(NamedResource newResource) {
 		NamedResource oldResource = resource;
 		resource = newResource;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__RESOURCE,
-					oldResource, resource));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__RESOURCE, oldResource, resource));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getFragment() {
@@ -130,28 +119,24 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setFragment(String newFragment) {
 		String oldFragment = fragment;
 		fragment = newFragment;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__FRAGMENT,
-					oldFragment, fragment));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__FRAGMENT, oldFragment, fragment));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_COPY__RESOURCE:
-				if (resolve)
-					return getResource();
+				if (resolve) return getResource();
 				return basicGetResource();
 			case EpatchPackage.OBJECT_COPY__FRAGMENT:
 				return getFragment();
@@ -161,7 +146,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -179,7 +163,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -197,7 +180,6 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -213,13 +195,11 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (fragment: ");

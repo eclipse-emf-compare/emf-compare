@@ -24,147 +24,128 @@ import org.eclipse.emf.compare.epatch.ObjectNew;
 import org.eclipse.emf.compare.epatch.ObjectRef;
 import org.eclipse.emf.compare.epatch.ResourceImport;
 import org.eclipse.emf.compare.epatch.SingleAssignment;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass epatchEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass importEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass modelImportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass resourceImportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass ePackageImportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass javaImportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass extensionImportEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass namedResourceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass namedObjectEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass objectRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass createdObjectEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass assignmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass singleAssignmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass listAssignmentEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass assignmentValueEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass objectNewEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass objectCopyEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
-	 * which also performs initialization of the package, or returns the registered package, if one already
-	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.epatch.EpatchPackage#eNS_URI
 	 * @see #init()
@@ -176,7 +157,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -201,13 +181,10 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 	 * @generated
 	 */
 	public static EpatchPackage init() {
-		if (isInited)
-			return (EpatchPackage)EPackage.Registry.INSTANCE.getEPackage(EpatchPackage.eNS_URI);
+		if (isInited) return (EpatchPackage)EPackage.Registry.INSTANCE.getEPackage(EpatchPackage.eNS_URI);
 
 		// Obtain or create and register package
-		EpatchPackageImpl theEpatchPackage = (EpatchPackageImpl)(EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI) instanceof EpatchPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI) : new EpatchPackageImpl());
+		EpatchPackageImpl theEpatchPackage = (EpatchPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof EpatchPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new EpatchPackageImpl());
 
 		isInited = true;
 
@@ -225,7 +202,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getEpatch() {
@@ -234,7 +210,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getEpatch_Name() {
@@ -243,7 +218,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getEpatch_Imports() {
@@ -252,7 +226,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getEpatch_Resources() {
@@ -261,7 +234,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getEpatch_Objects() {
@@ -270,7 +242,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getImport() {
@@ -279,7 +250,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getModelImport() {
@@ -288,7 +258,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getModelImport_Name() {
@@ -297,7 +266,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getResourceImport() {
@@ -306,7 +274,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getResourceImport_Uri() {
@@ -315,7 +282,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getEPackageImport() {
@@ -324,7 +290,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getEPackageImport_NsURI() {
@@ -333,7 +298,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getJavaImport() {
@@ -342,7 +306,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getJavaImport_Path() {
@@ -351,7 +314,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getExtensionImport() {
@@ -360,7 +322,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getExtensionImport_Path() {
@@ -369,7 +330,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getNamedResource() {
@@ -378,7 +338,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getNamedResource_Name() {
@@ -387,7 +346,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getNamedResource_LeftUri() {
@@ -396,7 +354,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getNamedResource_LeftRoot() {
@@ -405,7 +362,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getNamedResource_RightUri() {
@@ -414,7 +370,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getNamedResource_RightRoot() {
@@ -423,7 +378,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getNamedObject() {
@@ -432,7 +386,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getNamedObject_Name() {
@@ -441,7 +394,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getNamedObject_Assignments() {
@@ -450,7 +402,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getObjectRef() {
@@ -459,7 +410,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getObjectRef_LeftRes() {
@@ -468,7 +418,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getObjectRef_LeftFrag() {
@@ -477,7 +426,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getObjectRef_RightRes() {
@@ -486,7 +434,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getObjectRef_RightFrag() {
@@ -495,7 +442,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getCreatedObject() {
@@ -504,7 +450,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAssignment() {
@@ -513,7 +458,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignment_Feature() {
@@ -522,7 +466,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getSingleAssignment() {
@@ -531,7 +474,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getSingleAssignment_LeftValue() {
@@ -540,7 +482,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getSingleAssignment_RightValue() {
@@ -549,7 +490,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getListAssignment() {
@@ -558,7 +498,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getListAssignment_LeftValues() {
@@ -567,7 +506,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getListAssignment_RightValues() {
@@ -576,7 +514,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getAssignmentValue() {
@@ -585,7 +522,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_Value() {
@@ -594,7 +530,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAssignmentValue_RefObject() {
@@ -603,7 +538,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_RefFeature() {
@@ -612,7 +546,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_RefIndex() {
@@ -621,7 +554,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAssignmentValue_NewObject() {
@@ -630,7 +562,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getAssignmentValue_Import() {
@@ -639,7 +570,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_ImpFrag() {
@@ -648,7 +578,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_Index() {
@@ -657,7 +586,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getAssignmentValue_Keyword() {
@@ -666,7 +594,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getObjectNew() {
@@ -675,7 +602,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getObjectNew_Import() {
@@ -684,7 +610,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getObjectNew_ImpFrag() {
@@ -693,7 +618,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getObjectCopy() {
@@ -702,7 +626,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getObjectCopy_Resource() {
@@ -711,7 +634,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getObjectCopy_Fragment() {
@@ -720,7 +642,6 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EpatchFactory getEpatchFactory() {
@@ -729,20 +650,18 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
-			return;
+		if (isCreated) return;
 		isCreated = true;
 
 		// Create classes and their features
@@ -821,20 +740,18 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
-	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
-			return;
+		if (isInitialized) return;
 		isInitialized = true;
 
 		// Initialize package
@@ -860,170 +777,77 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage {
 		objectCopyEClass.getESuperTypes().add(this.getCreatedObject());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(epatchEClass, Epatch.class, "Epatch", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getEpatch_Name(), ecorePackage.getEString(), "name", null, 0, 1, Epatch.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getEpatch_Imports(), this.getImport(), null, "imports", null, 0, -1, Epatch.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getEpatch_Resources(), this.getNamedResource(), null, "resources", null, 0, -1,
-				Epatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getEpatch_Objects(), this.getObjectRef(), null, "objects", null, 0, -1, Epatch.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(epatchEClass, Epatch.class, "Epatch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEpatch_Name(), ecorePackage.getEString(), "name", null, 0, 1, Epatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEpatch_Imports(), this.getImport(), null, "imports", null, 0, -1, Epatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEpatch_Resources(), this.getNamedResource(), null, "resources", null, 0, -1, Epatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEpatch_Objects(), this.getObjectRef(), null, "objects", null, 0, -1, Epatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(modelImportEClass, ModelImport.class, "ModelImport", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getModelImport_Name(), ecorePackage.getEString(), "name", null, 0, 1,
-				ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(modelImportEClass, ModelImport.class, "ModelImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getModelImport_Name(), ecorePackage.getEString(), "name", null, 0, 1, ModelImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(resourceImportEClass, ResourceImport.class, "ResourceImport", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getResourceImport_Uri(), ecorePackage.getEString(), "uri", null, 0, 1,
-				ResourceImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(resourceImportEClass, ResourceImport.class, "ResourceImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getResourceImport_Uri(), ecorePackage.getEString(), "uri", null, 0, 1, ResourceImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(ePackageImportEClass, EPackageImport.class, "EPackageImport", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getEPackageImport_NsURI(), ecorePackage.getEString(), "nsURI", null, 0, 1,
-				EPackageImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(ePackageImportEClass, EPackageImport.class, "EPackageImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEPackageImport_NsURI(), ecorePackage.getEString(), "nsURI", null, 0, 1, EPackageImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(javaImportEClass, JavaImport.class, "JavaImport", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getJavaImport_Path(), ecorePackage.getEString(), "path", null, 0, -1,
-				JavaImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				!IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(javaImportEClass, JavaImport.class, "JavaImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getJavaImport_Path(), ecorePackage.getEString(), "path", null, 0, -1, JavaImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(extensionImportEClass, ExtensionImport.class, "ExtensionImport", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getExtensionImport_Path(), ecorePackage.getEString(), "path", null, 0, -1,
-				ExtensionImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				!IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(extensionImportEClass, ExtensionImport.class, "ExtensionImport", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExtensionImport_Path(), ecorePackage.getEString(), "path", null, 0, -1, ExtensionImport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(namedResourceEClass, NamedResource.class, "NamedResource", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNamedResource_Name(), ecorePackage.getEString(), "name", null, 0, 1,
-				NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getNamedResource_LeftUri(), ecorePackage.getEString(), "leftUri", null, 0, 1,
-				NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNamedResource_LeftRoot(), this.getCreatedObject(), null, "leftRoot", null, 0, 1,
-				NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getNamedResource_RightUri(), ecorePackage.getEString(), "rightUri", null, 0, 1,
-				NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNamedResource_RightRoot(), this.getCreatedObject(), null, "rightRoot", null, 0, 1,
-				NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(namedResourceEClass, NamedResource.class, "NamedResource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNamedResource_Name(), ecorePackage.getEString(), "name", null, 0, 1, NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNamedResource_LeftUri(), ecorePackage.getEString(), "leftUri", null, 0, 1, NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedResource_LeftRoot(), this.getCreatedObject(), null, "leftRoot", null, 0, 1, NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNamedResource_RightUri(), ecorePackage.getEString(), "rightUri", null, 0, 1, NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedResource_RightRoot(), this.getCreatedObject(), null, "rightRoot", null, 0, 1, NamedResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(namedObjectEClass, NamedObject.class, "NamedObject", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getNamedObject_Name(), ecorePackage.getEString(), "name", null, 0, 1,
-				NamedObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNamedObject_Assignments(), this.getAssignment(), null, "assignments", null, 0, -1,
-				NamedObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(namedObjectEClass, NamedObject.class, "NamedObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNamedObject_Name(), ecorePackage.getEString(), "name", null, 0, 1, NamedObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedObject_Assignments(), this.getAssignment(), null, "assignments", null, 0, -1, NamedObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(objectRefEClass, ObjectRef.class, "ObjectRef", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getObjectRef_LeftRes(), this.getNamedResource(), null, "leftRes", null, 0, 1,
-				ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getObjectRef_LeftFrag(), ecorePackage.getEString(), "leftFrag", null, 0, 1,
-				ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getObjectRef_RightRes(), this.getNamedResource(), null, "rightRes", null, 0, 1,
-				ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getObjectRef_RightFrag(), ecorePackage.getEString(), "rightFrag", null, 0, 1,
-				ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(objectRefEClass, ObjectRef.class, "ObjectRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getObjectRef_LeftRes(), this.getNamedResource(), null, "leftRes", null, 0, 1, ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getObjectRef_LeftFrag(), ecorePackage.getEString(), "leftFrag", null, 0, 1, ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getObjectRef_RightRes(), this.getNamedResource(), null, "rightRes", null, 0, 1, ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getObjectRef_RightFrag(), ecorePackage.getEString(), "rightFrag", null, 0, 1, ObjectRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(createdObjectEClass, CreatedObject.class, "CreatedObject", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
+		initEClass(createdObjectEClass, CreatedObject.class, "CreatedObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(assignmentEClass, Assignment.class, "Assignment", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAssignment_Feature(), ecorePackage.getEString(), "feature", null, 0, 1,
-				Assignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(assignmentEClass, Assignment.class, "Assignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAssignment_Feature(), ecorePackage.getEString(), "feature", null, 0, 1, Assignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(singleAssignmentEClass, SingleAssignment.class, "SingleAssignment", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSingleAssignment_LeftValue(), this.getAssignmentValue(), null, "leftValue", null,
-				0, 1, SingleAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSingleAssignment_RightValue(), this.getAssignmentValue(), null, "rightValue", null,
-				0, 1, SingleAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(singleAssignmentEClass, SingleAssignment.class, "SingleAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSingleAssignment_LeftValue(), this.getAssignmentValue(), null, "leftValue", null, 0, 1, SingleAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSingleAssignment_RightValue(), this.getAssignmentValue(), null, "rightValue", null, 0, 1, SingleAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(listAssignmentEClass, ListAssignment.class, "ListAssignment", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getListAssignment_LeftValues(), this.getAssignmentValue(), null, "leftValues", null,
-				0, -1, ListAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getListAssignment_RightValues(), this.getAssignmentValue(), null, "rightValues", null,
-				0, -1, ListAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(listAssignmentEClass, ListAssignment.class, "ListAssignment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getListAssignment_LeftValues(), this.getAssignmentValue(), null, "leftValues", null, 0, -1, ListAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getListAssignment_RightValues(), this.getAssignmentValue(), null, "rightValues", null, 0, -1, ListAssignment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(assignmentValueEClass, AssignmentValue.class, "AssignmentValue", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAssignmentValue_Value(), ecorePackage.getEString(), "value", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAssignmentValue_RefObject(), this.getNamedObject(), null, "refObject", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAssignmentValue_RefFeature(), ecorePackage.getEString(), "refFeature", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAssignmentValue_RefIndex(), ecorePackage.getEInt(), "refIndex", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAssignmentValue_NewObject(), this.getCreatedObject(), null, "newObject", null, 0,
-				1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
-				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAssignmentValue_Import(), this.getImport(), null, "import", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAssignmentValue_ImpFrag(), ecorePackage.getEString(), "impFrag", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAssignmentValue_Index(), ecorePackage.getEInt(), "index", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAssignmentValue_Keyword(), ecorePackage.getEString(), "keyword", null, 0, 1,
-				AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(assignmentValueEClass, AssignmentValue.class, "AssignmentValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAssignmentValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAssignmentValue_RefObject(), this.getNamedObject(), null, "refObject", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAssignmentValue_RefFeature(), ecorePackage.getEString(), "refFeature", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAssignmentValue_RefIndex(), ecorePackage.getEInt(), "refIndex", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAssignmentValue_NewObject(), this.getCreatedObject(), null, "newObject", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAssignmentValue_Import(), this.getImport(), null, "import", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAssignmentValue_ImpFrag(), ecorePackage.getEString(), "impFrag", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAssignmentValue_Index(), ecorePackage.getEInt(), "index", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAssignmentValue_Keyword(), ecorePackage.getEString(), "keyword", null, 0, 1, AssignmentValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(objectNewEClass, ObjectNew.class, "ObjectNew", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getObjectNew_Import(), this.getImport(), null, "import", null, 0, 1, ObjectNew.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getObjectNew_ImpFrag(), ecorePackage.getEString(), "impFrag", null, 0, 1,
-				ObjectNew.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(objectNewEClass, ObjectNew.class, "ObjectNew", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getObjectNew_Import(), this.getImport(), null, "import", null, 0, 1, ObjectNew.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getObjectNew_ImpFrag(), ecorePackage.getEString(), "impFrag", null, 0, 1, ObjectNew.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(objectCopyEClass, ObjectCopy.class, "ObjectCopy", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getObjectCopy_Resource(), this.getNamedResource(), null, "resource", null, 0, 1,
-				ObjectCopy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getObjectCopy_Fragment(), ecorePackage.getEString(), "fragment", null, 0, 1,
-				ObjectCopy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
-				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(objectCopyEClass, ObjectCopy.class, "ObjectCopy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getObjectCopy_Resource(), this.getNamedResource(), null, "resource", null, 0, 1, ObjectCopy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getObjectCopy_Fragment(), ecorePackage.getEString(), "fragment", null, 0, 1, ObjectCopy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

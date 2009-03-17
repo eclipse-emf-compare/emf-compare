@@ -7,16 +7,13 @@ package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.NamedResource;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Named Resource</b></em>'. <!--
@@ -24,21 +21,21 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getLeftUri <em>Left Uri</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getLeftRoot <em>Left Root</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getRightUri <em>Right Uri</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getRightRoot <em>Right Root</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getLeftUri <em>Left Uri</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getLeftRoot <em>Left Root</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getRightUri <em>Right Uri</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.NamedResourceImpl#getRightRoot <em>Right Root</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
-public class NamedResourceImpl extends MinimalEObjectImpl.Container implements NamedResource {
+public class NamedResourceImpl extends EObjectImpl implements NamedResource {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -46,9 +43,9 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -56,9 +53,9 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getLeftUri() <em>Left Uri</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getLeftUri() <em>Left Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftUri()
 	 * @generated
 	 * @ordered
@@ -66,9 +63,9 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 	protected static final String LEFT_URI_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getLeftUri() <em>Left Uri</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLeftUri() <em>Left Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getLeftUri()
 	 * @generated
 	 * @ordered
@@ -86,9 +83,9 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 	protected CreatedObject leftRoot;
 
 	/**
-	 * The default value of the '{@link #getRightUri() <em>Right Uri</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRightUri() <em>Right Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRightUri()
 	 * @generated
 	 * @ordered
@@ -96,9 +93,9 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 	protected static final String RIGHT_URI_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getRightUri() <em>Right Uri</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRightUri() <em>Right Uri</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getRightUri()
 	 * @generated
 	 * @ordered
@@ -117,7 +114,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected NamedResourceImpl() {
@@ -126,7 +122,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -136,7 +131,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -145,20 +139,17 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__NAME,
-					oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__NAME, oldName, name));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getLeftUri() {
@@ -167,20 +158,17 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftUri(String newLeftUri) {
 		String oldLeftUri = leftUri;
 		leftUri = newLeftUri;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__LEFT_URI,
-					oldLeftUri, leftUri));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__LEFT_URI, oldLeftUri, leftUri));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CreatedObject getLeftRoot() {
@@ -189,48 +177,38 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetLeftRoot(CreatedObject newLeftRoot, NotificationChain msgs) {
 		CreatedObject oldLeftRoot = leftRoot;
 		leftRoot = newLeftRoot;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, oldLeftRoot, newLeftRoot);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, oldLeftRoot, newLeftRoot);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setLeftRoot(CreatedObject newLeftRoot) {
 		if (newLeftRoot != leftRoot) {
 			NotificationChain msgs = null;
 			if (leftRoot != null)
-				msgs = ((InternalEObject)leftRoot).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, null, msgs);
+				msgs = ((InternalEObject)leftRoot).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, null, msgs);
 			if (newLeftRoot != null)
-				msgs = ((InternalEObject)newLeftRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, null, msgs);
+				msgs = ((InternalEObject)newLeftRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, null, msgs);
 			msgs = basicSetLeftRoot(newLeftRoot, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__LEFT_ROOT,
-					newLeftRoot, newLeftRoot));
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__LEFT_ROOT, newLeftRoot, newLeftRoot));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getRightUri() {
@@ -239,20 +217,17 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightUri(String newRightUri) {
 		String oldRightUri = rightUri;
 		rightUri = newRightUri;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__RIGHT_URI,
-					oldRightUri, rightUri));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__RIGHT_URI, oldRightUri, rightUri));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public CreatedObject getRightRoot() {
@@ -261,48 +236,38 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetRightRoot(CreatedObject newRightRoot, NotificationChain msgs) {
 		CreatedObject oldRightRoot = rightRoot;
 		rightRoot = newRightRoot;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, oldRightRoot, newRightRoot);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, oldRightRoot, newRightRoot);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setRightRoot(CreatedObject newRightRoot) {
 		if (newRightRoot != rightRoot) {
 			NotificationChain msgs = null;
 			if (rightRoot != null)
-				msgs = ((InternalEObject)rightRoot).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, null, msgs);
+				msgs = ((InternalEObject)rightRoot).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, null, msgs);
 			if (newRightRoot != null)
-				msgs = ((InternalEObject)newRightRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-						- EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, null, msgs);
+				msgs = ((InternalEObject)newRightRoot).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, null, msgs);
 			msgs = basicSetRightRoot(newRightRoot, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT,
-					newRightRoot, newRightRoot));
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.NAMED_RESOURCE__RIGHT_ROOT, newRightRoot, newRightRoot));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -318,7 +283,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -340,7 +304,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -367,7 +330,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -394,7 +356,6 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -416,13 +377,11 @@ public class NamedResourceImpl extends MinimalEObjectImpl.Container implements N
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");

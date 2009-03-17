@@ -6,12 +6,9 @@
 package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.ResourceImport;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -20,17 +17,17 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ResourceImportImpl#getUri <em>Uri</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ResourceImportImpl#getUri <em>Uri</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ResourceImportImpl extends ModelImportImpl implements ResourceImport {
 	/**
-	 * The default value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getUri() <em>Uri</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getUri()
 	 * @generated
 	 * @ordered
@@ -38,9 +35,9 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 	protected static final String URI_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getUri() <em>Uri</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getUri()
 	 * @generated
 	 * @ordered
@@ -49,7 +46,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ResourceImportImpl() {
@@ -58,7 +54,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -68,7 +63,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getUri() {
@@ -77,20 +71,17 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setUri(String newUri) {
 		String oldUri = uri;
 		uri = newUri;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.RESOURCE_IMPORT__URI, oldUri,
-					uri));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.RESOURCE_IMPORT__URI, oldUri, uri));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -104,7 +95,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -119,7 +109,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -134,7 +123,6 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -148,13 +136,11 @@ public class ResourceImportImpl extends ModelImportImpl implements ResourceImpor
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (uri: ");

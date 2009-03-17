@@ -7,7 +7,6 @@ package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
-
 import org.eclipse.emf.ecore.EClass;
 
 /**
@@ -15,13 +14,12 @@ import org.eclipse.emf.ecore.EClass;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class CreatedObjectImpl extends NamedObjectImpl implements CreatedObject {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected CreatedObjectImpl() {
@@ -30,7 +28,6 @@ public class CreatedObjectImpl extends NamedObjectImpl implements CreatedObject 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override

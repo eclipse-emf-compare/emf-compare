@@ -6,14 +6,11 @@
 package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.Import;
 import org.eclipse.emf.compare.epatch.ObjectNew;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -22,18 +19,18 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectNewImpl#getImport <em>Import</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectNewImpl#getImpFrag <em>Imp Frag</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectNewImpl#getImport <em>Import</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.ObjectNewImpl#getImpFrag <em>Imp Frag</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 	/**
-	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getImport()
 	 * @generated
 	 * @ordered
@@ -41,9 +38,9 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 	protected Import import_;
 
 	/**
-	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute. <!-- begin-user-doc -->
+	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
@@ -51,9 +48,9 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 	protected static final String IMP_FRAG_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
@@ -62,7 +59,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected ObjectNewImpl() {
@@ -71,7 +67,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -81,7 +76,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Import getImport() {
@@ -90,8 +84,7 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 			import_ = (Import)eResolveProxy(oldImport);
 			if (import_ != oldImport) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							EpatchPackage.OBJECT_NEW__IMPORT, oldImport, import_));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.OBJECT_NEW__IMPORT, oldImport, import_));
 			}
 		}
 		return import_;
@@ -99,7 +92,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Import basicGetImport() {
@@ -108,20 +100,17 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setImport(Import newImport) {
 		Import oldImport = import_;
 		import_ = newImport;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMPORT,
-					oldImport, import_));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMPORT, oldImport, import_));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getImpFrag() {
@@ -130,28 +119,24 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setImpFrag(String newImpFrag) {
 		String oldImpFrag = impFrag;
 		impFrag = newImpFrag;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMP_FRAG,
-					oldImpFrag, impFrag));
+			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMP_FRAG, oldImpFrag, impFrag));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_NEW__IMPORT:
-				if (resolve)
-					return getImport();
+				if (resolve) return getImport();
 				return basicGetImport();
 			case EpatchPackage.OBJECT_NEW__IMP_FRAG:
 				return getImpFrag();
@@ -161,7 +146,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -179,7 +163,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -197,7 +180,6 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -213,13 +195,11 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (impFrag: ");

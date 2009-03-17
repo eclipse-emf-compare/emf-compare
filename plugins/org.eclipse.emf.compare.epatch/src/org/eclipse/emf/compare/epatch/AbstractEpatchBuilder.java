@@ -228,7 +228,6 @@ public abstract class AbstractEpatchBuilder {
 	protected Import getImportRef(EObject obj) {
 		URI uri = obj.eIsProxy() ? ((InternalEObject)obj).eProxyURI().trimFragment() : obj.eResource()
 				.getURI();
-		System.out.println("requesting " + uri);
 		Import imp = importMap.get(uri);
 		if (imp != null)
 			return imp;

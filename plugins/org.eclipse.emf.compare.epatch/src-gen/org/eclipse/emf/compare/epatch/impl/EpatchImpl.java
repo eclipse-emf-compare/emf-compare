@@ -9,21 +9,16 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.compare.epatch.Epatch;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.compare.epatch.Import;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.compare.epatch.ObjectRef;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -42,11 +37,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * 
  * @generated
  */
-public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
+public class EpatchImpl extends EObjectImpl implements Epatch {
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -54,9 +49,9 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 	protected static final String NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
-	 * 
 	 * @see #getName()
 	 * @generated
 	 * @ordered
@@ -95,7 +90,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected EpatchImpl() {
@@ -104,7 +98,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -114,7 +107,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String getName() {
@@ -123,7 +115,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setName(String newName) {
@@ -135,7 +126,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<Import> getImports() {
@@ -147,33 +137,28 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<NamedResource> getResources() {
 		if (resources == null) {
-			resources = new EObjectContainmentEList<NamedResource>(NamedResource.class, this,
-					EpatchPackage.EPATCH__RESOURCES);
+			resources = new EObjectContainmentEList<NamedResource>(NamedResource.class, this, EpatchPackage.EPATCH__RESOURCES);
 		}
 		return resources;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<ObjectRef> getObjects() {
 		if (objects == null) {
-			objects = new EObjectContainmentEList<ObjectRef>(ObjectRef.class, this,
-					EpatchPackage.EPATCH__OBJECTS);
+			objects = new EObjectContainmentEList<ObjectRef>(ObjectRef.class, this, EpatchPackage.EPATCH__OBJECTS);
 		}
 		return objects;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -191,7 +176,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -211,7 +195,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -239,7 +222,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -263,7 +245,6 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -283,13 +264,11 @@ public class EpatchImpl extends MinimalEObjectImpl.Container implements Epatch {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
