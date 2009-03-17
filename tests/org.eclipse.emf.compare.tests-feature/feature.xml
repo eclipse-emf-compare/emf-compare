@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.emf.compare.tests"
-      label="EMF Compare Tests (Incubation)"
+      label="%featureName"
       version="0.9.0.qualifier"
-      provider-name="Eclipse.org">
+      provider-name="%providerName">
 
    <description>
       EMF Compare Tests (Incubation)
