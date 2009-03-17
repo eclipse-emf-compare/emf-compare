@@ -114,16 +114,20 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            The value that is to be copied.
 	 */
 	@SuppressWarnings("unchecked")
-	public void copyReferenceValue(EReference targetReference, EObject target, EObject value) {
+	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value) {
+		final EObject copy;
 		final EObject targetValue = get(value);
 		if (targetValue != null) {
-			((List<Object>)target.eGet(targetReference)).add(get(value));
+			copy = get(value);
 		} else if (mergeLinkedDiff(value)) {
 			// referenced object was an unmatched one and we managed to merge its corresponding diff
-			((List<Object>)target.eGet(targetReference)).add(get(value));
-		} else
+			copy = get(value);
+		} else {
 			throw new EMFCompareException(EMFCompareDiffMessages.getString(
 					"EMFCompareEObjectCopier.MergeFailure", value, targetReference)); //$NON-NLS-1$
+		}
+		((List<Object>)target.eGet(targetReference)).add(copy);
+		return copy;
 	}
 
 	/**
@@ -140,7 +144,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
 	 */
 	@SuppressWarnings("unchecked")
-	public void copyReferenceValue(EReference targetReference, EObject target, EObject value,
+	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value,
 			EObject matchedValue) {
 		EObject actualValue = value;
 		if (value == null && matchedValue != null) {
@@ -150,9 +154,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		if (matchedValue != null) {
 			put(actualValue, matchedValue);
 			((List<Object>)target.eGet(targetReference)).add(matchedValue);
-		} else {
-			copyReferenceValue(targetReference, target, actualValue);
+			return matchedValue;
 		}
+		return copyReferenceValue(targetReference, target, actualValue);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
@@ -86,8 +87,10 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 		final EObject element = theDiff.getRightElement();
 		final EObject leftTarget = theDiff.getRightTarget();
 		final EObject rightTarget = theDiff.getLeftTarget();
-		MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(), element, leftTarget,
-				rightTarget);
+		// FIXME respect ordering!
+		final EObject copiedValue = MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(),
+				element, leftTarget, rightTarget);
+
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
 		while (siblings.hasNext()) {
@@ -98,6 +101,12 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
 						&& link.getLeftTarget().equals(element)) {
 					removeFromContainer(link);
+				}
+			} else if (op instanceof ReferenceOrderChange) {
+				final ReferenceOrderChange link = (ReferenceOrderChange)op;
+				if (link.getReference().equals(theDiff.getReference())) {
+					// FIXME respect ordering!
+					link.getRightTarget().add(copiedValue);
 				}
 			}
 		}
