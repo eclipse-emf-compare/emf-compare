@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +55,7 @@ import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
@@ -792,8 +794,10 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		EObject matchedEObject = null;
 		if (matchCrossReferencer != null) {
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : matchCrossReferencer
-					.get(from)) {
+			final Collection<Setting> settings = matchCrossReferencer.get(from);
+			if (settings == null)
+				return null;
+			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
 				if (setting.getEObject() instanceof Match2Elements) {
 					if (side == LEFT_OBJECT) {
 						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
@@ -1527,8 +1531,8 @@ public class GenericDiffEngine implements IDiffEngine {
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
 
-			EObject leftTarget = getMatchedEObject(remotelyAdded.get(0));
-			EObject rightTarget = getMatchedEObject(remotelyDeleted.get(0));
+			EObject rightTarget = getMatchedEObject(remotelyAdded.get(0));
+			EObject leftTarget = getMatchedEObject(remotelyDeleted.get(0));
 			// checks if target are defined remotely
 			if (leftTarget == null) {
 				leftTarget = remotelyAdded.get(0);
@@ -1680,8 +1684,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		operation.setRightElement(right);
 		operation.setReference(reference);
 
-		EObject leftTarget = getMatchedEObject(addedValue);
-		EObject rightTarget = getMatchedEObject(deletedValue);
+		EObject rightTarget = getMatchedEObject(addedValue);
+		EObject leftTarget = getMatchedEObject(deletedValue);
 		// checks if target are defined remotely
 		if (leftTarget == null) {
 			leftTarget = addedValue;
