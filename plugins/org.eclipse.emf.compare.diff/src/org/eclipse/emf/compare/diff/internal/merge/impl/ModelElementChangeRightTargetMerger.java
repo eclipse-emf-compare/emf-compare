@@ -56,7 +56,7 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 				EMFComparePlugin.log(e, true);
 			}
 		} else {
-			findLeftResource().getContents().add(newOne);
+			origin.eResource().getContents().add(newOne);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();

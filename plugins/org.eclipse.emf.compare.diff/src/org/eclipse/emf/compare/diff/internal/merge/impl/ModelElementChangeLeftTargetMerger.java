@@ -72,7 +72,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 				EMFComparePlugin.log(e, true);
 			}
 		} else {
-			findRightResource().getContents().add(newOne);
+			origin.eResource().getContents().add(newOne);
 		}
 		// we should now have a look for RemovedReferencesLinks needing elements to apply
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
