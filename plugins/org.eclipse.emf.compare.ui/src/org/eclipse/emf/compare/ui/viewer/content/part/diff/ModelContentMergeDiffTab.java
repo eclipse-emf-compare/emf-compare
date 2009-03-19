@@ -359,14 +359,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
-		final TreePath[] expandedTreePaths = getExpandedTreePaths();
+		if (input != oldInput) {
+			final TreePath[] expandedTreePaths = getExpandedTreePaths();
 
-		super.inputChanged(input, oldInput);
+			super.inputChanged(input, oldInput);
 
-		// Expands all items so that we'll be able to find them back (defeats
-		// purpose of lazy loading)
-		expandAll();
-		setExpandedTreePaths(expandedTreePaths);
+			// Expands all items so that we'll be able to find them back (defeats
+			// purpose of lazy loading)
+			expandAll();
+			setExpandedTreePaths(expandedTreePaths);
+		}
 	}
 
 	/**
