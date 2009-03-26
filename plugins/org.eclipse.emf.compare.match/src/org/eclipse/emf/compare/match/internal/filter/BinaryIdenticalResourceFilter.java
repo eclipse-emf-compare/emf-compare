@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.filter.IResourceFilter;
 import org.eclipse.emf.compare.match.internal.statistic.ResourceSimilarity;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 
 /**
@@ -53,37 +55,24 @@ public class BinaryIdenticalResourceFilter implements IResourceFilter {
 		}
 
 		for (final Doublet<Resource> doublet : matchedResources) {
-			final byte[] leftContent = getContent(doublet.getFirst());
-			final byte[] rightContent = getContent(doublet.getSecond());
+			// do not filter out resources that contain fragments even when identical as fragments themselves
+			// have been removed from the list
+			if (!hasFragments(doublet.getFirst()) && !hasFragments(doublet.getSecond())) {
+				final byte[] leftContent = getContent(doublet.getFirst());
+				final byte[] rightContent = getContent(doublet.getSecond());
 
-			if (Arrays.equals(leftContent, rightContent)) {
-				leftResources.remove(doublet.getFirst());
-				rightResources.remove(doublet.getSecond());
+				if (Arrays.equals(leftContent, rightContent)) {
+					leftResources.remove(doublet.getFirst());
+					rightResources.remove(doublet.getSecond());
+				}
+
+				doublet.clear();
 			}
-
-			doublet.clear();
 		}
 
 		leftRemaining.clear();
 		rightRemaining.clear();
 		matchedResources.clear();
-	}
-
-	/**
-	 * Returns the content of a given resource as a byte array.
-	 * 
-	 * @param resource
-	 *            The resource we seek the content of.
-	 * @return The content of <code>resource</code> as a byte array.
-	 */
-	private byte[] getContent(Resource resource) {
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		try {
-			resource.save(stream, null);
-		} catch (final IOException e) {
-			EMFComparePlugin.log(e, false);
-		}
-		return stream.toByteArray();
 	}
 
 	/**
@@ -119,23 +108,63 @@ public class BinaryIdenticalResourceFilter implements IResourceFilter {
 		}
 
 		for (final Triplet<Resource> triplet : matchedResources) {
-			final byte[] leftContent = getContent(triplet.getFirst());
-			final byte[] rightContent = getContent(triplet.getSecond());
-			final byte[] ancestorContent = getContent(triplet.getThird());
+			// do not filter out resources that contain fragments even when identical as fragments themselves
+			// have been removed from the list
+			if (!hasFragments(triplet.getFirst()) && !hasFragments(triplet.getSecond())
+					&& !hasFragments(triplet.getThird())) {
+				final byte[] leftContent = getContent(triplet.getFirst());
+				final byte[] rightContent = getContent(triplet.getSecond());
+				final byte[] ancestorContent = getContent(triplet.getThird());
 
-			if (Arrays.equals(leftContent, ancestorContent) && Arrays.equals(rightContent, ancestorContent)) {
-				leftResources.remove(triplet.getFirst());
-				rightResources.remove(triplet.getSecond());
-				ancestorResources.remove(triplet.getThird());
+				if (Arrays.equals(leftContent, ancestorContent)
+						&& Arrays.equals(rightContent, ancestorContent)) {
+					leftResources.remove(triplet.getFirst());
+					rightResources.remove(triplet.getSecond());
+					ancestorResources.remove(triplet.getThird());
+				}
+
+				triplet.clear();
 			}
-
-			triplet.clear();
 		}
 
 		leftRemaining.clear();
 		rightRemaining.clear();
 		ancestorRemaining.clear();
 		matchedResources.clear();
+	}
+
+	/**
+	 * Returns the content of a given resource as a byte array.
+	 * 
+	 * @param resource
+	 *            The resource we seek the content of.
+	 * @return The content of <code>resource</code> as a byte array.
+	 */
+	private byte[] getContent(Resource resource) {
+		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		try {
+			resource.save(stream, null);
+		} catch (final IOException e) {
+			EMFComparePlugin.log(e, false);
+		}
+		return stream.toByteArray();
+	}
+
+	/**
+	 * This will iterate over the resource's contents and return <code>true</code> if it contains fragments.
+	 * 
+	 * @param resource
+	 *            Resource to iterate over.
+	 * @return <code>true</code> if <code>resource</code> has fragments, <code>false</code> otherwise.
+	 */
+	private boolean hasFragments(Resource resource) {
+		final TreeIterator<EObject> iterator = resource.getAllContents();
+		while (iterator.hasNext()) {
+			if (iterator.next().eResource() != resource) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
