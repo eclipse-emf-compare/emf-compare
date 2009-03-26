@@ -196,6 +196,9 @@ public class ModelCompareInput implements ICompareInput {
 			if (match instanceof MatchModel) {
 				matchModel = (MatchModel)match;
 			} else {
+				if (((MatchResourceSet)match).getMatchModels().size() == 0) {
+					return new TypedElementWrapper(null);
+				}
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
 			if (matchModel.getAncestorRoots().isEmpty()) {
