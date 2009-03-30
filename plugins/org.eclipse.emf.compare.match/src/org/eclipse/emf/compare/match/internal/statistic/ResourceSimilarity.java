@@ -78,11 +78,11 @@ public final class ResourceSimilarity {
 	public static double computeURISimilarity(URI reference, URI candidate) {
 		if (reference.equals(candidate))
 			return 1d;
-		final double segmentsWeight = 0.4;
-		final double fragmentWeight = 0.6;
-		final double almostEqual = 0.999;
+		final double segmentsWeight = 0.4d;
+		final double fragmentWeight = 0.6d;
+		final double almostEqual = 0.999d;
 
-		double similarity = 0;
+		double similarity = 0d;
 
 		if (reference.fileExtension().equals(candidate.fileExtension())) {
 			final String referenceFragment = reference.fragment();
