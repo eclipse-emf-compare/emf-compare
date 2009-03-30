@@ -1392,9 +1392,22 @@ public class GenericDiffEngine implements IDiffEngine {
 						createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
 								deletedValue));
 			} else if (addedValue != null && deletedValue != null) {
-				final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
-						.getURI(addedValue), EcoreUtil.getURI(deletedValue));
-				if (uriSimilarity < similarReferenceURIThreshold) {
+				boolean createDiff = false;
+				final EObject matchAdded = getMatchedEObject(addedValue);
+				if (matchAdded != null && matchAdded != deletedValue) {
+					createDiff = true;
+				} else if (getMatchedEObject(deletedValue) != null) {
+					// the deleted object has a match. At this point it can only be distinct from the added
+					// value since this added value itself has no match.
+					createDiff = true;
+				} else {
+					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
+							.getURI(addedValue), EcoreUtil.getURI(deletedValue));
+					if (uriSimilarity < similarReferenceURIThreshold) {
+						createDiff = true;
+					}
+				}
+				if (createDiff) {
 					root.getSubDiffElements().add(
 							createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
 									deletedValue));
