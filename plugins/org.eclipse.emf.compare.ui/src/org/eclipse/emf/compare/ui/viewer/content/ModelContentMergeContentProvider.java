@@ -176,6 +176,8 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
+		// FIXME save whole resource Set
+		// FIXME automatic saves
 		if (element instanceof ICompareInput) {
 			final ICompareInput input = (ICompareInput)element;
 			if (input.getLeft() instanceof TypedElementWrapper) {
@@ -196,6 +198,8 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveRightContent(Object element, byte[] bytes) {
+		// FIXME save whole resource Set
+		// FIXME automatic saves
 		if (element instanceof ICompareInput) {
 			final ICompareInput input = (ICompareInput)element;
 			if (input.getRight() instanceof TypedElementWrapper) {
