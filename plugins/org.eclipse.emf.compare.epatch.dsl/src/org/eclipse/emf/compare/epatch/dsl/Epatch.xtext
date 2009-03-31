@@ -16,6 +16,7 @@ grammar org.eclipse.emf.compare.epatch.dsl.Epatch with org.eclipse.xtext.common.
 generate epatch "http://www.eclipse.org/emf/compare/epatch/0.1"
 
 
+
 Epatch:
 	"epatch" name=ID "{" imports+=Import* resources+=NamedResource* objects+=ObjectRef* "}";
 	
