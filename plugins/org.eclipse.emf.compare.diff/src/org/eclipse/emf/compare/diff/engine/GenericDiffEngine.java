@@ -54,8 +54,8 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
@@ -794,7 +794,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		EObject matchedEObject = null;
 		if (matchCrossReferencer != null) {
-			final Collection<Setting> settings = matchCrossReferencer.get(from);
+			final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
 			if (settings == null)
 				return null;
 			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {

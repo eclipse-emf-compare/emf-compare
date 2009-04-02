@@ -112,6 +112,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            The object to copy to.
 	 * @param value
 	 *            The value that is to be copied.
+	 * @return The copied value.
 	 */
 	@SuppressWarnings("unchecked")
 	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value) {
@@ -142,6 +143,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param matchedValue
 	 *            Matched value of <tt>value</tt> if it is known. Will behave like
 	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
+	 * @return The copied value.
 	 */
 	@SuppressWarnings("unchecked")
 	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value,
