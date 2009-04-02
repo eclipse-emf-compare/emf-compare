@@ -100,7 +100,7 @@ public final class ResourceSimilarity {
 			similarity = segmentSimilarity * segmentsWeight + fragmentSimilarity * fragmentWeight;
 		}
 		if (similarity > almostEqual)
-			return 1d;
+			similarity = 1d;
 		return similarity;
 	}
 
