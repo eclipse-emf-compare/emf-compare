@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.eclipse.compare.CompareConfiguration;
-import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -23,7 +22,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Content provider for our {@link ContentMergeViewer}.
+ * Content provider for our {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer}.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -35,11 +34,13 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	private final CompareConfiguration configuration;
 
 	/**
-	 * Instantiates a content provider for our {@link ContentMergeViewer} given its
+	 * Instantiates a content provider for our
+	 * {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer} given its
 	 * {@link CompareConfiguration}.
 	 * 
 	 * @param cc
-	 *            {@link CompareConfiguration} used by this {@link ContentMergeViewer}.
+	 *            {@link CompareConfiguration} used by this
+	 *            {@link org.eclipse.compare.contentmergeviewer.ContentMergeViewer}.
 	 */
 	public ModelContentMergeContentProvider(CompareConfiguration cc) {
 		configuration = cc;
