@@ -184,23 +184,27 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 		private InputStream openRevisionStream(IResource target) {
 			final IProject project = target.getProject();
 			final RepositoryProvider provider = RepositoryProvider.getProvider(project);
-			final IFileHistoryProvider historyProvider = provider.getFileHistoryProvider();
-			final IFileHistory history = historyProvider.getFileHistoryFor(target, IFileHistoryProvider.NONE,
-					new NullProgressMonitor());
-			InputStream stream = null;
 			try {
-				if (history != null) {
-					IFileRevision soughtRevision = null;
-					for (final IFileRevision revision : history.getFileRevisions()) {
-						if (revision.getTimestamp() <= baseRevision.getTimestamp()) {
-							soughtRevision = revision;
-							break;
+				InputStream stream = null;
+				if (provider != null) {
+					final IFileHistoryProvider historyProvider = provider.getFileHistoryProvider();
+					final IFileHistory history = historyProvider.getFileHistoryFor(target,
+							IFileHistoryProvider.NONE, new NullProgressMonitor());
+
+					if (history != null) {
+						IFileRevision soughtRevision = null;
+						for (final IFileRevision revision : history.getFileRevisions()) {
+							if (revision.getTimestamp() <= baseRevision.getTimestamp()) {
+								soughtRevision = revision;
+								break;
+							}
+						}
+						if (soughtRevision != null) {
+							stream = soughtRevision.getStorage(new NullProgressMonitor()).getContents();
 						}
 					}
-					if (soughtRevision != null) {
-						stream = soughtRevision.getStorage(new NullProgressMonitor()).getContents();
-					}
-				} else {
+				}
+				if (stream == null) {
 					IFileState soughtState = null;
 					// This project is not connected to a repository. Search through local history
 					for (final IFileState state : ((IFile)target).getHistory(new NullProgressMonitor())) {
