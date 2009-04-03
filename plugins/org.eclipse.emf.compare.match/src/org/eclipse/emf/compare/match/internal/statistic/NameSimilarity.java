@@ -50,6 +50,20 @@ public final class NameSimilarity {
 	 * 
 	 * @param current
 	 *            Object for which we need {@link String} representation.
+	 * @return A string representation of all the features' values for a given {@link EObject}.
+	 * @throws FactoryException
+	 *             Thrown if one of the operation on {@link EObject} fails.
+	 */
+	public static String contentValue(EObject current) throws FactoryException {
+		return contentValue(current, null);
+	}
+
+	/**
+	 * Returns a string representation of the features' values for a given {@link EObject} after applying the
+	 * given <code>filter</code>.
+	 * 
+	 * @param current
+	 *            Object for which we need {@link String} representation.
 	 * @param filter
 	 *            Allows filtering of pertinent features.
 	 * @return A string representation of all the features' values for a given {@link EObject}.
@@ -64,12 +78,12 @@ public final class NameSimilarity {
 			if (eclass instanceof EClass) {
 				eclassAttributes = filter.getFilteredFeatures(current);
 			}
+			eclassAttributes.remove(findNameFeature(current));
 		} else {
 			if (eclass instanceof EClass) {
 				eclassAttributes.addAll(((EClass)eclass).getEAllAttributes());
 			}
 		}
-		eclassAttributes.remove(findNameFeature(current));
 		if (eclassAttributes.size() > 0) {
 			for (final EStructuralFeature feature : eclassAttributes) {
 				if (feature instanceof EAttribute) {

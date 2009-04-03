@@ -112,8 +112,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <p>
 	 * More specifically, we will populate this list with the {@link UnmatchElement}s created by the
 	 * comparison between the left and the ancestor model, followed by the {@link UnmatchElement}s created by
-	 * the comparison between the right and the ancestor model.<br/> Those {@link UnmatchElement}s will then
-	 * be filtered to retain only those that actually cannot be matched.
+	 * the comparison between the right and the ancestor model.<br/>
+	 * Those {@link UnmatchElement}s will then be filtered to retain only those that actually cannot be
+	 * matched.
 	 * </p>
 	 */
 	private final Set<EObject> remainingUnmatchedElements = new HashSet<EObject>();
@@ -460,9 +461,18 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
 		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
+		// This might be the counter check, invert the two
+		if (value == null) {
+			value = getSimilarityFromCache(obj2, obj1, VALUE_SIMILARITY);
+		}
 		if (value != null) {
 			similarity = value;
+		} else if (filter.getFilteredFeatures(obj1).size() < MIN_ATTRIBUTES_COUNT
+				|| filter.getFilteredFeatures(obj2).size() < MIN_ATTRIBUTES_COUNT) {
+			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1),
+					NameSimilarity.contentValue(obj2));
+			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
 		} else {
 			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
 					NameSimilarity.contentValue(obj2, filter));
@@ -771,7 +781,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <li>The left and origin model.</li>
 	 * <li>The right and origin model.</li>
 	 * </ul>
-	 * <br/><br/>We can then consider that a {@link match3elements} would be :
+	 * <br/>
+	 * <br/>
+	 * We can then consider that a {@link match3elements} would be :
 	 * 
 	 * <pre>
 	 * match.leftElement = left.getLeftElement();
