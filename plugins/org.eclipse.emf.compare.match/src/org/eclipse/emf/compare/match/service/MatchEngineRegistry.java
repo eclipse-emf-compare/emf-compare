@@ -95,7 +95,7 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	 */
 	public IMatchEngine getHighestEngine(String fileExtension) {
 		final List<Object> engines = get(fileExtension);
-		final int highestPriority = -1;
+		int highestPriority = -1;
 		IMatchEngine highest = null;
 		if (engines != null) {
 			for (final Object engine : engines) {
@@ -103,9 +103,11 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
+						highestPriority = desc.getPriorityValue();
 					}
 				} else if (engine instanceof IMatchEngine) {
 					highest = (IMatchEngine)engine;
+					break;
 				}
 			}
 		}
@@ -117,9 +119,11 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
+						highestPriority = desc.getPriorityValue();
 					}
 				} else if (engine instanceof IMatchEngine) {
 					highest = (IMatchEngine)engine;
+					break;
 				}
 			}
 		}
