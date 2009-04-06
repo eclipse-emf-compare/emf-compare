@@ -12,16 +12,4 @@
   </extension>
 
 
-  <extension
-		point="org.eclipse.xtend.typesystem.emf.checks">
-		<metaModel
-			nsURI="http://www.eclipse.org/emf/compare/epatch/0.1">
-			<checkFile
-				path="org/eclipse/emf/compare/epatch/dsl/EpatchChecks.chk">
-			</checkFile>
-		</metaModel>
-	
-	</extension>
-
-
 </plugin>

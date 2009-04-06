@@ -18,25 +18,16 @@ generate epatch "http://www.eclipse.org/emf/compare/epatch/0.1"
 
 
 Epatch:
-	"epatch" name=ID "{" imports+=Import* resources+=NamedResource* objects+=ObjectRef* "}";
+	"epatch" name=ID "{" modelImports+=ModelImport* resources+=NamedResource* objects+=ObjectRef* "}";
 	
-Import:
-	ModelImport | JavaImport | ExtensionImport;
-		
 ModelImport:
 	ResourceImport | EPackageImport;
-	
+		
 ResourceImport:
 	"import" name=ID "uri" uri=STRING;
 	
 EPackageImport:
 	"import" name=ID "ns" nsURI=STRING;
-	
-JavaImport:
-	"import" "java" path+=ID ("." path+=ID)*;
-	
-ExtensionImport:
-	"import" "extension" path+=ID ("::" path+=ID)*;
 	
 NamedResource:
 	"resource" name=ID "{"
@@ -73,16 +64,16 @@ MonoListAssignment returns ListAssignment:
 	feature=ID "=" "[" (leftValues+=AssignmentValue ("," leftValues+=AssignmentValue)*)? "]" ";";
 	
 AssignmentValue returns AssignmentValue:
-	value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[Import] impFrag=FRAGMENT);
+	value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[ModelImport] impFrag=FRAGMENT);
 
 ListAssignmentValue returns AssignmentValue:
-	 index=INT ":" (("[" refIndex=INT "]") | value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[Import] impFrag=FRAGMENT));
+	 index=INT ":" (("[" refIndex=INT "]") | value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[ModelImport] impFrag=FRAGMENT));
 	
 SingleAssignmentValue returns AssignmentValue:
-	 keyword="null" | value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[Import] impFrag=FRAGMENT);
+	 keyword="null" | value=STRING | (refObject=[NamedObject] ("." refFeature=ID ("[" refIndex=INT "]")?)?) | newObject=CreatedObject | (^import=[ModelImport] impFrag=FRAGMENT);
 
 ObjectNew:
-	"new" ^import=[Import] impFrag=FRAGMENT  name=ID? ("{"
+	"new" ^import=[ModelImport] impFrag=FRAGMENT  name=ID? ("{"
 		(assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)*	
 	"}" )?;
 	

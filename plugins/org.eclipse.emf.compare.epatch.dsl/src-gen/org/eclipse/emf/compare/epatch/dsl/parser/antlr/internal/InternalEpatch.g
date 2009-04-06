@@ -112,9 +112,9 @@ ruleEpatch returns [EObject current=null]
 	
 	    
 	    { 
-	        currentNode=createCompositeNode(grammarAccess.getEpatchAccess().getImportsImportParserRuleCall_3_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getEpatchAccess().getModelImportsModelImportParserRuleCall_3_0(), currentNode); 
 	    }
-	    lv_imports_3=ruleImport 
+	    lv_modelImports_3=ruleModelImport 
 	    {
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getEpatchRule().getType().getClassifier());
@@ -122,7 +122,7 @@ ruleEpatch returns [EObject current=null]
 	        }
 	        
 	        try {
-	       		add($current, "imports", lv_imports_3, "Import", currentNode);
+	       		add($current, "modelImports", lv_modelImports_3, "ModelImport", currentNode);
 	        } catch (ValueConverterException vce) {
 				handleValueConverterException(vce);
 	        }
@@ -181,68 +181,6 @@ ruleEpatch returns [EObject current=null]
 
 
 
-// Entry rule entryRuleImport
-entryRuleImport returns [EObject current=null] :
-	{ currentNode = createCompositeNode(grammarAccess.getImportRule(), currentNode); }
-	 iv_ruleImport=ruleImport 
-	 { $current=$iv_ruleImport.current; } 
-	 EOF 
-;
-
-// Rule Import
-ruleImport returns [EObject current=null] 
-    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-    	lastConsumedNode = currentNode;
-    }:
-(
-    { 
-        currentNode=createCompositeNode(grammarAccess.getImportAccess().getModelImportParserRuleCall_0(), currentNode); 
-    }
-    this_ModelImport_0=ruleModelImport
-    { 
-        $current = $this_ModelImport_0.current; 
-        currentNode = currentNode.getParent();
-    }
-
-    { 
-    createLeafNode(grammarAccess.getImportAccess().getModelImportParserRuleCall_0(), null); 
-    }
-
-    |
-    { 
-        currentNode=createCompositeNode(grammarAccess.getImportAccess().getJavaImportParserRuleCall_1(), currentNode); 
-    }
-    this_JavaImport_1=ruleJavaImport
-    { 
-        $current = $this_JavaImport_1.current; 
-        currentNode = currentNode.getParent();
-    }
-
-    { 
-    createLeafNode(grammarAccess.getImportAccess().getJavaImportParserRuleCall_1(), null); 
-    }
-
-    |
-    { 
-        currentNode=createCompositeNode(grammarAccess.getImportAccess().getExtensionImportParserRuleCall_2(), currentNode); 
-    }
-    this_ExtensionImport_2=ruleExtensionImport
-    { 
-        $current = $this_ExtensionImport_2.current; 
-        currentNode = currentNode.getParent();
-    }
-
-    { 
-    createLeafNode(grammarAccess.getImportAccess().getExtensionImportParserRuleCall_2(), null); 
-    }
-);
-
-
-
-
-
 // Entry rule entryRuleModelImport
 entryRuleModelImport returns [EObject current=null] :
 	{ currentNode = createCompositeNode(grammarAccess.getModelImportRule(), currentNode); }
@@ -268,10 +206,6 @@ ruleModelImport returns [EObject current=null]
         currentNode = currentNode.getParent();
     }
 
-    { 
-    createLeafNode(grammarAccess.getModelImportAccess().getResourceImportParserRuleCall_0(), null); 
-    }
-
     |
     { 
         currentNode=createCompositeNode(grammarAccess.getModelImportAccess().getEPackageImportParserRuleCall_1(), currentNode); 
@@ -280,10 +214,6 @@ ruleModelImport returns [EObject current=null]
     { 
         $current = $this_EPackageImport_1.current; 
         currentNode = currentNode.getParent();
-    }
-
-    { 
-    createLeafNode(grammarAccess.getModelImportAccess().getEPackageImportParserRuleCall_1(), null); 
     }
 );
 
@@ -424,152 +354,6 @@ ruleEPackageImport returns [EObject current=null]
 	    }
 	
 ));
-
-
-
-
-
-// Entry rule entryRuleJavaImport
-entryRuleJavaImport returns [EObject current=null] :
-	{ currentNode = createCompositeNode(grammarAccess.getJavaImportRule(), currentNode); }
-	 iv_ruleJavaImport=ruleJavaImport 
-	 { $current=$iv_ruleJavaImport.current; } 
-	 EOF 
-;
-
-// Rule JavaImport
-ruleJavaImport returns [EObject current=null] 
-    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-    	lastConsumedNode = currentNode;
-    }:
-('import' 
-    {
-        createLeafNode(grammarAccess.getJavaImportAccess().getImportKeyword_0(), null); 
-    }
-'java' 
-    {
-        createLeafNode(grammarAccess.getJavaImportAccess().getJavaKeyword_1(), null); 
-    }
-(	
-	
-	    lv_path_2=	RULE_ID
-	{
-		createLeafNode(grammarAccess.getJavaImportAccess().getPathIDTerminalRuleCall_2_0(), "path"); 
-	}
- 
-	    {
-	        if ($current==null) {
-	            $current = factory.create(grammarAccess.getJavaImportRule().getType().getClassifier());
-	            associateNodeWithAstElement(currentNode, $current);
-	        }
-	        
-	        try {
-	       		add($current, "path", lv_path_2, "ID", lastConsumedNode);
-	        } catch (ValueConverterException vce) {
-				handleValueConverterException(vce);
-	        }
-	    }
-	
-)('.' 
-    {
-        createLeafNode(grammarAccess.getJavaImportAccess().getFullStopKeyword_3_0(), null); 
-    }
-(	
-	
-	    lv_path_4=	RULE_ID
-	{
-		createLeafNode(grammarAccess.getJavaImportAccess().getPathIDTerminalRuleCall_3_1_0(), "path"); 
-	}
- 
-	    {
-	        if ($current==null) {
-	            $current = factory.create(grammarAccess.getJavaImportRule().getType().getClassifier());
-	            associateNodeWithAstElement(currentNode, $current);
-	        }
-	        
-	        try {
-	       		add($current, "path", lv_path_4, "ID", lastConsumedNode);
-	        } catch (ValueConverterException vce) {
-				handleValueConverterException(vce);
-	        }
-	    }
-	
-))*);
-
-
-
-
-
-// Entry rule entryRuleExtensionImport
-entryRuleExtensionImport returns [EObject current=null] :
-	{ currentNode = createCompositeNode(grammarAccess.getExtensionImportRule(), currentNode); }
-	 iv_ruleExtensionImport=ruleExtensionImport 
-	 { $current=$iv_ruleExtensionImport.current; } 
-	 EOF 
-;
-
-// Rule ExtensionImport
-ruleExtensionImport returns [EObject current=null] 
-    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
-    }
-    @after { resetLookahead(); 
-    	lastConsumedNode = currentNode;
-    }:
-('import' 
-    {
-        createLeafNode(grammarAccess.getExtensionImportAccess().getImportKeyword_0(), null); 
-    }
-'extension' 
-    {
-        createLeafNode(grammarAccess.getExtensionImportAccess().getExtensionKeyword_1(), null); 
-    }
-(	
-	
-	    lv_path_2=	RULE_ID
-	{
-		createLeafNode(grammarAccess.getExtensionImportAccess().getPathIDTerminalRuleCall_2_0(), "path"); 
-	}
- 
-	    {
-	        if ($current==null) {
-	            $current = factory.create(grammarAccess.getExtensionImportRule().getType().getClassifier());
-	            associateNodeWithAstElement(currentNode, $current);
-	        }
-	        
-	        try {
-	       		add($current, "path", lv_path_2, "ID", lastConsumedNode);
-	        } catch (ValueConverterException vce) {
-				handleValueConverterException(vce);
-	        }
-	    }
-	
-)('::' 
-    {
-        createLeafNode(grammarAccess.getExtensionImportAccess().getColonColonKeyword_3_0(), null); 
-    }
-(	
-	
-	    lv_path_4=	RULE_ID
-	{
-		createLeafNode(grammarAccess.getExtensionImportAccess().getPathIDTerminalRuleCall_3_1_0(), "path"); 
-	}
- 
-	    {
-	        if ($current==null) {
-	            $current = factory.create(grammarAccess.getExtensionImportRule().getType().getClassifier());
-	            associateNodeWithAstElement(currentNode, $current);
-	        }
-	        
-	        try {
-	       		add($current, "path", lv_path_4, "ID", lastConsumedNode);
-	        } catch (ValueConverterException vce) {
-				handleValueConverterException(vce);
-	        }
-	    }
-	
-))*);
 
 
 
@@ -976,10 +760,6 @@ ruleCreatedObject returns [EObject current=null]
         currentNode = currentNode.getParent();
     }
 
-    { 
-    createLeafNode(grammarAccess.getCreatedObjectAccess().getObjectNewParserRuleCall_0(), null); 
-    }
-
     |
     { 
         currentNode=createCompositeNode(grammarAccess.getCreatedObjectAccess().getObjectCopyParserRuleCall_1(), currentNode); 
@@ -988,10 +768,6 @@ ruleCreatedObject returns [EObject current=null]
     { 
         $current = $this_ObjectCopy_1.current; 
         currentNode = currentNode.getParent();
-    }
-
-    { 
-    createLeafNode(grammarAccess.getCreatedObjectAccess().getObjectCopyParserRuleCall_1(), null); 
     }
 );
 
@@ -1560,7 +1336,7 @@ ruleAssignmentValue returns [EObject current=null]
         }
 	RULE_ID
 	{
-		createLeafNode(grammarAccess.getAssignmentValueAccess().getImportImportCrossReference_3_0_0(), "import"); 
+		createLeafNode(grammarAccess.getAssignmentValueAccess().getImportModelImportCrossReference_3_0_0(), "import"); 
 	}
 
 		// TODO assign feature to currentNode
@@ -1782,7 +1558,7 @@ ruleListAssignmentValue returns [EObject current=null]
         }
 	RULE_ID
 	{
-		createLeafNode(grammarAccess.getListAssignmentValueAccess().getImportImportCrossReference_2_4_0_0(), "import"); 
+		createLeafNode(grammarAccess.getListAssignmentValueAccess().getImportModelImportCrossReference_2_4_0_0(), "import"); 
 	}
 
 		// TODO assign feature to currentNode
@@ -1973,7 +1749,7 @@ ruleSingleAssignmentValue returns [EObject current=null]
         }
 	RULE_ID
 	{
-		createLeafNode(grammarAccess.getSingleAssignmentValueAccess().getImportImportCrossReference_4_0_0(), "import"); 
+		createLeafNode(grammarAccess.getSingleAssignmentValueAccess().getImportModelImportCrossReference_4_0_0(), "import"); 
 	}
 
 		// TODO assign feature to currentNode
@@ -2034,7 +1810,7 @@ ruleObjectNew returns [EObject current=null]
         }
 	RULE_ID
 	{
-		createLeafNode(grammarAccess.getObjectNewAccess().getImportImportCrossReference_1_0(), "import"); 
+		createLeafNode(grammarAccess.getObjectNewAccess().getImportModelImportCrossReference_1_0(), "import"); 
 	}
 
 		// TODO assign feature to currentNode
@@ -2263,6 +2039,7 @@ ruleObjectCopy returns [EObject current=null]
         createLeafNode(grammarAccess.getObjectCopyAccess().getRightCurlyBracketKeyword_4_2(), null); 
     }
 )?);
+
 
 
 

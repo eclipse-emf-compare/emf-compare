@@ -12,8 +12,8 @@ import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.BiListAssignmentElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.BiSingleAssignmentElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.EpatchElements;
-import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ImportElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ListAssignmentValueElements;
+import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ModelImportElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.MonoListAssignmentElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.MonoSingleAssignmentElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.NamedResourceElements;
@@ -47,7 +47,7 @@ public class EpatchFormatter extends FormattingTokenSerializer {
 		cfg.setIndentation(ep.getLeftCurlyBracketKeyword_2(), ep.getRightCurlyBracketKeyword_6());
 
 		// package
-		ImportElements pr = g.getImportAccess();
+		ModelImportElements pr = g.getModelImportAccess();
 		cfg.setLinewrap().after(pr.getAlternatives());
 
 		// namedresource
