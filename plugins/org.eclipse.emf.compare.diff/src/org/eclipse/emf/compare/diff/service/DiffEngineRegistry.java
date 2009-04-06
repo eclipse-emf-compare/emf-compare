@@ -95,7 +95,7 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 	 */
 	public IDiffEngine getHighestEngine(String fileExtension) {
 		final List<Object> engines = get(fileExtension);
-		final int highestPriority = -1;
+		int highestPriority = -1;
 		IDiffEngine highest = null;
 		if (engines != null) {
 			for (final Object engine : engines) {
@@ -103,9 +103,11 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 					final DiffEngineDescriptor desc = (DiffEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
+						highestPriority = desc.getPriorityValue();
 					}
 				} else if (engine instanceof IDiffEngine) {
 					highest = (IDiffEngine)engine;
+					break;
 				}
 			}
 		}
@@ -117,9 +119,11 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 					final DiffEngineDescriptor desc = (DiffEngineDescriptor)engine;
 					if (desc.getPriorityValue() > highestPriority) {
 						highest = desc.getEngineInstance();
+						highestPriority = desc.getPriorityValue();
 					}
 				} else if (engine instanceof IDiffEngine) {
 					highest = (IDiffEngine)engine;
+					break;
 				}
 			}
 		}
