@@ -14,8 +14,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Object Ref</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Object Ref</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -28,89 +29,96 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
-	/**
+public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef
+{
+  /**
 	 * The cached value of the '{@link #getLeftRes() <em>Left Res</em>}' reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getLeftRes()
 	 * @generated
 	 * @ordered
 	 */
-	protected NamedResource leftRes;
+  protected NamedResource leftRes;
 
-	/**
+  /**
 	 * The default value of the '{@link #getLeftFrag() <em>Left Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getLeftFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String LEFT_FRAG_EDEFAULT = null;
+  protected static final String LEFT_FRAG_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getLeftFrag() <em>Left Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getLeftFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected String leftFrag = LEFT_FRAG_EDEFAULT;
+  protected String leftFrag = LEFT_FRAG_EDEFAULT;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getRightRes() <em>Right Res</em>}' reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRightRes()
 	 * @generated
 	 * @ordered
 	 */
-	protected NamedResource rightRes;
+  protected NamedResource rightRes;
 
-	/**
+  /**
 	 * The default value of the '{@link #getRightFrag() <em>Right Frag</em>}' attribute.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRightFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String RIGHT_FRAG_EDEFAULT = null;
+  protected static final String RIGHT_FRAG_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getRightFrag() <em>Right Frag</em>}' attribute.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRightFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected String rightFrag = RIGHT_FRAG_EDEFAULT;
+  protected String rightFrag = RIGHT_FRAG_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ObjectRefImpl() {
+  protected ObjectRefImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.OBJECT_REF;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource getLeftRes() {
+  public NamedResource getLeftRes()
+  {
 		if (leftRes != null && leftRes.eIsProxy()) {
 			InternalEObject oldLeftRes = (InternalEObject)leftRes;
 			leftRes = (NamedResource)eResolveProxy(oldLeftRes);
@@ -122,49 +130,59 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		return leftRes;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource basicGetLeftRes() {
+  public NamedResource basicGetLeftRes()
+  {
 		return leftRes;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLeftRes(NamedResource newLeftRes) {
+  public void setLeftRes(NamedResource newLeftRes)
+  {
 		NamedResource oldLeftRes = leftRes;
 		leftRes = newLeftRes;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_REF__LEFT_RES, oldLeftRes, leftRes));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getLeftFrag() {
+  public String getLeftFrag()
+  {
 		return leftFrag;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLeftFrag(String newLeftFrag) {
+  public void setLeftFrag(String newLeftFrag)
+  {
 		String oldLeftFrag = leftFrag;
 		leftFrag = newLeftFrag;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_REF__LEFT_FRAG, oldLeftFrag, leftFrag));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource getRightRes() {
+  public NamedResource getRightRes()
+  {
 		if (rightRes != null && rightRes.eIsProxy()) {
 			InternalEObject oldRightRes = (InternalEObject)rightRes;
 			rightRes = (NamedResource)eResolveProxy(oldRightRes);
@@ -176,50 +194,60 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		return rightRes;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource basicGetRightRes() {
+  public NamedResource basicGetRightRes()
+  {
 		return rightRes;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRightRes(NamedResource newRightRes) {
+  public void setRightRes(NamedResource newRightRes)
+  {
 		NamedResource oldRightRes = rightRes;
 		rightRes = newRightRes;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_REF__RIGHT_RES, oldRightRes, rightRes));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getRightFrag() {
+  public String getRightFrag()
+  {
 		return rightFrag;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRightFrag(String newRightFrag) {
+  public void setRightFrag(String newRightFrag)
+  {
 		String oldRightFrag = rightFrag;
 		rightFrag = newRightFrag;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_REF__RIGHT_FRAG, oldRightFrag, rightFrag));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_REF__LEFT_RES:
 				if (resolve) return getLeftRes();
@@ -235,12 +263,14 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_REF__LEFT_RES:
 				setLeftRes((NamedResource)newValue);
@@ -258,12 +288,14 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_REF__LEFT_RES:
 				setLeftRes((NamedResource)null);
@@ -281,12 +313,14 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_REF__LEFT_RES:
 				return leftRes != null;
@@ -300,12 +334,14 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -317,4 +353,4 @@ public class ObjectRefImpl extends NamedObjectImpl implements ObjectRef {
 		return result.toString();
 	}
 
-} // ObjectRefImpl
+} //ObjectRefImpl

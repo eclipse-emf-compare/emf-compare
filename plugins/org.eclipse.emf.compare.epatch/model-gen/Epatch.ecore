@@ -4,12 +4,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1" eType="//Import" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelImports" upperBound="-1" eType="//ModelImport" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resources" upperBound="-1" eType="//NamedResource" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1" eType="//ObjectRef" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Import"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ModelImport" eSuperTypes="//Import">
+  <eClassifiers xsi:type="ecore:EClass" name="ModelImport">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -21,16 +20,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EPackageImport" eSuperTypes="//ModelImport">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nsURI">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JavaImport" eSuperTypes="//Import">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" unique="false" upperBound="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExtensionImport" eSuperTypes="//Import">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" unique="false" upperBound="-1">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
@@ -89,7 +78,7 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="newObject" eType="//CreatedObject" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="import" eType="//Import"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="import" eType="//ModelImport"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="impFrag">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -101,7 +90,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ObjectNew" eSuperTypes="//CreatedObject">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="import" eType="//Import"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="import" eType="//ModelImport"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="impFrag">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

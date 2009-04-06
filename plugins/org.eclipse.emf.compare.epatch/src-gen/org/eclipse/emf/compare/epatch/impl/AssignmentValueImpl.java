@@ -10,7 +10,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
-import org.eclipse.emf.compare.epatch.Import;
+import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.NamedObject;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -18,8 +18,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Assignment Value</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Assignment Value</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -37,198 +38,209 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue {
-	/**
+public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue
+{
+  /**
 	 * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String VALUE_EDEFAULT = null;
+  protected static final String VALUE_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected String value = VALUE_EDEFAULT;
+  protected String value = VALUE_EDEFAULT;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getRefObject() <em>Ref Object</em>}' reference.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRefObject()
 	 * @generated
 	 * @ordered
 	 */
-	protected NamedObject refObject;
+  protected NamedObject refObject;
 
-	/**
+  /**
 	 * The default value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRefFeature()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String REF_FEATURE_EDEFAULT = null;
+  protected static final String REF_FEATURE_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getRefFeature() <em>Ref Feature</em>}' attribute.
-	 * <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRefFeature()
 	 * @generated
 	 * @ordered
 	 */
-	protected String refFeature = REF_FEATURE_EDEFAULT;
+  protected String refFeature = REF_FEATURE_EDEFAULT;
 
-	/**
+  /**
 	 * The default value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRefIndex()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int REF_INDEX_EDEFAULT = 0;
+  protected static final int REF_INDEX_EDEFAULT = 0;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getRefIndex() <em>Ref Index</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRefIndex()
 	 * @generated
 	 * @ordered
 	 */
-	protected int refIndex = REF_INDEX_EDEFAULT;
+  protected int refIndex = REF_INDEX_EDEFAULT;
 
-	/**
-	 * The cached value of the '{@link #getNewObject() <em>New Object</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+  /**
+	 * The cached value of the '{@link #getNewObject() <em>New Object</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getNewObject()
 	 * @generated
 	 * @ordered
 	 */
-	protected CreatedObject newObject;
+  protected CreatedObject newObject;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImport()
 	 * @generated
 	 * @ordered
 	 */
-	protected Import import_;
+  protected ModelImport import_;
 
-	/**
+  /**
 	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String IMP_FRAG_EDEFAULT = null;
+  protected static final String IMP_FRAG_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected String impFrag = IMP_FRAG_EDEFAULT;
+  protected String impFrag = IMP_FRAG_EDEFAULT;
 
-	/**
+  /**
 	 * The default value of the '{@link #getIndex() <em>Index</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getIndex()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int INDEX_EDEFAULT = 0;
+  protected static final int INDEX_EDEFAULT = 0;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getIndex() <em>Index</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getIndex()
 	 * @generated
 	 * @ordered
 	 */
-	protected int index = INDEX_EDEFAULT;
+  protected int index = INDEX_EDEFAULT;
 
-	/**
+  /**
 	 * The default value of the '{@link #getKeyword() <em>Keyword</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getKeyword()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String KEYWORD_EDEFAULT = null;
+  protected static final String KEYWORD_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getKeyword() <em>Keyword</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getKeyword()
 	 * @generated
 	 * @ordered
 	 */
-	protected String keyword = KEYWORD_EDEFAULT;
+  protected String keyword = KEYWORD_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AssignmentValueImpl() {
+  protected AssignmentValueImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.ASSIGNMENT_VALUE;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getValue() {
+  public String getValue()
+  {
 		return value;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setValue(String newValue) {
+  public void setValue(String newValue)
+  {
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__VALUE, oldValue, value));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedObject getRefObject() {
+  public NamedObject getRefObject()
+  {
 		if (refObject != null && refObject.eIsProxy()) {
 			InternalEObject oldRefObject = (InternalEObject)refObject;
 			refObject = (NamedObject)eResolveProxy(oldRefObject);
@@ -240,76 +252,92 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return refObject;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedObject basicGetRefObject() {
+  public NamedObject basicGetRefObject()
+  {
 		return refObject;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRefObject(NamedObject newRefObject) {
+  public void setRefObject(NamedObject newRefObject)
+  {
 		NamedObject oldRefObject = refObject;
 		refObject = newRefObject;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_OBJECT, oldRefObject, refObject));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getRefFeature() {
+  public String getRefFeature()
+  {
 		return refFeature;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRefFeature(String newRefFeature) {
+  public void setRefFeature(String newRefFeature)
+  {
 		String oldRefFeature = refFeature;
 		refFeature = newRefFeature;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE, oldRefFeature, refFeature));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getRefIndex() {
+  public int getRefIndex()
+  {
 		return refIndex;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRefIndex(int newRefIndex) {
+  public void setRefIndex(int newRefIndex)
+  {
 		int oldRefIndex = refIndex;
 		refIndex = newRefIndex;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX, oldRefIndex, refIndex));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CreatedObject getNewObject() {
+  public CreatedObject getNewObject()
+  {
 		return newObject;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetNewObject(CreatedObject newNewObject, NotificationChain msgs) {
+  public NotificationChain basicSetNewObject(CreatedObject newNewObject, NotificationChain msgs)
+  {
 		CreatedObject oldNewObject = newObject;
 		newObject = newNewObject;
 		if (eNotificationRequired()) {
@@ -319,11 +347,13 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return msgs;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setNewObject(CreatedObject newNewObject) {
+  public void setNewObject(CreatedObject newNewObject)
+  {
 		if (newNewObject != newObject) {
 			NotificationChain msgs = null;
 			if (newObject != null)
@@ -337,14 +367,16 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT, newNewObject, newNewObject));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Import getImport() {
+  public ModelImport getImport()
+  {
 		if (import_ != null && import_.eIsProxy()) {
 			InternalEObject oldImport = (InternalEObject)import_;
-			import_ = (Import)eResolveProxy(oldImport);
+			import_ = (ModelImport)eResolveProxy(oldImport);
 			if (import_ != oldImport) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.ASSIGNMENT_VALUE__IMPORT, oldImport, import_));
@@ -353,88 +385,106 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return import_;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Import basicGetImport() {
+  public ModelImport basicGetImport()
+  {
 		return import_;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImport(Import newImport) {
-		Import oldImport = import_;
+  public void setImport(ModelImport newImport)
+  {
+		ModelImport oldImport = import_;
 		import_ = newImport;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMPORT, oldImport, import_));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getImpFrag() {
+  public String getImpFrag()
+  {
 		return impFrag;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImpFrag(String newImpFrag) {
+  public void setImpFrag(String newImpFrag)
+  {
 		String oldImpFrag = impFrag;
 		impFrag = newImpFrag;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG, oldImpFrag, impFrag));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getIndex() {
+  public int getIndex()
+  {
 		return index;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setIndex(int newIndex) {
+  public void setIndex(int newIndex)
+  {
 		int oldIndex = index;
 		index = newIndex;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__INDEX, oldIndex, index));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getKeyword() {
+  public String getKeyword()
+  {
 		return keyword;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setKeyword(String newKeyword) {
+  public void setKeyword(String newKeyword)
+  {
 		String oldKeyword = keyword;
 		keyword = newKeyword;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT_VALUE__KEYWORD, oldKeyword, keyword));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				return basicSetNewObject(null, msgs);
@@ -442,12 +492,14 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT_VALUE__VALUE:
 				return getValue();
@@ -457,7 +509,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE:
 				return getRefFeature();
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				return new Integer(getRefIndex());
+				return getRefIndex();
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				return getNewObject();
 			case EpatchPackage.ASSIGNMENT_VALUE__IMPORT:
@@ -466,19 +518,21 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 			case EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG:
 				return getImpFrag();
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				return new Integer(getIndex());
+				return getIndex();
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				return getKeyword();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT_VALUE__VALUE:
 				setValue((String)newValue);
@@ -490,19 +544,19 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 				setRefFeature((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				setRefIndex(((Integer)newValue).intValue());
+				setRefIndex((Integer)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				setNewObject((CreatedObject)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__IMPORT:
-				setImport((Import)newValue);
+				setImport((ModelImport)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG:
 				setImpFrag((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				setIndex(((Integer)newValue).intValue());
+				setIndex((Integer)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				setKeyword((String)newValue);
@@ -511,12 +565,14 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT_VALUE__VALUE:
 				setValue(VALUE_EDEFAULT);
@@ -534,7 +590,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 				setNewObject((CreatedObject)null);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__IMPORT:
-				setImport((Import)null);
+				setImport((ModelImport)null);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG:
 				setImpFrag(IMP_FRAG_EDEFAULT);
@@ -549,12 +605,14 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT_VALUE__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
@@ -578,12 +636,14 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -603,4 +663,4 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue 
 		return result.toString();
 	}
 
-} // AssignmentValueImpl
+} //AssignmentValueImpl

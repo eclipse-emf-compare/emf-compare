@@ -13,8 +13,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Assignment</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Assignment</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -24,69 +25,80 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *
  * @generated
  */
-public class AssignmentImpl extends EObjectImpl implements Assignment {
-	/**
+public class AssignmentImpl extends EObjectImpl implements Assignment
+{
+  /**
 	 * The default value of the '{@link #getFeature() <em>Feature</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getFeature()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String FEATURE_EDEFAULT = null;
+  protected static final String FEATURE_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getFeature() <em>Feature</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getFeature()
 	 * @generated
 	 * @ordered
 	 */
-	protected String feature = FEATURE_EDEFAULT;
+  protected String feature = FEATURE_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected AssignmentImpl() {
+  protected AssignmentImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.ASSIGNMENT;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getFeature() {
+  public String getFeature()
+  {
 		return feature;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFeature(String newFeature) {
+  public void setFeature(String newFeature)
+  {
 		String oldFeature = feature;
 		feature = newFeature;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.ASSIGNMENT__FEATURE, oldFeature, feature));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT__FEATURE:
 				return getFeature();
@@ -94,12 +106,14 @@ public class AssignmentImpl extends EObjectImpl implements Assignment {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT__FEATURE:
 				setFeature((String)newValue);
@@ -108,12 +122,14 @@ public class AssignmentImpl extends EObjectImpl implements Assignment {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT__FEATURE:
 				setFeature(FEATURE_EDEFAULT);
@@ -122,12 +138,14 @@ public class AssignmentImpl extends EObjectImpl implements Assignment {
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.ASSIGNMENT__FEATURE:
 				return FEATURE_EDEFAULT == null ? feature != null : !FEATURE_EDEFAULT.equals(feature);
@@ -135,12 +153,14 @@ public class AssignmentImpl extends EObjectImpl implements Assignment {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -150,4 +170,4 @@ public class AssignmentImpl extends EObjectImpl implements Assignment {
 		return result.toString();
 	}
 
-} // AssignmentImpl
+} //AssignmentImpl

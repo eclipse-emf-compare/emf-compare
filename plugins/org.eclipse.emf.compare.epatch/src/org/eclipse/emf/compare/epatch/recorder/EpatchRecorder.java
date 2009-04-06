@@ -29,8 +29,8 @@ import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.Epatch;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
-import org.eclipse.emf.compare.epatch.Import;
 import org.eclipse.emf.compare.epatch.ListAssignment;
+import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.NamedObject;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.compare.epatch.ObjectCopy;
@@ -350,7 +350,7 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements RecorderLis
 			return uri.substring(0, p) + "1" + uri.substring(p);
 	}
 
-	protected void removeIfNotNeededAnymore(Import imp) {
+	protected void removeIfNotNeededAnymore(ModelImport imp) {
 		for (TreeIterator<EObject> i = epatch.eAllContents(); i.hasNext();) {
 			EObject o = i.next();
 			if (o instanceof ObjectNew && ((ObjectNew)o).getImport() == imp)
@@ -358,7 +358,7 @@ public class EpatchRecorder extends AbstractEpatchBuilder implements RecorderLis
 			if (o instanceof AssignmentValue && ((AssignmentValue)o).getImport() == imp)
 				return;
 		}
-		epatch.getImports().remove(imp);
+		epatch.getModelImports().remove(imp);
 	}
 
 	protected void removeUnneededObjectRefs() {

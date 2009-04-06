@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.epatch.AbstractEpatchBuilder;
@@ -98,6 +99,8 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 				handleRefChangeLeft((ReferenceChangeLeftTarget)o);
 			else if (o instanceof UpdateReference)
 				handleRefUpdate((UpdateReference)o);
+			else if (o instanceof ReferenceOrderChange)
+				handleRefOrderChange((ReferenceOrderChange)o);
 
 			// other
 			else if (o instanceof DiffGroup)
@@ -105,7 +108,7 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 			else
 				throw new RuntimeException("Warning: Didn't handle " + o.eClass().getName() + ": " + o);
 
-			// TODO: support moving of references... and more?
+			// TODO: support more?
 		}
 		generateNames();
 		sortLists();
@@ -290,4 +293,22 @@ public class DiffEpatchService extends AbstractEpatchBuilder {
 		doSet(ele.getLeftElement(), ele.getRightElement(), ele.getReference());
 	}
 
+	protected void handleRefOrderChange(ReferenceOrderChange ele) {
+		if (ignoreFeature(ele.getReference()))
+			return;
+		NamedObject o = getNamedObject(ele.getLeftElement(), ele.getRightElement());
+		ListAssignment ass = getListAssignment(o, ele.getReference());
+
+		// TODO: find an algorithm that doesn't need to store all pairs
+		for (int l = 0; l < ele.getLeftTarget().size(); l++) {
+			Match2Elements m = matchMap.get(l);
+			if (m == null)
+				continue;
+			int r = ele.getRightTarget().indexOf(m.getRightElement());
+			if (r < 0)
+				continue;
+			ass.getLeftValues().add(getListAssignmentValue(ele.getReference(), m.getLeftElement(), l));
+			ass.getRightValues().add(getListAssignmentValue(ele.getReference(), m.getRightElement(), r));
+		}
+	}
 }

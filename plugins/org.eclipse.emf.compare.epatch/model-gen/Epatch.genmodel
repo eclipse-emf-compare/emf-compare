@@ -8,7 +8,7 @@
         <ecoreFeature xsi:type="ecore:EAttribute" href="Epatch.ecore#//Epatch/name"/>
       </genFeatures>
       <genFeatures property="None" children="true" createChild="true">
-        <ecoreFeature xsi:type="ecore:EReference" href="Epatch.ecore#//Epatch/imports"/>
+        <ecoreFeature xsi:type="ecore:EReference" href="Epatch.ecore#//Epatch/modelImports"/>
       </genFeatures>
       <genFeatures property="None" children="true" createChild="true">
         <ecoreFeature xsi:type="ecore:EReference" href="Epatch.ecore#//Epatch/resources"/>
@@ -16,9 +16,6 @@
       <genFeatures property="None" children="true" createChild="true">
         <ecoreFeature xsi:type="ecore:EReference" href="Epatch.ecore#//Epatch/objects"/>
       </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="Epatch.ecore#//Import"/>
     </genClasses>
     <genClasses>
       <ecoreClass href="Epatch.ecore#//ModelImport"/>
@@ -36,18 +33,6 @@
       <ecoreClass href="Epatch.ecore#//EPackageImport"/>
       <genFeatures createChild="false">
         <ecoreFeature xsi:type="ecore:EAttribute" href="Epatch.ecore#//EPackageImport/nsURI"/>
-      </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="Epatch.ecore#//JavaImport"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="Epatch.ecore#//JavaImport/path"/>
-      </genFeatures>
-    </genClasses>
-    <genClasses>
-      <ecoreClass href="Epatch.ecore#//ExtensionImport"/>
-      <genFeatures createChild="false">
-        <ecoreFeature xsi:type="ecore:EAttribute" href="Epatch.ecore#//ExtensionImport/path"/>
       </genFeatures>
     </genClasses>
     <genClasses>

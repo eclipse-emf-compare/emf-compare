@@ -15,8 +15,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Single Assignment</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Single Assignment</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -27,57 +28,66 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssignment {
-	/**
-	 * The cached value of the '{@link #getLeftValue() <em>Left Value</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssignment
+{
+  /**
+	 * The cached value of the '{@link #getLeftValue() <em>Left Value</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getLeftValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected AssignmentValue leftValue;
+  protected AssignmentValue leftValue;
 
-	/**
-	 * The cached value of the '{@link #getRightValue() <em>Right Value</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+  /**
+	 * The cached value of the '{@link #getRightValue() <em>Right Value</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getRightValue()
 	 * @generated
 	 * @ordered
 	 */
-	protected AssignmentValue rightValue;
+  protected AssignmentValue rightValue;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected SingleAssignmentImpl() {
+  protected SingleAssignmentImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.SINGLE_ASSIGNMENT;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AssignmentValue getLeftValue() {
+  public AssignmentValue getLeftValue()
+  {
 		return leftValue;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetLeftValue(AssignmentValue newLeftValue, NotificationChain msgs) {
+  public NotificationChain basicSetLeftValue(AssignmentValue newLeftValue, NotificationChain msgs)
+  {
 		AssignmentValue oldLeftValue = leftValue;
 		leftValue = newLeftValue;
 		if (eNotificationRequired()) {
@@ -87,11 +97,13 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		return msgs;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLeftValue(AssignmentValue newLeftValue) {
+  public void setLeftValue(AssignmentValue newLeftValue)
+  {
 		if (newLeftValue != leftValue) {
 			NotificationChain msgs = null;
 			if (leftValue != null)
@@ -105,19 +117,23 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE, newLeftValue, newLeftValue));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AssignmentValue getRightValue() {
+  public AssignmentValue getRightValue()
+  {
 		return rightValue;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetRightValue(AssignmentValue newRightValue, NotificationChain msgs) {
+  public NotificationChain basicSetRightValue(AssignmentValue newRightValue, NotificationChain msgs)
+  {
 		AssignmentValue oldRightValue = rightValue;
 		rightValue = newRightValue;
 		if (eNotificationRequired()) {
@@ -127,11 +143,13 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		return msgs;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRightValue(AssignmentValue newRightValue) {
+  public void setRightValue(AssignmentValue newRightValue)
+  {
 		if (newRightValue != rightValue) {
 			NotificationChain msgs = null;
 			if (rightValue != null)
@@ -145,12 +163,14 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.SINGLE_ASSIGNMENT__RIGHT_VALUE, newRightValue, newRightValue));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
 		switch (featureID) {
 			case EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE:
 				return basicSetLeftValue(null, msgs);
@@ -160,12 +180,14 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE:
 				return getLeftValue();
@@ -175,12 +197,14 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE:
 				setLeftValue((AssignmentValue)newValue);
@@ -192,12 +216,14 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE:
 				setLeftValue((AssignmentValue)null);
@@ -209,12 +235,14 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.SINGLE_ASSIGNMENT__LEFT_VALUE:
 				return leftValue != null;
@@ -224,4 +252,4 @@ public class SingleAssignmentImpl extends AssignmentImpl implements SingleAssign
 		return super.eIsSet(featureID);
 	}
 
-} // SingleAssignmentImpl
+} //SingleAssignmentImpl

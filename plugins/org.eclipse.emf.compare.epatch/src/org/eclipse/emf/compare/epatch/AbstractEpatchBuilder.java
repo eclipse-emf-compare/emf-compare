@@ -95,7 +95,7 @@ public abstract class AbstractEpatchBuilder {
 
 	protected Epatch epatch;
 
-	protected Map<URI, Import> importMap = new HashMap<URI, Import>();
+	protected Map<URI, ModelImport> importMap = new HashMap<URI, ModelImport>();
 
 	protected Map<EObject, NamedObject> objMap = new HashMap<EObject, NamedObject>();
 
@@ -192,8 +192,8 @@ public abstract class AbstractEpatchBuilder {
 		do {
 			name = counter++ == -1 ? base : base + counter;
 			found = false;
-			for (Import i : epatch.getImports())
-				if (i instanceof ModelImport && ((ModelImport)i).getName().equals(name)) {
+			for (ModelImport i : epatch.getModelImports())
+				if (i instanceof ModelImport && i.getName().equals(name)) {
 					found = true;
 					break;
 				}
@@ -225,10 +225,10 @@ public abstract class AbstractEpatchBuilder {
 		return null;
 	}
 
-	protected Import getImportRef(EObject obj) {
+	protected ModelImport getImportRef(EObject obj) {
 		URI uri = obj.eIsProxy() ? ((InternalEObject)obj).eProxyURI().trimFragment() : obj.eResource()
 				.getURI();
-		Import imp = importMap.get(uri);
+		ModelImport imp = importMap.get(uri);
 		if (imp != null)
 			return imp;
 		if (obj.eIsProxy()) {
@@ -259,7 +259,7 @@ public abstract class AbstractEpatchBuilder {
 			}
 		}
 		importMap.put(uri, imp);
-		epatch.getImports().add(imp);
+		epatch.getModelImports().add(imp);
 		return imp;
 	}
 

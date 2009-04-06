@@ -11,7 +11,7 @@ package org.eclipse.emf.compare.epatch.applier;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.compare.epatch.Import;
+import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.NamedObject;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.ecore.EObject;
@@ -43,7 +43,7 @@ public interface EpatchMapping {
 
 	public Map<EObject, EObject> getDstToSrcMap();
 
-	public Map<Import, Resource> getImportedResources();
+	public Map<ModelImport, Resource> getImportedResources();
 
 	public Map<NamedResource, Resource> getSrcResources();
 

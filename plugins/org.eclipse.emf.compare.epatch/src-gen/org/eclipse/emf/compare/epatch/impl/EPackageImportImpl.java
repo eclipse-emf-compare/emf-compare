@@ -12,8 +12,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>EPackage Import</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>EPackage Import</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -23,69 +24,80 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class EPackageImportImpl extends ModelImportImpl implements EPackageImport {
-	/**
+public class EPackageImportImpl extends ModelImportImpl implements EPackageImport
+{
+  /**
 	 * The default value of the '{@link #getNsURI() <em>Ns URI</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getNsURI()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NS_URI_EDEFAULT = null;
+  protected static final String NS_URI_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getNsURI() <em>Ns URI</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getNsURI()
 	 * @generated
 	 * @ordered
 	 */
-	protected String nsURI = NS_URI_EDEFAULT;
+  protected String nsURI = NS_URI_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected EPackageImportImpl() {
+  protected EPackageImportImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.EPACKAGE_IMPORT;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getNsURI() {
+  public String getNsURI()
+  {
 		return nsURI;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setNsURI(String newNsURI) {
+  public void setNsURI(String newNsURI)
+  {
 		String oldNsURI = nsURI;
 		nsURI = newNsURI;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.EPACKAGE_IMPORT__NS_URI, oldNsURI, nsURI));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPACKAGE_IMPORT__NS_URI:
 				return getNsURI();
@@ -93,12 +105,14 @@ public class EPackageImportImpl extends ModelImportImpl implements EPackageImpor
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPACKAGE_IMPORT__NS_URI:
 				setNsURI((String)newValue);
@@ -107,12 +121,14 @@ public class EPackageImportImpl extends ModelImportImpl implements EPackageImpor
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPACKAGE_IMPORT__NS_URI:
 				setNsURI(NS_URI_EDEFAULT);
@@ -121,12 +137,14 @@ public class EPackageImportImpl extends ModelImportImpl implements EPackageImpor
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPACKAGE_IMPORT__NS_URI:
 				return NS_URI_EDEFAULT == null ? nsURI != null : !NS_URI_EDEFAULT.equals(nsURI);
@@ -134,12 +152,14 @@ public class EPackageImportImpl extends ModelImportImpl implements EPackageImpor
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -149,4 +169,4 @@ public class EPackageImportImpl extends ModelImportImpl implements EPackageImpor
 		return result.toString();
 	}
 
-} // EPackageImportImpl
+} //EPackageImportImpl

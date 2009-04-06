@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.EPackageImport;
 import org.eclipse.emf.compare.epatch.Epatch;
-import org.eclipse.emf.compare.epatch.Import;
 import org.eclipse.emf.compare.epatch.ListAssignment;
 import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.NamedObject;
@@ -103,7 +102,7 @@ public class CopyingEpatchApplier {
 			return outputResources;
 		}
 
-		public Map<Import, Resource> getImportedResources() {
+		public Map<ModelImport, Resource> getImportedResources() {
 			return imports;
 		}
 
@@ -164,7 +163,7 @@ public class CopyingEpatchApplier {
 
 	protected Epatch epatch;
 
-	protected Map<Import, Resource> imports;
+	protected Map<ModelImport, Resource> imports;
 
 	protected Map<NamedResource, Resource> inputResources;
 
@@ -174,7 +173,7 @@ public class CopyingEpatchApplier {
 
 	protected EpatchMapping triMap;
 
-	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch, Map<Import, Resource> imports,
+	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch, Map<ModelImport, Resource> imports,
 			Map<NamedResource, Resource> inputResources, ResourceSet outputResourceSet) {
 		super();
 		this.strategy = strategy;
@@ -331,7 +330,7 @@ public class CopyingEpatchApplier {
 		return epatch;
 	}
 
-	protected Resource getImport(Import imp) {
+	protected Resource getImport(ModelImport imp) {
 		Resource r = imports.get(imp);
 		if (r != null)
 			return r;
@@ -389,11 +388,11 @@ public class CopyingEpatchApplier {
 		triMap.put(src, objectClone(src), obj);
 	}
 
-	protected Map<Import, Resource> matchImports(ResourceSet rs) {
-		Map<Import, Resource> map = new HashMap<Import, Resource>();
-		for (Import imp : epatch.getImports())
+	protected Map<ModelImport, Resource> matchImports(ResourceSet rs) {
+		Map<ModelImport, Resource> map = new HashMap<ModelImport, Resource>();
+		for (ModelImport imp : epatch.getModelImports())
 			if (imp instanceof ModelImport)
-				map.put(imp, matchImports(rs, (ModelImport)imp));
+				map.put(imp, matchImports(rs, imp));
 		return map;
 	}
 

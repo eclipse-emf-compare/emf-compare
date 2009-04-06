@@ -7,15 +7,16 @@ package org.eclipse.emf.compare.epatch.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
-import org.eclipse.emf.compare.epatch.Import;
+import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.ObjectNew;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Object New</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Object New</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -26,62 +27,69 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
-	/**
+public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew
+{
+  /**
 	 * The cached value of the '{@link #getImport() <em>Import</em>}' reference.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImport()
 	 * @generated
 	 * @ordered
 	 */
-	protected Import import_;
+  protected ModelImport import_;
 
-	/**
+  /**
 	 * The default value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String IMP_FRAG_EDEFAULT = null;
+  protected static final String IMP_FRAG_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getImpFrag() <em>Imp Frag</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getImpFrag()
 	 * @generated
 	 * @ordered
 	 */
-	protected String impFrag = IMP_FRAG_EDEFAULT;
+  protected String impFrag = IMP_FRAG_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ObjectNewImpl() {
+  protected ObjectNewImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.OBJECT_NEW;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Import getImport() {
+  public ModelImport getImport()
+  {
 		if (import_ != null && import_.eIsProxy()) {
 			InternalEObject oldImport = (InternalEObject)import_;
-			import_ = (Import)eResolveProxy(oldImport);
+			import_ = (ModelImport)eResolveProxy(oldImport);
 			if (import_ != oldImport) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EpatchPackage.OBJECT_NEW__IMPORT, oldImport, import_));
@@ -90,50 +98,60 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		return import_;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Import basicGetImport() {
+  public ModelImport basicGetImport()
+  {
 		return import_;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImport(Import newImport) {
-		Import oldImport = import_;
+  public void setImport(ModelImport newImport)
+  {
+		ModelImport oldImport = import_;
 		import_ = newImport;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMPORT, oldImport, import_));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getImpFrag() {
+  public String getImpFrag()
+  {
 		return impFrag;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setImpFrag(String newImpFrag) {
+  public void setImpFrag(String newImpFrag)
+  {
 		String oldImpFrag = impFrag;
 		impFrag = newImpFrag;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_NEW__IMP_FRAG, oldImpFrag, impFrag));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_NEW__IMPORT:
 				if (resolve) return getImport();
@@ -144,15 +162,17 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_NEW__IMPORT:
-				setImport((Import)newValue);
+				setImport((ModelImport)newValue);
 				return;
 			case EpatchPackage.OBJECT_NEW__IMP_FRAG:
 				setImpFrag((String)newValue);
@@ -161,15 +181,17 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_NEW__IMPORT:
-				setImport((Import)null);
+				setImport((ModelImport)null);
 				return;
 			case EpatchPackage.OBJECT_NEW__IMP_FRAG:
 				setImpFrag(IMP_FRAG_EDEFAULT);
@@ -178,12 +200,14 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_NEW__IMPORT:
 				return import_ != null;
@@ -193,12 +217,14 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -208,4 +234,4 @@ public class ObjectNewImpl extends CreatedObjectImpl implements ObjectNew {
 		return result.toString();
 	}
 
-} // ObjectNewImpl
+} //ObjectNewImpl

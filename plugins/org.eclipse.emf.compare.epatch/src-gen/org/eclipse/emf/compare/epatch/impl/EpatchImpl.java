@@ -12,7 +12,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.epatch.Epatch;
 import org.eclipse.emf.compare.epatch.EpatchPackage;
-import org.eclipse.emf.compare.epatch.Import;
+import org.eclipse.emf.compare.epatch.ModelImport;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.compare.epatch.ObjectRef;
 import org.eclipse.emf.ecore.EClass;
@@ -23,149 +23,167 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Epatch</b></em>'. <!-- end-user-doc
- * -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Epatch</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getName <em>Name</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getImports <em>Imports</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getResources <em>Resources</em>}</li>
- * <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getObjects <em>Objects</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getModelImports <em>Model Imports</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getResources <em>Resources</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.epatch.impl.EpatchImpl#getObjects <em>Objects</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
-public class EpatchImpl extends EObjectImpl implements Epatch {
-	/**
+public class EpatchImpl extends EObjectImpl implements Epatch
+{
+  /**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+  protected static final String NAME_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String name = NAME_EDEFAULT;
+  protected String name = NAME_EDEFAULT;
 
-	/**
-	 * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getImports()
+  /**
+	 * The cached value of the '{@link #getModelImports() <em>Model Imports</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+	 * @see #getModelImports()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Import> imports;
+  protected EList<ModelImport> modelImports;
 
-	/**
-	 * The cached value of the '{@link #getResources() <em>Resources</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+  /**
+	 * The cached value of the '{@link #getResources() <em>Resources</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getResources()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<NamedResource> resources;
+  protected EList<NamedResource> resources;
 
-	/**
-	 * The cached value of the '{@link #getObjects() <em>Objects</em>}' containment reference list. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+  /**
+	 * The cached value of the '{@link #getObjects() <em>Objects</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getObjects()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ObjectRef> objects;
+  protected EList<ObjectRef> objects;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected EpatchImpl() {
+  protected EpatchImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.EPATCH;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName() {
+  public String getName()
+  {
 		return name;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName) {
+  public void setName(String newName)
+  {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.EPATCH__NAME, oldName, name));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Import> getImports() {
-		if (imports == null) {
-			imports = new EObjectContainmentEList<Import>(Import.class, this, EpatchPackage.EPATCH__IMPORTS);
+  public EList<ModelImport> getModelImports()
+  {
+		if (modelImports == null) {
+			modelImports = new EObjectContainmentEList<ModelImport>(ModelImport.class, this, EpatchPackage.EPATCH__MODEL_IMPORTS);
 		}
-		return imports;
+		return modelImports;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<NamedResource> getResources() {
+  public EList<NamedResource> getResources()
+  {
 		if (resources == null) {
 			resources = new EObjectContainmentEList<NamedResource>(NamedResource.class, this, EpatchPackage.EPATCH__RESOURCES);
 		}
 		return resources;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<ObjectRef> getObjects() {
+  public EList<ObjectRef> getObjects()
+  {
 		if (objects == null) {
 			objects = new EObjectContainmentEList<ObjectRef>(ObjectRef.class, this, EpatchPackage.EPATCH__OBJECTS);
 		}
 		return objects;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
 		switch (featureID) {
-			case EpatchPackage.EPATCH__IMPORTS:
-				return ((InternalEList<?>)getImports()).basicRemove(otherEnd, msgs);
+			case EpatchPackage.EPATCH__MODEL_IMPORTS:
+				return ((InternalEList<?>)getModelImports()).basicRemove(otherEnd, msgs);
 			case EpatchPackage.EPATCH__RESOURCES:
 				return ((InternalEList<?>)getResources()).basicRemove(otherEnd, msgs);
 			case EpatchPackage.EPATCH__OBJECTS:
@@ -174,17 +192,19 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPATCH__NAME:
 				return getName();
-			case EpatchPackage.EPATCH__IMPORTS:
-				return getImports();
+			case EpatchPackage.EPATCH__MODEL_IMPORTS:
+				return getModelImports();
 			case EpatchPackage.EPATCH__RESOURCES:
 				return getResources();
 			case EpatchPackage.EPATCH__OBJECTS:
@@ -193,20 +213,22 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @SuppressWarnings("unchecked")
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPATCH__NAME:
 				setName((String)newValue);
 				return;
-			case EpatchPackage.EPATCH__IMPORTS:
-				getImports().clear();
-				getImports().addAll((Collection<? extends Import>)newValue);
+			case EpatchPackage.EPATCH__MODEL_IMPORTS:
+				getModelImports().clear();
+				getModelImports().addAll((Collection<? extends ModelImport>)newValue);
 				return;
 			case EpatchPackage.EPATCH__RESOURCES:
 				getResources().clear();
@@ -220,18 +242,20 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPATCH__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case EpatchPackage.EPATCH__IMPORTS:
-				getImports().clear();
+			case EpatchPackage.EPATCH__MODEL_IMPORTS:
+				getModelImports().clear();
 				return;
 			case EpatchPackage.EPATCH__RESOURCES:
 				getResources().clear();
@@ -243,17 +267,19 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.EPATCH__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case EpatchPackage.EPATCH__IMPORTS:
-				return imports != null && !imports.isEmpty();
+			case EpatchPackage.EPATCH__MODEL_IMPORTS:
+				return modelImports != null && !modelImports.isEmpty();
 			case EpatchPackage.EPATCH__RESOURCES:
 				return resources != null && !resources.isEmpty();
 			case EpatchPackage.EPATCH__OBJECTS:
@@ -262,12 +288,14 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -277,4 +305,4 @@ public class EpatchImpl extends EObjectImpl implements Epatch {
 		return result.toString();
 	}
 
-} // EpatchImpl
+} //EpatchImpl

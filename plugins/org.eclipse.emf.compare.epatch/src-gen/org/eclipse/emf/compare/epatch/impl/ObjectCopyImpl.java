@@ -14,8 +14,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model object '<em><b>Object Copy</b></em>'. <!--
- * end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Object Copy</b></em>'.
+ * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -26,59 +27,66 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  *
  * @generated
  */
-public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
-	/**
+public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy
+{
+  /**
 	 * The cached value of the '{@link #getResource() <em>Resource</em>}' reference.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getResource()
 	 * @generated
 	 * @ordered
 	 */
-	protected NamedResource resource;
+  protected NamedResource resource;
 
-	/**
+  /**
 	 * The default value of the '{@link #getFragment() <em>Fragment</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getFragment()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String FRAGMENT_EDEFAULT = null;
+  protected static final String FRAGMENT_EDEFAULT = null;
 
-	/**
+  /**
 	 * The cached value of the '{@link #getFragment() <em>Fragment</em>}' attribute.
 	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+   * <!-- end-user-doc -->
 	 * @see #getFragment()
 	 * @generated
 	 * @ordered
 	 */
-	protected String fragment = FRAGMENT_EDEFAULT;
+  protected String fragment = FRAGMENT_EDEFAULT;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ObjectCopyImpl() {
+  protected ObjectCopyImpl()
+  {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	protected EClass eStaticClass() {
+  @Override
+  protected EClass eStaticClass()
+  {
 		return EpatchPackage.Literals.OBJECT_COPY;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource getResource() {
+  public NamedResource getResource()
+  {
 		if (resource != null && resource.eIsProxy()) {
 			InternalEObject oldResource = (InternalEObject)resource;
 			resource = (NamedResource)eResolveProxy(oldResource);
@@ -90,50 +98,60 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		return resource;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NamedResource basicGetResource() {
+  public NamedResource basicGetResource()
+  {
 		return resource;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setResource(NamedResource newResource) {
+  public void setResource(NamedResource newResource)
+  {
 		NamedResource oldResource = resource;
 		resource = newResource;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__RESOURCE, oldResource, resource));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getFragment() {
+  public String getFragment()
+  {
 		return fragment;
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFragment(String newFragment) {
+  public void setFragment(String newFragment)
+  {
 		String oldFragment = fragment;
 		fragment = newFragment;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EpatchPackage.OBJECT_COPY__FRAGMENT, oldFragment, fragment));
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+  @Override
+  public Object eGet(int featureID, boolean resolve, boolean coreType)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_COPY__RESOURCE:
 				if (resolve) return getResource();
@@ -144,12 +162,14 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		return super.eGet(featureID, resolve, coreType);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eSet(int featureID, Object newValue) {
+  @Override
+  public void eSet(int featureID, Object newValue)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_COPY__RESOURCE:
 				setResource((NamedResource)newValue);
@@ -161,12 +181,14 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		super.eSet(featureID, newValue);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public void eUnset(int featureID) {
+  @Override
+  public void eUnset(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_COPY__RESOURCE:
 				setResource((NamedResource)null);
@@ -178,12 +200,14 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		super.eUnset(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public boolean eIsSet(int featureID) {
+  @Override
+  public boolean eIsSet(int featureID)
+  {
 		switch (featureID) {
 			case EpatchPackage.OBJECT_COPY__RESOURCE:
 				return resource != null;
@@ -193,12 +217,14 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@Override
-	public String toString() {
+  @Override
+  public String toString()
+  {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
@@ -208,4 +234,4 @@ public class ObjectCopyImpl extends CreatedObjectImpl implements ObjectCopy {
 		return result.toString();
 	}
 
-} // ObjectCopyImpl
+} //ObjectCopyImpl
