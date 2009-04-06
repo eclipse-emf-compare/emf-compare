@@ -316,14 +316,24 @@ public class NameSimilarityTest extends TestCase {
 		// Computes the expected result for class1
 		final StringBuilder buffer = new StringBuilder();
 		final List<EAttribute> classAttrib = new ArrayList<EAttribute>(class1.eClass().getEAllAttributes());
-		classAttrib.remove(NameSimilarity.findNameFeature(class1));
+		// unfiltered content similarity keeps the name feature
 		for (final EAttribute attribute : classAttrib) {
 			if (attribute != null && EFactory.eGet(class1, attribute.getName()) != null) {
 				buffer.append(EFactory.eGetAsString(class1, attribute.getName())).append(" ");
 			}
 		}
+		// As the name is distinct, computes the expected result for the clone
+		final StringBuilder bufferClone = new StringBuilder();
+		// unfiltered content similarity keeps the name feature
+		for (final EAttribute attribute : classAttrib) {
+			if (attribute != null && EFactory.eGet(class1ClonedFromModel, attribute.getName()) != null) {
+				bufferClone.append(EFactory.eGetAsString(class1ClonedFromModel, attribute.getName())).append(
+						" ");
+			}
+		}
 
 		final String expectedClass1Content = buffer.toString();
+		final String expectedCloneContent = bufferClone.toString();
 		final String class1Content = NameSimilarity.contentValue(class1, null);
 		final String class1ClonedFromModelContent = NameSimilarity.contentValue(class1ClonedFromModel, null);
 		final String class1ClonedFromCodeContent = NameSimilarity.contentValue(class1ClonedFromCode, null);
@@ -333,8 +343,8 @@ public class NameSimilarityTest extends TestCase {
 
 		assertEquals(testedMethod + ' ' + "didn't return the expected result.", expectedClass1Content,
 				class1Content);
-		assertEquals(testedMethod + ' ' + "returned a distinct result for two identical objects.",
-				class1Content, class1ClonedFromModelContent);
+		assertEquals(testedMethod + ' ' + "returned an unexpected result for the model copy.",
+				expectedCloneContent, class1ClonedFromModelContent);
 		assertEquals(testedMethod + ' ' + "returned a distinct result for two clones.", class1Content,
 				class1ClonedFromCodeContent);
 

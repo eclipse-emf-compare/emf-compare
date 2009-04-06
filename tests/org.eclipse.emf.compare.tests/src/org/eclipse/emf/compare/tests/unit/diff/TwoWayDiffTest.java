@@ -202,7 +202,7 @@ public class TwoWayDiffTest extends TestCase {
 			// add this new element to model
 			EFactory.eAdd(copyModel, "authors", newElement);
 			// modify existing element
-			EFactory.eSet(originalWriter, "name", "ModifiedAuthorName");
+			EFactory.eSet(originalWriter, "name", "ModifiedWriterName");
 		} catch (final FactoryException e) {
 			/*
 			 * Shouldn't have happened if we had found a Writer as expected. Consider it a failure

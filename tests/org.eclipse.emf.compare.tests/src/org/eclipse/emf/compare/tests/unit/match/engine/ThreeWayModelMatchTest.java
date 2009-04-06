@@ -238,7 +238,7 @@ public class ThreeWayModelMatchTest extends TestCase {
 			// add this new element to model
 			EFactory.eAdd(copyModel, "authors", newElement);
 			// modify existing element
-			EFactory.eSet(originalWriter, "name", "ModifiedAuthorName");
+			EFactory.eSet(originalWriter, "name", "ModifiedWriterName");
 		} catch (final FactoryException e) {
 			/*
 			 * Shouldn't have happened if we had found a Writer as expected. Consider it a failure
@@ -282,8 +282,8 @@ public class ThreeWayModelMatchTest extends TestCase {
 				final EObject nextMatch = matchIterator.next();
 				if (nextMatch instanceof Match2Elements
 						&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
-						|| (nextMatch instanceof UnmatchElement && ((UnmatchElement)nextMatch).getElement()
-								.equals(next))) {
+						|| nextMatch instanceof UnmatchElement
+						&& ((UnmatchElement)nextMatch).getElement().equals(next)) {
 					found = true;
 					break;
 				}
@@ -297,8 +297,11 @@ public class ThreeWayModelMatchTest extends TestCase {
 		int matchElementCount = 0;
 		final TreeIterator<EObject> matchIterator = match.eAllContents();
 		while (matchIterator.hasNext()) {
-			if (matchIterator.next() instanceof Match2Elements) {
+			final EObject next = matchIterator.next();
+			if (next instanceof Match2Elements) {
 				matchElementCount++;
+			} else {
+				System.out.println("?");
 			}
 		}
 
