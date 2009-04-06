@@ -297,11 +297,8 @@ public class ThreeWayModelMatchTest extends TestCase {
 		int matchElementCount = 0;
 		final TreeIterator<EObject> matchIterator = match.eAllContents();
 		while (matchIterator.hasNext()) {
-			final EObject next = matchIterator.next();
-			if (next instanceof Match2Elements) {
+			if (matchIterator.next() instanceof Match2Elements) {
 				matchElementCount++;
-			} else {
-				System.out.println("?");
 			}
 		}
 
