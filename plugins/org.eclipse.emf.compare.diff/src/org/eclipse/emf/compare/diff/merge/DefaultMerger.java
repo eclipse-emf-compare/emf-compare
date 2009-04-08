@@ -25,6 +25,9 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.MatchElement;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
@@ -46,9 +49,11 @@ public class DefaultMerger implements IMerger {
 	protected DiffElement diff;
 
 	/** Keeps a reference on the left resource for this merger. */
+	@Deprecated
 	protected Resource leftResource;
 
 	/** Keeps a reference on the right resource for this merger. */
+	@Deprecated
 	protected Resource rightResource;
 
 	/**
@@ -129,6 +134,52 @@ public class DefaultMerger implements IMerger {
 		copier.copyReferences();
 		copier.copyXMIIDs();
 		return result;
+	}
+
+	/**
+	 * Returns the left resource.
+	 * 
+	 * @return The left resource.
+	 * @deprecated this will be removed before 1.0 is released. Resources should be computed directly from the
+	 *             mergers as we now have whole ResourceSets to consider.
+	 */
+	@Deprecated
+	protected Resource findLeftResource() {
+		if (leftResource == null) {
+			final MatchModel match = ((ComparisonResourceSnapshot)EcoreUtil.getRootContainer(diff))
+					.getMatch();
+			final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator();
+			while (matchIterator.hasNext()) {
+				final Match2Elements element = (Match2Elements)matchIterator.next();
+				if (element.getLeftElement() != null) {
+					leftResource = element.getLeftElement().eResource();
+				}
+			}
+		}
+		return leftResource;
+	}
+
+	/**
+	 * Returns the right resource.
+	 * 
+	 * @return The right resource.
+	 * @deprecated this will be removed before 1.0 is released. Resources should be computed directly from the
+	 *             mergers as we now have whole ResourceSets to consider.
+	 */
+	@Deprecated
+	protected Resource findRightResource() {
+		if (rightResource == null) {
+			final MatchModel match = ((ComparisonResourceSnapshot)EcoreUtil.getRootContainer(diff))
+					.getMatch();
+			final Iterator<MatchElement> matchIterator = match.getMatchedElements().iterator();
+			while (matchIterator.hasNext()) {
+				final Match2Elements element = (Match2Elements)matchIterator.next();
+				if (element.getRightElement() != null) {
+					rightResource = element.getRightElement().eResource();
+				}
+			}
+		}
+		return rightResource;
 	}
 
 	/**
