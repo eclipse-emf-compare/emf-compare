@@ -38,7 +38,7 @@ import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -1202,7 +1202,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private boolean getPreferenceDistinctMetaModel() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
 			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceKeys.PREFERENCES_KEY_DISTINCT_METAMODEL);
+					EMFComparePreferenceConstants.PREFERENCES_KEY_DISTINCT_METAMODEL);
 		return MatchOptions.DEFAULT_DISTINCT_METAMODEL;
 	}
 
@@ -1214,7 +1214,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private boolean getPreferenceIgnoreID() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
 			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID);
+					EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID);
 		return MatchOptions.DEFAULT_IGNORE_ID;
 	}
 
@@ -1226,7 +1226,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private boolean getPreferenceIgnoreXMIID() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
 			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID);
+					EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID);
 		return MatchOptions.DEFAULT_IGNORE_XMI_ID;
 	}
 
@@ -1241,9 +1241,9 @@ public class GenericMatchEngine implements IMatchEngine {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault() != null
 				&& EMFComparePlugin.getDefault().getInt(
-						EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW) > 0) {
+						EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW) > 0) {
 			searchWindow = EMFComparePlugin.getDefault().getInt(
-					EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW);
+					EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW);
 		}
 		if (searchWindow < 0) {
 			searchWindow = 0;

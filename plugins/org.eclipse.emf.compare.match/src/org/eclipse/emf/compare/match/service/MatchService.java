@@ -29,7 +29,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -428,7 +428,7 @@ public final class MatchService {
 	public static IMatchEngine getBestMatchEngine(String extension) {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault().getBoolean(
-						EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
+						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION)) {
 			final MatchEngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
