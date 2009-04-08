@@ -33,7 +33,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
@@ -190,7 +190,7 @@ public final class DiffService {
 	public static IDiffEngine getBestDiffEngine(String extension) {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault().getBoolean(
-						EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
+						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION)) {
 			final DiffEngineDescriptor desc = getBestDescriptor(extension);
 			return desc.getEngineInstance();
 		}
