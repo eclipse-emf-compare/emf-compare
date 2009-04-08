@@ -103,6 +103,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
 	 * @param comparator
 	 *            The comparator which has been used for this comparison.
+	 * @noreference This constructor is not intended to be referenced by clients.
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel, ModelComparator comparator) {
 		this(matchModel, diffModel);
@@ -122,6 +123,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            {@link DiffResourceSet diff} of the comparison.
 	 * @param comparator
 	 *            The comparator which has been used for this comparison.
+	 * @noreference This constructor is not intended to be referenced by clients.
 	 */
 	public ModelCompareInput(MatchResourceSet matchResourceset, DiffResourceSet diffResourceSet,
 			ModelComparator comparator) {
