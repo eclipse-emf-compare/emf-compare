@@ -12,8 +12,12 @@ package org.eclipse.emf.compare;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -137,7 +141,7 @@ public class EMFComparePlugin extends Plugin {
 	 * @return Current value of the boolean-valued preference with the given key.
 	 */
 	public boolean getBoolean(String preferenceKey) {
-		return plugin.getPluginPreferences().getBoolean(preferenceKey);
+		return Platform.getPreferencesService().getBoolean(PLUGIN_ID, preferenceKey, false, null);
 	}
 
 	/**
@@ -148,7 +152,7 @@ public class EMFComparePlugin extends Plugin {
 	 * @return Current value of the integer-valued preference with the given key.
 	 */
 	public int getInt(String preferenceKey) {
-		return plugin.getPluginPreferences().getInt(preferenceKey);
+		return Platform.getPreferencesService().getInt(PLUGIN_ID, preferenceKey, 0, null);
 	}
 
 	/**
@@ -159,6 +163,7 @@ public class EMFComparePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		initializeDefaultPreferences();
 	}
 
 	/**
@@ -170,5 +175,18 @@ public class EMFComparePlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+	}
+
+	/**
+	 * This will initialize the core preferences to their default values.
+	 */
+	private void initializeDefaultPreferences() {
+		final IEclipsePreferences defaultCorePreferences = new DefaultScope().getNode(PLUGIN_ID);
+		defaultCorePreferences.putInt(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFComparePreferenceConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
+		/*
+		 * "ignore ID", "ignore XMI ID", "distinct metamodel" and "Engine selection" are all initialized to
+		 * false and don't need a default
+		 */
 	}
 }

@@ -14,8 +14,9 @@ package org.eclipse.emf.compare.util;
  * Defines constants used for EMF Compare preferences. These are used by the UI as well as the match engine.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 0.9
  */
-public interface EMFComparePreferenceKeys {
+public interface EMFComparePreferenceConstants {
 	/**
 	 * Preferences key for the boolean indicating that the comparison should assume the compared models have
 	 * distinct metamodels.
@@ -37,4 +38,7 @@ public interface EMFComparePreferenceKeys {
 
 	/** Preferences key for the engine selection. */
 	String PREFERENCES_KEY_ENGINE_SELECTION = "emfcompare.engine.selection"; //$NON-NLS-1$
+
+	/** Default value for the siblings search window. */
+	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
 }
