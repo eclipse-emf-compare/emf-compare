@@ -139,7 +139,12 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		((TreeViewer)viewer).getTree().clearAll(true);
-		final ModelComparator comparator = ModelComparator.getComparator(configuration);
+		final ModelComparator comparator;
+		if (newInput instanceof ICompareInput) {
+			comparator = ModelComparator.getComparator(configuration, (ICompareInput)newInput);
+		} else {
+			comparator = ModelComparator.getComparator(configuration);
+		}
 		if (newInput instanceof ComparisonResourceSnapshot) {
 			input = ((ComparisonResourceSnapshot)newInput).getDiff();
 		} else if (newInput instanceof ComparisonResourceSetSnapshot) {

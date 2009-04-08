@@ -62,6 +62,9 @@ public class ModelCompareInput implements ICompareInput {
 	/** Resource containing the right compared object. */
 	private Resource rightResource;
 
+	/** The compare input we've originaly been fed. */
+	private ICompareInput initialInput;
+
 	/**
 	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel
 	 * match} and {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
@@ -106,6 +109,7 @@ public class ModelCompareInput implements ICompareInput {
 		leftResource = comparator.getLeftResource();
 		rightResource = comparator.getRightResource();
 		ancestorResource = comparator.getAncestorResource();
+		initialInput = comparator.getCompareInput();
 	}
 
 	/**
@@ -125,6 +129,7 @@ public class ModelCompareInput implements ICompareInput {
 		leftResource = comparator.getLeftResource();
 		rightResource = comparator.getRightResource();
 		ancestorResource = comparator.getAncestorResource();
+		initialInput = comparator.getCompareInput();
 	}
 
 	/**
@@ -186,28 +191,47 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getAncestor()
 	 */
 	public ITypedElement getAncestor() {
+		if (initialInput != null)
+			return initialInput.getAncestor();
 		ITypedElement ancestor = null;
 		if (ancestorResource != null) {
 			if (ancestorResource.getContents().size() > 0) {
 				ancestor = new TypedElementWrapper(ancestorResource.getContents().get(0));
 			}
 		} else {
-			final MatchModel matchModel;
+			MatchModel matchModel = null;
 			if (match instanceof MatchModel) {
 				matchModel = (MatchModel)match;
-			} else {
-				if (((MatchResourceSet)match).getMatchModels().size() == 0) {
-					return new TypedElementWrapper(null);
-				}
+			} else if (((MatchResourceSet)match).getMatchModels().size() != 0) {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			if (matchModel.getAncestorRoots().isEmpty()) {
-				ancestor = new TypedElementWrapper(null);
-			} else {
+			if (matchModel != null && !matchModel.getAncestorRoots().isEmpty()) {
 				ancestor = new TypedElementWrapper(matchModel.getAncestorRoots().get(0));
 			}
 		}
 		return ancestor;
+	}
+
+	/**
+	 * Returns the left resource of this input.
+	 * 
+	 * @return The left loaded resource.
+	 */
+	public Resource getAncestorResource() {
+		if (ancestorResource == null) {
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else if (match == null || ((MatchResourceSet)match).getMatchModels().size() == 0) {
+				return null;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
+			}
+			if (!matchModel.getAncestorRoots().isEmpty()) {
+				ancestorResource = matchModel.getAncestorRoots().get(0).eResource();
+			}
+		}
+		return ancestorResource;
 	}
 
 	/**
@@ -293,6 +317,8 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getLeft()
 	 */
 	public ITypedElement getLeft() {
+		if (initialInput != null)
+			return initialInput.getLeft();
 		ITypedElement left = null;
 		if (leftResource != null) {
 			if (leftResource.getContents().size() > 0) {
@@ -312,6 +338,28 @@ public class ModelCompareInput implements ICompareInput {
 			}
 		}
 		return left;
+	}
+
+	/**
+	 * Returns the left resource of this input.
+	 * 
+	 * @return The left loaded resource.
+	 */
+	public Resource getLeftResource() {
+		if (leftResource == null) {
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else if (match == null || ((MatchResourceSet)match).getMatchModels().size() == 0) {
+				return null;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
+			}
+			if (!matchModel.getLeftRoots().isEmpty()) {
+				leftResource = matchModel.getLeftRoots().get(0).eResource();
+			}
+		}
+		return leftResource;
 	}
 
 	/**
@@ -346,6 +394,8 @@ public class ModelCompareInput implements ICompareInput {
 	 * @see ICompareInput#getRight()
 	 */
 	public ITypedElement getRight() {
+		if (initialInput != null)
+			return initialInput.getRight();
 		ITypedElement right = null;
 		if (rightResource != null) {
 			if (rightResource.getContents().size() > 0) {
@@ -365,6 +415,28 @@ public class ModelCompareInput implements ICompareInput {
 			}
 		}
 		return right;
+	}
+
+	/**
+	 * Returns the left resource of this input.
+	 * 
+	 * @return The left loaded resource.
+	 */
+	public Resource getRightResource() {
+		if (rightResource == null) {
+			final MatchModel matchModel;
+			if (match instanceof MatchModel) {
+				matchModel = (MatchModel)match;
+			} else if (match == null || ((MatchResourceSet)match).getMatchModels().size() == 0) {
+				return null;
+			} else {
+				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
+			}
+			if (!matchModel.getRightRoots().isEmpty()) {
+				rightResource = matchModel.getRightRoots().get(0).eResource();
+			}
+		}
+		return rightResource;
 	}
 
 	/**

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
-import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -50,15 +48,6 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
-				getPreferenceStore().getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW));
-		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
-				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID));
-		EMFComparePlugin.getDefault().getPluginPreferences().setValue(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
-				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
 	}
 
 	/**

@@ -26,7 +26,6 @@ import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
-import org.eclipse.compare.internal.ICompareAsText;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -71,6 +70,11 @@ import org.eclipse.ui.PlatformUI;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class ModelComparator {
+	/**
+	 * This will be initialized to <code>false</code> in eclipse 3.5M6 and above, <code>true</code> otherwise.
+	 */
+	protected static final boolean IS_LESS_GANYMEDE;
+
 	/** Keeps track of the team handlers declared for the extension point. */
 	private static final Set<TeamHandlerDescriptor> CACHED_HANDLERS = new HashSet<TeamHandlerDescriptor>();
 
@@ -120,8 +124,25 @@ public final class ModelComparator {
 	/** Resource of the right model used in this comparison. */
 	private Resource rightResource;
 
+	/** The compare input we were initially fed. */
+	private final ICompareInput compareInput;
+
+	/**
+	 * This will be set to <code>true</code> if we managed to load the resources, <code>false</code> if an
+	 * error occured.
+	 */
+	private boolean loadingSucceeded;
+
 	static {
 		parseExtensionMetaData();
+		boolean temp = false;
+		try {
+			Class.forName("org.eclipse.compare.internal.ICompareAsText"); //$NON-NLS-1$
+			temp = true;
+		} catch (ClassNotFoundException e) {
+			// Will be thrown in Eclipse 3.5M6 or above
+		}
+		IS_LESS_GANYMEDE = temp;
 	}
 
 	/**
@@ -129,9 +150,28 @@ public final class ModelComparator {
 	 * 
 	 * @param configuration
 	 *            CompareConfiguration of this comparator.
+	 * @param input
+	 *            The previous compare input.
 	 */
-	private ModelComparator(CompareConfiguration configuration) {
+	private ModelComparator(CompareConfiguration configuration, ICompareInput input) {
 		compareConfiguration = configuration;
+		compareInput = input;
+	}
+
+	/**
+	 * This will return the ModelComparator associated to the given CompareConfiguration.
+	 * 
+	 * @param configuration
+	 *            CompareConfiguration of this comparator.
+	 * @param input
+	 *            The previous compare input.
+	 * @return The comparator for this configuration.
+	 */
+	public static ModelComparator getComparator(CompareConfiguration configuration, ICompareInput input) {
+		if (!INSTANCES.containsKey(configuration)) {
+			INSTANCES.put(configuration, new ModelComparator(configuration, input));
+		}
+		return INSTANCES.get(configuration);
 	}
 
 	/**
@@ -142,9 +182,6 @@ public final class ModelComparator {
 	 * @return The comparator for this configuration.
 	 */
 	public static ModelComparator getComparator(CompareConfiguration configuration) {
-		if (!INSTANCES.containsKey(configuration)) {
-			INSTANCES.put(configuration, new ModelComparator(configuration));
-		}
 		return INSTANCES.get(configuration);
 	}
 
@@ -155,7 +192,10 @@ public final class ModelComparator {
 	 *            CompareConfiguration which comparator should be removed.
 	 */
 	public static void removeComparator(CompareConfiguration configuration) {
-		INSTANCES.remove(configuration);
+		// In eclipse 3.5M6 and above, viewers can be switched. We cannot remove the comparator then
+		if (IS_LESS_GANYMEDE) {
+			INSTANCES.remove(configuration);
+		}
 	}
 
 	/**
@@ -188,6 +228,11 @@ public final class ModelComparator {
 	 * @return Result of the comparison of the loaded resources.
 	 */
 	public ComparisonResourceSetSnapshot compare(CompareConfiguration configuration) {
+		if (!loadingSucceeded) {
+			// We couldn't load the resource. It's useless to carry on.
+			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
+		}
+
 		if (comparisonResult == null) {
 			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
 			final Date start = Calendar.getInstance().getTime();
@@ -308,6 +353,15 @@ public final class ModelComparator {
 	}
 
 	/**
+	 * Returns the compare input we've initially been fed.
+	 * 
+	 * @return The initial compare input.
+	 */
+	public ICompareInput getCompareInput() {
+		return compareInput;
+	}
+
+	/**
 	 * This will load the resources held by <code>input</code>.
 	 * 
 	 * @param input
@@ -316,7 +370,6 @@ public final class ModelComparator {
 	 *         otherwise.
 	 */
 	public boolean loadResources(ICompareInput input) {
-		boolean result = false;
 		if (ancestorElement != input.getAncestor() || leftElement != input.getLeft()
 				|| rightElement != input.getRight()) {
 			clear();
@@ -326,41 +379,49 @@ public final class ModelComparator {
 
 			try {
 				// This will be sufficient when comparing local resources
-				result = handleLocalResources(leftElement, rightElement, ancestorElement);
+				loadingSucceeded = handleLocalResources(leftElement, rightElement, ancestorElement);
 				// If resources weren't local, iterates through the registry to find
 				// a proper team handler
-				if (!result) {
+				if (!loadingSucceeded) {
 					final Iterator<TeamHandlerDescriptor> handlerDescriptorIterator = CACHED_HANDLERS
 							.iterator();
 					while (handlerDescriptorIterator.hasNext()) {
 						final AbstractTeamHandler handler = handlerDescriptorIterator.next()
 								.getHandlerInstance();
-						result |= handler.loadResources(input);
-						if (result) {
+						loadingSucceeded |= handler.loadResources(input);
+						if (loadingSucceeded) {
 							comparisonHandler = handler;
 							break;
 						}
 					}
 				}
-				// We didn't found a proper handler, use a generic one
-				if (!result) {
-					result |= handleGenericResources(leftElement, rightElement, ancestorElement);
+				// We didn't find a proper handler, use a generic one
+				if (!loadingSucceeded) {
+					loadingSucceeded |= handleGenericResources(leftElement, rightElement, ancestorElement);
 				}
 				/*
 				 * The generic handler should work for any EMF resources. If we're here, no exception has been
 				 * thrown and loading ended accurately
 				 */
-				result = true;
+				loadingSucceeded = true;
 			} catch (final IOException e) {
-				final Dialog dialog = new CompareErrorDialog(
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-						"Comparison failed", "Comparison through EMF Compare failed", new Status(IStatus.ERROR, EMFCompareUIPlugin.PLUGIN_ID, e.getMessage(), e)); //$NON-NLS-1$ //$NON-NLS-2$
+				final String dialogMessage;
+				if (IS_LESS_GANYMEDE) {
+					dialogMessage = EMFCompareUIMessages.getString("ModelComparator.ResourceLoadingFailure"); //$NON-NLS-1$
+				} else {
+					dialogMessage = EMFCompareUIMessages
+							.getString("ModelComparator.ResourceLoadingFailureGanymede"); //$NON-NLS-1$
+				}
+				final Dialog dialog = new CompareErrorDialog(PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getShell(), "Comparison failed", dialogMessage, //$NON-NLS-1$
+						new Status(IStatus.ERROR, EMFCompareUIPlugin.PLUGIN_ID, e.getMessage(), e));
 				final int buttonPressed = dialog.open();
 				if (buttonPressed == CompareErrorDialog.COMPARE_AS_TEXT_ID) {
 					final Set<Object> set = new HashSet<Object>();
 					final CompareEditorInput editorInput = (CompareEditorInput)compareConfiguration
 							.getContainer();
-					compareConfiguration.setProperty(ICompareAsText.PROP_TEXT_INPUTS, set);
+					// value of the 3.3 and 3.4 "ICompareAsText.PROP_TEXT_INPUT"
+					compareConfiguration.setProperty("org.eclipse.compare.TextInputs", set); //$NON-NLS-1$
 					set.add(editorInput);
 					set.add(editorInput.getCompareResult());
 					CompareUI.openCompareEditorOnPage(editorInput, null);
@@ -369,10 +430,9 @@ public final class ModelComparator {
 				EMFComparePlugin.log(e.getStatus());
 			}
 		} else {
-			// input was the same as the last, we consider loading succeeded
-			result = true;
+			// input was the same as the last
 		}
-		return result;
+		return loadingSucceeded;
 	}
 
 	/**
@@ -575,7 +635,7 @@ public final class ModelComparator {
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 */
-	class CompareErrorDialog extends ErrorDialog {
+	final class CompareErrorDialog extends ErrorDialog {
 		/** ID of the "Compare As Text" button. Not intended to be either subclassed or accessed externally. */
 		static final int COMPARE_AS_TEXT_ID = IDialogConstants.CLIENT_ID + 1;
 
@@ -603,8 +663,14 @@ public final class ModelComparator {
 		 */
 		@Override
 		protected void createButtonsForButtonBar(Composite parent) {
-			createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, true);
-			createButton(parent, COMPARE_AS_TEXT_ID, "Compare As Text", false); //$NON-NLS-1$
+			/*
+			 * Using the CANCEL_ID for an "OK" button in order to inherit the cancel behavior but be coherent
+			 * with the error message.
+			 */
+			createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.OK_LABEL, true);
+			if (IS_LESS_GANYMEDE) {
+				createButton(parent, COMPARE_AS_TEXT_ID, "Compare As Text", false); //$NON-NLS-1$
+			}
 			createDetailsButton(parent);
 		}
 

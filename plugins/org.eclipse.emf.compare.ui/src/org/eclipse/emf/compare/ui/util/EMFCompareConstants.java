@@ -49,9 +49,6 @@ public interface EMFCompareConstants {
 	/** Default color (red) for a removed element circling. */
 	RGB PREFERENCES_DEFAULT_REMOVED_COLOR = new RGB(239, 41, 41);
 
-	/** Default value for the siblings search window. */
-	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
-
 	/** Preferences description for the added element color. */
 	String PREFERENCES_DESCRIPTION_ADDED_COLOR = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.addedColorLabel") + ':'; //$NON-NLS-1$

@@ -113,7 +113,7 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 		return false;
 	}
 
-	/* (non-javadoc) most of the behavior here has been copied from EMF 2.4 "URIHandleImpl". */
+	/* (non-javadoc) most of the behavior here has been copied from EMF 2.4 "URIHandlerImpl". */
 	/**
 	 * This implementation of an URIConverter allows us to properly resolve cross-model links towards the
 	 * actual revision that should be loaded.

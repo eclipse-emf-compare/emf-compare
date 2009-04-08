@@ -279,7 +279,12 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		if (input instanceof ICompareInput && ((ICompareInput)input).getAncestor() != null) {
 			isThreeWay = true;
 		}
-		final ModelComparator comparator = ModelComparator.getComparator(configuration);
+		final ModelComparator comparator;
+		if (input instanceof ICompareInput) {
+			comparator = ModelComparator.getComparator(configuration, (ICompareInput)input);
+		} else {
+			comparator = ModelComparator.getComparator(configuration);
+		}
 		if (input instanceof ComparisonResourceSnapshot) {
 			final ComparisonResourceSnapshot snapshot = (ComparisonResourceSnapshot)input;
 			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
@@ -295,6 +300,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			final ComparisonResourceSetSnapshot snapshot = comparator.compare(configuration);
 			super.setInput(new ModelCompareInput(snapshot.getMatchResourceSet(), snapshot
 					.getDiffResourceSet(), comparator));
+		} else {
+			super.setInput(input);
 		}
 	}
 
@@ -628,10 +635,10 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected void handleResizeLeftRight(int x, int y, int leftWidth, int centerWidth, int rightWidth,
 			int height) {
 		if (getCenterPart() != null) {
-			getCenterPart().setBounds(leftWidth - (CENTER_WIDTH / 2), y, CENTER_WIDTH, height);
+			getCenterPart().setBounds(leftWidth - CENTER_WIDTH / 2, y, CENTER_WIDTH, height);
 		}
-		leftPart.setBounds(x, y, leftWidth - (CENTER_WIDTH / 2), height);
-		rightPart.setBounds(x + leftWidth + (CENTER_WIDTH / 2), y, rightWidth - (CENTER_WIDTH / 2), height);
+		leftPart.setBounds(x, y, leftWidth - CENTER_WIDTH / 2, height);
+		rightPart.setBounds(x + leftWidth + CENTER_WIDTH / 2, y, rightWidth - CENTER_WIDTH / 2, height);
 		update();
 	}
 

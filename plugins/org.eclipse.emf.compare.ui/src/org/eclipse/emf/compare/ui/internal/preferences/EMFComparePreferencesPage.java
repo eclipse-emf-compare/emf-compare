@@ -14,12 +14,13 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
@@ -47,6 +48,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Preference page used for <b>EMFCompare</b>, it allows the user to define which files to compare with
@@ -102,7 +104,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		addField(new BooleanFieldEditor(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_DRAW_DIFFERENCES, guiGroup));
 		// present user with a coice of engines
-		addField(new BooleanFieldEditor(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION,
+		addField(new BooleanFieldEditor(EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_ENGINE_SELECTION, guiGroup));
 	}
 
@@ -146,17 +148,17 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		// EMFCompareConstants.PREFERENCES_DESCRIPTION_DISTINCT_METAMODEL, matchGroup));
 		// Search window field
 		final ImageIntegerFieldEditor searchWindowEditor = new ImageIntegerFieldEditor(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_SEARCH_WINDOW, matchGroup);
 		addField(searchWindowEditor);
 
 		// ignore ID field
 		final FieldEditor ignoreID = new BooleanFieldEditor(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID,
+				EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_ID, matchGroup);
 		// ignore XMI ID field
 		final FieldEditor ignoreXMIID = new BooleanFieldEditor(
-				EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID,
+				EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID,
 				EMFCompareConstants.PREFERENCES_DESCRIPTION_IGNORE_XMIID, matchGroup);
 
 		addField(ignoreID);
@@ -175,11 +177,13 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	public void init(IWorkbench workbench) {
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW)
-						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID)
-						|| event.getProperty().equals(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID)
+				if (event.getProperty().equals(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW)
+						|| event.getProperty()
+								.equals(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID)
 						|| event.getProperty().equals(
-								EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION)) {
+								EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID)
+						|| event.getProperty().equals(
+								EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION)) {
 					reflectOnCore();
 				}
 			}
@@ -192,19 +196,25 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	 * preferences store.
 	 */
 	protected void reflectOnCore() {
-		final Preferences corePreferences = EMFComparePlugin.getDefault().getPluginPreferences();
+		final IEclipsePreferences corePreferences = new InstanceScope().getNode(EMFComparePlugin.PLUGIN_ID);
 		// Search window
-		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW, getPreferenceStore()
-				.getInt(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW));
+		corePreferences.putInt(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				getPreferenceStore().getInt(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW));
 		// ID
-		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID, getPreferenceStore()
-				.getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_ID));
+		corePreferences.putBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID,
+				getPreferenceStore().getBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID));
 		// XMI ID
-		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID, getPreferenceStore()
-				.getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_IGNORE_XMIID));
+		corePreferences.putBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID,
+				getPreferenceStore().getBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID));
 		// Engine selection
-		corePreferences.setValue(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION,
-				getPreferenceStore().getBoolean(EMFComparePreferenceKeys.PREFERENCES_KEY_ENGINE_SELECTION));
+		corePreferences.putBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION,
+				getPreferenceStore().getBoolean(
+						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION));
+		try {
+			corePreferences.flush();
+		} catch (BackingStoreException e) {
+			// discard
+		}
 	}
 
 	/**

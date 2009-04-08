@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
-import org.eclipse.emf.compare.util.EMFComparePreferenceKeys;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 
@@ -32,12 +32,12 @@ public class EMFComparePreferencesInitializer extends AbstractPreferenceInitiali
 	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = EMFCompareUIPlugin.getDefault().getPreferenceStore();
 		/*
-		 * "ignore ID", "ignore XMI ID", "engine selection" and "distinct metamodel" booleans doen't need a
+		 * "ignore ID", "ignore XMI ID", "engine selection" and "distinct metamodel" booleans don't need a
 		 * default : initialized to false
 		 */
 		// Default search window
-		store.setDefault(EMFComparePreferenceKeys.PREFERENCES_KEY_SEARCH_WINDOW,
-				EMFCompareConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
+		store.setDefault(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
+				EMFComparePreferenceConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
 		// Default value for the "draw differences" boolean
 		store.setDefault(EMFCompareConstants.PREFERENCES_KEY_DRAW_DIFFERENCES, true);
 

@@ -17,7 +17,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.ui.TypedElementWrapper;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -61,9 +61,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
 	 */
 	public Object getAncestorContent(Object element) {
-		if (element instanceof ICompareInput)
-			return ((ICompareInput)element).getAncestor();
-		return null;
+		Object content = null;
+		if (element instanceof ModelCompareInput)
+			content = ((ModelCompareInput)element).getAncestorResource();
+		else if (element instanceof ICompareInput)
+			content = ((ICompareInput)element).getAncestor();
+		return content;
 	}
 
 	/**
@@ -90,9 +93,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftContent(java.lang.Object)
 	 */
 	public Object getLeftContent(Object element) {
-		if (element instanceof ICompareInput)
-			return ((ICompareInput)element).getLeft();
-		return null;
+		Object content = null;
+		if (element instanceof ModelCompareInput)
+			content = ((ModelCompareInput)element).getLeftResource();
+		else if (element instanceof ICompareInput)
+			content = ((ICompareInput)element).getLeft();
+		return content;
 	}
 
 	/**
@@ -119,9 +125,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
 	 */
 	public Object getRightContent(Object element) {
-		if (element instanceof ICompareInput)
-			return ((ICompareInput)element).getRight();
-		return null;
+		Object content = null;
+		if (element instanceof ModelCompareInput)
+			content = ((ModelCompareInput)element).getRightResource();
+		else if (element instanceof ICompareInput)
+			content = ((ICompareInput)element).getRight();
+		return content;
 	}
 
 	/**
@@ -179,12 +188,11 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	public void saveLeftContent(Object element, byte[] bytes) {
 		// FIXME save whole resource Set
 		// FIXME automatic saves
-		if (element instanceof ICompareInput) {
-			final ICompareInput input = (ICompareInput)element;
-			if (input.getLeft() instanceof TypedElementWrapper) {
-				final TypedElementWrapper left = (TypedElementWrapper)input.getLeft();
+		if (element instanceof ModelCompareInput) {
+			final ModelCompareInput input = (ModelCompareInput)element;
+			if (input.getLeftResource() != null) {
 				try {
-					left.getObject().eResource().save(Collections.EMPTY_MAP);
+					input.getLeftResource().save(Collections.EMPTY_MAP);
 				} catch (IOException e) {
 					EMFComparePlugin.log(e.getMessage(), false);
 				}
@@ -201,12 +209,11 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	public void saveRightContent(Object element, byte[] bytes) {
 		// FIXME save whole resource Set
 		// FIXME automatic saves
-		if (element instanceof ICompareInput) {
-			final ICompareInput input = (ICompareInput)element;
-			if (input.getRight() instanceof TypedElementWrapper) {
-				final TypedElementWrapper right = (TypedElementWrapper)input.getRight();
+		if (element instanceof ModelCompareInput) {
+			final ModelCompareInput input = (ModelCompareInput)element;
+			if (input.getRightResource() != null) {
 				try {
-					right.getObject().eResource().save(Collections.EMPTY_MAP);
+					input.getRightResource().save(Collections.EMPTY_MAP);
 				} catch (IOException e) {
 					EMFComparePlugin.log(e.getMessage(), false);
 				}
