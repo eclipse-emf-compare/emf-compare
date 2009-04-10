@@ -12,6 +12,7 @@ import static org.eclipse.emf.compare.epatch.applier.ApplyStrategy.LEFT_TO_RIGHT
 import static org.eclipse.emf.compare.epatch.applier.ApplyStrategy.RIGHT_TO_LEFT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ import org.eclipse.emf.compare.epatch.applier.EpatchMapping.EpatchMappingEntry;
 import org.eclipse.emf.compare.epatch.recorder.EpatchRecorder;
 import org.eclipse.emf.compare.epatch.tests.testdata.Change;
 import org.eclipse.emf.compare.epatch.tests.util.EmfAssert;
+import org.eclipse.emf.compare.epatch.tests.util.EmfFormatter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -97,63 +99,59 @@ public class ApplierTest {
 		return app;
 	}
 
+	private Set<EObject> getAllContents(Resource res) {
+		Set<EObject> all = new HashSet<EObject>();
+		for (TreeIterator<EObject> i = res.getAllContents(); i.hasNext();)
+			all.add(i.next());
+		return all;
+	}
+
 	@Test
-	public void testAllObjectsAreCopied() throws Exception {
+	public void testDstOnlyContainsCopiedObjects() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
 		Resource r2 = app.getMap().getSrcResources().get(app.getEpatch().getResources().get(0));
 		Resource r3 = app.getMap().getDstResources().get(app.getEpatch().getResources().get(0));
-		Set<EObject> orig = new HashSet<EObject>();
-		System.out.println("src");
-		for (TreeIterator<EObject> i = r2.getAllContents(); i.hasNext();) {
-			EObject o = i.next();
-			System.out.println(Integer.toHexString(o.hashCode()) + ": " + o);
-			orig.add(o);
-		}
-
-		System.out.println("dst");
+		Set<EObject> orig = getAllContents(r2);
 		for (TreeIterator<EObject> i = r3.getAllContents(); i.hasNext();) {
 			EObject o = i.next();
-			System.out.println(o);
 			assertFalse(orig.contains(o));
 		}
 	}
 
 	@Test
-	public void testAllSrcObjectsAreInSrc() throws Exception {
+	public void testEpatchMappingSrc() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
 		Resource r2 = app.getMap().getSrcResources().get(app.getEpatch().getResources().get(0));
-		Set<EObject> orig = new HashSet<EObject>();
-		System.out.println("src");
-		for (TreeIterator<EObject> i = r2.getAllContents(); i.hasNext();) {
-			EObject o = i.next();
-			System.out.println(Integer.toHexString(o.hashCode()) + ": " + o);
-			orig.add(o);
-		}
+		Set<EObject> orig = getAllContents(r2);
+		System.out.println(EmfFormatter.objToStr(app.getEpatch()));
 
-		System.out.println("triMap");
+		// all src-EObjects from the EpatchMapping must be contained in the source model
 		for (EpatchMappingEntry o : app.getMap().getAllEntries()) {
-			System.out.println(o);
 			if (o.getSrc() != null)
 				assertTrue(orig.contains(o.getSrc()));
 		}
+
+		// all EObjects from the source model must be contained in the EpatchMapping
+		for (EObject o : orig)
+			if (app.getMap().getBySrc(o) == null)
+				fail(change + " Object " + o + " not found in " + app.getMap());
 	}
 
 	@Test
-	public void testAllDstObjectsAreInDst() throws Exception {
+	public void testEpatchMappingDst() throws Exception {
 		CopyingEpatchApplier app = getAppliedPatch();
 		Resource r3 = app.getMap().getDstResources().get(app.getEpatch().getResources().get(0));
-		Set<EObject> orig = new HashSet<EObject>();
-		System.out.println("dst");
-		for (TreeIterator<EObject> i = r3.getAllContents(); i.hasNext();) {
-			EObject o = i.next();
-			System.out.println(Integer.toHexString(o.hashCode()) + ": " + o);
-			orig.add(o);
-		}
+		Set<EObject> orig = getAllContents(r3);
 
-		System.out.println("triMap");
+		// all src-EObjects from the EpatchMapping must be contained in the source model
 		for (EpatchMappingEntry o : app.getMap().getAllEntries()) {
 			if (o.getDst() != null)
 				assertTrue(orig.contains(o.getDst()));
 		}
+
+		// all EObjects from the source model must be contained in the EpatchMapping
+		for (EObject o : orig)
+			if (app.getMap().getByDst(o) == null)
+				fail(change + " Object " + o + " not found in " + app.getMap());
 	}
 }
