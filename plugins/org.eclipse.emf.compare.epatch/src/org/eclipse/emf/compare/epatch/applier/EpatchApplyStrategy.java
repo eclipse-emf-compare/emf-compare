@@ -8,13 +8,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.epatch.applier;
 
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.epatch.AssignmentValue;
 import org.eclipse.emf.compare.epatch.CreatedObject;
 import org.eclipse.emf.compare.epatch.ListAssignment;
+import org.eclipse.emf.compare.epatch.NamedObject;
 import org.eclipse.emf.compare.epatch.NamedResource;
 import org.eclipse.emf.compare.epatch.ObjectRef;
 import org.eclipse.emf.compare.epatch.SingleAssignment;
+import org.eclipse.emf.compare.epatch.util.EpatchUtil;
 
 /**
  * @author Moritz Eysholdt - Initial contribution and API
@@ -24,12 +28,24 @@ public interface EpatchApplyStrategy {
 		protected EpatchLeftToRightStrategy() {
 		}
 
+		public List<CreatedObject> getAllAddedObjects(NamedObject obj) {
+			return EpatchUtil.getAllRightValues(obj);
+		}
+
+		public List<CreatedObject> getAllRemovedObjects(NamedObject obj) {
+			return EpatchUtil.getAllLeftValues(obj);
+		}
+
 		public String getInputFragment(ObjectRef obj) {
 			return obj.getLeftFrag();
 		}
 
 		public NamedResource getInputResource(ObjectRef obj) {
 			return obj.getLeftRes();
+		}
+
+		public CreatedObject getInputRoot(NamedResource res) {
+			return res.getLeftRoot();
 		}
 
 		public String getInputURI(NamedResource res) {
@@ -61,6 +77,14 @@ public interface EpatchApplyStrategy {
 		protected EpatchRightToLeftStrategy() {
 		}
 
+		public List<CreatedObject> getAllAddedObjects(NamedObject obj) {
+			return EpatchUtil.getAllLeftValues(obj);
+		}
+
+		public List<CreatedObject> getAllRemovedObjects(NamedObject obj) {
+			return EpatchUtil.getAllRightValues(obj);
+		}
+
 		public String getInputFragment(ObjectRef obj) {
 			return obj.getRightFrag() != null && obj.getRightRes() != null ? obj.getRightFrag() : obj
 					.getLeftFrag();
@@ -69,6 +93,10 @@ public interface EpatchApplyStrategy {
 		public NamedResource getInputResource(ObjectRef obj) {
 			return obj.getRightFrag() != null && obj.getRightRes() != null ? obj.getRightRes() : obj
 					.getLeftRes();
+		}
+
+		public CreatedObject getInputRoot(NamedResource res) {
+			return res.getRightRoot();
 		}
 
 		public String getInputURI(NamedResource res) {
@@ -113,9 +141,15 @@ public interface EpatchApplyStrategy {
 		}
 	}
 
+	public List<CreatedObject> getAllAddedObjects(NamedObject obj);
+
+	public List<CreatedObject> getAllRemovedObjects(NamedObject obj);
+
 	public String getInputFragment(ObjectRef obj);
 
 	public NamedResource getInputResource(ObjectRef obj);
+
+	public CreatedObject getInputRoot(NamedResource res);
 
 	public String getInputURI(NamedResource res);
 

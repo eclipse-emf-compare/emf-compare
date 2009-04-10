@@ -8,12 +8,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.epatch.util;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.emf.compare.epatch.Assignment;
 import org.eclipse.emf.compare.epatch.AssignmentValue;
+import org.eclipse.emf.compare.epatch.CreatedObject;
+import org.eclipse.emf.compare.epatch.ListAssignment;
 import org.eclipse.emf.compare.epatch.NamedObject;
 import org.eclipse.emf.compare.epatch.ObjectRef;
+import org.eclipse.emf.compare.epatch.SingleAssignment;
 
 /**
  * @author Moritz Eysholdt - Initial contribution and API
@@ -68,15 +73,32 @@ public class EpatchUtil {
 
 	public static ObjSorter NAMED_OBJECT_SORTER = new ObjSorter();
 
-	// public static void removeMigrationInfo(Epatch patch) {
-	// for (TreeIterator<EObject> i = patch.eAllContents(); i.hasNext();) {
-	// EObject o = i.next();
-	// if (o instanceof Migration || o instanceof JavaImport
-	// || o instanceof ExtensionImport) {
-	// i.prune();
-	// EcoreUtil.remove(o);
-	// }
-	// }
-	// }
+	public static List<CreatedObject> getAllLeftValues(NamedObject obj) {
+		return getAllValues(obj, new ArrayList<CreatedObject>(), true);
+	}
 
+	private static List<CreatedObject> getAllValues(NamedObject obj, List<CreatedObject> list, boolean isLeft) {
+		boolean left = isLeft || obj instanceof CreatedObject;
+		for (Assignment a : obj.getAssignments())
+			if (a instanceof ListAssignment) {
+				ListAssignment la = (ListAssignment)a;
+				for (AssignmentValue v : left ? la.getLeftValues() : la.getRightValues())
+					if (v.getNewObject() != null) {
+						list.add(v.getNewObject());
+						getAllValues(v.getNewObject(), list, isLeft);
+					}
+			} else if (a instanceof SingleAssignment) {
+				SingleAssignment si = (SingleAssignment)a;
+				AssignmentValue v = left ? si.getLeftValue() : si.getRightValue();
+				if (v != null && v.getNewObject() != null) {
+					list.add(v.getNewObject());
+					getAllValues(v.getNewObject(), list, isLeft);
+				}
+			}
+		return list;
+	}
+
+	public static List<CreatedObject> getAllRightValues(NamedObject obj) {
+		return getAllValues(obj, new ArrayList<CreatedObject>(), false);
+	}
 }

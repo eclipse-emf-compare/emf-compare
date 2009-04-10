@@ -11,9 +11,8 @@ package org.eclipse.emf.compare.epatch.applier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
@@ -48,55 +47,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class CopyingEpatchApplier {
-	public class TriMap implements EpatchMapping {
-		private Map<EObject, TriMapEntry> dst = new HashMap<EObject, TriMapEntry>();
-
-		private Map<NamedObject, TriMapEntry> ptc = new HashMap<NamedObject, TriMapEntry>();
-
-		private Map<EObject, TriMapEntry> src = new HashMap<EObject, TriMapEntry>();
-
-		public Set<EpatchMappingEntry> getAllEntries() {
-			Set<EpatchMappingEntry> entries = new HashSet<EpatchMappingEntry>(src.values());
-			entries.addAll(dst.values());
-			entries.addAll(ptc.values());
-			return entries;
-		}
-
-		public EpatchMappingEntry getByDst(EObject dst) {
-			return this.dst.get(dst);
-		}
-
-		public EpatchMappingEntry getByPtc(NamedObject ptc) {
-			return this.ptc.get(ptc);
-		}
-
-		public EpatchMappingEntry getBySrc(EObject src) {
-			return this.src.get(src);
-		}
-
-		public Map<EObject, EObject> getDstToSrcMap() {
-			Map<EObject, EObject> map = new HashMap<EObject, EObject>();
-			for (Entry<EObject, TriMapEntry> e : dst.entrySet())
-				map.put(e.getKey(), e.getValue().getSrc());
-			return map;
-		}
-
-		public Map<EObject, EObject> getSrcToDstMap() {
-			Map<EObject, EObject> map = new HashMap<EObject, EObject>();
-			for (Entry<EObject, TriMapEntry> e : src.entrySet())
-				map.put(e.getKey(), e.getValue().getDst());
-			return map;
-		}
-
-		public void put(EObject src, EObject dst, NamedObject ptc) {
-			TriMapEntry e = new TriMapEntry(src, dst, ptc);
-			if (src != null)
-				this.src.put(src, e);
-			if (dst != null)
-				this.dst.put(dst, e);
-			if (ptc != null)
-				this.ptc.put(ptc, e);
-		}
+	public class TriMap extends AbstractEpatchMapping {
 
 		public Map<NamedResource, Resource> getDstResources() {
 			return outputResources;
@@ -115,51 +66,7 @@ public class CopyingEpatchApplier {
 		}
 	}
 
-	public class TriMapEntry implements EpatchMappingEntry {
-		private EObject dst;
-
-		private NamedObject ptc;
-
-		private EObject src;
-
-		public TriMapEntry(EObject src, EObject dst, NamedObject ptc) {
-			super();
-			this.src = src;
-			this.dst = dst;
-			this.ptc = ptc;
-		}
-
-		public EObject getDst() {
-			return dst;
-		}
-
-		public NamedObject getPtc() {
-			return ptc;
-		}
-
-		public EObject getSrc() {
-			return src;
-		}
-
-		@Override
-		public String toString() {
-			StringBuffer b = new StringBuffer();
-			b.append("src:");
-			b.append(src == null ? "null" : src.eClass().getName() + "@"
-					+ Integer.toHexString(src.hashCode()));
-			b.append(" dst:");
-			b.append(dst == null ? "null" : dst.eClass().getName() + "@"
-					+ Integer.toHexString(dst.hashCode()));
-			b.append(" ptc:");
-			b.append(ptc == null ? "null" : ptc.eClass().getName());
-			return b.toString();
-		}
-
-	}
-
 	protected EpatchApplyStrategy dir;
-
-	protected ApplyStrategy strategy;
 
 	protected Epatch epatch;
 
@@ -170,6 +77,8 @@ public class CopyingEpatchApplier {
 	protected Map<NamedResource, Resource> outputResources;
 
 	protected ResourceSet outputResourceSet;
+
+	protected ApplyStrategy strategy;
 
 	protected EpatchMapping triMap;
 
@@ -196,7 +105,7 @@ public class CopyingEpatchApplier {
 
 	public void apply() {
 		createOutputResources();
-		createNamedObjectMap();
+		mapObjects();
 		// printMaps();
 		copyFeatures();
 	}
@@ -206,33 +115,6 @@ public class CopyingEpatchApplier {
 			Resource res = outputResources.get(nr);
 			EObject src = inputResources.get(nr).getContents().get(0);
 			res.getContents().add(getDestObject(src, dir.getOutputRoot(nr), true));
-		}
-	}
-
-	protected void createNamedObjectMap() {
-		triMap = new TriMap();
-		for (NamedResource r : epatch.getResources()) {
-			if (r.getRightRoot() != null)
-				mapObject(r.getRightRoot());
-		}
-		for (ObjectRef nobj : epatch.getObjects()) {
-			EObject eobj = getEObject(dir.getInputResource(nobj), dir.getInputFragment(nobj));
-			mapObject(eobj, nobj);
-			for (Assignment ass : nobj.getAssignments()) {
-				if (ass instanceof SingleAssignment) {
-					SingleAssignment sa = (SingleAssignment)ass;
-					CreatedObject co = dir.getOutputValue(sa).getNewObject();
-					if (co != null)
-						mapObject(co);
-				} else if (ass instanceof ListAssignment) {
-					ListAssignment la = (ListAssignment)ass;
-					for (AssignmentValue av : dir.getOutputValues(la)) {
-						CreatedObject co = av.getNewObject();
-						if (co != null)
-							mapObject(co);
-					}
-				}
-			}
 		}
 	}
 
@@ -318,6 +200,28 @@ public class CopyingEpatchApplier {
 		}
 	}
 
+	protected EObject getEObject(CreatedObject obj) {
+		AssignmentValue asv = (AssignmentValue)obj.eContainer();
+		Assignment ass = (Assignment)asv.eContainer();
+		NamedObject no = (NamedObject)ass.eContainer();
+		EObject parent;
+		if (no instanceof ObjectRef) {
+			ObjectRef or = (ObjectRef)no;
+			parent = getEObject(dir.getInputResource(or), dir.getInputFragment(or));
+		} else if (no instanceof CreatedObject)
+			parent = getEObject((CreatedObject)no);
+		else
+			throw new RuntimeException("Unknown Type: " + no.eClass().getName());
+		EStructuralFeature f = parent.eClass().getEStructuralFeature(ass.getFeature());
+		Object val = parent.eGet(f);
+		if (ass instanceof ListAssignment) {
+			int i = no instanceof CreatedObject ? ((List<?>)ass.eGet(asv.eContainmentFeature())).indexOf(asv)
+					: asv.getIndex();
+			val = ((List<?>)val).get(i);
+		}
+		return (EObject)val;
+	}
+
 	protected EObject getEObject(NamedResource res, String fragment) {
 		Resource r = inputResources.get(res);
 		EObject o = r.getEObject(fragment);
@@ -352,40 +256,48 @@ public class CopyingEpatchApplier {
 		return true;
 	}
 
-	protected void mapObject(CreatedObject obj) {
-		if (obj instanceof ObjectCopy) {
-			ObjectCopy oc = (ObjectCopy)obj;
+	protected void mapAddedObject(CreatedObject o) {
+		if (o instanceof ObjectCopy) {
+			ObjectCopy oc = (ObjectCopy)o;
 			EObject src = getEObject(oc.getResource(), oc.getFragment());
 			EObject dst = objectClone(src);
-			triMap.put(obj, dst, obj);
-		} else if (obj instanceof ObjectNew) {
-			ObjectNew on = (ObjectNew)obj;
+			triMap.put(o, dst, o);
+		} else if (o instanceof ObjectNew) {
+			ObjectNew on = (ObjectNew)o;
 			Resource res = getImport(on.getImport());
 			EClass cls = (EClass)res.getEObject(on.getImpFrag());
 			EObject dst = cls.getEPackage().getEFactoryInstance().create(cls);
-			triMap.put(null, dst, obj);
+			triMap.put(null, dst, o);
 		} else
-			throw new RuntimeException("Unknown CreatObject: " + obj);
-		for (Assignment ass : obj.getAssignments()) {
-			if (ass instanceof SingleAssignment) {
-				SingleAssignment sa = (SingleAssignment)ass;
-				CreatedObject co = sa.getLeftValue().getNewObject();
-				if (co != null)
-					mapObject(co);
-			} else if (ass instanceof ListAssignment) {
-				ListAssignment la = (ListAssignment)ass;
-				for (AssignmentValue av : la.getLeftValues()) {
-					CreatedObject co = av.getNewObject();
-					if (co != null)
-						mapObject(co);
-				}
-			}
-		}
-
+			throw new RuntimeException("Unknown CreatObject: " + o);
 	}
 
-	protected void mapObject(EObject src, ObjectRef obj) {
+	protected void mapModifiedObject(EObject src, ObjectRef obj) {
 		triMap.put(src, objectClone(src), obj);
+	}
+
+	protected void mapObjects() {
+		triMap = new TriMap();
+		for (NamedResource r : epatch.getResources()) {
+			CreatedObject in = dir.getInputRoot(r);
+			CreatedObject out = dir.getOutputRoot(r);
+			if (in != null)
+				mapRemovedObject(in);
+			if (out != null)
+				mapAddedObject(out);
+		}
+		for (ObjectRef nobj : epatch.getObjects()) {
+			EObject eobj = getEObject(dir.getInputResource(nobj), dir.getInputFragment(nobj));
+			mapModifiedObject(eobj, nobj);
+			for (CreatedObject o : dir.getAllAddedObjects(nobj))
+				mapAddedObject(o);
+			for (CreatedObject o : dir.getAllRemovedObjects(nobj))
+				mapRemovedObject(o);
+		}
+	}
+
+	protected void mapRemovedObject(CreatedObject o) {
+		triMap.put(getEObject(o), null, o);
 	}
 
 	protected Map<ModelImport, Resource> matchImports(ResourceSet rs) {
