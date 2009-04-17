@@ -38,18 +38,20 @@ public final class ExampleLauncher {
 	 */
 	public static void main(String[] args) {
 		if (args.length == 2 && new File(args[0]).canRead() && new File(args[1]).canRead()) {
-			// Creates the resourceSet where we'll load the models
-			final ResourceSet resourceSet = new ResourceSetImpl();
+			// Creates the resourceSets where we'll load the models
+			final ResourceSet resourceSet1 = new ResourceSetImpl();
+			final ResourceSet resourceSet2 = new ResourceSetImpl();
 			// Register additionnal packages here. For UML2 for instance :
 			// Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION,
 			// UMLResource.Factory.INSTANCE);
-			// resourceSet.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+			// resourceSet1.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
+			// resourceSet2.getPackageRegistry().put(UMLPackage.eNS_URI, UMLPackage.eINSTANCE);
 
 			try {
 				System.out.println("Loading resources.\n"); //$NON-NLS-1$
 				// Loads the two models passed as arguments
-				final EObject model1 = ModelUtils.load(new File(args[0]), resourceSet);
-				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet);
+				final EObject model1 = ModelUtils.load(new File(args[0]), resourceSet1);
+				final EObject model2 = ModelUtils.load(new File(args[1]), resourceSet2);
 
 				// Creates the match then the diff model for those two models
 				System.out.println("Matching models.\n"); //$NON-NLS-1$
