@@ -106,6 +106,61 @@ public class AttributesCheck extends DefaultCheck {
 	}
 
 	/**
+	 * This will be used internaly to check that an attribute's values have changed from one version to the
+	 * other.
+	 * <p>
+	 * Specifically, this will check for :
+	 * <ul>
+	 * <li>Enumeration literals : if they have the same literal and integer values.</li>
+	 * <li>Feature Map Entries : if their respective values have been matched.</li>
+	 * <li>Other : if the left value is equal to the right value or both are <code>null</code>.</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param left
+	 *            The value of the attribute from the left compare resource.
+	 * @param right
+	 *            The value of the attribute from the right compare resource.
+	 * @return <code>true</code> if the <code>left</code> value is distinct from the <code>right</code> value.
+	 */
+	protected boolean areDistinctValues(Object left, Object right) {
+		final boolean distinct;
+		if (left instanceof EEnumLiteral && right instanceof EEnumLiteral) {
+			final StringBuilder value1 = new StringBuilder();
+			value1.append(((EEnumLiteral)left).getLiteral()).append(((EEnumLiteral)left).getValue());
+			final StringBuilder value2 = new StringBuilder();
+			value2.append(((EEnumLiteral)right).getLiteral()).append(((EEnumLiteral)right).getValue());
+			distinct = !value1.toString().equals(value2.toString());
+		} else if (left instanceof EObject && right instanceof EObject) {
+			// [248442] This will handle FeatureMapEntries detection
+			distinct = left != getMatchedEObject((EObject)right);
+		} else {
+			distinct = left != null && !left.equals(right) || left == null && left != right;
+		}
+		return distinct;
+	}
+
+	/**
+	 * This can be used to check that the given list contains the given value. This will use the checks
+	 * described in {@link #areDistinctValues(Object, Object)}.
+	 * 
+	 * @param values
+	 *            The list we need to check for a value equivalent to <code>value</code>.
+	 * @param value
+	 *            The value we need to know if it's contained by <code>values</code>.
+	 * @return <code>true</code> if {@link #areDistinctValues(Object, Object)} returned true for one of the
+	 *         objects contained by <code>values</code> when compared with <code>value</code>.
+	 */
+	protected final boolean attributeListContains(List<Object> values, Object value) {
+		for (Object aValue : values) {
+			if (!areDistinctValues(aValue, value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * This will check that the values of the given attribute from the objects contained by mapping has been
 	 * modified.
 	 * 
@@ -120,7 +175,7 @@ public class AttributesCheck extends DefaultCheck {
 	 *             Thrown if one of the checks fails.
 	 * @since 0.9
 	 */
-	public void checkAttributeUpdates(DiffGroup root, Match2Elements mapping, EAttribute attribute)
+	protected void checkAttributeUpdates(DiffGroup root, Match2Elements mapping, EAttribute attribute)
 			throws FactoryException {
 		final String attributeName = attribute.getName();
 
@@ -165,7 +220,7 @@ public class AttributesCheck extends DefaultCheck {
 	 *             Thrown if one of the checks fails.
 	 * @since 0.9
 	 */
-	public void checkAttributeUpdates(DiffGroup root, Match3Elements mapping, EAttribute attribute)
+	protected void checkAttributeUpdates(DiffGroup root, Match3Elements mapping, EAttribute attribute)
 			throws FactoryException {
 		final String attributeName = attribute.getName();
 
@@ -222,61 +277,6 @@ public class AttributesCheck extends DefaultCheck {
 	}
 
 	/**
-	 * This can be used to check that the given list contains the given value. This will use the checks
-	 * described in {@link #areDistinctValues(Object, Object)}.
-	 * 
-	 * @param values
-	 *            The list we need to check for a value equivalent to <code>value</code>.
-	 * @param value
-	 *            The value we need to know if it's contained by <code>values</code>.
-	 * @return <code>true</code> if {@link #areDistinctValues(Object, Object)} returned true for one of the
-	 *         objects contained by <code>values</code> when compared with <code>value</code>.
-	 */
-	protected final boolean attributeListContains(List<Object> values, Object value) {
-		for (Object aValue : values) {
-			if (!areDistinctValues(aValue, value)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * This will be used internaly to check that an attribute's values have changed from one version to the
-	 * other.
-	 * <p>
-	 * Specifically, this will check for :
-	 * <ul>
-	 * <li>Enumeration literals : if they have the same literal and integer values.</li>
-	 * <li>Feature Map Entries : if their respective values have been matched.</li>
-	 * <li>Other : if the left value is equal to the right value or both are <code>null</code>.</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param left
-	 *            The value of the attribute from the left compare resource.
-	 * @param right
-	 *            The value of the attribute from the right compare resource.
-	 * @return <code>true</code> if the <code>left</code> value is distinct from the <code>right</code> value.
-	 */
-	protected boolean areDistinctValues(Object left, Object right) {
-		final boolean distinct;
-		if (left instanceof EEnumLiteral && right instanceof EEnumLiteral) {
-			final StringBuilder value1 = new StringBuilder();
-			value1.append(((EEnumLiteral)left).getLiteral()).append(((EEnumLiteral)left).getValue());
-			final StringBuilder value2 = new StringBuilder();
-			value2.append(((EEnumLiteral)right).getLiteral()).append(((EEnumLiteral)right).getValue());
-			distinct = !value1.toString().equals(value2.toString());
-		} else if (left instanceof EObject && right instanceof EObject) {
-			// [248442] This will handle FeatureMapEntries detection
-			distinct = left != getMatchedEObject((EObject)right);
-		} else {
-			distinct = left != null && !left.equals(right) || left == null && left != right;
-		}
-		return distinct;
-	}
-
-	/**
 	 * Determines if we should ignore an attribute for diff detection.
 	 * <p>
 	 * Default is to ignore attributes marked either
@@ -297,6 +297,100 @@ public class AttributesCheck extends DefaultCheck {
 		boolean ignore = attribute.isTransient();
 		ignore = ignore || attribute.isDerived();
 		return ignore;
+	}
+
+	/**
+	 * Checks if there are conflictual changes between the values of the given {@link EAttribute}.<br/>
+	 * <p>
+	 * An attribute update is considered &quot;conflictual&quot; if it isn't multi-valued and its left value
+	 * differs from the right value.
+	 * </p>
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create if there actually are
+	 *            conflictual changes in the mapped elements <code>attribute</code> values.
+	 * @param attribute
+	 *            Target {@link EAttribute} to check.
+	 * @param mapping
+	 *            Contains the three (ancestor, left, right) elements' mapping.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped
+	 *             elements.
+	 */
+	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Elements mapping)
+			throws FactoryException {
+		if (!attribute.isMany()) {
+			createConflictingAttributeChange(root, attribute, mapping);
+		} else {
+			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getLeftElement(), attribute.getName()));
+			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
+					.getRightElement(), attribute.getName()));
+			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(mapping
+					.getOriginElement(), attribute.getName()));
+
+			for (final Object aValue : leftValue) {
+				if (!attributeListContains(rightValue, aValue)) {
+					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeLeftTarget();
+					if (ancestorValue.contains(aValue)) {
+						operation.setRemote(true);
+					}
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setLeftTarget(aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+			for (final Object aValue : rightValue) {
+				if (!attributeListContains(leftValue, aValue)) {
+					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+							.createAttributeChangeRightTarget();
+					if (ancestorValue.contains(aValue)) {
+						operation.setRemote(true);
+					}
+					operation.setAttribute(attribute);
+					operation.setRightElement(mapping.getRightElement());
+					operation.setLeftElement(mapping.getLeftElement());
+					operation.setRightTarget(aValue);
+					root.getSubDiffElements().add(operation);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual AttributeChange.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param attribute
+	 *            Attribute which has been changed to conflictual values.
+	 * @param mapping
+	 *            Contains informations about the left, right and origin element.
+	 * @throws FactoryException
+	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s children.
+	 */
+	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Elements mapping)
+			throws FactoryException {
+		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute,
+		// EObject, EObject)
+		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
+		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping
+				.getRightElement());
+
+		if (dummyGroup.getSubDiffElements().size() > 0) {
+			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
+					.createConflictingDiffElement();
+			conflictingDiff.setLeftParent(mapping.getLeftElement());
+			conflictingDiff.setRightParent(mapping.getRightElement());
+			conflictingDiff.setOriginElement(mapping.getOriginElement());
+			for (final DiffElement subDiff : new ArrayList<DiffElement>(dummyGroup.getSubDiffElements())) {
+				conflictingDiff.getSubDiffElements().add(subDiff);
+			}
+			root.getSubDiffElements().add(conflictingDiff);
+		}
 	}
 
 	/**
@@ -409,100 +503,6 @@ public class AttributesCheck extends DefaultCheck {
 			operation.setLeftElement(mapping.getLeftElement());
 			operation.setAttribute(attribute);
 			root.getSubDiffElements().add(operation);
-		}
-	}
-
-	/**
-	 * Checks if there are conflictual changes between the values of the given {@link EAttribute}.<br/>
-	 * <p>
-	 * An attribute update is considered &quot;conflictual&quot; if it isn't multi-valued and its left value
-	 * differs from the right value.
-	 * </p>
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if there actually are
-	 *            conflictual changes in the mapped elements <code>attribute</code> values.
-	 * @param attribute
-	 *            Target {@link EAttribute} to check.
-	 * @param mapping
-	 *            Contains the three (ancestor, left, right) elements' mapping.
-	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped
-	 *             elements.
-	 */
-	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Elements mapping)
-			throws FactoryException {
-		if (!attribute.isMany()) {
-			createConflictingAttributeChange(root, attribute, mapping);
-		} else {
-			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getLeftElement(), attribute.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attribute.getName()));
-			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getOriginElement(), attribute.getName()));
-
-			for (final Object aValue : leftValue) {
-				if (!attributeListContains(rightValue, aValue)) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-			for (final Object aValue : rightValue) {
-				if (!attributeListContains(leftValue, aValue)) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-		}
-	}
-
-	/**
-	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual AttributeChange.
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
-	 * @param attribute
-	 *            Attribute which has been changed to conflictual values.
-	 * @param mapping
-	 *            Contains informations about the left, right and origin element.
-	 * @throws FactoryException
-	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s children.
-	 */
-	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Elements mapping)
-			throws FactoryException {
-		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute,
-		// EObject, EObject)
-		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping
-				.getRightElement());
-
-		if (dummyGroup.getSubDiffElements().size() > 0) {
-			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
-					.createConflictingDiffElement();
-			conflictingDiff.setLeftParent(mapping.getLeftElement());
-			conflictingDiff.setRightParent(mapping.getRightElement());
-			conflictingDiff.setOriginElement(mapping.getOriginElement());
-			for (final DiffElement subDiff : new ArrayList<DiffElement>(dummyGroup.getSubDiffElements())) {
-				conflictingDiff.getSubDiffElements().add(subDiff);
-			}
-			root.getSubDiffElements().add(conflictingDiff);
 		}
 	}
 }
