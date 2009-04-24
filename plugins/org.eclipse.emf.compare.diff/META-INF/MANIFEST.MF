@@ -8,6 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.diff.engine,
+ org.eclipse.emf.compare.diff.engine.check,
  org.eclipse.emf.compare.diff.merge,
  org.eclipse.emf.compare.diff.merge.service,
  org.eclipse.emf.compare.diff.metamodel,

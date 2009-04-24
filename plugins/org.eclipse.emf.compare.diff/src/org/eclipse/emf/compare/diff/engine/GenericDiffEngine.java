@@ -16,14 +16,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
-import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.engine.check.AttributesCheck;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -35,7 +33,6 @@ import org.eclipse.emf.compare.diff.metamodel.MoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
-import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateContainmentFeature;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.match.internal.statistic.ResourceSimilarity;
@@ -50,21 +47,20 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
+import org.eclipse.emf.ecore.util.FeatureMap;
 
 /**
  * This class is useful when one wants to determine a diff from a matching model.
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
-// TODO this engine should be refactored (e.g create checkers for 'checkxxDiff')
+// FIXME this engine must be refactored (e.g create checkers for 'checkxxDiff')
 public class GenericDiffEngine implements IDiffEngine {
 	/** Allows retrieval of the ancestor matched object. */
 	protected static final int ANCESTOR_OBJECT = 0;
@@ -79,15 +75,12 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * If we're currently doing a resourceSet differencing, this will have been initialized with the whole
 	 * MatchResourceSet.
 	 */
-	protected CrossReferencer matchCrossReferencer;
+	protected EcoreUtil.CrossReferencer matchCrossReferencer;
 
 	/**
 	 * This map will keep track of the top level unmatched elements, as well as whether they are conflicting.
 	 */
 	protected final Map<UnmatchElement, Boolean> unmatchedElements = new EMFCompareMap<UnmatchElement, Boolean>();
-
-	/** This map is useful to find the Match from any EObject instance. */
-	private final Map<EObject, Match2Elements> eObjectToMatch = new EMFCompareMap<EObject, Match2Elements>();
 
 	/**
 	 * {@inheritDoc}
@@ -105,7 +98,14 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *      boolean)
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
-		updateEObjectToMatch(match, threeWay);
+		matchCrossReferencer = new EcoreUtil.CrossReferencer(match) {
+			private static final long serialVersionUID = 1L;
+
+			/** initializer. */
+			{
+				crossReference();
+			}
+		};
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
 		result.getLeftRoots().addAll(match.getLeftRoots());
 		result.getRightRoots().addAll(match.getRightRoots());
@@ -128,7 +128,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#doDiffResourceSet(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean, org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
-	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, CrossReferencer crossReferencer) {
+	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay,
+			EcoreUtil.CrossReferencer crossReferencer) {
 		matchCrossReferencer = crossReferencer;
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
 		result.getLeftRoots().addAll(match.getLeftRoots());
@@ -153,7 +154,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	public void reset() {
 		unmatchedElements.clear();
-		eObjectToMatch.clear();
 		matchCrossReferencer = null;
 	}
 
@@ -186,6 +186,18 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * Returns the implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 * responsible for the verification of updates on attribute values.
+	 * 
+	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 *         responsible for the verification of updates on attribute values.
+	 * @since 0.9
+	 */
+	protected AttributesCheck getAttributesChecker() {
+		return new AttributesCheck(matchCrossReferencer);
+	}
+
+	/**
 	 * This will iterate through all the attributes of the <code>mapping</code>'s two elements to check if any
 	 * of them has been modified.
 	 * 
@@ -193,41 +205,15 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            {@link DiffGroup root} of the {@link DiffElement} to create if one of the attributes has
 	 *            actually been changed.
 	 * @param mapping
-	 *            This contains the mapping information about the elements we need to check for a move.
+	 *            This contains the mapping information about the elements we need to check.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
+	 * @deprecated Override {@link AttributesCheck#checkAttributesUpdates(DiffGroup, Match2Elements)} and
+	 *             return your overriden implementation through {@link #getAttributesChecker()}.
 	 */
+	@Deprecated
 	protected void checkAttributesUpdates(DiffGroup root, Match2Elements mapping) throws FactoryException {
-		final EClass eClass = mapping.getLeftElement().eClass();
-
-		final List<EAttribute> eclassAttributes = eClass.getEAllAttributes();
-		// for each feature, compare the value
-		final Iterator<EAttribute> it = eclassAttributes.iterator();
-		while (it.hasNext()) {
-			final EAttribute next = it.next();
-			if (!shouldBeIgnored(next)) {
-				final String attributeName = next.getName();
-				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
-				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
-
-				if (leftValue instanceof EEnumLiteral && rightValue instanceof EEnumLiteral) {
-					final StringBuilder value1 = new StringBuilder();
-					value1.append(((EEnumLiteral)leftValue).getLiteral()).append(
-							((EEnumLiteral)leftValue).getValue());
-					final StringBuilder value2 = new StringBuilder();
-					value2.append(((EEnumLiteral)rightValue).getLiteral()).append(
-							((EEnumLiteral)rightValue).getValue());
-					if (!value1.toString().equals(value2.toString())) {
-						createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
-								.getRightElement());
-					}
-				} else if (leftValue != null && !leftValue.equals(rightValue) || leftValue == null
-						&& leftValue != rightValue) {
-					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
-							.getRightElement());
-				}
-			}
-		}
+		getAttributesChecker().checkAttributesUpdates(root, mapping);
 	}
 
 	/**
@@ -241,45 +227,12 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            This contains the mapping information about the elements we need to check for a move.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
+	 * @deprecated Override {@link AttributesCheck#checkAttributesUpdates(DiffGroup, Match3Elements)} and
+	 *             return your overriden implementation through {@link #getAttributesChecker()}.
 	 */
+	@Deprecated
 	protected void checkAttributesUpdates(DiffGroup root, Match3Elements mapping) throws FactoryException {
-		// Ignores matchElements when they don't have origin (no updates on
-		// these)
-		if (mapping.getOriginElement() == null)
-			return;
-		final EClass eClass = mapping.getOriginElement().eClass();
-
-		final List<EAttribute> eclassAttributes = eClass.getEAllAttributes();
-		// for each feature, compare the value
-		final Iterator<EAttribute> it = eclassAttributes.iterator();
-		while (it.hasNext()) {
-			final EAttribute next = it.next();
-			if (!shouldBeIgnored(next)) {
-				final String attributeName = next.getName();
-				final Object leftValue = EFactory.eGet(mapping.getLeftElement(), attributeName);
-				final Object rightValue = EFactory.eGet(mapping.getRightElement(), attributeName);
-				final Object ancestorValue = EFactory.eGet(mapping.getOriginElement(), attributeName);
-
-				final boolean rightDistinctFromOrigin = rightValue != ancestorValue && rightValue != null
-						&& !rightValue.equals(ancestorValue);
-				final boolean rightDistinctFromLeft = rightValue != leftValue && rightValue != null
-						&& !rightValue.equals(leftValue);
-				final boolean leftDistinctFromOrigin = leftValue != ancestorValue && leftValue != null
-						&& !leftValue.equals(ancestorValue);
-
-				// non conflicting change
-				if (leftDistinctFromOrigin && !rightDistinctFromOrigin) {
-					createNonConflictingAttributeChange(root, next, mapping.getLeftElement(), mapping
-							.getRightElement());
-					// only latest from head has changed
-				} else if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
-					createRemoteAttributeChange(root, next, mapping);
-					// conflicting
-				} else if (rightDistinctFromOrigin && leftDistinctFromOrigin || rightDistinctFromLeft) {
-					checkConflictingAttributesUpdate(root, next, mapping);
-				}
-			}
-		}
+		getAttributesChecker().checkAttributesUpdates(root, mapping);
 	}
 
 	/**
@@ -374,7 +327,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if one of the checks fails somehow.
 	 */
 	protected void checkForDiffs(DiffGroup current, Match2Elements match) throws FactoryException {
-		checkAttributesUpdates(current, match);
+		getAttributesChecker().checkAttributesUpdates(current, match);
 		checkReferencesUpdates(current, match);
 		checkMoves(current, match);
 		checkContainmentUpdate(current, match);
@@ -392,7 +345,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if one of the checks fails somehow.
 	 */
 	protected void checkForDiffs(DiffGroup current, Match3Elements match) throws FactoryException {
-		checkAttributesUpdates(current, match);
+		getAttributesChecker().checkAttributesUpdates(current, match);
 		checkReferencesUpdates(current, match);
 		checkMoves(current, match);
 		checkContainmentUpdate(current, match);
@@ -476,8 +429,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will be called to check for changes on a given reference values. <code>reference.isMany()</code>
-	 * always returns true here.
+	 * This will be called to check for changes on a given reference values. Note that we know
+	 * <code>reference.isMany()</code> and <code>reference.isOrdered()</code> always return true here for the
+	 * generic diff engine and the tests won't be made.
 	 * 
 	 * @param root
 	 *            {@link DiffGroup Root} of the {@link DiffElement}s to create.
@@ -599,10 +553,12 @@ public class GenericDiffEngine implements IDiffEngine {
 			final EReference next = it.next();
 			if (!shouldBeIgnored(next)) {
 				final String referenceName = next.getName();
-				final List<?> leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
-				final List<?> rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
-				final List<?> ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(),
-						referenceName);
+				final List<Object> leftReferences = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
+						.getLeftElement(), referenceName));
+				final List<Object> rightReferences = internalConvertFeatureMapList(EFactory.eGetAsList(
+						mapping.getRightElement(), referenceName));
+				final List<Object> ancestorReferences = internalConvertFeatureMapList(EFactory.eGetAsList(
+						mapping.getOriginElement(), referenceName));
 
 				// Checks if there're conflicts
 				if (isConflictual(next, leftReferences, rightReferences, ancestorReferences)) {
@@ -657,8 +613,10 @@ public class GenericDiffEngine implements IDiffEngine {
 								.getLeftElement(), mapping.getRightElement(), next, deletedReferences));
 					}
 					// Check for references order changes
-					checkReferenceOrderChange(root, next, mapping.getLeftElement(),
-							mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
+					if (next.isOrdered()) {
+						checkReferenceOrderChange(root, next, mapping.getLeftElement(), mapping
+								.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
+					}
 				}
 			}
 		}
@@ -746,25 +704,18 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The original {@link EObject}.
 	 * @return The matched {@link EObject}.
 	 */
-	protected EObject getMatchedEObject(EObject from) {
+	protected final EObject getMatchedEObject(EObject from) {
 		EObject matchedEObject = null;
-		if (matchCrossReferencer != null && from != null && matchCrossReferencer.get(from) != null) {
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : matchCrossReferencer
-					.get(from)) {
-				if (setting.getEObject() instanceof Match2Elements) {
-					if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-					} else {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-					}
+		final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
+		if (settings == null)
+			return null;
+		for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
+			if (setting.getEObject() instanceof Match2Elements) {
+				if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
+					matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
+				} else {
+					matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
 				}
-			}
-		} else {
-			final Match2Elements matchElem = eObjectToMatch.get(from);
-			if (matchElem != null && from.equals(matchElem.getRightElement())) {
-				matchedEObject = matchElem.getLeftElement();
-			} else if (matchElem != null) {
-				matchedEObject = matchElem.getRightElement();
 			}
 		}
 		return matchedEObject;
@@ -787,36 +738,23 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @throws IllegalArgumentException
 	 *             Thrown if <code>side</code> is invalid.
 	 */
-	protected EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
+	protected final EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
 		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
 			throw new IllegalArgumentException(EMFCompareDiffMessages
 					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
 		}
 		EObject matchedEObject = null;
-		if (matchCrossReferencer != null) {
-			final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
-			if (settings == null)
-				return null;
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
-				if (setting.getEObject() instanceof Match2Elements) {
-					if (side == LEFT_OBJECT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-					} else if (side == RIGHT_OBJECT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-					} else if (setting.getEObject() instanceof Match3Elements) {
-						matchedEObject = ((Match3Elements)setting.getEObject()).getOriginElement();
-					}
-				}
-			}
-		} else {
-			final Match2Elements matchElem = eObjectToMatch.get(from);
-			if (matchElem != null) {
+		final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
+		if (settings == null)
+			return null;
+		for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
+			if (setting.getEObject() instanceof Match2Elements) {
 				if (side == LEFT_OBJECT) {
-					matchedEObject = matchElem.getLeftElement();
+					matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
 				} else if (side == RIGHT_OBJECT) {
-					matchedEObject = matchElem.getRightElement();
-				} else if (side == ANCESTOR_OBJECT && matchElem instanceof Match3Elements) {
-					matchedEObject = ((Match3Elements)matchElem).getOriginElement();
+					matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
+				} else if (setting.getEObject() instanceof Match3Elements) {
+					matchedEObject = ((Match3Elements)setting.getEObject()).getOriginElement();
 				}
 			}
 		}
@@ -890,12 +828,12 @@ public class GenericDiffEngine implements IDiffEngine {
 	protected void processUnmatchedElements(DiffGroup diffRoot, Map<UnmatchElement, Boolean> unmatched) {
 		final Map<UnmatchElement, Boolean> filteredUnmatched = new HashMap<UnmatchElement, Boolean>(unmatched
 				.size());
-		for (final Entry<UnmatchElement, Boolean> element : unmatched.entrySet()) {
+		for (final Map.Entry<UnmatchElement, Boolean> element : unmatched.entrySet()) {
 			if (!(element.getKey().getElement() instanceof EGenericType)) {
 				filteredUnmatched.put(element.getKey(), element.getValue());
 			}
 		}
-		for (final Entry<UnmatchElement, Boolean> entry : filteredUnmatched.entrySet()) {
+		for (final Map.Entry<UnmatchElement, Boolean> entry : filteredUnmatched.entrySet()) {
 			if (entry.getValue().booleanValue()) {
 				processConflictingUnmatchedElement(diffRoot, entry.getKey());
 			} else {
@@ -1003,69 +941,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Checks if there are conflictual changes between the values of the given {@link EAttribute}.<br/>
-	 * <p>
-	 * An attribute update is considered &quot;conflictual&quot; if it isn't multi-valued and its left value
-	 * differs from the right value.
-	 * </p>
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create if there actually are
-	 *            conflictual changes in the mapped elements <code>attribute</code> values.
-	 * @param attribute
-	 *            Target {@link EAttribute} to check.
-	 * @param mapping
-	 *            Contains the three (ancestor, left, right) elements' mapping.
-	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>attribute</code>'s values for either one of the mapped
-	 *             elements.
-	 */
-	private void checkConflictingAttributesUpdate(DiffGroup root, EAttribute attribute, Match3Elements mapping)
-			throws FactoryException {
-		if (!attribute.isMany()) {
-			createConflictingAttributeChange(root, attribute, mapping);
-		} else {
-			final List<?> leftValue = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
-					.getLeftElement(), attribute.getName()));
-			final List<?> rightValue = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attribute.getName()));
-			final List<?> ancestorValue = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
-					.getOriginElement(), attribute.getName()));
-
-			for (final Object aValue : leftValue) {
-				final boolean rightHasValue = rightValue.contains(aValue);
-				if (!rightHasValue) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-			for (final Object aValue : rightValue) {
-				final boolean leftHasValue = leftValue.contains(aValue);
-				if (!leftHasValue) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-		}
-	}
-
-	/**
 	 * This will create and populate a {@link List} with all the references from the
 	 * <code>leftReferences</code> {@link List} that cannot be matched in the <code>rightReferences</code>
 	 * {@link List}.
@@ -1166,39 +1041,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual AttributeChange.
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
-	 * @param attribute
-	 *            Attribute which has been changed to conflictual values.
-	 * @param mapping
-	 *            Contains informations about the left, right and origin element.
-	 * @throws FactoryException
-	 *             Thrown if we cannot create the {@link ConflictingDiffGroup}'s children.
-	 */
-	private void createConflictingAttributeChange(DiffGroup root, EAttribute attribute, Match3Elements mapping)
-			throws FactoryException {
-		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute,
-		// EObject, EObject)
-		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping
-				.getRightElement());
-
-		if (dummyGroup.getSubDiffElements().size() > 0) {
-			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
-					.createConflictingDiffElement();
-			conflictingDiff.setLeftParent(mapping.getLeftElement());
-			conflictingDiff.setRightParent(mapping.getRightElement());
-			conflictingDiff.setOriginElement(mapping.getOriginElement());
-			for (final DiffElement subDiff : new ArrayList<DiffElement>(dummyGroup.getSubDiffElements())) {
-				conflictingDiff.getSubDiffElements().add(subDiff);
-			}
-			root.getSubDiffElements().add(conflictingDiff);
-		}
-	}
-
-	/**
 	 * This will create the {@link ConflictingDiffGroup} and its children for a conflictual ReferenceChange.
 	 * 
 	 * @param root
@@ -1292,57 +1134,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Creates and add the {@link DiffGroup} corresponding to an AttributeChange operation to the given
-	 * {@link DiffGroup root}.
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
-	 * @param attribute
-	 *            Attribute which value has been changed.
-	 * @param leftElement
-	 *            Left element of the attribute change.
-	 * @param rightElement
-	 *            Right element of the attribute change.
-	 * @throws FactoryException
-	 *             Thrown if we cannot fetch the attribute's value for either one of the elements.
-	 */
-	private void createNonConflictingAttributeChange(DiffGroup root, EAttribute attribute,
-			EObject leftElement, EObject rightElement) throws FactoryException {
-		if (attribute.isMany()) {
-			final List<?> leftValue = EFactory.eGetAsList(leftElement, attribute.getName());
-			final List<?> rightValue = EFactory.eGetAsList(rightElement, attribute.getName());
-			for (final Object aValue : leftValue) {
-				if (!rightValue.contains(aValue)) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					operation.setAttribute(attribute);
-					operation.setRightElement(rightElement);
-					operation.setLeftElement(leftElement);
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-			for (final Object aValue : rightValue) {
-				if (!leftValue.contains(aValue)) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					operation.setAttribute(attribute);
-					operation.setRightElement(rightElement);
-					operation.setLeftElement(leftElement);
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-		} else {
-			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
-			operation.setRightElement(rightElement);
-			operation.setLeftElement(leftElement);
-			operation.setAttribute(attribute);
-			root.getSubDiffElements().add(operation);
-		}
-	}
-
-	/**
 	 * This will check the given <code>reference</code> for modification between <code>leftElement</code> and
 	 * <code>rightElement</code> and create the corresponding {@link DiffElement}s under the given
 	 * {@link DiffGroup}.
@@ -1359,13 +1150,22 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *             Thrown if we cannot fetch <code>reference</code>'s values for either the left or the right
 	 *             element.
 	 */
-	@SuppressWarnings("unchecked")
 	private void createNonConflictingReferencesUpdate(DiffGroup root, EReference reference,
 			EObject leftElement, EObject rightElement) throws FactoryException {
-		final List<EObject> leftElementReferences = (List<EObject>)EFactory.eGetAsList(leftElement, reference
-				.getName());
-		final List<EObject> rightElementReferences = (List<EObject>)EFactory.eGetAsList(rightElement,
-				reference.getName());
+		final List<Object> leftElementObjReferences = internalConvertFeatureMapList(EFactory.eGetAsList(
+				leftElement, reference.getName()));
+		final List<Object> rightElementObjReferences = internalConvertFeatureMapList(EFactory.eGetAsList(
+				rightElement, reference.getName()));
+
+		// All values should be EObjects
+		final List<EObject> leftElementReferences = new ArrayList<EObject>();
+		final List<EObject> rightElementReferences = new ArrayList<EObject>();
+		for (Object left : leftElementObjReferences) {
+			leftElementReferences.add((EObject)left);
+		}
+		for (Object right : rightElementObjReferences) {
+			rightElementReferences.add((EObject)right);
+		}
 
 		final List<EObject> deletedReferences = computeDeletedReferences(leftElementReferences,
 				rightElementReferences);
@@ -1431,64 +1231,6 @@ public class GenericDiffEngine implements IDiffEngine {
 			// Check for references order changes
 			checkReferenceOrderChange(root, reference, leftElement, rightElement, addedReferencesDiffs,
 					removedReferencesDiffs);
-		}
-	}
-
-	/**
-	 * This will create the needed remote attribute change {@link DiffElement} under the given
-	 * {@link DiffGroup root}.<br/>
-	 * An attribute is &quot;remotely changed&quot; if it has been added, updated or deleted in the right
-	 * (latest from head) version but it has kept its former value in the left (working copy) version.
-	 * 
-	 * @param root
-	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
-	 * @param attribute
-	 *            Target {@link EAttribute} of the update.
-	 * @param mapping
-	 *            Contains the three (ancestor, left, right) elements' mapping.
-	 * @throws FactoryException
-	 *             Thrown if we cannot fetch <code>attribute</code>'s left and right values.
-	 */
-	private void createRemoteAttributeChange(DiffGroup root, EAttribute attribute, Match3Elements mapping)
-			throws FactoryException {
-		if (attribute.isMany()) {
-			final List<?> leftValue = EFactory.eGetAsList(mapping.getLeftElement(), attribute.getName());
-			final List<?> rightValue = EFactory.eGetAsList(mapping.getRightElement(), attribute.getName());
-			for (final Object aValue : leftValue) {
-				// if the value is present in the right (latest) but not in the
-				// left (working copy), it's been removed remotely
-				if (!rightValue.contains(aValue)) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					operation.setRemote(true);
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-			for (final Object aValue : rightValue) {
-				// if the value is present in the left (working copy) but not
-				// in the right (latest), it's been added remotely
-				if (!leftValue.contains(aValue)) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					operation.setRemote(true);
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-		} else {
-			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
-			operation.setRemote(true);
-			operation.setRightElement(mapping.getRightElement());
-			operation.setLeftElement(mapping.getLeftElement());
-			operation.setAttribute(attribute);
-			root.getSubDiffElements().add(operation);
 		}
 	}
 
@@ -1851,8 +1593,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            List that is to be converted.
 	 * @return A list containing only EObjects.
 	 */
-	private List<EObject> internalConvertFeatureMapList(List<?> input) {
-		final List<EObject> result = new ArrayList<EObject>();
+	private List<Object> internalConvertFeatureMapList(List<?> input) {
+		final List<Object> result = new ArrayList<Object>();
 		for (final Object inputValue : input) {
 			result.add(internalFindActualEObject(inputValue));
 		}
@@ -1866,11 +1608,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *            The object we need a valued of.
 	 * @return The first value of <tt>data</tt> that is not an instance of FeatureMapEntry.
 	 */
-	@SuppressWarnings("unchecked")
-	private EObject internalFindActualEObject(Object data) {
-		if (data instanceof Entry)
-			return internalFindActualEObject(((Entry)data).getValue());
-		return (EObject)data;
+	private Object internalFindActualEObject(Object data) {
+		if (data instanceof FeatureMap.Entry)
+			return internalFindActualEObject(((FeatureMap.Entry)data).getValue());
+		return data;
 	}
 
 	/**
@@ -1957,9 +1698,12 @@ public class GenericDiffEngine implements IDiffEngine {
 			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
 			throws FactoryException {
 		final String referenceName = reference.getName();
-		final List<?> leftReferences = EFactory.eGetAsList(mapping.getLeftElement(), referenceName);
-		final List<?> rightReferences = EFactory.eGetAsList(mapping.getRightElement(), referenceName);
-		final List<?> ancestorReferences = EFactory.eGetAsList(mapping.getOriginElement(), referenceName);
+		final List<Object> leftReferences = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
+				.getLeftElement(), referenceName));
+		final List<Object> rightReferences = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
+				.getRightElement(), referenceName));
+		final List<Object> ancestorReferences = internalConvertFeatureMapList(EFactory.eGetAsList(mapping
+				.getOriginElement(), referenceName));
 
 		// populates remotely added references list
 		for (final Object right : rightReferences) {
@@ -2029,36 +1773,6 @@ public class GenericDiffEngine implements IDiffEngine {
 			}
 			operation.getSubDiffElements().add(modelOperation);
 			addInContainerPackage(diffRoot, operation, element.eContainer());
-		}
-	}
-
-	/**
-	 * Fill the <code>eObjectToMatch</code> map to retrieve matchings from left, right or origin
-	 * {@link EObject}.
-	 * 
-	 * @param match
-	 *            {@link MatchModel} to extract the {@link MatchElement}s from.
-	 * @param threeWay
-	 *            <code>True</code> if we need to retrieve the informations from the origin model too.
-	 */
-	private void updateEObjectToMatch(MatchModel match, boolean threeWay) {
-		final Iterator<MatchElement> rootElemIt = match.getMatchedElements().iterator();
-		while (rootElemIt.hasNext()) {
-			final Match2Elements matchRoot = (Match2Elements)rootElemIt.next();
-			eObjectToMatch.put(matchRoot.getLeftElement(), matchRoot);
-			eObjectToMatch.put(matchRoot.getRightElement(), matchRoot);
-			if (threeWay) {
-				eObjectToMatch.put(((Match3Elements)matchRoot).getOriginElement(), matchRoot);
-			}
-			final TreeIterator<EObject> matchElemIt = matchRoot.eAllContents();
-			while (matchElemIt.hasNext()) {
-				final Match2Elements matchElem = (Match2Elements)matchElemIt.next();
-				eObjectToMatch.put(matchElem.getLeftElement(), matchElem);
-				eObjectToMatch.put(matchElem.getRightElement(), matchElem);
-				if (threeWay && ((Match3Elements)matchElem).getOriginElement() != null) {
-					eObjectToMatch.put(((Match3Elements)matchElem).getOriginElement(), matchElem);
-				}
-			}
 		}
 	}
 }
