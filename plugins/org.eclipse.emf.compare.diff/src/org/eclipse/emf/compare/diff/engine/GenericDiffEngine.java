@@ -713,7 +713,7 @@ public class GenericDiffEngine implements IDiffEngine {
 			if (setting.getEObject() instanceof Match2Elements) {
 				if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
 					matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-				} else {
+				} else if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT) {
 					matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
 				}
 			}
@@ -1229,8 +1229,10 @@ public class GenericDiffEngine implements IDiffEngine {
 						rightElement, reference, deletedReferences));
 			}
 			// Check for references order changes
-			checkReferenceOrderChange(root, reference, leftElement, rightElement, addedReferencesDiffs,
-					removedReferencesDiffs);
+			if (reference.isOrdered()) {
+				checkReferenceOrderChange(root, reference, leftElement, rightElement, addedReferencesDiffs,
+						removedReferencesDiffs);
+			}
 		}
 	}
 
