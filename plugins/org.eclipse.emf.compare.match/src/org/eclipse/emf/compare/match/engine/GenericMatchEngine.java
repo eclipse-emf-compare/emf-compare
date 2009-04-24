@@ -1185,7 +1185,10 @@ public class GenericMatchEngine implements IMatchEngine {
 			if (reference.isContainment() && reference.isDerived()) {
 				final Object value = eObject.eGet(reference);
 				if (value instanceof Collection) {
-					result.addAll((Collection)value);
+					for (Object newValue : (Collection)value) {
+						if (!result.contains(newValue) && newValue instanceof EObject)
+							result.add((EObject)newValue);
+					}
 				} else if (value instanceof EObject) {
 					result.add((EObject)value);
 				}
