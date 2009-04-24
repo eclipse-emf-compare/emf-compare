@@ -268,6 +268,7 @@ public class AttributesCheck extends DefaultCheck {
 			value2.append(((EEnumLiteral)right).getLiteral()).append(((EEnumLiteral)right).getValue());
 			distinct = !value1.toString().equals(value2.toString());
 		} else if (left instanceof EObject && right instanceof EObject) {
+			// [248442] This will handle FeatureMapEntries detection
 			distinct = left != getMatchedEObject((EObject)right);
 		} else {
 			distinct = left != null && !left.equals(right) || left == null && left != right;
