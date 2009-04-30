@@ -20,10 +20,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.internal.runtime.CompareProgressMonitor;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
@@ -39,6 +40,7 @@ import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -143,6 +145,20 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Creates the progress monitor that will be displayed to the user while the comparison lasts.
+	 * 
+	 * @return The progress monitor that will be displayed to the user while the comparison lasts.
+	 */
+	private Monitor createProgressMonitor() {
+		Monitor monitor = new BasicMonitor();
+		final Object delegateMonitor = getOption(MatchOptions.OPTION_PROGRESS_MONITOR);
+		if (delegateMonitor != null && EMFPlugin.IS_ECLIPSE_RUNNING) {
+			monitor = EclipseModelUtils.createProgressMonitor(delegateMonitor);
+		}
+		return monitor;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
@@ -150,9 +166,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0) {
+			loadOptionMap(optionMap);
+		}
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelRoots(root, leftObject.eResource(), rightObject.eResource(), ancestor.eResource());
-		final CompareProgressMonitor monitor = new CompareProgressMonitor();
+		final Monitor monitor = createProgressMonitor();
 		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
 		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
 
@@ -160,7 +179,6 @@ public class GenericMatchEngine implements IMatchEngine {
 				leftObjectAncestorMatch.getMatchedElements());
 		final List<MatchElement> rightObjectMatchedElements = new ArrayList<MatchElement>(
 				rightObjectAncestorMatch.getMatchedElements());
-
 		// populates the unmatched elements list for later use
 		for (final Object unmatch : leftObjectAncestorMatch.getUnmatchedElements()) {
 			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
@@ -168,7 +186,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		for (final Object unmatch : rightObjectAncestorMatch.getUnmatchedElements()) {
 			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
 		}
-
 		try {
 			Match3Elements subMatchRoot = null;
 			if (leftObjectMatchedElements.size() > 0 && rightObjectMatchedElements.size() > 0) {
@@ -191,10 +208,8 @@ public class GenericMatchEngine implements IMatchEngine {
 					stillToFindFromModel2.add(right);
 				}
 			}
-
 			// We will now check through the unmatched object for matches.
 			processUnmatchedElements(root, subMatchRoot);
-
 			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
 			// Match2Elements) will have updated "remainingUnmatchedElements"
 			final Set<EObject> remainingLeft = new HashSet<EObject>();
@@ -244,7 +259,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		} catch (final InterruptedException e) {
 			// Cannot be thrown since we have no monitor
 		}
-
 		return root;
 	}
 
@@ -259,7 +273,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			loadOptionMap(optionMap);
 		}
 
-		final CompareProgressMonitor monitor = new CompareProgressMonitor();
+		final Monitor monitor = createProgressMonitor();
 
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelRoots(root, leftObject.eResource(), rightObject.eResource());
@@ -321,8 +335,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
-		final CompareProgressMonitor monitor = new CompareProgressMonitor(
-				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		final Monitor monitor = createProgressMonitor();
 		int size = 1;
 		for (final EObject root : leftRoot.eResource().getContents()) {
 			final Iterator<EObject> rootContent = root.eAllContents();
@@ -352,8 +365,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
-		final CompareProgressMonitor monitor = new CompareProgressMonitor(
-				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		final Monitor monitor = createProgressMonitor();
 		int size = 1;
 		for (final EObject root : leftRoot.eResource().getContents()) {
 			final Iterator<EObject> rootContent = root.eAllContents();
@@ -400,8 +412,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
-		final CompareProgressMonitor monitor = new CompareProgressMonitor(
-				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		final Monitor monitor = createProgressMonitor();
 		int size = 1;
 		for (final EObject root : leftResource.getContents()) {
 			final Iterator<EObject> rootContent = root.eAllContents();
@@ -430,8 +441,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
-		final CompareProgressMonitor monitor = new CompareProgressMonitor(
-				getOption(MatchOptions.OPTION_PROGRESS_MONITOR));
+		final Monitor monitor = createProgressMonitor();
 		int size = 1;
 		for (final EObject root : leftResource.getContents()) {
 			final Iterator<EObject> rootContent = root.eAllContents();
@@ -865,7 +875,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *             Thrown if the operation is cancelled or fails somehow.
 	 */
 	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2,
-			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
+			Monitor monitor) throws FactoryException, InterruptedException {
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
 		final List<Match2Elements> mappings = mapLists(list1, list2, this
@@ -958,7 +968,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	private MatchModel doMatch(Resource leftResource, Resource rightResource, CompareProgressMonitor monitor)
+	private MatchModel doMatch(Resource leftResource, Resource rightResource, Monitor monitor)
 			throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelRoots(root, leftResource, rightResource);
@@ -1069,7 +1079,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
-			CompareProgressMonitor monitor) throws InterruptedException {
+			Monitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelRoots(root, leftResource, rightResource, ancestorResource);
 		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor);
@@ -1179,7 +1189,6 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<EObject> getContents(EObject eObject) {
-		// TODO can this be cached (Map<EClass, List<EReference>>)?
 		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
 		for (final EReference reference : eObject.eClass().getEAllReferences()) {
 			if (reference.isContainment() && reference.isDerived()) {
@@ -1189,7 +1198,7 @@ public class GenericMatchEngine implements IMatchEngine {
 						if (!result.contains(newValue) && newValue instanceof EObject)
 							result.add((EObject)newValue);
 					}
-				} else if (value instanceof EObject) {
+				} else if (!result.contains(value) && value instanceof EObject) {
 					result.add((EObject)value);
 				}
 			}
@@ -1326,7 +1335,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
 	private List<Match2Elements> mapLists(List<EObject> list1, List<EObject> list2, int window,
-			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
+			Monitor monitor) throws FactoryException, InterruptedException {
 		final List<Match2Elements> result = new ArrayList<Match2Elements>();
 		int curIndex = 0 - window / 2;
 		final List<EObject> notFoundList1 = new ArrayList<EObject>(list1);
@@ -1673,8 +1682,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
-	private Match2Elements recursiveMappings(EObject current1, EObject current2,
-			CompareProgressMonitor monitor) throws FactoryException, InterruptedException {
+	private Match2Elements recursiveMappings(EObject current1, EObject current2, Monitor monitor)
+			throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;
 		mapping = MatchFactory.eINSTANCE.createMatch2Elements();
 		mapping.setLeftElement(current1);
@@ -1807,7 +1816,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param size
 	 *            Size of the monitor
 	 */
-	private void startMonitor(CompareProgressMonitor monitor, int size) {
+	private void startMonitor(Monitor monitor, int size) {
 		monitor.beginTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.task"), size); //$NON-NLS-1$
 		monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.browsing")); //$NON-NLS-1$
 	}
