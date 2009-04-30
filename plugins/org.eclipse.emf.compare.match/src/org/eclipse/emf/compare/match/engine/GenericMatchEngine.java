@@ -109,6 +109,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private final Map<String, Double> metricsCache = new EMFCompareMap<String, Double>();
 
+	/** This map will allow us to cache the number of non-null features a given instance of EObject has. */
+	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
+
 	/**
 	 * This list allows us to memorize the unmatched elements for a three-way comparison.<br/>
 	 * <p>
@@ -133,29 +136,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private final List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
 
-	/** This map will allow us to cache the number of non-null features a given instance of EObject has. */
-	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
-
 	/**
 	 * The options map must be initialized to avoid potential NPEs. This initializer will take care of this
 	 * issue.
 	 */
 	{
 		options.putAll(loadPreferenceOptionMap());
-	}
-
-	/**
-	 * Creates the progress monitor that will be displayed to the user while the comparison lasts.
-	 * 
-	 * @return The progress monitor that will be displayed to the user while the comparison lasts.
-	 */
-	private Monitor createProgressMonitor() {
-		Monitor monitor = new BasicMonitor();
-		final Object delegateMonitor = getOption(MatchOptions.OPTION_PROGRESS_MONITOR);
-		if (delegateMonitor != null && EMFPlugin.IS_ECLIPSE_RUNNING) {
-			monitor = EclipseModelUtils.createProgressMonitor(delegateMonitor);
-		}
-		return monitor;
 	}
 
 	/**
@@ -456,6 +442,25 @@ public class GenericMatchEngine implements IMatchEngine {
 		return result;
 	}
 
+	/*
+	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
+	 * opened.
+	 */
+	/**
+	 * This will load all the needed options with their default values.
+	 * 
+	 * @return Map containing all the needed options with their default values.
+	 */
+	/* package */Map<String, Object> loadPreferenceOptionMap() {
+		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
+		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
+		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
+		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
+		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, getPreferenceDistinctMetaModel());
+		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
+		return optionMap;
+	}
+
 	/**
 	 * This will compute the similarity between two {@link EObject}s' contents.
 	 * 
@@ -703,25 +708,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		return similarity;
 	}
 
-	/*
-	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
-	 * opened.
-	 */
-	/**
-	 * This will load all the needed options with their default values.
-	 * 
-	 * @return Map containing all the needed options with their default values.
-	 */
-	/* package */Map<String, Object> loadPreferenceOptionMap() {
-		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
-		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
-		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
-		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, getPreferenceDistinctMetaModel());
-		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
-		return optionMap;
-	}
-
 	/**
 	 * Returns an absolute comparison metric between the two given {@link EObject}s.
 	 * 
@@ -781,6 +767,20 @@ public class GenericMatchEngine implements IMatchEngine {
 		final double metric3 = absoluteMetric(obj2, obj3);
 
 		return (metric1 + metric2 + metric3) / 3;
+	}
+
+	/**
+	 * Creates the progress monitor that will be displayed to the user while the comparison lasts.
+	 * 
+	 * @return The progress monitor that will be displayed to the user while the comparison lasts.
+	 */
+	private Monitor createProgressMonitor() {
+		Monitor monitor = new BasicMonitor();
+		final Object delegateMonitor = getOption(MatchOptions.OPTION_PROGRESS_MONITOR);
+		if (delegateMonitor != null && EMFPlugin.IS_ECLIPSE_RUNNING) {
+			monitor = EclipseModelUtils.createProgressMonitor(delegateMonitor);
+		}
+		return monitor;
 	}
 
 	/**
