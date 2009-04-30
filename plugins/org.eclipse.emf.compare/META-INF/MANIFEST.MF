@@ -12,7 +12,6 @@ Require-Bundle: org.eclipse.core.resources;resolution:=optional,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.edit
 Export-Package: org.eclipse.emf.compare,
- org.eclipse.emf.compare.internal.runtime;x-friends:="org.eclipse.emf.compare.match",
  org.eclipse.emf.compare.util
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

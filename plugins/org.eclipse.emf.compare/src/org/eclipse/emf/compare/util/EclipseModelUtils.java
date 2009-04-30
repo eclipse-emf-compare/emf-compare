@@ -16,6 +16,10 @@ import java.util.Collections;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -33,6 +37,28 @@ public final class EclipseModelUtils {
 	 */
 	private EclipseModelUtils() {
 		// prevents instantiation
+	}
+
+	/**
+	 * This will create an EMF {@link Monitor progress monitor} that can be used standalone to display
+	 * comparison progress to the user. If <code>delegate</code> isn't <code>null</code>, the created monitor
+	 * will delegate all calls to it.
+	 * 
+	 * @param delegate
+	 *            The delegate progress monitor. Can be <code>null</code> or Eclipse specific monitors.
+	 * @return The created progress monitor.
+	 * @since 0.9
+	 */
+	public static Monitor createProgressMonitor(Object delegate) {
+		final Monitor monitor;
+		if (delegate instanceof IProgressMonitorWithBlocking) {
+			monitor = BasicMonitor.toMonitor((IProgressMonitorWithBlocking)delegate);
+		} else if (delegate instanceof IProgressMonitor) {
+			monitor = BasicMonitor.toMonitor((IProgressMonitor)delegate);
+		} else {
+			monitor = new BasicMonitor();
+		}
+		return monitor;
 	}
 
 	/**
