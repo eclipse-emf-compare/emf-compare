@@ -34,7 +34,7 @@ public class EmfFormatter {
 
 	public static String objToStr(Object obj, EStructuralFeature... ignoredFeatures) {
 		Appendable buf = new StringBuilder(1024);
-		Set<EStructuralFeature> ignoreUs = (ignoredFeatures != null && ignoredFeatures.length != 0) ? (ignoredFeatures.length > 1 ? new HashSet<EStructuralFeature>(
+		Set<EStructuralFeature> ignoreUs = ignoredFeatures != null && ignoredFeatures.length != 0 ? (ignoredFeatures.length > 1 ? new HashSet<EStructuralFeature>(
 				Arrays.asList(ignoredFeatures))
 				: Collections.singleton(ignoredFeatures[0]))
 				: Collections.<EStructuralFeature> emptySet();
@@ -103,6 +103,19 @@ public class EmfFormatter {
 			buf.append(indent + "]");
 			return;
 		}
+		if (obj instanceof Resource) {
+			Resource r = (Resource)obj;
+			buf.append("Resource ");
+			buf.append(r.getURI().toString());
+			buf.append(" {\n");
+			buf.append(innerIdent);
+			for (EObject o : r.getContents())
+				objToStrImpl(o, innerIdent, buf, ignoreUs);
+			buf.append("\n");
+			buf.append(indent);
+			buf.append("}");
+			return;
+		}
 		if (obj != null) {
 			buf.append("'" + obj + "'");
 			return;
@@ -128,7 +141,7 @@ public class EmfFormatter {
 			int counter = 0;
 			Collection coll = (Collection)o;
 			for (Iterator i = coll.iterator(); i.hasNext();) {
-				Object item = (Object)i.next();
+				Object item = i.next();
 				if (counter == 0)
 					buf.append('\n');
 				buf.append(innerIndent);
