@@ -30,6 +30,7 @@ Export-Package: org.eclipse.emf.compare.epatch.dsl,
  org.eclipse.emf.compare.epatch.dsl.parser.packrat,
  org.eclipse.emf.compare.epatch.dsl.parser.packrat.consumers,
  org.eclipse.emf.compare.epatch.dsl.services,
- org.eclipse.emf.compare.epatch.dsl.util
+ org.eclipse.emf.compare.epatch.dsl.util,
+ org.eclipse.emf.compare.epatch.dsl.validation
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin

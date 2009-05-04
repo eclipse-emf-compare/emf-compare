@@ -21,25 +21,114 @@ public class EpatchParsetreeConstructor extends AbstractParseTreeConstructor {
 	@Override
 	protected Solution internalSerialize(EObject obj) {
 		IInstanceDescription inst = getDescr(obj);
-		Solution s;
-		if(inst.isInstanceOf(grammarAccess.getEpatchRule().getType().getClassifier()) && (s = new Epatch_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getModelImportRule().getType().getClassifier()) && (s = new ModelImport_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getResourceImportRule().getType().getClassifier()) && (s = new ResourceImport_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getEPackageImportRule().getType().getClassifier()) && (s = new EPackageImport_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getNamedResourceRule().getType().getClassifier()) && (s = new NamedResource_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getNamedObjectRule().getType().getClassifier()) && (s = new NamedObject_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getObjectRefRule().getType().getClassifier()) && (s = new ObjectRef_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier()) && (s = new CreatedObject_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getAssignmentRule().getType().getClassifier()) && (s = new Assignment_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getBiSingleAssignmentRule().getType().getClassifier()) && (s = new BiSingleAssignment_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getBiListAssignmentRule().getType().getClassifier()) && (s = new BiListAssignment_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getMonoSingleAssignmentRule().getType().getClassifier()) && (s = new MonoSingleAssignment_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getMonoListAssignmentRule().getType().getClassifier()) && (s = new MonoListAssignment_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getAssignmentValueRule().getType().getClassifier()) && (s = new AssignmentValue_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier()) && (s = new ListAssignmentValue_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getSingleAssignmentValueRule().getType().getClassifier()) && (s = new SingleAssignmentValue_Alternatives(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getObjectNewRule().getType().getClassifier()) && (s = new ObjectNew_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
-		if(inst.isInstanceOf(grammarAccess.getObjectCopyRule().getType().getClassifier()) && (s = new ObjectCopy_Group(inst, null).firstSolution()) != null && isConsumed(s,null)) return s;
+		if(inst.isInstanceOf(grammarAccess.getEpatchRule().getType().getClassifier())) {
+			final AbstractToken t = new Epatch_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getModelImportRule().getType().getClassifier())) {
+			final AbstractToken t = new ModelImport_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getResourceImportRule().getType().getClassifier())) {
+			final AbstractToken t = new ResourceImport_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getEPackageImportRule().getType().getClassifier())) {
+			final AbstractToken t = new EPackageImport_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getNamedResourceRule().getType().getClassifier())) {
+			final AbstractToken t = new NamedResource_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getNamedObjectRule().getType().getClassifier())) {
+			final AbstractToken t = new NamedObject_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getObjectRefRule().getType().getClassifier())) {
+			final AbstractToken t = new ObjectRef_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
+			final AbstractToken t = new CreatedObject_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getAssignmentRule().getType().getClassifier())) {
+			final AbstractToken t = new Assignment_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getBiSingleAssignmentRule().getType().getClassifier())) {
+			final AbstractToken t = new BiSingleAssignment_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getBiListAssignmentRule().getType().getClassifier())) {
+			final AbstractToken t = new BiListAssignment_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getMonoSingleAssignmentRule().getType().getClassifier())) {
+			final AbstractToken t = new MonoSingleAssignment_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getMonoListAssignmentRule().getType().getClassifier())) {
+			final AbstractToken t = new MonoListAssignment_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getAssignmentValueRule().getType().getClassifier())) {
+			final AbstractToken t = new AssignmentValue_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier())) {
+			final AbstractToken t = new ListAssignmentValue_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getSingleAssignmentValueRule().getType().getClassifier())) {
+			final AbstractToken t = new SingleAssignmentValue_Alternatives(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getObjectNewRule().getType().getClassifier())) {
+			final AbstractToken t = new ObjectNew_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
+		if(inst.isInstanceOf(grammarAccess.getObjectCopyRule().getType().getClassifier())) {
+			final AbstractToken t = new ObjectCopy_Group(inst, null);
+			Solution s = t.firstSolution();
+			while(s != null && !isConsumed(s, t)) s = s.getPredecessor().nextSolution(null, s);
+			if(s != null) return s;
+		}
 		return null;
 	}
 	
@@ -127,7 +216,7 @@ protected class Epatch_1_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getEpatchAccess().getNameIDTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -165,7 +254,7 @@ protected class Epatch_3_Assignment_modelImports extends AssignmentToken  {
 		if((value = current.getConsumable("modelImports",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("modelImports");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getModelImportRule().getType().getClassifier())) {
 				Solution s = new ModelImport_Alternatives(param, this).firstSolution();
@@ -198,7 +287,7 @@ protected class Epatch_4_Assignment_resources extends AssignmentToken  {
 		if((value = current.getConsumable("resources",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("resources");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getNamedResourceRule().getType().getClassifier())) {
 				Solution s = new NamedResource_Group(param, this).firstSolution();
@@ -231,7 +320,7 @@ protected class Epatch_5_Assignment_objects extends AssignmentToken  {
 		if((value = current.getConsumable("objects",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("objects");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectRefRule().getType().getClassifier())) {
 				Solution s = new ObjectRef_Group(param, this).firstSolution();
@@ -406,7 +495,7 @@ protected class ResourceImport_1_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getResourceImportAccess().getNameIDTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -443,7 +532,7 @@ protected class ResourceImport_3_Assignment_uri extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("uri",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("uri");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getResourceImportAccess().getUriSTRINGTerminalRuleCall_3_0();
 			return new Solution(obj);
@@ -527,7 +616,7 @@ protected class EPackageImport_1_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getEPackageImportAccess().getNameIDTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -564,7 +653,7 @@ protected class EPackageImport_3_Assignment_nsURI extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("nsURI",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("nsURI");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getEPackageImportAccess().getNsURISTRINGTerminalRuleCall_3_0();
 			return new Solution(obj);
@@ -672,7 +761,7 @@ protected class NamedResource_1_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getNamedResourceAccess().getNameIDTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -782,7 +871,7 @@ protected class NamedResource_4_0_1_Assignment_leftUri extends AssignmentToken  
 	protected Solution createSolution() {
 		if((value = current.getConsumable("leftUri",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftUri");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getNamedResourceAccess().getLeftUriSTRINGTerminalRuleCall_4_0_1_0();
 			return new Solution(obj);
@@ -809,7 +898,7 @@ protected class NamedResource_4_1_Assignment_leftRoot extends AssignmentToken  {
 		if((value = current.getConsumable("leftRoot",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftRoot");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
 				Solution s = new CreatedObject_Alternatives(param, this).firstSolution();
@@ -927,7 +1016,7 @@ protected class NamedResource_7_0_1_Assignment_rightUri extends AssignmentToken 
 	protected Solution createSolution() {
 		if((value = current.getConsumable("rightUri",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightUri");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getNamedResourceAccess().getRightUriSTRINGTerminalRuleCall_7_0_1_0();
 			return new Solution(obj);
@@ -954,7 +1043,7 @@ protected class NamedResource_7_1_Assignment_rightRoot extends AssignmentToken  
 		if((value = current.getConsumable("rightRoot",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightRoot");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
 				Solution s = new CreatedObject_Alternatives(param, this).firstSolution();
@@ -1142,7 +1231,7 @@ protected class ObjectRef_1_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectRefAccess().getNameIDTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -1216,7 +1305,7 @@ protected class ObjectRef_2_0_0_Assignment_leftRes extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("leftRes",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftRes");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectRefAccess().getLeftResNamedResourceCrossReference_2_0_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -1244,7 +1333,7 @@ protected class ObjectRef_2_0_1_Assignment_leftFrag extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("leftFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectRefAccess().getLeftFragFRAGMENTTerminalRuleCall_2_0_1_0();
 			return new Solution(obj);
@@ -1326,7 +1415,7 @@ protected class ObjectRef_2_1_1_Assignment_leftRes extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("leftRes",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftRes");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectRefAccess().getLeftResNamedResourceCrossReference_2_1_1_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -1354,7 +1443,7 @@ protected class ObjectRef_2_1_2_Assignment_leftFrag extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("leftFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectRefAccess().getLeftFragFRAGMENTTerminalRuleCall_2_1_2_0();
 			return new Solution(obj);
@@ -1391,7 +1480,7 @@ protected class ObjectRef_2_1_4_Assignment_rightRes extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("rightRes",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightRes");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectRefAccess().getRightResNamedResourceCrossReference_2_1_4_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -1419,7 +1508,7 @@ protected class ObjectRef_2_1_5_Assignment_rightFrag extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("rightFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectRefAccess().getRightFragFRAGMENTTerminalRuleCall_2_1_5_0();
 			return new Solution(obj);
@@ -1512,7 +1601,7 @@ protected class ObjectRef_3_1_0_Assignment_assignments extends AssignmentToken  
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getBiSingleAssignmentRule().getType().getClassifier())) {
 				Solution s = new BiSingleAssignment_Group(param, this).firstSolution();
@@ -1545,7 +1634,7 @@ protected class ObjectRef_3_1_1_Assignment_assignments extends AssignmentToken  
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getBiListAssignmentRule().getType().getClassifier())) {
 				Solution s = new BiListAssignment_Group(param, this).firstSolution();
@@ -1832,7 +1921,7 @@ protected class BiSingleAssignment_0_Assignment_feature extends AssignmentToken 
 	protected Solution createSolution() {
 		if((value = current.getConsumable("feature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("feature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getBiSingleAssignmentAccess().getFeatureIDTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -1870,7 +1959,7 @@ protected class BiSingleAssignment_2_Assignment_leftValue extends AssignmentToke
 		if((value = current.getConsumable("leftValue",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValue");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getSingleAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new SingleAssignmentValue_Alternatives(param, this).firstSolution();
@@ -1915,7 +2004,7 @@ protected class BiSingleAssignment_4_Assignment_rightValue extends AssignmentTok
 		if((value = current.getConsumable("rightValue",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightValue");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getSingleAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new SingleAssignmentValue_Alternatives(param, this).firstSolution();
@@ -2022,7 +2111,7 @@ protected class BiListAssignment_0_Assignment_feature extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("feature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("feature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getBiListAssignmentAccess().getFeatureIDTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -2100,7 +2189,7 @@ protected class BiListAssignment_3_0_Assignment_leftValues extends AssignmentTok
 		if((value = current.getConsumable("leftValues",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new ListAssignmentValue_Group(param, this).firstSolution();
@@ -2173,7 +2262,7 @@ protected class BiListAssignment_3_1_1_Assignment_leftValues extends AssignmentT
 		if((value = current.getConsumable("leftValues",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new ListAssignmentValue_Group(param, this).firstSolution();
@@ -2248,7 +2337,7 @@ protected class BiListAssignment_5_0_Assignment_rightValues extends AssignmentTo
 		if((value = current.getConsumable("rightValues",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new ListAssignmentValue_Group(param, this).firstSolution();
@@ -2321,7 +2410,7 @@ protected class BiListAssignment_5_1_1_Assignment_rightValues extends Assignment
 		if((value = current.getConsumable("rightValues",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("rightValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new ListAssignmentValue_Group(param, this).firstSolution();
@@ -2426,7 +2515,7 @@ protected class MonoSingleAssignment_0_Assignment_feature extends AssignmentToke
 	protected Solution createSolution() {
 		if((value = current.getConsumable("feature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("feature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getMonoSingleAssignmentAccess().getFeatureIDTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -2464,7 +2553,7 @@ protected class MonoSingleAssignment_2_Assignment_leftValue extends AssignmentTo
 		if((value = current.getConsumable("leftValue",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValue");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getSingleAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new SingleAssignmentValue_Alternatives(param, this).firstSolution();
@@ -2563,7 +2652,7 @@ protected class MonoListAssignment_0_Assignment_feature extends AssignmentToken 
 	protected Solution createSolution() {
 		if((value = current.getConsumable("feature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("feature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getMonoListAssignmentAccess().getFeatureIDTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -2641,7 +2730,7 @@ protected class MonoListAssignment_3_0_Assignment_leftValues extends AssignmentT
 		if((value = current.getConsumable("leftValues",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new AssignmentValue_Alternatives(param, this).firstSolution();
@@ -2714,7 +2803,7 @@ protected class MonoListAssignment_3_1_1_Assignment_leftValues extends Assignmen
 		if((value = current.getConsumable("leftValues",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("leftValues");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getAssignmentValueRule().getType().getClassifier())) {
 				Solution s = new AssignmentValue_Alternatives(param, this).firstSolution();
@@ -2806,7 +2895,7 @@ protected class AssignmentValue_0_Assignment_value extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("value",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("value");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getAssignmentValueAccess().getValueSTRINGTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -2859,7 +2948,7 @@ protected class AssignmentValue_1_0_Assignment_refObject extends AssignmentToken
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refObject");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getAssignmentValueAccess().getRefObjectNamedObjectCrossReference_1_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -2931,7 +3020,7 @@ protected class AssignmentValue_1_1_1_Assignment_refFeature extends AssignmentTo
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refFeature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refFeature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getAssignmentValueAccess().getRefFeatureIDTerminalRuleCall_1_1_1_0();
 			return new Solution(obj);
@@ -3000,7 +3089,7 @@ protected class AssignmentValue_1_1_2_1_Assignment_refIndex extends AssignmentTo
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refIndex",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refIndex");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getAssignmentValueAccess().getRefIndexINTTerminalRuleCall_1_1_2_1_0();
 			return new Solution(obj);
@@ -3041,7 +3130,7 @@ protected class AssignmentValue_2_Assignment_newObject extends AssignmentToken  
 		if((value = current.getConsumable("newObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("newObject");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
 				Solution s = new CreatedObject_Alternatives(param, this).firstSolution();
@@ -3101,7 +3190,7 @@ protected class AssignmentValue_3_0_Assignment_import extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("import",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("import");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getAssignmentValueAccess().getImportModelImportCrossReference_3_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -3129,7 +3218,7 @@ protected class AssignmentValue_3_1_Assignment_impFrag extends AssignmentToken  
 	protected Solution createSolution() {
 		if((value = current.getConsumable("impFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("impFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getAssignmentValueAccess().getImpFragFRAGMENTTerminalRuleCall_3_1_0();
 			return new Solution(obj);
@@ -3198,7 +3287,7 @@ protected class ListAssignmentValue_0_Assignment_index extends AssignmentToken  
 	protected Solution createSolution() {
 		if((value = current.getConsumable("index",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("index");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getIndexINTTerminalRuleCall_0_0();
 			return new Solution(obj);
@@ -3303,7 +3392,7 @@ protected class ListAssignmentValue_2_0_1_Assignment_refIndex extends Assignment
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refIndex",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refIndex");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getRefIndexINTTerminalRuleCall_2_0_1_0();
 			return new Solution(obj);
@@ -3341,7 +3430,7 @@ protected class ListAssignmentValue_2_1_Assignment_value extends AssignmentToken
 	protected Solution createSolution() {
 		if((value = current.getConsumable("value",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("value");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getValueSTRINGTerminalRuleCall_2_1_0();
 			return new Solution(obj);
@@ -3394,7 +3483,7 @@ protected class ListAssignmentValue_2_2_0_Assignment_refObject extends Assignmen
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refObject");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueAccess().getRefObjectNamedObjectCrossReference_2_2_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -3466,7 +3555,7 @@ protected class ListAssignmentValue_2_2_1_1_Assignment_refFeature extends Assign
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refFeature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refFeature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getRefFeatureIDTerminalRuleCall_2_2_1_1_0();
 			return new Solution(obj);
@@ -3535,7 +3624,7 @@ protected class ListAssignmentValue_2_2_1_2_1_Assignment_refIndex extends Assign
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refIndex",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refIndex");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getRefIndexINTTerminalRuleCall_2_2_1_2_1_0();
 			return new Solution(obj);
@@ -3576,7 +3665,7 @@ protected class ListAssignmentValue_2_3_Assignment_newObject extends AssignmentT
 		if((value = current.getConsumable("newObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("newObject");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
 				Solution s = new CreatedObject_Alternatives(param, this).firstSolution();
@@ -3636,7 +3725,7 @@ protected class ListAssignmentValue_2_4_0_Assignment_import extends AssignmentTo
 	protected Solution createSolution() {
 		if((value = current.getConsumable("import",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("import");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getListAssignmentValueAccess().getImportModelImportCrossReference_2_4_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -3664,7 +3753,7 @@ protected class ListAssignmentValue_2_4_1_Assignment_impFrag extends AssignmentT
 	protected Solution createSolution() {
 		if((value = current.getConsumable("impFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("impFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getListAssignmentValueAccess().getImpFragFRAGMENTTerminalRuleCall_2_4_1_0();
 			return new Solution(obj);
@@ -3727,7 +3816,7 @@ protected class SingleAssignmentValue_0_Assignment_keyword extends AssignmentTok
 		if((value = current.getConsumable("keyword",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("keyword");
 
-		if("null".equals(value)) { // xtext::Keyword
+		if("null".equals(value)) { // org::eclipse::xtext::impl::KeywordImpl
 			type = AssignmentType.KW;
 			element = grammarAccess.getSingleAssignmentValueAccess().getKeywordNullKeyword_0_0();
 			return new Solution(obj);
@@ -3753,7 +3842,7 @@ protected class SingleAssignmentValue_1_Assignment_value extends AssignmentToken
 	protected Solution createSolution() {
 		if((value = current.getConsumable("value",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("value");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getSingleAssignmentValueAccess().getValueSTRINGTerminalRuleCall_1_0();
 			return new Solution(obj);
@@ -3806,7 +3895,7 @@ protected class SingleAssignmentValue_2_0_Assignment_refObject extends Assignmen
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refObject");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getSingleAssignmentValueAccess().getRefObjectNamedObjectCrossReference_2_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -3878,7 +3967,7 @@ protected class SingleAssignmentValue_2_1_1_Assignment_refFeature extends Assign
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refFeature",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refFeature");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getSingleAssignmentValueAccess().getRefFeatureIDTerminalRuleCall_2_1_1_0();
 			return new Solution(obj);
@@ -3947,7 +4036,7 @@ protected class SingleAssignmentValue_2_1_2_1_Assignment_refIndex extends Assign
 	protected Solution createSolution() {
 		if((value = current.getConsumable("refIndex",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("refIndex");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getSingleAssignmentValueAccess().getRefIndexINTTerminalRuleCall_2_1_2_1_0();
 			return new Solution(obj);
@@ -3988,7 +4077,7 @@ protected class SingleAssignmentValue_3_Assignment_newObject extends AssignmentT
 		if((value = current.getConsumable("newObject",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("newObject");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getCreatedObjectRule().getType().getClassifier())) {
 				Solution s = new CreatedObject_Alternatives(param, this).firstSolution();
@@ -4048,7 +4137,7 @@ protected class SingleAssignmentValue_4_0_Assignment_import extends AssignmentTo
 	protected Solution createSolution() {
 		if((value = current.getConsumable("import",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("import");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getSingleAssignmentValueAccess().getImportModelImportCrossReference_4_0_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -4076,7 +4165,7 @@ protected class SingleAssignmentValue_4_1_Assignment_impFrag extends AssignmentT
 	protected Solution createSolution() {
 		if((value = current.getConsumable("impFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("impFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getSingleAssignmentValueAccess().getImpFragFRAGMENTTerminalRuleCall_4_1_0();
 			return new Solution(obj);
@@ -4165,7 +4254,7 @@ protected class ObjectNew_1_Assignment_import extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("import",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("import");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectNewAccess().getImportModelImportCrossReference_1_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -4193,7 +4282,7 @@ protected class ObjectNew_2_Assignment_impFrag extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("impFrag",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("impFrag");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectNewAccess().getImpFragFRAGMENTTerminalRuleCall_2_0();
 			return new Solution(obj);
@@ -4218,7 +4307,7 @@ protected class ObjectNew_3_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectNewAccess().getNameIDTerminalRuleCall_3_0();
 			return new Solution(obj);
@@ -4309,7 +4398,7 @@ protected class ObjectNew_4_1_0_Assignment_assignments extends AssignmentToken  
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMonoSingleAssignmentRule().getType().getClassifier())) {
 				Solution s = new MonoSingleAssignment_Group(param, this).firstSolution();
@@ -4342,7 +4431,7 @@ protected class ObjectNew_4_1_1_Assignment_assignments extends AssignmentToken  
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMonoListAssignmentRule().getType().getClassifier())) {
 				Solution s = new MonoListAssignment_Group(param, this).firstSolution();
@@ -4451,7 +4540,7 @@ protected class ObjectCopy_1_Assignment_resource extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("resource",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("resource");
-		if(value instanceof EObject) { // xtext::CrossReference
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::CrossReferenceImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getObjectCopyAccess().getResourceNamedResourceCrossReference_1_0().getType().getClassifier())) {
 				type = AssignmentType.CR;
@@ -4479,7 +4568,7 @@ protected class ObjectCopy_2_Assignment_fragment extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("fragment",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("fragment");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectCopyAccess().getFragmentFRAGMENTTerminalRuleCall_2_0();
 			return new Solution(obj);
@@ -4504,7 +4593,7 @@ protected class ObjectCopy_3_Assignment_name extends AssignmentToken  {
 	protected Solution createSolution() {
 		if((value = current.getConsumable("name",!IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("name");
-		if(Boolean.TRUE.booleanValue()) { // xtext::RuleCall FIXME: check if value is valid for lexer rule
+		if(Boolean.TRUE.booleanValue()) { // org::eclipse::xtext::impl::RuleCallImpl FIXME: check if value is valid for lexer rule
 			type = AssignmentType.LRC;
 			element = grammarAccess.getObjectCopyAccess().getNameIDTerminalRuleCall_3_0();
 			return new Solution(obj);
@@ -4595,7 +4684,7 @@ protected class ObjectCopy_4_1_0_Assignment_assignments extends AssignmentToken 
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMonoSingleAssignmentRule().getType().getClassifier())) {
 				Solution s = new MonoSingleAssignment_Group(param, this).firstSolution();
@@ -4628,7 +4717,7 @@ protected class ObjectCopy_4_1_1_Assignment_assignments extends AssignmentToken 
 		if((value = current.getConsumable("assignments",IS_REQUIRED)) == null) return null;
 		IInstanceDescription obj = current.cloneAndConsume("assignments");
 
-		if(value instanceof EObject) { // xtext::RuleCall
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
 			IInstanceDescription param = getDescr((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getMonoListAssignmentRule().getType().getClassifier())) {
 				Solution s = new MonoListAssignment_Group(param, this).firstSolution();
