@@ -7,11 +7,22 @@ package org.eclipse.emf.compare.epatch.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
-import org.eclipse.emf.compare.epatch.*;
-
+import org.eclipse.emf.compare.epatch.Assignment;
+import org.eclipse.emf.compare.epatch.AssignmentValue;
+import org.eclipse.emf.compare.epatch.CreatedObject;
+import org.eclipse.emf.compare.epatch.EPackageImport;
+import org.eclipse.emf.compare.epatch.Epatch;
+import org.eclipse.emf.compare.epatch.EpatchPackage;
+import org.eclipse.emf.compare.epatch.ListAssignment;
+import org.eclipse.emf.compare.epatch.ModelImport;
+import org.eclipse.emf.compare.epatch.NamedObject;
+import org.eclipse.emf.compare.epatch.NamedResource;
+import org.eclipse.emf.compare.epatch.ObjectCopy;
+import org.eclipse.emf.compare.epatch.ObjectNew;
+import org.eclipse.emf.compare.epatch.ObjectRef;
+import org.eclipse.emf.compare.epatch.ResourceImport;
+import org.eclipse.emf.compare.epatch.SingleAssignment;
 import org.eclipse.emf.ecore.EObject;
 
 /**

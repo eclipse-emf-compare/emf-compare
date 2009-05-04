@@ -93,6 +93,17 @@ public class CopyingEpatchApplier {
 		this.outputResourceSet = outputResourceSet;
 	}
 
+	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch,
+			Map<NamedResource, Resource> inputResources, ResourceSet inputResourceSet) {
+		super();
+		this.strategy = strategy;
+		this.dir = EpatchApplyStrategy.Util.get(strategy);
+		this.epatch = epatch;
+		this.imports = matchImports(inputResourceSet);
+		this.inputResources = inputResources;
+		this.outputResourceSet = createOutputResourceSet(inputResourceSet);
+	}
+
 	public CopyingEpatchApplier(ApplyStrategy strategy, Epatch epatch, ResourceSet inputResourceSet) {
 		super();
 		this.strategy = strategy;

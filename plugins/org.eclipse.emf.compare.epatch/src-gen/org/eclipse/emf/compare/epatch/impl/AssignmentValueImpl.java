@@ -509,7 +509,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_FEATURE:
 				return getRefFeature();
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				return getRefIndex();
+				return new Integer(getRefIndex());
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				return getNewObject();
 			case EpatchPackage.ASSIGNMENT_VALUE__IMPORT:
@@ -518,7 +518,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue
 			case EpatchPackage.ASSIGNMENT_VALUE__IMP_FRAG:
 				return getImpFrag();
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				return getIndex();
+				return new Integer(getIndex());
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				return getKeyword();
 		}
@@ -544,7 +544,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue
 				setRefFeature((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__REF_INDEX:
-				setRefIndex((Integer)newValue);
+				setRefIndex(((Integer)newValue).intValue());
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__NEW_OBJECT:
 				setNewObject((CreatedObject)newValue);
@@ -556,7 +556,7 @@ public class AssignmentValueImpl extends EObjectImpl implements AssignmentValue
 				setImpFrag((String)newValue);
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__INDEX:
-				setIndex((Integer)newValue);
+				setIndex(((Integer)newValue).intValue());
 				return;
 			case EpatchPackage.ASSIGNMENT_VALUE__KEYWORD:
 				setKeyword((String)newValue);
