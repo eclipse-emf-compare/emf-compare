@@ -20,3 +20,5 @@ Require-Bundle: org.eclipse.emf.compare,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.emf.compare.epatch.dsl.internal.EpatchActivator
 Bundle-Localization: plugin
+Export-Package: org.eclipse.emf.compare.epatch.dsl,
+ org.eclipse.emf.compare.epatch.dsl.contentassist

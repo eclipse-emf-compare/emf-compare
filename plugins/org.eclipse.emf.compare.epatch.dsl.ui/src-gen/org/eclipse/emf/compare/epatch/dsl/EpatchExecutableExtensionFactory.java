@@ -32,7 +32,10 @@ public class EpatchExecutableExtensionFactory implements IExecutableExtensionFac
 	}
 	
 	public Object create() throws CoreException {
-		Bundle bundle = org.eclipse.emf.compare.epatch.dsl.internal.EpatchActivator.getInstance().getBundle();
+		org.eclipse.emf.compare.epatch.dsl.internal.EpatchActivator instance = org.eclipse.emf.compare.epatch.dsl.internal.EpatchActivator.getInstance();
+		if (instance == null)
+			throw new IllegalStateException("The bundle has not yet been activated. Make sure the Manifest.MF contains 'Bundle-ActivationPolicy: lazy'.");
+		Bundle bundle = instance.getBundle();
 		try {
 			Class<?> class1 = bundle.loadClass(clazzName);
 			return org.eclipse.emf.compare.epatch.dsl.internal.EpatchActivator.getInstance().getInjector("org.eclipse.emf.compare.epatch.dsl.Epatch").getInstance(class1);

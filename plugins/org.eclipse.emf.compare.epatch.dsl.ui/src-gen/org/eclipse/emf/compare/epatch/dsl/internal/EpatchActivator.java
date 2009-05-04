@@ -4,6 +4,8 @@
  */
 package org.eclipse.emf.compare.epatch.dsl.internal;
 
+import org.eclipse.xtext.ui.common.service.UIPluginModule;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -30,12 +32,20 @@ public class EpatchActivator extends AbstractUIPlugin {
 		super.start(context);
 		INSTANCE = this;
 		
-		injectors.put("org.eclipse.emf.compare.epatch.dsl.Epatch",Guice.createInjector(new org.eclipse.emf.compare.epatch.dsl.EpatchRuntimeModule(), new org.eclipse.emf.compare.epatch.dsl.EpatchUiModule()));
+		injectors.put("org.eclipse.emf.compare.epatch.dsl.Epatch", Guice.createInjector(
+			new org.eclipse.emf.compare.epatch.dsl.EpatchRuntimeModule(), 
+			new org.eclipse.emf.compare.epatch.dsl.EpatchUiModule(),
+			createUIPluginModule()
+		));
 		
 	}
 	
 	public static EpatchActivator getInstance() {
 		return INSTANCE;
+	}
+	
+	protected UIPluginModule createUIPluginModule() {
+		return new UIPluginModule(this);
 	}
 	
 }

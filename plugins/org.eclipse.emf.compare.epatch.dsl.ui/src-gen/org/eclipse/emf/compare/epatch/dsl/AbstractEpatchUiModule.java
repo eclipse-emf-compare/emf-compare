@@ -28,8 +28,13 @@ public abstract class AbstractEpatchUiModule extends DefaultUIModule {
 	}
 
 	
-	public Class<? extends org.eclipse.xtext.ui.common.editor.contentassist.IProposalProvider> bindIProposalProvider() {
-		return org.eclipse.emf.compare.epatch.dsl.EpatchProposalProvider.class;
+	public Class<? extends org.eclipse.xtext.ui.common.editor.contentassist.IProposalConflictHelper> bindIProposalConflictHelper() {
+		return org.eclipse.xtext.ui.common.editor.contentassist.antlr.AntlrProposalConflictHelper.class;
+	}
+
+	
+	public Class<? extends org.eclipse.xtext.ui.core.editor.contentassist.IContentProposalProvider> bindIContentProposalProvider() {
+		return org.eclipse.emf.compare.epatch.dsl.contentassist.EpatchProposalProvider.class;
 	}
 
 }
