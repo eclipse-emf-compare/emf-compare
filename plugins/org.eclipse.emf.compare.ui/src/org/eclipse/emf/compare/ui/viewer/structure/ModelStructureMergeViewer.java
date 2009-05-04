@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -243,6 +244,10 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		});
 
 		configuration.addPropertyChangeListener(new ConfigurationPropertyListener());
+		final IWorkbenchPart part = configuration.getContainer().getWorkbenchPart();
+		if (part != null) {
+			part.getSite().setSelectionProvider(this);
+		}
 	}
 
 	/**
