@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.eclipse.emf.compare.epatch.EpatchPackage;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.xtext.validator.CheckType;
+import org.eclipse.xtext.validation.CheckType;
 
 public class EpatchCheckValidator extends org.eclipse.xtext.check.AbstractCheckValidator {
 
