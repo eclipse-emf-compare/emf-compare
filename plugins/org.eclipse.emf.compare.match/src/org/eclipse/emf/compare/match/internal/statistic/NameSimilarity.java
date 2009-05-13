@@ -75,14 +75,10 @@ public final class NameSimilarity {
 		final StringBuilder result = new StringBuilder();
 		List<EStructuralFeature> eclassAttributes = new ArrayList<EStructuralFeature>();
 		if (filter != null) {
-			if (eclass instanceof EClass) {
-				eclassAttributes = filter.getFilteredFeatures(current);
-			}
+			eclassAttributes = filter.getFilteredFeatures(current);
 			eclassAttributes.remove(findNameFeature(current));
 		} else {
-			if (eclass instanceof EClass) {
-				eclassAttributes.addAll(((EClass)eclass).getEAllAttributes());
-			}
+			eclassAttributes.addAll(((EClass)eclass).getEAllAttributes());
 		}
 		if (eclassAttributes.size() > 0) {
 			for (final EStructuralFeature feature : eclassAttributes) {

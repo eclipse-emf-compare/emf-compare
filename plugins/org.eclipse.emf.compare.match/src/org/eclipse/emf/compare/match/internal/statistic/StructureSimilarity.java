@@ -120,12 +120,10 @@ public final class StructureSimilarity {
 		final EObject eclass = current.eClass();
 		final StringBuilder result = new StringBuilder();
 		List<EStructuralFeature> eObjectFeatures = new ArrayList<EStructuralFeature>();
-		if (eclass instanceof EClass) {
-			if (filter != null)
-				eObjectFeatures = filter.getFilteredFeatures(current);
-			else
-				eObjectFeatures.addAll(((EClass)eclass).getEAllReferences());
-		}
+		if (filter != null)
+			eObjectFeatures = filter.getFilteredFeatures(current);
+		else
+			eObjectFeatures.addAll(((EClass)eclass).getEAllReferences());
 		for (EStructuralFeature feature : eObjectFeatures) {
 			if (feature instanceof EReference && !((EReference)feature).isDerived()) {
 				final Object value = current.eGet(feature);
