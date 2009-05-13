@@ -513,7 +513,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		double max = 0d;
 		EObject resultObject = null;
 		final Iterator<EObject> it = list.iterator();
-		while (it.hasNext() && max != 1.0d) {
+		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
 			if (this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
 					|| eObj.eClass() == next.eClass()) {
@@ -620,6 +620,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	protected boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
 		boolean similar = false;
+		final double almostEquals = 0.999999d;
 
 		// Defines threshold constants to assume objects' similarity
 		final double nameOnlyMetricThreshold = 0.7d;
@@ -646,7 +647,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)
 				&& haveDistinctXMIID(obj1, obj2)) {
 			similar = false;
-		} else if (nameSimilarity == 1 && hasSameUri) {
+		} else if (nameSimilarity > almostEquals && hasSameUri) {
 			similar = true;
 			// softer tests if we don't have enough attributes to compare the
 			// objects
@@ -660,9 +661,9 @@ public class GenericMatchEngine implements IMatchEngine {
 			final double contentSimilarity = contentSimilarity(obj1, obj2);
 			final double relationsSimilarity = relationsSimilarity(obj1, obj2);
 
-			if (relationsSimilarity == 1 && hasSameUri && nameSimilarity > nameThreshold) {
+			if (relationsSimilarity > almostEquals && hasSameUri && nameSimilarity > nameThreshold) {
 				similar = true;
-			} else if (contentSimilarity == 1 && relationsSimilarity == 1) {
+			} else if (contentSimilarity > almostEquals && relationsSimilarity > almostEquals) {
 				similar = true;
 			} else if (contentSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
 					&& nameSimilarity > nameThreshold) {
