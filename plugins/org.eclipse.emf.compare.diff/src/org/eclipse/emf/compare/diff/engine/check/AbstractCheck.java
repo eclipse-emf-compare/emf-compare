@@ -29,10 +29,8 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  * @since 0.9
- * @noinstantiate This class is not intended to be instantiated by clients. This is only meant to provide the
- *                base functionnalities of the different subclasses.
  */
-public class DefaultCheck {
+public abstract class AbstractCheck {
 	/** Allows retrieval of the ancestor matched object. */
 	protected static final int ANCESTOR_OBJECT = 0;
 
@@ -55,7 +53,7 @@ public class DefaultCheck {
 	 *            This cross referencer has been initialized with the whole MatchResourceSet and can be used
 	 *            to retrieve matched EObjects towards other resources.
 	 */
-	public DefaultCheck(EcoreUtil.CrossReferencer referencer) {
+	public AbstractCheck(EcoreUtil.CrossReferencer referencer) {
 		crossReferencer = referencer;
 	}
 

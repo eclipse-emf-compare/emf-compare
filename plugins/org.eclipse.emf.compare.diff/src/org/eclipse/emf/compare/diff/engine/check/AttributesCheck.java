@@ -37,13 +37,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
  * @since 0.9
  */
-public class AttributesCheck extends DefaultCheck {
+public class AttributesCheck extends AbstractCheck {
 	/**
 	 * Simply delegates to the super constructor.
 	 * 
 	 * @param referencer
 	 *            CrossReferencer instantiated with the match model or match resource set.
-	 * @see {@link DefaultCheck#DefaultCheck(org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)}
+	 * @see {@link AbstractCheck#DefaultCheck(org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)}
 	 */
 	public AttributesCheck(EcoreUtil.CrossReferencer referencer) {
 		super(referencer);
