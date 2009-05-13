@@ -31,6 +31,8 @@ import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
@@ -272,7 +274,7 @@ public final class MatchService {
 			} else {
 				final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 				unmatched.setSide(Side.LEFT);
-				unmatched.getRoots().addAll(res.getContents());
+				unmatched.getRoots().addAll(getResourceRoots(res));
 				remainingLeftResources.remove(res);
 				match.getUnmatchedModels().add(unmatched);
 			}
@@ -287,7 +289,7 @@ public final class MatchService {
 			} else {
 				final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 				unmatched.setSide(Side.RIGHT);
-				unmatched.getRoots().addAll(res.getContents());
+				unmatched.getRoots().addAll(getResourceRoots(res));
 				remainingLeftResources.remove(res);
 				match.getUnmatchedModels().add(unmatched);
 			}
@@ -371,14 +373,14 @@ public final class MatchService {
 						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.LEFT);
-					unmatched.getRoots().addAll(res.getContents());
+					unmatched.getRoots().addAll(getResourceRoots(res));
 					unmatched.setRemote(true);
 					remainingAncestorResources.remove(matchedAncestor);
 					match.getUnmatchedModels().add(unmatched);
 				} else {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.LEFT);
-					unmatched.getRoots().addAll(res.getContents());
+					unmatched.getRoots().addAll(getResourceRoots(res));
 					match.getUnmatchedModels().add(unmatched);
 				}
 			}
@@ -402,14 +404,14 @@ public final class MatchService {
 						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.RIGHT);
-					unmatched.getRoots().addAll(res.getContents());
+					unmatched.getRoots().addAll(getResourceRoots(res));
 					unmatched.setRemote(true);
 					remainingAncestorResources.remove(matchedAncestor);
 					match.getUnmatchedModels().add(unmatched);
 				} else {
 					final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 					unmatched.setSide(Side.RIGHT);
-					unmatched.getRoots().addAll(res.getContents());
+					unmatched.getRoots().addAll(getResourceRoots(res));
 					match.getUnmatchedModels().add(unmatched);
 				}
 			}
@@ -443,6 +445,25 @@ public final class MatchService {
 	 */
 	public static void setMatchEngineSelector(IMatchEngineSelector selector) {
 		matchEngineSelector = selector;
+	}
+
+	/**
+	 * Returns the roots of the given resource. This will return a proxy to hold the resource's URI if it has
+	 * no roots.
+	 * 
+	 * @param res
+	 *            The resource we need the roots of.
+	 * @return The roots of the given resource.
+	 */
+	private static List<EObject> getResourceRoots(Resource res) {
+		final List<EObject> roots = new ArrayList<EObject>(res.getContents());
+		if (res.getContents().isEmpty()) {
+			// The resource has no root ... create a proxy to hold the resource URI
+			final EObject proxy = EcoreFactory.eINSTANCE.createEObject();
+			((InternalEObject)proxy).eSetProxyURI(res.getURI().appendFragment("/")); //$NON-NLS-1$
+			roots.add(proxy);
+		}
+		return roots;
 	}
 
 	/**
