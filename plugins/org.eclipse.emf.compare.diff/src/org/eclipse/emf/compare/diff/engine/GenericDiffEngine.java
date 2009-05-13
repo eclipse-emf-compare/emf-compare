@@ -181,10 +181,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Returns the implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 * Returns the implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 * responsible for the verification of updates on attribute values.
 	 * 
-	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 *         responsible for the verification of updates on attribute values.
 	 * @since 0.9
 	 */
@@ -193,10 +193,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * Returns the implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 * Returns the implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 * responsible for the verification of updates on reference values.
 	 * 
-	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.DefaultCheck}
+	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 *         responsible for the verification of updates on reference values.
 	 * @since 0.9
 	 */
