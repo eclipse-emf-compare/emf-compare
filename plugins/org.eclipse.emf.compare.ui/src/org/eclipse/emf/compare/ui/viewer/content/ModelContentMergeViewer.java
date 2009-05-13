@@ -46,7 +46,7 @@ import org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTa
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabFolder;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabItem;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
@@ -554,16 +554,23 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected byte[] getContents(boolean left) {
 		byte[] contents = null;
 
-		EObject root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
-				.getLeftContent(getInput())).getObject();
-		if (!left) {
-			root = ((TypedElementWrapper)((IMergeViewerContentProvider)getContentProvider())
-					.getRightContent(getInput())).getObject();
+		final Object input;
+		if (left) {
+			input = ((IMergeViewerContentProvider)getContentProvider()).getLeftContent(getInput());
+		} else {
+			input = ((IMergeViewerContentProvider)getContentProvider()).getRightContent(getInput());
+		}
+
+		final Resource resource;
+		if (input instanceof TypedElementWrapper) {
+			resource = ((TypedElementWrapper)input).getObject().eResource();
+		} else {
+			resource = (Resource)input;
 		}
 
 		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
-			root.eResource().save(stream, null);
+			resource.save(stream, null);
 			contents = stream.toByteArray();
 		} catch (final IOException e) {
 			EMFComparePlugin.log(e, false);
@@ -574,7 +581,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 	/**
 	 * This will minimize the list of differences to the visible differences. Differences are considered
-	 * "visible" if {@link DiffAdapterFactory#shouldBeHidden(EObject)} returns false on it.
+	 * "visible" if {@link DiffAdapterFactory#shouldBeHidden(org.eclipse.emf.ecore.EObject)} returns false on
+	 * it.
 	 * 
 	 * @return {@link List} of the visible differences for this comparison.
 	 */
