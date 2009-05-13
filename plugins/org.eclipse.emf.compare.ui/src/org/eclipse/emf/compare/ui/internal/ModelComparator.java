@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,7 +77,7 @@ public final class ModelComparator {
 	protected static final boolean IS_LESS_GANYMEDE;
 
 	/** Keeps track of the team handlers declared for the extension point. */
-	private static final Set<TeamHandlerDescriptor> CACHED_HANDLERS = new HashSet<TeamHandlerDescriptor>();
+	private static final Set<TeamHandlerDescriptor> CACHED_HANDLERS = new LinkedHashSet<TeamHandlerDescriptor>();
 
 	/**
 	 * This will contain instances of comparators associated to given CompareConfiguration.
