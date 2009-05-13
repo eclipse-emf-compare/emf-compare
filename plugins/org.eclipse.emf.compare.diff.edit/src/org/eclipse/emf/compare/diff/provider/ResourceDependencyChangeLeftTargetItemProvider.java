@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChangeLeftTarget;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
@@ -57,8 +59,8 @@ public class ResourceDependencyChangeLeftTargetItemProvider extends ResourceDepe
 	}
 
 	/**
-	 * This returns ResourceDependencyChangeLeftTarget.gif.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This returns ResourceDependencyChangeLeftTarget.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -76,17 +78,23 @@ public class ResourceDependencyChangeLeftTargetItemProvider extends ResourceDepe
 	public String getText(Object object) {
 		final ResourceDependencyChangeLeftTarget operation = (ResourceDependencyChangeLeftTarget)object;
 
-		final String resourceName = operation.getRoots().get(0).eResource().getURI().lastSegment();
+		final EObject root = operation.getRoots().get(0);
+		final String resourceName;
+		if (root.eIsProxy()) {
+			resourceName = ((InternalEObject)root).eProxyURI().trimFragment().lastSegment();
+		} else {
+			resourceName = root.eResource().getURI().lastSegment();
+		}
 		if (operation.isRemote())
-			return getString("_UI_RemoteRemoveResourceDependency_type", new Object[] {resourceName,}); //$NON-NLS-1$
-		return getString("_UI_AddResourceDependency_type", new Object[] {resourceName,}); //$NON-NLS-1$
+			return getString("_UI_RemoteRemoveResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
+		return getString("_UI_AddResourceDependency_type", new Object[] {resourceName, }); //$NON-NLS-1$
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -96,9 +104,9 @@ public class ResourceDependencyChangeLeftTargetItemProvider extends ResourceDepe
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
