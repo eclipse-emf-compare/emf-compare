@@ -112,6 +112,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	/** This map will allow us to cache the number of non-null features a given instance of EObject has. */
 	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
 
+	/** We'll use this map to cache the uri fragments computed for each objects. */
+	private final Map<EObject, String> uriFragmentCache = new HashMap<EObject, String>(20);
+
 	/**
 	 * This list allows us to memorize the unmatched elements for a three-way comparison.<br/>
 	 * <p>
@@ -381,6 +384,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		remainingUnmatchedElements.clear();
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
+		uriFragmentCache.clear();
 		options.putAll(loadPreferenceOptionMap());
 	}
 
@@ -725,7 +729,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final double relationsSimilarity = relationsSimilarity(obj1, obj2);
 		double sameUri = 0d;
 		if (hasSameUri(obj1, obj2)) {
-			sameUri = 1;
+			sameUri = 1d;
 		}
 		final double positionSimilarity = relationsSimilarity / 2d + sameUri / 2d;
 
@@ -1299,8 +1303,19 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @return <code>True</code> if the {@link EObject}s have the same URI, <code>False</code> otherwise.
 	 */
 	private boolean hasSameUri(EObject obj1, EObject obj2) {
-		if (obj1.eResource() != null && obj2.eResource() != null)
-			return obj1.eResource().getURIFragment(obj1).equals(obj2.eResource().getURIFragment(obj2));
+		if (obj1.eResource() != null && obj2.eResource() != null) {
+			String obj1URIFragment = uriFragmentCache.get(obj1);
+			if (obj1URIFragment == null) {
+				obj1URIFragment = obj1.eResource().getURIFragment(obj1);
+				uriFragmentCache.put(obj1, obj1URIFragment);
+			}
+			String obj2URIFragment = uriFragmentCache.get(obj2);
+			if (obj2URIFragment == null) {
+				obj2URIFragment = obj2.eResource().getURIFragment(obj2);
+				uriFragmentCache.put(obj2, obj2URIFragment);
+			}
+			return obj1URIFragment.equals(obj2URIFragment);
+		}
 		return false;
 	}
 
