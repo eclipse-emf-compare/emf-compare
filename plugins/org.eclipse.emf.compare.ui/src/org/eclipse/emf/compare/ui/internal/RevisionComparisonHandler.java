@@ -75,7 +75,19 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 			final ResourceSet leftResourceSet = new ResourceSetImpl();
 			final ResourceSet rightResourceSet = new ResourceSetImpl();
 
-			if (((ResourceNode)left).getResource().isAccessible()) {
+			if (left instanceof FileRevisionTypedElement) {
+				try {
+					leftResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
+							left.getName(), leftResourceSet).eResource();
+					leftResourceSet.setURIConverter(new RevisionedURIConverter(
+							((FileRevisionTypedElement)left).getFileRevision()));
+				} catch (final IOException e) {
+					// We couldn't load the resource. Considers it has been deleted
+					leftResource = ModelUtils.createResource(URI.createURI(left.getName()));
+					// Set the left as remote to disable merge facilities
+					leftIsRemote = true;
+				}
+			} else if (((ResourceNode)left).getResource().isAccessible()) {
 				leftResource = EclipseModelUtils.load(((ResourceNode)left).getResource().getFullPath(),
 						leftResourceSet).eResource();
 			} else {
