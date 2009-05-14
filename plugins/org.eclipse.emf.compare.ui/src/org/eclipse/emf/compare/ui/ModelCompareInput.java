@@ -107,10 +107,12 @@ public class ModelCompareInput implements ICompareInput {
 	 */
 	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel, ModelComparator comparator) {
 		this(matchModel, diffModel);
-		leftResource = comparator.getLeftResource();
-		rightResource = comparator.getRightResource();
-		ancestorResource = comparator.getAncestorResource();
-		initialInput = comparator.getCompareInput();
+		if (comparator != null) {
+			leftResource = comparator.getLeftResource();
+			rightResource = comparator.getRightResource();
+			ancestorResource = comparator.getAncestorResource();
+			initialInput = comparator.getCompareInput();
+		}
 	}
 
 	/**
@@ -128,10 +130,12 @@ public class ModelCompareInput implements ICompareInput {
 	public ModelCompareInput(MatchResourceSet matchResourceset, DiffResourceSet diffResourceSet,
 			ModelComparator comparator) {
 		this(matchResourceset, diffResourceSet);
-		leftResource = comparator.getLeftResource();
-		rightResource = comparator.getRightResource();
-		ancestorResource = comparator.getAncestorResource();
-		initialInput = comparator.getCompareInput();
+		if (comparator != null) {
+			leftResource = comparator.getLeftResource();
+			rightResource = comparator.getRightResource();
+			ancestorResource = comparator.getAncestorResource();
+			initialInput = comparator.getCompareInput();
+		}
 	}
 
 	/**

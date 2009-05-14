@@ -194,8 +194,12 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * menu.
 	 */
 	protected void updateToolItems() {
-		exportMenu.enableSave(!ModelComparator.getComparator(configuration).isLeftRemote()
-				&& !ModelComparator.getComparator(configuration).isRightRemote());
+		final ModelComparator comparator = ModelComparator.getComparator(configuration);
+		if (comparator != null) {
+			exportMenu.enableSave(!comparator.isLeftRemote() && !comparator.isRightRemote());
+		} else {
+			exportMenu.enableSave(false);
+		}
 		CompareViewerPane.getToolBarManager(getControl().getParent()).update(true);
 	}
 

@@ -704,10 +704,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 *            <code>True</code> if we seek to enable the actions, <code>False</code> otherwise.
 	 */
 	protected void switchCopyState(boolean enabled) {
-		final boolean leftEditable = !ModelComparator.getComparator(configuration).isLeftRemote()
-				&& configuration.isLeftEditable();
-		final boolean rightEditable = !ModelComparator.getComparator(configuration).isRightRemote()
-				&& configuration.isRightEditable();
+		final ModelComparator comparator = ModelComparator.getComparator(configuration);
+
+		boolean leftEditable = configuration.isLeftEditable();
+		if (comparator != null)
+			leftEditable = leftEditable && !comparator.isLeftRemote();
+		boolean rightEditable = configuration.isRightEditable();
+		if (comparator != null)
+			rightEditable = rightEditable && !comparator.isRightRemote();
 		if (copyDiffLeftToRight != null) {
 			copyDiffLeftToRight.setEnabled(rightEditable && enabled);
 		}

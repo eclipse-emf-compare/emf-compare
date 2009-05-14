@@ -139,6 +139,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		((TreeViewer)viewer).getTree().clearAll(true);
+		if (newInput == null)
+			return;
 		final ModelComparator comparator;
 		if (newInput instanceof ICompareInput) {
 			comparator = ModelComparator.getComparator(configuration, (ICompareInput)newInput);
