@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -113,7 +114,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
 
 	/** We'll use this map to cache the uri fragments computed for each objects. */
-	private final Map<EObject, String> uriFragmentCache = new HashMap<EObject, String>(20);
+	private final Map<EObject, String> uriFragmentCache = new WeakHashMap<EObject, String>(20);
 
 	/**
 	 * This list allows us to memorize the unmatched elements for a three-way comparison.<br/>
