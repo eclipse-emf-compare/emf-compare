@@ -102,9 +102,12 @@ public abstract class AbstractEpatchBuilder {
 	protected Epatch createEpatch(String name) {
 		Epatch patch = fc.createEpatch();
 		patch.setName(name);
-		Resource r = new ResourceImpl(URI.createURI(name + ".epatch"));
+		Resource r = new ResourceSetImpl().createResource(URI.createURI(name + ".epatch"));
+		if (r == null) {
+			r = new ResourceImpl(URI.createURI(name + ".xmi"));
+			new ResourceSetImpl().getResources().add(r);
+		}
 		r.getContents().add(patch);
-		new ResourceSetImpl().getResources().add(r);
 		return patch;
 	}
 
