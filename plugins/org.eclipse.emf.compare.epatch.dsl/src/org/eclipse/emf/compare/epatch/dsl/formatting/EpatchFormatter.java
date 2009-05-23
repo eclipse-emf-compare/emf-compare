@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
-package org.eclipse.emf.compare.epatch.dsl;
+package org.eclipse.emf.compare.epatch.dsl.formatting;
 
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.BiListAssignmentElements;
@@ -21,20 +21,13 @@ import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ObjectCop
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ObjectNewElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.ObjectRefElements;
 import org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.SingleAssignmentValueElements;
-import org.eclipse.xtext.IGrammarAccess;
+import org.eclipse.xtext.parsetree.reconstr.impl.AbstractFormattingTokenSerializer;
 import org.eclipse.xtext.parsetree.reconstr.impl.FormattingConfig;
-import org.eclipse.xtext.parsetree.reconstr.impl.FormattingTokenSerializer;
-
-import com.google.inject.Inject;
 
 /**
  * @author Moritz Eysholdt - Initial contribution and API
  */
-public class EpatchFormatter extends FormattingTokenSerializer {
-	@Inject
-	protected EpatchFormatter(IGrammarAccess grammarAccess) {
-		super(grammarAccess);
-	}
+public class EpatchFormatter extends AbstractFormattingTokenSerializer {
 
 	@Override
 	protected void configureFormatting(FormattingConfig cfg) {

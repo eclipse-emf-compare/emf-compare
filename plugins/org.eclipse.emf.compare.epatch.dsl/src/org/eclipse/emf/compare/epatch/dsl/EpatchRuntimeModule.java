@@ -9,7 +9,6 @@
 package org.eclipse.emf.compare.epatch.dsl;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
-import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
 
 /**
  * used to register components to be used within the IDE.
@@ -17,11 +16,6 @@ import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
  * @author Moritz Eysholdt - Initial contribution and API
  */
 public class EpatchRuntimeModule extends AbstractEpatchRuntimeModule {
-	@Override
-	public Class<? extends ITokenSerializer> bindITokenSerializer() {
-		return EpatchFormatter.class;
-	}
-
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return EpatchValueConverter.class;

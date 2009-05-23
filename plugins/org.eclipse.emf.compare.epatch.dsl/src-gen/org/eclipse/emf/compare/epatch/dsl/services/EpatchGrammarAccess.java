@@ -33,10 +33,10 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//Epatch:
-		//  "epatch" name=ID "{" (modelImports+=ModelImport)* (resources+=NamedResource)* (objects+=ObjectRef)* "}";
+		//  "epatch" name=ID "{" modelImports+=ModelImport* resources+=NamedResource* objects+=ObjectRef* "}";
 		public ParserRule getRule() { return rule; }
 
-		//"epatch" name=ID "{" (modelImports+=ModelImport)* (resources+=NamedResource)* (objects+=ObjectRef)* "}"
+		//"epatch" name=ID "{" modelImports+=ModelImport* resources+=NamedResource* objects+=ObjectRef* "}"
 		public Group getGroup() { return cGroup; }
 
 		//"epatch"
@@ -51,19 +51,19 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		//"{"
 		public Keyword getLeftCurlyBracketKeyword_2() { return cLeftCurlyBracketKeyword_2; }
 
-		//(modelImports+=ModelImport)*
+		//modelImports+=ModelImport*
 		public Assignment getModelImportsAssignment_3() { return cModelImportsAssignment_3; }
 
 		//ModelImport
 		public RuleCall getModelImportsModelImportParserRuleCall_3_0() { return cModelImportsModelImportParserRuleCall_3_0; }
 
-		//(resources+=NamedResource)*
+		//resources+=NamedResource*
 		public Assignment getResourcesAssignment_4() { return cResourcesAssignment_4; }
 
 		//NamedResource
 		public RuleCall getResourcesNamedResourceParserRuleCall_4_0() { return cResourcesNamedResourceParserRuleCall_4_0; }
 
-		//(objects+=ObjectRef)*
+		//objects+=ObjectRef*
 		public Assignment getObjectsAssignment_5() { return cObjectsAssignment_5; }
 
 		//ObjectRef
@@ -325,16 +325,16 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		private final Keyword cRightCurlyBracketKeyword_3_2 = (Keyword)cGroup_3.eContents().get(2);
 		
 		//ObjectRef:
-		//  "object" (name=ID)? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?;
+		//  "object" name=ID? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?;
 		public ParserRule getRule() { return rule; }
 
-		//"object" (name=ID)? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?
+		//"object" name=ID? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?
 		public Group getGroup() { return cGroup; }
 
 		//"object"
 		public Keyword getObjectKeyword_0() { return cObjectKeyword_0; }
 
-		//(name=ID)?
+		//name=ID?
 		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
 
 		//ID
@@ -1094,10 +1094,10 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		private final Keyword cRightCurlyBracketKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
 		
 		//ObjectNew:
-		//  "new" ^import=[ModelImport] impFrag=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
+		//  "new" ^import=[ModelImport] impFrag=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
 		public ParserRule getRule() { return rule; }
 
-		//"new" ^import=[ModelImport] impFrag=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?
+		//"new" ^import=[ModelImport] impFrag=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?
 		public Group getGroup() { return cGroup; }
 
 		//"new"
@@ -1118,7 +1118,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		//FRAGMENT
 		public RuleCall getImpFragFRAGMENTTerminalRuleCall_2_0() { return cImpFragFRAGMENTTerminalRuleCall_2_0; }
 
-		//(name=ID)?
+		//name=ID?
 		public Assignment getNameAssignment_3() { return cNameAssignment_3; }
 
 		//ID
@@ -1170,10 +1170,10 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		private final Keyword cRightCurlyBracketKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
 		
 		//ObjectCopy:
-		//  "copy" resource=[NamedResource] fragment=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
+		//  "copy" resource=[NamedResource] fragment=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
 		public ParserRule getRule() { return rule; }
 
-		//"copy" resource=[NamedResource] fragment=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?
+		//"copy" resource=[NamedResource] fragment=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?
 		public Group getGroup() { return cGroup; }
 
 		//"copy"
@@ -1194,7 +1194,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 		//FRAGMENT
 		public RuleCall getFragmentFRAGMENTTerminalRuleCall_2_0() { return cFragmentFRAGMENTTerminalRuleCall_2_0; }
 
-		//(name=ID)?
+		//name=ID?
 		public Assignment getNameAssignment_3() { return cNameAssignment_3; }
 
 		//ID
@@ -1268,7 +1268,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 
 	
 	//Epatch:
-	//  "epatch" name=ID "{" (modelImports+=ModelImport)* (resources+=NamedResource)* (objects+=ObjectRef)* "}";
+	//  "epatch" name=ID "{" modelImports+=ModelImport* resources+=NamedResource* objects+=ObjectRef* "}";
 	public EpatchElements getEpatchAccess() {
 		return (pEpatch != null) ? pEpatch : (pEpatch = new EpatchElements());
 	}
@@ -1328,7 +1328,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 	}
 
 	//ObjectRef:
-	//  "object" (name=ID)? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?;
+	//  "object" name=ID? (leftRes=[NamedResource] leftFrag=FRAGMENT|"left" leftRes=[NamedResource] leftFrag=FRAGMENT "right" rightRes=[NamedResource] rightFrag=FRAGMENT) ("{" (assignments+=BiSingleAssignment|assignments+=BiListAssignment)* "}")?;
 	public ObjectRefElements getObjectRefAccess() {
 		return (pObjectRef != null) ? pObjectRef : (pObjectRef = new ObjectRefElements());
 	}
@@ -1428,7 +1428,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 	}
 
 	//ObjectNew:
-	//  "new" ^import=[ModelImport] impFrag=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
+	//  "new" ^import=[ModelImport] impFrag=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
 	public ObjectNewElements getObjectNewAccess() {
 		return (pObjectNew != null) ? pObjectNew : (pObjectNew = new ObjectNewElements());
 	}
@@ -1438,7 +1438,7 @@ public class EpatchGrammarAccess implements IGrammarAccess {
 	}
 
 	//ObjectCopy:
-	//  "copy" resource=[NamedResource] fragment=FRAGMENT (name=ID)? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
+	//  "copy" resource=[NamedResource] fragment=FRAGMENT name=ID? ("{" (assignments+=MonoSingleAssignment|assignments+=MonoListAssignment)* "}")?;
 	public ObjectCopyElements getObjectCopyAccess() {
 		return (pObjectCopy != null) ? pObjectCopy : (pObjectCopy = new ObjectCopyElements());
 	}

@@ -23,64 +23,54 @@ public abstract class AbstractEpatchRuntimeModule extends DefaultRuntimeModule {
 	}
 	
 	
-	
+	// contributed by org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
 	public Class<? extends org.eclipse.xtext.IGrammarAccess> bindIGrammarAccess() {
 		return org.eclipse.emf.compare.epatch.dsl.services.EpatchGrammarAccess.class;
 	}
 
-	
-	public Class<? extends org.eclipse.xtext.parser.packrat.IPackratParser> bindIPackratParser() {
-		return org.eclipse.emf.compare.epatch.dsl.parser.packrat.EpatchPackratParser.class;
-	}
-
-	
+	// contributed by org.eclipse.xtext.generator.parseTreeConstructor.ParseTreeConstructorFragment
 	public Class<? extends org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor> bindIParseTreeConstructor() {
 		return org.eclipse.emf.compare.epatch.dsl.parseTreeConstruction.EpatchParsetreeConstructor.class;
 	}
 
-	
-	public Class<? extends org.eclipse.xtend.expression.ExecutionContext> bindExecutionContext() {
-		return org.eclipse.xtext.xtend.InjectableExecutionContext.class;
-	}
-
-	
-	public Class<? extends org.eclipse.xtend.expression.ResourceManager> bindResourceManager() {
-		return org.eclipse.xtext.xtend.InjectableResourceManager.class;
-	}
-
-	
-	public java.lang.ClassLoader bindClassLoader() {
-		return getClass().getClassLoader();
-	}
-
-	@org.eclipse.xtext.service.SingletonBinding(eager=true)
-	public Class<? extends org.eclipse.emf.compare.epatch.dsl.validation.EpatchCheckValidator> bindEpatchCheckValidator() {
-		return org.eclipse.emf.compare.epatch.dsl.validation.EpatchCheckValidator.class;
-	}
-
-	
+	// contributed by de.itemis.xtext.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.IAntlrParser> bindIAntlrParser() {
 		return org.eclipse.emf.compare.epatch.dsl.parser.antlr.EpatchParser.class;
 	}
 
-	
+	// contributed by de.itemis.xtext.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.ITokenToStringConverter> bindITokenToStringConverter() {
 		return org.eclipse.xtext.parser.antlr.AntlrTokenToStringConverter.class;
 	}
 
-	
+	// contributed by de.itemis.xtext.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.IAntlrTokenFileProvider> bindIAntlrTokenFileProvider() {
 		return org.eclipse.emf.compare.epatch.dsl.parser.antlr.EpatchAntlrTokenFileProvider.class;
 	}
 
-	
+	// contributed by de.itemis.xtext.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.Lexer> bindLexer() {
 		return org.eclipse.emf.compare.epatch.dsl.parser.antlr.internal.InternalEpatchLexer.class;
 	}
 
-	
+	// contributed by de.itemis.xtext.antlr.XtextAntlrGeneratorFragment
 	public Class<? extends org.eclipse.xtext.parser.antlr.ITokenDefProvider> bindITokenDefProvider() {
 		return org.eclipse.xtext.parser.antlr.AntlrTokenDefProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.validation.JavaValidatorFragment
+	@org.eclipse.xtext.service.SingletonBinding(eager=true)	public Class<? extends org.eclipse.emf.compare.epatch.dsl.validation.EpatchJavaValidator> bindEpatchJavaValidator() {
+		return org.eclipse.emf.compare.epatch.dsl.validation.EpatchJavaValidator.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.scoping.JavaScopingFragment
+	public Class<? extends org.eclipse.xtext.scoping.IScopeProvider> bindIScopeProvider() {
+		return org.eclipse.emf.compare.epatch.dsl.scoping.EpatchScopeProvider.class;
+	}
+
+	// contributed by org.eclipse.xtext.generator.formatting.FormatterFragment
+	public Class<? extends org.eclipse.xtext.parsetree.reconstr.ITokenSerializer> bindITokenSerializer() {
+		return org.eclipse.emf.compare.epatch.dsl.formatting.EpatchFormatter.class;
 	}
 
 }
