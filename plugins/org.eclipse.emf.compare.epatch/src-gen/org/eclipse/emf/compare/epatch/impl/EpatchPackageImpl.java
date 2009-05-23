@@ -187,7 +187,7 @@ public class EpatchPackageImpl extends EPackageImpl implements EpatchPackage
 		if (isInited) return (EpatchPackage)EPackage.Registry.INSTANCE.getEPackage(EpatchPackage.eNS_URI);
 
 		// Obtain or create and register package
-		EpatchPackageImpl theEpatchPackage = (EpatchPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof EpatchPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new EpatchPackageImpl());
+		EpatchPackageImpl theEpatchPackage = (EpatchPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof EpatchPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new EpatchPackageImpl());
 
 		isInited = true;
 
