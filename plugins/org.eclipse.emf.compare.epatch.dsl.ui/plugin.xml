@@ -21,6 +21,7 @@
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
 			extensions="epatch"
+			icon="icons/eedit16/epatch_editor.gif"
 			id="org.eclipse.emf.compare.epatch.dsl.Epatch"
 			name="Epatch Editor">
 		</editor>
@@ -81,5 +82,14 @@
 		</keyword>
 	</extension>
 	
+
+ <extension
+       point="org.eclipse.emf.compare.ui.export">
+    <action
+          class="org.eclipse.emf.compare.epatch.dsl.EpatchExportAction"
+          fileExtension="*"
+          id="org.eclipse.emf.compare.epatch.dsl.EpatchExportAction">
+    </action>
+ </extension>
 
 </plugin>
