@@ -33,7 +33,6 @@ public class EpatchActivator extends AbstractUIPlugin {
 		INSTANCE = this;
 		
 		injectors.put("org.eclipse.emf.compare.epatch.dsl.Epatch", Guice.createInjector(
-			new org.eclipse.emf.compare.epatch.dsl.EpatchRuntimeModule(), 
 			new org.eclipse.emf.compare.epatch.dsl.EpatchUiModule(),
 			createUIPluginModule()
 		));
