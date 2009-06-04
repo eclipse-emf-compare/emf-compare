@@ -84,7 +84,9 @@ public final class ResourceSimilarity {
 
 		double similarity = 0d;
 
-		if (reference.fileExtension().equals(candidate.fileExtension())) {
+		// #279079 ignore file extensions if one of them is null
+		if (reference.fileExtension() == null || candidate.fileExtension() == null
+				|| reference.fileExtension().equals(candidate.fileExtension())) {
 			final String referenceFragment = reference.fragment();
 			final String candidateFragment = candidate.fragment();
 			final String[] referenceSegments = reference.trimFileExtension().segments();
