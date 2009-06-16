@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.team.subversive"
       label="%featureName"
-      version="0.9.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="%providerName">
 
    <description>
