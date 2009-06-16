@@ -12,13 +12,12 @@ package org.eclipse.emf.compare.diff.service;
 
 import java.util.List;
 
-
 /**
  * This can be subclassed for clients to display a diff engine selector to users when more than a single diff
  * engine are defined on the same file extension.
  * 
  * @author <a href="laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 0.9
+ * @since 1.0.0
  */
 public interface IDiffEngineSelector {
 	/**

@@ -186,7 +186,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * 
 	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 *         responsible for the verification of updates on attribute values.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected AttributesCheck getAttributesChecker() {
 		return new AttributesCheck(matchCrossReferencer);
@@ -198,7 +198,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * 
 	 * @return The implementation of a {@link org.eclipse.emf.compare.diff.engine.check.AbstractCheck}
 	 *         responsible for the verification of updates on reference values.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected ReferencesCheck getReferencesChecker() {
 		return new ReferencesCheck(matchCrossReferencer);

@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.diff.service.IDiffEngineSelector;
  * passed list.
  * 
  * @author <a href="laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 0.9
+ * @since 1.0
  */
 public class DefaultDiffEngineSelector implements IDiffEngineSelector {
 	/**

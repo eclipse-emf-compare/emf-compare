@@ -35,7 +35,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * This will implement the attribute checks : order of attribute values, changes between two versions, ...
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
- * @since 0.9
+ * @since 1.0
  */
 public class AttributesCheck extends AbstractCheck {
 	/**
@@ -173,7 +173,7 @@ public class AttributesCheck extends AbstractCheck {
 	 *            The attribute we need to check for differences.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected void checkAttributeUpdates(DiffGroup root, Match2Elements mapping, EAttribute attribute)
 			throws FactoryException {
@@ -218,7 +218,7 @@ public class AttributesCheck extends AbstractCheck {
 	 *            The attribute we need to check for differences.
 	 * @throws FactoryException
 	 *             Thrown if one of the checks fails.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected void checkAttributeUpdates(DiffGroup root, Match3Elements mapping, EAttribute attribute)
 			throws FactoryException {

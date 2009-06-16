@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * differencing engines implementations.
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
- * @since 0.9
+ * @since 1.0
  */
 public abstract class AbstractCheck {
 	/** Allows retrieval of the ancestor matched object. */
@@ -63,7 +63,7 @@ public abstract class AbstractCheck {
 	 * @param input
 	 *            List that is to be converted.
 	 * @return A list containing only EObjects.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected final List<Object> convertFeatureMapList(List<?> input) {
 		final List<Object> result = new ArrayList<Object>();

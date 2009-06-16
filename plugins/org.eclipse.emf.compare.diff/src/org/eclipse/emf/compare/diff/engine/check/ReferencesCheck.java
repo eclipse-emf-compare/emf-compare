@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * This will implement the reference checks : order of reference values, changes between two versions, ...
  * 
  * @author Laurent Goubet <a href="mailto:laurent.goubet@obeo.fr">laurent.goubet@obeo.fr</a>
- * @since 0.9
+ * @since 1.0
  */
 public class ReferencesCheck extends AbstractCheck {
 	/**
