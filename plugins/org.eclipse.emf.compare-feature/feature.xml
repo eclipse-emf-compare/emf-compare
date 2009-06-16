@@ -3,10 +3,11 @@
       id="org.eclipse.emf.compare"
       label="%featureName"
       version="1.0.0.qualifier"
-      provider-name="%providerName">
+      provider-name="%providerName"
+      plugin="org.eclipse.emf.compare">
 
    <description>
-      Model comparison support (Incubation)
+      Model comparison support
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">
@@ -265,7 +266,7 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-   
+
    <plugin
          id="org.eclipse.emf.compare.epatch"
          download-size="0"
