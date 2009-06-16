@@ -123,7 +123,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * actual revision that should be loaded.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	private class RevisionedURIConverter extends URIConverterImpl {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */
@@ -206,7 +206,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * This will allow us to open an InputStream over a String.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	private class StringInputStream extends InputStream {
 		/** StringReader towards which calls will be delegated. */
@@ -237,7 +237,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * This will allow us to stream a revision's content to a String.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	private class StringOutputStream extends OutputStream {
 		/** StringWriter towards which calls will be delegated. */
