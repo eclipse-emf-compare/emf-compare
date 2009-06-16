@@ -6,7 +6,7 @@
       provider-name="%providerName">
 
    <description>
-      EMF Compare Tests (Incubation)
+      EMF Compare Tests
    </description>
 
    <copyright url="http://www.eclipse.org/legal/epl-v10.html">
