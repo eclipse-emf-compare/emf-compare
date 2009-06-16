@@ -47,7 +47,7 @@ public final class EclipseModelUtils {
 	 * @param delegate
 	 *            The delegate progress monitor. Can be <code>null</code> or Eclipse specific monitors.
 	 * @return The created progress monitor.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public static Monitor createProgressMonitor(Object delegate) {
 		final Monitor monitor;

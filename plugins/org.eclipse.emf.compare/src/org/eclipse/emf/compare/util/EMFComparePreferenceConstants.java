@@ -14,7 +14,7 @@ package org.eclipse.emf.compare.util;
  * Defines constants used for EMF Compare preferences. These are used by the UI as well as the match engine.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 0.9
+ * @since 1.0
  */
 public interface EMFComparePreferenceConstants {
 	/**
