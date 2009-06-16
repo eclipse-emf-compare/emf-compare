@@ -133,7 +133,7 @@ public final class ResourceSimilarity {
 	private static double resourceURISimilarity(String[] reference, String[] candidate) {
 		final double nameWeight = 0.6;
 		final double equalSegmentWeight = 0.4;
-		final double almostEqual = 0.999;
+		final double almostEqual = 0.999d;
 
 		final String referenceName = reference[reference.length - 1];
 		final String candidateName = candidate[candidate.length - 1];

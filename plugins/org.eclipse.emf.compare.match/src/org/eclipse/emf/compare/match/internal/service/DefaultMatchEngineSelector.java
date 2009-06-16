@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.match.service.MatchEngineDescriptor;
  * one are defined on a single extension.
  * 
  * @author <a href="dkolovos@cs.york.ac.uk">Dimitrios Kolovos</a>
- * @since 0.9
+ * @since 1.0
  */
 public class DefaultMatchEngineSelector implements IMatchEngineSelector {
 	/**

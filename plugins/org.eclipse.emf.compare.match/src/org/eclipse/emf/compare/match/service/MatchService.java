@@ -75,7 +75,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, EObject, Map)
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
@@ -102,7 +102,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
 			Map<String, Object> options) throws InterruptedException {
@@ -179,7 +179,7 @@ public final class MatchService {
 	 *             Thrown if the matching is interrupted somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @see IMatchEngine#contentMatch(EObject, EObject, Map)
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> options) throws InterruptedException {
@@ -232,7 +232,7 @@ public final class MatchService {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	@SuppressWarnings("unchecked")
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
@@ -315,7 +315,7 @@ public final class MatchService {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	@SuppressWarnings("unchecked")
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,

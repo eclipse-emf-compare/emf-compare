@@ -41,7 +41,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException;
@@ -62,7 +62,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel contentMatch(EObject leftObject, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException;
@@ -84,7 +84,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor, Map<String, Object> optionMap)
 			throws InterruptedException;
@@ -104,7 +104,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException;
@@ -130,7 +130,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Map<String, Object> optionMap)
 			throws InterruptedException;
@@ -152,7 +152,7 @@ public interface IMatchEngine {
 	 *             Thrown if the options map specifies a progress monitor, and the comparison gets interrupted
 	 *             somehow.
 	 * @see org.eclipse.emf.compare.match.MatchOptions
-	 * @since 0.9.0
+	 * @since 1.0.0
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException;

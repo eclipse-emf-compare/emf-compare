@@ -117,7 +117,7 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 	 * Returns the configuration element.
 	 * 
 	 * @return The configuration element.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public IConfigurationElement getElement() {
 		return element;
@@ -127,7 +127,7 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 	 * Returns the qualified name of the engine's class.
 	 * 
 	 * @return Qualified name of the engine's class.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public String getEngineClassName() {
 		return engineClassName;
@@ -166,7 +166,7 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 	 * Returns the icon that represents the wrapped engine.
 	 * 
 	 * @return The icon that represents the wrapped engine.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public String getIcon() {
 		return icon;
@@ -176,7 +176,7 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 	 * Returns the label that represents the wrapped engine.
 	 * 
 	 * @return The label that represents the wrapped engine.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public String getLabel() {
 		return label;
@@ -212,7 +212,7 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 			priorityHash = priority.hashCode();
 		}
 
-		return (((prime + classNameHash) * prime) + extensionHash) * prime + priorityHash;
+		return ((prime + classNameHash) * prime + extensionHash) * prime + priorityHash;
 	}
 
 	/**
@@ -236,8 +236,8 @@ public class MatchEngineDescriptor implements Comparable<MatchEngineDescriptor> 
 	}
 
 	/**
-	 * Returns the value of the priority of this engine.<br/>Returned values according to
-	 * <code>priority</code> :
+	 * Returns the value of the priority of this engine.<br/>
+	 * Returned values according to <code>priority</code> :
 	 * <ul>
 	 * <li>&quot;lowest&quot; =&gt; {@value EngineConstants#PRIORITY_LOWEST}</li>
 	 * <li>&quot;low&quot; =&gt; {@value EngineConstants#PRIORITY_LOW}</li>
