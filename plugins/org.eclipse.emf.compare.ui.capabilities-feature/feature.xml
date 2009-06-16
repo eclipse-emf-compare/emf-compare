@@ -225,6 +225,10 @@ litigation.
       <discovery label="%updateSiteName" url="http://download.eclipse.org/modeling/emft/updates/"/>
    </url>
 
+   <includes
+         id="org.eclipse.emf.compare.ui.capabilities.source"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.ui"/>
    </requires>
@@ -236,8 +240,4 @@ litigation.
          version="0.0.0"
          unpack="false"/>
 
-    <includes
-         id="org.eclipse.emf.compare.ui.capabilities.source"
-         version="0.0.0"/>
-         
 </feature>
