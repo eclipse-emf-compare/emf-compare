@@ -222,7 +222,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * Returns the left resource of this input.
 	 * 
 	 * @return The left loaded resource.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public Resource getAncestorResource() {
 		if (ancestorResource == null) {
@@ -351,7 +351,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * Returns the left resource of this input.
 	 * 
 	 * @return The left loaded resource.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public Resource getLeftResource() {
 		if (leftResource == null) {
@@ -429,7 +429,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * Returns the left resource of this input.
 	 * 
 	 * @return The left loaded resource.
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	public Resource getRightResource() {
 		if (rightResource == null) {

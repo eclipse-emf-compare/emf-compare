@@ -31,7 +31,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * user to select the accurate match or diff engine.
  * 
  * @author <a href="dkolovos@cs.york.ac.uk">Dimitrios Kolovos</a>
- * @since 0.9
+ * @since 1.0
  */
 public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSelector {
 	/**
@@ -111,7 +111,7 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 	 * to its descriptor.
 	 * 
 	 * @author <a href="dkolovos@cs.york.ac.uk">Dimitrios Kolovos</a>
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	protected class EngineDescriptorLabelProvider extends LabelProvider {
 		/**

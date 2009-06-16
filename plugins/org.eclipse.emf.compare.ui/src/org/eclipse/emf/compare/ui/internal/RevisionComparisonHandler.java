@@ -42,7 +42,7 @@ import org.eclipse.team.internal.ui.history.FileRevisionTypedElement;
  * Allows EMF Compare to properly handle history comparison when resources have links towards others.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 0.9
+ * @since 1.0
  */
 public class RevisionComparisonHandler extends AbstractTeamHandler {
 	/** This will be set to true if the left resource cannot be loaded. */
@@ -131,7 +131,7 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 	 * actual revision that should be loaded.
 	 * 
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
-	 * @since 0.9
+	 * @since 1.0
 	 */
 	private class RevisionedURIConverter extends URIConverterImpl {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */

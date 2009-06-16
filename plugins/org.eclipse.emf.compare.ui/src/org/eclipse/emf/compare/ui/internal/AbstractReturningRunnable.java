@@ -14,7 +14,7 @@ package org.eclipse.emf.compare.ui.internal;
  * This runnable implementation allows us to keep a reference to the execution result.
  * 
  * @author <a href="dkolovos@cs.york.ac.uk">Dimitrios Kolovos</a>
- * @since 0.9
+ * @since 1.0
  */
 public abstract class AbstractReturningRunnable implements Runnable {
 	/** Result of the execution. */
