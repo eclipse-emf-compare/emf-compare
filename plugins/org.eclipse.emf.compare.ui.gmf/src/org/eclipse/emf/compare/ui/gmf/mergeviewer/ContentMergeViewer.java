@@ -11,7 +11,6 @@
 
 package org.eclipse.emf.compare.ui.gmf.mergeviewer;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -24,9 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ui.gmf.viewmodel.ViewModelCreator;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
@@ -34,8 +31,6 @@ import org.eclipse.gmf.runtime.diagram.core.DiagramEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
-import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
-import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
