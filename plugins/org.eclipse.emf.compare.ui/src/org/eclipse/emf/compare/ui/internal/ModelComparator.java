@@ -39,6 +39,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
@@ -434,6 +436,27 @@ public final class ModelComparator {
 			// input was the same as the last
 		}
 		return loadingSucceeded;
+	}
+
+	/**
+	 * We might want to create an editor for an already compared configuration. This enables us to do so.
+	 * 
+	 * @param snapshot
+	 *            The expected result of this comparison.
+	 */
+	public void setComparisonResult(ComparisonSnapshot snapshot) {
+		if (snapshot instanceof ComparisonResourceSnapshot) {
+			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
+			comparisonResult.setDate(snapshot.getDate());
+			final DiffResourceSet diffRS = DiffFactory.eINSTANCE.createDiffResourceSet();
+			diffRS.getDiffModels().add(((ComparisonResourceSnapshot)snapshot).getDiff());
+			comparisonResult.setDiffResourceSet(diffRS);
+			final MatchResourceSet matchRS = MatchFactory.eINSTANCE.createMatchResourceSet();
+			matchRS.getMatchModels().add(((ComparisonResourceSnapshot)snapshot).getMatch());
+			comparisonResult.setMatchResourceSet(matchRS);
+		} else {
+			comparisonResult = (ComparisonResourceSetSnapshot)snapshot;
+		}
 	}
 
 	/**

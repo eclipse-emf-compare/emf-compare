@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.editor;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -21,12 +23,14 @@ import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
+import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
 import org.eclipse.emf.ecore.EObject;
@@ -66,6 +70,9 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	/** {@link ModelInputSnapshot} result of the underlying comparison. */
 	private final ComparisonSnapshot inputSnapshot;
 
+	/** This is the input that will be used throughout. */
+	private ModelCompareInput preparedInput;
+
 	/**
 	 * This constructor takes a {@link ModelInputSnapshot} as input.
 	 * 
@@ -80,8 +87,29 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 			public void compareInputChanged(ICompareInput source) {
 				structureMergeViewer.setInput(source);
 				contentMergeViewer.setInput(source);
+				setDirty(true);
 			}
 		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.CompareEditorInput#saveChanges(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void saveChanges(IProgressMonitor monitor) {
+		// FIXME save whole resource Set
+		try {
+			if (preparedInput.getLeftResource() != null) {
+				preparedInput.getLeftResource().save(Collections.EMPTY_MAP);
+			}
+			if (preparedInput.getRightResource() != null) {
+				preparedInput.getRightResource().save(Collections.EMPTY_MAP);
+			}
+		} catch (IOException e) {
+			EMFComparePlugin.log(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -100,7 +128,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		contentMergeViewer = new ModelContentMergeViewer(pane, getCompareConfiguration());
 		pane.setContent(contentMergeViewer.getControl());
 
-		contentMergeViewer.setInput(inputSnapshot);
+		contentMergeViewer.setInput(preparedInput);
 
 		final int structureWeight = 30;
 		final int contentWeight = 70;
@@ -123,7 +151,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		structureMergeViewer = new ModelStructureMergeViewer(pane, getCompareConfiguration());
 		pane.setContent(structureMergeViewer.getTree());
 
-		structureMergeViewer.setInput(inputSnapshot);
+		structureMergeViewer.setInput(preparedInput);
 
 		return splitter;
 	}
@@ -135,18 +163,20 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 */
 	@Override
 	protected Object prepareInput(IProgressMonitor monitor) {
-		final ModelCompareInput input;
 		if (inputSnapshot instanceof ComparisonResourceSnapshot) {
 			final ComparisonResourceSnapshot snap = (ComparisonResourceSnapshot)inputSnapshot;
 			resolveAll(snap);
-			input = new ModelCompareInput(snap.getMatch(), snap.getDiff());
+			preparedInput = new ModelCompareInput(snap.getMatch(), snap.getDiff());
 		} else {
 			final ComparisonResourceSetSnapshot snap = (ComparisonResourceSetSnapshot)inputSnapshot;
 			resolveAll(snap);
-			input = new ModelCompareInput(snap.getMatchResourceSet(), snap.getDiffResourceSet());
+			preparedInput = new ModelCompareInput(snap.getMatchResourceSet(), snap.getDiffResourceSet());
 		}
-		input.addCompareInputChangeListener(inputListener);
-		return input;
+		final ModelComparator comparator = ModelComparator.getComparator(getCompareConfiguration(),
+				preparedInput);
+		comparator.setComparisonResult(inputSnapshot);
+		preparedInput.addCompareInputChangeListener(inputListener);
+		return preparedInput;
 	}
 
 	/**

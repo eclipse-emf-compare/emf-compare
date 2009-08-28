@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -153,6 +154,8 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 			input = ((ComparisonResourceSetSnapshot)newInput).getDiffResourceSet();
 		} else if (comparator.getComparisonResult() != null) {
 			input = comparator.getComparisonResult().getDiffResourceSet();
+		} else if (newInput instanceof ModelCompareInput) {
+			input = ((ModelCompareInput)newInput).getDiff();
 		} else if (oldInput != newInput && newInput instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)newInput);
 			input = comparator.compare(configuration).getDiffResourceSet();
