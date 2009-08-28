@@ -2727,7 +2727,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>IMerger</em>'.
 	 * @see org.eclipse.emf.compare.diff.merge.IMerger
-	 * @model instanceClass="org.eclipse.emf.compare.diff.merge.IMerger"
+	 * @model instanceClass="org.eclipse.emf.compare.diff.merge.IMerger" serializeable="false"
 	 * @generated
 	 */
 	EDataType getIMerger();

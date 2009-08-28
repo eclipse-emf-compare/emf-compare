@@ -102,21 +102,11 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String convertIMergerToString(EDataType eDataType, Object instanceValue) {
-		return super.convertToString(eDataType, instanceValue);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
 			case DiffPackage.DIFFERENCE_KIND:
 				return convertDifferenceKindToString(eDataType, instanceValue);
-			case DiffPackage.IMERGER:
-				return convertIMergerToString(eDataType, instanceValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -288,20 +278,10 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 		switch (eDataType.getClassifierID()) {
 			case DiffPackage.DIFFERENCE_KIND:
 				return createDifferenceKindFromString(eDataType, initialValue);
-			case DiffPackage.IMERGER:
-				return createIMergerFromString(eDataType, initialValue);
 			default:
 				throw new IllegalArgumentException(
 						"The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public IMerger createIMergerFromString(EDataType eDataType, String initialValue) {
-		return (IMerger)super.createFromString(eDataType, initialValue);
 	}
 
 	/**

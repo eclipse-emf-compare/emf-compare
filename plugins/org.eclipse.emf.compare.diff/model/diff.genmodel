@@ -100,7 +100,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateReference/leftTarget"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//UpdateReference/rightTarget"/>
     </genClasses>
-    <genClasses ecoreClass="diff.ecore#//ReferenceOrderChange"/>
+    <genClasses ecoreClass="diff.ecore#//ReferenceOrderChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceOrderChange/leftTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceOrderChange/rightTarget"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="diff.ecore#//AbstractDiffExtension">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//AbstractDiffExtension/hideElements"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//AbstractDiffExtension/isCollapsed"/>

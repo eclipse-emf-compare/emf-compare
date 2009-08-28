@@ -127,9 +127,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 			case DiffPackage.DIFF_GROUP__RIGHT_PARENT:
 				setRightParent((EObject)newValue);
 				return;
-			case DiffPackage.DIFF_GROUP__SUBCHANGES:
-				setSubchanges(((Integer)newValue).intValue());
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -143,9 +140,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 		switch (featureID) {
 			case DiffPackage.DIFF_GROUP__RIGHT_PARENT:
 				setRightParent((EObject)null);
-				return;
-			case DiffPackage.DIFF_GROUP__SUBCHANGES:
-				unsetSubchanges();
 				return;
 		}
 		super.eUnset(featureID);
@@ -181,20 +175,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setSubchanges(int newSubchanges) {
-		int oldSubchanges = subchanges;
-		subchanges = newSubchanges;
-		boolean oldSubchangesESet = subchangesESet;
-		subchangesESet = true;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_GROUP__SUBCHANGES,
-					oldSubchanges, subchanges, !oldSubchangesESet));
-	}
-
-	/**
 	 * {@inheritDoc}
 	 * 
 	 * @generated NOT
@@ -212,20 +192,6 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 			return EMFCompareDiffMessages.getString(
 					"DiffGroupImpl.ToString", getSubchanges(), rightParent.eClass().getName()); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void unsetSubchanges() {
-		int oldSubchanges = subchanges;
-		boolean oldSubchangesESet = subchangesESet;
-		subchanges = SUBCHANGES_EDEFAULT;
-		subchangesESet = false;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.UNSET, DiffPackage.DIFF_GROUP__SUBCHANGES,
-					oldSubchanges, SUBCHANGES_EDEFAULT, oldSubchangesESet));
 	}
 
 	/**

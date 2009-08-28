@@ -53,7 +53,7 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightParent" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="subchanges" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        transient="true" unsettable="true" derived="true"/>
+        changeable="false" transient="true" unsettable="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ComparisonSnapshot" abstract="true"
       interface="true">
@@ -217,7 +217,8 @@
       <details key="documentation" value="A &quot;RightTarget&quot; element change describes a difference involving the right ResourceSet. These differences can be used to describe deletions or remote additions of third-party resources dependencies."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.IMerger">
+  <eClassifiers xsi:type="ecore:EDataType" name="IMerger" instanceClassName="org.eclipse.emf.compare.diff.merge.IMerger"
+      serializable="false">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Can represent mergers provided by a given DiffExtension."/>
     </eAnnotations>

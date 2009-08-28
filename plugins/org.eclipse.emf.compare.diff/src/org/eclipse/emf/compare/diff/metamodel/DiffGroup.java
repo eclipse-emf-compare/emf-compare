@@ -69,10 +69,8 @@ public interface DiffGroup extends DiffElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Subchanges</em>' attribute.
 	 * @see #isSetSubchanges()
-	 * @see #unsetSubchanges()
-	 * @see #setSubchanges(int)
 	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffGroup_Subchanges()
-	 * @model unsettable="true" transient="true" derived="true"
+	 * @model unsettable="true" transient="true" changeable="false" derived="true"
 	 * @generated
 	 */
 	int getSubchanges();
@@ -81,32 +79,9 @@ public interface DiffGroup extends DiffElement {
 	 * Returns whether the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute is set.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return whether the value of the '<em>Subchanges</em>' attribute is set.
-	 * @see #unsetSubchanges()
 	 * @see #getSubchanges()
-	 * @see #setSubchanges(int)
 	 * @generated
 	 */
 	boolean isSetSubchanges();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Subchanges</em>' attribute.
-	 * @see #isSetSubchanges()
-	 * @see #unsetSubchanges()
-	 * @see #getSubchanges()
-	 * @generated
-	 */
-	void setSubchanges(int value);
-
-	/**
-	 * Unsets the value of the '{@link org.eclipse.emf.compare.diff.metamodel.DiffGroup#getSubchanges <em>Subchanges</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @see #isSetSubchanges()
-	 * @see #getSubchanges()
-	 * @see #setSubchanges(int)
-	 * @generated
-	 */
-	void unsetSubchanges();
 
 } // DiffGroup

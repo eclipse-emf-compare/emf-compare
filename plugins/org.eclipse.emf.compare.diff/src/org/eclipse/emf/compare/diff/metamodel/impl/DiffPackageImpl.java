@@ -1221,7 +1221,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		initEAttribute(
 				getDiffGroup_Subchanges(),
 				ecorePackage.getEInt(),
-				"subchanges", null, 0, 1, DiffGroup.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+				"subchanges", null, 0, 1, DiffGroup.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(comparisonSnapshotEClass, ComparisonSnapshot.class,
 				"ComparisonSnapshot", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1473,7 +1473,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		// Initialize data types
 		initEDataType(iMergerEDataType, IMerger.class,
-				"IMerger", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+				"IMerger", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
