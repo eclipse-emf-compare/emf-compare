@@ -84,9 +84,9 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 
 		if (operation.isRemote())
 			return getString("_UI_RemoteUpdateContainmentFeature_type", new Object[] { //$NON-NLS-1$
-					rightContainmentFeature, leftContainmentFeature,});
+					rightContainmentFeature, leftContainmentFeature, });
 		return getString("_UI_UpdateContainmentFeature_type", new Object[] {rightContainmentFeature, //$NON-NLS-1$
-				leftContainmentFeature,});
+				leftContainmentFeature, });
 	}
 
 	/**

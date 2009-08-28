@@ -140,9 +140,9 @@ public class ReferenceChangeRightTargetItemProvider extends ReferenceChangeItemP
 
 		if (operation.isRemote())
 			return getString("_UI_RemoteAddReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
-					elementLabel,});
+					elementLabel, });
 		return getString("_UI_RemoveReferenceValue_type", new Object[] {valueLabel, referenceLabel, //$NON-NLS-1$
-				elementLabel,});
+				elementLabel, });
 	}
 
 	/**

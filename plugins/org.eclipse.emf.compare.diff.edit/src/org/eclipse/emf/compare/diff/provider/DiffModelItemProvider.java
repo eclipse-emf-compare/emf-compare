@@ -166,8 +166,8 @@ public class DiffModelItemProvider extends ItemProviderAdapter implements IEditi
 		final String resourceName = diff.getLeftRoots().get(0).eResource().getURI().lastSegment();
 		if (diff.getOwnedElements().size() > 0)
 			return getString("_UI_DiffModel_type", new Object[] { //$NON-NLS-1$
-					((DiffGroup)diff.getOwnedElements().get(0)).getSubchanges(), resourceName,});
-		return getString("_UI_DiffModel_type", new Object[] {Integer.valueOf(0), resourceName,}); //$NON-NLS-1$
+					((DiffGroup)diff.getOwnedElements().get(0)).getSubchanges(), resourceName, });
+		return getString("_UI_DiffModel_type", new Object[] {Integer.valueOf(0), resourceName, }); //$NON-NLS-1$
 	}
 
 	/**

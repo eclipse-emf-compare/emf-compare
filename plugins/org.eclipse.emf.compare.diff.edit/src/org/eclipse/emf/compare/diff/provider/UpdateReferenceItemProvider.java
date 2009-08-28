@@ -146,14 +146,14 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 		final String diffLabel;
 		if (operation.isRemote()) {
 			diffLabel = getString("_UI_RemoteUpdateReference_type", new Object[] {referenceLabel, //$NON-NLS-1$
-					elementLabel, leftValueLabel, rightValueLabel,});
+					elementLabel, leftValueLabel, rightValueLabel, });
 		} else {
 			if (operation.isConflicting()) {
 				diffLabel = getString("_UI_UpdateReference_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$
-						elementLabel, rightValueLabel, leftValueLabel,});
+						elementLabel, rightValueLabel, leftValueLabel, });
 			} else {
 				diffLabel = getString("_UI_UpdateReference_type", new Object[] {referenceLabel, elementLabel, //$NON-NLS-1$
-						rightValueLabel, leftValueLabel,});
+						rightValueLabel, leftValueLabel, });
 			}
 		}
 

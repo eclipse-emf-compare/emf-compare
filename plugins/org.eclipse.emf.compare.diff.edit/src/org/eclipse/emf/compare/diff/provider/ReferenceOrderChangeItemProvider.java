@@ -113,7 +113,7 @@ public class ReferenceOrderChangeItemProvider extends ReferenceChangeItemProvide
 	public String getText(Object object) {
 		final ReferenceOrderChange referenceOrderChange = (ReferenceOrderChange)object;
 		return getString(
-				"_UI_ReferenceOrderChange_type", new Object[] {referenceOrderChange.getReference().getName()}); //$NON-NLS-1$
+				"_UI_ReferenceOrderChange_type", new Object[] {referenceOrderChange.getReference().getName() }); //$NON-NLS-1$
 	}
 
 	/**

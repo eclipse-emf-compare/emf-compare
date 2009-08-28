@@ -86,7 +86,7 @@ public class ConflictingDiffElementItemProvider extends DiffElementItemProvider 
 		final String rightLabel = AdapterUtils.getItemProviderText(conflictingDiffElement.getRightParent());
 
 		return getString("_UI_ConflictingDiffElement_type", new Object[] {leftLabel, //$NON-NLS-1$
-				rightLabel,});
+				rightLabel, });
 	}
 
 	/**

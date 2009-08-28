@@ -100,16 +100,16 @@ public class UpdateAttributeItemProvider extends AttributeChangeItemProvider imp
 		final String diffLabel;
 		if (updateOp.isRemote()) {
 			diffLabel = getString("_UI_RemoteUpdateAttribute_type", new Object[] {attributeLabel, //$NON-NLS-1$
-					elementLabel, leftValue, rightValue,});
+					elementLabel, leftValue, rightValue, });
 		} else {
 			if (updateOp.isConflicting()) {
 				diffLabel = getString(
 						"_UI_UpdateAttribute_conflicting", new Object[] {attributeLabel, rightValue, //$NON-NLS-1$
-								leftValue,});
+								leftValue, });
 			} else {
 				diffLabel = getString(
 						"_UI_UpdateAttribute_type", new Object[] {attributeLabel, elementLabel, rightValue, //$NON-NLS-1$
-								leftValue,});
+								leftValue, });
 			}
 		}
 		return diffLabel;
