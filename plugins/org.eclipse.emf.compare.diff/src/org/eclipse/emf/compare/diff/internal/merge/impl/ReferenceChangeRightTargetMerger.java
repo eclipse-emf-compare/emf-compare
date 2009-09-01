@@ -54,9 +54,9 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				element, rightTarget, leftTarget);
 
 		// We'll now look through this reference's eOpposite as they are already taken care of
-		final Iterator<EObject> siblings = getDiffModel().eAllContents();
-		while (siblings.hasNext()) {
-			final DiffElement op = (DiffElement)siblings.next();
+		final Iterator<EObject> related = getDiffModel().eAllContents();
+		while (related.hasNext()) {
+			final DiffElement op = (DiffElement)related.next();
 			if (op instanceof ReferenceChangeRightTarget) {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// If this is my eOpposite, delete it from the DiffModel (merged along with this one)
@@ -91,9 +91,9 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 			EMFComparePlugin.log(e, true);
 		}
 		// we should now have a look for AddReferencesLinks needing this object
-		final Iterator<EObject> siblings = getDiffModel().eAllContents();
-		while (siblings.hasNext()) {
-			final DiffElement op = (DiffElement)siblings.next();
+		final Iterator<EObject> related = getDiffModel().eAllContents();
+		while (related.hasNext()) {
+			final DiffElement op = (DiffElement)related.next();
 			if (op instanceof ReferenceChangeRightTarget) {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin

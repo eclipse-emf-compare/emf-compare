@@ -18,6 +18,7 @@ import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -67,6 +68,12 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getLeftTarget().equals(element)) {
 					link.setRightTarget(newOne);
+				}
+			} else if (op instanceof ReferenceOrderChange) {
+				final ReferenceOrderChange link = (ReferenceOrderChange)op;
+				if (link.getReference().equals(ref)) {
+					// FIXME respect ordering!
+					link.getLeftTarget().add(newOne);
 				}
 			}
 		}
