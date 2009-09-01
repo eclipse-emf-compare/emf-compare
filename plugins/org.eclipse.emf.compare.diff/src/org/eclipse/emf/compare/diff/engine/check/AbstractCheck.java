@@ -12,12 +12,14 @@ package org.eclipse.emf.compare.diff.engine.check;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -44,7 +46,7 @@ public abstract class AbstractCheck {
 	 * If we're currently doing a resourceSet differencing, this will have been initialized with the whole
 	 * MatchResourceSet.
 	 */
-	private final EcoreUtil.CrossReferencer crossReferencer;
+	protected final EcoreUtil.CrossReferencer crossReferencer;
 
 	/**
 	 * Instantiates the checker given the current crossreferencing members of the diff engine.
@@ -138,6 +140,23 @@ public abstract class AbstractCheck {
 			}
 		}
 		return matchedEObject;
+	}
+
+	/**
+	 * Returns <code>true</code> if the given element corresponds to an UnmatchedElement, <code>false</code>
+	 * otherwise.
+	 * 
+	 * @param element
+	 *            The element for which we need to know whether it is unmatched.
+	 * @return <code>true</code> if the given element corresponds to an UnmatchedElement, <code>false</code>
+	 *         otherwise.
+	 */
+	protected final boolean isUnmatched(EObject element) {
+		final Iterator<EStructuralFeature.Setting> it = crossReferencer.get(element).iterator();
+		if (it.hasNext() && it.next().getEObject() instanceof UnmatchElement) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -75,6 +75,8 @@ public class ReferencesCheck extends AbstractCheck {
 			final EReference next = it.next();
 			if (!shouldBeIgnored(next)) {
 				checkReferenceUpdates(root, mapping, next);
+			} else if (next.isContainment() && next.isOrdered()) {
+				checkContainmentReferenceOrderChange(root, mapping, next);
 			}
 		}
 	}
@@ -106,6 +108,75 @@ public class ReferencesCheck extends AbstractCheck {
 			final EReference next = it.next();
 			if (!shouldBeIgnored(next)) {
 				checkReferenceUpdates(root, mapping, next);
+			} else if (next.isContainment() && next.isOrdered()) {
+				checkContainmentReferenceOrderChange(root, mapping, next);
+			}
+		}
+	}
+
+	/**
+	 * This will be called to check for ordering changes on a given containment reference values.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffElement}s to create.
+	 * @param mapping
+	 *            Contains informations about the left and right model elements we have to compare.
+	 * @param reference
+	 *            {@link EReference} to check for modifications.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch the references' values.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void checkContainmentReferenceOrderChange(DiffGroup root, Match2Elements mapping,
+			EReference reference) throws FactoryException {
+		/*
+		 * We'll need to compute the added and removed reference values from the cross referencing of
+		 * unmatched elements as they haven't been processed yet.
+		 */
+		final List<EObject> leftElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
+				.eGetAsList(mapping.getLeftElement(), reference.getName()));
+		final List<EObject> rightElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
+				.eGetAsList(mapping.getRightElement(), reference.getName()));
+		final List<Integer> removedIndices = new ArrayList<Integer>();
+		// Purge "left" list of all reference values that have been added to it
+		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
+			if (isUnmatched(leftValue))
+				leftElementReferences.remove(leftValue);
+		}
+		for (EObject rightValue : new ArrayList<EObject>(rightElementReferences)) {
+			if (isUnmatched(rightValue)) {
+				removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(rightValue)));
+			}
+		}
+		int expectedIndex = 0;
+		for (int i = 0; i < leftElementReferences.size(); i++) {
+			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
+			for (final Integer removedIndice : new ArrayList<Integer>(removedIndices)) {
+				if (i == removedIndice) {
+					expectedIndex += 1;
+					removedIndices.remove(removedIndice);
+				}
+			}
+			if (rightElementReferences.indexOf(matched) != expectedIndex++) {
+				final ReferenceOrderChange refChange = DiffFactory.eINSTANCE.createReferenceOrderChange();
+				refChange.setReference(reference);
+				refChange.setLeftElement(mapping.getLeftElement());
+				refChange.setRightElement(mapping.getRightElement());
+
+				// The loop will be broken here. Initialize left and right "target" lists for the diff
+				for (int j = removedIndices.size() - 1; j >= 0; j--) {
+					rightElementReferences.remove(removedIndices.get(j).intValue());
+				}
+				final List<EObject> leftTarget = new ArrayList<EObject>(
+						getMatchedReferences(rightElementReferences));
+				final List<EObject> rightTarget = new ArrayList<EObject>(
+						getMatchedReferences(leftElementReferences));
+
+				refChange.getLeftTarget().addAll(leftTarget);
+				refChange.getRightTarget().addAll(rightTarget);
+
+				root.getSubDiffElements().add(refChange);
+				break;
 			}
 		}
 	}
@@ -120,9 +191,9 @@ public class ReferencesCheck extends AbstractCheck {
 	 * @param reference
 	 *            {@link EReference} to check for modifications.
 	 * @param leftElement
-	 *            Element corresponding to the final value for the given reference.
+	 *            Element corresponding to the final holder of the given reference.
 	 * @param rightElement
-	 *            Element corresponding to the initial value for the given reference.
+	 *            Element corresponding to the initial holder of the given reference.
 	 * @param addedReferences
 	 *            Contains the created differences for added reference values.
 	 * @param removedReferences
