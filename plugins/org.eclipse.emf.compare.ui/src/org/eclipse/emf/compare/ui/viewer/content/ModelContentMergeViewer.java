@@ -23,6 +23,8 @@ import org.eclipse.compare.contentmergeviewer.ContentMergeViewer;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.merge.IMerger;
+import org.eclipse.emf.compare.diff.merge.service.MergeFactory;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -713,11 +715,20 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		boolean rightEditable = configuration.isRightEditable();
 		if (comparator != null)
 			rightEditable = rightEditable && !comparator.isRightRemote();
+
+		boolean canCopyLeftToRight = true;
+		boolean canCopyRightToLeft = true;
+		if (currentSelection.size() == 1) {
+			final IMerger merger = MergeFactory.createMerger(currentSelection.get(0));
+			canCopyLeftToRight = merger.canUndoInTarget();
+			canCopyRightToLeft = merger.canApplyInOrigin();
+		}
+
 		if (copyDiffLeftToRight != null) {
-			copyDiffLeftToRight.setEnabled(rightEditable && enabled);
+			copyDiffLeftToRight.setEnabled(rightEditable && enabled && canCopyLeftToRight);
 		}
 		if (copyDiffRightToLeft != null) {
-			copyDiffRightToLeft.setEnabled(leftEditable && enabled);
+			copyDiffRightToLeft.setEnabled(leftEditable && enabled && canCopyRightToLeft);
 		}
 	}
 
