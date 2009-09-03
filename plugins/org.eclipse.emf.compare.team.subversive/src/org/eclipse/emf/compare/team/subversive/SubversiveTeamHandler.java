@@ -152,53 +152,59 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 		 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI)
 		 */
 		@Override
-		public InputStream createInputStream(URI uri) {
-			try {
-				// We'll have to change the EMF URI to find the IFile it points to
-				URI deresolvedURI = uri;
-				if (uri.isRelative()) {
-					deresolvedURI = uri.resolve(URI.createURI(baseRevision.getUrl()));
-				}
-				final IRepositoryLocation location = baseRevision.getRepositoryLocation();
-				final ISVNConnector proxy = location.acquireSVNProxy();
-				final IRepositoryResource target = location.asRepositoryFile(deresolvedURI.toString(), false);
-				final long svnOptions = ISVNConnector.Options.NONE;
-				final String[] revProps = ISVNConnector.DEFAULT_LOG_ENTRY_PROPS;
-				final ISVNProgressMonitor monitor = new SVNNullProgressMonitor();
-
-				final SVNLogEntry[] entries = SVNUtility.logEntries(proxy, SVNUtility
-						.asEntryReference(deresolvedURI.toString()), SVNRevision.HEAD, SVNRevision
-						.fromNumber(0), svnOptions, revProps, 0, monitor);
-
-				StringOutputStream stream = null;
-				if (baseRevision.getSelectedRevision() != SVNRevision.BASE) {
-					final long baseTimestamp = baseRevision.getInfo().lastChangedDate;
-					for (final SVNLogEntry entry : entries) {
-						if (entry.date <= baseTimestamp) {
-							target.setPegRevision(SVNRevision.fromNumber(entry.revision));
-							target.setSelectedRevision(SVNRevision.fromNumber(entry.revision));
-
-							stream = new StringOutputStream();
-							final int bufferSize = 2048;
-							proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target), bufferSize,
-									stream, monitor);
-							break;
-						}
+		public InputStream createInputStream(URI uri) throws IOException {
+			InputStream resultStream = null;
+			if (uri.isPlatformPlugin() || uri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
+				resultStream = super.createInputStream(uri);
+			} else {
+				try {
+					// We'll have to change the EMF URI to find the IFile it points to
+					URI deresolvedURI = uri;
+					if (uri.isRelative()) {
+						deresolvedURI = uri.resolve(URI.createURI(baseRevision.getUrl()));
 					}
-				} else {
-					// FIXME find a way to determine revision number or timestamp of the BASE revision
-					final long baseRevisionNumber = localResource.getBaseRevision();
-					stream = new StringOutputStream();
-					final int bufferSize = 2048;
-					proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target), bufferSize, stream,
-							monitor);
+					final IRepositoryLocation location = baseRevision.getRepositoryLocation();
+					final ISVNConnector proxy = location.acquireSVNProxy();
+					final IRepositoryResource target = location.asRepositoryFile(deresolvedURI.toString(),
+							false);
+					final long svnOptions = ISVNConnector.Options.NONE;
+					final String[] revProps = ISVNConnector.DEFAULT_LOG_ENTRY_PROPS;
+					final ISVNProgressMonitor monitor = new SVNNullProgressMonitor();
+
+					final SVNLogEntry[] entries = SVNUtility.logEntries(proxy, SVNUtility
+							.asEntryReference(deresolvedURI.toString()), SVNRevision.HEAD, SVNRevision
+							.fromNumber(0), svnOptions, revProps, 0, monitor);
+
+					StringOutputStream stream = null;
+					if (baseRevision.getSelectedRevision() != SVNRevision.BASE) {
+						final long baseTimestamp = baseRevision.getInfo().lastChangedDate;
+						for (final SVNLogEntry entry : entries) {
+							if (entry.date <= baseTimestamp) {
+								target.setPegRevision(SVNRevision.fromNumber(entry.revision));
+								target.setSelectedRevision(SVNRevision.fromNumber(entry.revision));
+
+								stream = new StringOutputStream();
+								final int bufferSize = 2048;
+								proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target),
+										bufferSize, stream, monitor);
+								break;
+							}
+						}
+					} else {
+						// FIXME find a way to determine revision number or timestamp of the BASE revision
+						final long baseRevisionNumber = localResource.getBaseRevision();
+						stream = new StringOutputStream();
+						final int bufferSize = 2048;
+						proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target), bufferSize,
+								stream, monitor);
+					}
+					if (stream != null)
+						resultStream = new StringInputStream(stream.getWriter().getBuffer().toString());
+				} catch (final SVNConnectorException e) {
+					// FIXME log this
 				}
-				if (stream != null)
-					return new StringInputStream(stream.getWriter().getBuffer().toString());
-			} catch (final SVNConnectorException e) {
-				// FIXME log this
 			}
-			return null;
+			return resultStream;
 		}
 	}
 
