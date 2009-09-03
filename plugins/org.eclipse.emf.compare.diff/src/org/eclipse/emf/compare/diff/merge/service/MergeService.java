@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.diff.merge.service;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.merge.EMFCompareEObjectCopier;
@@ -121,15 +120,10 @@ public final class MergeService {
 	 * @param leftToRight
 	 *            <code>True</code> if the changes must be applied from the left to the right model,
 	 *            <code>False</code> when they have to be applied the other way around.
-	 * @throws ConcurrentModificationException
-	 *             Could be thrown if the list you give is directly a reference from the meta model such as
-	 *             {@link DiffModel#getOwnedElements()} or {@link DiffElement#getSubDiffElements()}. Copy the
-	 *             list before merging it.
 	 */
-	public static void merge(List<DiffElement> elements, boolean leftToRight)
-			throws ConcurrentModificationException {
+	public static void merge(List<DiffElement> elements, boolean leftToRight) {
 		fireMergeOperationStart(elements);
-		for (DiffElement element : elements)
+		for (DiffElement element : new ArrayList<DiffElement>(elements))
 			// we might remove the diff from the list before merging it
 			// (eOpposite reference)
 			if (element.eContainer() != null)
