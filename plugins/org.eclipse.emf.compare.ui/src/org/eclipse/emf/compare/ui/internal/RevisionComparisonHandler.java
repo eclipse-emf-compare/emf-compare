@@ -154,34 +154,39 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 		 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI)
 		 */
 		@Override
-		public InputStream createInputStream(URI uri) {
-			try {
-				// We'll have to change the EMF URI to find the IFile it points to
-				URI deresolvedURI = uri;
+		public InputStream createInputStream(URI uri) throws IOException {
+			InputStream stream = null;
+			if (uri.isPlatformPlugin() || uri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
+				stream = super.createInputStream(uri);
+			} else {
+				try {
+					// We'll have to change the EMF URI to find the IFile it points to
+					URI deresolvedURI = uri;
 
-				final IStorage storage = baseRevision.getStorage(null);
-				if (uri.isRelative()) {
-					// Current revision, yet the proxy could point to a file that has changed since.
-					if (storage instanceof IFile) {
-						final IFile file = (IFile)storage;
-						deresolvedURI = uri.resolve(URI.createURI(file.getLocationURI().toString()));
-					} else {
-						final IResource stateFile = workspaceRoot.findMember(storage.getFullPath());
-						deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
+					final IStorage storage = baseRevision.getStorage(null);
+					if (uri.isRelative()) {
+						// Current revision, yet the proxy could point to a file that has changed since.
+						if (storage instanceof IFile) {
+							final IFile file = (IFile)storage;
+							deresolvedURI = uri.resolve(URI.createURI(file.getLocationURI().toString()));
+						} else {
+							final IResource stateFile = workspaceRoot.findMember(storage.getFullPath());
+							deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
+						}
 					}
+					deresolvedURI = deresolvedURI.deresolve(URI.createURI(workspaceRoot.getLocationURI()
+							.toString() + '/'));
+
+					final IResource targetFile = workspaceRoot.findMember(new Path(deresolvedURI
+							.trimFragment().toString()));
+
+					if (targetFile != null)
+						stream = openRevisionStream(targetFile);
+				} catch (final CoreException e) {
+					// FIXME log this
 				}
-				deresolvedURI = deresolvedURI.deresolve(URI.createURI(workspaceRoot.getLocationURI()
-						.toString() + '/'));
-
-				final IResource targetFile = workspaceRoot.findMember(new Path(deresolvedURI.trimFragment()
-						.toString()));
-
-				if (targetFile != null)
-					return openRevisionStream(targetFile);
-			} catch (final CoreException e) {
-				// FIXME log this
 			}
-			return null;
+			return stream;
 		}
 
 		/**
