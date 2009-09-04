@@ -66,6 +66,44 @@ public final class EFactory {
 	}
 
 	/**
+	 * Adds the new value of the given feature of the object at the given index. If the structural feature
+	 * isn't a list, it behaves like eSet and the index is ignored.
+	 * 
+	 * @param object
+	 *            Object on which we want to add to the feature values list.
+	 * @param name
+	 *            The name of the feature to add to.
+	 * @param arg
+	 *            New value to add to the feature values.
+	 * @param insertionIndex
+	 *            Index in the list at which the new value is to be added.
+	 * @param <T>
+	 *            Type of the new value to be added to the list.
+	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
+	 * @since 1.0
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> void eInsertAt(EObject object, String name, T arg, int insertionIndex)
+			throws FactoryException {
+		final EStructuralFeature feature = eStructuralFeature(object, name);
+		if (feature.isMany()) {
+			final List<? super T> target = (List<? super T>)object.eGet(feature);
+			int actualIndex = insertionIndex;
+			if (insertionIndex < 0) {
+				actualIndex = 0;
+			} else if (insertionIndex > target.size()) {
+				actualIndex = target.size();
+			}
+			if (arg != null) {
+				target.add(actualIndex, arg);
+			}
+		} else {
+			eSet(object, name, arg);
+		}
+	}
+
+	/**
 	 * Gets the value of the given feature of the object.
 	 * 
 	 * @param object
@@ -103,13 +141,12 @@ public final class EFactory {
 	 *            Object to retrieve the feature value from.
 	 * @param name
 	 *            Name of the feature to get the value for.
-	 * @return
-	 *            <ul>
-	 *            If the feature is :
-	 *            <li><b>a list :</b> value of the feature</li>
-	 *            <li><b>a single valued feature :</b> new list containing the value as its single element</li>
-	 *            <li><b>not a feature :</b> <code>null</code></li>
-	 *            </ul>
+	 * @return <ul>
+	 *         If the feature is :
+	 *         <li><b>a list :</b> value of the feature</li>
+	 *         <li><b>a single valued feature :</b> new list containing the value as its single element</li>
+	 *         <li><b>not a feature :</b> <code>null</code></li>
+	 *         </ul>
 	 * @throws FactoryException
 	 *             Thrown if the retrieval fails.
 	 */
