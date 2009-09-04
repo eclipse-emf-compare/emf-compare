@@ -284,7 +284,12 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#setReflectiveInput(org.eclipse.emf.ecore.EObject)
 	 */
 	public void setReflectiveInput(Object input) {
-		setInput(input);
+		if (input instanceof Match2Elements) {
+			setInput(input);
+		} else {
+			// forces refresh
+			setInput(getInput());
+		}
 		mapDifferences();
 		mapTableItems();
 	}
@@ -452,7 +457,8 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 		 * Instantiates this label provider given its {@link AdapterFactory}.
 		 * 
 		 * @param theAdapterFactory
-		 *            Adapter factory providing this {@link LabelProvider}'s text and images.
+		 *            Adapter factory providing this {@link org.eclipse.jface.viewers.LabelProvider}'s text
+		 *            and images.
 		 */
 		public PropertyLabelProvider(AdapterFactory theAdapterFactory) {
 			super(theAdapterFactory);
