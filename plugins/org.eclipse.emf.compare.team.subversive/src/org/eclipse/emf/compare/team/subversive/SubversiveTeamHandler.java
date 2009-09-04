@@ -90,7 +90,10 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 				rightResource = ModelUtils.load(((ResourceElement)right).getContents(), right.getName(),
 						rightResourceSet).eResource();
 				final IRepositoryResource resource = ((ResourceElement)right).getRepositoryResource();
-				final ILocalResource local = ((ResourceElement)ancestor).getLocalResource();
+				// We might be comparing two distant files, in which case ancestor is null
+				ILocalResource local = null;
+				if (ancestor != null)
+					local = ((ResourceElement)ancestor).getLocalResource();
 				rightResourceSet.setURIConverter(new RevisionedURIConverter(resource, local));
 			} catch (final IOException e) {
 				// We couldn't load the remote resource. Considers it has been added to the repository
@@ -192,7 +195,10 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 						}
 					} else {
 						// FIXME find a way to determine revision number or timestamp of the BASE revision
-						final long baseRevisionNumber = localResource.getBaseRevision();
+						// take note that localResource is null if we compare two distant revisions
+						if (localResource != null) {
+							final long baseRevisionNumber = localResource.getBaseRevision();
+						}
 						stream = new StringOutputStream();
 						final int bufferSize = 2048;
 						proxy.streamFileContent(SVNUtility.getEntryRevisionReference(target), bufferSize,
