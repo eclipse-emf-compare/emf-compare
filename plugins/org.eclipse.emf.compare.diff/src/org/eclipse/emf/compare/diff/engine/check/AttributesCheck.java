@@ -186,10 +186,20 @@ public class AttributesCheck extends AbstractCheck {
 			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
 					.getRightElement(), attributeName));
 
-			for (Object left : leftValue) {
-				distinct = !attributeListContains(rightValue, left);
-				if (distinct) {
-					break;
+			if (leftValue.size() != rightValue.size()) {
+				distinct = true;
+			} else {
+				for (Object left : leftValue) {
+					distinct = !attributeListContains(rightValue, left);
+					if (distinct) {
+						break;
+					}
+				}
+				for (Object right : rightValue) {
+					distinct = !attributeListContains(leftValue, right);
+					if (distinct) {
+						break;
+					}
 				}
 			}
 		} else {
