@@ -183,7 +183,7 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 					if (targetFile != null)
 						stream = openRevisionStream(targetFile);
 				} catch (final CoreException e) {
-					// FIXME log this
+					stream = super.createInputStream(uri);
 				}
 			}
 			return stream;
