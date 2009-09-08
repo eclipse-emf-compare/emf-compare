@@ -76,33 +76,38 @@ public final class ResourceSimilarity {
 	 *         equal and <code>0</code> different.
 	 */
 	public static double computeURISimilarity(URI reference, URI candidate) {
-		if (reference.equals(candidate))
-			return 1d;
-		final double segmentsWeight = 0.4d;
-		final double fragmentWeight = 0.6d;
-		final double almostEqual = 0.999d;
-
 		double similarity = 0d;
-
-		// #279079 ignore file extensions if one of them is null
-		if (reference.fileExtension() == null || candidate.fileExtension() == null
-				|| reference.fileExtension().equals(candidate.fileExtension())) {
-			final String referenceFragment = reference.fragment();
-			final String candidateFragment = candidate.fragment();
-			final String[] referenceSegments = reference.trimFileExtension().segments();
-			final String[] candidateSegments = candidate.trimFileExtension().segments();
-			final double segmentSimilarity = resourceURISimilarity(referenceSegments, candidateSegments);
-			final double fragmentSimilarity;
-			if (referenceFragment != null && candidateFragment != null) {
-				fragmentSimilarity = fragmentURISimilarity(referenceFragment, candidateFragment);
-			} else {
-				fragmentSimilarity = 1d;
-			}
-
-			similarity = segmentSimilarity * segmentsWeight + fragmentSimilarity * fragmentWeight;
-		}
-		if (similarity > almostEqual)
+		if (reference.equals(candidate)) {
 			similarity = 1d;
+		} else if (reference.toString().length() == 0) {
+			if (candidate.toString().length() == 0) {
+				similarity = 1d;
+			}
+		} else {
+			final double segmentsWeight = 0.4d;
+			final double fragmentWeight = 0.6d;
+			final double almostEqual = 0.999d;
+
+			// #279079 ignore file extensions if one of them is null
+			if (reference.fileExtension() == null || candidate.fileExtension() == null
+					|| reference.fileExtension().equals(candidate.fileExtension())) {
+				final String referenceFragment = reference.fragment();
+				final String candidateFragment = candidate.fragment();
+				final String[] referenceSegments = reference.trimFileExtension().segments();
+				final String[] candidateSegments = candidate.trimFileExtension().segments();
+				final double segmentSimilarity = resourceURISimilarity(referenceSegments, candidateSegments);
+				final double fragmentSimilarity;
+				if (referenceFragment != null && candidateFragment != null) {
+					fragmentSimilarity = fragmentURISimilarity(referenceFragment, candidateFragment);
+				} else {
+					fragmentSimilarity = 1d;
+				}
+
+				similarity = segmentSimilarity * segmentsWeight + fragmentSimilarity * fragmentWeight;
+			}
+			if (similarity > almostEqual)
+				similarity = 1d;
+		}
 		return similarity;
 	}
 
