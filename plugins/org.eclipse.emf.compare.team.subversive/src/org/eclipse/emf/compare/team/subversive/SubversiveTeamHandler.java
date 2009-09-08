@@ -207,7 +207,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 					if (stream != null)
 						resultStream = new StringInputStream(stream.getWriter().getBuffer().toString());
 				} catch (final SVNConnectorException e) {
-					// FIXME log this
+					resultStream = super.createInputStream(uri);
 				}
 			}
 			return resultStream;
