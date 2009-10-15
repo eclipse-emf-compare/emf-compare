@@ -305,33 +305,30 @@ public class DefaultMerger implements IMerger {
 		DiffElement toRemove = null;
 		if (diff instanceof ReferenceChange) {
 			final EReference reference = ((ReferenceChange)diff).getReference();
-			switch (reference.getFeatureID()) {
-				case EcorePackage.ECLASS__ESUPER_TYPES:
-					final EObject referenceType;
-					if (diff instanceof ReferenceChangeLeftTarget) {
-						referenceType = ((ReferenceChangeLeftTarget)diff).getRightTarget();
-					} else {
-						referenceType = ((ReferenceChangeRightTarget)diff).getLeftTarget();
-					}
-					for (final DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
-						if (siblingDiff instanceof ModelElementChangeLeftTarget) {
-							if (((ModelElementChangeLeftTarget)siblingDiff).getLeftElement() instanceof EGenericType
-									&& ((EGenericType)((ModelElementChangeLeftTarget)siblingDiff)
-											.getLeftElement()).getEClassifier() == referenceType) {
-								toRemove = siblingDiff;
-								break;
-							}
-						} else if (siblingDiff instanceof ModelElementChangeRightTarget) {
-							if (((ModelElementChangeRightTarget)siblingDiff).getRightElement() instanceof EGenericType
-									&& ((EGenericType)((ModelElementChangeRightTarget)siblingDiff)
-											.getRightElement()).getEClassifier() == referenceType) {
-								toRemove = siblingDiff;
-								break;
-							}
+			if (reference == EcorePackage.eINSTANCE.getEClass_ESuperTypes()) {
+				final EObject referenceType;
+				if (diff instanceof ReferenceChangeLeftTarget) {
+					referenceType = ((ReferenceChangeLeftTarget)diff).getRightTarget();
+				} else {
+					referenceType = ((ReferenceChangeRightTarget)diff).getLeftTarget();
+				}
+				for (final DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
+					if (siblingDiff instanceof ModelElementChangeLeftTarget) {
+						if (((ModelElementChangeLeftTarget)siblingDiff).getLeftElement() instanceof EGenericType
+								&& ((EGenericType)((ModelElementChangeLeftTarget)siblingDiff)
+										.getLeftElement()).getEClassifier() == referenceType) {
+							toRemove = siblingDiff;
+							break;
+						}
+					} else if (siblingDiff instanceof ModelElementChangeRightTarget) {
+						if (((ModelElementChangeRightTarget)siblingDiff).getRightElement() instanceof EGenericType
+								&& ((EGenericType)((ModelElementChangeRightTarget)siblingDiff)
+										.getRightElement()).getEClassifier() == referenceType) {
+							toRemove = siblingDiff;
+							break;
 						}
 					}
-					break;
-				default:
+				}
 			}
 		} else if (diff instanceof ModelElementChangeLeftTarget
 				&& ((ModelElementChangeLeftTarget)diff).getLeftElement() instanceof EGenericType) {

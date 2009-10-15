@@ -687,14 +687,14 @@ public class ReferencesCheck extends AbstractCheck {
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
 
-			EObject rightTarget = getMatchedEObject(remotelyAdded.get(0));
-			EObject leftTarget = getMatchedEObject(remotelyDeleted.get(0));
+			EObject leftTarget = getMatchedEObject(remotelyAdded.get(0));
+			EObject rightTarget = getMatchedEObject(remotelyDeleted.get(0));
 			// checks if target are defined remotely
 			if (leftTarget == null) {
-				leftTarget = remotelyAdded.get(0);
+				leftTarget = remotelyDeleted.get(0);
 			}
 			if (rightTarget == null) {
-				rightTarget = remotelyDeleted.get(0);
+				rightTarget = remotelyAdded.get(0);
 			}
 
 			operation.setLeftTarget(leftTarget);
@@ -797,14 +797,14 @@ public class ReferencesCheck extends AbstractCheck {
 		operation.setRightElement(right);
 		operation.setReference(reference);
 
-		EObject rightTarget = getMatchedEObject(addedValue);
-		EObject leftTarget = getMatchedEObject(deletedValue);
+		EObject leftTarget = getMatchedEObject(addedValue);
+		EObject rightTarget = getMatchedEObject(deletedValue);
 		// checks if target are defined remotely
 		if (leftTarget == null) {
-			leftTarget = addedValue;
+			leftTarget = deletedValue;
 		}
 		if (rightTarget == null) {
-			rightTarget = deletedValue;
+			rightTarget = addedValue;
 		}
 
 		operation.setLeftTarget(leftTarget);
