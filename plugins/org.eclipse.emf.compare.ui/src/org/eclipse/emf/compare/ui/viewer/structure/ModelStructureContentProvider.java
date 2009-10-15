@@ -18,6 +18,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
@@ -99,6 +100,15 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		} else if (input instanceof DiffResourceSet) {
 			final List<Object> elementList = new ArrayList<Object>(((DiffResourceSet)input).getDiffModels());
 			elementList.addAll(((DiffResourceSet)input).getResourceDiffs());
+			if (elementList.isEmpty()) {
+				/*
+				 * binary identical resources. Create a dummy diff to provide the user with feedback that 0
+				 * differences were found.
+				 */
+				final DiffModel dummyDiff = DiffFactory.eINSTANCE.createDiffModel();
+				dummyDiff.getOwnedElements().add(DiffFactory.eINSTANCE.createDiffGroup());
+				elementList.add(dummyDiff);
+			}
 			elements = elementList.toArray();
 		} else {
 			elements = new Object[0];

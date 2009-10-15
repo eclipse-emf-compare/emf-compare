@@ -332,13 +332,13 @@ public class ModelCompareInput implements ICompareInput {
 				left = new TypedElementWrapper(leftResource.getContents().get(0));
 			}
 		} else {
-			final MatchModel matchModel;
+			MatchModel matchModel = null;
 			if (match instanceof MatchModel) {
 				matchModel = (MatchModel)match;
-			} else {
+			} else if (!((MatchResourceSet)match).getMatchModels().isEmpty()) {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			if (matchModel.getLeftRoots().isEmpty()) {
+			if (matchModel == null || matchModel.getLeftRoots().isEmpty()) {
 				left = new TypedElementWrapper(null);
 			} else {
 				left = new TypedElementWrapper(matchModel.getLeftRoots().get(0));
@@ -410,13 +410,13 @@ public class ModelCompareInput implements ICompareInput {
 				right = new TypedElementWrapper(rightResource.getContents().get(0));
 			}
 		} else {
-			final MatchModel matchModel;
+			MatchModel matchModel = null;
 			if (match instanceof MatchModel) {
 				matchModel = (MatchModel)match;
-			} else {
+			} else if (!((MatchResourceSet)match).getMatchModels().isEmpty()) {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
-			if (matchModel.getRightRoots().isEmpty()) {
+			if (matchModel == null || matchModel.getRightRoots().isEmpty()) {
 				right = new TypedElementWrapper(null);
 			} else {
 				right = new TypedElementWrapper(matchModel.getRightRoots().get(0));
