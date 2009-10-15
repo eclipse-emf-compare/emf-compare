@@ -47,14 +47,16 @@ public final class ResourceSimilarity {
 		double highestSimilarity = -1;
 		for (final Resource candidate : candidates) {
 			final URI candidateURI = candidate.getURI();
-			if (referenceURI.fileExtension().equals(candidateURI.fileExtension())) {
-				final String[] referenceSegments = referenceURI.trimFileExtension().segments();
-				final String[] candidateSegments = candidateURI.trimFileExtension().segments();
-				final double similarity = resourceURISimilarity(referenceSegments, candidateSegments);
-				if (similarity > highestSimilarity) {
-					highestSimilarity = similarity;
-					mostSimilar = candidate;
-				}
+			if (referenceURI.fileExtension() != null
+					&& !referenceURI.fileExtension().equals(candidateURI.fileExtension())) {
+				continue;
+			}
+			final String[] referenceSegments = referenceURI.trimFileExtension().segments();
+			final String[] candidateSegments = candidateURI.trimFileExtension().segments();
+			final double similarity = resourceURISimilarity(referenceSegments, candidateSegments);
+			if (similarity > highestSimilarity) {
+				highestSimilarity = similarity;
+				mostSimilar = candidate;
 			}
 		}
 
