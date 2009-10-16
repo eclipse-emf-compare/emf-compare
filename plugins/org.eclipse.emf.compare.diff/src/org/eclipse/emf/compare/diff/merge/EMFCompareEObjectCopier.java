@@ -216,6 +216,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 						// diff
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObject));
 						// else => don't take any action, this has already been handled
+					} else {
+						// referenced object lies in another resource, simply reference it
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
 					}
 				}
 			}
@@ -232,6 +235,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 					// referenced object was an unmatched one and we managed to merge its corresponding diff
 					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
 					// else => don't take any action, this has already been handled
+				} else {
+					// referenced object lies in another resource, simply reference it
+					copyEObject.eSet(getTarget(eReference), referencedEObject);
 				}
 			}
 		}
