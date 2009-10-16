@@ -10,18 +10,21 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.metamodel.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.BasicEList.UnmodifiableEList;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
@@ -241,6 +244,133 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 					DiffPackage.DIFF_MODEL__ANCESTOR_ROOTS);
 		}
 		return ancestorRoots;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public int getSubchanges() {
+		int subChanges = 0;
+		for (DiffElement diff : getOwnedElements()) {
+			if (diff instanceof DiffGroup) {
+				subChanges += ((DiffGroup)diff).getSubchanges();
+			} else {
+				// not possible at the time of writing
+				subChanges += 1;
+			}
+		}
+		return subChanges;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public EList<DiffElement> getDifferences(EObject modelElement) {
+		List<DiffElement> ownedDifferences = new ArrayList<DiffElement>();
+		
+		for (DiffElement diff : getOwnedElements()) {
+			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
+				ownedDifferences.addAll(getDifferencesFrom(diff, modelElement));
+			} else {
+				// not possible at the time of writing
+				if (isPertinentDiff(diff, modelElement)) {
+					ownedDifferences.add(diff);
+				}
+			}
+		}
+		
+		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public EList<DiffElement> getDifferences() {
+		List<DiffElement> ownedDifferences = new ArrayList<DiffElement>();
+		
+		for (DiffElement diff : getOwnedElements()) {
+			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
+				ownedDifferences.addAll(getDifferencesFrom(diff));
+			} else {
+				// not possible at the time of writing
+				ownedDifferences.add(diff);
+			}
+		}
+		
+		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
+	}
+	
+	/**
+	 * Returns the list of all sub-differences of the given DiffGroup recursively.
+	 * 
+	 * @param group
+	 *            The group we seek the sub-differences of.
+	 * @return The list of all differences under the given diffgroup, less the sub-DiffGroups themselves.
+	 * @generated NOT
+	 */
+	private EList<DiffElement> getDifferencesFrom(DiffElement group) {
+		EList<DiffElement> ownedDifferences = new BasicEList<DiffElement>();
+		
+		for (DiffElement diff : group.getSubDiffElements()) {
+			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
+				ownedDifferences.addAll(getDifferencesFrom(diff));
+			} else {
+				ownedDifferences.add(diff);
+			}
+		}
+		
+		return ownedDifferences;
+	}
+	
+	/**
+	 * Returns the list of all sub-differences of the given DiffGroup that concern the given EObject,
+	 * recursively.
+	 * 
+	 * @param group
+	 *            The group we seek the sub-differences of.
+	 * @param modelElement
+	 *            Model element on which the difference must be detected.
+	 * @return The list of all differences under the given diffgroup, less the sub-DiffGroups themselves.
+	 * @generated NOT
+	 */
+	private EList<DiffElement> getDifferencesFrom(DiffElement group, EObject modelElement) {
+		EList<DiffElement> ownedDifferences = new BasicEList<DiffElement>();
+		
+		for (DiffElement diff : group.getSubDiffElements()) {
+			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
+				ownedDifferences.addAll(getDifferencesFrom(diff));
+			} else {
+				if (isPertinentDiff(diff, modelElement)) {
+					ownedDifferences.add(diff);
+				}
+			}
+		}
+		
+		return ownedDifferences;
+	}
+	
+	/**
+	 * This will return <code>true</code> iff the given DiffElement concerns the given EObject.
+	 * 
+	 * @param diff
+	 *            The diff to take into account.
+	 * @param modelElement
+	 *            Element on which the diff must be applying.
+	 * @return <code>true</code> if the given DiffElement concerns the given EObject, <code>false</code>
+	 *         otherwise.
+	 */
+	private boolean isPertinentDiff(DiffElement diff, EObject modelElement) {
+		boolean isPertinent = false;
+		if (diff instanceof ModelElementChangeLeftTargetImpl) {
+			isPertinent = ((ModelElementChangeLeftTargetImpl)diff).getLeftElement().equals(modelElement);
+		}
+		return isPertinent;
 	}
 
 	/**

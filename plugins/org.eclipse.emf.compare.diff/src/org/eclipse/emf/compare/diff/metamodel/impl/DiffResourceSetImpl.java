@@ -100,6 +100,19 @@ public class DiffResourceSetImpl extends EObjectImpl implements DiffResourceSet 
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public int getSubchanges() {
+		int totalSubchanges = 0;
+		for (DiffModel subDiff : getDiffModels()) {
+			totalSubchanges += subDiff.getSubchanges();
+		}
+		return totalSubchanges;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */

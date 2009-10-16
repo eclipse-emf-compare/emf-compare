@@ -101,4 +101,28 @@ public interface DiffModel extends EObject {
 	 */
 	EList<EObject> getAncestorRoots();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	int getSubchanges();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	EList<DiffElement> getDifferences(EObject modelElement);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	EList<DiffElement> getDifferences();
+
 } // DiffModel

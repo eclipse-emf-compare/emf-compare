@@ -21,10 +21,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/leftRoots"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/rightRoots"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffModel/ancestorRoots"/>
+      <genOperations ecoreOperation="diff.ecore#//DiffModel/getSubchanges"/>
+      <genOperations ecoreOperation="diff.ecore#//DiffModel/getDifferences">
+        <genParameters ecoreParameter="diff.ecore#//DiffModel/getDifferences/modelElement"/>
+      </genOperations>
+      <genOperations ecoreOperation="diff.ecore#//DiffModel/getDifferences.1"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//DiffResourceSet">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffResourceSet/diffModels"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffResourceSet/resourceDiffs"/>
+      <genOperations ecoreOperation="diff.ecore#//DiffResourceSet/getSubchanges"/>
     </genClasses>
     <genClasses image="false" ecoreClass="diff.ecore#//DiffElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/subDiffElements"/>

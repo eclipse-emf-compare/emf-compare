@@ -7,6 +7,11 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Root of the differences model for single resources differencing."/>
     </eAnnotations>
+    <eOperations name="getSubchanges" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EInt"/>
+    <eOperations name="getDifferences" upperBound="-1" eType="#//DiffElement">
+      <eParameters name="modelElement" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+    </eOperations>
+    <eOperations name="getDifferences" upperBound="-1" eType="#//DiffElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElements" upperBound="-1"
         eType="#//DiffElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftRoots" upperBound="-1"
@@ -20,6 +25,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Root of the differences model for ResourceSet-wide differencing."/>
     </eAnnotations>
+    <eOperations name="getSubchanges" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diffModels" upperBound="-1"
         eType="#//DiffModel" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceDiffs" upperBound="-1"

@@ -66,4 +66,12 @@ public interface DiffResourceSet extends EObject {
 	 */
 	EList<ResourceDiff> getResourceDiffs();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation"
+	 * @generated
+	 */
+	int getSubchanges();
+
 } // DiffResourceSet

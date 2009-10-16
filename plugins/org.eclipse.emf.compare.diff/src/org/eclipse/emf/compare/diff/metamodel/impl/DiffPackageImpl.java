@@ -1155,6 +1155,15 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				null,
 				"ancestorRoots", null, 0, -1, DiffModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
+		addEOperation(diffModelEClass, theEcorePackage.getEInt(),
+				"getSubchanges", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		EOperation op = addEOperation(diffModelEClass, this.getDiffElement(),
+				"getDifferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		addEParameter(op, theEcorePackage.getEObject(), "modelElement", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
+		addEOperation(diffModelEClass, this.getDiffElement(), "getDifferences", 0, -1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+
 		initEClass(diffResourceSetEClass, DiffResourceSet.class,
 				"DiffResourceSet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEReference(
@@ -1167,6 +1176,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				this.getResourceDiff(),
 				null,
 				"resourceDiffs", null, 0, -1, DiffResourceSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		addEOperation(diffResourceSetEClass, theEcorePackage.getEInt(),
+				"getSubchanges", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(diffElementEClass, DiffElement.class,
 				"DiffElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -1431,7 +1443,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				ecorePackage.getEBoolean(),
 				"isCollapsed", "false", 0, 1, AbstractDiffExtension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$ //$NON-NLS-2$
 
-		EOperation op = addEOperation(abstractDiffExtensionEClass, null, "visit", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
+		op = addEOperation(abstractDiffExtensionEClass, null, "visit", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 		addEParameter(op, this.getDiffModel(), "diffModel", 0, 1, IS_UNIQUE, IS_ORDERED); //$NON-NLS-1$
 
 		addEOperation(abstractDiffExtensionEClass, theEcorePackage.getEString(),
