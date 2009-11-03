@@ -199,7 +199,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				}
 			}
 			// We will now check through the unmatched object for matches.
-			processUnmatchedElements(root, subMatchRoot);
+			processNotFoundElements(root, subMatchRoot);
 			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
 			// Match2Elements) will have updated "remainingUnmatchedElements"
 			final Set<EObject> remainingLeft = new HashSet<EObject>();
@@ -1097,11 +1097,12 @@ public class GenericMatchEngine implements IMatchEngine {
 				.getMatchedElements());
 
 		// populates the unmatched elements list for later use
-		for (final Object unmatch : root1AncestorMatch.getUnmatchedElements()) {
-			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
+		// There cannot be any conflicts on those, as neither has an ancestor
+		for (final UnmatchElement unmatch : root1AncestorMatch.getUnmatchedElements()) {
+			remainingUnmatchedElements.add(unmatch);
 		}
-		for (final Object unmatch : root2AncestorMatch.getUnmatchedElements()) {
-			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
+		for (final UnmatchElement unmatch : root2AncestorMatch.getUnmatchedElements()) {
+			remainingUnmatchedElements.add(unmatch);
 		}
 
 		try {
@@ -1123,48 +1124,18 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			// We will now check through the unmatched object for matches. This will allow for a more accurate
 			// difference detection when dealing with multiple roots models.
-			processUnmatchedElements(root, subMatchRoot);
+			processNotFoundElements(root, subMatchRoot);
 
-			// #processUnmatchedElements(MatchModel, Match3Element)
+			// #processNotFoundElements(MatchModel, Match3Element)
 			// will have updated "remainingUnmatchedElements"
-			final Set<EObject> remainingLeft = new HashSet<EObject>();
-			final Set<EObject> remainingRight = new HashSet<EObject>();
-			for (final EObject unmatched : remainingUnmatchedElements) {
-				if (unmatched.eResource() == leftResource) {
-					remainingLeft.add(unmatched);
-					final TreeIterator<EObject> iterator = unmatched.eAllContents();
-					while (iterator.hasNext()) {
-						remainingLeft.add(iterator.next());
-					}
-				} else if (unmatched.eResource() == rightResource) {
-					remainingRight.add(unmatched);
-					final TreeIterator<EObject> iterator = unmatched.eAllContents();
-					while (iterator.hasNext()) {
-						remainingRight.add(iterator.next());
-					}
-				}
-			}
-			stillToFindFromModel1.clear();
-			stillToFindFromModel2.clear();
-			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-					new ArrayList<EObject>(remainingRight), this
-							.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
-			for (final Match2Elements map : mappings) {
-				final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
-				subMatch.setLeftElement(map.getLeftElement());
-				subMatch.setRightElement(map.getRightElement());
-				redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
-			}
-			final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
-			for (final EObject unmatch : stillToFindFromModel1) {
-				unmatchedElements.put(unmatch, false);
-				createThreeWayUnmatchElements(root, unmatchedElements, true);
-			}
-			unmatchedElements.clear();
-			for (final EObject remoteUnmatch : stillToFindFromModel2) {
-				unmatchedElements.put(remoteUnmatch, true);
-				createThreeWayUnmatchElements(root, unmatchedElements, false);
-			}
+			/*
+			 * We'll have to make two passes : UnmatchElements are potential matches for one another (they
+			 * result in elements not having ancestors, yet we could still be able to match them through 2-way
+			 * handling). The second pass will try and match Match2Elements with one another. Note that these
+			 * can be matched simply through instance equality of their ancestor element.
+			 */
+			processSingleUnmatchedElements(leftResource, rightResource, root, subMatchRoot, monitor);
+			processUnmatchedMatch2Elements(leftResource, rightResource, root, subMatchRoot);
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
@@ -1618,10 +1589,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *             Thrown if we cannot compute {@link EObject}s similarity or if adding elements to either
 	 *             <code>root</code> or <code>subMatchRoot</code> fails somehow.
 	 */
-	private void processUnmatchedElements(MatchModel root, Match3Elements subMatchRoot)
+	private void processNotFoundElements(MatchModel root, Match3Elements subMatchRoot)
 			throws FactoryException {
 		for (final EObject obj1 : new ArrayList<EObject>(stillToFindFromModel1)) {
-			boolean matchFound = false;
 			if (obj1 instanceof Match2Elements) {
 				final Match2Elements match1 = (Match2Elements)obj1;
 				for (final EObject obj2 : new ArrayList<EObject>(stillToFindFromModel2)) {
@@ -1629,7 +1599,6 @@ public class GenericMatchEngine implements IMatchEngine {
 						final Match2Elements match2 = (Match2Elements)obj2;
 
 						if (match1.getRightElement() == match2.getRightElement()) {
-							matchFound = true;
 							final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
 							match.setSimilarity(absoluteMetric(match1.getLeftElement(), match2
 									.getLeftElement(), match2.getRightElement()));
@@ -1649,34 +1618,183 @@ public class GenericMatchEngine implements IMatchEngine {
 						}
 					}
 				}
-				if (!matchFound) {
-					remainingUnmatchedElements.add(match1.getLeftElement());
-				}
 			}
 		}
 
 		for (final EObject eObj : new ArrayList<EObject>(stillToFindFromModel1)) {
 			if (eObj instanceof Match2Elements) {
-				final Match2Elements nextRightNotFound = (Match2Elements)eObj;
-				final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
-				unmatch.setElement(nextRightNotFound.getLeftElement());
-				unmatch.setSide(Side.LEFT);
-				unmatch.setRemote(true);
-				remainingUnmatchedElements.remove(nextRightNotFound.getLeftElement());
-				remainingUnmatchedElements.remove(nextRightNotFound.getRightElement());
-				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
+				remainingUnmatchedElements.add(eObj);
 			}
 		}
 		for (final EObject eObj : new ArrayList<EObject>(stillToFindFromModel2)) {
 			if (eObj instanceof Match2Elements) {
-				final Match2Elements nextLeftNotFound = (Match2Elements)eObj;
-				final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
-				unmatch.setElement(nextLeftNotFound.getLeftElement());
-				unmatch.setSide(Side.RIGHT);
-				remainingUnmatchedElements.remove(nextLeftNotFound.getLeftElement());
-				remainingUnmatchedElements.remove(nextLeftNotFound.getRightElement());
-				redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
+				remainingUnmatchedElements.add(eObj);
 			}
+		}
+	}
+
+	/**
+	 * This will be used in three way matching to take care of all unmatched elements. Unmatched elements are
+	 * then comprised of two things :
+	 * <ul>
+	 * <li>Match2Elements between left and ancestor or right and ancestor that had no equivalent in
+	 * respectively the right or left model - elements that have been removed or remotely removed.</li>
+	 * <li>UnmatchElements in either the right or the left model - elements that have been added or remotely
+	 * added</li>
+	 * </ul>
+	 * <p>
+	 * We are here handling Match2Elements only. These particular elements cannot be conflicting.
+	 * UnmatchElements will be handled in
+	 * {@link #processSingleUnmatchedElements(Resource, Resource, MatchModel, Match3Elements, Monitor)}.
+	 * </p>
+	 * 
+	 * @param leftResource
+	 *            Left model for the comparison.
+	 * @param rightResource
+	 *            Right model for the comparison.
+	 * @param root
+	 *            Root of the {@link MatchModel}.
+	 * @param subMatchRoot
+	 *            root under which new match elements are to be added.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't add the new UnmatchElements.
+	 */
+	private void processUnmatchedMatch2Elements(Resource leftResource, Resource rightResource,
+			MatchModel root, Match3Elements subMatchRoot) throws FactoryException {
+		final Set<Match2Elements> remainingLeft = new HashSet<Match2Elements>();
+		final Set<Match2Elements> remainingRight = new HashSet<Match2Elements>();
+		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
+			if (unmatched instanceof Match2Elements) {
+				final EObject element = ((Match2Elements)unmatched).getLeftElement();
+				if (element.eResource() == leftResource) {
+					remainingLeft.add((Match2Elements)unmatched);
+				} else if (element.eResource() == rightResource) {
+					remainingRight.add((Match2Elements)unmatched);
+				}
+				// unmatched in ancestor can be safely ignored.
+				remainingUnmatchedElements.remove(unmatched);
+			}
+		}
+
+		for (final Match2Elements left : new HashSet<Match2Elements>(remainingLeft)) {
+			for (final Match2Elements right : new HashSet<Match2Elements>(remainingRight)) {
+				if (left.getRightElement() == right.getRightElement()) {
+					final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
+					subMatch.setOriginElement(left.getRightElement());
+					subMatch.setLeftElement(left.getLeftElement());
+					subMatch.setRightElement(right.getLeftElement());
+					redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+					remainingLeft.remove(left);
+					remainingRight.remove(right);
+					break;
+				}
+			}
+		}
+		for (final Match2Elements nextLeftUnmatch : remainingLeft) {
+			final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
+			unmatch.setElement(nextLeftUnmatch.getLeftElement());
+			unmatch.setSide(Side.LEFT);
+			unmatch.setRemote(true);
+			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
+		}
+		for (final Match2Elements nextRightUnmatch : remainingRight) {
+			final UnmatchElement unmatch = MatchFactory.eINSTANCE.createUnmatchElement();
+			unmatch.setElement(nextRightUnmatch.getLeftElement());
+			unmatch.setSide(Side.RIGHT);
+			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unmatch);
+		}
+	}
+
+	/**
+	 * This will be used in three way matching to take care of all unmatched elements. Unmatched elements are
+	 * then comprised of two things :
+	 * <ul>
+	 * <li>Match2Elements between left and ancestor or right and ancestor that had no equivalent in
+	 * respectively the right or left model - elements that have been removed or remotely removed.</li>
+	 * <li>UnmatchElements in either the right or the left model - elements that have been added or remotely
+	 * added</li>
+	 * </ul>
+	 * <p>
+	 * We are here handling UnmatchElements only. Note that these particular differences can be conflicting if
+	 * they are contained within elements that have themselves been removed from the model. Match2Elements
+	 * have been handled by
+	 * {@link #processUnmatchedMatch2Elements(Resource, Resource, MatchModel, Match3Elements)}.
+	 * </p>
+	 * 
+	 * @param leftResource
+	 *            Left model for the comparison.
+	 * @param rightResource
+	 *            Right model for the comparison.
+	 * @param root
+	 *            Root of the {@link MatchModel}.
+	 * @param subMatchRoot
+	 *            root under which new match elements are to be added.
+	 * @param monitor
+	 *            Progress monitor to display while the comparison lasts.
+	 * @throws InterruptedException
+	 *             Thrown if the comparison is interrupted somehow.
+	 * @throws FactoryException
+	 *             Thrown if we couldn't add the new UnmatchElements.
+	 */
+	private void processSingleUnmatchedElements(Resource leftResource, Resource rightResource,
+			MatchModel root, Match3Elements subMatchRoot, Monitor monitor) throws InterruptedException,
+			FactoryException {
+		final Set<EObject> remainingLeft = new HashSet<EObject>();
+		final Set<EObject> remainingRight = new HashSet<EObject>();
+		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
+			if (unmatched instanceof UnmatchElement) {
+				final EObject element = ((UnmatchElement)unmatched).getElement();
+				if (element.eResource() == leftResource) {
+					remainingLeft.add(element);
+				} else if (element.eResource() == rightResource) {
+					remainingRight.add(element);
+				}
+				// unmatched in ancestor can be safely ignored.
+				remainingUnmatchedElements.remove(unmatched);
+			}
+		}
+
+		stillToFindFromModel1.clear();
+		stillToFindFromModel2.clear();
+
+		final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
+				new ArrayList<EObject>(remainingRight), this
+						.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+		for (final Match2Elements map : mappings) {
+			final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
+			subMatch.setLeftElement(map.getLeftElement());
+			subMatch.setRightElement(map.getRightElement());
+			redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+		}
+		for (final EObject unmatch : stillToFindFromModel1) {
+			final UnmatchElement unMap = MatchFactory.eINSTANCE.createUnmatchElement();
+			unMap.setElement(unmatch);
+			unMap.setSide(Side.LEFT);
+			unMap.setRemote(false);
+			for (final EObject unmatched : remainingUnmatchedElements) {
+				if (unmatched instanceof Match2Elements) {
+					if (unmatch.eContainer() == ((Match2Elements)unmatched).getLeftElement()) {
+						unMap.setConflicting(true);
+						break;
+					}
+				}
+			}
+			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
+		}
+		for (final EObject remoteUnmatch : stillToFindFromModel2) {
+			final UnmatchElement unMap = MatchFactory.eINSTANCE.createUnmatchElement();
+			unMap.setElement(remoteUnmatch);
+			unMap.setSide(Side.RIGHT);
+			unMap.setRemote(true);
+			for (final EObject unmatched : remainingUnmatchedElements) {
+				if (unmatched instanceof Match2Elements) {
+					if (remoteUnmatch.eContainer() == ((Match2Elements)unmatched).getLeftElement()) {
+						unMap.setConflicting(true);
+						break;
+					}
+				}
+			}
+			redirectedAdd(root, UNMATCH_ELEMENT_NAME, unMap);
 		}
 	}
 

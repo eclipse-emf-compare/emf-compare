@@ -29,95 +29,84 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private static boolean isInited = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isCreated = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private boolean isInitialized = false;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass match2ElementsEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass match3ElementsEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass unmatchElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass matchResourceSetEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EEnum sideEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass matchElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass matchModelEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	private EClass unmatchModelEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
-	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()},
-	 * which also performs initialization of the package, or returns the registered package, if one already
-	 * exists. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#eNS_URI
 	 * @see #init()
@@ -151,9 +140,9 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 			return (MatchPackage)EPackage.Registry.INSTANCE.getEPackage(MatchPackage.eNS_URI);
 
 		// Obtain or create and register package
-		final MatchPackageImpl theMatchPackage = (MatchPackageImpl)(EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI) instanceof MatchPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI) : new MatchPackageImpl());
+		MatchPackageImpl theMatchPackage = (MatchPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof MatchPackageImpl ? EPackage.Registry.INSTANCE
+				.getEPackage(eNS_URI)
+				: new MatchPackageImpl());
 
 		isInited = true;
 
@@ -166,13 +155,15 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 		// Mark meta-data to indicate it can't be changed
 		theMatchPackage.freeze();
 
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(MatchPackage.eNS_URI, theMatchPackage);
 		return theMatchPackage;
 	}
 
 	/**
-	 * Creates the meta-model objects for the package. This method is guarded to have no affect on any
-	 * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -210,6 +201,7 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 		unmatchElementEClass = createEClass(UNMATCH_ELEMENT);
 		createEReference(unmatchElementEClass, UNMATCH_ELEMENT__ELEMENT);
+		createEAttribute(unmatchElementEClass, UNMATCH_ELEMENT__CONFLICTING);
 		createEAttribute(unmatchElementEClass, UNMATCH_ELEMENT__REMOTE);
 		createEAttribute(unmatchElementEClass, UNMATCH_ELEMENT__SIDE);
 
@@ -219,7 +211,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatch2Elements() {
@@ -228,7 +219,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch2Elements_LeftElement() {
@@ -237,7 +227,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch2Elements_RightElement() {
@@ -246,7 +235,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatch3Elements() {
@@ -255,7 +243,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatch3Elements_OriginElement() {
@@ -264,7 +251,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUnmatchElement() {
@@ -273,7 +259,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUnmatchElement_Element() {
@@ -281,26 +266,32 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getUnmatchElement_Remote() {
+	public EAttribute getUnmatchElement_Conflicting() {
 		return (EAttribute)unmatchElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
-	public EAttribute getUnmatchElement_Side() {
+	public EAttribute getUnmatchElement_Remote() {
 		return (EAttribute)unmatchElementEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * @generated
+	 */
+	public EAttribute getUnmatchElement_Side() {
+		return (EAttribute)unmatchElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getMatchResourceSet() {
@@ -309,7 +300,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchResourceSet_MatchModels() {
@@ -318,7 +308,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchResourceSet_UnmatchedModels() {
@@ -327,7 +316,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EEnum getSide() {
@@ -336,7 +324,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatchElement() {
@@ -345,7 +332,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getMatchElement_Similarity() {
@@ -354,7 +340,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchElement_SubMatchElements() {
@@ -363,7 +348,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchFactory getMatchFactory() {
@@ -372,7 +356,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getMatchModel() {
@@ -381,7 +364,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchModel_MatchedElements() {
@@ -390,7 +372,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchModel_UnmatchedElements() {
@@ -399,7 +380,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchModel_LeftRoots() {
@@ -408,7 +388,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchModel_RightRoots() {
@@ -417,7 +396,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getMatchModel_AncestorRoots() {
@@ -426,7 +404,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EClass getUnmatchModel() {
@@ -435,7 +412,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EReference getUnmatchModel_Roots() {
@@ -444,7 +420,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getUnmatchModel_Remote() {
@@ -453,7 +428,6 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EAttribute getUnmatchModel_Side() {
@@ -461,9 +435,9 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 	}
 
 	/**
-	 * Complete the initialization of the package and its meta-model. This method is guarded to have no affect
-	 * on any invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -582,6 +556,10 @@ public class MatchPackageImpl extends EPackageImpl implements MatchPackage {
 				ecorePackage.getEObject(),
 				null,
 				"element", null, 1, 1, UnmatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED); //$NON-NLS-1$
+		initEAttribute(
+				getUnmatchElement_Conflicting(),
+				ecorePackage.getEBoolean(),
+				"conflicting", null, 0, 1, UnmatchElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 		initEAttribute(
 				getUnmatchElement_Remote(),
 				ecorePackage.getEBoolean(),

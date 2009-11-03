@@ -28,21 +28,20 @@ import org.eclipse.emf.ecore.EObject;
  * {@link #doSwitch(EObject) doSwitch(object)} to invoke the <code>caseXXX</code> method for each class of the
  * model, starting with the actual class of the object and proceeding up the inheritance hierarchy until a
  * non-null result is returned, which is the result of the switch. <!-- end-user-doc -->
- * 
  * @see org.eclipse.emf.compare.match.metamodel.MatchPackage
  * @generated
  */
 public class MatchSwitch<T> {
 	/**
-	 * The cached model package <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * The cached model package
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected static MatchPackage modelPackage;
 
 	/**
-	 * Creates an instance of the switch. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the switch.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public MatchSwitch() {
@@ -129,12 +128,11 @@ public class MatchSwitch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'. <!-- begin-user-doc
+	 * Returns the result of interpreting the object as an instance of '<em>Model</em>'.
+	 * <!-- begin-user-doc
 	 * --> This implementation returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
-	 * 
-	 * @param object
-	 *            the target of the switch.
+	 * @param object the target of the switch.
 	 * @return the result of interpreting the object as an instance of '<em>Model</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
@@ -176,9 +174,8 @@ public class MatchSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
@@ -187,93 +184,81 @@ public class MatchSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected T doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage)
+		if (theEClass.eContainer() == modelPackage) {
 			return doSwitch(theEClass.getClassifierID(), theEObject);
-		else {
-			final List<EClass> eSuperTypes = theEClass.getESuperTypes();
+		} else {
+			List<EClass> eSuperTypes = theEClass.getESuperTypes();
 			return eSuperTypes.isEmpty() ? defaultCase(theEObject) : doSwitch(eSuperTypes.get(0), theEObject);
 		}
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields
-	 * that result. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case MatchPackage.MATCH_MODEL: {
-				final MatchModel matchModel = (MatchModel)theEObject;
+				MatchModel matchModel = (MatchModel)theEObject;
 				T result = caseMatchModel(matchModel);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.UNMATCH_MODEL: {
-				final UnmatchModel unmatchModel = (UnmatchModel)theEObject;
+				UnmatchModel unmatchModel = (UnmatchModel)theEObject;
 				T result = caseUnmatchModel(unmatchModel);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.MATCH_RESOURCE_SET: {
-				final MatchResourceSet matchResourceSet = (MatchResourceSet)theEObject;
+				MatchResourceSet matchResourceSet = (MatchResourceSet)theEObject;
 				T result = caseMatchResourceSet(matchResourceSet);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.MATCH_ELEMENT: {
-				final MatchElement matchElement = (MatchElement)theEObject;
+				MatchElement matchElement = (MatchElement)theEObject;
 				T result = caseMatchElement(matchElement);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.MATCH2_ELEMENTS: {
-				final Match2Elements match2Elements = (Match2Elements)theEObject;
+				Match2Elements match2Elements = (Match2Elements)theEObject;
 				T result = caseMatch2Elements(match2Elements);
-				if (result == null) {
+				if (result == null)
 					result = caseMatchElement(match2Elements);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.MATCH3_ELEMENTS: {
-				final Match3Elements match3Elements = (Match3Elements)theEObject;
+				Match3Elements match3Elements = (Match3Elements)theEObject;
 				T result = caseMatch3Elements(match3Elements);
-				if (result == null) {
+				if (result == null)
 					result = caseMatch2Elements(match3Elements);
-				}
-				if (result == null) {
+				if (result == null)
 					result = caseMatchElement(match3Elements);
-				}
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			case MatchPackage.UNMATCH_ELEMENT: {
-				final UnmatchElement unmatchElement = (UnmatchElement)theEObject;
+				UnmatchElement unmatchElement = (UnmatchElement)theEObject;
 				T result = caseUnmatchElement(unmatchElement);
-				if (result == null) {
+				if (result == null)
 					result = defaultCase(theEObject);
-				}
 				return result;
 			}
 			default:

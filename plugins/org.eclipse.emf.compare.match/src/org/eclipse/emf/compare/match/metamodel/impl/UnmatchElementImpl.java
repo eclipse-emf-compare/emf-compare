@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#isConflicting <em>Conflicting</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#isRemote <em>Remote</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.impl.UnmatchElementImpl#getSide <em>Side</em>}</li>
  * </ul>
@@ -44,6 +45,26 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	 * @ordered
 	 */
 	protected EObject element;
+
+	/**
+	 * The default value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isConflicting()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean CONFLICTING_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isConflicting() <em>Conflicting</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isConflicting()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean conflicting = CONFLICTING_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isRemote() <em>Remote</em>}' attribute.
@@ -144,6 +165,28 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isConflicting() {
+		return conflicting;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setConflicting(boolean newConflicting) {
+		boolean oldConflicting = conflicting;
+		conflicting = newConflicting;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MatchPackage.UNMATCH_ELEMENT__CONFLICTING,
+					oldConflicting, conflicting));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isRemote() {
 		return remote;
 	}
@@ -194,6 +237,8 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 				if (resolve)
 					return getElement();
 				return basicGetElement();
+			case MatchPackage.UNMATCH_ELEMENT__CONFLICTING:
+				return isConflicting();
 			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
 				return isRemote() ? Boolean.TRUE : Boolean.FALSE;
 			case MatchPackage.UNMATCH_ELEMENT__SIDE:
@@ -211,6 +256,9 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 		switch (featureID) {
 			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
 				setElement((EObject)newValue);
+				return;
+			case MatchPackage.UNMATCH_ELEMENT__CONFLICTING:
+				setConflicting((Boolean)newValue);
 				return;
 			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
 				setRemote(((Boolean)newValue).booleanValue());
@@ -232,6 +280,9 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
 				setElement((EObject)null);
 				return;
+			case MatchPackage.UNMATCH_ELEMENT__CONFLICTING:
+				setConflicting(CONFLICTING_EDEFAULT);
+				return;
 			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
 				setRemote(REMOTE_EDEFAULT);
 				return;
@@ -251,6 +302,8 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 		switch (featureID) {
 			case MatchPackage.UNMATCH_ELEMENT__ELEMENT:
 				return element != null;
+			case MatchPackage.UNMATCH_ELEMENT__CONFLICTING:
+				return conflicting != CONFLICTING_EDEFAULT;
 			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
 				return remote != REMOTE_EDEFAULT;
 			case MatchPackage.UNMATCH_ELEMENT__SIDE:
@@ -270,7 +323,9 @@ public class UnmatchElementImpl extends EObjectImpl implements UnmatchElement {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (remote: "); //$NON-NLS-1$
+		result.append(" (conflicting: "); //$NON-NLS-1$
+		result.append(conflicting);
+		result.append(", remote: "); //$NON-NLS-1$
 		result.append(remote);
 		result.append(", side: "); //$NON-NLS-1$
 		result.append(side);

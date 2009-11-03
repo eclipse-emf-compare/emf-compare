@@ -46,6 +46,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="UnmatchElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" ordered="false"
         lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflicting" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="remote" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="side" eType="#//Side"/>
   </eClassifiers>

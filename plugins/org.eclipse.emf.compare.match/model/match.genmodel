@@ -45,6 +45,7 @@
     </genClasses>
     <genClasses ecoreClass="match.ecore#//UnmatchElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference match.ecore#//UnmatchElement/element"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchElement/conflicting"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchElement/remote"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute match.ecore#//UnmatchElement/side"/>
     </genClasses>

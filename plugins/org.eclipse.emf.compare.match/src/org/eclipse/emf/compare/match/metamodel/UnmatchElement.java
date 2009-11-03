@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#isConflicting <em>Conflicting</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#isRemote <em>Remote</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#getSide <em>Side</em>}</li>
  * </ul>
@@ -54,6 +55,32 @@ public interface UnmatchElement extends EObject {
 	 * @generated
 	 */
 	void setElement(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Conflicting</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Conflicting</em>' attribute.
+	 * @see #setConflicting(boolean)
+	 * @see org.eclipse.emf.compare.match.metamodel.MatchPackage#getUnmatchElement_Conflicting()
+	 * @model
+	 * @generated
+	 */
+	boolean isConflicting();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#isConflicting <em>Conflicting</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Conflicting</em>' attribute.
+	 * @see #isConflicting()
+	 * @generated
+	 */
+	void setConflicting(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Remote</b></em>' attribute.

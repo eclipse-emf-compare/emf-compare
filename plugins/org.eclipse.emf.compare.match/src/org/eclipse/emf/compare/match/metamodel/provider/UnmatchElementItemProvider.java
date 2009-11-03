@@ -57,6 +57,7 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 			super.getPropertyDescriptors(object);
 
 			addElementPropertyDescriptor(object);
+			addConflictingPropertyDescriptor(object);
 			addRemotePropertyDescriptor(object);
 			addSidePropertyDescriptor(object);
 		}
@@ -77,6 +78,24 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 						getString(
 								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_element_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						MatchPackage.Literals.UNMATCH_ELEMENT__ELEMENT, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Conflicting feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addConflictingPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_UnmatchElement_conflicting_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_UnmatchElement_conflicting_feature", "_UI_UnmatchElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						MatchPackage.Literals.UNMATCH_ELEMENT__CONFLICTING, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -133,7 +152,7 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 	@Override
 	public String getText(Object object) {
 		UnmatchElement unmatchElement = (UnmatchElement)object;
-		return getString("_UI_UnmatchElement_type") + " " + unmatchElement.isRemote(); //$NON-NLS-1$ //$NON-NLS-2$
+		return getString("_UI_UnmatchElement_type") + " " + unmatchElement.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -148,6 +167,7 @@ public class UnmatchElementItemProvider extends ItemProviderAdapter implements I
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(UnmatchElement.class)) {
+			case MatchPackage.UNMATCH_ELEMENT__CONFLICTING:
 			case MatchPackage.UNMATCH_ELEMENT__REMOTE:
 			case MatchPackage.UNMATCH_ELEMENT__SIDE:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false,

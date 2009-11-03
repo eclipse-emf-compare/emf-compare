@@ -380,13 +380,22 @@ public interface MatchPackage extends EPackage {
 	int UNMATCH_ELEMENT__ELEMENT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNMATCH_ELEMENT__CONFLICTING = 1;
+
+	/**
 	 * The feature id for the '<em><b>Remote</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNMATCH_ELEMENT__REMOTE = 1;
+	int UNMATCH_ELEMENT__REMOTE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Side</b></em>' attribute.
@@ -395,7 +404,7 @@ public interface MatchPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNMATCH_ELEMENT__SIDE = 2;
+	int UNMATCH_ELEMENT__SIDE = 3;
 
 	/**
 	 * The number of structural features of the '<em>Unmatch Element</em>' class.
@@ -404,7 +413,7 @@ public interface MatchPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int UNMATCH_ELEMENT_FEATURE_COUNT = 3;
+	int UNMATCH_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.match.metamodel.Side <em>Side</em>}' enum.
@@ -486,6 +495,17 @@ public interface MatchPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getUnmatchElement_Element();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#isConflicting <em>Conflicting</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Conflicting</em>'.
+	 * @see org.eclipse.emf.compare.match.metamodel.UnmatchElement#isConflicting()
+	 * @see #getUnmatchElement()
+	 * @generated
+	 */
+	EAttribute getUnmatchElement_Conflicting();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.emf.compare.match.metamodel.UnmatchElement#isRemote <em>Remote</em>}'.
@@ -873,6 +893,14 @@ public interface MatchPackage extends EPackage {
 		 * @generated
 		 */
 		EReference UNMATCH_ELEMENT__ELEMENT = eINSTANCE.getUnmatchElement_Element();
+
+		/**
+		 * The meta object literal for the '<em><b>Conflicting</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute UNMATCH_ELEMENT__CONFLICTING = eINSTANCE.getUnmatchElement_Conflicting();
 
 		/**
 		 * The meta object literal for the '<em><b>Remote</b></em>' attribute feature.

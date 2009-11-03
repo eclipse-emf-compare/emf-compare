@@ -28,13 +28,12 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	/**
-	 * Creates an instance of the factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public MatchFactoryImpl() {
@@ -43,7 +42,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @deprecated
 	 * @generated
 	 */
@@ -53,17 +51,18 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 	}
 
 	/**
-	 * Creates the default factory implementation. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public static MatchFactory init() {
 		try {
-			final MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
+			MatchFactory theMatchFactory = (MatchFactory)EPackage.Registry.INSTANCE
 					.getEFactory("http://www.eclipse.org/emf/compare/match/1.1"); //$NON-NLS-1$ 
-			if (theMatchFactory != null)
+			if (theMatchFactory != null) {
 				return theMatchFactory;
-		} catch (final Exception exception) {
+			}
+		} catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new MatchFactoryImpl();
@@ -71,7 +70,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -97,7 +95,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -113,7 +110,6 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -129,61 +125,54 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match2Elements createMatch2Elements() {
-		final Match2ElementsImpl match2Elements = new Match2ElementsImpl();
+		Match2ElementsImpl match2Elements = new Match2ElementsImpl();
 		return match2Elements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Match3Elements createMatch3Elements() {
-		final Match3ElementsImpl match3Elements = new Match3ElementsImpl();
+		Match3ElementsImpl match3Elements = new Match3ElementsImpl();
 		return match3Elements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UnmatchElement createUnmatchElement() {
-		final UnmatchElementImpl unmatchElement = new UnmatchElementImpl();
+		UnmatchElementImpl unmatchElement = new UnmatchElementImpl();
 		return unmatchElement;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchResourceSet createMatchResourceSet() {
-		final MatchResourceSetImpl matchResourceSet = new MatchResourceSetImpl();
+		MatchResourceSetImpl matchResourceSet = new MatchResourceSetImpl();
 		return matchResourceSet;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Side createSideFromString(EDataType eDataType, String initialValue) {
-		final Side result = Side.get(initialValue);
-		if (result == null) {
+		Side result = Side.get(initialValue);
+		if (result == null)
 			throw new IllegalArgumentException(
 					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
 		return result;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public String convertSideToString(EDataType eDataType, Object instanceValue) {
@@ -192,27 +181,24 @@ public class MatchFactoryImpl extends EFactoryImpl implements MatchFactory {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchModel createMatchModel() {
-		final MatchModelImpl matchModel = new MatchModelImpl();
+		MatchModelImpl matchModel = new MatchModelImpl();
 		return matchModel;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public UnmatchModel createUnmatchModel() {
-		final UnmatchModelImpl unmatchModel = new UnmatchModelImpl();
+		UnmatchModelImpl unmatchModel = new UnmatchModelImpl();
 		return unmatchModel;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public MatchPackage getMatchPackage() {
