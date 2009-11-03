@@ -12,10 +12,8 @@ package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
@@ -41,7 +39,6 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
-import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
@@ -71,11 +68,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * MatchResourceSet.
 	 */
 	protected EcoreUtil.CrossReferencer matchCrossReferencer;
-
-	/**
-	 * This map will keep track of the top level unmatched elements, as well as whether they are conflicting.
-	 */
-	protected final Map<UnmatchElement, Boolean> unmatchedElements = new EMFCompareMap<UnmatchElement, Boolean>();
 
 	/**
 	 * {@inheritDoc}
@@ -148,7 +140,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#reset()
 	 */
 	public void reset() {
-		unmatchedElements.clear();
 		matchCrossReferencer = null;
 	}
 
@@ -526,33 +517,31 @@ public class GenericDiffEngine implements IDiffEngine {
 			doDiffDelegate(diffRoot, matchRoot);
 		}
 
-		unmatchedElements.clear();
+		final List<UnmatchElement> filteredUnmatched = new ArrayList<UnmatchElement>(match
+				.getUnmatchedElements().size());
 		final Iterator<UnmatchElement> unmatched = match.getUnmatchedElements().iterator();
 		while (unmatched.hasNext()) {
 			final UnmatchElement unmatchElement = unmatched.next();
+			// We'll consider both conflicting elements and root of an unmatched hierarchy
+			if (unmatchElement.isConflicting()) {
+				filteredUnmatched.add(unmatchElement);
+				continue;
+			}
+
 			boolean isChild = false;
-			boolean isAncestor = false;
-			for (final Object object : match.getUnmatchedElements()) {
-				if (unmatchElement != (UnmatchElement)object) {
-					if (EcoreUtil.isAncestor(unmatchElement.getElement(), ((UnmatchElement)object)
-							.getElement())) {
-						isAncestor = true;
-					}
-					if (EcoreUtil.isAncestor(((UnmatchElement)object).getElement(), unmatchElement
-							.getElement())) {
-						isChild = true;
-					}
-				}
-				if (isChild || isAncestor) {
+			for (final UnmatchElement elem : match.getUnmatchedElements()) {
+				if (elem != unmatchElement
+						&& EcoreUtil.isAncestor(elem.getElement(), unmatchElement.getElement())) {
+					isChild = true;
 					break;
 				}
 			}
 			if (!isChild) {
-				unmatchedElements.put(unmatchElement, isAncestor);
+				filteredUnmatched.add(unmatchElement);
 			}
 		}
-		if (unmatchedElements.size() > 0) {
-			processUnmatchedElements(diffRoot, unmatchedElements);
+		if (filteredUnmatched.size() > 0) {
+			processUnmatchedElements(diffRoot, filteredUnmatched);
 		}
 		return diffRoot;
 	}
@@ -650,9 +639,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	/**
 	 * This will process the {@link #unmatchedElements unmatched elements} list and create the appropriate
 	 * {@link DiffElement}s.
-	 * <p>
-	 * This is called for two-way comparison. Clients can override this to alter the checks or add their own.
-	 * </p>
 	 * 
 	 * @param diffRoot
 	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
@@ -668,82 +654,43 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		for (final UnmatchElement unmatchElement : filteredUnmatched) {
 			final EObject element = unmatchElement.getElement();
+			final EObject leftParent = getMatchedEObject(element.eContainer());
+
+			final ConflictingDiffElement container;
+			if (unmatchElement.isConflicting()) {
+				container = DiffFactory.eINSTANCE.createConflictingDiffElement();
+				container.setLeftParent(leftParent);
+				container.setRightParent(element.eContainer());
+				container.setOriginElement(getMatchedEObject(element, ANCESTOR_OBJECT));
+			} else {
+				container = null;
+			}
+
 			if (unmatchElement.getSide() == Side.RIGHT) {
 				// add RemoveModelElement
 				final ModelElementChangeRightTarget operation = DiffFactory.eINSTANCE
 						.createModelElementChangeRightTarget();
 				operation.setRightElement(element);
-				// Container will be null if we're adding a root
-				if (element.eContainer() != null) {
-					operation.setLeftParent(getMatchedEObject(element.eContainer()));
-					addInContainerPackage(diffRoot, operation, getMatchedEObject(element.eContainer()));
+				operation.setRemote(unmatchElement.isRemote());
+				operation.setLeftParent(leftParent);
+				if (container != null) {
+					container.getSubDiffElements().add(operation);
+					addInContainerPackage(diffRoot, container, leftParent);
 				} else {
-					operation.setLeftParent(element.eContainer());
-					addInContainerPackage(diffRoot, operation, element.eContainer());
+					addInContainerPackage(diffRoot, operation, leftParent);
 				}
 			} else {
 				// add AddModelElement
 				final ModelElementChangeLeftTarget operation = DiffFactory.eINSTANCE
 						.createModelElementChangeLeftTarget();
 				operation.setLeftElement(element);
-				// Container will be null if we're adding a root
-				if (element.eContainer() != null) {
-					operation.setRightParent(getMatchedEObject(element.eContainer()));
-					addInContainerPackage(diffRoot, operation, getMatchedEObject(element.eContainer()));
+				operation.setRemote(unmatchElement.isRemote());
+				operation.setRightParent(leftParent);
+				if (container != null) {
+					container.getSubDiffElements().add(operation);
+					addInContainerPackage(diffRoot, container, leftParent);
 				} else {
-					operation.setRightParent(element.eContainer());
-					addInContainerPackage(diffRoot, operation, element.eContainer());
-				}
-			}
-		}
-	}
-
-	/**
-	 * This will process the {@link #unmatchedElements unmatched elements} list and create the appropriate
-	 * {@link DiffElement}s.
-	 * <p>
-	 * This is called for three-way comparison. Clients can override this to alter the checks or add their
-	 * own.
-	 * </p>
-	 * 
-	 * @param diffRoot
-	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
-	 * @param unmatched
-	 *            The MatchModel's {@link UnmatchElement}s.
-	 */
-	protected void processUnmatchedElements(DiffGroup diffRoot, Map<UnmatchElement, Boolean> unmatched) {
-		final Map<UnmatchElement, Boolean> filteredUnmatched = new HashMap<UnmatchElement, Boolean>(unmatched
-				.size());
-		for (final Map.Entry<UnmatchElement, Boolean> element : unmatched.entrySet()) {
-			if (!(element.getKey().getElement() instanceof EGenericType)) {
-				filteredUnmatched.put(element.getKey(), element.getValue());
-			}
-		}
-		for (final Map.Entry<UnmatchElement, Boolean> entry : filteredUnmatched.entrySet()) {
-			if (entry.getValue().booleanValue()) {
-				processConflictingUnmatchedElement(diffRoot, entry.getKey());
-			} else {
-				final EObject element = entry.getKey().getElement();
-				final EObject matchedParent = getMatchedEObject(element.eContainer());
-
-				if (entry.getKey().getSide() == Side.LEFT) {
-					final ModelElementChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createModelElementChangeRightTarget();
-					operation.setRightElement(element);
-					operation.setLeftParent(matchedParent);
-					if (entry.getKey().isRemote()) {
-						operation.setRemote(true);
-					}
-					addInContainerPackage(diffRoot, operation, matchedParent);
-				} else {
-					final ModelElementChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createModelElementChangeLeftTarget();
-					operation.setLeftElement(element);
-					operation.setRightParent(matchedParent);
-					if (entry.getKey().isRemote()) {
-						operation.setRemote(true);
-					}
-					addInContainerPackage(diffRoot, operation, element.eContainer());
+					addInContainerPackage(diffRoot, operation, leftParent);
 				}
 			}
 		}
@@ -1019,46 +966,5 @@ public class GenericDiffEngine implements IDiffEngine {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * This will process the given unmatched element as a conflicting difference.
-	 * 
-	 * @param diffRoot
-	 *            {@link DiffGroup} under which to create the {@link DiffElement}s.
-	 * @param unmatch
-	 *            The conflicting diff element that is to be created.
-	 */
-	private void processConflictingUnmatchedElement(DiffGroup diffRoot, UnmatchElement unmatch) {
-		final EObject element = unmatch.getElement();
-		final EObject matchedParent = getMatchedEObject(element.eContainer());
-		final EObject matchedAncestor = getMatchedEObject(element, ANCESTOR_OBJECT);
-
-		final ConflictingDiffElement operation = DiffFactory.eINSTANCE.createConflictingDiffElement();
-		operation.setLeftParent(matchedParent);
-		operation.setRightParent(element);
-		operation.setOriginElement(matchedAncestor);
-
-		if (unmatch.getSide() == Side.LEFT) {
-			final ModelElementChangeRightTarget modelOperation = DiffFactory.eINSTANCE
-					.createModelElementChangeRightTarget();
-			modelOperation.setRightElement(element);
-			modelOperation.setLeftParent(matchedParent);
-			if (unmatch.isRemote()) {
-				modelOperation.setRemote(true);
-			}
-			operation.getSubDiffElements().add(modelOperation);
-			addInContainerPackage(diffRoot, operation, matchedParent);
-		} else {
-			final ModelElementChangeLeftTarget modelOperation = DiffFactory.eINSTANCE
-					.createModelElementChangeLeftTarget();
-			modelOperation.setLeftElement(element);
-			modelOperation.setRightParent(matchedParent);
-			if (unmatch.isRemote()) {
-				modelOperation.setRemote(true);
-			}
-			operation.getSubDiffElements().add(modelOperation);
-			addInContainerPackage(diffRoot, operation, element.eContainer());
-		}
 	}
 }
