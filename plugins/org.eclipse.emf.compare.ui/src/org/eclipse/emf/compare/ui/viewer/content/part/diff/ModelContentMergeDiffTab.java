@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Widget;
  * Represents the tree view under a {@link ModelContentMergeTabFolder}'s diff tab.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public class ModelContentMergeDiffTab extends TreeViewer implements IModelContentMergeViewerTab {
 	/** Tells the tree viewer it needs to be redrawn. */
@@ -76,6 +77,13 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 	/** Caches visible elements. */
 	protected final List<Item> visibleItems = new ArrayList<Item>();
+
+	/**
+	 * Keeps a reference to the containing tab folder.
+	 * 
+	 * @since 1.1
+	 */
+	protected final ModelContentMergeTabFolder parent;
 
 	/** Maps TreeItems to their TreePath. */
 	private final Map<Item, TreePath> cachedTreePath = new EMFCompareMap<Item, TreePath>();
@@ -91,9 +99,6 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 
 	/** Maps a Diffelement to its UI item. */
 	private final Map<DiffElement, ModelContentMergeTabItem> diffToUIItem = new EMFCompareMap<DiffElement, ModelContentMergeTabItem>();
-
-	/** Keeps a reference to the containing tab folder. */
-	private final ModelContentMergeTabFolder parent;
 
 	/**
 	 * Creates a tree viewer under the given parent control.
@@ -142,9 +147,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#dispose()
 	 */
 	public void dispose() {
-		// FIXME more caches to invalidate here
-		dataToDiff.clear();
-		diffToUIItem.clear();
+		clearCaches();
+		cachedTreePath.clear();
 		getTree().dispose();
 	}
 
@@ -220,8 +224,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					break;
 				}
 			}
-			// or a regular match (ancestor of the item is visible and
-			// collapsed)
+			// or a regular match (ancestor of the item is visible and collapsed)
 			if (visibleMatch == null) {
 				for (final Item visible : items) {
 					if (!((TreeItem)visible).getExpanded()
@@ -271,9 +274,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public void setReflectiveInput(Object object) {
 		// We *need* to invalidate the cache here since setInput() would try to
 		// use it otherwise
-		dataToDiff.clear();
-		diffToUIItem.clear();
-		dataToTreeItem.clear();
+		clearCaches();
 
 		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
 		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
@@ -284,9 +285,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			setInput(object);
 		}
 
-		mapTreeItems();
-		mapDifferences();
-		mapTreeItemsToUI();
+		setupCaches();
 		needsRedraw = true;
 	}
 
@@ -311,6 +310,15 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		setSelection(new StructuredSelection(datas), true);
 		needsRedraw = true;
 		redraw();
+	}
+
+	/**
+	 * Invalidates all caches of the tab.
+	 */
+	protected final void clearCaches() {
+		dataToDiff.clear();
+		diffToUIItem.clear();
+		dataToTreeItem.clear();
 	}
 
 	/**
@@ -407,6 +415,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		} else {
 			super.setSelectionToWidget(l, reveal);
 		}
+	}
+
+	/**
+	 * Sets up all necessary caches for navigation through the differences shown by this tab. This must be
+	 * called at input setting.
+	 */
+	protected final void setupCaches() {
+		mapTreeItems();
+		mapDifferences();
+		mapTreeItemsToUI();
 	}
 
 	/**

@@ -445,6 +445,21 @@ public class ModelContentMergeTabFolder {
 	}
 
 	/**
+	 * Actual creation of the properties tab. Synchronization of the scroll bars and selections will be
+	 * handled through {@link #createPropertiesPart(Composite)}.
+	 * 
+	 * @param parent
+	 *            Parent {@link Composite} of the viewer tab that is to be created.
+	 * @return The newly created {@link IModelContentMergeViewerTab} that'll be added to the current tab
+	 *         folder.
+	 * @since 1.1
+	 * @nooverride This method is not intended to be re-implemented or extended by clients.
+	 */
+	protected IModelContentMergeViewerTab createModelContentMergeViewerTab(Composite parent) {
+		return new ModelContentMergePropertyTab(parent, partSide, this);
+	}
+
+	/**
 	 * Handles the creation of the properties tab of this viewer part given the parent {@link Composite} under
 	 * which to create it.
 	 * 
@@ -453,8 +468,7 @@ public class ModelContentMergeTabFolder {
 	 * @return The properties part displayed by this viewer part's properties tab.
 	 */
 	private IModelContentMergeViewerTab createPropertiesPart(Composite composite) {
-		final IModelContentMergeViewerTab propertiesPart = new ModelContentMergePropertyTab(composite,
-				partSide, this);
+		final IModelContentMergeViewerTab propertiesPart = createModelContentMergeViewerTab(composite);
 
 		((Scrollable)propertiesPart.getControl()).getVerticalBar().addSelectionListener(
 				new SelectionListener() {
@@ -477,6 +491,21 @@ public class ModelContentMergeTabFolder {
 	}
 
 	/**
+	 * Actual creation of the tree tab. Synchronization of the scroll bars and selections will be handled
+	 * through {@link #createTreePart(Composite)}.
+	 * 
+	 * @param parent
+	 *            Parent {@link Composite} of the viewer tab that is to be created.
+	 * @return The newly created {@link IModelContentMergeViewerTab} that'll be added to the current tab
+	 *         folder.
+	 * @since 1.1
+	 * @nooverride This method is not intended to be re-implemented or extended by clients.
+	 */
+	protected IModelContentMergeViewerTab createModelContentMergeDiffTab(Composite parent) {
+		return new ModelContentMergeDiffTab(parent, partSide, this);
+	}
+
+	/**
 	 * Handles the creation of the tree tab of this viewer part given the parent {@link Composite} under which
 	 * to create it.
 	 * 
@@ -485,7 +514,7 @@ public class ModelContentMergeTabFolder {
 	 * @return The tree part displayed by this viewer part's tree tab.
 	 */
 	private IModelContentMergeViewerTab createTreePart(Composite composite) {
-		final IModelContentMergeViewerTab treePart = new ModelContentMergeDiffTab(composite, partSide, this);
+		final IModelContentMergeViewerTab treePart = createModelContentMergeDiffTab(composite);
 
 		((Scrollable)treePart.getControl()).getVerticalBar().addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
