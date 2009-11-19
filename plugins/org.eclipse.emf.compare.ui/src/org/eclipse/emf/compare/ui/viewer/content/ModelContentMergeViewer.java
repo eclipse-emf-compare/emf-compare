@@ -105,15 +105,17 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected ModelContentMergeTabFolder rightPart;
 
 	/**
+	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
+	 * one used to created this compare editor.
+	 * 
+	 * @since 1.1
+	 */
+	protected final CompareConfiguration configuration;
+
+	/**
 	 * this is the "center" part of the content merge viewer where we handle all the drawing operations.
 	 */
 	private AbstractCenterPart canvas;
-
-	/**
-	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
-	 * one used to created this compare editor.
-	 */
-	private final CompareConfiguration configuration;
 
 	/**
 	 * This is the action we instantiate to handle the {@link DiffElement}s merge from the left model to the
@@ -158,7 +160,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	private final IPropertyChangeListener structureSelectionListener;
 
 	/**
-	 * Creates a new model content merge viewer and intializes it.
+	 * Creates a new model content merge viewer and initializes it.
 	 * 
 	 * @param parent
 	 *            Parent composite for this viewer.
@@ -170,7 +172,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		configuration = config;
 		buildControl(parent);
 		updatePreferences();
-		setContentProvider(new ModelContentMergeContentProvider(config));
+
+		final IMergeViewerContentProvider contentProvider = createMergeViewerContentProvider();
+		if (contentProvider != null) {
+			setContentProvider(contentProvider);
+		} else {
+			// Fall back to default
+			setContentProvider(new ModelContentMergeContentProvider(configuration));
+		}
 
 		// disables diff copy from either side
 		switchCopyState(false);
@@ -466,9 +475,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	@Override
 	protected void createControls(Composite composite) {
-		leftPart = new ModelContentMergeTabFolder(this, composite, EMFCompareConstants.LEFT);
-		rightPart = new ModelContentMergeTabFolder(this, composite, EMFCompareConstants.RIGHT);
-		ancestorPart = new ModelContentMergeTabFolder(this, composite, EMFCompareConstants.ANCESTOR);
+		leftPart = createModelContentMergeTabFolder(composite, EMFCompareConstants.LEFT);
+		rightPart = createModelContentMergeTabFolder(composite, EMFCompareConstants.RIGHT);
+		ancestorPart = createModelContentMergeTabFolder(composite, EMFCompareConstants.ANCESTOR);
 
 		partListener = new EditorPartListener(leftPart, rightPart, ancestorPart);
 		leftPart.addCompareEditorPartListener(partListener);
@@ -477,6 +486,31 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 
 		createPropertiesSyncHandlers(leftPart, rightPart, ancestorPart);
 		createTreeSyncHandlers(leftPart, rightPart, ancestorPart);
+	}
+
+	/**
+	 * Creates and return our content provider.
+	 * 
+	 * @return The {@link IMergeViewerContentProvider content provider} for this merge viewer.
+	 * @since 1.1
+	 */
+	protected IMergeViewerContentProvider createMergeViewerContentProvider() {
+		return new ModelContentMergeContentProvider(configuration);
+	}
+
+	/**
+	 * Creates a new {@link ModelContentMergeTabFolder tab folder} for the specified <code>side</code> (left,
+	 * right or ancestor). Clients may override this method in order to create their custom part.
+	 * 
+	 * @param composite
+	 *            The parent {@link Composite} of the part to create.
+	 * @param side
+	 *            The side where the created part is going to be displayed.
+	 * @return The created tab folder.
+	 * @since 1.1
+	 */
+	protected ModelContentMergeTabFolder createModelContentMergeTabFolder(Composite composite, int side) {
+		return new ModelContentMergeTabFolder(this, composite, side);
 	}
 
 	/**
