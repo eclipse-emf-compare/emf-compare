@@ -59,12 +59,10 @@ public class GenericMatchEngine implements IMatchEngine {
 	/** Used while computing similarity, this defines the general threshold. */
 	private static final double GENERAL_THRESHOLD = 0.96d;
 
-	/** Containmnent reference for the matched elements root. */
+	/** Containment reference for the matched elements root. */
 	private static final String MATCH_ELEMENT_NAME = "matchedElements"; //$NON-NLS-1$
 
-	/**
-	 * Minimal number of attributes an element must have for content comparison.
-	 */
+	/** Minimal number of attributes an element must have for content comparison. */
 	private static final int MIN_ATTRIBUTES_COUNT = 5;
 
 	/** This constant is used as key for the buffering of name similarity. */
@@ -73,13 +71,13 @@ public class GenericMatchEngine implements IMatchEngine {
 	/** This constant is used as key for the buffering of relations similarity. */
 	private static final char RELATION_SIMILARITY = 'r';
 
-	/** Containmnent reference for {@link MatchElement}s' submatches. */
+	/** Containment reference for {@link MatchElement}s' submatches. */
 	private static final String SUBMATCH_ELEMENT_NAME = "subMatchElements"; //$NON-NLS-1$
 
 	/** This constant is used as key for the buffering of type similarity. */
 	private static final char TYPE_SIMILARITY = 't';
 
-	/** Containmnent reference for the {@link MatchModel}'s unmatched elements. */
+	/** Containment reference for the {@link MatchModel}'s unmatched elements. */
 	private static final String UNMATCH_ELEMENT_NAME = "unmatchedElements"; //$NON-NLS-1$
 
 	/** This constant is used as key for the buffering of value similarity. */
@@ -159,8 +157,10 @@ public class GenericMatchEngine implements IMatchEngine {
 		if (optionMap != null && optionMap.size() > 0) {
 			loadOptionMap(optionMap);
 		}
+
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftObject.eResource(), rightObject.eResource(), ancestor.eResource());
+		setModelRoots(root, leftObject, rightObject, ancestor);
+
 		final Monitor monitor = createProgressMonitor();
 		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
 		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
@@ -266,7 +266,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Monitor monitor = createProgressMonitor();
 
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftObject.eResource(), rightObject.eResource());
+		setModelRoots(root, leftObject, rightObject);
 
 		/*
 		 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots of
@@ -977,8 +977,15 @@ public class GenericMatchEngine implements IMatchEngine {
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, Monitor monitor)
 			throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftResource, rightResource);
-
+		EObject leftRoot = null;
+		EObject rightRoot = null;
+		if (leftResource.getContents().size() > 0) {
+			leftRoot = leftResource.getContents().get(0);
+		}
+		if (rightResource.getContents().size() > 0) {
+			rightRoot = rightResource.getContents().get(0);
+		}
+		setModelRoots(root, leftRoot, rightRoot);
 		// filters unused features
 		filterUnused(leftResource);
 		filterUnused(rightResource);
@@ -1087,7 +1094,19 @@ public class GenericMatchEngine implements IMatchEngine {
 	private MatchModel doMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Monitor monitor) throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftResource, rightResource, ancestorResource);
+		EObject leftRoot = null;
+		EObject rightRoot = null;
+		EObject ancestorRoot = null;
+		if (leftResource.getContents().size() > 0) {
+			leftRoot = leftResource.getContents().get(0);
+		}
+		if (rightResource.getContents().size() > 0) {
+			rightRoot = rightResource.getContents().get(0);
+		}
+		if (ancestorResource.getContents().size() > 0) {
+			ancestorRoot = ancestorResource.getContents().get(0);
+		}
+		setModelRoots(root, leftRoot, rightRoot, ancestorRoot);
 		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor);
 		final MatchModel root2AncestorMatch = doMatch(rightResource, ancestorResource, monitor);
 
@@ -1888,8 +1907,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Element from which to resolve the left model URI.
 	 * @param right
 	 *            Element from which to resolve the right model URI.
+	 * @since 1.1
 	 */
-	private void setModelRoots(MatchModel modelRoot, Resource left, Resource right) {
+	protected void setModelRoots(MatchModel modelRoot, EObject left, EObject right) {
 		setModelRoots(modelRoot, left, right, null);
 	}
 
@@ -1904,17 +1924,18 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Element from which to resolve the right model URI.
 	 * @param ancestor
 	 *            Element from which to resolve the ancestor model URI. Can be <code>null</code>.
+	 * @since 1.1
 	 */
-	private void setModelRoots(MatchModel modelRoot, Resource left, Resource right, Resource ancestor) {
-		// Sets values of left, right and ancestor model URIs
-		if (left != null) {
-			modelRoot.getLeftRoots().addAll(left.getContents());
+	protected void setModelRoots(MatchModel modelRoot, EObject left, EObject right, EObject ancestor) {
+		// Sets values of left, right and ancestor model roots
+		if (left != null && left.eResource() != null) {
+			modelRoot.getLeftRoots().addAll(left.eResource().getContents());
 		}
-		if (right != null) {
-			modelRoot.getRightRoots().addAll(right.getContents());
+		if (right != null && right.eResource() != null) {
+			modelRoot.getRightRoots().addAll(right.eResource().getContents());
 		}
-		if (ancestor != null) {
-			modelRoot.getAncestorRoots().addAll(ancestor.getContents());
+		if (ancestor != null && ancestor.eResource() != null) {
+			modelRoot.getAncestorRoots().addAll(ancestor.eResource().getContents());
 		}
 	}
 
