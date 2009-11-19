@@ -72,8 +72,12 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
-		} else {
+		} else if (origin == null && getDiffModel().getRightRoots().size() > 0) {
+			getDiffModel().getRightRoots().get(0).eResource().getContents().add(newOne);
+		} else if (origin != null) {
 			origin.eResource().getContents().add(newOne);
+		} else {
+			// FIXME throw exception : couldn't merge this
 		}
 		// we should now have a look for RemovedReferencesLinks needing elements to apply
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();

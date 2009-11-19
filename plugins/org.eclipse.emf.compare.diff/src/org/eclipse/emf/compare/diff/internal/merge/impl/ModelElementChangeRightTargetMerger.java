@@ -56,8 +56,12 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);
 			}
-		} else {
+		} else if (origin == null && getDiffModel().getLeftRoots().size() > 0) {
+			getDiffModel().getLeftRoots().get(0).eResource().getContents().add(newOne);
+		} else if (origin != null) {
 			origin.eResource().getContents().add(newOne);
+		} else {
+			// FIXME Throw exception : couldn't merge this
 		}
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
