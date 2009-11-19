@@ -224,6 +224,7 @@ public class DefaultMerger implements IMerger {
 			root = ((ComparisonResourceSnapshot)root).getDiff();
 		}
 		if (root != null) {
+			// FIXME diff resourceset
 			final EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
 				private static final long serialVersionUID = 616050158241084372L;
 

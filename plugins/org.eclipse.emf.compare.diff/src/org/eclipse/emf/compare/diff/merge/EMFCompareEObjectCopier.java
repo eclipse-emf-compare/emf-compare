@@ -173,6 +173,13 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				final XMIResource copyResource = (XMIResource)copy.eResource();
 				if (originResource.getID(original) != null) {
 					copyResource.setID(copy, originResource.getID(original));
+					final TreeIterator<EObject> originalIterator = original.eAllContents();
+					final TreeIterator<EObject> copyIterator = copy.eAllContents();
+					while (originalIterator.hasNext()) {
+						final EObject nextOriginalChild = originalIterator.next();
+						final EObject nextCopyChild = copyIterator.next();
+						copyResource.setID(nextCopyChild, originResource.getID(nextOriginalChild));
+					}
 				}
 			}
 		}
