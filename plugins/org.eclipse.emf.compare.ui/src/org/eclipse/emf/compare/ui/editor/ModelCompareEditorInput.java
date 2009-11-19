@@ -55,6 +55,12 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 */
 	protected ModelContentMergeViewer contentMergeViewer;
 
+	/** {@link ModelInputSnapshot} result of the underlying comparison. */
+	protected final ComparisonSnapshot inputSnapshot;
+
+	/** This is the input that will be used throughout. */
+	protected ModelCompareInput preparedInput;
+
 	/**
 	 * Structure merge viewer of this {@link org.eclipse.compare.CompareViewerPane}. It represents the top
 	 * TreeViewer of the view.
@@ -66,12 +72,6 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 * {@link ModelStructureMergeViewer}'s input.
 	 */
 	private final ICompareInputChangeListener inputListener;
-
-	/** {@link ModelInputSnapshot} result of the underlying comparison. */
-	private final ComparisonSnapshot inputSnapshot;
-
-	/** This is the input that will be used throughout. */
-	private ModelCompareInput preparedInput;
 
 	/**
 	 * This constructor takes a {@link ModelInputSnapshot} as input.
@@ -124,8 +124,10 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		createOutlineContents(fComposite, SWT.HORIZONTAL);
 
 		final CompareViewerPane pane = new CompareViewerPane(fComposite, SWT.NONE);
+		final CompareConfiguration compareConfig = getCompareConfiguration();
 
-		contentMergeViewer = new ModelContentMergeViewer(pane, getCompareConfiguration());
+		// Delegates the merge viewer creation so that clients could override it
+		contentMergeViewer = createMergeViewer(pane, compareConfig);
 		pane.setContent(contentMergeViewer.getControl());
 
 		contentMergeViewer.setInput(preparedInput);
@@ -135,6 +137,22 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		fComposite.setWeights(new int[] {structureWeight, contentWeight });
 
 		return fComposite;
+	}
+
+	/**
+	 * Creates and returns the {@link ModelContentMergeViewer merge viewer} constituting the content of this
+	 * compare editor input. Clients may override this method in order to create their own merge viewer.
+	 * 
+	 * @param pane
+	 *            The compare viewer pane to use as a parent composite for the viewer to create.
+	 * @param config
+	 *            The {@link CompareConfiguration compare configuration} to consider.
+	 * @return The {@link ModelContentMergeViewer merge viewer} constituting the content of this compare
+	 *         editor input.
+	 * @since 1.1
+	 */
+	protected ModelContentMergeViewer createMergeViewer(CompareViewerPane pane, CompareConfiguration config) {
+		return new ModelContentMergeViewer(pane, config);
 	}
 
 	/**
