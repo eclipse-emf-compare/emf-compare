@@ -1,12 +1,12 @@
-#Fri Mar 13 15:47:48 CET 2009
+#Wed Nov 18 14:01:34 CET 2009
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
 org.eclipse.jdt.core.compiler.compliance=1.5
 org.eclipse.jdt.core.compiler.problem.annotationSuperInterface=warning
 org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
 org.eclipse.jdt.core.compiler.problem.autoboxing=ignore
-org.eclipse.jdt.core.compiler.problem.deprecation=warning
-org.eclipse.jdt.core.compiler.problem.deprecationInDeprecatedCode=enabled
+org.eclipse.jdt.core.compiler.problem.deprecation=error
+org.eclipse.jdt.core.compiler.problem.deprecationInDeprecatedCode=disabled
 org.eclipse.jdt.core.compiler.problem.deprecationWhenOverridingDeprecatedMethod=enabled
 org.eclipse.jdt.core.compiler.problem.discouragedReference=error
 org.eclipse.jdt.core.compiler.problem.emptyStatement=error

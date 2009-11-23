@@ -21,6 +21,7 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.engine.IMatchEngine;
+import org.eclipse.emf.compare.util.ModelIdentifier;
 
 /* (non-javadoc) we make use of the ordering of the engines, do not change Map and List implementations. */
 /**
@@ -34,17 +35,23 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	/** Singleton instance of the registry. */
 	public static final MatchEngineRegistry INSTANCE = new MatchEngineRegistry();
 
-	/** Wild card for file extensions. */
-	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
-
 	/** Name of the extension point to parse for engines. */
 	private static final String MATCH_ENGINES_EXTENSION_POINT = "org.eclipse.emf.compare.match.engine"; //$NON-NLS-1$
+
+	/** Separator for extension Metadata attributes. */
+	private static final String SEPARATOR = ","; //$NON-NLS-1$
 
 	/** Serial version UID is used when deserializing Objects. */
 	private static final long serialVersionUID = 2237008034183610765L;
 
 	/** Externalized here to avoid too many distinct usages. */
 	private static final String TAG_ENGINE = "matchengine"; //$NON-NLS-1$
+
+	/** Wild card for file extensions. */
+	private static final String WILDCARD = "*"; //$NON-NLS-1$
+
+	/** Store the engine descriptors associated by a namespace pattern. */
+	private final List<MatchEngineDescriptor> nsPatternDescriptors = new ArrayList<MatchEngineDescriptor>();
 
 	/**
 	 * As this is a singleton, hide the default constructor. Access the instance through the field
@@ -55,22 +62,53 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 			parseExtensionMetadata();
 		} else {
 			// Add both generic engines
-			putValue(ALL_EXTENSIONS, new GenericMatchEngine());
+			putValue(WILDCARD, new GenericMatchEngine());
 		}
 	}
 
 	/**
-	 * This will return the list of engines available for a given fileExtension. Engines must have been
-	 * registered through an extension point for this to return anything else than an empty list. Note that
-	 * engines registered against {@value #ALL_EXTENSIONS} will always be returned at the end of this list.
+	 * This will return the list of engine descriptors available for a given model identifier. Engines must
+	 * have been registered through an extension point for this to return anything else than an empty list.
+	 * Note that engines registered against {@value #WILDCARD} will always be returned at the end of this
+	 * list.
 	 * 
-	 * @param fileExtension
-	 *            Extension of the file we seek the matching engines for.
-	 * @return The list of available engines.
+	 * @param identifier
+	 *            {@link ModelIdentifier} we seek the matching engines for.
+	 * @return The list of available engine descriptors.
+	 * @since 1.1
 	 */
-	public List<MatchEngineDescriptor> getDescriptors(String fileExtension) {
-		final List<Object> specific = get(fileExtension);
-		final List<Object> candidates = new ArrayList<Object>(get(ALL_EXTENSIONS));
+	public List<MatchEngineDescriptor> getDescriptors(ModelIdentifier identifier) {
+		final List<Object> candidates = getEnginesForIdentifier(identifier);
+
+		candidates.addAll(get(WILDCARD));
+
+		final List<MatchEngineDescriptor> engines = new ArrayList<MatchEngineDescriptor>(candidates.size());
+		for (final Object value : candidates) {
+			if (value instanceof MatchEngineDescriptor) {
+				engines.add((MatchEngineDescriptor)value);
+			}
+		}
+
+		return engines;
+	}
+
+	/**
+	 * This will return the list of engine descriptors available for a given engine identifier. Engines must
+	 * have been registered through an extension point for this to return anything else than an empty list.
+	 * Note that engines registered against {@value #WILDCARD} will always be returned at the end of this
+	 * list.
+	 * 
+	 * @param engineIdentifier
+	 *            Engine identifier we seek the matching engines for.<br/>
+	 *            An engine identifier is a String that can describe either a file extension, a content-type
+	 *            or a namespace.
+	 * @return The list of available engine descriptors.
+	 * @deprecated use {@link MatchEngineRegistry#getDescriptors(ModelIdentifier)} instead.
+	 */
+	@Deprecated
+	public List<MatchEngineDescriptor> getDescriptors(String engineIdentifier) {
+		final List<Object> specific = get(engineIdentifier);
+		final List<Object> candidates = new ArrayList<Object>(get(WILDCARD));
 		if (specific != null) {
 			candidates.addAll(0, specific);
 		}
@@ -85,47 +123,54 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	}
 
 	/**
-	 * Returns the highest priority {@link IMatchEngine} registered against the given file extension. Specific
-	 * engines will always come before generic ones regardless of their priority. If engines have been
-	 * manually added to the list, the latest added will be returned.
+	 * Returns the highest priority {@link IMatchEngine} registered against the given model identifiers.
+	 * Specific engines will always come before generic ones regardless of their priority. If engines have
+	 * been manually added to the list, the latest added will be returned.
 	 * 
-	 * @param fileExtension
-	 *            The extension of the file we need a {@link IMatchEngine} for.
-	 * @return The best {@link IMatchEngine} for the given file extension.
+	 * @param identifier
+	 *            {@link ModelIdentifier} to search on the registered {@link IMatchEngine}
+	 * @return The best {@link IMatchEngine} for the given engine identifiers.
+	 * @since 1.1
 	 */
-	public IMatchEngine getHighestEngine(String fileExtension) {
-		final List<Object> engines = get(fileExtension);
-		int highestPriority = -1;
+	public IMatchEngine getHighestEngine(ModelIdentifier identifier) {
 		IMatchEngine highest = null;
-		if (engines != null) {
-			for (final Object engine : engines) {
-				if (engine instanceof MatchEngineDescriptor) {
-					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
-					if (desc.getPriorityValue() > highestPriority) {
-						highest = desc.getEngineInstance();
-						highestPriority = desc.getPriorityValue();
-					}
-				} else if (engine instanceof IMatchEngine) {
-					highest = (IMatchEngine)engine;
-					break;
-				}
-			}
+
+		final List<Object> engines = getEnginesForIdentifier(identifier);
+
+		if (engines.size() != 0) {
+			highest = getSpecificHighestEngine(engines);
 		}
 
 		// couldn't find a specific engine, search through the generic ones
 		if (highest == null) {
-			for (final Object engine : get(ALL_EXTENSIONS)) {
-				if (engine instanceof MatchEngineDescriptor) {
-					final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
-					if (desc.getPriorityValue() > highestPriority) {
-						highest = desc.getEngineInstance();
-						highestPriority = desc.getPriorityValue();
-					}
-				} else if (engine instanceof IMatchEngine) {
-					highest = (IMatchEngine)engine;
-					break;
-				}
-			}
+			highest = getSpecificHighestEngine(get(WILDCARD));
+		}
+		return highest;
+	}
+
+	/**
+	 * Returns the highest priority {@link IMatchEngine} registered against the given engine identifier.
+	 * Specific engines will always come before generic ones regardless of their priority. If engines have
+	 * been manually added to the list, the latest added will be returned.
+	 * 
+	 * @param engineIdentifier
+	 *            An engine identifier to search on the registered {@link IMatchEngine}.<br/>
+	 *            An engine identifier is a String that can describe either a file extension, a content-type
+	 *            or a namespace.
+	 * @return The best {@link IMatchEngine} for the given file identifier.
+	 * @deprecated use {@link MatchEngineRegistry#getHighestEngine(ModelIdentifier)} instead.
+	 */
+	@Deprecated
+	public IMatchEngine getHighestEngine(String engineIdentifier) {
+		final List<Object> engines = get(engineIdentifier);
+		IMatchEngine highest = null;
+		if (engines != null) {
+			highest = getSpecificHighestEngine(engines);
+		}
+
+		// couldn't find a specific engine, search through the generic ones
+		if (highest == null) {
+			highest = getSpecificHighestEngine(get(WILDCARD));
 		}
 		return highest;
 	}
@@ -154,12 +199,80 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 	}
 
 	/**
+	 * Retrieves the engines that correspond to the given identifier.
+	 * 
+	 * @param identifier
+	 *            the {@link ModelIdentifier} we seek engines for.
+	 * @return a list of {@link IMatchEngine} and {@link DiffEngineDescriptor}
+	 */
+	private List<Object> getEnginesForIdentifier(ModelIdentifier identifier) {
+		final List<Object> candidates = new ArrayList<Object>();
+		List<Object> newCandidates;
+
+		if (identifier.getNamespace() != null) {
+			newCandidates = get(identifier.getNamespace());
+			if (newCandidates != null) {
+				candidates.addAll(newCandidates);
+			}
+
+			for (MatchEngineDescriptor desc : nsPatternDescriptors) {
+				if (identifier.getNamespace().matches(desc.getNamespacePattern())) {
+					candidates.add(desc);
+				}
+			}
+		}
+
+		if (identifier.getContentType() != null) {
+			newCandidates = get(identifier.getContentType());
+			if (newCandidates != null) {
+				candidates.addAll(newCandidates);
+			}
+		}
+
+		if (identifier.getExtension() != null) {
+			newCandidates = get(identifier.getExtension());
+			if (newCandidates != null) {
+				candidates.addAll(newCandidates);
+			}
+		}
+
+		return candidates;
+	}
+
+	/**
+	 * Returns the highest priority {@link IMatchEngine} registered among the given engine list. If engines
+	 * have been manually added to the list, the latest added will be returned.
+	 * 
+	 * @param engines
+	 *            List of engines.
+	 * @return The best {@link IMatchEngine} for the given engine list.
+	 */
+	private IMatchEngine getSpecificHighestEngine(List<Object> engines) {
+		int highestPriority = -1;
+		IMatchEngine highest = null;
+
+		for (final Object engine : engines) {
+			if (engine instanceof MatchEngineDescriptor) {
+				final MatchEngineDescriptor desc = (MatchEngineDescriptor)engine;
+				if (desc.getPriorityValue() > highestPriority) {
+					highest = desc.getEngineInstance();
+					highestPriority = desc.getPriorityValue();
+				}
+			} else if (engine instanceof IMatchEngine) {
+				highest = (IMatchEngine)engine;
+			}
+		}
+
+		return highest;
+	}
+
+	/**
 	 * This will parse the given {@link IConfigurationElement configuration element} and return a descriptor
 	 * for it if it describes and engine.
 	 * 
 	 * @param configElement
 	 *            Configuration element to parse.
-	 * @return {@link MatchEngineDescriptor} wrapped around <code>configElement</code> if it describes an
+	 * @return {@link DiffEngineDescriptor} wrapped around <code>configElement</code> if it describes an
 	 *         engine, <code>null</code> otherwise.
 	 */
 	private MatchEngineDescriptor parseEngine(IConfigurationElement configElement) {
@@ -180,9 +293,31 @@ public final class MatchEngineRegistry extends HashMap<String, List<Object>> {
 			final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 			for (int j = 0; j < configElements.length; j++) {
 				final MatchEngineDescriptor desc = parseEngine(configElements[j]);
-				final String[] fileExtensions = desc.getFileExtension().split(","); //$NON-NLS-1$
+
+				final String namespacePattern = desc.getNamespacePattern();
+				if (!"".equals(namespacePattern)) { //$NON-NLS-1$
+					nsPatternDescriptors.add(desc);
+				}
+
+				final String[] namespaces = desc.getNamespace().split(SEPARATOR);
+				for (final String ns : namespaces) {
+					if (!"".equals(ns)) { //$NON-NLS-1$
+						putValue(ns, desc);
+					}
+				}
+
+				final String[] contentTypes = desc.getContentType().split(SEPARATOR);
+				for (final String ct : contentTypes) {
+					if (!"".equals(ct)) { //$NON-NLS-1$
+						putValue(ct, desc);
+					}
+				}
+
+				final String[] fileExtensions = desc.getFileExtension().split(SEPARATOR);
 				for (final String ext : fileExtensions) {
-					putValue(ext, desc);
+					if (!"".equals(ext)) { //$NON-NLS-1$
+						putValue(ext, desc);
+					}
 				}
 			}
 		}

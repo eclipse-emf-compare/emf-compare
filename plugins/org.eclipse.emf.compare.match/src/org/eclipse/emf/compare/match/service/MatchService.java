@@ -30,6 +30,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchModel;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
+import org.eclipse.emf.compare.util.ModelIdentifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -42,9 +43,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class MatchService {
-	/** Default extension for EObjects not attached to a resource. */
-	private static final String DEFAULT_EXTENSION = "ecore"; //$NON-NLS-1$
-
 	/** Keeps track of those resources that are loaded as fragments of others. */
 	private static final Set<Resource> FRAGMENT_RESOURCES = new HashSet<Resource>();
 
@@ -79,9 +77,8 @@ public final class MatchService {
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource(), ancestor
-				.eResource());
-		final IMatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(leftObject.eResource(), rightObject.eResource(),
+				ancestor.eResource());
 		final MatchModel result = engine.contentMatch(leftObject, rightObject, ancestor, options);
 		engine.reset();
 		return result;
@@ -106,8 +103,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doContentMatch(EObject leftObject, EObject rightObject,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftObject.eResource(), rightObject.eResource());
-		final IMatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(leftObject.eResource(), rightObject.eResource());
 		final MatchModel result = engine.contentMatch(leftObject, rightObject, options);
 		engine.reset();
 		return result;
@@ -132,9 +128,8 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource(), ancestor
+		final IMatchEngine engine = getBestMatchEngine(leftRoot.eResource(), rightRoot.eResource(), ancestor
 				.eResource());
-		final IMatchEngine engine = getBestMatchEngine(extension);
 		final MatchModel result = engine.modelMatch(leftRoot, rightRoot, ancestor, options);
 		engine.reset();
 		return result;
@@ -157,8 +152,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> options)
 			throws InterruptedException {
-		final String extension = getBestExtension(leftRoot.eResource(), rightRoot.eResource());
-		final IMatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(leftRoot.eResource(), rightRoot.eResource());
 		final MatchModel result = engine.modelMatch(leftRoot, rightRoot, options);
 		engine.reset();
 		return result;
@@ -183,8 +177,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftResource, rightResource);
-		final IMatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(leftResource, rightResource);
 		final MatchModel result = engine.resourceMatch(leftResource, rightResource, options);
 		engine.reset();
 		return result;
@@ -209,8 +202,7 @@ public final class MatchService {
 	 */
 	public static MatchModel doResourceMatch(Resource leftResource, Resource rightResource,
 			Resource ancestorResource, Map<String, Object> options) throws InterruptedException {
-		final String extension = getBestExtension(leftResource, rightResource, ancestorResource);
-		final IMatchEngine engine = getBestMatchEngine(extension);
+		final IMatchEngine engine = getBestMatchEngine(leftResource, rightResource, ancestorResource);
 		final MatchModel result = engine
 				.resourceMatch(leftResource, rightResource, ancestorResource, options);
 		engine.reset();
@@ -421,20 +413,68 @@ public final class MatchService {
 	}
 
 	/**
-	 * Returns the best {@link IMatchEngine} for a file given its extension.
+	 * This will try and find a resource in <code>candidates</code> similar to <code>resource</code>.
 	 * 
-	 * @param extension
-	 *            The extension of the file we need an {@link IMatchEngine} for.
-	 * @return The best {@link IMatchEngine} for the given file extension.
+	 * @param resource
+	 *            The resource we seek a similar to in the given resourceSet.
+	 * @param candidates
+	 *            candidate resources.
+	 * @return The most similar resource to <code>resource</code> we could find in <code>resourceSet</code>.
 	 */
-	public static IMatchEngine getBestMatchEngine(String extension) {
+	public static Resource findMatchingResource(Resource resource, List<Resource> candidates) {
+		return ResourceSimilarity.findMatchingResource(resource, candidates);
+	}
+
+	/**
+	 * Returns the best {@link IMatchEngine} for a given list of {@link Resource} to compare.
+	 * 
+	 * @param resources
+	 *            The list of {@link Resource} to compare.
+	 * @return The best {@link IMatchEngine} for the given list of {@link Resource}
+	 * @since 1.1
+	 */
+	public static IMatchEngine getBestMatchEngine(Resource... resources) {
+		IMatchEngine engine = null;
+
+		final ModelIdentifier identifier = new ModelIdentifier(resources);
+
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault().getBoolean(
 						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION)) {
-			final MatchEngineDescriptor desc = getBestDescriptor(extension);
+			final List<MatchEngineDescriptor> engines = MatchEngineRegistry.INSTANCE
+					.getDescriptors(identifier);
+
+			if (engines.size() == 1) {
+				engine = engines.iterator().next().getEngineInstance();
+			} else {
+				engine = matchEngineSelector.selectMatchEngine(engines).getEngineInstance();
+			}
+		} else {
+			engine = MatchEngineRegistry.INSTANCE.getHighestEngine(identifier);
+		}
+
+		return engine;
+	}
+
+	/**
+	 * Returns the best {@link IMatchEngine} for a file given its extension.
+	 * 
+	 * @param engineIdentifier
+	 *            An engine identifier to search on the registered {@link IMatchEngine}.<br/>
+	 *            An engine identifier is a String that can describe either a file extension, a content-type
+	 *            or a namespace.
+	 * @return The best {@link IMatchEngine} for the given engine identifier.
+	 * @deprecated use {@link MatchService#getBestMatchEngine(Resource...)} instead
+	 */
+	@Deprecated
+	public static IMatchEngine getBestMatchEngine(String engineIdentifier) {
+		if (EMFPlugin.IS_ECLIPSE_RUNNING
+				&& EMFComparePlugin.getDefault().getBoolean(
+						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION)) {
+			final MatchEngineDescriptor desc = getBestDescriptor(engineIdentifier);
 			return desc.getEngineInstance();
 		}
-		return MatchEngineRegistry.INSTANCE.getHighestEngine(extension);
+		return MatchEngineRegistry.INSTANCE.getHighestEngine(engineIdentifier);
 	}
 
 	/**
@@ -445,25 +485,6 @@ public final class MatchService {
 	 */
 	public static void setMatchEngineSelector(IMatchEngineSelector selector) {
 		matchEngineSelector = selector;
-	}
-
-	/**
-	 * Returns the roots of the given resource. This will return a proxy to hold the resource's URI if it has
-	 * no roots.
-	 * 
-	 * @param res
-	 *            The resource we need the roots of.
-	 * @return The roots of the given resource.
-	 */
-	private static List<EObject> getResourceRoots(Resource res) {
-		final List<EObject> roots = new ArrayList<EObject>(res.getContents());
-		if (res.getContents().isEmpty()) {
-			// The resource has no root ... create a proxy to hold the resource URI
-			final EObject proxy = EcoreFactory.eINSTANCE.createEObject();
-			((InternalEObject)proxy).eSetProxyURI(res.getURI().appendFragment("/")); //$NON-NLS-1$
-			roots.add(proxy);
-		}
-		return roots;
 	}
 
 	/**
@@ -483,14 +504,18 @@ public final class MatchService {
 	}
 
 	/**
-	 * Returns the best {@link MatchEngineDescriptor} for a given file extension.
+	 * Returns the best {@link DiffEngineDescriptor} for a given file extension.
 	 * 
-	 * @param extension
-	 *            The file extension we need a match engine for.
-	 * @return The best {@link MatchEngineDescriptor}.
+	 * @param engineIdentifier
+	 *            An engine identifier to search on the registered {@link DiffEngineDescriptor}.<br/>
+	 *            An engine identifier is a String that can describe either a file extension, a content-type
+	 *            or a namespace.
+	 * @return The best {@link DiffEngineDescriptor}.
 	 */
-	private static MatchEngineDescriptor getBestDescriptor(String extension) {
-		final List<MatchEngineDescriptor> engines = MatchEngineRegistry.INSTANCE.getDescriptors(extension);
+	@Deprecated
+	private static MatchEngineDescriptor getBestDescriptor(String engineIdentifier) {
+		final List<MatchEngineDescriptor> engines = MatchEngineRegistry.INSTANCE
+				.getDescriptors(engineIdentifier);
 		MatchEngineDescriptor engine = null;
 		if (engines.size() == 1) {
 			engine = engines.iterator().next();
@@ -502,31 +527,22 @@ public final class MatchService {
 	}
 
 	/**
-	 * This will try and find the file extension of the compared models.
-	 * <p>
-	 * When the two extensions are distinct or empty, {@link #DEFAULT_EXTENSION} will be returned.
-	 * </p>
+	 * Returns the roots of the given resource. This will return a proxy to hold the resource's URI if it has
+	 * no roots.
 	 * 
-	 * @param resources
-	 *            The Resources that will be compared.
-	 * @return The file extension to consider when searching for a match engine.
+	 * @param res
+	 *            The resource we need the roots of.
+	 * @return The roots of the given resource.
 	 */
-	private static String getBestExtension(Resource... resources) {
-		String extension = null;
-		for (int i = 0; i < resources.length; i++) {
-			if (resources[i] == null) {
-				extension = DEFAULT_EXTENSION;
-				break;
-			} else if (resources[i].getURI() != null) {
-				if (extension == null) {
-					extension = resources[i].getURI().fileExtension();
-				} else if (!extension.equals(resources[i].getURI().fileExtension())) {
-					extension = DEFAULT_EXTENSION;
-					break;
-				}
-			}
+	private static List<EObject> getResourceRoots(Resource res) {
+		final List<EObject> roots = new ArrayList<EObject>(res.getContents());
+		if (res.getContents().isEmpty()) {
+			// The resource has no root ... create a proxy to hold the resource URI
+			final EObject proxy = EcoreFactory.eINSTANCE.createEObject();
+			((InternalEObject)proxy).eSetProxyURI(res.getURI().appendFragment("/")); //$NON-NLS-1$
+			roots.add(proxy);
 		}
-		return extension;
+		return roots;
 	}
 
 	/**
@@ -571,18 +587,5 @@ public final class MatchService {
 				}
 			}
 		}
-	}
-
-	/**
-	 * This will try and find a resource in <code>candidates</code> similar to <code>resource</code>.
-	 * 
-	 * @param resource
-	 *            The resource we seek a similar to in the given resourceSet.
-	 * @param candidates
-	 *            candidate resources.
-	 * @return The most similar resource to <code>resource</code> we could find in <code>resourceSet</code>.
-	 */
-	public static Resource findMatchingResource(Resource resource, List<Resource> candidates) {
-		return ResourceSimilarity.findMatchingResource(resource, candidates);
 	}
 }
