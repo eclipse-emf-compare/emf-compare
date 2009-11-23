@@ -34,6 +34,18 @@ Contributors:
             fileExtension="c"
             priority="low"
             label="CLowEngine"/>
+      <matchengine
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.DEngine"
+            label="DEngine"
+            namespace="http://www.eclipse.org/emf/2002/GenModel"
+            priority="lowest">
+      </matchengine>
+      <matchengine
+            engineClass="org.eclipse.emf.compare.tests.unit.match.engine.mock.EEngine"
+            label="EEngine"
+            namespacePattern=".*2002/GenModel"
+            priority="lowest">
+      </matchengine>
             <!--
       <matchengine
             engineClass="org.eclipse.emf.compare.match.statistic.test.match.engines.GenericHighestEngine"
