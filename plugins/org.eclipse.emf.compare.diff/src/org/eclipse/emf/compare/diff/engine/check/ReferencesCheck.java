@@ -409,24 +409,6 @@ public class ReferencesCheck extends AbstractCheck {
 		// have no matching "right" counterpart
 		addedReferences.removeAll(matchedOldReferences);
 
-		// Double check for objects not matched with the matchCrossReferencer
-		for (final EObject added : new ArrayList<EObject>(addedReferences)) {
-			for (final EObject deleted : deletedReferences) {
-				final EObject matched = getMatchedEObject(added);
-				if (matched != null) {
-					if (matched == deleted) {
-						addedReferences.remove(added);
-					}
-				} else {
-					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
-							.getURI(added), EcoreUtil.getURI(deleted));
-					if (uriSimilarity > similarReferenceURIThreshold) {
-						addedReferences.remove(added);
-					}
-				}
-			}
-		}
-
 		return addedReferences;
 	}
 
@@ -458,24 +440,6 @@ public class ReferencesCheck extends AbstractCheck {
 		// "deleted" references are the references from the right element that
 		// have no counterpart in the left element
 		deletedReferences.removeAll(matchedNewReferences);
-
-		// Double check for objects not matched with the matchCrossReferencer
-		for (final EObject deleted : new ArrayList<EObject>(deletedReferences)) {
-			for (final EObject added : addedReferences) {
-				final EObject matched = getMatchedEObject(deleted);
-				if (matched != null) {
-					if (matched == added) {
-						deletedReferences.remove(deleted);
-					}
-				} else {
-					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
-							.getURI(added), EcoreUtil.getURI(deleted));
-					if (uriSimilarity > similarReferenceURIThreshold) {
-						deletedReferences.remove(deleted);
-					}
-				}
-			}
-		}
 
 		return deletedReferences;
 	}
