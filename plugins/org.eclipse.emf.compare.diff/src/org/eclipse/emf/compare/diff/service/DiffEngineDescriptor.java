@@ -23,6 +23,16 @@ import org.eclipse.emf.compare.util.EngineConstants;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
+	/** Wildcard character. */
+	private static final String WILDCARD = "*"; //$NON-NLS-1$
+
+	/**
+	 * Content type this engine takes into account.
+	 * 
+	 * @since 1.1
+	 */
+	protected final String contentType;
+
 	/** Configuration element of this descriptor. */
 	protected final IConfigurationElement element;
 
@@ -32,11 +42,25 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 	/** File extensions this engine takes into account. */
 	protected final String fileExtension;
 
+	/** Icon of this engine. */
+	protected final String icon;
+
 	/** Label of this engine. */
 	protected final String label;
 
-	/** Icon of this engine. */
-	protected final String icon;
+	/**
+	 * Namespace this engine takes into account.
+	 * 
+	 * @since 1.1
+	 */
+	protected final String namespace;
+
+	/**
+	 * Namespace pattern this engine takes into account.
+	 * 
+	 * @since 1.1
+	 */
+	protected final String namespacePattern;
 
 	/**
 	 * Priority of this descriptor. Should be one of
@@ -64,11 +88,19 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 	 */
 	public DiffEngineDescriptor(IConfigurationElement configuration) {
 		element = configuration;
-		fileExtension = getAttribute("fileExtension", "*"); //$NON-NLS-1$ //$NON-NLS-2$
 		priority = getAttribute("priority", "low"); //$NON-NLS-1$//$NON-NLS-2$
 		engineClassName = getAttribute("engineClass", null); //$NON-NLS-1$
 		label = getAttribute("label", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		icon = getAttribute("icon", ""); //$NON-NLS-1$ //$NON-NLS-2$
+
+		contentType = getAttribute("contentType", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		namespace = getAttribute("namespace", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		namespacePattern = getAttribute("namespacePattern", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if ("".equals(contentType) && "".equals(namespace) && "".equals(namespacePattern)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			fileExtension = getAttribute("fileExtension", WILDCARD); //$NON-NLS-1$
+		} else {
+			fileExtension = getAttribute("fileExtension", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	/**
@@ -104,6 +136,14 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 				isEqual = false;
 			} else if (fileExtension != null && !fileExtension.equals(other.fileExtension)) {
 				isEqual = false;
+			} else if (contentType == null && other.contentType != null) {
+				isEqual = false;
+			} else if (contentType != null && !contentType.equals(other.contentType)) {
+				isEqual = false;
+			} else if (namespace == null && other.namespace != null) {
+				isEqual = false;
+			} else if (namespace != null && !namespace.equals(other.namespace)) {
+				isEqual = false;
 			} else if (priority == null && other.priority != null) {
 				isEqual = false;
 			} else if (priority != null && !priority.equals(other.priority)) {
@@ -111,6 +151,16 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 			}
 		}
 		return isEqual;
+	}
+
+	/**
+	 * Returns the content type this engine should handle.
+	 * 
+	 * @return The content type this engine should handle.
+	 * @since 1.1
+	 */
+	public String getContentType() {
+		return contentType;
 	}
 
 	/**
@@ -183,56 +233,32 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 	}
 
 	/**
+	 * Returns the namespace this engine should handle.
+	 * 
+	 * @return The namespace this engine should handle.
+	 * @since 1.1
+	 */
+	public String getNamespace() {
+		return namespace;
+	}
+
+	/**
+	 * Returns the namespace pattern this engine should handle.
+	 * 
+	 * @return The namespace pattern this engine should handle.
+	 * @since 1.1
+	 */
+	public String getNamespacePattern() {
+		return namespacePattern;
+	}
+
+	/**
 	 * Returns the engine priority.
 	 * 
 	 * @return The engine priority.
 	 */
 	public String getPriority() {
 		return priority.toLowerCase();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int classNameHash = 0;
-		if (engineClassName != null) {
-			classNameHash = engineClassName.hashCode();
-		}
-		int extensionHash = 0;
-		if (fileExtension != null) {
-			extensionHash = fileExtension.hashCode();
-		}
-		int priorityHash = 0;
-		if (priority != null) {
-			priorityHash = priority.hashCode();
-		}
-
-		return ((prime + classNameHash) * prime + extensionHash) * prime + priorityHash;
-	}
-
-	/**
-	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the
-	 * attribute hasn't been set, we'll return <code>defaultValue</code> instead.
-	 * 
-	 * @param name
-	 *            Name of the attribute we seek the value of.
-	 * @param defaultValue
-	 *            Value to return if the attribute hasn't been set.
-	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
-	 */
-	private String getAttribute(String name, String defaultValue) {
-		final String value = element.getAttribute(name);
-		if (value != null)
-			return value;
-		if (defaultValue != null)
-			return defaultValue;
-		throw new IllegalArgumentException(EMFCompareDiffMessages.getString(
-				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 
 	/**
@@ -262,5 +288,62 @@ public class DiffEngineDescriptor implements Comparable<DiffEngineDescriptor> {
 			}
 		}
 		return priorityValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int classNameHash = 0;
+		if (engineClassName != null) {
+			classNameHash = engineClassName.hashCode();
+		}
+		int namespaceHash = 0;
+		if (namespace != null) {
+			namespaceHash = namespace.hashCode();
+		}
+		int contentTypeHash = 0;
+		if (contentType != null) {
+			contentTypeHash = contentType.hashCode();
+		}
+		int extensionHash = 0;
+		if (fileExtension != null) {
+			extensionHash = fileExtension.hashCode();
+		}
+		int priorityHash = 0;
+		if (priority != null) {
+			priorityHash = priority.hashCode();
+		}
+
+		int hashCode = (prime + classNameHash) * prime;
+		hashCode = hashCode << 2;
+		hashCode = (hashCode + extensionHash + namespaceHash + contentTypeHash) * prime;
+		hashCode = hashCode << 1;
+		hashCode = hashCode + priorityHash;
+		return hashCode;
+	}
+
+	/**
+	 * Returns the value of the attribute <code>name</code> of this descriptor's configuration element. if the
+	 * attribute hasn't been set, we'll return <code>defaultValue</code> instead.
+	 * 
+	 * @param name
+	 *            Name of the attribute we seek the value of.
+	 * @param defaultValue
+	 *            Value to return if the attribute hasn't been set.
+	 * @return The value of the attribute <code>name</code>, <code>defaultValue</code> if it hasn't been set.
+	 */
+	private String getAttribute(String name, String defaultValue) {
+		final String value = element.getAttribute(name);
+		if (value != null)
+			return value;
+		if (defaultValue != null)
+			return defaultValue;
+		throw new IllegalArgumentException(EMFCompareDiffMessages.getString(
+				"Descriptor.MissingAttribute", name)); //$NON-NLS-1$
 	}
 }

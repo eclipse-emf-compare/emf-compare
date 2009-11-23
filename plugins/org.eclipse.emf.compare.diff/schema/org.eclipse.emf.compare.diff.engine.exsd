@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.emf.compare.diff" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.emf.compare.diff" id="org.eclipse.emf.compare.diff.engine" name="org.eclipse.emf.compare.diff.engine"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          This extension point allows a plug-in to register a distinct match engine to adress specific comparison needs.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -56,14 +56,35 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="contentType" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the content type this engine targets. * for any content type.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="namespace" type="string">
+            <annotation>
+               <documentation>
+                  Comma separated list of the namespaces this engine targets. * for any namespace.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="namespacePattern" type="string">
+            <annotation>
+               <documentation>
+                  A pattern representing the namespaces targetted by this engine.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="engineClass" type="string" use="required">
             <annotation>
                <documentation>
                   The fully qualified name of a Java class implementing &lt;code&gt;org.eclipse.emf.compare.diff.api.IDiffEngine&lt;/code&gt;.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.diff.api.IDiffEngine"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="priority" use="default" value="low">
@@ -99,45 +120,45 @@
                <documentation>
                   Icon that will be presented along with the label to the user when selecting the engine
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="resource"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          0.8
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter API information here.]
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          [Enter information about supplied implementation of this extension point.]
       </documentation>
