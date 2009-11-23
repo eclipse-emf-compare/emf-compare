@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -125,6 +126,58 @@ public final class ModelUtils {
 	}
 
 	/**
+	 * This will try and find the common file extension for the compared models.
+	 * 
+	 * @param uris
+	 *            The resource URIs that will be compared.
+	 * @return The file extension to consider when searching for a match engine or <code>null</code> if file
+	 *         extensions are distinct.
+	 */
+	public static String getCommonExtension(URI... uris) {
+		String extension = null;
+		for (int i = 0; i < uris.length; i++) {
+			if (uris[i] != null) {
+				if (extension == null) {
+					extension = uris[i].fileExtension();
+				} else if (uris[i].fileExtension() != null && !extension.equals(uris[i].fileExtension())) {
+					return null;
+				}
+			}
+		}
+		return extension;
+	}
+
+	/**
+	 * This will try to find the common namespace of the given resources.
+	 * 
+	 * @param resources
+	 *            The resources that will be compared.
+	 * @return The namespace to consider when searching for a match engine or <code>null</code> if namespaces
+	 *         are distinct.
+	 * @since 1.1
+	 */
+	public static String getCommonNamespace(Resource... resources) {
+		String namespace = null;
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i] != null) {
+				if (!resources[i].getContents().isEmpty()) {
+
+					final EObject rootContainer = EcoreUtil.getRootContainer(resources[i].getContents()
+							.get(0).eClass());
+					if (rootContainer instanceof EPackage) {
+						if (namespace == null) {
+							namespace = ((EPackage)rootContainer).getNsURI();
+						} else if (!namespace.equals(((EPackage)rootContainer).getNsURI())) {
+							return null;
+						}
+					}
+				}
+			}
+		}
+		return namespace;
+	}
+
+	/**
 	 * Loads the models contained by the given directory in the given ResourceSet.
 	 * <p>
 	 * If <code>resourceSet</code> is <code>null</code>, all models will be loaded in a new resourceSet.
@@ -150,13 +203,13 @@ public final class ModelUtils {
 	 * If <code>resourceSet</code> is <code>null</code>, all models will be loaded in a new resourceSet.
 	 * </p>
 	 * <p>
-	 * The argument <code>extension</code> is in fact the needed suffix for its name in order for a file to
-	 * be loaded. If it is equal to &quot;rd&quot;, a file named &quot;model.aird&quot; will be loaded, but so
+	 * The argument <code>extension</code> is in fact the needed suffix for its name in order for a file to be
+	 * loaded. If it is equal to &quot;rd&quot;, a file named &quot;model.aird&quot; will be loaded, but so
 	 * would be a file named &quot;Shepherd&quot;.
 	 * </p>
 	 * <p>
-	 * The empty String or <code>null</code> will result in all the files of the given directory to be
-	 * loaded, and would then be equivalent to {@link #getModelsFrom(File)}.
+	 * The empty String or <code>null</code> will result in all the files of the given directory to be loaded,
+	 * and would then be equivalent to {@link #getModelsFrom(File)}.
 	 * </p>
 	 * 
 	 * @param directory
@@ -219,7 +272,7 @@ public final class ModelUtils {
 	}
 
 	/**
-	 * Load a model from an {@link java.io.InputStream  InputStream} in a given {@link ResourceSet}.
+	 * Load a model from an {@link java.io.InputStream InputStream} in a given {@link ResourceSet}.
 	 * <p>
 	 * This will return the first root of the loaded model, other roots can be accessed via the resource's
 	 * content.
@@ -247,7 +300,7 @@ public final class ModelUtils {
 			result = modelResource.getContents().get(0);
 		return result;
 	}
-	
+
 	/**
 	 * Loads a model from the String representing the location of a model.
 	 * <p>
@@ -259,7 +312,8 @@ public final class ModelUtils {
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * This will return the first root of the loaded model, other roots can be accessed via the resource's content.
+	 * This will return the first root of the loaded model, other roots can be accessed via the resource's
+	 * content.
 	 * </p>
 	 * 
 	 * @param path

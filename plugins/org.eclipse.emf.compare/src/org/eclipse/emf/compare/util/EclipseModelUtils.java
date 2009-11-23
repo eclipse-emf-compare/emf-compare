@@ -15,9 +15,11 @@ import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -59,6 +61,40 @@ public final class EclipseModelUtils {
 			monitor = new BasicMonitor();
 		}
 		return monitor;
+	}
+
+	/**
+	 * This will try and find the common content-type of the given resources.
+	 * 
+	 * @param uris
+	 *            The resource URIs that will be compared.
+	 * @return The content-type to consider when searching for a match engine or <code>null</code> if
+	 *         content-types are distinct.
+	 * @since 1.1
+	 */
+	public static String getCommonContentType(URI... uris) {
+		String contentType = null;
+		for (int i = 0; i < uris.length; i++) {
+			if (uris[i] != null) {
+				if (uris[i].isPlatformResource()) {
+					final IPath modelPath = new Path(uris[i].toPlatformString(true));
+					String newContentType = null;
+					try {
+						newContentType = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath)
+								.getContentDescription().getContentType().getId();
+					} catch (CoreException e) {
+						// Do nothing
+					}
+
+					if (contentType == null) {
+						contentType = newContentType;
+					} else if (newContentType != null && !contentType.equals(newContentType)) {
+						return null;
+					}
+				}
+			}
+		}
+		return contentType;
 	}
 
 	/**
