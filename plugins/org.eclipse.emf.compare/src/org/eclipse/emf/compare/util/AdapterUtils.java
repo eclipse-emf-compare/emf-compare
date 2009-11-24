@@ -56,19 +56,6 @@ public final class AdapterUtils {
 	}
 
 	/**
-	 * Return a factory for a given instance.
-	 * 
-	 * @param eObj
-	 *            the instance.
-	 * @return the factory.
-	 * @deprecated This unused method will be deleted before 1.0 is released.
-	 */
-	@Deprecated
-	public static AdapterFactory findAdapterFactory(EObject eObj) {
-		return FACTORY.getFactoryForType(eObj);
-	}
-
-	/**
 	 * Returns a factory built with all the {@link AdapterFactory} instances available in the global registry.
 	 * 
 	 * @return A factory built with all the {@link AdapterFactory} instances available in the global registry.
