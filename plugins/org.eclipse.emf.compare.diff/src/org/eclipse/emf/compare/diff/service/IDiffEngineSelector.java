@@ -17,7 +17,7 @@ import java.util.List;
  * engine are defined on the same file extension.
  * 
  * @author <a href="laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 1.0.0
+ * @since 1.0
  */
 public interface IDiffEngineSelector {
 	/**
