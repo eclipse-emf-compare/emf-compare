@@ -39,11 +39,15 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 	/**
 	 * {@link CompareConfiguration} controls various aspect of the GUI elements. This will keep track of the
 	 * one used to created this compare editor.
+	 * 
+	 * @since 1.1
 	 */
 	protected final CompareConfiguration configuration;
 
 	/**
 	 * Result of the underlying comparison. This can be either a {@link DiffModel} or {@link DiffResourceSet}.
+	 * 
+	 * @since 1.1
 	 */
 	protected Object input;
 
