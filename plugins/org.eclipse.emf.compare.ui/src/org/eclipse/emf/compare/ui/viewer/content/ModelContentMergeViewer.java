@@ -113,6 +113,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	protected final CompareConfiguration configuration;
 
 	/**
+	 * Indicates that this is a three-way comparison.
+	 * 
+	 * @since 1.1
+	 */
+	protected boolean isThreeWay;
+
+	/**
 	 * this is the "center" part of the content merge viewer where we handle all the drawing operations.
 	 */
 	private AbstractCenterPart canvas;
@@ -128,9 +135,6 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * left model.
 	 */
 	private Action copyDiffRightToLeft;
-
-	/** Indicates that this is a three-way comparison. */
-	private boolean isThreeWay;
 
 	/**
 	 * Indicates that the left model has been modified since opening. Will allow us to prompt the user to save
