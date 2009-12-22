@@ -121,6 +121,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * @param compareConfiguration
 	 *            Compare configuration that's been fed this viewer.
 	 * @return This viewer's content provider.
+	 * @since 1.1
 	 */
 	protected ModelStructureContentProvider createContentProvider(CompareConfiguration compareConfiguration) {
 		return new ModelStructureContentProvider(compareConfiguration);
@@ -132,6 +133,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 * @param compareConfiguration
 	 *            Compare configuration that's been fed this viewer.
 	 * @return This viewer's label provider.
+	 * @since 1.1
 	 */
 	protected ModelStructureLabelProvider createLabelProvider(
 			@SuppressWarnings("unused") CompareConfiguration compareConfiguration) {
