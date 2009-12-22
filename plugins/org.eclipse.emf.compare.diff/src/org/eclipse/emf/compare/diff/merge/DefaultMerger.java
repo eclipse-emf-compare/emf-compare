@@ -175,23 +175,61 @@ public class DefaultMerger implements IMerger {
 			root = ((ComparisonResourceSnapshot)root).getDiff();
 		}
 		if (root != null) {
-			// FIXME diff resourceset
-			final EcoreUtil.CrossReferencer referencer = new EcoreUtil.CrossReferencer(root.eResource()) {
-				private static final long serialVersionUID = 616050158241084372L;
+			// FIXME performance, find a way to cache this referencer
+			final Resource res = root.eResource();
+			final EcoreUtil.CrossReferencer referencer;
+			if (res != null && res.getResourceSet() != null) {
+				referencer = new EcoreUtil.CrossReferencer(res.getResourceSet()) {
+					private static final long serialVersionUID = 616050158241084372L;
 
-				// initializer for this anonymous class
-				{
-					crossReference();
-				}
+					// initializer for this anonymous class
+					{
+						crossReference();
+					}
 
-				@Override
-				protected boolean crossReference(EObject eObject, EReference eReference,
-						EObject crossReferencedEObject) {
-					if (eReference.isChangeable() && !eReference.isDerived())
-						return crossReferencedEObject.eResource() == null;
-					return false;
-				}
-			};
+					@Override
+					protected boolean crossReference(EObject eObject, EReference eReference,
+							EObject crossReferencedEObject) {
+						if (eReference.isChangeable() && !eReference.isDerived())
+							return crossReferencedEObject.eResource() == null;
+						return false;
+					}
+				};
+			} else if (res != null) {
+				referencer = new EcoreUtil.CrossReferencer(res) {
+					private static final long serialVersionUID = 616050158241084372L;
+
+					// initializer for this anonymous class
+					{
+						crossReference();
+					}
+
+					@Override
+					protected boolean crossReference(EObject eObject, EReference eReference,
+							EObject crossReferencedEObject) {
+						if (eReference.isChangeable() && !eReference.isDerived())
+							return crossReferencedEObject.eResource() == null;
+						return false;
+					}
+				};
+			} else {
+				referencer = new EcoreUtil.CrossReferencer(root) {
+					private static final long serialVersionUID = 616050158241084372L;
+
+					// initializer for this anonymous class
+					{
+						crossReference();
+					}
+
+					@Override
+					protected boolean crossReference(EObject eObject, EReference eReference,
+							EObject crossReferencedEObject) {
+						if (eReference.isChangeable() && !eReference.isDerived())
+							return crossReferencedEObject.eResource() == null;
+						return false;
+					}
+				};
+			}
 			final Iterator<Map.Entry<EObject, Collection<EStructuralFeature.Setting>>> i = referencer
 					.entrySet().iterator();
 			while (i.hasNext()) {
