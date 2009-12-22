@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
  * Compare and merge viewer with an area showing diffs as a structured tree.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @noextend This class is not intended to be subclassed by clients.
  */
 public class ModelStructureMergeViewer extends TreeViewer {
 	/** Configuration element of the underlying comparison. */
@@ -100,6 +101,41 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	public String getTitle() {
 		return EMFCompareUIMessages.getString("ModelStructureMergeViewer.viewerTitle"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Returns the widget representing the given element.
+	 * 
+	 * @param element
+	 *            Element we seek the {@link TreeItem} for.
+	 * @return The widget representing the given element.
+	 */
+	/* package */Widget find(Object element) {
+		final Widget widget = super.findItem(element);
+		return widget;
+	}
+
+	/**
+	 * Creates this viewer's content provider.
+	 * 
+	 * @param compareConfiguration
+	 *            Compare configuration that's been fed this viewer.
+	 * @return This viewer's content provider.
+	 */
+	protected ModelStructureContentProvider createContentProvider(CompareConfiguration compareConfiguration) {
+		return new ModelStructureContentProvider(compareConfiguration);
+	}
+
+	/**
+	 * Creates this viewer's label provider.
+	 * 
+	 * @param compareConfiguration
+	 *            Compare configuration that's been fed this viewer.
+	 * @return This viewer's label provider.
+	 */
+	protected ModelStructureLabelProvider createLabelProvider(
+			@SuppressWarnings("unused") CompareConfiguration compareConfiguration) {
+		return new ModelStructureLabelProvider();
 	}
 
 	/**
@@ -182,14 +218,6 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * This will be called when the input of this viewer is set to <code>null</code> and hide the whole
-	 * viewer.
-	 */
-	private void hideStructurePane() {
-		getControl().getParent().getParent().setVisible(false);
-	}
-
-	/**
 	 * Updates the Structure viewer's tool items. This will modify the actions of the "export diff as..."
 	 * menu.
 	 */
@@ -204,15 +232,11 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	}
 
 	/**
-	 * Returns the widget representing the given element.
-	 * 
-	 * @param element
-	 *            Element we seek the {@link TreeItem} for.
-	 * @return The widget representing the given element.
+	 * This will be called when the input of this viewer is set to <code>null</code> and hide the whole
+	 * viewer.
 	 */
-	/* package */Widget find(Object element) {
-		final Widget widget = super.findItem(element);
-		return widget;
+	private void hideStructurePane() {
+		getControl().getParent().getParent().setVisible(false);
 	}
 
 	/**
@@ -224,9 +248,9 @@ public class ModelStructureMergeViewer extends TreeViewer {
 	 */
 	private void initialize(CompareConfiguration compareConfiguration) {
 		configuration = compareConfiguration;
-		setLabelProvider(new ModelStructureLabelProvider());
+		setLabelProvider(createLabelProvider(compareConfiguration));
 		setUseHashlookup(true);
-		setContentProvider(new ModelStructureContentProvider(compareConfiguration));
+		setContentProvider(createContentProvider(compareConfiguration));
 
 		final Tree tree = getTree();
 		tree.setData(CompareUI.COMPARE_VIEWER_TITLE, getTitle());
