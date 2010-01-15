@@ -21,7 +21,6 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.engine.IDiffEngine;
-import org.eclipse.emf.compare.match.engine.IMatchEngine;
 import org.eclipse.emf.compare.util.ModelIdentifier;
 
 /* (non-javadoc) we make use of the ordering of the engines, do not change Map and List implementations. */
@@ -154,7 +153,7 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 	 * been manually added to the list, the latest added will be returned.
 	 * 
 	 * @param engineIdentifier
-	 *            An engine identifier to search on the registered {@link IMatchEngine}.<br/>
+	 *            An engine identifier to search on the registered {@link IDiffEngine}.<br/>
 	 *            An engine identifier is a String that can describe either a file extension, a content-type
 	 *            or a namespace.
 	 * @return The best {@link IDiffEngine} for the given file extension.
@@ -245,7 +244,7 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 	 * 
 	 * @param engines
 	 *            List of engines.
-	 * @return The best {@link IMatchEngine} for the given engine list.
+	 * @return The best {@link IDiffEngine} for the given engine list.
 	 */
 	private IDiffEngine getSpecificHighestEngine(List<Object> engines) {
 		int highestPriority = -1;
@@ -258,7 +257,7 @@ public final class DiffEngineRegistry extends HashMap<String, List<Object>> {
 					highest = desc.getEngineInstance();
 					highestPriority = desc.getPriorityValue();
 				}
-			} else if (engine instanceof IMatchEngine) {
+			} else if (engine instanceof IDiffEngine) {
 				highest = (IDiffEngine)engine;
 			}
 		}
