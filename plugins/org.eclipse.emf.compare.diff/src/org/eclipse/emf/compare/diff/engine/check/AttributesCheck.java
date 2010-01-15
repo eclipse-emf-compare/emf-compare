@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2009 Obeo.
+ * Copyright (c) 2006, 2009 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Taal - [299641] Compare arrays by their content instead of instance equality
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine.check;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -113,6 +115,7 @@ public class AttributesCheck extends AbstractCheck {
 	 * <ul>
 	 * <li>Enumeration literals : if they have the same literal and integer values.</li>
 	 * <li>Feature Map Entries : if their respective values have been matched.</li>
+	 * <li>Arrays : compare the content of the two arrays.</li>
 	 * <li>Other : if the left value is equal to the right value or both are <code>null</code>.</li>
 	 * </ul>
 	 * </p>
@@ -134,8 +137,44 @@ public class AttributesCheck extends AbstractCheck {
 		} else if (left instanceof EObject && right instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
 			distinct = left != getMatchedEObject((EObject)right);
+		} else if (left != null && left.getClass().isArray()) {
+			// [299641] compare arrays by their content instead of instance equality
+			distinct = areDistinctArrays(left, right);
 		} else {
 			distinct = left != null && !left.equals(right) || left == null && left != right;
+		}
+		return distinct;
+	}
+
+	/**
+	 * Compares two values as arrays, checking that the length and content of both matches each other.
+	 * 
+	 * @param left
+	 *            The value of the attribute from the left compare resource.
+	 * @param right
+	 *            The value of the attribute from the right compare resource.
+	 * @return <code>true</code> if the <code>left</code> value is distinct from the <code>right</code> value.
+	 */
+	private boolean areDistinctArrays(Object left, Object right) {
+		boolean distinct = false;
+		// we know left is a non-null array.
+		if (right == null || !right.getClass().isArray()) {
+			distinct = true;
+		} else {
+			final int leftLength = Array.getLength(left);
+			final int rightLength = Array.getLength(right);
+			if (leftLength != rightLength) {
+				distinct = true;
+			} else {
+				for (int i = 0; i < leftLength; i++) {
+					final Object leftElement = Array.get(left, i);
+					final Object rightElement = Array.get(right, i);
+					if (areDistinctValues(leftElement, rightElement)) {
+						distinct = true;
+						break;
+					}
+				}
+			}
 		}
 		return distinct;
 	}
