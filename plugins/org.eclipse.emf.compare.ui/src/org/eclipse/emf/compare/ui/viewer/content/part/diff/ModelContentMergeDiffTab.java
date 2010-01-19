@@ -680,10 +680,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				final EObject right = ((ModelElementChangeRightTarget)diff).getRightElement();
 				final EObject left = ((ModelElementChangeRightTarget)diff).getLeftParent();
 				final int rightIndex = right.eContainer().eContents().indexOf(right);
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int leftIndex = Math.min(rightIndex - 1, left.eContents().size() - 1);
-				if (left.eContents().size() > 0) {
-					visibleItem = (Item)findItem(left.eContents().get(leftIndex));
+				if (left != null) {
+					// Ensures we cannot trigger ArrayOutOfBounds exeptions
+					final int leftIndex = Math.min(rightIndex - 1, left.eContents().size() - 1);
+					if (left.eContents().size() > 0) {
+						visibleItem = (Item)findItem(left.eContents().get(leftIndex));
+					}
 				}
 			} else if (partSide == EMFCompareConstants.RIGHT && diff instanceof ModelElementChangeLeftTarget
 					&& ((ModelElementChangeLeftTarget)diff).getLeftElement().eContainer() != null) {
@@ -694,10 +696,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				final EObject right = ((ModelElementChangeLeftTarget)diff).getRightParent();
 				final EObject left = ((ModelElementChangeLeftTarget)diff).getLeftElement();
 				final int leftIndex = left.eContainer().eContents().indexOf(left);
-				// Ensures we cannot trigger ArrayOutOfBounds exeptions
-				final int rightIndex = Math.max(0, Math.min(leftIndex - 1, right.eContents().size() - 1));
-				if (right.eContents().size() > 0) {
-					visibleItem = (Item)findItem(right.eContents().get(rightIndex));
+				if (right != null) {
+					// Ensures we cannot trigger ArrayOutOfBounds exeptions
+					final int rightIndex = Math.max(0, Math.min(leftIndex - 1, right.eContents().size() - 1));
+					if (right.eContents().size() > 0) {
+						visibleItem = (Item)findItem(right.eContents().get(rightIndex));
+					}
 				}
 			}
 
