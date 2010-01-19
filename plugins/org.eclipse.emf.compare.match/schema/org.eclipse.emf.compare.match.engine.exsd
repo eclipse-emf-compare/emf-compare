@@ -92,9 +92,6 @@
                <documentation>
                   The priority of this engine. Values can be &lt;code&gt;lowest&lt;/code&gt;, &lt;code&gt;low&lt;/code&gt;, &lt;code&gt;normal&lt;/code&gt;, &lt;code&gt;high&lt;/code&gt;, &lt;code&gt;highest&lt;/code&gt;.
                </documentation>
-               <appInfo>
-                  <meta.attribute deprecated="true"/>
-               </appInfo>
             </annotation>
             <simpleType>
                <restriction base="string">
