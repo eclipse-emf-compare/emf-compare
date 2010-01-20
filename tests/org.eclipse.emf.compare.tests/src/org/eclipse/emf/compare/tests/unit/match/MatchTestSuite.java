@@ -17,6 +17,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.emf.compare.tests.unit.match.engine.MatchEngineTestSuite;
 import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.NameSimilarityTest;
+import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.ResourceSimilarityTest;
 import org.eclipse.emf.compare.tests.unit.match.statistic.similarity.structuresimilarity.StructureSimilarityTestSuite;
 
 /**
@@ -46,6 +47,7 @@ public class MatchTestSuite extends TestCase {
 	public static Test suite() {
 		final TestSuite suite = new TestSuite("Tests for the match plugin."); //$NON-NLS-1$
 		suite.addTestSuite(NameSimilarityTest.class);
+		suite.addTestSuite(ResourceSimilarityTest.class);
 		suite.addTest(StructureSimilarityTestSuite.suite());
 		// These tests are too long/costly to be run with too low memory
 		if (Runtime.getRuntime().maxMemory() > MIN_XMX_SETTING)
