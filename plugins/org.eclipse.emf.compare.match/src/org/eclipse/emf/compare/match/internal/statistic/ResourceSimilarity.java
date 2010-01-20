@@ -141,25 +141,34 @@ public final class ResourceSimilarity {
 		final double nameWeight = 0.6;
 		final double equalSegmentWeight = 0.4;
 		final double almostEqual = 0.999d;
+		double similarity = 0d;
 
-		final String referenceName = reference[reference.length - 1];
-		final String candidateName = candidate[candidate.length - 1];
-		final double nameSimilarity = NameSimilarity.nameSimilarityMetric(referenceName, candidateName);
+		if (reference.length != 0 && candidate.length != 0) {
+			final String referenceName = reference[reference.length - 1];
+			final String candidateName = candidate[candidate.length - 1];
+			final double nameSimilarity = NameSimilarity.nameSimilarityMetric(referenceName, candidateName);
 
-		if (reference.length == 1 || candidate.length == 1 || nameSimilarity > almostEqual)
-			return nameSimilarity;
-
-		double equalSegments = 0d;
-		int referenceIndex = reference.length - 2;
-		int candidateIndex = candidate.length - 2;
-		while (referenceIndex >= 0 && candidateIndex >= 0) {
-			if (reference[referenceIndex].equals(candidate[candidateIndex])) {
-				equalSegments++;
+			if (reference.length == 1 || candidate.length == 1 || nameSimilarity > almostEqual) {
+				similarity = nameSimilarity;
+			} else {
+				double equalSegments = 0d;
+				int referenceIndex = reference.length - 2;
+				int candidateIndex = candidate.length - 2;
+				while (referenceIndex >= 0 && candidateIndex >= 0) {
+					if (reference[referenceIndex].equals(candidate[candidateIndex])) {
+						equalSegments++;
+					}
+					referenceIndex--;
+					candidateIndex--;
+				}
+				similarity = nameSimilarity * nameWeight + equalSegments * 2
+						/ (reference.length + candidate.length - 2) * equalSegmentWeight;
 			}
-			referenceIndex--;
-			candidateIndex--;
+		} else if (reference.length == candidate.length) {
+			// In case there is no segment in the given URIs
+			similarity = 1d;
 		}
-		return nameSimilarity * nameWeight + equalSegments * 2 / (reference.length + candidate.length - 2)
-				* equalSegmentWeight;
+
+		return similarity;
 	}
 }
