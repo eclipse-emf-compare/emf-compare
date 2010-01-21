@@ -181,20 +181,29 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 */
 	@Override
 	protected Object prepareInput(IProgressMonitor monitor) {
-		if (inputSnapshot instanceof ComparisonResourceSnapshot) {
-			final ComparisonResourceSnapshot snap = (ComparisonResourceSnapshot)inputSnapshot;
-			resolveAll(snap);
-			preparedInput = new ModelCompareInput(snap.getMatch(), snap.getDiff());
-		} else {
-			final ComparisonResourceSetSnapshot snap = (ComparisonResourceSetSnapshot)inputSnapshot;
-			resolveAll(snap);
-			preparedInput = new ModelCompareInput(snap.getMatchResourceSet(), snap.getDiffResourceSet());
-		}
+		resolveAll(inputSnapshot);
+		preparedInput = createModelCompareInput(inputSnapshot);
 		final ModelComparator comparator = ModelComparator.getComparator(getCompareConfiguration(),
 				preparedInput);
 		comparator.setComparisonResult(inputSnapshot);
 		preparedInput.addCompareInputChangeListener(inputListener);
 		return preparedInput;
+	}
+
+	/**
+	 * Creates the ModelCompareInput for this editor input.
+	 * 
+	 * @param snap
+	 *            Snapshot of the current comparison.
+	 * @return The prepared ModelCompareInput for this editor input.
+	 */
+	protected ModelCompareInput createModelCompareInput(final ComparisonSnapshot snap) {
+		if (snap instanceof ComparisonResourceSetSnapshot) {
+			return new ModelCompareInput(((ComparisonResourceSetSnapshot)snap).getMatchResourceSet(),
+					((ComparisonResourceSetSnapshot)snap).getDiffResourceSet());
+		}
+		return new ModelCompareInput(((ComparisonResourceSnapshot)snap).getMatch(),
+				((ComparisonResourceSnapshot)snap).getDiff());
 	}
 
 	/**

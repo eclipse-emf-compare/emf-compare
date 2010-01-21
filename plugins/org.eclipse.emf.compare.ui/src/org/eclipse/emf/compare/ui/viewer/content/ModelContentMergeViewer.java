@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.diff.merge.IMerger;
 import org.eclipse.emf.compare.diff.merge.service.MergeFactory;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -302,23 +303,42 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		}
 		if (input instanceof ComparisonResourceSnapshot) {
 			final ComparisonResourceSnapshot snapshot = (ComparisonResourceSnapshot)input;
-			super.setInput(new ModelCompareInput(snapshot.getMatch(), snapshot.getDiff(), comparator));
+			super.setInput(createModelCompareInput(comparator, snapshot));
 		} else if (input instanceof ComparisonResourceSetSnapshot) {
 			final ComparisonResourceSetSnapshot snapshot = (ComparisonResourceSetSnapshot)input;
-			super.setInput(new ModelCompareInput(snapshot.getMatchResourceSet(), snapshot
-					.getDiffResourceSet(), comparator));
+			super.setInput(createModelCompareInput(comparator, snapshot));
 		} else if (input instanceof ModelCompareInput) {
 			// if there is already a ModelCompareInput provided, no reloading of resources should be done.
 			super.setInput(input);
 		} else if (input instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)input);
 			final ComparisonResourceSetSnapshot snapshot = comparator.compare(configuration);
-			super.setInput(new ModelCompareInput(snapshot.getMatchResourceSet(), snapshot
-					.getDiffResourceSet(), comparator));
+			super.setInput(createModelCompareInput(comparator, snapshot));
 			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snapshot);
 		} else {
 			super.setInput(input);
 		}
+	}
+
+	/**
+	 * Creates the {@link ModelCompareInput} for this particular viewer.
+	 * 
+	 * @param comparator
+	 *            The {@link ModelComparator model comparator} instance that is in charge of this comparison.
+	 * @param snapshot
+	 *            Snapshot describing the current comparison.
+	 * @return The prepared {@link ModelCompareInput} for this particular viewer.
+	 * @noreference This method is not intended to be referenced by clients.
+	 * @nooverride This method is not intended to be re-implemented or extended by clients.
+	 */
+	protected ModelCompareInput createModelCompareInput(ModelComparator comparator,
+			ComparisonSnapshot snapshot) {
+		if (snapshot instanceof ComparisonResourceSetSnapshot) {
+			return new ModelCompareInput(((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet(),
+					((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet(), comparator);
+		}
+		return new ModelCompareInput(((ComparisonResourceSnapshot)snapshot).getMatch(),
+				((ComparisonResourceSnapshot)snapshot).getDiff(), comparator);
 	}
 
 	/**
