@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_WPUnwC27Ed-YFu7cyA9chg" name="Library">
+  <packagedElement xmi:type="uml:Package" xmi:id="_tcLrwS3CEd-x3I4yK_Yssw" name="Business">
+    <packagedElement xmi:type="uml:Class" xmi:id="_QiTg8C3DEd-x3I4yK_Yssw" name="Library"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_SLY-oC3DEd-x3I4yK_Yssw" name="Member">
+      <ownedAttribute xmi:id="_fso9IC3DEd-x3I4yK_Yssw" name="firstName" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+      <ownedAttribute xmi:id="_g9JiwC3DEd-x3I4yK_Yssw" name="lastName" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_S6ijoC3DEd-x3I4yK_Yssw" name="Book">
+      <ownedAttribute xmi:id="_TxqY4C3DEd-x3I4yK_Yssw" name="ISBN" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+      <ownedAttribute xmi:id="_bdHBoC3DEd-x3I4yK_Yssw" name="Title" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_WAQ-cC3DEd-x3I4yK_Yssw" name="String"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_dt7NsC3DEd-x3I4yK_Yssw" name="Category">
+      <ownedAttribute xmi:id="_dt7NsS3DEd-x3I4yK_Yssw" name="name" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_wKfsIC3CEd-x3I4yK_Yssw" name="Feature">
+    <packagedElement xmi:type="uml:Actor" xmi:id="_3c3tkC3CEd-x3I4yK_Yssw" name="People"/>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_xfQfoC3CEd-x3I4yK_Yssw" name="Member">
+      <generalization xmi:id="_7uQDMC3CEd-x3I4yK_Yssw" general="_3c3tkC3CEd-x3I4yK_Yssw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_y-Xh8C3CEd-x3I4yK_Yssw" name="Borrow a book"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_0Sn_IC3CEd-x3I4yK_Yssw" name="Return a book"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_J_i-kC3DEd-x3I4yK_Yssw" name="Subscribe"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_K0gQoC3DEd-x3I4yK_Yssw" name="Un subscribe"/>
+  </packagedElement>
+</uml:Model>
