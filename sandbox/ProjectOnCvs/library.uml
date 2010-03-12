@@ -5,10 +5,12 @@
     <packagedElement xmi:type="uml:Class" xmi:id="_SLY-oC3DEd-x3I4yK_Yssw" name="Member">
       <ownedAttribute xmi:id="_fso9IC3DEd-x3I4yK_Yssw" name="firstName" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
       <ownedAttribute xmi:id="_g9JiwC3DEd-x3I4yK_Yssw" name="lastName" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+      <ownedAttribute xmi:id="_KbwBUC3iEd-9betKeUyvpg" name="address" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Class" xmi:id="_S6ijoC3DEd-x3I4yK_Yssw" name="Book">
       <ownedAttribute xmi:id="_TxqY4C3DEd-x3I4yK_Yssw" name="ISBN" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
       <ownedAttribute xmi:id="_bdHBoC3DEd-x3I4yK_Yssw" name="Title" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
+      <ownedAttribute xmi:id="_HbzeYS3iEd-9betKeUyvpg" name="Summary" type="_WAQ-cC3DEd-x3I4yK_Yssw"/>
     </packagedElement>
     <packagedElement xmi:type="uml:DataType" xmi:id="_WAQ-cC3DEd-x3I4yK_Yssw" name="String"/>
     <packagedElement xmi:type="uml:Class" xmi:id="_dt7NsC3DEd-x3I4yK_Yssw" name="Category">
