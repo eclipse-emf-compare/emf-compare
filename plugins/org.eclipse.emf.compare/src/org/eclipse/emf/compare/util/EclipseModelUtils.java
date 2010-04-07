@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -80,8 +81,12 @@ public final class EclipseModelUtils {
 					final IPath modelPath = new Path(uris[i].toPlatformString(true));
 					String newContentType = null;
 					try {
-						newContentType = ResourcesPlugin.getWorkspace().getRoot().getFile(modelPath)
-								.getContentDescription().getContentType().getId();
+						final IContentDescription contentDescription = ResourcesPlugin.getWorkspace()
+								.getRoot().getFile(modelPath).getContentDescription();
+						if (contentDescription != null && contentDescription.getContentType() != null) {
+							newContentType = contentDescription.getContentType().getId();
+						}
+
 					} catch (CoreException e) {
 						// Do nothing
 					}
