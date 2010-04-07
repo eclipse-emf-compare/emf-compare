@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
-import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -101,17 +100,18 @@ public class ModelCompareInput implements ICompareInput {
 	 *            {@link org.eclipse.emf.compare.match.diff.match.MatchModel match} of the comparison.
 	 * @param diffModel
 	 *            {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
-	 * @param comparator
-	 *            The comparator which has been used for this comparison.
-	 * @noreference This constructor is not intended to be referenced by clients.
+	 * @param provider
+	 *            The input provider which has been used for this comparison.
+	 * @since 1.1
 	 */
-	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel, ModelComparator comparator) {
+	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel,
+			ICompareInputDetailsProvider provider) {
 		this(matchModel, diffModel);
-		if (comparator != null) {
-			leftResource = comparator.getLeftResource();
-			rightResource = comparator.getRightResource();
-			ancestorResource = comparator.getAncestorResource();
-			initialInput = comparator.getCompareInput();
+		if (provider != null) {
+			leftResource = provider.getLeftResource();
+			rightResource = provider.getRightResource();
+			ancestorResource = provider.getAncestorResource();
+			initialInput = provider.getCompareInput();
 		}
 	}
 
@@ -123,18 +123,18 @@ public class ModelCompareInput implements ICompareInput {
 	 *            {@link MatchResourceSet match} of the comparison.
 	 * @param diffResourceSet
 	 *            {@link DiffResourceSet diff} of the comparison.
-	 * @param comparator
-	 *            The comparator which has been used for this comparison.
-	 * @noreference This constructor is not intended to be referenced by clients.
+	 * @param provider
+	 *            The input provider which has been used for this comparison.
+	 * @since 1.1
 	 */
 	public ModelCompareInput(MatchResourceSet matchResourceset, DiffResourceSet diffResourceSet,
-			ModelComparator comparator) {
+			ICompareInputDetailsProvider provider) {
 		this(matchResourceset, diffResourceSet);
-		if (comparator != null) {
-			leftResource = comparator.getLeftResource();
-			rightResource = comparator.getRightResource();
-			ancestorResource = comparator.getAncestorResource();
-			initialInput = comparator.getCompareInput();
+		if (provider != null) {
+			leftResource = provider.getLeftResource();
+			rightResource = provider.getRightResource();
+			ancestorResource = provider.getAncestorResource();
+			initialInput = provider.getCompareInput();
 		}
 	}
 

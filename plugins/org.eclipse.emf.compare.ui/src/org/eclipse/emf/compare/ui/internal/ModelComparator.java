@@ -50,6 +50,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
+import org.eclipse.emf.compare.ui.ICompareInputDetailsProvider;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.EMFCompareMap;
@@ -72,7 +73,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public final class ModelComparator {
+public final class ModelComparator implements ICompareInputDetailsProvider {
 	/**
 	 * This will be initialized to <code>false</code> in eclipse 3.5M6 and above, <code>true</code> otherwise.
 	 */

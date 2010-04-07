@@ -40,6 +40,7 @@ import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareEditorPartListener;
+import org.eclipse.emf.compare.ui.ICompareInputDetailsProvider;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
@@ -323,22 +324,21 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	/**
 	 * Creates the {@link ModelCompareInput} for this particular viewer.
 	 * 
-	 * @param comparator
-	 *            The {@link ModelComparator model comparator} instance that is in charge of this comparison.
+	 * @param provider
+	 *            The input provider instance that is in charge of this comparison.
 	 * @param snapshot
 	 *            Snapshot describing the current comparison.
 	 * @return The prepared {@link ModelCompareInput} for this particular viewer.
-	 * @noreference This method is not intended to be referenced by clients.
-	 * @nooverride This method is not intended to be re-implemented or extended by clients.
+	 * @since 1.1
 	 */
-	protected ModelCompareInput createModelCompareInput(ModelComparator comparator,
+	protected ModelCompareInput createModelCompareInput(ICompareInputDetailsProvider provider,
 			ComparisonSnapshot snapshot) {
 		if (snapshot instanceof ComparisonResourceSetSnapshot) {
 			return new ModelCompareInput(((ComparisonResourceSetSnapshot)snapshot).getMatchResourceSet(),
-					((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet(), comparator);
+					((ComparisonResourceSetSnapshot)snapshot).getDiffResourceSet(), provider);
 		}
 		return new ModelCompareInput(((ComparisonResourceSnapshot)snapshot).getMatch(),
-				((ComparisonResourceSnapshot)snapshot).getDiff(), comparator);
+				((ComparisonResourceSnapshot)snapshot).getDiff(), provider);
 	}
 
 	/**
