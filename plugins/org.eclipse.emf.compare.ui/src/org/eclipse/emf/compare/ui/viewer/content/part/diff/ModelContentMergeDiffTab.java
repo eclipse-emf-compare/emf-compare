@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
+import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
@@ -279,7 +280,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
 		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 		if (object instanceof EObject) {
-			setInput(((EObject)object).eResource());
+			final Resource resource = ((EObject)object).eResource();
+			if (resource != null) {
+				setInput(resource);
+			} else {
+				setInput(object);
+			}
 		} else {
 			assert object instanceof Resource;
 			setInput(object);
@@ -841,6 +847,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		 */
 		@Override
 		public Object[] getElements(Object object) {
+			final Object[] result;
 			if (object instanceof ResourceSet) {
 				final List<Resource> resources = ((ResourceSet)object).getResources();
 				final List<Resource> elements = new ArrayList<Resource>(resources.size());
@@ -850,9 +857,13 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 						elements.add(resource);
 					}
 				}
-				return elements.toArray();
+				result = elements.toArray();
+			} else if (object instanceof TypedElementWrapper) {
+				result = new Object[] {((EObject)object).eResource(), };
+			} else {
+				result = super.getElements(object);
 			}
-			return super.getElements(object);
+			return result;
 		}
 	}
 }

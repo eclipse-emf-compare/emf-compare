@@ -804,15 +804,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (((TypedElementWrapper)ancestorObject).getObject() == null) {
 				ancestorObject = null;
 			} else {
-				ancestorObject = ((TypedElementWrapper)ancestorObject).getObject().eResource()
-						.getResourceSet();
+				ancestorObject = getInputObject((TypedElementWrapper)ancestorObject);
 			}
 		}
 		if (leftObject instanceof TypedElementWrapper) {
-			leftObject = ((TypedElementWrapper)leftObject).getObject().eResource().getResourceSet();
+			leftObject = getInputObject((TypedElementWrapper)leftObject);
 		}
 		if (rightObject instanceof TypedElementWrapper) {
-			rightObject = ((TypedElementWrapper)rightObject).getObject().eResource().getResourceSet();
+			rightObject = getInputObject((TypedElementWrapper)rightObject);
 		}
 
 		if (ancestorObject != null) {
@@ -884,6 +883,21 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		handleHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
 		handleHSync(rightPart.getTreePart(), leftPart.getTreePart(), ancestorPart.getTreePart());
 		handleHSync(ancestorPart.getTreePart(), rightPart.getTreePart(), leftPart.getTreePart());
+	}
+
+	/**
+	 * This will return the actual Object that is to be used as input of the different tabs.
+	 * 
+	 * @param elementWrapper
+	 *            Element that we've been fed.
+	 * @return Actual Object that is to be used as input of the different tabs.
+	 */
+	private Object getInputObject(TypedElementWrapper elementWrapper) {
+		final Resource resource = elementWrapper.getObject().eResource();
+		if (resource != null) {
+			return resource.getResourceSet();
+		}
+		return elementWrapper;
 	}
 
 	/**

@@ -18,6 +18,7 @@ import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -95,12 +96,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	public Object getLeftContent(Object element) {
 		Object content = null;
 		if (element instanceof ModelCompareInput) {
-			content = ((ModelCompareInput)element).getLeftResource();
-			// final Resource res = ((ModelCompareInput)element).getLeftResource();
-			// if (res != null && res.getResourceSet() != null)
-			// content = res.getResourceSet();
-			// else
-			// content = res;
+			final Resource res = ((ModelCompareInput)element).getLeftResource();
+			if (res == null) {
+				content = ((ModelCompareInput)element).getLeft();
+			} else {
+				content = res;
+			}
 		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getLeft();
 		return content;
@@ -132,12 +133,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	public Object getRightContent(Object element) {
 		Object content = null;
 		if (element instanceof ModelCompareInput) {
-			content = ((ModelCompareInput)element).getRightResource();
-			// final Resource res = ((ModelCompareInput)element).getRightResource();
-			// if (res != null && res.getResourceSet() != null)
-			// content = res.getResourceSet();
-			// else
-			// content = res;
+			final Resource res = ((ModelCompareInput)element).getRightResource();
+			if (res == null) {
+				content = ((ModelCompareInput)element).getRight();
+			} else {
+				content = res;
+			}
 		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getRight();
 		return content;
