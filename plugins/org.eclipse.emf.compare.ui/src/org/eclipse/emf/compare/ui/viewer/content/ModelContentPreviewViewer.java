@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Moritz Eysholdt
  */
 public class ModelContentPreviewViewer implements IChangePreviewViewer {
-    /** This will hold a reference to the view itself. */
+	/** This will hold a reference to the view itself. */
 	private ModelContentMergeViewer view;
 
 	/** This will be used to display the preview. */
@@ -34,7 +34,7 @@ public class ModelContentPreviewViewer implements IChangePreviewViewer {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.ltk.ui.refactoring.IChangePreviewViewer#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
@@ -46,7 +46,7 @@ public class ModelContentPreviewViewer implements IChangePreviewViewer {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.ltk.ui.refactoring.IChangePreviewViewer#getControl()
 	 */
 	public Control getControl() {
@@ -55,10 +55,14 @@ public class ModelContentPreviewViewer implements IChangePreviewViewer {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.ltk.ui.refactoring.IChangePreviewViewer#setInput(org.eclipse.ltk.ui.refactoring.ChangePreviewViewerInput)
 	 */
 	public void setInput(ChangePreviewViewerInput in) {
+		if (!(in.getChange() instanceof IModelCompareInputProvider)) {
+			return;
+		}
+
 		final IModelCompareInputProvider p = (IModelCompareInputProvider)in.getChange();
 		view.setInput(p.getModelCompareInput());
 	}
