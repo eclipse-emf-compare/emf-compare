@@ -173,7 +173,7 @@ You can setup your environment to use EMF Compare in standalone mode. The will l
 	
 					// Serializes the result as "result.emfdiff" in the directory this class has been called from.
 					System.out.println("saving emfdiff as \"result.emfdiff\""); //$NON-NLS-1$
-					final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
+					final ComparisonSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
 					snapshot.setDate(Calendar.getInstance().getTime());
 					snapshot.setMatch(match);
 					snapshot.setDiff(diff);

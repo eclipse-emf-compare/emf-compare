@@ -139,7 +139,7 @@ We'll use a wizard-based action for our report exporting. Export actions must im
 which defines five methods:
 
  +------------------------------------------------+
- |void exportSnapshot(ModelInputSnapshot snapshot)|
+ |void exportSnapshot(ComparisonSnapshot snapshot)|
  +------------------------------------------------+
  |Image getDisabledImage()                        |
  +------------------------------------------------+
@@ -207,7 +207,7 @@ The java editor should have opened on your new Class. Paste the code below as th
 		return image;
 	}
 
-	public void exportSnapshot(ModelInputSnapshot snapshot) {
+	public void exportSnapshot(ComparisonSnapshot snapshot) {
 		final LibraryExportWizard wizard = new LibraryExportWizard();
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		

@@ -271,7 +271,7 @@ defines five methods:</p>
 <col width="100%" /></colgroup>
 <tbody valign="top">
 <tr>
-<td>void exportSnapshot(ModelInputSnapshot snapshot)</td>
+<td>void exportSnapshot(ComparisonSnapshot snapshot)</td>
 </tr>
 <tr>
 <td>Image getDisabledImage()</td>
@@ -379,7 +379,7 @@ public class LibraryExportAction implements IExportAction {
                return image;
        }
 
-       public void exportSnapshot(ModelInputSnapshot snapshot) {
+       public void exportSnapshot(ComparisonSnapshot snapshot) {
                final LibraryExportWizard wizard = new LibraryExportWizard();
                final IWorkbench workbench = PlatformUI.getWorkbench();
 
