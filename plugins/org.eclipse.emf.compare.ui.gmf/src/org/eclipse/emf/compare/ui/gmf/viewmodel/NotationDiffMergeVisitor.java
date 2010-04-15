@@ -21,13 +21,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
-import org.eclipse.emf.compare.diff.metamodel.AddModelElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
-import org.eclipse.emf.compare.diff.metamodel.RemoveModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
@@ -201,92 +199,96 @@ public class NotationDiffMergeVisitor extends DiffSwitch<Object> {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch#caseRemoveModelElement(org.eclipse.emf.compare.diff.metamodel.AddModelElement)
+	 * @see org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch#caseModelElementChangeRightTarget(org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget)
 	 */
 	@Override
-	public Object caseRemoveModelElement(RemoveModelElement object) {
-		EObject rightElement = object.getRightElement();
-
-		// find the correspondig notation element
-		View rightElementNotation = rightSemantic2notationMap.get(rightElement);
-		if(rightElementNotation == null) {
-			//TODO: resolve inconsistency between semantic and notation models
-			return null;
-		}
-
-		// merge the right _semantic_ element to the left
-		if(elementCopier == null) {
-			elementCopier = MergeService.getCopier(object);
-			elementCopier.putAll(right2leftSemanticMap);			
-		}
-		if(object.eContainer() != null)
-			MergeService.merge(object, false);
-		
-		// merge the _notation_ element to left model add annotation
-		View newLeftElementNotation = notationElementRightToLeft(rightElementNotation);
-		newLeftElementNotation.setElement(elementCopier.get(rightElement));
-		annotateNotation(newLeftElementNotation, Constants.STYLE_STATE_VALUE_DELETED);
-		annotateNotation(rightElementNotation, Constants.STYLE_STATE_VALUE_DELETED); // _static_ (see below)
-		for (TreeIterator<EObject> iter = rightElement.eAllContents(); iter.hasNext();) {
-			EObject element = iter.next();
-			View notationElement = rightSemantic2notationMap.get(element);
-			if(notationElement == null) {
+	public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
+		if (!object.isRemote()) {
+			EObject rightElement = object.getRightElement();
+	
+			// find the correspondig notation element
+			View rightElementNotation = rightSemantic2notationMap.get(rightElement);
+			if(rightElementNotation == null) {
 				//TODO: resolve inconsistency between semantic and notation models
-				continue;
+				return null;
 			}
-			View leftNotationElement = notationElementRightToLeft(notationElement);
-			annotateNotation(leftNotationElement, Constants.STYLE_STATE_VALUE_DELETED);
-			leftNotationElement.setElement(elementCopier.get(element));
+	
+			// merge the right _semantic_ element to the left
+			if(elementCopier == null) {
+				elementCopier = MergeService.getCopier(object);
+				elementCopier.putAll(right2leftSemanticMap);			
+			}
+			if(object.eContainer() != null)
+				MergeService.merge(object, false);
 			
-			// annotate the _static_ notation element for ContentMergeViewer (right model)
-			// this can be done in the same loop, because the right model is unmodified
-			annotateNotation(notationElement, Constants.STYLE_STATE_VALUE_DELETED);
+			// merge the _notation_ element to left model add annotation
+			View newLeftElementNotation = notationElementRightToLeft(rightElementNotation);
+			newLeftElementNotation.setElement(elementCopier.get(rightElement));
+			annotateNotation(newLeftElementNotation, Constants.STYLE_STATE_VALUE_DELETED);
+			annotateNotation(rightElementNotation, Constants.STYLE_STATE_VALUE_DELETED); // _static_ (see below)
+			for (TreeIterator<EObject> iter = rightElement.eAllContents(); iter.hasNext();) {
+				EObject element = iter.next();
+				View notationElement = rightSemantic2notationMap.get(element);
+				if(notationElement == null) {
+					//TODO: resolve inconsistency between semantic and notation models
+					continue;
+				}
+				View leftNotationElement = notationElementRightToLeft(notationElement);
+				annotateNotation(leftNotationElement, Constants.STYLE_STATE_VALUE_DELETED);
+				leftNotationElement.setElement(elementCopier.get(element));
+				
+				// annotate the _static_ notation element for ContentMergeViewer (right model)
+				// this can be done in the same loop, because the right model is unmodified
+				annotateNotation(notationElement, Constants.STYLE_STATE_VALUE_DELETED);
+			}
+			return object;
 		}
-		return object;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @see org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch#caseAddModelElement(org.eclipse.emf.compare.diff.metamodel.RemoveModelElement)
+	 * @see org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch#caseModelElementChangeLeftTarget(org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget)
 	 */
 	@Override
-	public Object caseAddModelElement(AddModelElement object) {
-		EObject leftElement = object.getLeftElement();
-
-		// find the correspondig notation element
-		View leftElementNotation = leftSemantic2notationMap.get(leftElement);
-		if(leftElementNotation == null) {
-			//TODO: resolve inconsistency between semantic and notation models
-			return null;
-		}
-
-		// annotate notation element and all sub elements
-		annotateNotation(leftElementNotation, Constants.STYLE_STATE_VALUE_ADDED);
-		for (TreeIterator<EObject> iter = leftElement.eAllContents(); iter.hasNext();) {
-			EObject element = iter.next();
-			View notationElement = leftSemantic2notationMap.get(element);
-			if(notationElement == null) {
+	public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
+		if (!object.isRemote()) {
+			EObject leftElement = object.getLeftElement();
+	
+			// find the correspondig notation element
+			View leftElementNotation = leftSemantic2notationMap.get(leftElement);
+			if(leftElementNotation == null) {
 				//TODO: resolve inconsistency between semantic and notation models
-				continue;
+				return null;
 			}
-			annotateNotation(notationElement, Constants.STYLE_STATE_VALUE_ADDED);
-		}
-
-		// annotate the _static_ notation elements for ContentMergeViewer (left model)
-		EObject staticElement = merge2StaticSemanticMap.get(leftElement);
-		if(staticElement != null) {
-			View staticNotationElement = staticSemantic2notationMap.get(staticElement);
-			if(staticNotationElement != null)
-				annotateNotation(staticNotationElement,Constants.STYLE_STATE_VALUE_ADDED);
-			for (TreeIterator<EObject> iter = staticElement.eAllContents(); iter.hasNext();) {
+	
+			// annotate notation element and all sub elements
+			annotateNotation(leftElementNotation, Constants.STYLE_STATE_VALUE_ADDED);
+			for (TreeIterator<EObject> iter = leftElement.eAllContents(); iter.hasNext();) {
 				EObject element = iter.next();
-				staticNotationElement = staticSemantic2notationMap.get(element);
-				if(staticNotationElement != null)
-					annotateNotation(staticNotationElement, Constants.STYLE_STATE_VALUE_ADDED);
+				View notationElement = leftSemantic2notationMap.get(element);
+				if(notationElement == null) {
+					//TODO: resolve inconsistency between semantic and notation models
+					continue;
+				}
+				annotateNotation(notationElement, Constants.STYLE_STATE_VALUE_ADDED);
 			}
+	
+			// annotate the _static_ notation elements for ContentMergeViewer (left model)
+			EObject staticElement = merge2StaticSemanticMap.get(leftElement);
+			if(staticElement != null) {
+				View staticNotationElement = staticSemantic2notationMap.get(staticElement);
+				if(staticNotationElement != null)
+					annotateNotation(staticNotationElement,Constants.STYLE_STATE_VALUE_ADDED);
+				for (TreeIterator<EObject> iter = staticElement.eAllContents(); iter.hasNext();) {
+					EObject element = iter.next();
+					staticNotationElement = staticSemantic2notationMap.get(element);
+					if(staticNotationElement != null)
+						annotateNotation(staticNotationElement, Constants.STYLE_STATE_VALUE_ADDED);
+				}
+			}
+			return object;
 		}
-		return object;
 	}
 	
 	/**
