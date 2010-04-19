@@ -55,7 +55,7 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 */
 	protected ModelContentMergeViewer contentMergeViewer;
 
-	/** {@link ModelInputSnapshot} result of the underlying comparison. */
+	/** {@link ComparisonSnapshot} result of the underlying comparison. */
 	protected final ComparisonSnapshot inputSnapshot;
 
 	/** This is the input that will be used throughout. */
@@ -74,10 +74,10 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	private final ICompareInputChangeListener inputListener;
 
 	/**
-	 * This constructor takes a {@link ModelInputSnapshot} as input.
+	 * This constructor takes a {@link ComparisonSnapshot} as input.
 	 * 
 	 * @param snapshot
-	 *            The {@link ModelInputSnapshot} loaded from an emfdiff.
+	 *            The {@link ComparisonSnapshot} loaded from an emfdiff.
 	 */
 	public ModelCompareEditorInput(ComparisonSnapshot snapshot) {
 		super(new CompareConfiguration());

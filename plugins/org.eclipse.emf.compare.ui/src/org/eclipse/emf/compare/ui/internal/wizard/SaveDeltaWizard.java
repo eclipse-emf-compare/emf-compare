@@ -28,7 +28,8 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 
 /**
- * Wizard used by the "save" action of the {@link ModelStructureMergeViewer}.
+ * Wizard used by the "save" action of the
+ * {@link org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer}.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
@@ -75,7 +76,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	 * @param workbench
 	 *            Current workbench.
 	 * @param inputSnapshot
-	 *            The {@link ModelInputSnapshot} to save.
+	 *            The {@link ComparisonSnapshot} to save.
 	 */
 	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());

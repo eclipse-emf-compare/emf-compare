@@ -224,7 +224,7 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	}
 
 	/**
-	 * This will run the comparison process and return the resulting {@link ModelInputSnapshot snapshot}.
+	 * This will run the comparison process and return the resulting {@link ComparisonSnapshot snapshot}.
 	 * 
 	 * @param configuration
 	 *            Compared configuration of this comparison. Properties will be set on this to hold comparison
