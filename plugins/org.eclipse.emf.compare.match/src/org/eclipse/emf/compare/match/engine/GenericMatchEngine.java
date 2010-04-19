@@ -1557,8 +1557,14 @@ public class GenericMatchEngine implements IMatchEngine {
 					.iterator();
 			while (features.hasNext()) {
 				final EStructuralFeature feature = features.next();
-				if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) { //$NON-NLS-1$
-					count++;
+				if (!feature.isDerived()) {
+					final Object value = eobj.eGet(feature);
+					if (feature.isMany() && ((Collection)value).size() > 0) {
+						count++;
+					}
+					if (value != null && !"".equals(value.toString())) { //$NON-NLS-1$
+						count++;
+					}
 				}
 			}
 			nonNullFeatures = Integer.valueOf(count);
