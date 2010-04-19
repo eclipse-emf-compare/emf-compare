@@ -16,12 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 /**
@@ -35,14 +33,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  */
 public class MetamodelFilter {
 	/** Keeps track of all the informations of the features. */
-	protected final Map<String, FeatureInformation> featuresToInformation = new EMFCompareMap<String, FeatureInformation>();
+	protected final Map<EStructuralFeature, FeatureInformation> featuresToInformation = new EMFCompareMap<EStructuralFeature, FeatureInformation>();
 
 	/** List of the unused features' informations. */
 	protected List<EStructuralFeature> unusedFeatures;
 
 	/**
-	 * This map will keep track of all the used {@link EStructuralFeature features} for a given
-	 * {@link EClass class}.
+	 * This map will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass
+	 * class}.
 	 */
 	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new EMFCompareMap<EClass, List<EStructuralFeature>>();
 
@@ -103,9 +101,9 @@ public class MetamodelFilter {
 	 */
 	private void buildUnusedFeatures() {
 		unusedFeatures = new ArrayList<EStructuralFeature>();
-		final Iterator<String> it = featuresToInformation.keySet().iterator();
+		final Iterator<EStructuralFeature> it = featuresToInformation.keySet().iterator();
 		while (it.hasNext()) {
-			final String feat = it.next();
+			final EStructuralFeature feat = it.next();
 			if (featuresToInformation.get(feat).hasUniqueValue())
 				unusedFeatures.add(featuresToInformation.get(feat).getFeature());
 		}
@@ -135,20 +133,30 @@ public class MetamodelFilter {
 		final Iterator<EStructuralFeature> featIt = eObj.eClass().getEAllStructuralFeatures().iterator();
 		while (featIt.hasNext()) {
 			final EStructuralFeature feat = featIt.next();
-			final StringBuilder key = new StringBuilder();
-			key.append(feat.hashCode());
-			key.append(eObj.eClass().getName());
-			if (!featuresToInformation.containsKey(key.toString())) {
-				featuresToInformation.put(key.toString(), new FeatureInformation(feat));
-			}
-			try {
-				if (EFactory.eGet(eObj, feat.getName()) != null) {
-					featuresToInformation.get(key.toString()).processValue(eObj.eGet(feat).toString());
-				} else {
-					featuresToInformation.get(key.toString()).processValue("null"); //$NON-NLS-1$
+			if (!feat.isDerived()) {
+				if (!featuresToInformation.containsKey(feat)) {
+					featuresToInformation.put(feat, new FeatureInformation(feat));
 				}
-			} catch (FactoryException e) {
-				EMFComparePlugin.log(e.getMessage(), false);
+				final Object value = eObj.eGet(feat);
+				final FeatureInformation featureInformation = featuresToInformation.get(feat);
+				if (feat instanceof EReference) {
+					if (feat.isMany()) {
+						final Collection<EObject> values = (Collection)value;
+						if (values.size() == 0) {
+							featureInformation.processValue("0"); //$NON-NLS-1$
+						}
+					} else {
+						if (value == null) {
+							featureInformation.processValue("0"); //$NON-NLS-1$
+						}
+					}
+				} else {
+					if (value != null) {
+						featureInformation.processValue(value.toString());
+					} else {
+						featureInformation.processValue("null"); //$NON-NLS-1$
+					}
+				}
 			}
 		}
 	}
