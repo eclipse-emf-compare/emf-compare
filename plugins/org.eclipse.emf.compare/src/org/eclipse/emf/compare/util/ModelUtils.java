@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * Utility class for model loading/saving and serialization.
@@ -112,14 +111,17 @@ public final class ModelUtils {
 			fileExtension = Resource.Factory.Registry.DEFAULT_EXTENSION;
 		}
 
-		final Resource.Factory.Registry registry = Resource.Factory.Registry.INSTANCE;
-		final Object resourceFactory = registry.getExtensionToFactoryMap().get(fileExtension);
-		if (resourceFactory != null) {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					resourceFactory);
-		} else {
-			resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
-					new XMIResourceFactoryImpl());
+		// First search the resource set for our resource factory
+		Resource.Factory.Registry registry = resourceSet.getResourceFactoryRegistry();
+		Object resourceFactory = registry.getExtensionToFactoryMap().get(fileExtension);
+		if (resourceFactory == null) {
+			// then the global registry
+			registry = Resource.Factory.Registry.INSTANCE;
+			resourceFactory = registry.getExtensionToFactoryMap().get(fileExtension);
+			if (resourceFactory != null) {
+				resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+						resourceFactory);
+			}
 		}
 
 		return resourceSet.createResource(modelURI);

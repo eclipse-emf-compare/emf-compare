@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
@@ -62,6 +63,35 @@ public final class EclipseModelUtils {
 			monitor = new BasicMonitor();
 		}
 		return monitor;
+	}
+
+	/**
+	 * This will create a {@link Resource} given the model extension it is intended for and a ResourceSet.
+	 * 
+	 * @param modelURI
+	 *            {@link org.eclipse.emf.common.util.URI URI} where the model is stored.
+	 * @param contentType
+	 *            Content type of this file.
+	 * @param resourceSet
+	 *            The {@link ResourceSet} to load the model in.
+	 * @return The {@link Resource} given the model extension it is intended for.
+	 * @since 1.1
+	 */
+	public static Resource createResource(URI modelURI, String contentType, ResourceSet resourceSet) {
+		// First search the resource set for our resource factory
+		Resource.Factory.Registry registry = resourceSet.getResourceFactoryRegistry();
+		Object resourceFactory = registry.getContentTypeToFactoryMap().get(contentType);
+		if (resourceFactory == null) {
+			// Then the global registry
+			registry = Resource.Factory.Registry.INSTANCE;
+			resourceFactory = registry.getContentTypeToFactoryMap().get(contentType);
+			if (resourceFactory != null) {
+				resourceSet.getResourceFactoryRegistry().getContentTypeToFactoryMap().put(contentType,
+						resourceFactory);
+			}
+		}
+
+		return resourceSet.createResource(modelURI, contentType);
 	}
 
 	/**
@@ -121,8 +151,19 @@ public final class EclipseModelUtils {
 		EObject result = null;
 
 		// First tries to load the IFile assuming it is in the workspace
-		Resource modelResource = ModelUtils.createResource(URI.createPlatformResourceURI(file.getFullPath()
-				.toOSString(), true), resourceSet);
+		final URI resourceURI = URI.createPlatformResourceURI(file.getFullPath().toOSString(), true);
+		Resource modelResource;
+		IContentType contentType = null;
+		try {
+			contentType = file.getContentDescription().getContentType();
+		} catch (CoreException e) {
+			// discard
+		}
+		if (contentType != null) {
+			modelResource = createResource(resourceURI, contentType.getId(), resourceSet);
+		} else {
+			modelResource = ModelUtils.createResource(resourceURI, resourceSet);
+		}
 		try {
 			modelResource.load(Collections.emptyMap());
 		} catch (IOException e) {
