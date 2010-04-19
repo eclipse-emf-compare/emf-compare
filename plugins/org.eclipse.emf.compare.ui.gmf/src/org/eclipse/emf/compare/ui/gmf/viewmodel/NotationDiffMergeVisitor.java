@@ -203,6 +203,7 @@ public class NotationDiffMergeVisitor extends DiffSwitch<Object> {
 	 */
 	@Override
 	public Object caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
+		Object result = null;
 		if (!object.isRemote()) {
 			EObject rightElement = object.getRightElement();
 	
@@ -241,8 +242,9 @@ public class NotationDiffMergeVisitor extends DiffSwitch<Object> {
 				// this can be done in the same loop, because the right model is unmodified
 				annotateNotation(notationElement, Constants.STYLE_STATE_VALUE_DELETED);
 			}
-			return object;
+			result = object;
 		}
+		return result;
 	}
 	
 	/**
@@ -252,6 +254,7 @@ public class NotationDiffMergeVisitor extends DiffSwitch<Object> {
 	 */
 	@Override
 	public Object caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
+		Object result = null;
 		if (!object.isRemote()) {
 			EObject leftElement = object.getLeftElement();
 	
@@ -287,8 +290,9 @@ public class NotationDiffMergeVisitor extends DiffSwitch<Object> {
 						annotateNotation(staticNotationElement, Constants.STYLE_STATE_VALUE_ADDED);
 				}
 			}
-			return object;
+			result = object;
 		}
+		return result;
 	}
 	
 	/**
