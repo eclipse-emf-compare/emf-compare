@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -1870,7 +1871,18 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *             Thrown if the value's affectation fails.
 	 */
 	private void redirectedAdd(EObject object, String name, Object value) throws FactoryException {
-		EFactory.eAdd(object, name, value);
+		final EStructuralFeature feature = object.eClass().getEStructuralFeature(name);
+		if (feature.isMany()) {
+			if (value != null) {
+				if (value instanceof EObject) {
+					((BasicEList)object.eGet(feature)).addUnique(value);
+				} else {
+					((List)object.eGet(feature)).add(value);
+				}
+			}
+		} else {
+			EFactory.eSet(object, name, value);
+		}
 	}
 
 	/**
