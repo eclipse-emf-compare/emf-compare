@@ -534,6 +534,35 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
+	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
+	 * contents from an EObject <u>including</u> those references.
+	 * 
+	 * @param eObject
+	 *            The EObject we seek the content of.
+	 * @return The list of all the content of a given EObject, derived containmnent references included.
+	 * @since 1.1
+	 */
+	@SuppressWarnings("unchecked")
+	protected List<EObject> getContents(EObject eObject) {
+		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
+		for (final EReference reference : eObject.eClass().getEAllReferences()) {
+			if (reference.isContainment() && reference.isDerived()) {
+				final Object value = eObject.eGet(reference);
+				if (value instanceof Collection) {
+					for (Object newValue : (Collection)value) {
+						if (!result.contains(newValue) && newValue instanceof EObject)
+							result.add((EObject)newValue);
+					}
+				} else if (!result.contains(value) && value instanceof EObject) {
+					result.add((EObject)value);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * This will return the value associated to the given key in the options map.
 	 * <p>
 	 * NOTE : Misuses of this method will easily throw {@link ClassCastException}s.
@@ -1173,34 +1202,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		for (final EObject root : resource.getContents()) {
 			filter.analyseModel(root);
 		}
-	}
-
-	/**
-	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
-	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
-	 * contents from an EObject <u>including</u> those references.
-	 * 
-	 * @param eObject
-	 *            The EObject we seek the content of.
-	 * @return The list of all the content of a given EObject, derived containmnent references included.
-	 */
-	@SuppressWarnings("unchecked")
-	private List<EObject> getContents(EObject eObject) {
-		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
-		for (final EReference reference : eObject.eClass().getEAllReferences()) {
-			if (reference.isContainment() && reference.isDerived()) {
-				final Object value = eObject.eGet(reference);
-				if (value instanceof Collection) {
-					for (Object newValue : (Collection)value) {
-						if (!result.contains(newValue) && newValue instanceof EObject)
-							result.add((EObject)newValue);
-					}
-				} else if (!result.contains(value) && value instanceof EObject) {
-					result.add((EObject)value);
-				}
-			}
-		}
-		return result;
 	}
 
 	/**
