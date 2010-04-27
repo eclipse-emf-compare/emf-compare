@@ -52,23 +52,23 @@
       <eClassifiers xsi:type="ecore:EDataType" name="AndADataType" instanceClassName="java.lang.Object"/>
       <eSubpackages name="ThisIsToAddSomethingToTheSurroundings"/>
     </eSubpackages>
-    <eSubpackages name="totallydifferent">
+    <eSubpackages name="noPairInCommon">
       <eClassifiers xsi:type="ecore:EClass" name="Library">
         <eStructuralFeatures xsi:type="ecore:EReference" name="books" upperBound="-1"
-            eType="#//structureSimilarityTests/totallydifferent/Book"/>
+            eType="#//structureSimilarityTests/noPairInCommon/Book"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="authors" upperBound="-1"
-            eType="#//structureSimilarityTests/totallydifferent/Author"/>
+            eType="#//structureSimilarityTests/noPairInCommon/Author"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="Book">
-        <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//structureSimilarityTests/totallydifferent/Author"
-            eOpposite="#//structureSimilarityTests/totallydifferent/Author/books"/>
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="#//structureSimilarityTests/totallydifferent/LString"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//structureSimilarityTests/noPairInCommon/Author"
+            eOpposite="#//structureSimilarityTests/noPairInCommon/Author/books"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="#//structureSimilarityTests/noPairInCommon/LString"/>
         <eStructuralFeatures xsi:type="ecore:EAttribute" name="pages" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EShort"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EClass" name="Author">
-        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//structureSimilarityTests/totallydifferent/LString"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//structureSimilarityTests/noPairInCommon/LString"/>
         <eStructuralFeatures xsi:type="ecore:EReference" name="books" upperBound="-1"
-            eType="#//structureSimilarityTests/totallydifferent/Book" eOpposite="#//structureSimilarityTests/totallydifferent/Book/author"/>
+            eType="#//structureSimilarityTests/noPairInCommon/Book" eOpposite="#//structureSimilarityTests/noPairInCommon/Book/author"/>
       </eClassifiers>
       <eClassifiers xsi:type="ecore:EDataType" name="LString" instanceClassName="java.lang.String">
         <eAnnotations source="This will add to the difference"/>
