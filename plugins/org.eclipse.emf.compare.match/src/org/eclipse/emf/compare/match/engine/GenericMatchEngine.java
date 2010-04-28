@@ -12,13 +12,11 @@ package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.BasicEList;
@@ -29,8 +27,12 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.compare.match.engine.internal.AbstractSimilarityChecker;
+import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
+import org.eclipse.emf.compare.match.engine.internal.MatchSettings;
+import org.eclipse.emf.compare.match.engine.internal.StatisticBasedSimilarityChecker;
+import org.eclipse.emf.compare.match.engine.internal.XMIIDSimilarityChecker;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
-import org.eclipse.emf.compare.match.internal.statistic.StructureSimilarity;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
@@ -43,12 +45,10 @@ import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -57,32 +57,14 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 public class GenericMatchEngine implements IMatchEngine {
-	/** Used while computing similarity, this defines the general threshold. */
-	private static final double GENERAL_THRESHOLD = 0.96d;
-
 	/** Containment reference for the matched elements root. */
 	private static final String MATCH_ELEMENT_NAME = "matchedElements"; //$NON-NLS-1$
-
-	/** Minimal number of attributes an element must have for content comparison. */
-	private static final int MIN_ATTRIBUTES_COUNT = 5;
-
-	/** This constant is used as key for the buffering of name similarity. */
-	private static final char NAME_SIMILARITY = 'n';
-
-	/** This constant is used as key for the buffering of relations similarity. */
-	private static final char RELATION_SIMILARITY = 'r';
 
 	/** Containment reference for {@link MatchElement}s' submatches. */
 	private static final String SUBMATCH_ELEMENT_NAME = "subMatchElements"; //$NON-NLS-1$
 
-	/** This constant is used as key for the buffering of type similarity. */
-	private static final char TYPE_SIMILARITY = 't';
-
 	/** Containment reference for the {@link MatchModel}'s unmatched elements. */
 	private static final String UNMATCH_ELEMENT_NAME = "unmatchedElements"; //$NON-NLS-1$
-
-	/** This constant is used as key for the buffering of value similarity. */
-	private static final char VALUE_SIMILARITY = 'v';
 
 	/**
 	 * {@link MetamodelFilter} used for filtering unused features of the objects we're computing the
@@ -91,29 +73,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	protected final MetamodelFilter filter = new MetamodelFilter();
 
 	/** Contains the options given to the match procedure. */
-	protected final Map<String, Object> options = new EMFCompareMap<String, Object>();
+	@Deprecated
+	protected Map<String, Object> options = new EMFCompareMap<String, Object>();
 
-	/**
-	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their functional ID.
-	 */
-	private final Map<String, EObject> matchedByID = new EMFCompareMap<String, EObject>();
-
-	/**
-	 * This map allows us memorize the {@link EObject} we've been able to match thanks to their XMI ID.
-	 */
-	private final Map<String, EObject> matchedByXMIID = new EMFCompareMap<String, EObject>();
-
-	/**
-	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
-	 * valueSimilarity, relationSimilarity, TypeSimilarity].
-	 */
-	private final Map<String, Double> metricsCache = new EMFCompareMap<String, Double>();
-
-	/** This map will allow us to cache the number of non-null features a given instance of EObject has. */
-	private final Map<EObject, Integer> nonNullFeatureCounts = new HashMap<EObject, Integer>(20);
-
-	/** We'll use this map to cache the uri fragments computed for each objects. */
-	private final Map<EObject, String> uriFragmentCache = new WeakHashMap<EObject, String>(20);
+	/** Contains the options given to the match procedure. */
+	private MatchSettings structuredOptions;
 
 	/**
 	 * This list allows us to memorize the unmatched elements for a three-way comparison.<br/>
@@ -140,11 +104,17 @@ public class GenericMatchEngine implements IMatchEngine {
 	private final List<EObject> stillToFindFromModel2 = new ArrayList<EObject>();
 
 	/**
+	 * Current checker used by the engine to determine whether an element has the same identity as another one
+	 * or not.
+	 */
+	private AbstractSimilarityChecker checker;
+
+	/**
 	 * The options map must be initialized to avoid potential NPEs. This initializer will take care of this
 	 * issue.
 	 */
 	{
-		options.putAll(loadPreferenceOptionMap());
+		structuredOptions = new MatchSettings();
 	}
 
 	/**
@@ -155,9 +125,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		setModelRoots(root, leftObject, rightObject, ancestor);
@@ -184,7 +153,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
 				subMatchRoot = MatchFactory.eINSTANCE.createMatch3Elements();
 
-				subMatchRoot.setSimilarity(absoluteMetric(leftObjectMatchRoot.getLeftElement(),
+				subMatchRoot.setSimilarity(checker.absoluteMetric(leftObjectMatchRoot.getLeftElement(),
 						rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
 				subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
 				subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
@@ -223,8 +192,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-					new ArrayList<EObject>(remainingRight), this
-							.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+					new ArrayList<EObject>(remainingRight), structuredOptions.getSearchWindow(), monitor);
 			for (final Match2Elements map : mappings) {
 				final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
 				subMatch.setLeftElement(map.getLeftElement());
@@ -254,15 +222,40 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
+	 * Build the best checker depending on the options.
+	 */
+	private void prepareChecker() {
+		checker = new StatisticBasedSimilarityChecker(filter);
+		if (!structuredOptions.ignoreID()) {
+			checker = new EcoreIDSimilarityChecker(filter);
+		} else if (!structuredOptions.ignoreXMIID()) {
+			checker = new XMIIDSimilarityChecker(filter);
+		}
+
+	}
+
+	/**
+	 * prepare the engine with the options.
+	 * 
+	 * @param optionMap
+	 *            the match options.
+	 */
+	private void init(Map<String, Object> optionMap) {
+		if (optionMap != null && optionMap.size() > 0) {
+			loadOptionMap(optionMap);
+		}
+
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.match.engine.IMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		final Monitor monitor = createProgressMonitor();
 
@@ -279,12 +272,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		// navigate through both objects at the same time and realize mappings..
 		try {
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)) {
-				matchByXMIID(leftObject, rightObject);
-			}
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID)) {
-				matchByID(leftObject, rightObject);
-			}
+			checker.init(leftObject, rightObject);
 			if (isSimilar(leftObject, rightObject)) {
 				stillToFindFromModel1.clear();
 				stillToFindFromModel2.clear();
@@ -320,9 +308,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -350,9 +337,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -378,16 +364,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public void reset() {
 		filter.clear();
-		options.clear();
-		matchedByID.clear();
-		matchedByXMIID.clear();
-		metricsCache.clear();
-		nonNullFeatureCounts.clear();
+		checker = null;
+
 		remainingUnmatchedElements.clear();
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
-		uriFragmentCache.clear();
-		options.putAll(loadPreferenceOptionMap());
+		structuredOptions = new MatchSettings();
 	}
 
 	/**
@@ -398,9 +380,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -427,9 +408,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
-		}
+		init(optionMap);
+		prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -468,41 +448,6 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * This will compute the similarity between two {@link EObject}s' contents.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents. 0
-	 *         &lt; value &lt; 1.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
-	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
-	 */
-	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		double similarity = 0d;
-		Double value = getSimilarityFromCache(obj1, obj2, VALUE_SIMILARITY);
-		// This might be the counter check, invert the two
-		if (value == null) {
-			value = getSimilarityFromCache(obj2, obj1, VALUE_SIMILARITY);
-		}
-		if (value != null) {
-			similarity = value;
-		} else if (filter.getFilteredFeatures(obj1).size() < MIN_ATTRIBUTES_COUNT
-				|| filter.getFilteredFeatures(obj2).size() < MIN_ATTRIBUTES_COUNT) {
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1),
-					NameSimilarity.contentValue(obj2));
-			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
-		} else {
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),
-					NameSimilarity.contentValue(obj2, filter));
-			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
-		}
-		return similarity;
-	}
-
-	/**
 	 * This will iterate through the given {@link List} and return its element which is most similar (as given
 	 * by {@link #absoluteMetric(EObject, EObject)}) to the given {@link EObject}.
 	 * 
@@ -521,9 +466,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
-			if (this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
-					|| eObj.eClass() == next.eClass()) {
-				final double similarity = absoluteMetric(eObj, next);
+			if (structuredOptions.distinctMetamodels() || eObj.eClass() == next.eClass()) {
+				final double similarity = checker.absoluteMetric(eObj, next);
 				if (similarity > max) {
 					max = similarity;
 					resultObject = next;
@@ -534,285 +478,13 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
-	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
-	 * contents from an EObject <u>including</u> those references.
-	 * 
-	 * @param eObject
-	 *            The EObject we seek the content of.
-	 * @return The list of all the content of a given EObject, derived containmnent references included.
-	 * @since 1.1
-	 */
-	@SuppressWarnings("unchecked")
-	protected List<EObject> getContents(EObject eObject) {
-		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
-		for (final EReference reference : eObject.eClass().getEAllReferences()) {
-			if (reference.isContainment() && reference.isDerived()) {
-				final Object value = eObject.eGet(reference);
-				if (value instanceof Collection) {
-					for (Object newValue : (Collection)value) {
-						if (!result.contains(newValue) && newValue instanceof EObject)
-							result.add((EObject)newValue);
-					}
-				} else if (!result.contains(value) && value instanceof EObject) {
-					result.add((EObject)value);
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * This will return the value associated to the given key in the options map.
-	 * <p>
-	 * NOTE : Misuses of this method will easily throw {@link ClassCastException}s.
-	 * </p>
-	 * 
-	 * @param <T>
-	 *            Expected type of the value associated to <code>key</code>.
-	 * @param key
-	 *            Key of the value to retrieve.
-	 * @return Value associated to the given key in the options map.
-	 * @throws ClassCastException
-	 *             If the value isn't assignment compatible with the expected type.
-	 */
-	@SuppressWarnings("unchecked")
-	protected <T> T getOption(String key) throws ClassCastException {
-		return (T)options.get(key);
-	}
-
-	/**
-	 * This will lookup in the {@link #matchedByID} map and check if the two given objects have indeed been
-	 * matched by their ID.
-	 * 
-	 * @param left
-	 *            Left of the two objects to check.
-	 * @param right
-	 *            Right of the two objects to check.
-	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code> otherwise.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the key for the object to match.
-	 */
-	protected boolean haveDistinctID(EObject left, EObject right) throws FactoryException {
-		boolean result = false;
-		final StringBuilder leftKey = new StringBuilder();
-		leftKey.append(NameSimilarity.findName(left));
-		leftKey.append(left.hashCode());
-		final EObject matched = matchedByID.get(leftKey.toString());
-		// must be the same instance
-		if (matched != null) {
-			result = matched != right;
-		} else {
-			// we didn't match a single element with this ID.
-			// This could be because no IDs are defined.
-			result = EcoreUtil.getID(left) != null;
-		}
-		return result;
-	}
-
-	/**
-	 * This will lookup in the {@link #matchedByXMIID} map and check if the two given objects have indeed been
-	 * matched by their XMI ID.
-	 * 
-	 * @param left
-	 *            Left of the two objects to check.
-	 * @param right
-	 *            Right of the two objects to check.
-	 * @return <code>True</code> these objects haven't been matched by their XMI ID, <code>False</code>
-	 *         otherwise.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the key for the object to match.
-	 */
-	protected boolean haveDistinctXMIID(EObject left, EObject right) throws FactoryException {
-		boolean result = false;
-		final StringBuilder leftKey = new StringBuilder();
-		leftKey.append(NameSimilarity.findName(left));
-		leftKey.append(left.hashCode());
-		final EObject matched = matchedByXMIID.get(leftKey.toString());
-		// must be the same instance
-		if (matched != null) {
-			result = matched != right;
-		} else {
-			// we didn't match a single element with this ID.
-			// This could be because no IDs are defined.
-			result = left.eResource() instanceof XMIResource
-					&& ((XMIResource)left.eResource()).getID(left) != null;
-		}
-		return result;
-	}
-
-	/**
-	 * Returns <code>True</code> if the 2 given {@link EObject}s are considered similar.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
-	 *         otherwise.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute one of the needed similarity.
-	 */
-	protected boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-		boolean similar = false;
-		final double almostEquals = 0.999999d;
-
-		// Defines threshold constants to assume objects' similarity
-		final double nameOnlyMetricThreshold = 0.7d;
-		final double fewerAttributesNameThreshold = 0.8d;
-		final double relationsThreshold = 0.9d;
-		final double nameThreshold = 0.2d;
-		final double contentThreshold = 0.9d;
-		final double triWayThreshold = 0.9d;
-		final double generalThreshold = GENERAL_THRESHOLD;
-
-		// Computes some of the required metrics
-		final double nameSimilarity = nameSimilarity(obj1, obj2);
-		final boolean hasSameUri = hasSameUri(obj1, obj2);
-		final int obj1NonNullFeatures = nonNullFeaturesCount(obj1);
-		final int obj2NonNullFeatures = nonNullFeaturesCount(obj2);
-
-		if (obj1 instanceof EGenericType || obj2 instanceof EGenericType) {
-			similar = isSimilar(obj1.eContainer(), obj2.eContainer());
-		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_DISTINCT_METAMODELS)
-				&& obj1.eClass() != obj2.eClass()) {
-			similar = false;
-		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID) && haveDistinctID(obj1, obj2)) {
-			similar = false;
-		} else if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID)
-				&& haveDistinctXMIID(obj1, obj2)) {
-			similar = false;
-		} else if (nameSimilarity > almostEquals && hasSameUri) {
-			similar = true;
-			// softer tests if we don't have enough attributes to compare the
-			// objects
-		} else if (obj1NonNullFeatures == 1 && obj2NonNullFeatures == 1) {
-			similar = nameSimilarity > nameOnlyMetricThreshold;
-		} else if (nameSimilarity > fewerAttributesNameThreshold
-				&& obj1NonNullFeatures <= MIN_ATTRIBUTES_COUNT && obj2NonNullFeatures <= MIN_ATTRIBUTES_COUNT
-				&& typeSimilarity(obj1, obj2) > generalThreshold) {
-			similar = true;
-		} else {
-			final double contentSimilarity = contentSimilarity(obj1, obj2);
-			final double relationsSimilarity = relationsSimilarity(obj1, obj2);
-
-			if (relationsSimilarity > almostEquals && hasSameUri && nameSimilarity > nameThreshold) {
-				similar = true;
-			} else if (contentSimilarity > almostEquals && relationsSimilarity > almostEquals) {
-				similar = true;
-			} else if (contentSimilarity > generalThreshold && relationsSimilarity > relationsThreshold
-					&& nameSimilarity > nameThreshold) {
-				similar = true;
-			} else if (relationsSimilarity > generalThreshold && contentSimilarity > contentThreshold) {
-				similar = true;
-			} else if (contentSimilarity > triWayThreshold && nameSimilarity > triWayThreshold
-					&& relationsSimilarity > triWayThreshold) {
-				similar = true;
-			} else if (contentSimilarity > generalThreshold && nameSimilarity > generalThreshold
-					&& typeSimilarity(obj1, obj2) > generalThreshold) {
-				similar = true;
-			}
-		}
-		return similar;
-	}
-
-	/**
-	 * This will compute the similarity between two {@link EObject}s' names.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0 &lt;
-	 *         value &lt; 1.
-	 * @see NameSimilarity#nameSimilarityMetric(String, String)
-	 */
-	protected double nameSimilarity(EObject obj1, EObject obj2) {
-		double similarity = 0d;
-		try {
-			final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
-			if (value != null) {
-				similarity = value;
-			} else {
-				similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
-						NameSimilarity.findName(obj2));
-				setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
-			}
-		} catch (final FactoryException e) {
-			// fails silently, will return a similarity of 0d
-		}
-		return similarity;
-	}
-
-	/**
-	 * Returns an absolute comparison metric between the two given {@link EObject}s.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @return An absolute comparison metric. 0 &lt; value &lt; 1.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the content similarity.
-	 */
-	private double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
-		final double nameSimilarity = nameSimilarity(obj1, obj2);
-		final double relationsSimilarity = relationsSimilarity(obj1, obj2);
-		double sameUri = 0d;
-		if (hasSameUri(obj1, obj2)) {
-			sameUri = 1d;
-		}
-		final double positionSimilarity = relationsSimilarity / 2d + sameUri / 2d;
-
-		final double contentWeight = 0.5d;
-
-		if (nonNullFeaturesCount(obj1) > MIN_ATTRIBUTES_COUNT
-				&& nonNullFeaturesCount(obj2) > MIN_ATTRIBUTES_COUNT) {
-			final double nameWeight = 0.4d;
-			final double positionWeight = 0.4d;
-			final double contentSimilarity = contentSimilarity(obj1, obj2);
-			// Computing type similarity really is time expensive
-			// double typeSimilarity = typeSimilarity(obj1, obj2);
-			return (contentSimilarity * contentWeight + nameSimilarity * nameWeight + positionSimilarity
-					* positionWeight)
-					/ (contentWeight + nameWeight + positionWeight);
-		}
-		// we didn't have enough features to compute an accurate metric
-		final double nameWeight = 0.8d;
-		final double positionWeight = 0.2d;
-		return (nameSimilarity * nameWeight + positionSimilarity * positionWeight)
-				/ (nameWeight + positionWeight);
-	}
-
-	/**
-	 * Returns an absolute comparison metric between the three given {@link EObject}s.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @param obj3
-	 *            Second of the {@link EObject}s to compare.
-	 * @return An absolute comparison metric
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the content similarity.
-	 */
-	private double absoluteMetric(EObject obj1, EObject obj2, EObject obj3) throws FactoryException {
-		final double metric1 = absoluteMetric(obj1, obj2);
-		final double metric2 = absoluteMetric(obj1, obj3);
-		final double metric3 = absoluteMetric(obj2, obj3);
-
-		return (metric1 + metric2 + metric3) / 3;
-	}
-
-	/**
 	 * Creates the progress monitor that will be displayed to the user while the comparison lasts.
 	 * 
 	 * @return The progress monitor that will be displayed to the user while the comparison lasts.
 	 */
 	private Monitor createProgressMonitor() {
 		Monitor monitor = new BasicMonitor();
-		final Object delegateMonitor = getOption(MatchOptions.OPTION_PROGRESS_MONITOR);
+		final Object delegateMonitor = structuredOptions.getProgressMonitor();
 		if (delegateMonitor != null && EMFPlugin.IS_ECLIPSE_RUNNING) {
 			monitor = EclipseModelUtils.createProgressMonitor(delegateMonitor);
 		}
@@ -871,7 +543,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			if (correspondingMatch != null) {
 				final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-				match.setSimilarity(absoluteMetric(nextLeftMatch.getLeftElement(), correspondingMatch
+				match.setSimilarity(checker.absoluteMetric(nextLeftMatch.getLeftElement(), correspondingMatch
 						.getLeftElement(), correspondingMatch.getRightElement()));
 				match.setLeftElement(nextLeftMatch.getLeftElement());
 				match.setRightElement(correspondingMatch.getLeftElement());
@@ -914,8 +586,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			Monitor monitor) throws FactoryException, InterruptedException {
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
-		final List<Match2Elements> mappings = mapLists(list1, list2, this
-				.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+		final List<Match2Elements> mappings = mapLists(list1, list2, structuredOptions.getSearchWindow(),
+				monitor);
 
 		final Iterator<Match2Elements> it = mappings.iterator();
 		while (it.hasNext()) {
@@ -1022,17 +694,14 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		// navigate through both models at the same time and realize mappings..
 		try {
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_XMI_ID))
+			if (!structuredOptions.ignoreXMIID())
 				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource) {
-					matchByXMIID((XMIResource)leftResource, (XMIResource)rightResource);
+					checker.init(leftResource, rightResource);
 				}
-			if (!this.<Boolean> getOption(MatchOptions.OPTION_IGNORE_ID)) {
-				matchByID(leftResource, rightResource);
-			}
 
 			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(leftResource.getContents(), rightResource
-					.getContents(), this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+					.getContents(), structuredOptions.getSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			final List<EObject> unmatchedLeftRoots = new ArrayList<EObject>(leftResource.getContents());
@@ -1160,7 +829,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements root1Match = (Match2Elements)root1MatchedElements.get(0);
 				final Match2Elements root2Match = (Match2Elements)root2MatchedElements.get(0);
 
-				subMatchRoot.setSimilarity(absoluteMetric(root1Match.getLeftElement(), root2Match
+				subMatchRoot.setSimilarity(checker.absoluteMetric(root1Match.getLeftElement(), root2Match
 						.getLeftElement(), root2Match.getRightElement()));
 				subMatchRoot.setLeftElement(root1Match.getLeftElement());
 				subMatchRoot.setRightElement(root2Match.getLeftElement());
@@ -1171,7 +840,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				stillToFindFromModel1.add(root1MatchedElements.get(0));
 			}
 
-			// We will now check through the unmatched object for matches. This will allow for a more accurate
+			// We will now check through the unmatched object for matches. This
+			// will allow for a more accurate
 			// difference detection when dealing with multiple roots models.
 			processNotFoundElements(root, subMatchRoot);
 
@@ -1202,6 +872,135 @@ public class GenericMatchEngine implements IMatchEngine {
 		for (final EObject root : resource.getContents()) {
 			filter.analyseModel(root);
 		}
+	}
+
+	/**
+	 * This will return the value associated to the given key in the options map.
+	 * <p>
+	 * NOTE : Misuses of this method will easily throw {@link ClassCastException}s.
+	 * </p>
+	 * 
+	 * @param <T>
+	 *            Expected type of the value associated to <code>key</code>.
+	 * @param key
+	 *            Key of the value to retrieve.
+	 * @return Value associated to the given key in the options map.
+	 * @throws ClassCastException
+	 *             If the value isn't assignment compatible with the expected type.
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> T getOption(String key) throws ClassCastException {
+		return (T)options.get(key);
+	}
+
+	/**
+	 * This will lookup in the {@link #matchedByID} map and check if the two given objects have indeed been
+	 * matched by their ID. This method is no more used by the generic match engine implementation itself as
+	 * this logic moved to the AbstractSimilarityChecker
+	 * 
+	 * @param left
+	 *            Left of the two objects to check.
+	 * @param right
+	 *            Right of the two objects to check.
+	 * @return <code>True</code> these objects haven't been matched by their ID, <code>False</code> otherwise.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the key for the object to match.
+	 */
+	@Deprecated
+	protected boolean haveDistinctID(EObject left, EObject right) throws FactoryException {
+		return checker.isSimilar(left, right);
+	}
+
+	/**
+	 * This will lookup in the {@link #matchedByXMIID} map and check if the two given objects have indeed been
+	 * matched by their XMI ID.
+	 * 
+	 * @param left
+	 *            Left of the two objects to check.
+	 * @param right
+	 *            Right of the two objects to check.
+	 * @return <code>True</code> these objects haven't been matched by their XMI ID, <code>False</code>
+	 *         otherwise.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the key for the object to match.
+	 */
+	@Deprecated
+	protected boolean haveDistinctXMIID(EObject left, EObject right) throws FactoryException {
+		return checker.isSimilar(left, right);
+	}
+
+	/**
+	 * This will compute the similarity between two {@link EObject}s' names.
+	 * 
+	 * @param obj1
+	 *            First of the two {@link EObject}s.
+	 * @param obj2
+	 *            Second of the two {@link EObject}s.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' names. 0 &lt;
+	 *         value &lt; 1.
+	 * @see NameSimilarity#nameSimilarityMetric(String, String)
+	 */
+	@Deprecated
+	protected double nameSimilarity(EObject obj1, EObject obj2) {
+		double similarity = 0d;
+		try {
+
+			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1), NameSimilarity
+					.findName(obj2));
+		} catch (final FactoryException e) {
+			// fails silently, will return a similarity of 0d
+		}
+		return similarity;
+	}
+
+	/**
+	 * This will compute the similarity between two {@link EObject}s' contents.
+	 * 
+	 * @param obj1
+	 *            First of the two {@link EObject}s.
+	 * @param obj2
+	 *            Second of the two {@link EObject}s.
+	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' contents. 0
+	 *         &lt; value &lt; 1.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the {@link EObject}s' contents similarity metrics.
+	 * @see NameSimilarity#contentValue(EObject, MetamodelFilter)
+	 */
+	@Deprecated
+	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
+		double similarity = 0d;
+		similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1), NameSimilarity
+				.contentValue(obj2));
+		return similarity;
+	}
+
+	/**
+	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
+	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
+	 * contents from an EObject <u>including</u> those references.
+	 * 
+	 * @param eObject
+	 *            The EObject we seek the content of.
+	 * @return The list of all the content of a given EObject, derived containmnent references included.
+	 * @since 1.1
+	 */
+	@SuppressWarnings("unchecked")
+	protected List<EObject> getContents(EObject eObject) {
+		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
+		for (final EReference reference : eObject.eClass().getEAllReferences()) {
+			if (reference.isContainment() && reference.isDerived()) {
+				final Object value = eObject.eGet(reference);
+				if (value instanceof Collection) {
+					for (Object newValue : (Collection)value) {
+						if (!result.contains(newValue) && newValue instanceof EObject)
+							result.add((EObject)newValue);
+					}
+				} else if (!result.contains(value) && value instanceof EObject) {
+					result.add((EObject)value);
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -1262,67 +1061,14 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * Returns the given similarity between the two given {@link EObject}s as it is stored in cache.<br/>
-	 * <p>
-	 * <code>similarityKind</code> must be one of
-	 * <ul>
-	 * <li>{@link #NAME_SIMILARITY}</li>
-	 * <li>{@link #TYPE_SIMILARITY}</li>
-	 * <li>{@link #VALUE_SIMILARITY}</li>
-	 * <li>{@link #RELATION_SIMILARITY}</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s we seek the similarity for.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s we seek the similarity for.
-	 * @param similarityKind
-	 *            Kind of similarity to get.
-	 * @return The similarity as described by <code>similarityKind</code> as it is stored in cache for the two
-	 *         given {@link EObject}s.
-	 */
-	private Double getSimilarityFromCache(EObject obj1, EObject obj2, char similarityKind) {
-		return metricsCache.get(pairHashCode(obj1, obj2, similarityKind));
-	}
-
-	/**
-	 * Checks wether the two given {@link EObject} have the same URI.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject} we're comparing.
-	 * @param obj2
-	 *            Second {@link EObject} we're comparing.
-	 * @return <code>True</code> if the {@link EObject}s have the same URI, <code>False</code> otherwise.
-	 */
-	private boolean hasSameUri(EObject obj1, EObject obj2) {
-		if (obj1.eResource() != null && obj2.eResource() != null) {
-			String obj1URIFragment = uriFragmentCache.get(obj1);
-			if (obj1URIFragment == null) {
-				obj1URIFragment = obj1.eResource().getURIFragment(obj1);
-				uriFragmentCache.put(obj1, obj1URIFragment);
-			}
-			String obj2URIFragment = uriFragmentCache.get(obj2);
-			if (obj2URIFragment == null) {
-				obj2URIFragment = obj2.eResource().getURIFragment(obj2);
-				uriFragmentCache.put(obj2, obj2URIFragment);
-			}
-			return obj1URIFragment.equals(obj2URIFragment);
-		}
-		return false;
-	}
-
-	/**
 	 * This replaces the contents of the defaults options map with the options overridden by the given map.
 	 * 
 	 * @param map
 	 *            Map containing the option given to the match procedure. cannot be <code>null</code>.
 	 */
 	private void loadOptionMap(Map<String, Object> map) {
-		options.putAll(map);
-		if (this.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW) < 0) {
-			options.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
-		}
+		options = map;
+		structuredOptions.init(map);
 	}
 
 	/**
@@ -1354,11 +1100,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		// then iterate over the 2 lists and compare the elements
 		while (it1.hasNext() && notFoundList2.size() > 0) {
 			final EObject obj1 = it1.next();
-
-			final StringBuilder obj1Key = new StringBuilder();
-			obj1Key.append(NameSimilarity.findName(obj1));
-			obj1Key.append(obj1.hashCode());
-			EObject obj2 = matchedByID.get(obj1Key.toString());
+			EObject obj2 = checker.fastLookup(obj1);
 
 			if (obj2 == null) {
 				// subtracts the difference between the notfound and the
@@ -1380,7 +1122,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			if (notFoundList1.contains(obj1) && notFoundList2.contains(obj2) && isSimilar(obj1, obj2)) {
 				final Match2Elements mapping = MatchFactory.eINSTANCE.createMatch2Elements();
-				final double metric = absoluteMetric(obj1, obj2);
+				final double metric = checker.absoluteMetric(obj1, obj2);
 
 				mapping.setLeftElement(obj1);
 				mapping.setRightElement(obj2);
@@ -1400,209 +1142,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		stillToFindFromModel1.addAll(notFoundList1);
 		stillToFindFromModel2.addAll(notFoundList2);
 		return result;
-	}
-
-	/**
-	 * Iterates through both of the given EObjects to find all of their children that can be matched by their
-	 * functional ID, then populates {@link #matchedByID} with those mappings.
-	 * <p>
-	 * Note that this method will perform a check to ensure the two objects' resources are indeed
-	 * XMIResources.
-	 * </p>
-	 * 
-	 * @param obj1
-	 *            First of the two EObjects to visit.
-	 * @param obj2
-	 *            Second of the EObjects to visit.
-	 * @throws FactoryException
-	 *             Thrown if we couldn't compute a key to store the items in cache.
-	 */
-	private void matchByID(EObject obj1, EObject obj2) throws FactoryException {
-		matchedByID.clear();
-		final Iterator<EObject> iterator1 = obj1.eAllContents();
-		while (iterator1.hasNext()) {
-			final EObject item1 = iterator1.next();
-			final String item1ID = EcoreUtil.getID(item1);
-			if (item1ID != null) {
-				final Iterator<EObject> iterator2 = obj2.eAllContents();
-				while (iterator2.hasNext()) {
-					final EObject item2 = iterator2.next();
-					final String item2ID = EcoreUtil.getID(item2);
-					if (item2 != null && item1ID.equals(item2ID)) {
-						final StringBuilder item1Key = new StringBuilder();
-						item1Key.append(NameSimilarity.findName(item1));
-						item1Key.append(item1.hashCode());
-						matchedByID.put(item1Key.toString(), item2);
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Iterates through both of the given {@link XMIResource resources} to find all the elements that can be
-	 * matched by their XMI ID, then populates {@link #matchedByID} with those mappings.
-	 * 
-	 * @param left
-	 *            First of the two {@link XMIResource resources} to visit.
-	 * @param right
-	 *            Second of the {@link XMIResource resources} to visit.
-	 * @throws FactoryException
-	 *             Thrown if we couldn't compute a key to store the items in cache.
-	 */
-	private void matchByID(Resource left, Resource right) throws FactoryException {
-		matchedByID.clear();
-		final Iterator<EObject> leftIterator = left.getAllContents();
-		while (leftIterator.hasNext()) {
-			final EObject item1 = leftIterator.next();
-			final String item1ID = EcoreUtil.getID(item1);
-			if (item1ID != null) {
-				final Iterator<EObject> rightIterator = right.getAllContents();
-				while (rightIterator.hasNext()) {
-					final EObject item2 = rightIterator.next();
-					final String item2ID = EcoreUtil.getID(item2);
-					if (item2 != null && item1ID.equals(item2ID)) {
-						final StringBuilder item1Key = new StringBuilder();
-						item1Key.append(NameSimilarity.findName(item1));
-						item1Key.append(item1.hashCode());
-						matchedByID.put(item1Key.toString(), item2);
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Iterates through both of the given EObjects to find all of their children that can be matched by their
-	 * XMI ID, then populates {@link #matchedByXMIID} with those mappings.
-	 * <p>
-	 * Note that this method will perform a check to ensure the two objects' resources are indeed
-	 * XMIResources.
-	 * </p>
-	 * 
-	 * @param obj1
-	 *            First of the two EObjects to visit.
-	 * @param obj2
-	 *            Second of the EObjects to visit.
-	 * @throws FactoryException
-	 *             Thrown if we couldn't compute a key to store the items in cache.
-	 */
-	private void matchByXMIID(EObject obj1, EObject obj2) throws FactoryException {
-		matchedByXMIID.clear();
-		if (obj1 != null && obj2 != null && obj1.eResource() instanceof XMIResource
-				&& obj2.eResource() instanceof XMIResource) {
-			final XMIResource left = (XMIResource)obj1.eResource();
-			final XMIResource right = (XMIResource)obj2.eResource();
-			final Iterator<EObject> iterator = obj1.eAllContents();
-			while (iterator.hasNext()) {
-				final EObject item1 = iterator.next();
-				final String item1ID = left.getID(item1);
-				if (item1ID != null) {
-					final EObject item2 = right.getEObject(item1ID);
-					if (item2 != null) {
-						final StringBuilder item1Key = new StringBuilder();
-						item1Key.append(NameSimilarity.findName(item1));
-						item1Key.append(item1.hashCode());
-						matchedByXMIID.put(item1Key.toString(), item2);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Iterates through both of the given {@link XMIResource resources} to find all the elements that can be
-	 * matched by their XMI ID, then populates {@link #matchedByXMIID} with those mappings.
-	 * 
-	 * @param left
-	 *            First of the two {@link XMIResource resources} to visit.
-	 * @param right
-	 *            Second of the {@link XMIResource resources} to visit.
-	 * @throws FactoryException
-	 *             Thrown if we couldn't compute a key to store the items in cache.
-	 */
-	private void matchByXMIID(XMIResource left, XMIResource right) throws FactoryException {
-		matchedByXMIID.clear();
-		final Iterator<EObject> leftIterator = left.getAllContents();
-
-		while (leftIterator.hasNext()) {
-			final EObject item1 = leftIterator.next();
-			final String item1ID = left.getID(item1);
-			if (item1ID != null) {
-				final EObject item2 = right.getEObject(item1ID);
-				if (item2 != null) {
-					final StringBuilder item1Key = new StringBuilder();
-					item1Key.append(NameSimilarity.findName(item1));
-					item1Key.append(item1.hashCode());
-					matchedByXMIID.put(item1Key.toString(), item2);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Counts all the {@link EStructuralFeature features} of the given {@link EObject} that are
-	 * <code>null</code> or initialized to the empty {@link String} &quot;&quot;.
-	 * 
-	 * @param eobj
-	 *            {@link EObject} we need to count the empty features of.
-	 * @return The number of features not initialized to <code>null</code> or the empty String.
-	 */
-	private int nonNullFeaturesCount(EObject eobj) {
-		Integer nonNullFeatures = nonNullFeatureCounts.get(eobj);
-		if (nonNullFeatures == null) {
-			int count = 0;
-			final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures()
-					.iterator();
-			while (features.hasNext()) {
-				final EStructuralFeature feature = features.next();
-				if (!feature.isDerived()) {
-					final Object value = eobj.eGet(feature);
-					if (feature.isMany() && ((Collection)value).size() > 0) {
-						count++;
-					}
-					if (value != null && !"".equals(value.toString())) { //$NON-NLS-1$
-						count++;
-					}
-				}
-			}
-			nonNullFeatures = Integer.valueOf(count);
-			nonNullFeatureCounts.put(eobj, nonNullFeatures);
-		}
-		return nonNullFeatures.intValue();
-	}
-
-	/**
-	 * Computes an unique key between to {@link EObject}s to store their similarity in cache.
-	 * <p>
-	 * <code>similarityKind</code> must be one of
-	 * <ul>
-	 * <li>{@link #NAME_SIMILARITY}</li>
-	 * <li>{@link #TYPE_SIMILARITY}</li>
-	 * <li>{@link #VALUE_SIMILARITY}</li>
-	 * <li>{@link #RELATION_SIMILARITY}</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @param similarityKind
-	 *            Kind of similarity this key will represent in cache.
-	 * @return Unique key for the similarity cache.
-	 */
-	private String pairHashCode(EObject obj1, EObject obj2, char similarityKind) {
-		if (similarityKind == NAME_SIMILARITY || similarityKind == TYPE_SIMILARITY
-				|| similarityKind == VALUE_SIMILARITY || similarityKind == RELATION_SIMILARITY) {
-			final StringBuilder hash = new StringBuilder();
-			hash.append(similarityKind).append(obj1.hashCode()).append(obj2.hashCode());
-			return hash.toString();
-		}
-		throw new IllegalArgumentException(EMFCompareMatchMessages.getString(
-				"DifferencesServices.illegalSimilarityKind", similarityKind)); //$NON-NLS-1$
 	}
 
 	/**
@@ -1627,7 +1166,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 						if (match1.getRightElement() == match2.getRightElement()) {
 							final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-							match.setSimilarity(absoluteMetric(match1.getLeftElement(), match2
+							match.setSimilarity(checker.absoluteMetric(match1.getLeftElement(), match2
 									.getLeftElement(), match2.getRightElement()));
 							match.setLeftElement(match1.getLeftElement());
 							match.setRightElement(match2.getLeftElement());
@@ -1672,7 +1211,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <p>
 	 * We are here handling Match2Elements only. These particular elements cannot be conflicting.
 	 * UnmatchElements will be handled in
-	 * {@link #processSingleUnmatchedElements(Resource, Resource, MatchModel, Match3Elements, Monitor)}.
+	 * {@link #processSingleUnmatchedElements(Resource, Resource, MatchModel, Match3Elements, Monitor)} .
 	 * </p>
 	 * 
 	 * @param leftResource
@@ -1745,7 +1284,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * We are here handling UnmatchElements only. Note that these particular differences can be conflicting if
 	 * they are contained within elements that have themselves been removed from the model. Match2Elements
 	 * have been handled by
-	 * {@link #processUnmatchedMatch2Elements(Resource, Resource, MatchModel, Match3Elements)}.
+	 * {@link #processUnmatchedMatch2Elements(Resource, Resource, MatchModel, Match3Elements)} .
 	 * </p>
 	 * 
 	 * @param leftResource
@@ -1785,8 +1324,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		stillToFindFromModel2.clear();
 
 		final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-				new ArrayList<EObject>(remainingRight), this
-						.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+				new ArrayList<EObject>(remainingRight), structuredOptions.getSearchWindow(), monitor);
 		for (final Match2Elements map : mappings) {
 			final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
 			subMatch.setLeftElement(map.getLeftElement());
@@ -1850,9 +1388,9 @@ public class GenericMatchEngine implements IMatchEngine {
 		mapping = MatchFactory.eINSTANCE.createMatch2Elements();
 		mapping.setLeftElement(current1);
 		mapping.setRightElement(current2);
-		mapping.setSimilarity(absoluteMetric(current1, current2));
-		final List<Match2Elements> mapList = mapLists(getContents(current1), getContents(current2), this
-				.<Integer> getOption(MatchOptions.OPTION_SEARCH_WINDOW), monitor);
+		mapping.setSimilarity(checker.absoluteMetric(current1, current2));
+		final List<Match2Elements> mapList = mapLists(getContents(current1), getContents(current2),
+				structuredOptions.getSearchWindow(), monitor);
 		// We can map other elements with mapLists; we iterate through them.
 		final Iterator<Match2Elements> it = mapList.iterator();
 		while (it.hasNext()) {
@@ -1890,31 +1428,6 @@ public class GenericMatchEngine implements IMatchEngine {
 		} else {
 			EFactory.eSet(object, name, value);
 		}
-	}
-
-	/**
-	 * This will compute the similarity between two {@link EObject}s' relations.
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' relations. 0
-	 *         &lt; value &lt; 1.
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the relations' similarity metrics.
-	 * @see StructureSimilarity#relationsSimilarityMetric(EObject, EObject, MetamodelFilter)
-	 */
-	private double relationsSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, RELATION_SIMILARITY);
-		if (value != null) {
-			similarity = value;
-		} else {
-			similarity = StructureSimilarity.relationsSimilarityMetric(obj1, obj2, filter);
-			setSimilarityInCache(obj1, obj2, RELATION_SIMILARITY, similarity);
-		}
-		return similarity;
 	}
 
 	/**
@@ -1959,31 +1472,6 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * Stores in cache the given similarity between the two given {@link EObject}s.<br/>
-	 * <p>
-	 * <code>similarityKind</code> must be one of
-	 * <ul>
-	 * <li>{@link #NAME_SIMILARITY}</li>
-	 * <li>{@link #TYPE_SIMILARITY}</li>
-	 * <li>{@link #VALUE_SIMILARITY}</li>
-	 * <li>{@link #RELATION_SIMILARITY}</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param obj1
-	 *            First of the two {@link EObject}s we're setting the similarity for.
-	 * @param obj2
-	 *            Second of the two {@link EObject}s we're setting the similarity for.
-	 * @param similarityKind
-	 *            Kind of similarity to set.
-	 * @param similarity
-	 *            Value of the similarity between the two {@link EObject}s.
-	 */
-	private void setSimilarityInCache(EObject obj1, EObject obj2, char similarityKind, double similarity) {
-		metricsCache.put(pairHashCode(obj1, obj2, similarityKind), new Double(similarity));
-	}
-
-	/**
 	 * Starts the monitor for comparison progress. Externalized here to avoid multiple usage of the Strings.
 	 * 
 	 * @param monitor
@@ -1997,27 +1485,19 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * This will compute the similarity between two {@link EObject}s' types.
+	 * Returns <code>True</code> if the 2 given {@link EObject}s are considered similar.
 	 * 
 	 * @param obj1
-	 *            First of the two {@link EObject}s.
+	 *            The first {@link EObject} to compare.
 	 * @param obj2
-	 *            Second of the two {@link EObject}s.
-	 * @return <code>double</code> representing the similarity between the two {@link EObject}s' types. 0 &lt;
-	 *         value &lt; 1.
+	 *            Second of the {@link EObject}s to compare.
+	 * @return <code>True</code> if both elements have the same serialization ID, <code>False</code>
+	 *         otherwise.
 	 * @throws FactoryException
-	 *             Thrown if we cannot compute the type similarity metrics.
-	 * @see StructureSimilarity#typeSimilarityMetric(EObject, EObject)
+	 *             Thrown if we cannot compute one of the needed similarity.
 	 */
-	private double typeSimilarity(EObject obj1, EObject obj2) throws FactoryException {
-		double similarity = 0d;
-		final Double value = getSimilarityFromCache(obj1, obj2, TYPE_SIMILARITY);
-		if (value != null) {
-			similarity = value;
-		} else {
-			similarity = StructureSimilarity.typeSimilarityMetric(obj1, obj2);
-			setSimilarityInCache(obj1, obj2, TYPE_SIMILARITY, similarity);
-		}
-		return similarity;
+	protected boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
+		return checker.isSimilar(obj1, obj2);
 	}
+
 }

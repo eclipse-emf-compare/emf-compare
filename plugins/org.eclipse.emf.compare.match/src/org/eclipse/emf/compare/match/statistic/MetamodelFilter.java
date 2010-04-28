@@ -42,7 +42,7 @@ public class MetamodelFilter {
 	 * This map will keep track of all the used {@link EStructuralFeature features} for a given {@link EClass
 	 * class}.
 	 */
-	private final Map<EClass, List<EStructuralFeature>> eClassToFeaturesList = new EMFCompareMap<EClass, List<EStructuralFeature>>();
+	private final Map<EClass, List<EStructuralFeature>> eClassToFilteredFeaturesList = new EMFCompareMap<EClass, List<EStructuralFeature>>();
 
 	/**
 	 * Analyses a model and changes the stats using this model.
@@ -58,7 +58,7 @@ public class MetamodelFilter {
 			processEObject(eObj);
 		}
 		unusedFeatures = null;
-		eClassToFeaturesList.clear();
+		eClassToFilteredFeaturesList.clear();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class MetamodelFilter {
 	public void clear() {
 		featuresToInformation.clear();
 		unusedFeatures = null;
-		eClassToFeaturesList.clear();
+		eClassToFilteredFeaturesList.clear();
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class MetamodelFilter {
 	 */
 	public List<EStructuralFeature> getFilteredFeatures(EObject eObj) {
 		// cache the filtered features for a type
-		if (eClassToFeaturesList.containsKey(eObj.eClass()))
-			return eClassToFeaturesList.get(eObj.eClass());
+		if (eClassToFilteredFeaturesList.containsKey(eObj.eClass()))
+			return eClassToFilteredFeaturesList.get(eObj.eClass());
 		// end of memorize cache
 
 		final List<EStructuralFeature> result = new ArrayList<EStructuralFeature>();
@@ -91,7 +91,7 @@ public class MetamodelFilter {
 			if (!unused.contains(feat))
 				result.add(feat);
 		}
-		eClassToFeaturesList.put(eObj.eClass(), result);
+		eClassToFilteredFeaturesList.put(eObj.eClass(), result);
 		return result;
 	}
 
