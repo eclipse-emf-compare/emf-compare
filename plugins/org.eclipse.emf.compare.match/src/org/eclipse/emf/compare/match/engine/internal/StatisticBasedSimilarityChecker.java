@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * A similarity checker using heuristics.
@@ -104,8 +103,6 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 
 		if (obj1 instanceof EGenericType || obj2 instanceof EGenericType) {
 			similar = isSimilar(obj1.eContainer(), obj2.eContainer());
-		} else if (!EcoreUtil.equals(obj1.eClass(), obj2.eClass())) {
-			similar = false;
 		} else if (nameSimilarity > almostEquals && hasSameUri) {
 			similar = true;
 			// softer tests if we don't have enough attributes to compare the
