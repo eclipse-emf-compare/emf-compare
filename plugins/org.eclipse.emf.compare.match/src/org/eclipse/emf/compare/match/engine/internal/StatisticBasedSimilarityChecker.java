@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine.internal;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -298,19 +299,39 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	private int nonNullFeaturesCount(EObject eobj) {
 		Integer nonNullFeatures = nonNullFeatureCounts.get(eobj);
 		if (nonNullFeatures == null) {
-			int count = 0;
-			final Iterator<EStructuralFeature> features = eobj.eClass().getEAllStructuralFeatures()
-					.iterator();
-			while (features.hasNext()) {
-				final EStructuralFeature feature = features.next();
-				if (eobj.eGet(feature) != null && !"".equals(eobj.eGet(feature).toString())) { //$NON-NLS-1$
-					count++;
-				}
-			}
+			final int count = countNonNullFeatures(eobj);
 			nonNullFeatures = Integer.valueOf(count);
 			nonNullFeatureCounts.put(eobj, nonNullFeatures);
 		}
 		return nonNullFeatures.intValue();
+	}
+
+	/**
+	 * Count non null features in an EObject.
+	 * 
+	 * @param eobj
+	 *            the EObject.
+	 * @return the number of filtered non null features.
+	 */
+	private int countNonNullFeatures(EObject eobj) {
+		int count = 0;
+		final Iterator<EStructuralFeature> features = filter.getFilteredFeatures(eobj).iterator();
+		while (features.hasNext()) {
+			final EStructuralFeature feature = features.next();
+			if (!feature.isDerived()) {
+				final Object value = eobj.eGet(feature);
+				if (feature.isMany()) {
+					if (((Collection)value).size() > 0) {
+						count++;
+					}
+				} else {
+					if (value != null && !"".equals(value.toString())) { //$NON-NLS-1$
+						count++;
+					}
+				}
+			}
+		}
+		return count;
 	}
 
 	/**
