@@ -26,10 +26,8 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.engine.internal.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
-import org.eclipse.emf.compare.match.engine.internal.MatchSettings;
 import org.eclipse.emf.compare.match.engine.internal.StatisticBasedSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.XMIIDSimilarityChecker;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
@@ -43,7 +41,6 @@ import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
-import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -72,7 +69,10 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	protected final MetamodelFilter filter = new MetamodelFilter();
 
-	/** Contains the options given to the match procedure. */
+	/**
+	 * Contains the options given to the match procedure. This method is deprecated, if you want to handle
+	 * specific options for your match engine you should override the updateSettings() method.
+	 */
 	@Deprecated
 	protected Map<String, Object> options = new EMFCompareMap<String, Object>();
 
@@ -125,7 +125,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
@@ -226,9 +226,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void prepareChecker() {
 		checker = new StatisticBasedSimilarityChecker(filter);
-		if (!structuredOptions.ignoreID()) {
+		if (!structuredOptions.isIgnoringID()) {
 			checker = new EcoreIDSimilarityChecker(filter);
-		} else if (!structuredOptions.ignoreXMIID()) {
+		} else if (!structuredOptions.isIgnoringXMIID()) {
 			checker = new XMIIDSimilarityChecker(filter);
 		}
 
@@ -237,12 +237,15 @@ public class GenericMatchEngine implements IMatchEngine {
 	/**
 	 * prepare the engine with the options.
 	 * 
+	 * @param settings
+	 *            the settings to update.
 	 * @param optionMap
 	 *            the match options.
+	 *@since 1.1
 	 */
-	private void init(Map<String, Object> optionMap) {
+	protected void updateSettings(MatchSettings settings, Map<String, Object> optionMap) {
 		if (optionMap != null && optionMap.size() > 0) {
-			loadOptionMap(optionMap);
+			settings.update(optionMap);
 		}
 
 	}
@@ -254,7 +257,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		final Monitor monitor = createProgressMonitor();
@@ -308,7 +311,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		MatchModel result = null;
@@ -337,7 +340,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		MatchModel result = null;
@@ -380,7 +383,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		MatchModel result = null;
@@ -408,7 +411,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		init(optionMap);
+		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
 		MatchModel result = null;
@@ -426,25 +429,6 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		result = doMatch(leftResource, rightResource, ancestorResource, monitor);
 		return result;
-	}
-
-	/*
-	 * created as package visibility method to allow access from initializer's listener. Shouldn't be further
-	 * opened.
-	 */
-	/**
-	 * This will load all the needed options with their default values.
-	 * 
-	 * @return Map containing all the needed options with their default values.
-	 */
-	/* package */Map<String, Object> loadPreferenceOptionMap() {
-		final Map<String, Object> optionMap = new EMFCompareMap<String, Object>(17);
-		optionMap.put(MatchOptions.OPTION_SEARCH_WINDOW, getPreferenceSearchWindow());
-		optionMap.put(MatchOptions.OPTION_IGNORE_ID, getPreferenceIgnoreID());
-		optionMap.put(MatchOptions.OPTION_IGNORE_XMI_ID, getPreferenceIgnoreXMIID());
-		optionMap.put(MatchOptions.OPTION_DISTINCT_METAMODELS, getPreferenceDistinctMetaModel());
-		optionMap.put(MatchOptions.OPTION_PROGRESS_MONITOR, null);
-		return optionMap;
 	}
 
 	/**
@@ -466,7 +450,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
-			if (structuredOptions.distinctMetamodels() || eObj.eClass() == next.eClass()) {
+			if (structuredOptions.shouldMatchDistinctMetamodels() || eObj.eClass() == next.eClass()) {
 				final double similarity = checker.absoluteMetric(eObj, next);
 				if (similarity > max) {
 					max = similarity;
@@ -694,7 +678,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		// navigate through both models at the same time and realize mappings..
 		try {
-			if (!structuredOptions.ignoreXMIID())
+			if (!structuredOptions.isIgnoringXMIID())
 				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource) {
 					checker.init(leftResource, rightResource);
 				}
@@ -1001,74 +985,6 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Returns whether we should assume the metamodels of the compared models are distinct.
-	 * 
-	 * @return <code>true</code> if the metamodels are to be assumed distinct, <code>false</code> otherwise.
-	 */
-	private boolean getPreferenceDistinctMetaModel() {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
-			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceConstants.PREFERENCES_KEY_DISTINCT_METAMODEL);
-		return MatchOptions.DEFAULT_DISTINCT_METAMODEL;
-	}
-
-	/**
-	 * Returns whether we should ignore the IDs or compare using them.
-	 * 
-	 * @return <code>True</code> if we should ignore ID, <code>False</code> otherwise.
-	 */
-	private boolean getPreferenceIgnoreID() {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
-			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_ID);
-		return MatchOptions.DEFAULT_IGNORE_ID;
-	}
-
-	/**
-	 * Returns whether we should ignore the XMI IDs or compare with them.
-	 * 
-	 * @return <code>True</code> if we should ignore XMI ID, <code>False</code> otherwise.
-	 */
-	private boolean getPreferenceIgnoreXMIID() {
-		if (EMFPlugin.IS_ECLIPSE_RUNNING && EMFComparePlugin.getDefault() != null)
-			return EMFComparePlugin.getDefault().getBoolean(
-					EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID);
-		return MatchOptions.DEFAULT_IGNORE_XMI_ID;
-	}
-
-	/**
-	 * Returns the search window corresponding to the number of siblings to consider while matching. Reducing
-	 * this number (on the preferences page) considerably improve performances while reducing precision.
-	 * 
-	 * @return An <code>int</code> representing the number of siblings to consider for matching.
-	 */
-	private int getPreferenceSearchWindow() {
-		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
-		if (EMFPlugin.IS_ECLIPSE_RUNNING
-				&& EMFComparePlugin.getDefault() != null
-				&& EMFComparePlugin.getDefault().getInt(
-						EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW) > 0) {
-			searchWindow = EMFComparePlugin.getDefault().getInt(
-					EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW);
-		}
-		if (searchWindow < 0) {
-			searchWindow = 0;
-		}
-		return searchWindow;
-	}
-
-	/**
-	 * This replaces the contents of the defaults options map with the options overridden by the given map.
-	 * 
-	 * @param map
-	 *            Map containing the option given to the match procedure. cannot be <code>null</code>.
-	 */
-	private void loadOptionMap(Map<String, Object> map) {
-		options = map;
-		structuredOptions.init(map);
 	}
 
 	/**
