@@ -234,7 +234,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		}
 		if (!structuredOptions.isIgnoringID()) {
 			checker = new EcoreIDSimilarityChecker(filter);
-		} else if (!structuredOptions.isIgnoringXMIID()) {
+		}
+		if (!structuredOptions.isIgnoringXMIID()) {
 			checker = new XMIIDSimilarityChecker(filter);
 		}
 
