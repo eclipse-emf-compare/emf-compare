@@ -69,7 +69,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * {@link MetamodelFilter} used for filtering unused features of the objects we're computing the
 	 * similarity for.
 	 */
-	protected final MetamodelFilter filter = new MetamodelFilter();
+	protected MetamodelFilter filter = new MetamodelFilter();
 
 	/**
 	 * Contains the options given to the match procedure. This method is deprecated, if you want to handle
@@ -234,10 +234,33 @@ public class GenericMatchEngine implements IMatchEngine {
 		}
 		if (!structuredOptions.isIgnoringID()) {
 			checker = new EcoreIDSimilarityChecker(filter);
+			disableMetamodelFilter();
 		}
 		if (!structuredOptions.isIgnoringXMIID()) {
 			checker = new XMIIDSimilarityChecker(filter);
+			disableMetamodelFilter();
 		}
+
+	}
+
+	/**
+	 * replace the metamodel filter with one doing nothing.
+	 */
+	private void disableMetamodelFilter() {
+		filter = new MetamodelFilter() {
+
+			@Override
+			public void analyseModel(EObject root) {
+				/*
+				 * do nothing
+				 */
+			}
+
+			@Override
+			public List<EStructuralFeature> getFilteredFeatures(EObject eObj) {
+				return eObj.eClass().getEAllStructuralFeatures();
+			}
+		};
 
 	}
 
@@ -374,6 +397,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	public void reset() {
 		filter.clear();
+		filter = new MetamodelFilter();
 		checker = null;
 
 		remainingUnmatchedElements.clear();
