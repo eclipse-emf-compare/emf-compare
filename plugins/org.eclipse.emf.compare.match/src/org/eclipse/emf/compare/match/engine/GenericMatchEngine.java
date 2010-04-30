@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.engine.internal.AbstractSimilarityChecker;
+import org.eclipse.emf.compare.match.engine.internal.DistinctEcoreSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.StatisticBasedSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.XMIIDSimilarityChecker;
@@ -226,7 +227,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * Build the best checker depending on the options.
 	 */
 	private void prepareChecker() {
-		checker = new StatisticBasedSimilarityChecker(filter);
+		if (!structuredOptions.shouldMatchDistinctMetamodels()) {
+			checker = new DistinctEcoreSimilarityChecker(filter);
+		} else {
+			checker = new StatisticBasedSimilarityChecker(filter);
+		}
 		if (!structuredOptions.isIgnoringID()) {
 			checker = new EcoreIDSimilarityChecker(filter);
 		} else if (!structuredOptions.isIgnoringXMIID()) {
