@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,7 +59,12 @@ public final class EFactory {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (feature.isMany()) {
 			if (arg != null) {
-				((BasicEList<? super T>)object.eGet(feature)).addUnique(arg);
+				final Object manyValue = object.eGet(feature);
+				if (manyValue instanceof BasicEList) {
+					((BasicEList<? super T>)manyValue).addUnique(arg);
+				} else if (manyValue instanceof Collection) {
+					((Collection)manyValue).add(arg);
+				}
 			}
 		} else {
 			eSet(object, name, arg);
