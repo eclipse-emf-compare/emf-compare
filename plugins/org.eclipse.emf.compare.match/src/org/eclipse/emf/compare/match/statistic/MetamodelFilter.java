@@ -134,11 +134,12 @@ public class MetamodelFilter {
 		while (featIt.hasNext()) {
 			final EStructuralFeature feat = featIt.next();
 			if (!feat.isDerived()) {
-				if (!featuresToInformation.containsKey(feat)) {
-					featuresToInformation.put(feat, new FeatureInformation(feat));
+				FeatureInformation featureInformation = featuresToInformation.get(feat);
+				if (featureInformation == null) {
+					featureInformation = new FeatureInformation(feat);
+					featuresToInformation.put(feat, featureInformation);
 				}
 				final Object value = eObj.eGet(feat);
-				final FeatureInformation featureInformation = featuresToInformation.get(feat);
 				if (feat instanceof EReference) {
 					if (feat.isMany()) {
 						final Collection<EObject> values = (Collection)value;
