@@ -58,7 +58,7 @@ public final class EFactory {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (feature.isMany()) {
 			if (arg != null) {
-				((List<? super T>)object.eGet(feature)).add(arg);
+				((BasicEList<? super T>)object.eGet(feature)).addUnique(arg);
 			}
 		} else {
 			eSet(object, name, arg);
