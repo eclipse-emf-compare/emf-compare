@@ -50,6 +50,9 @@ public class MatchSettings {
 	 */
 	private Object progressMonitor;
 
+	/**
+	 * Create a new Match Setting.
+	 */
 	public MatchSettings() {
 		update(loadPreferenceOptionMap());
 	}
@@ -78,32 +81,32 @@ public class MatchSettings {
 	/**
 	 * Set the search window size.
 	 * 
-	 * @param searchWindow
+	 * @param windowSize
 	 *            set the search window size
 	 */
-	public void setSearchWindow(int searchWindow) {
-		this.searchWindow = searchWindow;
+	public void setSearchWindow(int windowSize) {
+		this.searchWindow = windowSize;
 	}
 
 	/**
 	 * Activate or deactivate the fact that the match engine should ignore XMI ID's.
 	 * 
-	 * @param ignoresXMIID
+	 * @param ignore
 	 *            true to ignore XMIId, false to use them for matching.
 	 */
-	public void ignoreXMIID(boolean ignoresXMIID) {
-		this.ignoresXMIID = ignoresXMIID;
+	public void ignoreXMIID(boolean ignore) {
+		this.ignoresXMIID = ignore;
 	}
 
 	/**
 	 * Activate or deactivate the fact that the match engine should ignore ID's attributes defined in the
 	 * Ecore model.
 	 * 
-	 * @param ignoreID
+	 * @param ignore
 	 *            true to ignore ID's attribute, false to use them for matching.
 	 */
-	public void ignoreEcoreID(boolean ignoreID) {
-		this.ignoreID = ignoreID;
+	public void ignoreEcoreID(boolean ignore) {
+		this.ignoreID = ignore;
 	}
 
 	/**
@@ -111,6 +114,7 @@ public class MatchSettings {
 	 * a different Ecore model.
 	 * 
 	 * @param distinctMetamodels
+	 *            true if we
 	 */
 	public void matchDistinctMetamodels(boolean distinctMetamodels) {
 		this.distingMetamodels = distinctMetamodels;
@@ -119,11 +123,11 @@ public class MatchSettings {
 	/**
 	 * Set a progress monitor used during the match.
 	 * 
-	 * @param progressMonitor
+	 * @param monitor
 	 *            the progressmonitor to use.
 	 */
-	public void setProgressMonitor(Object progressMonitor) {
-		this.progressMonitor = progressMonitor;
+	public void setProgressMonitor(Object monitor) {
+		this.progressMonitor = monitor;
 	}
 
 	/**
@@ -263,18 +267,18 @@ public class MatchSettings {
 	 * @return An <code>int</code> representing the number of siblings to consider for matching.
 	 */
 	private int getPreferenceSearchWindow() {
-		int searchWindow = MatchOptions.DEFAULT_SEARCH_WINDOW;
+		int searchWindowPrefereence = MatchOptions.DEFAULT_SEARCH_WINDOW;
 		if (EMFPlugin.IS_ECLIPSE_RUNNING
 				&& EMFComparePlugin.getDefault() != null
 				&& EMFComparePlugin.getDefault().getInt(
 						EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW) > 0) {
-			searchWindow = EMFComparePlugin.getDefault().getInt(
+			searchWindowPrefereence = EMFComparePlugin.getDefault().getInt(
 					EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW);
 		}
-		if (searchWindow < 0) {
-			searchWindow = 0;
+		if (searchWindowPrefereence < 0) {
+			searchWindowPrefereence = 0;
 		}
-		return searchWindow;
+		return searchWindowPrefereence;
 	}
 
 }
