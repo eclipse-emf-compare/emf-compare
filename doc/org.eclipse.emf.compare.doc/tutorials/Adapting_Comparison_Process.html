@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body><h1 id="Adaptingthecomparisonprocess">Adapting the comparison process</h1><p><code>Author</code> Cédric Brun<br/><code>Contact</code> cedric.brun@obeo.fr</p><p>Copyright  2007-2010, Obeo &#169;</p><ol style="list-style: none;"><li><a href="#Adaptingthecomparisonprocess">Adapting the comparison process</a><ol style="list-style: none;"><li><a href="#Introduction">Introduction</a></li><li><a href="#CustomizingtheMatchEngine">Customizing the Match Engine</a></li></ol></li></ol><h2 id="Introduction">Introduction</h2><p>If you defined your own formalism using an <code>ecore</code> model you might want to control the way your model is processed during the comparison to get results faster or to avoid false positives.</p><p>The main things you&#8217;ll want to customize is the match process, it&#8217;s responsability is to match elements from both versions of the models, trying to determine their identity.</p><h2 id="CustomizingtheMatchEngine">Customizing the Match Engine</h2><p>You first need to write your own <code>IMatchEngine</code> , the simplest way to do so is to extends the <code>GenericMatchEngine</code> which already provides all the needed behavior and plugin in your own customized <code>SimilarityChecker</code></p><pre>
+
+public class LibraryMatchEngine extends GenericMatchEngine {
+
+	@Override
+	protected AbstractSimilarityChecker prepareChecker() {
+		return new AbstractSimilarityChecker(filter) {
+
+			/**
+			 * Should determine whether an element is similar to the other one or not.
+			 * 
+			 * @param obj1
+			 *            an element.
+			 * @param obj2
+			 *            another element.
+			 * @return true if those elements have the same identity.
+			 */
+			@Override
+			public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public void init(Resource leftResource, Resource rightResource) throws FactoryException {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void init(EObject leftObject, EObject rightObject) throws FactoryException {
+				// TODO Auto-generated method stub
+
+			}
+
+		};
+	}
+  
+</pre><p></p><p>And then you can specify your own similarity logic redefining the isSimilar method. Please note that you&#8217;ll have to express a distance between two elements through the <code>absoluteMetric(...)</code> method. <br/>The <code>init(...)</code> methods will be called by the match engine so that you can prepare your matching process if you need to.</p><blockquote><p><br/>  If your matching process is <strong>able</strong> to return, right away, from a given instance it&#8217;s matched counter part, then you should override the <code>fastLookup(..)</code> method to return this instance :</p></blockquote><pre>
+
+	@Override
+	public EObject fastLookup(EObject obj1) {
+		return leftToRight.get(obj1);
+	}
+
+</pre><p><br/>It is not mandatory and only here to get a faster processing with specific matching like, for instance, ID based ones.</p><p>Please have a look on the existing <code>AbstractSimilarityChecker</code> subclasses and feel free to copy/paste from those, these are not provided through the API yet but will have API counterparts at some point.</p></body></html>

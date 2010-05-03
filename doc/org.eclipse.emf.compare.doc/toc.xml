@@ -22,6 +22,10 @@ Contributors:
 	    <topic href="tutorials/Using_Compare_Services.html" label="Using The Compare Services">
 	       <link toc="tutorials/Using_Compare_Services-toc.xml"/>
 	    </topic>
+	    <topic href="tutorials/Adapting_Comparison_Process.html" label="Customizing Compare Services">
+	       <link toc="tutorials/Adapting_Comparison_Process-toc.xml"/>
+	    </topic>
+	    
         <topic href="tutorials/EMF_Compare_Export_Tutorial.html" label="Adding new actions to the export menu">
 	       <link toc="tutorials/EMF_Compare_Export_Tutorial-toc.xml"/>
 	    </topic>	    
