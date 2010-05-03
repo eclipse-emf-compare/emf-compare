@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine.internal;
 
+import org.eclipse.emf.compare.match.engine.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
