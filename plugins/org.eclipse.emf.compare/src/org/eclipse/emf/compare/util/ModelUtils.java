@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareMessages;
 import org.eclipse.emf.ecore.EObject;
@@ -425,5 +426,25 @@ public final class ModelUtils {
 		final String result = writer.toString();
 		writer.flush();
 		return result;
+	}
+
+	/**
+	 * Checks whether the given resource contains the given object by searching its complete contents (
+	 * {@link Resource#getAllContents()}).
+	 * 
+	 * @param resource
+	 *            The resource whose contents is to be processed.
+	 * @param eObject
+	 *            The object to be evaluated.
+	 * @return <code>true</code> if the resource contains the eObject, <code>false</code> otherwise.
+	 */
+	public static boolean contains(Resource resource, EObject eObject) {
+		final TreeIterator<EObject> contentsIterator = resource.getAllContents();
+		while (contentsIterator.hasNext()) {
+			if (contentsIterator.next() == eObject) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
