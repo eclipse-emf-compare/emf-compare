@@ -1,54 +1,53 @@
-===========================
- Using the Compare Services
-===========================
 
-:Authors: Cédric
-:Contact: cedric.brun@obeo.fr
+h1. Using the Compare Services
 
-.. contents:: Table Of Contents
 
-This document is a work in progress.
 
-.. include:: <isonum.txt>
+@Authors@ Cédric Brun 
+@Contact@ cedric.brun@obeo.fr
+ 
 
-Copyright |copy| 2007-2008, Obeo\ |trade|.
+Copyright  2007-2010, Obeo (c)
 
-Introduction
-=============
+{toc}
+
+h2. Introduction
+
 
 All the following examples will use a simple (some would say "stupid") domain model used to keep personal information, here 
 contact lists.
 
 Here is the diagram:
 
-.. image:: ../images/AddressBookMM.png
+!images/AddressBookMM.png!
 
 The whole comparison process is divided in two phases :
  
-#. matching both versions of the elements and providing a match model.
-#. computing the diff (delta) model from this match.
+# matching both versions of the elements and providing a match model.
+# computing the diff (delta) model from this match.
 
 When comparing (using the user interface) two models conformed to the AddressBook metamodel you'll get:
 
-.. image:: ../images/AddressBookComparaison1.png
+images/AddressBookComparaison1.png!
 
 This is an emfdiff model displayed using the emf compare editor. Both match and delta information are kept in this model, let's have 
 a further look on the match part:
 
-.. image:: ../images/AddressBookMatch.png
+!images/AddressBookMatch.png!
 
 The match model weave elements from both versions of the model.
 
-.. image:: ../images/AddressBookMatchDetail.png
+!images/AddressBookMatchDetail.png!
 
 From this match model EMF compare is able to compute the delta (diff):
 
-.. image:: ../images/AddressBookDiffDetail.png
+!images/AddressBookDiffDetail.png!
 
-Getting the differences of two models
-======================================
+h2. Getting the differences of two models
+
 Getting these differences using some code is easy, here is the snippet::
 
+pre. 
    private DiffModel getDiff(AddressBook v1, AddressBook v2) throws Exception {
         Map options = new HashMap();
         MatchModel match = MatchService.doContentMatch(v1, v2, options);
@@ -57,6 +56,7 @@ Getting these differences using some code is easy, here is the snippet::
 And you'll get the Match model which you can browse like any other EMF model.
 Let's now produce the diff from this match information::
 
+pre. 
         DiffModel diff =  DiffService.doDiff(match);
         return diff;
     }
@@ -64,6 +64,7 @@ Let's now produce the diff from this match information::
 Both Diff and Match services leverage the Eclipse architecture to find the best match/diff engine from the file extension.
 But EMF Compare can be used to get the differences of two models within Eclipse or out of Eclipse (standalone mode) and using it in standalone mode you'll loose the ability of "auto-picking" the right match/diff engine considering the file extension : you'll have to call the engines yourself. Here the generic one::
 
+pre. 
    private DiffModel getDiff(AddressBook v1, AddressBook v2) throws Exception {
         Map options = new HashMap();
         MatchModel match = new GenericMatchEngine().contentMatch(v1,v2,options);        
@@ -74,47 +75,38 @@ But EMF Compare can be used to get the differences of two models within Eclipse 
 The generic match engine can be parameterized thanks to some options available in the MatchOptions interface:
 
 
-+-----------------------------+--------------------------------------------------------+------------------+
-|            Name             |        Description                                     |     Type         |
-+-----------------------------+--------------------------------------------------------+------------------+
-| OPTION_DISTINCT_METAMODELS  | If set to true, the engine will be able to compare two |      Boolean     |           
-|                             | models from different metamodel and find similarities. |                  |
-+-----------------------------+--------------------------------------------------------+------------------+
-| OPTION_IGNORE_ID            | If set to true, the engine will ignore the Ecore ID's  |      Boolean     |            
-|                             | and will consider the elements data to match them.     |                  |
-+-----------------------------+--------------------------------------------------------+------------------+   
-| OPTION_IGNORE_XMI_ID        | If set to true, the engine will ignore the XMI ID's    |      Boolean     |           
-|                             | and will consider the elements data to match them.     |                  |
-+-----------------------------+--------------------------------------------------------+------------------+
-| OPTION_SEARCH_WINDOW        | The search window is the number of elements the engine |      Integer     |           
-|                             | will consider at the same time, the bigger it is, more |                  |
-|                             | precise is the result, but slower is the process.      |                  |
-+-----------------------------+--------------------------------------------------------+------------------+
-| OPTION_PROGRESS_MONITOR     | If set with an IProgressMonitor instance, this one will| IProgressMonitor |           
-|                             | be used to monitor the match process.                  |                  |
-+-----------------------------+--------------------------------------------------------+------------------+
- 
- 
- .. HINT:: please note that all these calls can be done with 3 models, left, right and the ancestor one. Then you'll be able to detect conflicts.
 
-Merging the differences
-=======================
+|            Name             |        Description                                     |     Type         |
+| OPTION_DISTINCT_METAMODELS  | If set to true, the engine will be able to compare two models from different metamodel and find similarities. |      Boolean     |           
+| OPTION_IGNORE_ID            | If set to true, the engine will ignore the Ecore ID's and will consider the elements data to match them.   |      Boolean     |              
+| OPTION_IGNORE_XMI_ID        | If set to true, the engine will ignore the XMI ID's  and will consider the elements data to match them.    |      Boolean     |           
+| OPTION_SEARCH_WINDOW        | The search window is the number of elements the engine will consider at the same time, the bigger it is, more precise is the result, but slower is the process. |      Integer     |           
+| OPTION_PROGRESS_MONITOR     | If set with an IProgressMonitor instance, this one will| IProgressMonitor be used to monitor the match process.  |           
+
+ 
+ bq. 
+  please note that all these calls can be done with 3 models, left, right and the ancestor one. Then you'll be able to detect conflicts.
+
+h2. Merging the differences
+
 
 Once you get the differences you can merge them. You can merge every detected delta from the diff model using the merge service::
 
+pre. 
    AddModelElement add = DiffHelper.isAdded(alice, changes);
    MergeService.merge(add, false);
    
 
 Here is a quick view of all the diff elements:
 
-.. image:: ../images/DiffMM.jpg
+!images/DiffMM.jpg!
 
-Using EMF Compare in standalone mode
-====================================
+h2. Using EMF Compare in standalone mode
+
 
 You can setup your environment to use EMF Compare in standalone mode. The will looks like this ::
 
+pre.. 
 	/**
 	 * This application will try and launch an headless model comparison.
 	 * 
@@ -173,7 +165,7 @@ You can setup your environment to use EMF Compare in standalone mode. The will l
 	
 					// Serializes the result as "result.emfdiff" in the directory this class has been called from.
 					System.out.println("saving emfdiff as \"result.emfdiff\""); //$NON-NLS-1$
-					final ComparisonSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+					final ModelInputSnapshot snapshot = DiffFactory.eINSTANCE.createModelInputSnapshot();
 					snapshot.setDate(Calendar.getInstance().getTime());
 					snapshot.setMatch(match);
 					snapshot.setDiff(diff);
@@ -190,21 +182,22 @@ You can setup your environment to use EMF Compare in standalone mode. The will l
 		}
 	}
 
+p. 
 
-Compilation
------------
+h3. Compilation
+
 The following list of libraries will need to be in the classpath in order to compile:
 
-- org.eclipse.emf.common 2.3 or higher
-- org.eclipse.emf.ecore 2.3 or higher
-- org.eclipse.emf.compare 0.8 or higher
-- org.eclipse.emf.compare.diff 0.8 or higher
-- org.eclipse.emf.compare.match 0.8 or higher
+* org.eclipse.emf.common 2.3 or higher
+* org.eclipse.emf.ecore 2.3 or higher
+* org.eclipse.emf.compare 0.8 or higher
+* org.eclipse.emf.compare.diff 0.8 or higher
+* org.eclipse.emf.compare.match 0.8 or higher
   
-Launch
-------
+h3. Launch
+
 All six aforementionned libraries will be required to be in the classpath for this class to run. Additionally, the following libraries 
   are required:
 
-- org.eclipse.emf.ecore.xmi 2.3 or higher
+* org.eclipse.emf.ecore.xmi 2.3 or higher
 
