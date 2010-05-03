@@ -15,7 +15,7 @@ Contributors:
        <link toc="tutorials/User_Guide-toc.xml"/>
     </topic>
    
-   <topic label="Developper Guide">		
+   <topic label="Developer Guide">		
 	    <topic href="tutorials/Architecture.html" label="Architecture">
 	       <link toc="tutorials/Architecture-toc.xml"/>
 	    </topic>
