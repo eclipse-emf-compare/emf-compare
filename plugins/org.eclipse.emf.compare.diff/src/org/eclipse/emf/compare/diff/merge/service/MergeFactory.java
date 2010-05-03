@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.internal.merge.DefaultMergerProvider;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.IMerger;
+import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.util.ClassUtils;
 import org.eclipse.emf.compare.util.EMFCompareMap;
@@ -81,19 +82,28 @@ public final class MergeFactory {
 	 * @return The merger adapted to <code>element</code>, <code>null</code> if it cannot be instantiated.
 	 */
 	public static IMerger createMerger(DiffElement element) {
-		final Class<? extends IMerger> mergerClass = getBestMerger(element);
-
 		// If the merger provides a default constructor, we instantiate it
 		IMerger elementMerger = null;
-		try {
-			elementMerger = mergerClass.newInstance();
-			elementMerger.setDiffElement(element);
-		} catch (final InstantiationException e) {
-			EMFComparePlugin.log(e.getMessage(), false);
-		} catch (final IllegalAccessException e) {
-			EMFComparePlugin.log(e.getMessage(), false);
+
+		// diff extensions may offer their own merger, so we use it here
+		if (element instanceof AbstractDiffExtension) {
+			elementMerger = ((AbstractDiffExtension)element).provideMerger();
 		}
 
+		if (elementMerger == null) {
+			try {
+				final Class<? extends IMerger> mergerClass = getBestMerger(element);
+				elementMerger = mergerClass.newInstance();
+			} catch (final InstantiationException e) {
+				EMFComparePlugin.log(e.getMessage(), false);
+			} catch (final IllegalAccessException e) {
+				EMFComparePlugin.log(e.getMessage(), false);
+			}
+		}
+
+		if (elementMerger != null) {
+			elementMerger.setDiffElement(element);
+		}
 		return elementMerger;
 	}
 

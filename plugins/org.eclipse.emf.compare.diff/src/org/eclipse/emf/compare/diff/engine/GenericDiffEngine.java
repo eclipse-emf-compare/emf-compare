@@ -773,7 +773,13 @@ public class GenericDiffEngine implements IDiffEngine {
 			root.getSubDiffElements().add(curGroup);
 			return curGroup;
 		}
-		buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
+		// if targetElement is the root of a fragment resource, do not walk the hierarchy up,
+		// instead report changes to fragments in their own resource's context
+		if (targetParent.eResource() == targetParent.eContainer().eResource()) {
+			buildHierarchyGroup(targetParent.eContainer(), root).getSubDiffElements().add(curGroup);
+		} else {
+			root.getSubDiffElements().add(curGroup);
+		}
 		return curGroup;
 	}
 
