@@ -35,7 +35,7 @@ h2. The example
 
 The example used in this tutorial is an HTML export of a model representing a library. This tutorial will go through all the steps from defining
 the meta-model to generating code and testing the custom export. If you simply wish to define the export extension point on one of your existing
-models, Step directly to `Step 5`_ of this example.
+models, Step directly to Step 5 of this example.
 
 h2. Setting up the environment
 
@@ -77,7 +77,7 @@ EMF provides a number of ways to create this meta-model, yet this is out of the 
 <a href="http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.emf.doc/tutorials/clibmod/clibmod.html">Generating an EMF model </a> can help you in 
 going through this step.
 
-The Ecore file for this meta-model is present in the example plugin and can be downloaded from the <a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/model/library.ecore?revision=1.1&root=Modeling_Project>">CVS </a> with this tutorial and should look like :
+The Ecore file for this meta-model is present in the example plugin and can be downloaded from the <a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/model/library.ecore?revision=1.1&amp;root=Modeling_Project>">CVS </a> with this tutorial and should look like :
 
 !images/LibraryEcore.png!
 
@@ -215,9 +215,9 @@ All needed variables are initialized within the default constructor with static 
 The method *exportSnapshot* is implemented by creating a custom wizard and passing it the snapshot via its *init* method. We need to create this
 wizard : repeat the steps above to create a package named "org.eclipse.emf.compare.examples.export.library.wizard" alongside the "\*.action" one.
 Once done, copy the two classes 
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/src/org/eclipse/emf/compare/examples/export/library/wizard/LibraryExportWizard.java?revision=1.1&root=Modeling_Project">LibraryExportWizard </a>
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/src/org/eclipse/emf/compare/examples/export/library/wizard/LibraryExportWizard.java?revision=1.1&amp;root=Modeling_Project">LibraryExportWizard </a>
 and 
-<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/src/org/eclipse/emf/compare/examples/export/library/wizard/LibraryExportWizardPage.java?revision=1.1&root=Modeling_Project">LibraryExportWizardPage </a>
+<a href="http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.emf/org.eclipse.emf.compare/examples/org.eclipse.emf.compare.examples.export.library/src/org/eclipse/emf/compare/examples/export/library/wizard/LibraryExportWizardPage.java?revision=1.1&amp;root=Modeling_Project">LibraryExportWizardPage </a>
 within this new package.
 
 **LibraryExportWizardPage** is the page that will be displayed by the wizard. It allows us to define our own validation rules::
@@ -295,14 +295,14 @@ h2. Step 6 : Providing the export action
 Export actions can be added through the extension point *org.eclipse.emf.compare.ui.export*. This extension point accepts three parameters, two of 
 which being mandatory. **id** is the unique identifier of your extension, **class** is the fully qualified name of the action class implementing
 *org.eclipse.emf.compare.ui.export.IExportAction*. The third -and optional- parameter is the file extension on which this export action will be 
-enabled. We've prepared all of the required classes in the above steps; let us now configure this extension point:
+enabled. We've prepared all of the required classes in the above steps: let us now configure this extension point:
 
 #) Double-click on the file **META-INF/MANIFEST.MF** of the *org.eclipse.emf.compare.examples.export.library* plugin.
 #) | Select the **extensions** tab !images/ExtensionTab.png!    
 #) Click on **Add**, select the extension point *org.eclipse.emf.compare.ui.export* and click **Finish**.
 #) On the right part of the editor now appear three fields labeled *ID*, *class* and *fileExtension* corresponding to the parameters described above.
 #) Fill in the ID with a unique identifier (leaving it as-is should be enough).
-#) Click on **Browse...** and enter the name of the action Class "*LibraryExportAction*"; select it on the lower part and click **OK**.
+#) Click on **Browse...** and enter the name of the action Class "*LibraryExportAction*", select it on the lower part and click **OK**.
 #) Set the fileExtension to be *library*. The tab should now look like !images/ExportExtension.png!
 
 

@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="tutorials/EMF_Compare_Export_Tutorial.html" label="EMF_Compare_Export_Tutorial">
+	<topic href="tutorials/EMF_Compare_Export_Tutorial.html" label="Adding new actions to the export menu">
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#SourceCode" label="Source Code"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Whatistheexportmenuandwhyaddingnewexportactions" label="What is the export menu, and why adding new export actions?"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Theexample" label="The example"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Settinguptheenvironment" label="Setting up the environment"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step1Designingthemetamodel" label="Step 1 : Designing the meta-model"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step2Definingthemetamodel" label="Step 2 : Defining the meta-model"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step3Generatingmodelcode" label="Step 3 : Generating model code"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step4Prototypingtheexport" label="Step 4 : Prototyping the export"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step5Designingtheexportaction" label="Step 5 : Designing the export action"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Step6Providingtheexportaction" label="Step 6 : Providing the export action"></topic>
+		<topic href="tutorials/EMF_Compare_Export_Tutorial.html#Testingtheexportaction" label="Testing the export action"></topic>
+	</topic>
+</toc>
