@@ -11,12 +11,17 @@
 package org.eclipse.emf.compare.ui.viewer.content;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
+import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.Viewer;
@@ -61,11 +66,29 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getAncestorContent(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getAncestorContent(Object element) {
 		Object content = null;
-		if (element instanceof ModelCompareInput)
-			content = ((ModelCompareInput)element).getAncestorResource();
-		else if (element instanceof ICompareInput)
+		if (element instanceof ModelCompareInput) {
+			// if we compared a complete resource set, we should display the different resources
+			final Object diff = ((ModelCompareInput)element).getDiff();
+			final Resource res = ((ModelCompareInput)element).getAncestorResource();
+			if (diff instanceof DiffResourceSet) {
+				if (res != null && res.getResourceSet() != null) {
+					content = new ArrayList<Resource>();
+					for (Resource resource : res.getResourceSet().getResources()) {
+						if (hasChanged(resource, (DiffResourceSet)diff, null)) {
+							((List<Resource>)content).add(resource);
+						}
+					}
+					if (((List<Resource>)content).isEmpty()) {
+						content = null;
+					}
+				}
+			} else if (diff instanceof DiffModel) {
+				content = res;
+			}
+		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getAncestor();
 		return content;
 	}
@@ -93,18 +116,64 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getLeftContent(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getLeftContent(Object element) {
 		Object content = null;
 		if (element instanceof ModelCompareInput) {
+			// if we compared a complete resource set, we should display the different resources
+			final Object diff = ((ModelCompareInput)element).getDiff();
 			final Resource res = ((ModelCompareInput)element).getLeftResource();
-			if (res == null) {
-				content = ((ModelCompareInput)element).getLeft();
-			} else {
+			if (diff instanceof DiffResourceSet) {
+				if (res != null && res.getResourceSet() != null) {
+					content = new ArrayList<Resource>();
+					for (Resource resource : res.getResourceSet().getResources()) {
+						if (hasChanged(resource, (DiffResourceSet)diff, Side.LEFT)) {
+							((List<Resource>)content).add(resource);
+						}
+					}
+					if (((List<Resource>)content).isEmpty()) {
+						content = null;
+					}
+				}
+			} else if (diff instanceof DiffModel) {
 				content = res;
 			}
 		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getLeft();
 		return content;
+	}
+
+	/**
+	 * Checks whether the given resource does contain changes on the respective side of the given diff
+	 * resource set.
+	 * 
+	 * @param res
+	 *            the resource that is being checked.
+	 * @param diffResourceSet
+	 *            the resource that that is to be tested for changes to the given resource
+	 * @param side
+	 *            the side of the diff resource set that is to be evaluated.
+	 * @return <code>true</code> if the resource has related changes, <code>false</code> otherwise.
+	 */
+	private boolean hasChanged(Resource res, DiffResourceSet diffResourceSet, Side side) {
+		for (DiffModel diffModel : diffResourceSet.getDiffModels()) {
+			// diff model does not have ref to its covered resource, so
+			// we have to indirectly check if the diff models root are within the contents of the resource
+			if (side == Side.LEFT) {
+				if (res.getContents().containsAll(diffModel.getLeftRoots())) {
+					return diffModel.getSubchanges() != 0;
+				}
+			} else if (side == Side.RIGHT) {
+				if (res.getContents().containsAll(diffModel.getRightRoots())) {
+					return diffModel.getSubchanges() != 0;
+				}
+			} else { // ancestor side
+				if (res.getContents().containsAll(diffModel.getAncestorRoots())) {
+					return diffModel.getSubchanges() != 0;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -130,13 +199,26 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * 
 	 * @see org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider#getRightContent(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getRightContent(Object element) {
 		Object content = null;
 		if (element instanceof ModelCompareInput) {
+			// if we compared a complete resource set, we should display the different resources
+			final Object diff = ((ModelCompareInput)element).getDiff();
 			final Resource res = ((ModelCompareInput)element).getRightResource();
-			if (res == null) {
-				content = ((ModelCompareInput)element).getRight();
-			} else {
+			if (diff instanceof DiffResourceSet) {
+				if (res != null && res.getResourceSet() != null) {
+					content = new ArrayList<Resource>();
+					for (Resource resource : res.getResourceSet().getResources()) {
+						if (hasChanged(resource, (DiffResourceSet)diff, Side.RIGHT)) {
+							((List<Resource>)content).add(resource);
+						}
+					}
+					if (((List<Resource>)content).isEmpty()) {
+						content = null;
+					}
+				}
+			} else if (diff instanceof DiffModel) {
 				content = res;
 			}
 		} else if (element instanceof ICompareInput)

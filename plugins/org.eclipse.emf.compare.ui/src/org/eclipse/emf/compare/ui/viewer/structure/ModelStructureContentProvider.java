@@ -18,6 +18,7 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
@@ -167,12 +168,30 @@ public class ModelStructureContentProvider implements ITreeContentProvider {
 		} else if (newInput instanceof ComparisonResourceSetSnapshot) {
 			input = ((ComparisonResourceSetSnapshot)newInput).getDiffResourceSet();
 		} else if (comparator.getComparisonResult() != null) {
-			input = comparator.getComparisonResult().getDiffResourceSet();
+			input = retrieveInputFromSnapshot(comparator.getComparisonResult());
 		} else if (newInput instanceof ModelCompareInput) {
 			input = ((ModelCompareInput)newInput).getDiff();
 		} else if (oldInput != newInput && newInput instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)newInput);
-			input = comparator.compare(configuration).getDiffResourceSet();
+			input = retrieveInputFromSnapshot(comparator.compare(configuration));
 		}
+	}
+
+	/**
+	 * Utility function to retrieve the viewer input from the given comparison result.
+	 * 
+	 * @param comparisonResult
+	 *            the result to evaluate
+	 * @return a {@link DiffModel} in case the comparison result is a {@link ComparisonResourceSnapshot}, a
+	 *         {@link DiffResourceSet otherwise}.
+	 */
+	private Object retrieveInputFromSnapshot(final ComparisonSnapshot comparisonResult) {
+		Object retrievedInput = null;
+		if (comparisonResult instanceof ComparisonResourceSnapshot) {
+			retrievedInput = ((ComparisonResourceSnapshot)comparisonResult).getDiff();
+		} else {
+			retrievedInput = ((ComparisonResourceSetSnapshot)comparisonResult).getDiffResourceSet();
+		}
+		return retrievedInput;
 	}
 }

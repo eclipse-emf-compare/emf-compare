@@ -26,12 +26,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ui.team.AbstractResolvingURIConverter;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.URIConverterImpl;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
 import org.eclipse.team.core.history.IFileHistoryProvider;
@@ -77,10 +78,10 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 
 			if (left instanceof FileRevisionTypedElement) {
 				try {
-					leftResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
-							left.getName(), leftResourceSet).eResource();
 					leftResourceSet.setURIConverter(new RevisionedURIConverter(
 							((FileRevisionTypedElement)left).getFileRevision()));
+					leftResource = ModelUtils.load(((IStreamContentAccessor)left).getContents(),
+							left.getName(), leftResourceSet).eResource();
 				} catch (final IOException e) {
 					// We couldn't load the resource. Considers it has been deleted
 					leftResource = ModelUtils.createResource(URI.createURI(left.getName()));
@@ -98,9 +99,9 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 			}
 
 			try {
+				rightResourceSet.setURIConverter(new RevisionedURIConverter(rightRevision));
 				rightResource = ModelUtils.load(((IStreamContentAccessor)right).getContents(),
 						right.getName(), rightResourceSet).eResource();
-				rightResourceSet.setURIConverter(new RevisionedURIConverter(rightRevision));
 			} catch (final IOException e) {
 				// We couldn't load the remote resource. Considers it has been added to the repository
 				rightResource = ModelUtils.createResource(URI.createURI(right.getName()));
@@ -112,9 +113,9 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 				final IFileRevision ancestorRevision = ((FileRevisionTypedElement)ancestor).getFileRevision();
 				final ResourceSet ancestorResourceSet = new ResourceSetImpl();
 				try {
+					ancestorResourceSet.setURIConverter(new RevisionedURIConverter(ancestorRevision));
 					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
 							ancestor.getName(), ancestorResourceSet).eResource();
-					ancestorResourceSet.setURIConverter(new RevisionedURIConverter(ancestorRevision));
 				} catch (final IOException e) {
 					// Couldn't load ancestor resource, create an empty one
 					ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
@@ -133,7 +134,7 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 * @since 1.0
 	 */
-	private class RevisionedURIConverter extends URIConverterImpl {
+	private class RevisionedURIConverter extends AbstractResolvingURIConverter {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */
 		private final IFileRevision baseRevision;
 
@@ -151,39 +152,48 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 		/**
 		 * {@inheritDoc}
 		 * 
+		 * @see org.eclipse.emf.compare.ui.team.AbstractResolvingURIConverter#resolve(org.eclipse.emf.common.util.URI)
+		 */
+		@Override
+		public URI resolve(URI uri) throws CoreException {
+			URI deresolvedURI = uri;
+			// We'll have to change the EMF URI to find the IFile it points to
+			final IStorage storage = baseRevision.getStorage(null);
+			if (uri.isRelative()) {
+				// Current revision, yet the proxy could point to a file that has changed since.
+				if (storage instanceof IFile) {
+					final IFile file = (IFile)storage;
+					deresolvedURI = uri.resolve(URI.createURI(file.getLocationURI().toString()));
+				} else {
+					final IResource stateFile = EcorePlugin.getWorkspaceRoot().findMember(
+							storage.getFullPath());
+					deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
+				}
+			}
+			deresolvedURI = URI.createPlatformResourceURI(deresolvedURI.deresolve(
+					URI.createURI(EcorePlugin.getWorkspaceRoot().getLocationURI().toString() + '/'))
+					.toString());
+			return deresolvedURI;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
 		 * @see org.eclipse.emf.ecore.resource.URIConverter#createInputStream(org.eclipse.emf.common.util.URI)
 		 */
 		@Override
 		public InputStream createInputStream(URI uri) throws IOException {
 			InputStream stream = null;
-			if (uri.isPlatformPlugin() || uri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
-				stream = super.createInputStream(uri);
+			final URI normalizedUri = normalize(uri);
+			if (normalizedUri.isPlatformPlugin() || normalizedUri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
+				stream = super.createInputStream(normalizedUri);
 			} else {
-				try {
-					// We'll have to change the EMF URI to find the IFile it points to
-					URI deresolvedURI = uri;
-
-					final IStorage storage = baseRevision.getStorage(null);
-					if (uri.isRelative()) {
-						// Current revision, yet the proxy could point to a file that has changed since.
-						if (storage instanceof IFile) {
-							final IFile file = (IFile)storage;
-							deresolvedURI = uri.resolve(URI.createURI(file.getLocationURI().toString()));
-						} else {
-							final IResource stateFile = workspaceRoot.findMember(storage.getFullPath());
-							deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
-						}
-					}
-					deresolvedURI = deresolvedURI.deresolve(URI.createURI(workspaceRoot.getLocationURI()
-							.toString() + '/'));
-
-					final IResource targetFile = workspaceRoot.findMember(new Path(deresolvedURI
-							.trimFragment().toString()));
-
-					if (targetFile != null)
-						stream = openRevisionStream(targetFile);
-				} catch (final CoreException e) {
-					stream = super.createInputStream(uri);
+				final IResource targetFile = EcorePlugin.getWorkspaceRoot().findMember(
+						new Path(normalizedUri.trimFragment().toPlatformString(true)));
+				if (targetFile != null) {
+					stream = openRevisionStream(targetFile);
+				} else {
+					super.createInputStream(normalizedUri);
 				}
 			}
 			return stream;

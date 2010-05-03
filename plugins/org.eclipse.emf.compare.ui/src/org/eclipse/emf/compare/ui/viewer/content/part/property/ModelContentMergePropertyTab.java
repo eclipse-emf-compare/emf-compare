@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Widget;
@@ -207,12 +208,7 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 			key += '/' + fragments[fragments.length - 1];
 		final ModelContentMergeTabItem item = dataToItem.get(key);
 		if (item != null) {
-			if (getSelectedElements().contains(item.getActualItem()))
-				item.setCurveSize(2);
-			else
-				item.setCurveSize(1);
-			item.setCurveY(((TableItem)item.getActualItem()).getBounds().y
-					+ ((TableItem)item.getActualItem()).getBounds().height / 2);
+			computeUIInfoFor(item);
 		}
 		return item;
 	}
@@ -245,17 +241,41 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 				if (nextTableItem.getBounds().y >= getTable().getClientArea().y
 						&& nextTableItem.getBounds().y <= getTable().getClientArea().y
 								+ getTable().getClientArea().height) {
-					if (getSelectedElements().contains(nextTableItem))
-						next.setCurveSize(2);
-					else
-						next.setCurveSize(1);
-					next.setCurveY(nextTableItem.getBounds().y + nextTableItem.getBounds().height / 2);
-					next.setHeaderHeight(getTable().getHeaderHeight());
+					computeUIInfoFor(next);
 					result.add(next);
 				}
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * This will compute the necessary GUI information for the given {@link ModelContentMergeTabItem}.
+	 * 
+	 * @param item
+	 *            The item which UI information is to be set.
+	 */
+	private void computeUIInfoFor(ModelContentMergeTabItem item) {
+		final TableItem actualItem = (TableItem)item.getActualItem();
+		// compute vertical offset
+		final Scrollable scrollable = (Scrollable)getControl();
+		int offset = scrollable.getBounds().y + scrollable.getClientArea().height
+				- (scrollable.getClientArea().y + scrollable.getBounds().height);
+
+		// if horizontal scrollbar is visible, compensate this as well
+		if (scrollable.getClientArea().width < actualItem.getBounds().width) {
+			offset += scrollable.getHorizontalBar().getSize().y;
+		}
+		item.setVerticalOffset(offset);
+
+		// compute curve
+		item.setCurveY(actualItem.getBounds().y + actualItem.getBounds().height / 2);
+
+		if (getSelectedElements().contains(item.getActualItem())) {
+			item.setCurveSize(2);
+		} else {
+			item.setCurveSize(1);
+		}
 	}
 
 	/**

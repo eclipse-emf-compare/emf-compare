@@ -59,6 +59,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -118,8 +119,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		parent = parentFolder;
 
 		setUseHashlookup(true);
-		setContentProvider(new ModelContentMergeDiffTabContentProvider(AdapterUtils.getAdapterFactory()));
-		setLabelProvider(new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory()));
+		setContentProvider(createContentProvider());
+		setLabelProvider(createLabelProvider());
 		getTree().addPaintListener(new TreePaintListener());
 
 		// The following listeners will be used to invalidate the cache of
@@ -140,6 +141,24 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				redraw();
 			}
 		});
+	}
+
+	/**
+	 * Utility function to create a new label provider.
+	 * 
+	 * @return the new label provider instance.
+	 */
+	private AdapterFactoryLabelProvider createLabelProvider() {
+		return new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
+	}
+
+	/**
+	 * Utility function to create a new content provider.
+	 * 
+	 * @return the new content provider instance.
+	 */
+	private ModelContentMergeDiffTabContentProvider createContentProvider() {
+		return new ModelContentMergeDiffTabContentProvider(AdapterUtils.getAdapterFactory());
 	}
 
 	/**
@@ -251,7 +270,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#redraw()
 	 */
 	public void redraw() {
+		clearCaches();
 		getTree().redraw();
+		setupCaches();
 	}
 
 	/**
@@ -261,10 +282,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	@Override
 	public void refresh(Object element, boolean updateLabels) {
+		clearCaches();
 		super.refresh(element, updateLabels);
-		mapTreeItems();
-		mapDifferences();
-		mapTreeItemsToUI();
+		setupCaches();
 	}
 
 	/**
@@ -272,22 +292,23 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 * 
 	 * @see org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab#setReflectiveInput(java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public void setReflectiveInput(Object object) {
 		// We *need* to invalidate the cache here since setInput() would try to
 		// use it otherwise
 		clearCaches();
 
-		final AdapterFactory adapterFactory = AdapterUtils.getAdapterFactory();
-		setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
+		// setLabelProvider(createLabelProvider()); // already set in constructor
 		if (object instanceof EObject) {
-			final Resource resource = ((EObject)object).eResource();
-			if (resource != null) {
-				setInput(resource);
-			} else {
-				setInput(object);
-			}
+			setInput(((EObject)object).eResource());
 		} else {
-			assert object instanceof Resource;
+			// may be invoked with a resourceSet, a list of resources, or a single resource
+			assert object instanceof Resource || object instanceof List;
+			if (object instanceof List) {
+				for (Object item : (List)object) {
+					assert item instanceof Resource;
+				}
+			}
 			setInput(object);
 		}
 
@@ -312,6 +333,19 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			} else {
 				datas.add(EMFCompareEObjectUtils.getRightElement(items.get(i)));
 			}
+		}
+
+		// filter null values
+		final Iterator<EObject> iterator = datas.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next() == null) {
+				iterator.remove();
+			}
+		}
+
+		// expand those being selected first
+		for (EObject data : datas) {
+			reveal(data);
 		}
 		setSelection(new StructuredSelection(datas), true);
 		needsRedraw = true;
@@ -339,9 +373,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			return res;
 		else if (res != null) {
 			// mapped items are disposed
-			mapTreeItems();
-			mapDifferences();
-			mapTreeItemsToUI();
+			clearCaches();
+			setupCaches();
 			// won't call this recursively since it could eventually lead to
 			// stack overflows
 			dataToTreeItem.get(element);
@@ -373,16 +406,10 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	 */
 	@Override
 	protected void inputChanged(Object input, Object oldInput) {
-		if (input != oldInput) {
-			final TreePath[] expandedTreePaths = getExpandedTreePaths();
-
-			super.inputChanged(input, oldInput);
-
-			// Expands all items so that we'll be able to find them back (defeats
-			// purpose of lazy loading)
-			expandAll();
-			setExpandedTreePaths(expandedTreePaths);
-		}
+		// preserve expansion state
+		final TreePath[] expandedTreePaths = getExpandedTreePaths();
+		super.inputChanged(input, oldInput);
+		setExpandedTreePaths(expandedTreePaths);
 	}
 
 	/**
@@ -473,6 +500,16 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		} else {
 			item.setCurveSize(1);
 		}
+
+		final Scrollable scrollable = (Scrollable)getControl();
+		int offset = scrollable.getBounds().y + scrollable.getClientArea().height
+				- (scrollable.getClientArea().y + scrollable.getBounds().height);
+
+		// if horizontal scrollbar is visible, compensate this as well
+		if (scrollable.getClientArea().width < ((TreeItem)item.getActualItem()).getBounds().width) {
+			offset += scrollable.getHorizontalBar().getSize().y;
+		}
+		item.setVerticalOffset(offset);
 	}
 
 	/**
@@ -671,10 +708,14 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				// look for the matchedElement
 				data = getTree().getItems()[0].getData();
 			}
-			final Item actualItem = (Item)findItem(data);
-			if (actualItem == null) {
+			final Widget actualWidget = findItem(data);
+			if (actualWidget == null) {
 				continue;
 			}
+			if (!(actualWidget instanceof Item)) {
+				continue;
+			}
+			final Item actualItem = (Item)actualWidget;
 
 			Item visibleItem = null;
 			if (partSide == EMFCompareConstants.LEFT && diff instanceof ModelElementChangeRightTarget
@@ -845,9 +886,12 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		 * 
 		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getElements(java.lang.Object)
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object object) {
-			final Object[] result;
+			// overwritten to ensure contents of ResourceSets, List<Resource>, and Resource are correclty
+			// returned.
+			Object[] result = null;
 			if (object instanceof ResourceSet) {
 				final List<Resource> resources = ((ResourceSet)object).getResources();
 				final List<Resource> elements = new ArrayList<Resource>(resources.size());
@@ -860,10 +904,42 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				result = elements.toArray();
 			} else if (object instanceof TypedElementWrapper) {
 				result = new Object[] {((EObject)object).eResource(), };
+			} else if (object instanceof List) {
+				// we may also display a list of resources
+				result = ((List)object).toArray();
+			} else if (object instanceof Resource) {
+				// return contents of resource
+				result = ((Resource)object).getContents().toArray();
 			} else {
 				result = super.getElements(object);
 			}
 			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
+		 */
+		@Override
+		public Object[] getChildren(Object object) {
+			if (object instanceof Resource) {
+				return ((Resource)object).getContents().toArray();
+			}
+			return super.getChildren(object);
+		}
+
+		/**
+		 *{@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#hasChildren(java.lang.Object)
+		 */
+		@Override
+		public boolean hasChildren(Object object) {
+			if (object instanceof Resource) {
+				return ((Resource)object).getContents().size() > 0;
+			}
+			return super.hasChildren(object);
 		}
 	}
 }

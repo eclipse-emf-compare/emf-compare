@@ -126,8 +126,8 @@ public abstract class AbstractCenterPart extends Canvas {
 			leftY = leftItem.getCurveY() + treeTabBorder;
 			rightY = rightItem.getCurveY() + treeTabBorder;
 		} else {
-			leftY = leftItem.getCurveY() + leftItem.getHeaderHeight() + treeTabBorder;
-			rightY = rightItem.getCurveY() + rightItem.getHeaderHeight() + treeTabBorder;
+			leftY = leftItem.getCurveY() + treeTabBorder + leftItem.getVerticalOffset();
+			rightY = rightItem.getCurveY() + treeTabBorder + rightItem.getVerticalOffset();
 		}
 		final int lineWidth = leftItem.getCurveSize();
 

@@ -42,10 +42,13 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
@@ -62,6 +65,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -91,7 +95,7 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	private static final String TEAM_HANDLERS_EXTENSION_POINT = "org.eclipse.emf.compare.ui.team.handler"; //$NON-NLS-1$
 
 	/** This will hold the result of these resources' comparison. */
-	protected ComparisonResourceSetSnapshot comparisonResult;
+	protected ComparisonSnapshot comparisonResult;
 
 	/** Keeps a reference to the last "ancestor" element of the input. */
 	private ITypedElement ancestorElement;
@@ -231,63 +235,150 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 *            data.
 	 * @return Result of the comparison of the loaded resources.
 	 */
-	public ComparisonResourceSetSnapshot compare(CompareConfiguration configuration) {
+	public ComparisonSnapshot compare(CompareConfiguration configuration) {
 		if (!loadingSucceeded) {
 			// We couldn't load the resource. It's useless to carry on.
 			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
 		}
 
 		if (comparisonResult == null) {
-			comparisonResult = DiffFactory.eINSTANCE.createComparisonResourceSetSnapshot();
 			final Date start = Calendar.getInstance().getTime();
 
 			MatchService.setMatchEngineSelector(new VisualEngineSelector());
 			DiffService.setDiffEngineSelector(new VisualEngineSelector());
 
-			try {
-				PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InterruptedException {
-						final Map<String, Object> options = new EMFCompareMap<String, Object>();
-						options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-						final MatchResourceSet match;
-						if (getAncestorResource() == null) {
-							match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
-									getRightResource().getResourceSet(), options);
-						} else {
-							match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
-									getRightResource().getResourceSet(), getAncestorResource()
-											.getResourceSet(), options);
-						}
-						final DiffResourceSet diff = DiffService.doDiff(match, getAncestorResource() != null);
+			// show prompt to select the match scope
+			final MessageDialog queryMatchScopeDialog = new MessageDialog(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					EMFCompareUIMessages.getString("ModelComparator.MatchModeSelectionDialogTitle"), null, EMFCompareUIMessages.getString("ModelComparator.MatchModeSelectionDialogMessage"), MessageDialog.NONE, new String[] {EMFCompareUIMessages.getString("ModelComparator.MatchModelSelectionDialogResourceOption"), EMFCompareUIMessages.getString("ModelComparator.MatchModelSelectionDialogResourceSetOption") }, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			final boolean doResourceMatchOnly = queryMatchScopeDialog.open() == 0;
 
-						comparisonResult.setDate(Calendar.getInstance().getTime());
-						comparisonResult.setDiffResourceSet(diff);
-						comparisonResult.setMatchResourceSet(match);
-					}
-				});
-			} catch (final InterruptedException e) {
-				comparisonResult.setDate(Calendar.getInstance().getTime());
-				comparisonResult.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
-				comparisonResult.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
-			} catch (final EMFCompareException e) {
-				comparisonResult.setDate(Calendar.getInstance().getTime());
-				comparisonResult.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
-				comparisonResult.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
-			} catch (final InvocationTargetException e) {
-				EMFComparePlugin.log(e, true);
+			if (doResourceMatchOnly) {
+				comparisonResult = doResourceCompare();
+			} else {
+				comparisonResult = doResourceSetCompare();
 			}
 
+			// set date of comparison
 			final Date end = Calendar.getInstance().getTime();
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
-					- start.getTime());
+			comparisonResult.setDate(end);
+
 			configuration.setLeftEditable(configuration.isLeftEditable() && !isLeftRemote());
 			configuration.setRightEditable(configuration.isRightEditable() && !isRightRemote());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
+					- start.getTime());
 			if (isLeftRemote()) {
-				configuration.setLeftLabel(EMFCompareUIMessages.getString("comparison.label.remoteResource")); //$NON-NLS-1$
-				configuration.setRightLabel(EMFCompareUIMessages.getString("comparison.label.localResource")); //$NON-NLS-1$
+				if (doResourceMatchOnly) {
+					configuration.setLeftLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+							.getString("ModelComparator.remoteResourceCompareLabel"))); //$NON-NLS-1$
+					configuration.setRightLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+							.getString("ModelComparator.localResourceCompareLabel"))); //$NON-NLS-1$
+				} else {
+
+					configuration.setLeftLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+							.getString("ModelComparator.remoteResourceSetCompareLabel"))); //$NON-NLS-1$
+					configuration.setRightLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
+							.getString("ModelComparator.localResourceSetCompareLabel"))); //$NON-NLS-1$
+
+				}
 			}
 		}
 		return comparisonResult;
+	}
+
+	/**
+	 * Perform a comparison of the left and right (and if specified ancestor resource).
+	 * 
+	 * @return the {@link ComparisonResourceSnapshot} that contains the comparison result.
+	 */
+	protected ComparisonResourceSnapshot doResourceCompare() {
+		// create snapshot
+		final ComparisonResourceSnapshot snapshot = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+		snapshot.setDiff(DiffFactory.eINSTANCE.createDiffModel());
+		snapshot.setMatch(MatchFactory.eINSTANCE.createMatchModel());
+
+		try {
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InterruptedException {
+					final Map<String, Object> options = new EMFCompareMap<String, Object>();
+					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+					// do comparison
+					final MatchModel match;
+					if (getAncestorResource() == null) {
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+								getLeftResource(), getRightResource()));
+						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(), options);
+					} else {
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+								getLeftResource(), getRightResource(), getAncestorResource()));
+						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
+								getAncestorResource(), options);
+					}
+					final DiffModel diff = DiffService.doDiff(match, getAncestorResource() != null);
+					snapshot.setDiff(diff);
+					snapshot.setMatch(match);
+
+				}
+			});
+		} catch (final InterruptedException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (final EMFCompareException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (final InvocationTargetException e) {
+			EMFComparePlugin.log(e, true);
+		}
+
+		return snapshot;
+	}
+
+	/**
+	 * /** Perform a comparison of the left and right (and if specified ancestor resource), as well as all
+	 * other resources, included in their respective resource sets.
+	 * 
+	 * @return the {@link ComparisonResourceSetSnapshot} that contains the comparison result.
+	 */
+	protected ComparisonResourceSetSnapshot doResourceSetCompare() {
+		final ComparisonResourceSetSnapshot snapshot = DiffFactory.eINSTANCE
+				.createComparisonResourceSetSnapshot();
+		snapshot.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
+		snapshot.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
+
+		try {
+			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) throws InterruptedException {
+					final Map<String, Object> options = new EMFCompareMap<String, Object>();
+					options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+					// do comparison
+					final MatchResourceSet match;
+					if (getAncestorResource() == null) {
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+								getLeftResource().getResourceSet(), getRightResource().getResourceSet()));
+						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
+								getRightResource().getResourceSet(), options);
+					} else {
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+								getLeftResource().getResourceSet(), getRightResource().getResourceSet(),
+								getAncestorResource().getResourceSet()));
+						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
+								getRightResource().getResourceSet(), getAncestorResource().getResourceSet(),
+								options);
+					}
+					final DiffResourceSet diff = DiffService.doDiff(match, getAncestorResource() != null);
+					snapshot.setDiffResourceSet(diff);
+					snapshot.setMatchResourceSet(match);
+				}
+			});
+		} catch (final InterruptedException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (final EMFCompareException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (final InvocationTargetException e) {
+			EMFComparePlugin.log(e, true);
+		}
+
+		return snapshot;
 	}
 
 	/**
@@ -307,7 +398,7 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 * @return The comparison result. <code>null</code> if no comparison has been done since last loading
 	 *         resources.
 	 */
-	public ComparisonResourceSetSnapshot getComparisonResult() {
+	public ComparisonSnapshot getComparisonResult() {
 		return comparisonResult;
 	}
 
@@ -451,12 +542,12 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			comparisonResult.setDate(snapshot.getDate());
 			final DiffResourceSet diffRS = DiffFactory.eINSTANCE.createDiffResourceSet();
 			diffRS.getDiffModels().add(((ComparisonResourceSnapshot)snapshot).getDiff());
-			comparisonResult.setDiffResourceSet(diffRS);
+			((ComparisonResourceSetSnapshot)comparisonResult).setDiffResourceSet(diffRS);
 			final MatchResourceSet matchRS = MatchFactory.eINSTANCE.createMatchResourceSet();
 			matchRS.getMatchModels().add(((ComparisonResourceSnapshot)snapshot).getMatch());
-			comparisonResult.setMatchResourceSet(matchRS);
+			((ComparisonResourceSetSnapshot)comparisonResult).setMatchResourceSet(matchRS);
 		} else {
-			comparisonResult = (ComparisonResourceSetSnapshot)snapshot;
+			comparisonResult = snapshot;
 		}
 	}
 

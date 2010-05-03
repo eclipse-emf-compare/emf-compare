@@ -16,8 +16,9 @@ import org.eclipse.swt.widgets.Item;
 
 // TODO Diff should be made optional. What if a tab doesn't display diff-related information?
 /**
- * This class will be used to wrap {@link Item} subclasses such as {@link TreeItem} and {@link TableItem} to
- * allow us to call methods such as <tt>getBounds</tt> without explicitely casting each time we do so.
+ * This class will be used to wrap {@link Item} subclasses such as {@link org.eclipse.swt.widgets.TreeItem}
+ * and {@link org.eclipse.swt.widgets.TableItem} to allow us to call methods such as <tt>getBounds</tt>
+ * without explicitely casting each time we do so.
  * <p>
  * This wrapper will allow us to maintain a logical structure of the tree : which TreeItem corresponds to
  * which difference or visible parent ...
@@ -41,11 +42,11 @@ public final class ModelContentMergeTabItem {
 	/** Holds a reference to the difference represented by the wrapped item. */
 	private final DiffElement difference;
 
-	/** Height of the item's control's header. */
-	private int headerHeight;
-
 	/** The visible item on which will be drawn UI marquees. */
 	private Item visibleItem;
+
+	/** Offset to correct scroll effects and table header when painting curve. */
+	private int verticalOffset;
 
 	/**
 	 * Constructs a wrapper around the given item. This constructor specifies the color to use when drawing UI
@@ -125,7 +126,8 @@ public final class ModelContentMergeTabItem {
 	 * Returns the color which should be used when drawing the center curve and other UI colored components
 	 * using this item.
 	 * <p>
-	 * If no colors are specified for this item, {@link ModelContentMergeViewer#getChangedColor()} will be
+	 * If no colors are specified for this item,
+	 * {@link org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer#getChangedColor()} will be
 	 * used as default.
 	 * </p>
 	 * 
@@ -169,12 +171,13 @@ public final class ModelContentMergeTabItem {
 	}
 
 	/**
-	 * Returns the height of the item's control header.
+	 * Returns the offset needed to compensate scroll effects and table headers when painting curve.
 	 * 
-	 * @return The height of the item's control header.
+	 * @since 1.1
+	 * @return the vertical scrollbar offset
 	 */
-	public int getHeaderHeight() {
-		return headerHeight;
+	public int getVerticalOffset() {
+		return verticalOffset;
 	}
 
 	/**
@@ -207,13 +210,14 @@ public final class ModelContentMergeTabItem {
 	}
 
 	/**
-	 * Returns the value of the item's control header height.
+	 * Specifies offset to compensate scroll effects or table headers when painting curve.
 	 * 
-	 * @param newHeaderHeight
-	 *            The value of the item's control header height.
+	 * @since 1.1
+	 * @param offset
+	 *            the vertical offset
 	 */
-	public void setHeaderHeight(int newHeaderHeight) {
-		headerHeight = newHeaderHeight;
+	public void setVerticalOffset(int offset) {
+		verticalOffset = offset;
 	}
 
 	/**
@@ -246,4 +250,5 @@ public final class ModelContentMergeTabItem {
 		result += ')';
 		return result;
 	}
+
 }

@@ -313,7 +313,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			super.setInput(input);
 		} else if (input instanceof ICompareInput) {
 			comparator.loadResources((ICompareInput)input);
-			final ComparisonResourceSetSnapshot snapshot = comparator.compare(configuration);
+			final ComparisonSnapshot snapshot = comparator.compare(configuration);
 			super.setInput(createModelCompareInput(comparator, snapshot));
 			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snapshot);
 		} else {
