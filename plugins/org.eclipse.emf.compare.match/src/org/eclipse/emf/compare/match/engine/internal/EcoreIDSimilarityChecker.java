@@ -232,14 +232,6 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public double absoluteMetric(EObject obj1, EObject obj2, EObject obj3) throws FactoryException {
-		return 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	protected String computeID(EObject obj) {
 		return EcoreUtil.getID(obj);
 	}

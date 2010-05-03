@@ -209,28 +209,6 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	}
 
 	/**
-	 * Returns an absolute comparison metric between the three given {@link EObject}s.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @param obj3
-	 *            Second of the {@link EObject}s to compare.
-	 * @return An absolute comparison metric
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the content similarity.
-	 */
-	@Override
-	public double absoluteMetric(EObject obj1, EObject obj2, EObject obj3) throws FactoryException {
-		final double metric1 = absoluteMetric(obj1, obj2);
-		final double metric2 = absoluteMetric(obj1, obj3);
-		final double metric3 = absoluteMetric(obj2, obj3);
-
-		return (metric1 + metric2 + metric3) / 3;
-	}
-
-	/**
 	 * This will compute the similarity between two {@link EObject}s' types.
 	 * 
 	 * @param obj1

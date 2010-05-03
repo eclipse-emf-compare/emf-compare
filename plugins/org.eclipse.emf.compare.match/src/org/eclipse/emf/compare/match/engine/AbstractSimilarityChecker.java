@@ -89,21 +89,6 @@ public abstract class AbstractSimilarityChecker {
 	public abstract double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException;
 
 	/**
-	 * Returns an absolute comparison metric between the three given {@link EObject}s.
-	 * 
-	 * @param obj1
-	 *            The first {@link EObject} to compare.
-	 * @param obj2
-	 *            Second of the {@link EObject}s to compare.
-	 * @param obj3
-	 *            Second of the {@link EObject}s to compare.
-	 * @return An absolute comparison metric
-	 * @throws FactoryException
-	 *             Thrown if we cannot compute the content similarity.
-	 */
-	public abstract double absoluteMetric(EObject obj1, EObject obj2, EObject obj3) throws FactoryException;
-
-	/**
 	 * If a checker is able to return the matching element quickly it should define that. Not every checker
 	 * might be able to provide that !
 	 * 

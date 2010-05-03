@@ -221,7 +221,7 @@ public class GenericMatchEngine implements IMatchEngine {
 							.get(0);
 					subMatchRoot = MatchFactory.eINSTANCE.createMatch3Elements();
 
-					subMatchRoot.setSimilarity(checker.absoluteMetric(leftObjectMatchRoot.getLeftElement(),
+					subMatchRoot.setSimilarity(set3WaySimilarity(leftObjectMatchRoot.getLeftElement(),
 							rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
 					subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
 					subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
@@ -718,7 +718,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			if (correspondingMatch != null) {
 				final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-				match.setSimilarity(checker.absoluteMetric(nextLeftMatch.getLeftElement(), correspondingMatch
+				match.setSimilarity(set3WaySimilarity(nextLeftMatch.getLeftElement(), correspondingMatch
 						.getLeftElement(), correspondingMatch.getRightElement()));
 				match.setLeftElement(nextLeftMatch.getLeftElement());
 				match.setRightElement(correspondingMatch.getLeftElement());
@@ -1047,7 +1047,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements root1Match = (Match2Elements)root1MatchedElements.get(0);
 				final Match2Elements root2Match = (Match2Elements)root2MatchedElements.get(0);
 
-				subMatchRoot.setSimilarity(checker.absoluteMetric(root1Match.getLeftElement(), root2Match
+				subMatchRoot.setSimilarity(set3WaySimilarity(root1Match.getLeftElement(), root2Match
 						.getLeftElement(), root2Match.getRightElement()));
 				subMatchRoot.setLeftElement(root1Match.getLeftElement());
 				subMatchRoot.setRightElement(root2Match.getLeftElement());
@@ -1107,8 +1107,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			mapping.setRightElement(rightExternalMapping.getLeftElement());
 			mapping.setOriginElement(rightExternalMapping.getRightElement());
 			try {
-				mapping.setSimilarity(checker.absoluteMetric(mapping.getLeftElement(), mapping
-						.getRightElement(), mapping.getOriginElement()));
+				mapping.setSimilarity(set3WaySimilarity(mapping.getLeftElement(), mapping.getRightElement(),
+						mapping.getOriginElement()));
 			} catch (FactoryException e) {
 				mapping.setSimilarity(1.0d);
 			}
@@ -1353,7 +1353,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 						if (match1.getRightElement() == match2.getRightElement()) {
 							final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-							match.setSimilarity(checker.absoluteMetric(match1.getLeftElement(), match2
+							match.setSimilarity(set3WaySimilarity(match1.getLeftElement(), match2
 									.getLeftElement(), match2.getRightElement()));
 							match.setLeftElement(match1.getLeftElement());
 							match.setRightElement(match2.getLeftElement());
@@ -1384,6 +1384,25 @@ public class GenericMatchEngine implements IMatchEngine {
 				remainingUnmatchedElements.add(eObj);
 			}
 		}
+	}
+
+	/**
+	 * Compute a three way similarity combining results from the pairs.
+	 * 
+	 * @param left
+	 *            left element.
+	 * @param right
+	 *            right element.
+	 * @param ancestor
+	 *            common ancestor.
+	 * @return a value representing their distance.
+	 * @throws FactoryException
+	 */
+	private double set3WaySimilarity(EObject left, EObject right, EObject ancestor) throws FactoryException {
+		final double metric1 = checker.absoluteMetric(left, right);
+		final double metric2 = checker.absoluteMetric(left, ancestor);
+		final double metric3 = checker.absoluteMetric(right, ancestor);
+		return (metric1 + metric2 + metric3) / 3;
 	}
 
 	/**
