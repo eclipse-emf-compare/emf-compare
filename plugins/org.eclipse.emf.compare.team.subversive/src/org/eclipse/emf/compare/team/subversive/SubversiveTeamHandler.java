@@ -22,12 +22,12 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.ui.team.AbstractResolvingURIConverter;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.resource.impl.URIConverterImpl;
 import org.eclipse.team.svn.core.connector.ISVNConnector;
 import org.eclipse.team.svn.core.connector.ISVNProgressMonitor;
 import org.eclipse.team.svn.core.connector.SVNConnectorException;
@@ -87,14 +87,14 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 			}
 
 			try {
-				rightResource = ModelUtils.load(((ResourceElement)right).getContents(), right.getName(),
-						rightResourceSet).eResource();
 				final IRepositoryResource resource = ((ResourceElement)right).getRepositoryResource();
 				// We might be comparing two distant files, in which case ancestor is null
 				ILocalResource local = null;
 				if (ancestor != null)
 					local = ((ResourceElement)ancestor).getLocalResource();
 				rightResourceSet.setURIConverter(new RevisionedURIConverter(resource, local));
+				rightResource = ModelUtils.load(((ResourceElement)right).getContents(), right.getName(),
+						rightResourceSet).eResource();
 			} catch (final IOException e) {
 				// We couldn't load the remote resource. Considers it has been added to the repository
 				rightResource = ModelUtils.createResource(URI.createURI(right.getName()));
@@ -105,11 +105,11 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 			if (ancestor != null) {
 				final ResourceSet ancestorResourceSet = new ResourceSetImpl();
 				try {
-					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
-							ancestor.getName(), ancestorResourceSet).eResource();
 					final IRepositoryResource resource = ((ResourceElement)ancestor).getRepositoryResource();
 					final ILocalResource local = ((ResourceElement)ancestor).getLocalResource();
 					ancestorResourceSet.setURIConverter(new RevisionedURIConverter(resource, local));
+					ancestorResource = ModelUtils.load(((IStreamContentAccessor)ancestor).getContents(),
+							ancestor.getName(), ancestorResourceSet).eResource();
 				} catch (final IOException e) {
 					// Couldn't load ancestor resource, create an empty one
 					ancestorResource = ModelUtils.createResource(URI.createURI(ancestor.getName()));
@@ -128,7 +128,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 	 * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
 	 * @since 1.0
 	 */
-	private class RevisionedURIConverter extends URIConverterImpl {
+	private class RevisionedURIConverter extends AbstractResolvingURIConverter {
 		/** The revision of the base model. This revision's timestamp will be used to resolve proxies. */
 		private final IRepositoryResource baseRevision;
 
@@ -149,6 +149,24 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 			localResource = local;
 		}
 
+		private URI getRemoteResourceUri() {
+			return URI.createURI(baseRevision.getUrl());
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.ui.team.AbstractResolvingURIConverter#resolve(org.eclipse.emf.common.util.URI)
+		 */
+		@Override
+		protected URI resolve(URI uri) throws CoreException {
+			URI resolvedUri = uri;
+			if (uri.isRelative()) {
+				resolvedUri = uri.resolve(getRemoteResourceUri());
+			}
+			return resolvedUri;
+		}
+
 		/**
 		 * {@inheritDoc}
 		 * 
@@ -157,25 +175,24 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 		@Override
 		public InputStream createInputStream(URI uri) throws IOException {
 			InputStream resultStream = null;
-			if (uri.isPlatformPlugin() || uri.toString().matches("(\\.\\./)+?plugins/.*")) { //$NON-NLS-1$
+
+			final URI normalizedUri = normalize(uri);
+			// load all local uris via super implementation (except for the local resource)
+			if (normalizedUri.isPlatformPlugin()) {
 				resultStream = super.createInputStream(uri);
 			} else {
 				try {
-					// We'll have to change the EMF URI to find the IFile it points to
-					URI deresolvedURI = uri;
-					if (uri.isRelative()) {
-						deresolvedURI = uri.resolve(URI.createURI(baseRevision.getUrl()));
-					}
+					// load only remove resources via svn
 					final IRepositoryLocation location = baseRevision.getRepositoryLocation();
 					final ISVNConnector proxy = location.acquireSVNProxy();
-					final IRepositoryResource target = location.asRepositoryFile(deresolvedURI.toString(),
+					final IRepositoryResource target = location.asRepositoryFile(normalizedUri.toString(),
 							false);
 					final long svnOptions = ISVNConnector.Options.NONE;
 					final String[] revProps = ISVNConnector.DEFAULT_LOG_ENTRY_PROPS;
 					final ISVNProgressMonitor monitor = new SVNNullProgressMonitor();
 
 					final SVNLogEntry[] entries = SVNUtility.logEntries(proxy, SVNUtility
-							.asEntryReference(deresolvedURI.toString()), SVNRevision.HEAD, SVNRevision
+							.asEntryReference(normalizedUri.toString()), SVNRevision.HEAD, SVNRevision
 							.fromNumber(0), svnOptions, revProps, 0, monitor);
 
 					StringOutputStream stream = null;
@@ -207,7 +224,7 @@ public class SubversiveTeamHandler extends AbstractTeamHandler {
 					if (stream != null)
 						resultStream = new StringInputStream(stream.getWriter().getBuffer().toString());
 				} catch (final SVNConnectorException e) {
-					resultStream = super.createInputStream(uri);
+					resultStream = super.createInputStream(normalizedUri);
 				}
 			}
 			return resultStream;
