@@ -233,11 +233,11 @@ public class GenericMatchEngine implements IMatchEngine {
 			checker = new StatisticBasedSimilarityChecker(filter);
 		}
 		if (!structuredOptions.isIgnoringID()) {
-			checker = new EcoreIDSimilarityChecker(filter);
+			checker = new EcoreIDSimilarityChecker(filter, checker);
 			disableMetamodelFilter();
 		}
 		if (!structuredOptions.isIgnoringXMIID()) {
-			checker = new XMIIDSimilarityChecker(filter);
+			checker = new XMIIDSimilarityChecker(filter, checker);
 			disableMetamodelFilter();
 		}
 

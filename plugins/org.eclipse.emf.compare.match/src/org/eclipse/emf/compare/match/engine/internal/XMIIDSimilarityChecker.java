@@ -28,9 +28,11 @@ public class XMIIDSimilarityChecker extends EcoreIDSimilarityChecker {
 	 * @param filter
 	 *            a metamodel filter the checker can use to know whether a feature alwaas has the same value
 	 *            or not in the models.
+	 * @param fallback
+	 *            checker to call if the elements have no ID at all.
 	 */
-	public XMIIDSimilarityChecker(MetamodelFilter filter) {
-		super(filter);
+	public XMIIDSimilarityChecker(MetamodelFilter filter, AbstractSimilarityChecker fallback) {
+		super(filter, fallback);
 	}
 
 	/**

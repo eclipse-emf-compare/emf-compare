@@ -11,7 +11,9 @@
 package org.eclipse.emf.compare.match.engine.internal;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
@@ -83,14 +85,27 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	private final Map<EObject, EObject> leftToRight = new EMFCompareMap<EObject, EObject>();
 
 	/**
+	 * This collection keep track of elements non providing ID's.
+	 */
+	private final Set<EObject> nonIdentified = new LinkedHashSet<EObject>();
+
+	/**
+	 * Delegating checker to ask for similarity when elements are not providing ID's.
+	 */
+	private AbstractSimilarityChecker delegate;
+
+	/**
 	 * Create a new checker.
 	 * 
 	 * @param filter
 	 *            a metamodel filter the checker can use to know whether a feature alwaas has the same value
 	 *            or not in the models.
+	 * @param fallback
+	 *            checker to call if the elements have no ID at all.
 	 */
-	public EcoreIDSimilarityChecker(MetamodelFilter filter) {
+	public EcoreIDSimilarityChecker(MetamodelFilter filter, AbstractSimilarityChecker fallback) {
 		super(filter);
+		this.delegate = fallback;
 	}
 
 	/**
@@ -109,9 +124,11 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	@Override
 	public void init(EObject obj1, EObject obj2) throws FactoryException {
 		leftToRight.clear();
+		nonIdentified.clear();
 		final Iterator<EObject> leftIterator = obj1.eAllContents();
 		final Iterator<EObject> rightIterator = obj2.eAllContents();
 		browseComputingId(leftIterator, rightIterator);
+		delegate.init(obj1, obj2);
 	}
 
 	/**
@@ -127,14 +144,22 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 		while (leftIterator.hasNext()) {
 			final EObject item1 = leftIterator.next();
 			final String item1ID = computeID(item1);
-			final EObjectCouple duo = getOrCreate(matchedByID, item1ID);
-			duo.setLeft(item1);
+			if (item1ID == null) {
+				nonIdentified.add(item1);
+			} else {
+				final EObjectCouple duo = getOrCreate(matchedByID, item1ID);
+				duo.setLeft(item1);
+			}
 		}
 		while (rightIterator.hasNext()) {
 			final EObject item2 = rightIterator.next();
 			final String item2ID = computeID(item2);
-			final EObjectCouple duo = getOrCreate(matchedByID, item2ID);
-			duo.setRight(item2);
+			if (item2ID == null) {
+				nonIdentified.add(item2);
+			} else {
+				final EObjectCouple duo = getOrCreate(matchedByID, item2ID);
+				duo.setRight(item2);
+			}
 		}
 
 		for (EObjectCouple pair : matchedByID.values()) {
@@ -176,9 +201,11 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	@Override
 	public void init(Resource left, Resource right) throws FactoryException {
 		leftToRight.clear();
+		nonIdentified.clear();
 		final Iterator<EObject> leftIterator = left.getAllContents();
 		final Iterator<EObject> rightIterator = right.getAllContents();
 		browseComputingId(leftIterator, rightIterator);
+		delegate.init(left, right);
 	}
 
 	/**
@@ -186,6 +213,8 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	@Override
 	public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
+		if (nonIdentified.contains(obj1) && nonIdentified.contains(obj2))
+			return delegate.isSimilar(obj1, obj2);
 		return leftToRight.get(obj1) == obj2;
 	}
 
