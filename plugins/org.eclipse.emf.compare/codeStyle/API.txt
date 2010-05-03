@@ -1,0 +1,5 @@
+All the code exported by a plugin is considered API and the non-exported
+code is considered internal.
+
+EMF Compare will kept being API compatible for every planned minor release.
+ 
