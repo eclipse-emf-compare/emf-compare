@@ -26,7 +26,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
-import org.eclipse.emf.compare.match.engine.internal.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.DistinctEcoreSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.StatisticBasedSimilarityChecker;
@@ -133,7 +132,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		// see if scope provider was passed in via option, otherwise create default one
 		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
@@ -297,8 +296,11 @@ public class GenericMatchEngine implements IMatchEngine {
 
 	/**
 	 * Build the best checker depending on the options.
+	 * 
+	 * @since 1.1
 	 */
-	private void prepareChecker() {
+	protected AbstractSimilarityChecker prepareChecker() {
+		AbstractSimilarityChecker checker = null;
 		if (!structuredOptions.shouldMatchDistinctMetamodels()) {
 			checker = new DistinctEcoreSimilarityChecker(filter);
 		} else {
@@ -312,6 +314,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			checker = new XMIIDSimilarityChecker(filter, checker);
 			disableMetamodelFilter();
 		}
+		return checker;
 
 	}
 
@@ -361,7 +364,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
 		externalRefMappings.clear();
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		// see if scope provider was passed in via option, otherwise create default one
 		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
@@ -454,7 +457,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException {
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -495,7 +498,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException {
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -550,7 +553,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) throws InterruptedException {
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
@@ -588,7 +591,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException {
 		updateSettings(structuredOptions, optionMap);
-		prepareChecker();
+		checker = prepareChecker();
 
 		MatchModel result = null;
 		// Creates and sizes progress monitor
