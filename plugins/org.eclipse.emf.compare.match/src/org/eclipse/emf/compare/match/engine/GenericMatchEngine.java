@@ -47,7 +47,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -112,6 +111,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	private AbstractSimilarityChecker checker;
 
 	/**
+	 * This list is used while matching elements to keep track of matched reference targets, being outside the
+	 * provided match scope.
+	 */
+	private List<Match2Elements> externalRefMappings = new ArrayList<Match2Elements>();
+
+	/**
 	 * The options map must be initialized to avoid potential NPEs. This initializer will take care of this
 	 * issue.
 	 */
@@ -130,95 +135,162 @@ public class GenericMatchEngine implements IMatchEngine {
 		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
-		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftObject, rightObject, ancestor);
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+				leftObject, rightObject, ancestor);
 
-		final Monitor monitor = createProgressMonitor();
-		final MatchModel leftObjectAncestorMatch = contentMatch(leftObject, ancestor, optionMap);
-		final MatchModel rightObjectAncestorMatch = contentMatch(rightObject, ancestor, optionMap);
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+		final IMatchScope ancestorScope = scopeProvider.getAncestorScope();
 
-		final List<MatchElement> leftObjectMatchedElements = new ArrayList<MatchElement>(
-				leftObjectAncestorMatch.getMatchedElements());
-		final List<MatchElement> rightObjectMatchedElements = new ArrayList<MatchElement>(
-				rightObjectAncestorMatch.getMatchedElements());
-		// populates the unmatched elements list for later use
-		for (final Object unmatch : leftObjectAncestorMatch.getUnmatchedElements()) {
-			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
+		MatchModel result = null;
+		if (leftScope.isInScope(leftObject) && rightScope.isInScope(rightObject)
+				&& ancestorScope.isInScope(ancestor)) {
+			result = doContentMatch(leftObject, leftScope, rightObject, rightScope, ancestor, ancestorScope);
 		}
-		for (final Object unmatch : rightObjectAncestorMatch.getUnmatchedElements()) {
-			remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
-		}
-		try {
-			Match3Elements subMatchRoot = null;
-			if (leftObjectMatchedElements.size() > 0 && rightObjectMatchedElements.size() > 0) {
-				final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements.get(0);
-				final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements.get(0);
-				subMatchRoot = MatchFactory.eINSTANCE.createMatch3Elements();
+		return result;
+	}
 
-				subMatchRoot.setSimilarity(checker.absoluteMetric(leftObjectMatchRoot.getLeftElement(),
-						rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
-				subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
-				subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
-				subMatchRoot.setOriginElement(rightObjectMatchRoot.getRightElement());
-				redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
-				createSub3Match(root, subMatchRoot, leftObjectMatchRoot, rightObjectMatchRoot);
-			} else {
-				for (final EObject left : leftObjectMatchedElements) {
-					stillToFindFromModel1.add(left);
-				}
-				for (final EObject right : rightObjectMatchedElements) {
-					stillToFindFromModel2.add(right);
-				}
+	/**
+	 * This method will compare three {@link EObject}s and their direct content, ignoring the given objects'
+	 * siblings and parents, as well as all objects not being part of the scope (indeed the given ones will
+	 * also not be compared, if they are not included in the scope), for the match. It will however compute
+	 * external mappings for all those objects outside the scope, being referenced from those that are
+	 * processed.
+	 * 
+	 * @param leftObject
+	 *            Left of the two objects to get compared.
+	 * @param leftScope
+	 *            The scope to restrict which content of the left object is processed.
+	 * @param rightObject
+	 *            Right of the two objects to compare.
+	 * @param rightScope
+	 *            The scope to restrict which content of the left object is processed.
+	 * @param ancestor
+	 *            Common ancestor of the two others.
+	 * @param ancestorScope
+	 *            The scope to restrict which content of the ancestor is processed.
+	 * @return {@link MatchModel} for these two objects' comparison.
+	 */
+	private MatchModel doContentMatch(EObject leftObject, IMatchScope leftScope, EObject rightObject,
+			IMatchScope rightScope, EObject ancestor, IMatchScope ancestorScope) {
+		MatchModel root = null;
+
+		// proceed if input elements are within scope
+		if (leftScope.isInScope(leftObject) && rightScope.isInScope(rightObject)
+				&& ancestorScope.isInScope(ancestor)) {
+			root = MatchFactory.eINSTANCE.createMatchModel();
+
+			setModelRoots(root, leftObject, rightObject, ancestor);
+
+			final Monitor monitor = createProgressMonitor();
+
+			// perform content match
+			final MatchModel leftObjectAncestorMatch = doContentMatch(leftObject, leftScope, ancestor,
+					ancestorScope);
+			// remove those external mappings added by call to contentMatch
+			leftObjectAncestorMatch.getMatchedElements().removeAll(externalRefMappings);
+			final List<Match2Elements> leftExternal2WayMappings = new ArrayList<Match2Elements>(
+					externalRefMappings);
+
+			// perform content match
+			final MatchModel rightObjectAncestorMatch = doContentMatch(rightObject, rightScope, ancestor,
+					ancestorScope);
+			// remove those external mappings added by call to contentMatch
+			rightObjectAncestorMatch.getMatchedElements().removeAll(externalRefMappings);
+			final List<Match2Elements> rightExternal2WayMappings = new ArrayList<Match2Elements>(
+					externalRefMappings);
+
+			final List<MatchElement> leftObjectMatchedElements = new ArrayList<MatchElement>(
+					leftObjectAncestorMatch.getMatchedElements());
+			final List<MatchElement> rightObjectMatchedElements = new ArrayList<MatchElement>(
+					rightObjectAncestorMatch.getMatchedElements());
+
+			// populates the unmatched elements list for later use
+			for (final Object unmatch : leftObjectAncestorMatch.getUnmatchedElements()) {
+				remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
 			}
-			// We will now check through the unmatched object for matches.
-			processNotFoundElements(root, subMatchRoot);
-			// #createSub3Match(MatchModel, Match3Element, Match2Elements,
-			// Match2Elements) will have updated "remainingUnmatchedElements"
-			final Set<EObject> remainingLeft = new HashSet<EObject>();
-			final Set<EObject> remainingRight = new HashSet<EObject>();
-			for (final EObject unmatched : remainingUnmatchedElements) {
-				if (unmatched.eResource() == leftObject.eResource()) {
-					remainingLeft.add(unmatched);
-					final TreeIterator<EObject> iterator = unmatched.eAllContents();
-					while (iterator.hasNext()) {
-						remainingLeft.add(iterator.next());
-					}
-				} else if (unmatched.eResource() == rightObject.eResource()) {
-					remainingRight.add(unmatched);
-					final TreeIterator<EObject> iterator = unmatched.eAllContents();
-					while (iterator.hasNext()) {
-						remainingRight.add(iterator.next());
-					}
-				}
+			for (final Object unmatch : rightObjectAncestorMatch.getUnmatchedElements()) {
+				remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
 			}
-			stillToFindFromModel1.clear();
-			stillToFindFromModel2.clear();
-			final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-					new ArrayList<EObject>(remainingRight), structuredOptions.getSearchWindow(), monitor);
-			for (final Match2Elements map : mappings) {
-				final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
-				subMatch.setLeftElement(map.getLeftElement());
-				subMatch.setRightElement(map.getRightElement());
-				if (subMatchRoot == null) {
-					redirectedAdd(root, MATCH_ELEMENT_NAME, subMatch);
+			try {
+				Match3Elements subMatchRoot = null;
+				if (leftObjectMatchedElements.size() > 0 && rightObjectMatchedElements.size() > 0) {
+					final Match2Elements leftObjectMatchRoot = (Match2Elements)leftObjectMatchedElements
+							.get(0);
+					final Match2Elements rightObjectMatchRoot = (Match2Elements)rightObjectMatchedElements
+							.get(0);
+					subMatchRoot = MatchFactory.eINSTANCE.createMatch3Elements();
+
+					subMatchRoot.setSimilarity(checker.absoluteMetric(leftObjectMatchRoot.getLeftElement(),
+							rightObjectMatchRoot.getLeftElement(), rightObjectMatchRoot.getRightElement()));
+					subMatchRoot.setLeftElement(leftObjectMatchRoot.getLeftElement());
+					subMatchRoot.setRightElement(rightObjectMatchRoot.getLeftElement());
+					subMatchRoot.setOriginElement(rightObjectMatchRoot.getRightElement());
+					redirectedAdd(root, MATCH_ELEMENT_NAME, subMatchRoot);
+					createSub3Match(root, subMatchRoot, leftObjectMatchRoot, rightObjectMatchRoot);
 				} else {
-					redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+					for (final EObject left : leftObjectMatchedElements) {
+						stillToFindFromModel1.add(left);
+					}
+					for (final EObject right : rightObjectMatchedElements) {
+						stillToFindFromModel2.add(right);
+					}
 				}
+				// We will now check through the unmatched object for matches.
+				processNotFoundElements(root, subMatchRoot);
+				// #createSub3Match(MatchModel, Match3Element, Match2Elements,
+				// Match2Elements) will have updated "remainingUnmatchedElements"
+				final Set<EObject> remainingLeft = new HashSet<EObject>();
+				final Set<EObject> remainingRight = new HashSet<EObject>();
+				for (final EObject unmatched : remainingUnmatchedElements) {
+					if (unmatched.eResource() == leftObject.eResource()) {
+						remainingLeft.add(unmatched);
+						final TreeIterator<EObject> iterator = unmatched.eAllContents();
+						while (iterator.hasNext()) {
+							remainingLeft.add(iterator.next());
+						}
+					} else if (unmatched.eResource() == rightObject.eResource()) {
+						remainingRight.add(unmatched);
+						final TreeIterator<EObject> iterator = unmatched.eAllContents();
+						while (iterator.hasNext()) {
+							remainingRight.add(iterator.next());
+						}
+					}
+				}
+				stillToFindFromModel1.clear();
+				stillToFindFromModel2.clear();
+				final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
+						new ArrayList<EObject>(remainingRight), structuredOptions.getSearchWindow(), monitor);
+				for (final Match2Elements map : mappings) {
+					final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
+					subMatch.setLeftElement(map.getLeftElement());
+					subMatch.setRightElement(map.getRightElement());
+					if (subMatchRoot == null) {
+						redirectedAdd(root, MATCH_ELEMENT_NAME, subMatch);
+					} else {
+						redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
+					}
+				}
+				final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
+				for (final EObject unmatch : stillToFindFromModel1) {
+					unmatchedElements.put(unmatch, false);
+					createThreeWayUnmatchElements(root, unmatchedElements, true);
+				}
+				unmatchedElements.clear();
+				for (final EObject remoteUnmatch : stillToFindFromModel2) {
+					unmatchedElements.put(remoteUnmatch, true);
+					createThreeWayUnmatchElements(root, unmatchedElements, false);
+				}
+			} catch (final FactoryException e) {
+				EMFComparePlugin.log(e, false);
+			} catch (final InterruptedException e) {
+				// Cannot be thrown since we have no monitor
 			}
-			final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
-			for (final EObject unmatch : stillToFindFromModel1) {
-				unmatchedElements.put(unmatch, false);
-				createThreeWayUnmatchElements(root, unmatchedElements, true);
-			}
-			unmatchedElements.clear();
-			for (final EObject remoteUnmatch : stillToFindFromModel2) {
-				unmatchedElements.put(remoteUnmatch, true);
-				createThreeWayUnmatchElements(root, unmatchedElements, false);
-			}
-		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, false);
-		} catch (final InterruptedException e) {
-			// Cannot be thrown since we have no monitor
+
+			// create mappings for external references
+			create3WayMatches(leftExternal2WayMappings, rightExternal2WayMappings);
+
 		}
 		return root;
 	}
@@ -287,48 +359,88 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
 	 */
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
+		externalRefMappings.clear();
 		updateSettings(structuredOptions, optionMap);
 		prepareChecker();
 
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+				leftObject, rightObject);
+
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+
+		MatchModel result = null;
+		if (leftScope.isInScope(leftObject) && rightScope.isInScope(rightObject)) {
+			result = doContentMatch(leftObject, leftScope, rightObject, rightScope);
+		}
+		return result;
+	}
+
+	/**
+	 * This method will compare two {@link EObject}s and their direct content, ignoring the given objects'
+	 * siblings and parents, as well as all objects not being part of the scope (indeed the given ones will
+	 * also not be compared, if they are not included in the scope), for the match. It will however compute
+	 * external mappings for all those objects outside the scope, being referenced from those that are
+	 * processed.
+	 * 
+	 * @param leftObject
+	 *            Left of the two objects to get compared.
+	 * @param leftScope
+	 *            The scope to restrict which content of the left object is processed.
+	 * @param rightObject
+	 *            Right of the two objects to compare.
+	 *@param rightScope
+	 *            The scope to restrict which content of the left object is processed.
+	 * @return {@link MatchModel} for these two objects' comparison.
+	 */
+	private MatchModel doContentMatch(EObject leftObject, IMatchScope leftScope, EObject rightObject,
+			IMatchScope rightScope) {
 		final Monitor monitor = createProgressMonitor();
 
-		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
-		setModelRoots(root, leftObject, rightObject);
+		MatchModel root = null;
+		if (leftScope.isInScope(leftObject) && rightScope.isInScope(rightObject)) {
+			root = MatchFactory.eINSTANCE.createMatchModel();
 
-		/*
-		 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots of
-		 * a resource), we cannot filter the model.
-		 */
+			setModelRoots(root, leftObject, rightObject);
+			/*
+			 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots
+			 * of a resource), we cannot filter the model.
+			 */
 
-		final Set<EObject> still1 = new HashSet<EObject>();
-		final Set<EObject> still2 = new HashSet<EObject>();
+			final Set<EObject> still1 = new HashSet<EObject>();
+			final Set<EObject> still2 = new HashSet<EObject>();
 
-		// navigate through both objects at the same time and realize mappings..
-		try {
-			checker.init(leftObject, rightObject);
-			if (isSimilar(leftObject, rightObject)) {
-				stillToFindFromModel1.clear();
-				stillToFindFromModel2.clear();
-				final Match2Elements matchModelRoot = recursiveMappings(leftObject, rightObject, monitor);
-				redirectedAdd(root, MATCH_ELEMENT_NAME, matchModelRoot);
-				createSubMatchElements(matchModelRoot, new ArrayList<EObject>(stillToFindFromModel1),
-						new ArrayList<EObject>(stillToFindFromModel2), monitor);
-				still1.addAll(stillToFindFromModel1);
-				still2.addAll(stillToFindFromModel2);
-				createUnmatchElements(root, still1, true, false);
-				createUnmatchElements(root, still2, false, false);
-			} else {
-				// The two objects passed as this method's parameters are not
-				// similar. Creates unmatch root.
-				still1.add(leftObject);
-				still2.add(rightObject);
-				createUnmatchElements(root, still1, true, false);
-				createUnmatchElements(root, still2, false, false);
+			// navigate through both objects at the same time and realize mappings..
+			try {
+				checker.init(leftObject, rightObject);
+				if (isSimilar(leftObject, rightObject)) {
+					stillToFindFromModel1.clear();
+					stillToFindFromModel2.clear();
+					final Match2Elements matchModelRoot = recursiveMappings(leftObject, leftScope,
+							rightObject, rightScope, monitor);
+					redirectedAdd(root, MATCH_ELEMENT_NAME, matchModelRoot);
+					createSubMatchElements(matchModelRoot, new ArrayList<EObject>(stillToFindFromModel1),
+							leftScope, new ArrayList<EObject>(stillToFindFromModel2), rightScope, monitor);
+					still1.addAll(stillToFindFromModel1);
+					still2.addAll(stillToFindFromModel2);
+					createUnmatchElements(root, still1, true, false);
+					createUnmatchElements(root, still2, false, false);
+				} else {
+					// The two objects passed as this method's parameters are not
+					// similar. Creates unmatch root.
+					still1.add(leftObject);
+					still2.add(rightObject);
+					createUnmatchElements(root, still1, true, false);
+					createUnmatchElements(root, still2, false, false);
+				}
+			} catch (final FactoryException e) {
+				EMFComparePlugin.log(e, false);
+			} catch (final InterruptedException e) {
+				// Cannot be thrown since we have no monitor
 			}
-		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, false);
-		} catch (final InterruptedException e) {
-			// Cannot be thrown since we have no monitor
+
+			root.getMatchedElements().addAll(externalRefMappings);
 		}
 		return root;
 	}
@@ -357,7 +469,19 @@ public class GenericMatchEngine implements IMatchEngine {
 		}
 		startMonitor(monitor, size << 1);
 
-		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource(), monitor);
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap, leftRoot
+				.eResource(), rightRoot.eResource(), ancestor.eResource());
+
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+		final IMatchScope ancestorScope = scopeProvider.getAncestorScope();
+
+		if (leftScope.isInScope(leftRoot.eResource()) && rightScope.isInScope(rightRoot.eResource())
+				&& ancestorScope.isInScope(ancestor.eResource())) {
+			result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope, ancestor
+					.eResource(), ancestorScope, monitor);
+		}
 
 		return result;
 	}
@@ -386,7 +510,17 @@ public class GenericMatchEngine implements IMatchEngine {
 		}
 		startMonitor(monitor, size);
 
-		result = doMatch(leftRoot.eResource(), rightRoot.eResource(), monitor);
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap, leftRoot
+				.eResource(), rightRoot.eResource());
+
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+
+		if (leftScope.isInScope(leftRoot.eResource()) && rightScope.isInScope(rightRoot.eResource())) {
+			result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope, monitor);
+		}
+
 		return result;
 	}
 
@@ -403,6 +537,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		remainingUnmatchedElements.clear();
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
+		externalRefMappings.clear();
 		structuredOptions = new MatchSettings();
 	}
 
@@ -428,9 +563,19 @@ public class GenericMatchEngine implements IMatchEngine {
 				size++;
 			}
 		}
+
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+				leftResource, rightResource);
+
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+
 		startMonitor(monitor, size);
 
-		result = doMatch(leftResource, rightResource, monitor);
+		if (leftScope.isInScope(leftResource) && rightScope.isInScope(rightResource)) {
+			result = doMatch(leftResource, leftScope, rightResource, rightScope, monitor);
+		}
 		return result;
 	}
 
@@ -458,7 +603,19 @@ public class GenericMatchEngine implements IMatchEngine {
 		}
 		startMonitor(monitor, size << 1);
 
-		result = doMatch(leftResource, rightResource, ancestorResource, monitor);
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+				leftResource, rightResource, ancestorResource);
+
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+		final IMatchScope ancestorScope = scopeProvider.getAncestorScope();
+
+		if (leftScope.isInScope(leftResource) && rightScope.isInScope(rightResource)
+				&& ancestorScope.isInScope(ancestorResource)) {
+			result = doMatch(leftResource, leftScope, rightResource, rightScope, ancestorResource,
+					ancestorScope, monitor);
+		}
 		return result;
 	}
 
@@ -481,8 +638,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
-			if (structuredOptions.shouldMatchDistinctMetamodels()
-					|| EcoreUtil.equals(eObj.eClass(), next.eClass())) {
+			if (structuredOptions.shouldMatchDistinctMetamodels() || eObj.eClass() == next.eClass()) {
 				final double similarity = checker.absoluteMetric(eObj, next);
 				if (similarity > max) {
 					max = similarity;
@@ -587,8 +743,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Root of the {@link MatchModel} where to insert all these mappings.
 	 * @param list1
 	 *            First of the lists used to compute mapping.
+	 * @param list1Scope
+	 *            The scope to restrict the matching of sub elements in list1.
 	 * @param list2
 	 *            Second of the lists used to compute mapping.
+	 * @param list2Scope
+	 *            The scope to restrict the matching of sub elements in list2.
 	 * @param monitor
 	 *            {@link CompareProgressMonitor progress monitor} to display while the comparison lasts. Might
 	 *            be <code>null</code>, in which case we won't monitor progress.
@@ -598,8 +758,9 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the operation is cancelled or fails somehow.
 	 */
-	private void createSubMatchElements(EObject root, List<EObject> list1, List<EObject> list2,
-			Monitor monitor) throws FactoryException, InterruptedException {
+	private void createSubMatchElements(EObject root, List<EObject> list1, IMatchScope list1Scope,
+			List<EObject> list2, IMatchScope list2Scope, Monitor monitor) throws FactoryException,
+			InterruptedException {
 		stillToFindFromModel1.clear();
 		stillToFindFromModel2.clear();
 		final List<Match2Elements> mappings = mapLists(list1, list2, structuredOptions.getSearchWindow(),
@@ -608,8 +769,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<Match2Elements> it = mappings.iterator();
 		while (it.hasNext()) {
 			final Match2Elements map = it.next();
-			final Match2Elements match = recursiveMappings(map.getLeftElement(), map.getRightElement(),
-					monitor);
+			final Match2Elements match = recursiveMappings(map.getLeftElement(), list1Scope, map
+					.getRightElement(), list2Scope, monitor);
 			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, match);
 		}
 	}
@@ -684,26 +845,38 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * 
 	 * @param leftResource
 	 *            Left model for the comparison.
+	 * @param leftScope
+	 *            The {@link IMatchScope} restricting the left side of comparison.
 	 * @param rightResource
 	 *            Right model for the comparison.
+	 * @param rightScope
+	 *            The {@link IMatchScope} restricting the right side of comparison.
 	 * @param monitor
 	 *            Progress monitor to display while the comparison lasts.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	private MatchModel doMatch(Resource leftResource, Resource rightResource, Monitor monitor)
-			throws InterruptedException {
+	private MatchModel doMatch(Resource leftResource, IMatchScope leftScope, Resource rightResource,
+			IMatchScope rightScope, Monitor monitor) throws InterruptedException {
+		externalRefMappings.clear();
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		EObject leftRoot = null;
 		EObject rightRoot = null;
-		if (leftResource.getContents().size() > 0) {
-			leftRoot = leftResource.getContents().get(0);
+
+		final List<EObject> leftContents = getScopeInternalContents(leftResource, leftScope);
+		final List<EObject> rightContents = getScopeInternalContents(rightResource, rightScope);
+
+		if (leftContents.size() > 0) {
+			leftRoot = leftContents.get(0);
 		}
-		if (rightResource.getContents().size() > 0) {
-			rightRoot = rightResource.getContents().get(0);
+
+		if (rightContents.size() > 0) {
+			rightRoot = rightContents.get(0);
 		}
+
 		setModelRoots(root, leftRoot, rightRoot);
+
 		// filters unused features
 		filterUnused(leftResource);
 		filterUnused(rightResource);
@@ -716,27 +889,26 @@ public class GenericMatchEngine implements IMatchEngine {
 				}
 
 			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
-			final List<Match2Elements> matchedRoots = mapLists(leftResource.getContents(), rightResource
-					.getContents(), structuredOptions.getSearchWindow(), monitor);
+			final List<Match2Elements> matchedRoots = mapLists(leftContents, rightContents, structuredOptions
+					.getSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
-			final List<EObject> unmatchedLeftRoots = new ArrayList<EObject>(leftResource.getContents());
-			final List<EObject> unmatchedRightRoots = new ArrayList<EObject>(rightResource.getContents());
+			final List<EObject> unmatchedLeftRoots = new ArrayList<EObject>(leftContents);
+			final List<EObject> unmatchedRightRoots = new ArrayList<EObject>(rightContents);
 			// These sets will help us in keeping track of the yet to be found
 			// elements
 			final Set<EObject> still1 = new HashSet<EObject>();
 			final Set<EObject> still2 = new HashSet<EObject>();
 
 			// If one of the resources has no roots, considers it as deleted
-			if (leftResource.getContents().size() > 0 && rightResource.getContents().size() > 0) {
+			if (leftContents.size() > 0 && rightContents.size() > 0) {
 				Match2Elements matchModelRoot = MatchFactory.eINSTANCE.createMatch2Elements();
 				// We haven't found any similar roots, we then consider the
 				// firsts to be similar.
 				if (matchedRoots.size() == 0) {
 					final Match2Elements rootMapping = MatchFactory.eINSTANCE.createMatch2Elements();
-					rootMapping.setLeftElement(leftResource.getContents().get(0));
-					EObject rightElement = findMostSimilar(leftResource.getContents().get(0),
-							unmatchedRightRoots);
+					rootMapping.setLeftElement(leftContents.get(0));
+					EObject rightElement = findMostSimilar(leftContents.get(0), unmatchedRightRoots);
 					if (rightElement == null) {
 						rightElement = unmatchedRightRoots.get(0);
 					}
@@ -747,7 +919,7 @@ public class GenericMatchEngine implements IMatchEngine {
 						.getString("DifferencesServices.monitor.rootsContents")); //$NON-NLS-1$
 				for (final Match2Elements matchedRoot : matchedRoots) {
 					final Match2Elements rootMapping = recursiveMappings(matchedRoot.getLeftElement(),
-							matchedRoot.getRightElement(), monitor);
+							leftScope, matchedRoot.getRightElement(), rightScope, monitor);
 					// this is the first time we're here
 					if (matchModelRoot.getLeftElement() == null) {
 						matchModelRoot = rootMapping;
@@ -761,7 +933,7 @@ public class GenericMatchEngine implements IMatchEngine {
 					still2.removeAll(stillToFindFromModel2);
 					// checks for matches within the yet to found elements lists
 					createSubMatchElements(rootMapping, new ArrayList<EObject>(stillToFindFromModel1),
-							new ArrayList<EObject>(stillToFindFromModel2), monitor);
+							leftScope, new ArrayList<EObject>(stillToFindFromModel2), rightScope, monitor);
 					// Adds all unfound elements to the sets
 					still1.addAll(stillToFindFromModel1);
 					still2.addAll(stillToFindFromModel2);
@@ -772,7 +944,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				// We'll iterate through the unmatchedRoots all contents
 				monitor.subTask(EMFCompareMatchMessages
 						.getString("DifferencesServices.monitor.unmatchedRoots")); //$NON-NLS-1$
-				createSubMatchElements(matchModelRoot, unmatchedLeftRoots, unmatchedRightRoots, monitor);
+				createSubMatchElements(matchModelRoot, unmatchedLeftRoots, leftScope, unmatchedRightRoots,
+						rightScope, monitor);
 			} else {
 				// Roots are unmatched, this is either a file addition or
 				// deletion
@@ -788,6 +961,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, false);
 		}
+
+		root.getMatchedElements().addAll(externalRefMappings);
 		return root;
 	}
 
@@ -796,34 +971,58 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * 
 	 * @param leftResource
 	 *            Left model for the comparison.
+	 * @param leftScope
+	 *            The {@link IMatchScope} restricting the left side of comparison.
 	 * @param rightResource
 	 *            Right model for the comparison.
+	 * @param rightScope
+	 *            The {@link IMatchScope} restricting the right side of comparison.
 	 * @param ancestorResource
 	 *            Common ancestor of the right and left models.
+	 * @param ancestorScope
+	 *            The {@link IMatchScope} restricting the ancestor side of comparison.
 	 * @param monitor
 	 *            Progress monitor to display while the comparison lasts.
 	 * @return The corresponding {@link MatchModel}.
 	 * @throws InterruptedException
 	 *             Thrown if the comparison is interrupted somehow.
 	 */
-	private MatchModel doMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
-			Monitor monitor) throws InterruptedException {
+	private MatchModel doMatch(Resource leftResource, IMatchScope leftScope, Resource rightResource,
+			IMatchScope rightScope, Resource ancestorResource, IMatchScope ancestorScope, Monitor monitor)
+			throws InterruptedException {
 		final MatchModel root = MatchFactory.eINSTANCE.createMatchModel();
 		EObject leftRoot = null;
 		EObject rightRoot = null;
 		EObject ancestorRoot = null;
-		if (leftResource.getContents().size() > 0) {
-			leftRoot = leftResource.getContents().get(0);
+
+		final List<EObject> leftContents = getScopeInternalContents(leftResource, leftScope);
+		final List<EObject> rightContents = getScopeInternalContents(rightResource, rightScope);
+		final List<EObject> ancestorContents = getScopeInternalContents(ancestorResource, ancestorScope);
+
+		if (leftContents.size() > 0) {
+			leftRoot = leftContents.get(0);
 		}
-		if (rightResource.getContents().size() > 0) {
-			rightRoot = rightResource.getContents().get(0);
+		if (rightContents.size() > 0) {
+			rightRoot = rightContents.get(0);
 		}
-		if (ancestorResource.getContents().size() > 0) {
-			ancestorRoot = ancestorResource.getContents().get(0);
+		if (ancestorContents.size() > 0) {
+			ancestorRoot = ancestorContents.get(0);
 		}
 		setModelRoots(root, leftRoot, rightRoot, ancestorRoot);
-		final MatchModel root1AncestorMatch = doMatch(leftResource, ancestorResource, monitor);
-		final MatchModel root2AncestorMatch = doMatch(rightResource, ancestorResource, monitor);
+
+		final MatchModel root1AncestorMatch = doMatch(leftResource, leftScope, ancestorResource,
+				ancestorScope, monitor);
+		// remove those external mappings added by call to doMatch
+		root1AncestorMatch.getMatchedElements().removeAll(externalRefMappings);
+		final List<Match2Elements> leftExternal2WayMappings = new ArrayList<Match2Elements>(
+				externalRefMappings);
+
+		final MatchModel root2AncestorMatch = doMatch(rightResource, rightScope, ancestorResource,
+				ancestorScope, monitor);
+		// remove those external mappings added by call to doMatch
+		root2AncestorMatch.getMatchedElements().removeAll(externalRefMappings);
+		final List<Match2Elements> rightExternal2WayMappings = new ArrayList<Match2Elements>(
+				externalRefMappings);
 
 		final List<MatchElement> root1MatchedElements = new ArrayList<MatchElement>(root1AncestorMatch
 				.getMatchedElements());
@@ -875,7 +1074,44 @@ public class GenericMatchEngine implements IMatchEngine {
 			EMFComparePlugin.log(e, false);
 		}
 
+		// create three way mappings for external references
+		root.getMatchedElements().addAll(
+				create3WayMatches(leftExternal2WayMappings, rightExternal2WayMappings));
 		return root;
+	}
+
+	/**
+	 * Creates {@link Match3Elements} by merging those {@link Match2Elements}, having the same ancestor.
+	 * 
+	 * @param leftToAncestor
+	 *            matches between a left elements and their ancestors.
+	 * @param rightToAncestor
+	 *            matches between right elements and their ancestors.
+	 * @return A list of newly created {@link Match3Elements}, each created for a pair of
+	 *         {@link Match2Elements} from the leftToAncestor and rightToAncestor lists, sharing the same
+	 *         ancestor.
+	 */
+	private List<Match3Elements> create3WayMatches(List<Match2Elements> leftToAncestor,
+			List<Match2Elements> rightToAncestor) {
+		// create three way mappings for external references
+		final List<Match3Elements> threeWayMappings = new ArrayList<Match3Elements>();
+		for (Match2Elements leftExternalMapping : leftToAncestor) {
+			final Match2Elements rightExternalMapping = rightToAncestor.get(leftToAncestor
+					.indexOf(leftExternalMapping));
+
+			final Match3Elements mapping = MatchFactory.eINSTANCE.createMatch3Elements();
+			mapping.setLeftElement(leftExternalMapping.getLeftElement());
+			mapping.setRightElement(rightExternalMapping.getLeftElement());
+			mapping.setOriginElement(rightExternalMapping.getRightElement());
+			try {
+				mapping.setSimilarity(checker.absoluteMetric(mapping.getLeftElement(), mapping
+						.getRightElement(), mapping.getOriginElement()));
+			} catch (FactoryException e) {
+				mapping.setSimilarity(1.0d);
+			}
+			threeWayMappings.add(mapping);
+		}
+		return threeWayMappings;
 	}
 
 	/**
@@ -1318,8 +1554,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * 
 	 * @param current1
 	 *            First element of the two elements mapping.
+	 * @param current1Scope
+	 *            The {@link IMatchScope} to restrict the contents of current1.
 	 * @param current2
 	 *            Second of the two elements mapping.
+	 * @param current2Scope
+	 *            The {@link IMatchScope} to restrict the contents of current2.
 	 * @param monitor
 	 *            {@link CompareProgressMonitor Progress monitor} to display while the comparison lasts. Might
 	 *            be <code>null</code>, in which case we won't monitor progress.
@@ -1330,15 +1570,16 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws InterruptedException
 	 *             Thrown if the matching process is interrupted somehow.
 	 */
-	private Match2Elements recursiveMappings(EObject current1, EObject current2, Monitor monitor)
-			throws FactoryException, InterruptedException {
+	private Match2Elements recursiveMappings(EObject current1, IMatchScope current1Scope, EObject current2,
+			IMatchScope current2Scope, Monitor monitor) throws FactoryException, InterruptedException {
 		Match2Elements mapping = null;
 		mapping = MatchFactory.eINSTANCE.createMatch2Elements();
 		mapping.setLeftElement(current1);
 		mapping.setRightElement(current2);
 		mapping.setSimilarity(checker.absoluteMetric(current1, current2));
-		final List<Match2Elements> mapList = mapLists(getContents(current1), getContents(current2),
-				structuredOptions.getSearchWindow(), monitor);
+		final List<Match2Elements> mapList = mapLists(getScopeInternalContents(current1, current1Scope),
+				getScopeInternalContents(current2, current2Scope), structuredOptions.getSearchWindow(),
+				monitor);
 		// We can map other elements with mapLists; we iterate through them.
 		final Iterator<Match2Elements> it = mapList.iterator();
 		while (it.hasNext()) {
@@ -1346,9 +1587,60 @@ public class GenericMatchEngine implements IMatchEngine {
 			// As we know source and target are similars, we call recursive
 			// mappings onto these objects
 			EFactory.eAdd(mapping, SUBMATCH_ELEMENT_NAME, recursiveMappings(subMapping.getLeftElement(),
-					subMapping.getRightElement(), monitor));
+					current1Scope, subMapping.getRightElement(), current2Scope, monitor));
 		}
+
+		// we also have to match those elements, which are directly referenced but not contained in the
+		// specified match scope. Otherwise the diff engine will detect reference changes also in case
+		// there is no change
+		final List<EObject> current1ScopeExternalReferences = getScopeExternalReferences(current1,
+				current1Scope);
+		final List<EObject> current2ScopeExternalReferences = getScopeExternalReferences(current2,
+				current2Scope);
+		for (EObject leftRef : current1ScopeExternalReferences) {
+			final EObject rightRef = findMostSimilar(leftRef, current2ScopeExternalReferences);
+			if (rightRef != null && findMostSimilar(rightRef, current1ScopeExternalReferences) == leftRef) {
+				// create a mapping to indicate an exact match (as this is out of scope)
+				final Match2Elements externalRefMapping = MatchFactory.eINSTANCE.createMatch2Elements();
+				externalRefMapping.setLeftElement(leftRef);
+				externalRefMapping.setRightElement(rightRef);
+				externalRefMapping.setSimilarity(checker.absoluteMetric(leftRef, rightRef));
+				externalRefMappings.add(externalRefMapping);
+			}
+		}
+
 		return mapping;
+	}
+
+	/**
+	 * Obtain all EObjets, which are referenced by the given eObject ({@link EObject#getEAllReferences()}),
+	 * but are not part of the match scope.
+	 * 
+	 * @param eObject
+	 *            the eObject, whose references are to be regarded
+	 * @param scope
+	 *            the scope to decide whether the target of a given reference has to be included in the list
+	 *            of referenced objects or not
+	 * @return the list of all objects, referenced by the given one, which are not part of the scope
+	 */
+	@SuppressWarnings("unchecked")
+	private List<EObject> getScopeExternalReferences(EObject eObject, IMatchScope scope) {
+		final List<EObject> result = new ArrayList<EObject>();
+		// process all references to outside the scope
+		for (final EReference reference : eObject.eClass().getEAllReferences()) {
+			final Object value = eObject.eGet(reference);
+			if (value instanceof Collection) {
+				for (Object newValue : (Collection)value) {
+					if (!result.contains(newValue) && newValue instanceof EObject
+							&& !scope.isInScope((EObject)newValue))
+						result.add((EObject)newValue);
+				}
+			} else if (!result.contains(value) && value instanceof EObject
+					&& !scope.isInScope((EObject)value)) {
+				result.add((EObject)value);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -1448,4 +1740,74 @@ public class GenericMatchEngine implements IMatchEngine {
 		return checker.isSimilar(obj1, obj2);
 	}
 
+	/**
+	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
+	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
+	 * contents from an EObject <u>including</u> those references.
+	 * 
+	 * @param eObject
+	 *            The EObject we seek the content of.
+	 * @param scope
+	 *            The scope to restrict the contents.
+	 * @return The list of all the content of a given EObject, derived containmnent references included.
+	 */
+	@SuppressWarnings("unchecked")
+	private List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
+		// filter out those contained objects belonging to a fragment resource
+		final List<EObject> result = new ArrayList<EObject>();
+		// add contents within scope
+		for (EObject contents : eObject.eContents()) {
+			// only add direct "non-fragment" contents
+			if (!result.contains(contents) && scope.isInScope(contents)
+					&& (contents.eResource() == null || eObject.eResource() == contents.eResource())) {
+				result.add(contents);
+			}
+		}
+		// add derived containment references in scope (do not objects contained in fragments)
+		for (final EReference reference : eObject.eClass().getEAllReferences()) {
+			if (reference.isContainment() && reference.isDerived()) {
+				final Object value = eObject.eGet(reference);
+				if (value instanceof Collection) {
+					for (Object contents : (Collection)value) {
+						if (!result.contains(contents) && contents instanceof EObject) {
+							final EObject object = (EObject)contents;
+							if (scope.isInScope(object)
+									&& (object.eResource() == null || eObject.eResource() == object
+											.eResource())) {
+								result.add(object);
+							}
+						}
+					}
+				} else if (!result.contains(value) && value instanceof EObject) {
+					final EObject object = (EObject)value;
+					if (scope.isInScope(object)
+							&& (object.eResource() == null || eObject.eResource() == object.eResource())) {
+						result.add(object);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns all objects contained in the given resource (via {@link Resource#getContents()}), covered by
+	 * the provided scope.
+	 * 
+	 * @param resource
+	 *            The resource, whose contents is to be regarded.
+	 * @param scope
+	 *            The scope to restrict, which of the contents' objects is included in the returned list.
+	 * @return The list of conents' objects, covered within the given scope.
+	 */
+	private List<EObject> getScopeInternalContents(Resource resource, IMatchScope scope) {
+		final List<EObject> result = new ArrayList<EObject>();
+		for (EObject contents : resource.getContents()) {
+			if (!result.contains(contents) && scope.isInScope(contents)
+					&& (contents.eResource() == null || resource == contents.eResource())) {
+				result.add(contents);
+			}
+		}
+		return result;
+	}
 }

@@ -11,15 +11,16 @@
 package org.eclipse.emf.compare.match.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.match.engine.IMatchEngine;
+import org.eclipse.emf.compare.match.engine.IMatchScope;
+import org.eclipse.emf.compare.match.engine.IMatchScopeProvider;
+import org.eclipse.emf.compare.match.engine.MatchScopeProviderUtil;
 import org.eclipse.emf.compare.match.filter.IResourceFilter;
 import org.eclipse.emf.compare.match.filter.ResourceFilterRegistry;
 import org.eclipse.emf.compare.match.internal.service.DefaultMatchEngineSelector;
@@ -43,8 +44,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public final class MatchService {
-	/** Keeps track of those resources that are loaded as fragments of others. */
-	private static final Set<Resource> FRAGMENT_RESOURCES = new HashSet<Resource>();
 
 	/** Currently set match engine selector. */
 	private static IMatchEngineSelector matchEngineSelector = new DefaultMatchEngineSelector();
@@ -226,21 +225,27 @@ public final class MatchService {
 	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 1.0
 	 */
-	@SuppressWarnings("unchecked")
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
 			ResourceSet rightResourceSet, Map<String, Object> options) throws InterruptedException {
+
 		// Resolve all proxies so that all resources get loaded
 		resolveAll(leftResourceSet);
 		resolveAll(rightResourceSet);
+
+		// see if scope provider was passed in via option, otherwise create default one
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(options,
+				leftResourceSet, rightResourceSet);
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+
+		applyExternalFilter(scopeProvider);
 
 		final List<Resource> remainingLeftResources = new ArrayList<Resource>(leftResourceSet.getResources());
 		final List<Resource> remainingRightResources = new ArrayList<Resource>(rightResourceSet
 				.getResources());
 
-		// Removes fragments from the resources to match
-		removeFragments(remainingLeftResources, remainingRightResources);
-		// filters out resources if any client extends the filtering extension point
-		filterResources(remainingLeftResources, remainingRightResources);
+		applyScopeFilter(leftScope, remainingLeftResources);
+		applyScopeFilter(rightScope, remainingRightResources);
 
 		final MatchResourceSet match = MatchFactory.eINSTANCE.createMatchResourceSet();
 		for (final Resource res : new ArrayList<Resource>(remainingLeftResources)) {
@@ -309,25 +314,28 @@ public final class MatchService {
 	 * @see org.eclipse.emf.compare.match.MatchOptions
 	 * @since 1.0
 	 */
-	@SuppressWarnings("unchecked")
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
 			ResourceSet rightResourceSet, ResourceSet ancestorResourceSet, Map<String, Object> options)
 			throws InterruptedException {
-		// Resolve all proxies so that all resources get loaded
 		resolveAll(leftResourceSet);
 		resolveAll(rightResourceSet);
 		resolveAll(ancestorResourceSet);
 
+		// apply filter to scope provider, then filter resources with provided scopes
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(options,
+				leftResourceSet, rightResourceSet, ancestorResourceSet);
+		final IMatchScope leftScope = scopeProvider.getLeftScope();
+		final IMatchScope rightScope = scopeProvider.getRightScope();
+		final IMatchScope ancestorScope = scopeProvider.getAncestorScope();
+		applyExternalFilter(scopeProvider);
 		final List<Resource> remainingLeftResources = new ArrayList<Resource>(leftResourceSet.getResources());
 		final List<Resource> remainingRightResources = new ArrayList<Resource>(rightResourceSet
 				.getResources());
 		final List<Resource> remainingAncestorResources = new ArrayList<Resource>(ancestorResourceSet
 				.getResources());
-
-		// Removes fragments from the resources to match
-		removeFragments(remainingLeftResources, remainingRightResources, remainingAncestorResources);
-		// filters out resources if any client extends the filtering extension point
-		filterResources(remainingLeftResources, remainingRightResources, remainingAncestorResources);
+		applyScopeFilter(leftScope, remainingLeftResources);
+		applyScopeFilter(rightScope, remainingRightResources);
+		applyScopeFilter(ancestorScope, remainingAncestorResources);
 
 		final MatchResourceSet match = MatchFactory.eINSTANCE.createMatchResourceSet();
 		for (final Resource res : new ArrayList<Resource>(remainingLeftResources)) {
@@ -408,7 +416,6 @@ public final class MatchService {
 				}
 			}
 		}
-
 		return match;
 	}
 
@@ -488,17 +495,30 @@ public final class MatchService {
 	}
 
 	/**
-	 * Remove all fragment resources from the given resources lists.
+	 * Apply external filters to the {@link IMatchScopeProvider}.
 	 * 
-	 * @param resources
-	 *            Lists that are to be cleared off fragments.
+	 * @param scopeProvider
+	 *            The {@link IMatchScopeProvider} the external filters are to be applied to
 	 */
-	private static void filterResources(List<Resource>... resources) {
+	private static void applyExternalFilter(IMatchScopeProvider scopeProvider) {
 		for (final IResourceFilter filter : ResourceFilterRegistry.INSTANCE.getRegisteredResourceFilters()) {
-			if (resources.length == 2) {
-				filter.filter(resources[0], resources[1]);
-			} else {
-				filter.filter(resources[0], resources[1], resources[2]);
+			scopeProvider.applyResourceFilter(filter);
+		}
+	}
+
+	/**
+	 * Removes all resources from the given list, which are not covered by the provided scope.
+	 * 
+	 * @param scope
+	 *            the {@link IMatchScope} used to determine with resources to retain in the list
+	 * @param resources
+	 *            the list of {@link Resource}s that has to be filtered
+	 */
+	private static void applyScopeFilter(IMatchScope scope, List<Resource> resources) {
+		final Iterator<Resource> iterator = resources.iterator();
+		while (iterator.hasNext()) {
+			if (!scope.isInScope(iterator.next())) {
+				iterator.remove();
 			}
 		}
 	}
@@ -546,26 +566,8 @@ public final class MatchService {
 	}
 
 	/**
-	 * Remove all fragment resources from the given resources lists.
-	 * 
-	 * @param resources
-	 *            Lists that are to be cleared off fragments.
-	 */
-	private static void removeFragments(List<Resource>... resources) {
-		for (final Resource resource : FRAGMENT_RESOURCES) {
-			for (final List<Resource> res : resources) {
-				res.remove(resource);
-			}
-		}
-		FRAGMENT_RESOURCES.clear();
-	}
-
-	/**
 	 * This will allow us to resolve all references from resources contained within <code>resourceSet</code>,
-	 * loading referenced resources along the way as would
-	 * {@link org.eclipse.emf.ecore.util.EcoreUtil#resolveAll(ResourceSet)}. The difference lies in the fact
-	 * we will populate {@link #FRAGMENT_RESOURCES} so as to keep track of the resources loaded as fragments
-	 * of others.
+	 * loading referenced resources along the way.
 	 * 
 	 * @param resourceSet
 	 *            The resourceSet we wish all references of resolved.
@@ -573,13 +575,10 @@ public final class MatchService {
 	private static void resolveAll(ResourceSet resourceSet) {
 		final List<Resource> resources = resourceSet.getResources();
 		for (int i = 0; i < resources.size(); ++i) {
-			final Iterator<EObject> resourceContent = resources.get(i).getAllContents();
+			final Resource currentResource = resources.get(i);
+			final Iterator<EObject> resourceContent = currentResource.getAllContents();
 			while (resourceContent.hasNext()) {
 				final EObject eObject = resourceContent.next();
-				final Resource childResource = eObject.eResource();
-				if (childResource != null && childResource != resources.get(i)) {
-					FRAGMENT_RESOURCES.add(childResource);
-				}
 				final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
 				while (objectChildren.hasNext()) {
 					// Resolves cross references by simply visiting them.

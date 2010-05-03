@@ -156,4 +156,5 @@ public interface IMatchEngine {
 	 */
 	MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException;
+
 }

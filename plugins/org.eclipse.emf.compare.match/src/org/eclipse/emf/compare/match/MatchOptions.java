@@ -47,6 +47,14 @@ package org.eclipse.emf.compare.match;
  * values increase comparison time, lower values decrease comparison accuracy.</td>
  * <td>Positive integer, defaults to <code>100</code>. A negative value will be reset to the default.</td>
  * </tr>
+ * <tr>
+ * <td>{@link #OPTION_MATCH_SCOPE_PROVIDER}</td>
+ * <td>Allows to pass an {@link org.eclipse.emf.compare.match.engine.IMatchScopeProvider} instance to the
+ * {@link org.eclipse.emf.compare.match.engine.IMatchEngine} to restrict the scope of comparison.</td>
+ * <td>The specified {@link org.eclipse.emf.compare.match.engine.IMatchScopeProvider} may be evaluated by the
+ * {@link org.eclipse.emf.compare.match.engine.IMatchEngine} to restrict the scope of objects/resources to be
+ * compared.</td>
+ * </tr>
  * </table>
  * </p>
  * 
@@ -79,4 +87,12 @@ public interface MatchOptions {
 
 	/** Key for the option defining the search window. */
 	String OPTION_SEARCH_WINDOW = "match.search.window"; //$NON-NLS-1$
+
+	/**
+	 * Key for an {@link org.eclipse.emf.compare.match.engine.IMatchScopeProvider} to limit the scope
+	 * processed by the match engine.
+	 * 
+	 * @since 1.1
+	 */
+	String OPTION_MATCH_SCOPE_PROVIDER = "match.scope.provider"; //$NON-NLS-1$
 }
