@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -654,7 +655,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<EObject> it = list.iterator();
 		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
-			if (structuredOptions.shouldMatchDistinctMetamodels() || eObj.eClass() == next.eClass()) {
+			if (structuredOptions.shouldMatchDistinctMetamodels()
+					|| EcoreUtil.equals(eObj.eClass(), next.eClass())) {
 				final double similarity = checker.absoluteMetric(eObj, next);
 				if (similarity > max) {
 					max = similarity;

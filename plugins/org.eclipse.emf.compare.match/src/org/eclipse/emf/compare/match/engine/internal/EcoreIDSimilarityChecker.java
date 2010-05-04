@@ -224,6 +224,8 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	@Override
 	public double absoluteMetric(EObject obj1, EObject obj2) throws FactoryException {
+		if (nonIdentified.contains(obj1) && nonIdentified.contains(obj2))
+			return delegate.absoluteMetric(obj1, obj2);
 		if (leftToRight.get(obj1) == obj2)
 			return 1;
 		return 0;
