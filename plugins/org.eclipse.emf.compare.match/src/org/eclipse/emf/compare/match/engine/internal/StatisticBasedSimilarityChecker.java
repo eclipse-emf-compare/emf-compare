@@ -70,14 +70,23 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	private final Map<EObject, String> uriFragmentCache = new WeakHashMap<EObject, String>(20);
 
 	/**
+	 * This field is needed to keep the same behavior for clients having subclassed the generic match engine.
+	 */
+	@Deprecated
+	private GenericMatchEngineToCheckerBridge bridge;
+
+	/**
 	 * Create a new checker.
 	 * 
 	 * @param filter
 	 *            a metamodel filter the checker can use to know whether a feature alwaas has the same value
 	 *            or not in the models.
+	 * @param bridge
+	 *            utility class to keep API compatibility.
 	 */
-	public StatisticBasedSimilarityChecker(MetamodelFilter filter) {
+	public StatisticBasedSimilarityChecker(MetamodelFilter filter, GenericMatchEngineToCheckerBridge bridge) {
 		super(filter);
+		this.bridge = bridge;
 	}
 
 	/**
@@ -152,18 +161,14 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 */
 	protected double nameSimilarity(EObject obj1, EObject obj2) {
 		double similarity = 0d;
-		try {
-			final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
-			if (value != null) {
-				similarity = value;
-			} else {
-				similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
-						NameSimilarity.findName(obj2));
-				setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
-			}
-		} catch (final FactoryException e) {
-			// fails silently, will return a similarity of 0d
+		final Double value = getSimilarityFromCache(obj1, obj2, NAME_SIMILARITY);
+		if (value != null) {
+			similarity = value;
+		} else {
+			similarity = bridge.nameSimilarity(obj1, obj2);
+			setSimilarityInCache(obj1, obj2, NAME_SIMILARITY, similarity);
 		}
+		// fails silently, will return a similarity of 0d
 		return similarity;
 	}
 
@@ -256,8 +261,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 			similarity = value;
 		} else if (filter.getFilteredFeatures(obj1).size() < MIN_ATTRIBUTES_COUNT
 				|| filter.getFilteredFeatures(obj2).size() < MIN_ATTRIBUTES_COUNT) {
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1),
-					NameSimilarity.contentValue(obj2));
+			similarity = bridge.contentSimilarity(obj1, obj2);
 			setSimilarityInCache(obj1, obj2, VALUE_SIMILARITY, similarity);
 		} else {
 			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1, filter),

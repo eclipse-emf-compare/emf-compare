@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
 import org.eclipse.emf.compare.match.engine.internal.DistinctEcoreSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
+import org.eclipse.emf.compare.match.engine.internal.GenericMatchEngineToCheckerBridge;
 import org.eclipse.emf.compare.match.engine.internal.StatisticBasedSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.XMIIDSimilarityChecker;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
@@ -301,10 +302,22 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	protected AbstractSimilarityChecker prepareChecker() {
 		AbstractSimilarityChecker checker = null;
+		GenericMatchEngineToCheckerBridge bridge = new GenericMatchEngineToCheckerBridge() {
+
+			@Override
+			public double nameSimilarity(EObject obj1, EObject obj2) {
+				return GenericMatchEngine.this.nameSimilarity(obj1, obj2);
+			}
+
+			@Override
+			public double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
+				return GenericMatchEngine.this.contentSimilarity(obj1, obj2);
+			}
+		};
 		if (!structuredOptions.shouldMatchDistinctMetamodels()) {
-			checker = new DistinctEcoreSimilarityChecker(filter);
+			checker = new DistinctEcoreSimilarityChecker(filter, bridge);
 		} else {
-			checker = new StatisticBasedSimilarityChecker(filter);
+			checker = new StatisticBasedSimilarityChecker(filter, bridge);
 		}
 		if (!structuredOptions.isIgnoringID()) {
 			checker = new EcoreIDSimilarityChecker(filter, checker);

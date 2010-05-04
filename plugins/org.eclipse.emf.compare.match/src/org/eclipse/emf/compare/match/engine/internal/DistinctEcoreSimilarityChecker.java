@@ -28,9 +28,11 @@ public class DistinctEcoreSimilarityChecker extends StatisticBasedSimilarityChec
 	 * @param filter
 	 *            a metamodel filter the checker can use to know whether a feature alwaas has the same value
 	 *            or not in the models.
+	 * @param bridge
+	 *            utility class to keep API compatibility.
 	 */
-	public DistinctEcoreSimilarityChecker(MetamodelFilter filter) {
-		super(filter);
+	public DistinctEcoreSimilarityChecker(MetamodelFilter filter, GenericMatchEngineToCheckerBridge bridge) {
+		super(filter, bridge);
 	}
 
 	/**
