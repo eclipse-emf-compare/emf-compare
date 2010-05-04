@@ -41,12 +41,8 @@ Contributors:
           org.eclipse.emf.edit.provider.ITreeItemContentProvider
           org.eclipse.emf.edit.provider.IItemLabelProvider
           org.eclipse.emf.edit.provider.IItemPropertySource" />
-  </extension>
-  <extension
-        point="org.eclipse.emf.compare.match.resourcefilters">
-     <filter
-           class="org.eclipse.emf.compare.match.internal.filter.BinaryIdenticalResourceFilter"/>
-  </extension>
-
+  </extension> 
+  
+ 
 </plugin>
 
