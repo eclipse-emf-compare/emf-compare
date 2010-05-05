@@ -518,24 +518,45 @@ public class GenericMatchEngine implements IMatchEngine {
 		// Creates and sizes progress monitor
 		final Monitor monitor = createProgressMonitor();
 		int size = 1;
-		for (final EObject root : leftRoot.eResource().getContents()) {
-			final Iterator<EObject> rootContent = root.eAllContents();
+		if (leftRoot.eResource() != null && rightRoot.eResource() != null) {
+			for (final EObject root : leftRoot.eResource().getContents()) {
+				final Iterator<EObject> rootContent = root.eAllContents();
+				while (rootContent.hasNext()) {
+					rootContent.next();
+					size++;
+				}
+			}
+
+			startMonitor(monitor, size);
+
+			// see if scope provider was passed in via option, otherwise create default one
+			final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+					leftRoot.eResource(), rightRoot.eResource());
+			final IMatchScope leftScope = scopeProvider.getLeftScope();
+			final IMatchScope rightScope = scopeProvider.getRightScope();
+
+			if (leftScope.isInScope(leftRoot.eResource()) && rightScope.isInScope(rightRoot.eResource())) {
+				result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope, monitor);
+			}
+		} else {
+			final Iterator<EObject> rootContent = leftRoot.eAllContents();
 			while (rootContent.hasNext()) {
 				rootContent.next();
 				size++;
 			}
-		}
-		startMonitor(monitor, size);
+			startMonitor(monitor, size);
+			IMatchScope alwaysInScope = new IMatchScope() {
 
-		// see if scope provider was passed in via option, otherwise create default one
-		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap, leftRoot
-				.eResource(), rightRoot.eResource());
+				public boolean isInScope(Resource resource) {
+					return true;
+				}
 
-		final IMatchScope leftScope = scopeProvider.getLeftScope();
-		final IMatchScope rightScope = scopeProvider.getRightScope();
+				public boolean isInScope(EObject eObject) {
+					return true;
+				}
+			};
+			result = doContentMatch(leftRoot, alwaysInScope, rightRoot, alwaysInScope);
 
-		if (leftScope.isInScope(leftRoot.eResource()) && rightScope.isInScope(rightRoot.eResource())) {
-			result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope, monitor);
 		}
 
 		return result;
@@ -1245,35 +1266,6 @@ public class GenericMatchEngine implements IMatchEngine {
 	}
 
 	/**
-	 * Workaround for bug #235606 : elements held by a reference with containment=true and derived=true are
-	 * not matched since not returned by {@link EObject#eContents()}. This allows us to return the list of all
-	 * contents from an EObject <u>including</u> those references.
-	 * 
-	 * @param eObject
-	 *            The EObject we seek the content of.
-	 * @return The list of all the content of a given EObject, derived containmnent references included.
-	 * @since 1.1
-	 */
-	@SuppressWarnings("unchecked")
-	protected List<EObject> getContents(EObject eObject) {
-		final List<EObject> result = new ArrayList<EObject>(eObject.eContents());
-		for (final EReference reference : eObject.eClass().getEAllReferences()) {
-			if (reference.isContainment() && reference.isDerived()) {
-				final Object value = eObject.eGet(reference);
-				if (value instanceof Collection) {
-					for (Object newValue : (Collection)value) {
-						if (!result.contains(newValue) && newValue instanceof EObject)
-							result.add((EObject)newValue);
-					}
-				} else if (!result.contains(value) && value instanceof EObject) {
-					result.add((EObject)value);
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Returns a list containing mappings of the nodes of both given {@link List}s.
 	 * 
 	 * @param list1
@@ -1787,9 +1779,10 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param scope
 	 *            The scope to restrict the contents.
 	 * @return The list of all the content of a given EObject, derived containmnent references included.
+	 * @since 1.1
 	 */
 	@SuppressWarnings("unchecked")
-	private List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
+	protected List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
 		// filter out those contained objects belonging to a fragment resource
 		final List<EObject> result = new ArrayList<EObject>();
 		// add contents within scope
