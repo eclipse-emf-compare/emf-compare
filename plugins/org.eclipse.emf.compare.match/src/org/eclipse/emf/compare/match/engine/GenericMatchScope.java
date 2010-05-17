@@ -156,15 +156,17 @@ public class GenericMatchScope implements IMatchScope {
 	 *            the resource set to resolve.
 	 */
 	private static void resolveAll(ResourceSet resourceSet) {
-		final List<Resource> resources = resourceSet.getResources();
-		for (int i = 0; i < resources.size(); ++i) {
-			final Iterator<EObject> resourceContent = resources.get(i).getAllContents();
-			while (resourceContent.hasNext()) {
-				final EObject eObject = resourceContent.next();
-				final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
-				while (objectChildren.hasNext()) {
-					// Resolves cross references by simply visiting them.
-					objectChildren.next();
+		if (resourceSet != null) {
+			final List<Resource> resources = resourceSet.getResources();
+			for (int i = 0; i < resources.size(); ++i) {
+				final Iterator<EObject> resourceContent = resources.get(i).getAllContents();
+				while (resourceContent.hasNext()) {
+					final EObject eObject = resourceContent.next();
+					final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
+					while (objectChildren.hasNext()) {
+						// Resolves cross references by simply visiting them.
+						objectChildren.next();
+					}
 				}
 			}
 		}
