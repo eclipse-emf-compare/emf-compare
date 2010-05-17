@@ -882,7 +882,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		try {
 			checkForDiffs(current, match);
 		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, false);
+			log(e);
 		}
 		// we need to build this list to avoid concurrent modifications
 		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
@@ -908,6 +908,17 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
+	 * Log an error. Clients may override this to perform custom logging.
+	 * 
+	 * @since 1.1
+	 * @param e
+	 *            any Exception.
+	 */
+	protected void log(final Exception e) {
+		EMFComparePlugin.log(e, false);
+	}
+
+	/**
 	 * This is the core of the diff computing for three way comparison. This will call for checks on
 	 * attributes, references and model elements to check for updates/changes.
 	 * 
@@ -922,7 +933,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		try {
 			checkForDiffs(current, match);
 		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, false);
+			log(e);
 		}
 		// we need to build this list to avoid concurrent modifications
 		final List<DiffElement> shouldAddToList = new ArrayList<DiffElement>();
