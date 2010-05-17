@@ -48,7 +48,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
  * These services are useful when one wants to compare models more precisely using the method modelDiff.
@@ -922,10 +921,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		// navigate through both models at the same time and realize mappings..
 		try {
-			if (!structuredOptions.isIgnoringXMIID())
-				if (leftResource instanceof XMIResource && rightResource instanceof XMIResource) {
-					checker.init(leftResource, rightResource);
-				}
+			checker.init(leftResource, rightResource);
 
 			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
 			final List<Match2Elements> matchedRoots = mapLists(leftContents, rightContents, structuredOptions
