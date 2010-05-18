@@ -127,8 +127,11 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 		leftToRight.clear();
 		nonIdentified.clear();
 		final Iterator<EObject> leftIterator = obj1.eAllContents();
+		EMFCompareMap<String, EObjectCouple> matchedByID = new EMFCompareMap<String, EObjectCouple>();
+		processLeftElement(matchedByID, obj1);
+		processRightElement(matchedByID, obj2);
 		final Iterator<EObject> rightIterator = obj2.eAllContents();
-		browseComputingId(leftIterator, rightIterator);
+		browseComputingId(matchedByID, leftIterator, rightIterator);
 		delegate.init(obj1, obj2);
 	}
 
@@ -140,27 +143,15 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 	 * @param rightIterator
 	 *            right model.
 	 */
-	private void browseComputingId(final Iterator<EObject> leftIterator, final Iterator<EObject> rightIterator) {
-		final Map<String, EObjectCouple> matchedByID = new EMFCompareMap<String, EObjectCouple>();
+	private void browseComputingId(Map<String, EObjectCouple> matchedByID,
+			final Iterator<EObject> leftIterator, final Iterator<EObject> rightIterator) {
 		while (leftIterator.hasNext()) {
 			final EObject item1 = leftIterator.next();
-			final String item1ID = computeID(item1);
-			if (item1ID == null) {
-				nonIdentified.add(item1);
-			} else {
-				final EObjectCouple duo = getOrCreate(matchedByID, item1ID);
-				duo.setLeft(item1);
-			}
+			processLeftElement(matchedByID, item1);
 		}
 		while (rightIterator.hasNext()) {
 			final EObject item2 = rightIterator.next();
-			final String item2ID = computeID(item2);
-			if (item2ID == null) {
-				nonIdentified.add(item2);
-			} else {
-				final EObjectCouple duo = getOrCreate(matchedByID, item2ID);
-				duo.setRight(item2);
-			}
+			processRightElement(matchedByID, item2);
 		}
 
 		for (EObjectCouple pair : matchedByID.values()) {
@@ -168,6 +159,26 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 				leftToRight.put(pair.getLeft(), pair.getRight());
 		}
 
+	}
+
+	private void processRightElement(final Map<String, EObjectCouple> matchedByID, final EObject item2) {
+		final String item2ID = computeID(item2);
+		if (item2ID == null) {
+			nonIdentified.add(item2);
+		} else {
+			final EObjectCouple duo = getOrCreate(matchedByID, item2ID);
+			duo.setRight(item2);
+		}
+	}
+
+	private void processLeftElement(final Map<String, EObjectCouple> matchedByID, final EObject item1) {
+		final String item1ID = computeID(item1);
+		if (item1ID == null) {
+			nonIdentified.add(item1);
+		} else {
+			final EObjectCouple duo = getOrCreate(matchedByID, item1ID);
+			duo.setLeft(item1);
+		}
 	}
 
 	/**
@@ -205,7 +216,7 @@ public class EcoreIDSimilarityChecker extends AbstractSimilarityChecker {
 		nonIdentified.clear();
 		final Iterator<EObject> leftIterator = left.getAllContents();
 		final Iterator<EObject> rightIterator = right.getAllContents();
-		browseComputingId(leftIterator, rightIterator);
+		browseComputingId(new EMFCompareMap<String, EObjectCouple>(), leftIterator, rightIterator);
 		delegate.init(left, right);
 	}
 
