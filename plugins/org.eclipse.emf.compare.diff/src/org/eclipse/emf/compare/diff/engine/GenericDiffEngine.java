@@ -248,7 +248,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		final EObject rightElement = matchElement.getRightElement();
 		if (leftElement.eContainmentFeature() != null && rightElement.eContainmentFeature() != null) {
 			if (!leftElement.eContainmentFeature().getName().equals(
-					rightElement.eContainmentFeature().getName())) {
+					rightElement.eContainmentFeature().getName())
+					&& getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
 				createUpdateContainmentOperation(current, leftElement, rightElement);
 			}
 		}
