@@ -12,7 +12,9 @@ package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
@@ -34,7 +36,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 public class GenericMatchScope implements IMatchScope {
 
 	/** the list of resources to be included in the scope. */
-	private final List<Resource> resourcesInScope = new ArrayList<Resource>();
+	private final Set<Resource> resourcesInScope = new LinkedHashSet<Resource>();
 
 	/** the list of objects to be included in the scope. */
 	private final List<EObject> eObjectsInScope = new ArrayList<EObject>();
@@ -146,7 +148,7 @@ public class GenericMatchScope implements IMatchScope {
 	 * @return the list of {@link Resource}s by references.
 	 */
 	public List<Resource> getResourcesInScope() {
-		return resourcesInScope;
+		return new ArrayList<Resource>(resourcesInScope);
 	}
 
 	/**
@@ -155,7 +157,7 @@ public class GenericMatchScope implements IMatchScope {
 	 * @param resourceSet
 	 *            the resource set to resolve.
 	 */
-	private static void resolveAll(ResourceSet resourceSet) {
+	private void resolveAll(ResourceSet resourceSet) {
 		if (resourceSet != null) {
 			final List<Resource> resources = resourceSet.getResources();
 			for (int i = 0; i < resources.size(); ++i) {
@@ -167,6 +169,7 @@ public class GenericMatchScope implements IMatchScope {
 						// Resolves cross references by simply visiting them.
 						objectChildren.next();
 					}
+					resourcesInScope.add(eObject.eResource());
 				}
 			}
 		}

@@ -1784,8 +1784,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		// add contents within scope
 		for (EObject contents : eObject.eContents()) {
 			// only add direct "non-fragment" contents
-			if (!result.contains(contents) && scope.isInScope(contents)
-					&& (contents.eResource() == null || eObject.eResource() == contents.eResource())) {
+			if (!result.contains(contents) && scope.isInScope(contents)) {
 				result.add(contents);
 			}
 		}
@@ -1797,17 +1796,14 @@ public class GenericMatchEngine implements IMatchEngine {
 					for (Object contents : (Collection)value) {
 						if (!result.contains(contents) && contents instanceof EObject) {
 							final EObject object = (EObject)contents;
-							if (scope.isInScope(object)
-									&& (object.eResource() == null || eObject.eResource() == object
-											.eResource())) {
+							if (scope.isInScope(object)) {
 								result.add(object);
 							}
 						}
 					}
 				} else if (!result.contains(value) && value instanceof EObject) {
 					final EObject object = (EObject)value;
-					if (scope.isInScope(object)
-							&& (object.eResource() == null || eObject.eResource() == object.eResource())) {
+					if (scope.isInScope(object)) {
 						result.add(object);
 					}
 				}
@@ -1829,8 +1825,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	private List<EObject> getScopeInternalContents(Resource resource, IMatchScope scope) {
 		final List<EObject> result = new ArrayList<EObject>();
 		for (EObject contents : resource.getContents()) {
-			if (!result.contains(contents) && scope.isInScope(contents)
-					&& (contents.eResource() == null || resource == contents.eResource())) {
+			if (!result.contains(contents) && scope.isInScope(contents)) {
 				result.add(contents);
 			}
 		}
