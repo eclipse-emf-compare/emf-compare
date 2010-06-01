@@ -24,7 +24,10 @@
   
   <license url="%licenseURL">%license</license>   
 
-
+   <url>
+      <discovery label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+      <update label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+   </url>
 
    <includes
          id="org.eclipse.emf.compare"
