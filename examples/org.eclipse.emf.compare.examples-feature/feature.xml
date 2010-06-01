@@ -24,6 +24,11 @@
       %license
    </license>
 
+   <url>
+      <discovery label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+      <update label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+   </url>
+
    <requires>
       <import feature="org.eclipse.emf.compare" version="0.9.0.qualifier" match="greaterOrEqual"/>
    </requires>
