@@ -25,8 +25,8 @@
    </license>
    
    <url>
-      <discovery label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
-      <update label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+      <discovery label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
+      <update label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
    </url>
 
    <plugin
