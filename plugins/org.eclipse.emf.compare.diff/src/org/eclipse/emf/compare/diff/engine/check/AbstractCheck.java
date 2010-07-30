@@ -152,9 +152,11 @@ public abstract class AbstractCheck {
 	 *         otherwise.
 	 */
 	protected final boolean isUnmatched(EObject element) {
-		final Iterator<EStructuralFeature.Setting> it = crossReferencer.get(element).iterator();
-		if (it.hasNext() && it.next().getEObject() instanceof UnmatchElement) {
-			return true;
+		if (crossReferencer != null && crossReferencer.get(element) != null) {
+			final Iterator<EStructuralFeature.Setting> it = crossReferencer.get(element).iterator();
+			if (it.hasNext() && it.next().getEObject() instanceof UnmatchElement) {
+				return true;
+			}
 		}
 		return false;
 	}
