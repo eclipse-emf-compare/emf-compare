@@ -346,7 +346,7 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			@Override
 			public List<EStructuralFeature> getFilteredFeatures(EObject eObj) {
-				return eObj.eClass().getEAllStructuralFeatures();
+				return new ArrayList<EStructuralFeature>(eObj.eClass().getEAllStructuralFeatures());
 			}
 		};
 
