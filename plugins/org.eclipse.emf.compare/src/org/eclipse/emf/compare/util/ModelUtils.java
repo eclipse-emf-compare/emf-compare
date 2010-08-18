@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
  * Utility class for model loading/saving and serialization.
@@ -122,6 +123,9 @@ public final class ModelUtils {
 			if (resourceFactory != null) {
 				resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
 						resourceFactory);
+			} else {
+				resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(fileExtension,
+						new XMIResourceFactoryImpl());
 			}
 		}
 
