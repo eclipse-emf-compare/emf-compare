@@ -54,14 +54,42 @@ public final class EFactory {
 	 * @throws FactoryException
 	 *             Thrown if the affectation fails.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> void eAdd(EObject object, String name, T arg) throws FactoryException {
+		eAdd(object, name, arg, -1);
+	}
+
+	/**
+	 * Adds the new value of the given feature of the object. If the structural feature isn't a list, it
+	 * behaves like eSet.
+	 * 
+	 * @param object
+	 *            Object on which we want to add to the feature values list.
+	 * @param name
+	 *            The name of the feature to add to.
+	 * @param arg
+	 *            New value to add to the feature values.
+	 * @param <T>
+	 *            Type of the new value to be added to the list.
+	 * @param elementIndex
+	 *            in case the feature is multiplicity-many, specify the index where the new value has to be
+	 *            added. If the index is -1, the value will be appended to the feature list.
+	 * @throws FactoryException
+	 *             Thrown if the affectation fails.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> void eAdd(EObject object, String name, T arg, int elementIndex) throws FactoryException {
 		final EStructuralFeature feature = eStructuralFeature(object, name);
 		if (feature.isMany()) {
 			if (arg != null) {
 				final Object manyValue = object.eGet(feature);
 				if (manyValue instanceof BasicEList) {
-					((BasicEList<? super T>)manyValue).addUnique(arg);
+					BasicEList<? super T> basicEList = (BasicEList<? super T>)manyValue;
+					int listSize = basicEList.size();
+					if (elementIndex > -1 && elementIndex < listSize) {
+						basicEList.addUnique(elementIndex, arg);
+					} else {
+						basicEList.addUnique(arg);
+					}
 				} else if (manyValue instanceof Collection) {
 					((Collection)manyValue).add(arg);
 				}
