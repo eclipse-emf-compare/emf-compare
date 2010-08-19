@@ -12,8 +12,8 @@ package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,7 +90,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * matched.
 	 * </p>
 	 */
-	private final Set<EObject> remainingUnmatchedElements = new HashSet<EObject>();
+	private final Set<EObject> remainingUnmatchedElements = new LinkedHashSet<EObject>();
 
 	/**
 	 * This list will be intensively used while matching elements to keep track of the unmatched ones from the
@@ -241,8 +241,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				processNotFoundElements(root, subMatchRoot);
 				// #createSub3Match(MatchModel, Match3Element, Match2Elements,
 				// Match2Elements) will have updated "remainingUnmatchedElements"
-				final Set<EObject> remainingLeft = new HashSet<EObject>();
-				final Set<EObject> remainingRight = new HashSet<EObject>();
+				final Set<EObject> remainingLeft = new LinkedHashSet<EObject>();
+				final Set<EObject> remainingRight = new LinkedHashSet<EObject>();
 				for (final EObject unmatched : remainingUnmatchedElements) {
 					if (unmatched.eResource() == leftObject.eResource()) {
 						remainingLeft.add(unmatched);
@@ -424,8 +424,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			 * of a resource), we cannot filter the model.
 			 */
 
-			final Set<EObject> still1 = new HashSet<EObject>();
-			final Set<EObject> still2 = new HashSet<EObject>();
+			final Set<EObject> still1 = new LinkedHashSet<EObject>();
+			final Set<EObject> still2 = new LinkedHashSet<EObject>();
 
 			// navigate through both objects at the same time and realize mappings..
 			try {
@@ -932,8 +932,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			final List<EObject> unmatchedRightRoots = new ArrayList<EObject>(rightContents);
 			// These sets will help us in keeping track of the yet to be found
 			// elements
-			final Set<EObject> still1 = new HashSet<EObject>();
-			final Set<EObject> still2 = new HashSet<EObject>();
+			final Set<EObject> still1 = new LinkedHashSet<EObject>();
+			final Set<EObject> still2 = new LinkedHashSet<EObject>();
 
 			// If one of the resources has no roots, considers it as deleted
 			if (leftContents.size() > 0 && rightContents.size() > 0) {
@@ -1436,8 +1436,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	 */
 	private void processUnmatchedMatch2Elements(Resource leftResource, Resource rightResource,
 			MatchModel root, Match3Elements subMatchRoot) throws FactoryException {
-		final Set<Match2Elements> remainingLeft = new HashSet<Match2Elements>();
-		final Set<Match2Elements> remainingRight = new HashSet<Match2Elements>();
+		final Set<Match2Elements> remainingLeft = new LinkedHashSet<Match2Elements>();
+		final Set<Match2Elements> remainingRight = new LinkedHashSet<Match2Elements>();
 		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
 			if (unmatched instanceof Match2Elements) {
 				final EObject element = ((Match2Elements)unmatched).getLeftElement();
@@ -1451,8 +1451,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 		}
 
-		for (final Match2Elements left : new HashSet<Match2Elements>(remainingLeft)) {
-			for (final Match2Elements right : new HashSet<Match2Elements>(remainingRight)) {
+		for (final Match2Elements left : new LinkedHashSet<Match2Elements>(remainingLeft)) {
+			for (final Match2Elements right : new LinkedHashSet<Match2Elements>(remainingRight)) {
 				if (left.getRightElement() == right.getRightElement()) {
 					final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
 					subMatch.setOriginElement(left.getRightElement());
@@ -1514,8 +1514,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	private void processSingleUnmatchedElements(Resource leftResource, Resource rightResource,
 			MatchModel root, Match3Elements subMatchRoot, Monitor monitor) throws InterruptedException,
 			FactoryException {
-		final Set<EObject> remainingLeft = new HashSet<EObject>();
-		final Set<EObject> remainingRight = new HashSet<EObject>();
+		final Set<EObject> remainingLeft = new LinkedHashSet<EObject>();
+		final Set<EObject> remainingRight = new LinkedHashSet<EObject>();
 		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
 			if (unmatched instanceof UnmatchElement) {
 				final EObject element = ((UnmatchElement)unmatched).getElement();
