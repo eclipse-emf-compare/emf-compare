@@ -1,39 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Gerhardt Informatics.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Gerhardt Informatics - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
-import java.util.Collections;
-import java.util.Map;
-
-import junit.framework.TestCase;
-
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.merge.service.MergeService;
-import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
-public class TestContainmentRemove extends TestCase {
-
-	private EObject leftModel;
-
-	private EObject expectedModel;
-
-	private EObject rightModel;
+public class TestContainmentRemove extends MergeTestBase {
 
 	@Override
 	public void setUp() throws Exception {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
-				Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
+
+		super.setUp();
 
 		EcoreFactory factory = EcoreFactory.eINSTANCE;
 		EPackage p = factory.createEPackage();
@@ -56,20 +45,19 @@ public class TestContainmentRemove extends TestCase {
 
 	}
 
-	public void testClassifierOrder() throws Exception {
-		Map<String, Object> options = Collections.emptyMap();
+	@Override
+	protected void preMergeHook(boolean isLeftToRight) {
+		super.preMergeHook(isLeftToRight);
+		doCheckFactory();
+	}
 
-		MatchModel match = MatchService.doMatch(leftModel, rightModel, options);
-		System.out.println("Match model:");
-		System.out.println(ModelUtils.serialize(match));
+	@Override
+	protected void postMergeHook(boolean isLeftToRight) {
+		super.postMergeHook(isLeftToRight);
+		doCheckFactory();
+	}
 
-		DiffModel diff = DiffService.doDiff(match);
-		EList<DiffElement> differences = diff.getDifferences();
-
-		System.out.println("Diffs: ");
-		for (DiffElement diffElement : differences) {
-			System.out.println(diffElement);
-		}
+	private void doCheckFactory() {
 
 		EPackage leftPackage = (EPackage)leftModel;
 		EPackage rightPackage = (EPackage)rightModel;
@@ -77,18 +65,5 @@ public class TestContainmentRemove extends TestCase {
 		assertNotNull("Left eFactoryInstance is not null ", leftPackage.getEFactoryInstance());
 		assertNotNull("Right eFactoryInstance is not null ", rightPackage.getEFactoryInstance());
 
-		MergeService.merge(differences, true);
-
-		assertNotNull("Left eFactoryInstance is not null ", leftPackage.getEFactoryInstance());
-		assertNotNull("Right eFactoryInstance is not null ", rightPackage.getEFactoryInstance());
-
-		System.out.println("Expected :\n" + ModelUtils.serialize(expectedModel));
-		System.out.println("Actual   :\n" + ModelUtils.serialize(rightModel));
-
-		boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
-
-		if (false == mergeOK) {
-			fail(" Merge failed ");
-		}
 	}
 }
