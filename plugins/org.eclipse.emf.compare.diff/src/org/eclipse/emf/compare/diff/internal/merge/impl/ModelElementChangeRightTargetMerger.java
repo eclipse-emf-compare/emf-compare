@@ -99,4 +99,11 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		removeDanglingReferences(parent);
 		super.undoInTarget();
 	}
+
+	@Override
+	public boolean canUndoInTarget() {
+		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
+		boolean isRightElementNotNull = theDiff.getRightElement() != null;
+		return isRightElementNotNull;
+	}
 }

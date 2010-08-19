@@ -143,11 +143,14 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param matchedValue
 	 *            Matched value of <tt>value</tt> if it is known. Will behave like
 	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
+	 * @param index
+	 *            an optional index in case the target is a List (-1 is a good default, the value will be
+	 *            appended to the list)
 	 * @return The copied value.
 	 */
 	@SuppressWarnings("unchecked")
 	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value,
-			EObject matchedValue) {
+			EObject matchedValue, int index) {
 		EObject actualValue = value;
 		if (value == null && matchedValue != null) {
 			handleLinkedResourceDependencyChange(matchedValue);
@@ -155,10 +158,35 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		if (matchedValue != null) {
 			put(actualValue, matchedValue);
-			((List<Object>)target.eGet(targetReference)).add(matchedValue);
+			List targetList = (List<Object>)target.eGet(targetReference);
+			int targetListSize = targetList.size();
+			if (index > -1 && index < targetListSize) {
+				targetList.add(index, matchedValue);
+			} else {
+				targetList.add(matchedValue);
+			}
 			return matchedValue;
 		}
 		return copyReferenceValue(targetReference, target, actualValue);
+	}
+
+	/**
+	 * This will copy the given <tt>value</tt> to the reference <tt>targetReference</tt> of <tt>target</tt>.
+	 * 
+	 * @param targetReference
+	 *            The reference to add a value to.
+	 * @param target
+	 *            The object to copy to.
+	 * @param value
+	 *            The value that is to be copied.
+	 * @param matchedValue
+	 *            Matched value of <tt>value</tt> if it is known. Will behave like
+	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
+	 * @return The copied value.
+	 */
+	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value,
+			EObject matchedValue) {
+		return copyReferenceValue(targetReference, target, value, matchedValue, -1);
 	}
 
 	/**
@@ -343,4 +371,5 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		return hasMerged;
 	}
+
 }

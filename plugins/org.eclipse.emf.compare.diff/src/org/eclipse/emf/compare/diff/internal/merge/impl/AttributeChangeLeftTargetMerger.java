@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
@@ -62,7 +64,16 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 		final Object value = theDiff.getLeftTarget();
 		final EAttribute attr = theDiff.getAttribute();
 		try {
-			EFactory.eAdd(target, attr.getName(), value);
+			int valueIndex = -1;
+			if (attr.isMany()) {
+				EObject leftElement = theDiff.getLeftElement();
+				Object leftValues = leftElement.eGet(attr);
+				if (leftValues instanceof List) {
+					List leftValuesList = (List)leftValues;
+					valueIndex = leftValuesList.indexOf(value);
+				}
+			}
+			EFactory.eAdd(target, attr.getName(), value, valueIndex);
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}

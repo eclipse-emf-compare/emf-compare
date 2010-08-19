@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -22,6 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -84,12 +86,26 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	@Override
 	public void undoInTarget() {
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
-		final EObject element = theDiff.getRightElement();
-		final EObject leftTarget = theDiff.getRightTarget();
-		final EObject rightTarget = theDiff.getLeftTarget();
+
 		// FIXME respect ordering!
-		final EObject copiedValue = MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(),
-				element, leftTarget, rightTarget);
+		EReference reference = theDiff.getReference();
+
+		final EObject rightElement = theDiff.getRightElement();
+		EObject leftElement = theDiff.getLeftElement();
+
+		EObject leftTarget = theDiff.getLeftTarget();
+		EObject rightTarget = theDiff.getRightTarget();
+
+		int index = -1;
+		if (reference.isMany()) {
+			Object leftRefValue = leftElement.eGet(reference);
+			if (leftRefValue instanceof List) {
+				List refLeftValueList = (List)leftRefValue;
+				index = refLeftValueList.indexOf(leftTarget);
+			}
+		}
+		final EObject copiedValue = MergeService.getCopier(diff).copyReferenceValue(reference, rightElement,
+				leftTarget, rightTarget, index);
 
 		// we should now have a look for AddReferencesLinks needing this object
 		final Iterator<EObject> siblings = getDiffModel().eAllContents();
@@ -98,13 +114,13 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeLeftTarget) {
 				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getLeftTarget().equals(element)) {
+				if (link.getReference().equals(reference.getEOpposite())
+						&& link.getLeftTarget().equals(rightElement)) {
 					removeFromContainer(link);
 				}
 			} else if (op instanceof ReferenceOrderChange) {
 				final ReferenceOrderChange link = (ReferenceOrderChange)op;
-				if (link.getReference().equals(theDiff.getReference())) {
+				if (link.getReference().equals(reference)) {
 					// FIXME respect ordering!
 					link.getRightTarget().add(copiedValue);
 				}
