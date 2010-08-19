@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -51,7 +52,15 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		final EReference ref = element.eContainmentFeature();
 		if (ref != null) {
 			try {
-				EFactory.eAdd(origin, ref.getName(), newOne);
+				int elementIndex = -1;
+				if (ref.isMany()) {
+					Object containmentRefVal = element.eContainer().eGet(ref);
+					if (containmentRefVal instanceof List) {
+						List listVal = (List)containmentRefVal;
+						elementIndex = listVal.indexOf(element);
+					}
+				}
+				EFactory.eAdd(origin, ref.getName(), newOne, elementIndex);
 				setXMIID(newOne, getXMIID(element));
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, true);

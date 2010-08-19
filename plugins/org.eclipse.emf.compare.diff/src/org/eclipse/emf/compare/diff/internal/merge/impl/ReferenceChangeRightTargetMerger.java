@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
@@ -22,6 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -47,11 +49,25 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	public void applyInOrigin() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
-		final EObject leftTarget = theDiff.getRightTarget();
-		final EObject rightTarget = theDiff.getLeftTarget();
+		final EObject rightTarget = theDiff.getRightTarget();
+		final EObject leftTarget = theDiff.getLeftTarget();
+
 		// FIXME respect ordering!
-		final EObject copiedValue = MergeService.getCopier(diff).copyReferenceValue(theDiff.getReference(),
-				element, rightTarget, leftTarget);
+		EReference reference = theDiff.getReference();
+
+		// ordering handling:
+		int index = -1;
+		if (reference.isMany()) {
+
+			EObject rightElement = theDiff.getRightElement();
+			Object fightRefValue = rightElement.eGet(reference);
+			if (fightRefValue instanceof List) {
+				List refRightValueList = (List)fightRefValue;
+				index = refRightValueList.indexOf(rightTarget);
+			}
+		}
+		final EObject copiedValue = MergeService.getCopier(diff).copyReferenceValue(reference, element,
+				rightTarget, leftTarget, index);
 
 		// We'll now look through this reference's eOpposite as they are already taken care of
 		final Iterator<EObject> related = getDiffModel().eAllContents();
