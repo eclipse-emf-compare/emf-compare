@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MPatch editing support
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.edit;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: org.eclipse.emf.compare.mpatch.provider.MPatchEditPlugin$Implementation
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.provider
+Require-Bundle: org.eclipse.emf.compare.mpatch;visibility:=reexport,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore.edit;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Technical University of Denmark
