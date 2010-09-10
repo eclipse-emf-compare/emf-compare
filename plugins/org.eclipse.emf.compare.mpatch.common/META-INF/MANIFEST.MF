@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commonly used fragments for MPatches
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.common;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.core.resources;visibility:=reexport,
+ org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.emf.edit.ui;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.compare.diff,
+ org.eclipse.emf.compare.match,
+ org.eclipse.emf.compare.mpatch;visibility:=reexport,
+ org.eclipse.emf.compare.mpatch.binding;visibility:=reexport,
+ org.eclipse.ui.ide
+Export-Package: org.eclipse.emf.compare.mpatch.common.actions,
+ org.eclipse.emf.compare.mpatch.common.util,
+ org.eclipse.emf.compare.mpatch.extension
+Bundle-Activator: org.eclipse.emf.compare.mpatch.common.CommonMPatchPlugin
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Technical University of Denmark

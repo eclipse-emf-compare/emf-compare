@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+
+ $Id: org.eclipse.emf.compare.mpatch.symbolicreference.exsd,v 1.1 2010/09/10 15:26:10 cbrun Exp $
+-->
+<schema targetNamespace="org.eclipse.emf.compare.mpatch.common" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.eclipse.emf.compare.mpatch.common" id="org.eclipse.emf.compare.mpatch.symbolicreference" name="MPatch transformation Extensions: Symbolic reference creator"/>
+      </appinfo>
+      <documentation>
+         [Enter description of this extension point.]
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="symbolicreferencecreator" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute translatable="true"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="symbolicreferencecreator">
+      <annotation>
+         <documentation>
+            A symbolic reference creator for the qvto transformation emfdiff to an mpatch.
+
+The default implementation creates an ocl expression as a symbolic reference containing all attributes of the object.
+
+The default priority is 1, i.e. if another extension with a higher priority exists, it will be used.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="symbolic_reference_creator" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiinfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>
