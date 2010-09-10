@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MPatch Application Plugin
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.apply;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: org.eclipse.emf.compare.mpatch.apply.ApplyActivator
+Require-Bundle: org.eclipse.compare,
+ org.eclipse.ui.ide,
+ org.eclipse.emf.compare.mpatch.edit;visibility:=reexport,
+ org.eclipse.emf.compare.diff;visibility:=reexport,
+ org.eclipse.emf.compare.ui,
+ org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.compare.mpatch.common;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.apply.util
+Bundle-Vendor: Technical University of Denmark

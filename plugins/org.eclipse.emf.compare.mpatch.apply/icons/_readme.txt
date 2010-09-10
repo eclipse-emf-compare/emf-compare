@@ -1,0 +1,1 @@
+copied from org.eclipse.emf.compare.mpatch.emfdiff2mpatch/icons
