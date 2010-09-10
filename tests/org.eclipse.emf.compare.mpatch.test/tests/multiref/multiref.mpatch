@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<mpatch:MPatchModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:descriptor="http://www.eclipse.org/emf/compare/mpatch/1.0/descriptor" xmlns:mpatch="http://www.eclipse.org/emf/compare/mpatch/1.0" xmlns:symrefs="http://www.eclipse.org/emf/compare/mpatch/1.0/symrefs" oldModel="platform:/resource/tests/multi/multi.eachonce " newModel="platform:/resource/tests/multi/multi_changed.eachonce ">
+  <changes xsi:type="mpatch:IndepAddElementChange">
+    <correspondingElement xsi:type="symrefs:ElementSetReference" uriReference="platform:/resource/tests/multi/multi.eachonce#A" upperBound="-1" label="'Container' children">
+      <type href="http://eachonce#//Entity"/>
+      <conditions xsi:type="symrefs:OclCondition" expression="not self.oclAsType(ecore::EObject).eContainer().oclIsUndefined() and self.oclAsType(ecore::EObject).eContainer().oclAsType(Entity).singleAttribute = 'Container'"/>
+    </correspondingElement>
+    <subModel xsi:type="descriptor:EMFModelDescriptor" descriptorUri="platform:/resource/tests/multi/multi_changed.eachonce#x">
+      <selfReference xsi:type="symrefs:ElementSetReference" uriReference="platform:/resource/tests/multi/multi_changed.eachonce#x" label="Entity x">
+        <type href="http://eachonce#//Entity"/>
+        <conditions xsi:type="symrefs:OclCondition" expression="singleAttribute = 'x' and multiAttribute->asSequence() = Sequence{} and additionalAttribute->asSet()->isEmpty()"/>
+      </selfReference>
+      <type href="http://eachonce#//Entity"/>
+      <attributes>
+        <key href="http://eachonce#//Entity/singleAttribute"/>
+        <value>ACED000574000178</value>
+      </attributes>
+      <references>
+        <value xsi:type="symrefs:ElementSetReference" uriReference="platform:/resource/tests/multi/multi_changed.eachonce#A" upperBound="-1" label="'Container' children">
+          <type href="http://eachonce#//Entity"/>
+          <conditions xsi:type="symrefs:OclCondition" expression="not self.oclAsType(ecore::EObject).eContainer().oclIsUndefined() and self.oclAsType(ecore::EObject).eContainer().oclAsType(Entity).singleAttribute = 'Container'"/>
+        </value>
+        <key href="http://eachonce#//Entity/multiReference"/>
+      </references>
+    </subModel>
+    <containment href="http://eachonce#//Entity/children"/>
+  </changes>
+</mpatch:MPatchModel>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eachonce:Entity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:eachonce="http://eachonce" singleAttribute="root">
+  <children singleAttribute="addAttribute">
+    <children singleAttribute="addAttr1" additionalAttribute="blub">
+      <multiAttribute>adding here</multiAttribute>
+      <multiAttribute>added</multiAttribute>
+    </children>
+    <children singleAttribute="addAttr2" additionalAttribute="blub">
+      <multiAttribute>adding here</multiAttribute>
+      <multiAttribute>added</multiAttribute>
+    </children>
+    <children singleAttribute="addAttr3" additionalAttribute="blub">
+      <multiAttribute>adding here</multiAttribute>
+      <multiAttribute>added</multiAttribute>
+    </children>
+    <children singleAttribute="addAttr4" additionalAttribute="blub">
+      <multiAttribute>adding here</multiAttribute>
+      <multiAttribute>added</multiAttribute>
+    </children>
+  </children>
+  <children singleAttribute="deleteAttribute">
+    <children singleAttribute="delAttr1" additionalAttribute="deleting here...">
+      <multiAttribute>a</multiAttribute>
+      <multiAttribute>b</multiAttribute>
+      <multiAttribute>blub</multiAttribute>
+      <multiAttribute>arg</multiAttribute>
+    </children>
+    <children singleAttribute="delAttr2" additionalAttribute="deleting here...">
+      <multiAttribute>a</multiAttribute>
+      <multiAttribute>b</multiAttribute>
+      <multiAttribute>blub</multiAttribute>
+      <multiAttribute>arg</multiAttribute>
+    </children>
+  </children>
+  <children singleAttribute="updateAttribute">
+    <children singleAttribute="updateAttr1" additionalAttribute="its changed!">
+      <multiAttribute>x</multiAttribute>
+    </children>
+    <children singleAttribute="updateAttr2" additionalAttribute="its changed!">
+      <multiAttribute>x</multiAttribute>
+    </children>
+    <children singleAttribute="updateAttr3" additionalAttribute="its changed!">
+      <multiAttribute>x</multiAttribute>
+    </children>
+  </children>
+  <children singleAttribute="addReference">
+    <children singleAttribute="addRef1" multiReference="updateReference root" additionalAttribute="addingRef"/>
+    <children singleAttribute="addRef2" multiReference="updateReference root" additionalAttribute="addingRef"/>
+    <children singleAttribute="addRef3" multiReference="updateReference root" additionalAttribute="addingRef"/>
+  </children>
+  <children singleAttribute="deleteReference">
+    <children singleAttribute="delRef1" multiReference="root" additionalAttribute="deletingRef">
+      <multiAttribute>b</multiAttribute>
+    </children>
+    <children singleAttribute="delRef2" multiReference="root" additionalAttribute="deletingRef">
+      <multiAttribute>b</multiAttribute>
+    </children>
+    <children singleAttribute="delRef3" multiReference="root" additionalAttribute="deletingRef">
+      <multiAttribute>b</multiAttribute>
+    </children>
+  </children>
+  <children singleAttribute="updateReference">
+    <children singleAttribute="updateRef1" singleReference="updateReference" additionalAttribute="updateRef"/>
+    <children singleAttribute="updateRef2" singleReference="updateReference" additionalAttribute="updateRef"/>
+    <children singleAttribute="updateRef1_fromNull" singleReference="root" additionalAttribute="updateRef from null"/>
+    <children singleAttribute="updateRef2_fromNull" singleReference="root" additionalAttribute="updateRef from null"/>
+    <children singleAttribute="updateRef2_toNull" additionalAttribute="updateRef to null"/>
+    <children singleAttribute="updateRef1_toNull" additionalAttribute="updateRef to null"/>
+  </children>
+</eachonce:Entity>

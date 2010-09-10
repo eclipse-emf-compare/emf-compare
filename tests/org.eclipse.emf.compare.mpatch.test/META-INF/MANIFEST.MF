@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MPatch Tests
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test
+Bundle-Version: 1.0.1.qualifier
+Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
+ org.eclipse.emf.compare.mpatch.grouping,
+ org.junit4,
+ org.eclipse.emf.compare.mpatch.apply,
+ org.eclipse.emf.compare.mpatch.apply.generic,
+ org.eclipse.emf.query,
+ org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic,
+ org.eclipse.emf.compare.mpatch.generalize
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Technical University of Denmark

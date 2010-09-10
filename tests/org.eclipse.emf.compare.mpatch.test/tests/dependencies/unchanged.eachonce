@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eachonce:Entity xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:eachonce="http://eachonce" singleAttribute="root">
+  <children singleAttribute="AddDependency">
+    <children singleAttribute="AddedReference" multiReference="AddDependency"/>
+    <children2 singleAttribute="Add_MovedReference" singleReference="AddDependency"/>
+  </children>
+  <children singleAttribute="RemoveDependency">
+    <children singleAttribute="RemovedElement">
+      <children singleAttribute="RemovedSubElement" singleReference="RemoveDependency" multiReference="RemovedElement"/>
+    </children>
+    <children singleAttribute="RemovedReference" singleReference="RemovedSubElement" multiReference="RemovedElement RemovedSubElement"/>
+    <children2 singleAttribute="Remove_MovedReference" singleReference="RemovedSubElement"/>
+  </children>
+</eachonce:Entity>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_KT2ucJCCEd6Zu68UW-XOmg" name="reftest">
+  <packagedElement xmi:type="uml:Class" xmi:id="_NfaEcJCCEd6Zu68UW-XOmg" name="AClass"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_VQ2ngJCCEd6Zu68UW-XOmg" name="assoc" memberEnd="_VQ2ngZCCEd6Zu68UW-XOmg _VQ_xcZCCEd6Zu68UW-XOmg">
+    <ownedEnd xmi:id="_VQ2ngZCCEd6Zu68UW-XOmg" name="src" type="_NfaEcJCCEd6Zu68UW-XOmg" association="_VQ2ngJCCEd6Zu68UW-XOmg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VQ_xcJCCEd6Zu68UW-XOmg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VQ2ngpCCEd6Zu68UW-XOmg" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_VQ_xcZCCEd6Zu68UW-XOmg" name="dst" type="_NfaEcJCCEd6Zu68UW-XOmg" association="_VQ2ngJCCEd6Zu68UW-XOmg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VQ_xc5CCEd6Zu68UW-XOmg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VQ_xcpCCEd6Zu68UW-XOmg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Package>

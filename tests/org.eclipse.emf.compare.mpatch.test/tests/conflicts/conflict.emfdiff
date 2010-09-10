@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="CP1252"?>
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" date="2009-03-17T14:37:36.284+0100">
+  <diffResourceSet>
+    <diffModels>
+      <ownedElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:ConflictingDiffElement"/>
+      </ownedElements>
+      <leftRoots href="platform:/resource/Eachonce/dependencies/dep_v1.eachonce#root"/>
+      <rightRoots href="platform:/resource/Eachonce/dependencies/dep_v2.eachonce#root"/>
+    </diffModels>
+  </diffResourceSet>
+  <matchResourceSet>
+    <matchModels/>
+  </matchResourceSet>
+</diff:ComparisonResourceSetSnapshot>
