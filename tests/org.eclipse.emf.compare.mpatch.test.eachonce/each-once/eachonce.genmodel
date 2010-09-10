@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/EMF-Compare-examples/src"
+    editDirectory="/EMF-Compare-examples/src" editorDirectory="/EMF-Compare-examples/src"
+    modelPluginID="EMF_Compare_examples" modelName="Eachonce" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="EMF_Compare_examples"
+    editorPluginID="EMF_Compare_examples">
+  <foreignModel>metamodel.ecore</foreignModel>
+  <genPackages prefix="Eachonce" disposableProviderFactory="true" ecorePackage="metamodel.ecore#/">
+    <genClasses ecoreClass="metamodel.ecore#//Entity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metamodel.ecore#//Entity/singleAttribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metamodel.ecore#//Entity/multiAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metamodel.ecore#//Entity/singleReference"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference metamodel.ecore#//Entity/multiReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metamodel.ecore#//Entity/children"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute metamodel.ecore#//Entity/additionalAttribute"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference metamodel.ecore#//Entity/children2"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
