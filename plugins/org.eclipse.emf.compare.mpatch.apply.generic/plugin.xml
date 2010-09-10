@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.apply.generic.diffdependencies"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.apply.generic.actions.DependencyAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.apply.generic.DiffDependencies"
+               label="Transformation: Add Dependency Graph"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/transform">
+         </action>
+         <menu
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.apply.generic.internalreferences"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.apply.generic.actions.InternalReferencesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.apply.generic.InternalReferences"
+               label="Transformation: Create Internal References"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/transform">
+         </action>
+         <menu
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.apply">
+      <diffapplier
+            diff_applier="org.eclipse.emf.compare.mpatch.apply.generic.impl.GenericMPatchApplier">
+      </diffapplier>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.resolve">
+      <diffresolver
+            diff_resolver="org.eclipse.emf.compare.mpatch.apply.generic.impl.GenericMPatchResolver">
+      </diffresolver>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.apply.generic.impl.MPatchDependencies">
+      </difftransformation>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.apply.generic.impl.InternalReferences">
+      </difftransformation>
+   </extension>
+</plugin>
