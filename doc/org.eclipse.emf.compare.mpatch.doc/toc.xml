@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+
+ $Id: toc.xml,v 1.1 2010/09/10 15:37:42 cbrun Exp $
+-->
+
+<toc label="MPatch User Guide" topic="html/toc.html">
+   <topic label="Getting Started">
+      <anchor id="gettingstarted"/>
+      <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index2.php?option=com_content&amp;task=view&amp;id=49&amp;Itemid=56" label="Install">
+      </topic>
+      <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index2.php?option=com_content&amp;task=view&amp;id=50&amp;Itemid=57&amp;showall=1" label="Tutorial">
+      </topic>
+      <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index2.php?option=com_content&amp;task=view&amp;id=63&amp;Itemid=67" label="Screencasts">
+      </topic>
+   </topic>
+   <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index2.php?option=com_content&amp;task=view&amp;id=51&amp;Itemid=58" label="Documentation">
+   </topic>
+   <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index2.php?option=com_content&amp;task=view&amp;id=65&amp;Itemid=68" label="Tests">
+   </topic>
+   <topic href="http://modeldiff.imm.dtu.dk/modeldiff/index.php" label="Website">
+   </topic>
+</toc>
