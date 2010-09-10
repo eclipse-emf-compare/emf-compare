@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.edit;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: org.eclipse.emf.compare.mpatch.EditPlugin$Implementation
+Bundle-Vendor: Technical University of Denmark
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.symrefs.provider
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic;visibility:=reexport,
+ org.eclipse.emf.compare.mpatch.edit;visibility:=reexport
+Bundle-ActivationPolicy: lazy
