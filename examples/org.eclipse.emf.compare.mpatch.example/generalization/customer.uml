@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_QnJ04UMxEd-jXvz6ingaZQ" name="sampleapplication">
+  <packagedElement xmi:type="uml:Package" xmi:id="_nQmcEEMzEd-jXvz6ingaZQ" name="customerdata">
+    <packagedElement xmi:type="uml:Class" xmi:id="_uPm1kEMzEd-jXvz6ingaZQ" name="Contract">
+      <ownedAttribute xmi:id="_wTVn4EMzEd-jXvz6ingaZQ" name="contract_id" aggregation="composite">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+      <ownedAttribute xmi:id="_9k16NEMzEd-jXvz6ingaZQ" name="invoice" type="_u8HWQEMzEd-jXvz6ingaZQ" association="_9k16MEMzEd-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_9k16NkMzEd-jXvz6ingaZQ" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_9k16NUMzEd-jXvz6ingaZQ" value="1"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_u8HWQEMzEd-jXvz6ingaZQ" name="Invoice">
+      <ownedAttribute xmi:id="_1WYD8EMzEd-jXvz6ingaZQ" name="invoice_id" aggregation="composite">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_vmYbQEMzEd-jXvz6ingaZQ" name="Customer">
+      <ownedAttribute xmi:id="_5Qr9YEMzEd-jXvz6ingaZQ" name="name" aggregation="composite">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_9k16MEMzEd-jXvz6ingaZQ" memberEnd="_9k16MUMzEd-jXvz6ingaZQ _9k16NEMzEd-jXvz6ingaZQ">
+      <ownedEnd xmi:id="_9k16MUMzEd-jXvz6ingaZQ" name="contract" type="_uPm1kEMzEd-jXvz6ingaZQ" association="_9k16MEMzEd-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_9k16M0MzEd-jXvz6ingaZQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_9k16MkMzEd-jXvz6ingaZQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_CNJiEEM0Ed-jXvz6ingaZQ" memberEnd="_CNJiEUM0Ed-jXvz6ingaZQ _CNJiFEM0Ed-jXvz6ingaZQ">
+      <ownedEnd xmi:id="_CNJiEUM0Ed-jXvz6ingaZQ" name="customer" type="_vmYbQEMzEd-jXvz6ingaZQ" association="_CNJiEEM0Ed-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_CNJiE0M0Ed-jXvz6ingaZQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_CNJiEkM0Ed-jXvz6ingaZQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_CNJiFEM0Ed-jXvz6ingaZQ" name="contracts" type="_uPm1kEMzEd-jXvz6ingaZQ" association="_CNJiEEM0Ed-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_CNJiFkM0Ed-jXvz6ingaZQ" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_CNJiFUM0Ed-jXvz6ingaZQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_Fhhc4EM0Ed-jXvz6ingaZQ" memberEnd="_Fhhc4UM0Ed-jXvz6ingaZQ _Fhhc5EM0Ed-jXvz6ingaZQ">
+      <ownedEnd xmi:id="_Fhhc4UM0Ed-jXvz6ingaZQ" name="customer" type="_vmYbQEMzEd-jXvz6ingaZQ" association="_Fhhc4EM0Ed-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Fhhc40M0Ed-jXvz6ingaZQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Fhhc4kM0Ed-jXvz6ingaZQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_Fhhc5EM0Ed-jXvz6ingaZQ" name="invoices" type="_u8HWQEMzEd-jXvz6ingaZQ" association="_Fhhc4EM0Ed-jXvz6ingaZQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Fhhc5kM0Ed-jXvz6ingaZQ" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Fhhc5UM0Ed-jXvz6ingaZQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>
