@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Binding for applied MPatches
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.binding;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare.mpatch.edit;visibility:=reexport,
+ org.eclipse.emf.ecore.editor,
+ org.eclipse.ocl.ecore,
+ org.eclipse.emf.validation
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.binding,
+ org.eclipse.emf.compare.mpatch.binding.provider,
+ org.eclipse.emf.compare.mpatch.binding.util,
+ org.eclipse.emf.compare.mpatch.binding
