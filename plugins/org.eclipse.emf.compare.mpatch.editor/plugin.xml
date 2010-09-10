@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+
+ $Id: plugin.xml,v 1.1 2010/09/10 15:28:35 cbrun Exp $
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.compare.mpatch.Wizard.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.emf.compare.mpatch.presentation.mpatchModelWizardID"
+            name="%_UI_mpatchModelWizard_label"
+            class="org.eclipse.emf.compare.mpatch.presentation.MPatchModelWizard"
+            category="org.eclipse.emf.compare.mpatch.Wizard.ID"
+            icon="icons/full/obj16/MPatchModelFile.gif">
+         <description>%_UI_mpatchModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="org.eclipse.emf.compare.mpatch.presentation.mpatchEditorID"
+            name="%_UI_mpatchEditor_label"
+            icon="icons/full/obj16/MPatchModelFile.gif"
+            extensions="mpatch"
+            class="org.eclipse.emf.compare.mpatch.presentation.MPatchEditor"
+            contributorClass="org.eclipse.emf.compare.mpatch.presentation.MPatchActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
