@@ -1,0 +1,235 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2010 Technical University of Denmark.
+-- All rights reserved. This program and the accompanying materials 
+-- are made available under the terms of the Eclipse Public License v1.0 
+-- which accompanies this distribution, and is available at 
+-- http://www.eclipse.org/legal/epl-v10.html 
+--
+-- Contributors:
+--    Patrick Koenemann, DTU Informatics - initial API and implementation
+--
+-- $Id: emfdiff2mpatch.qvto,v 1.1 2010/09/10 15:31:52 cbrun Exp $
+--------------------------------------------------------------------------------
+
+
+-- the library containing our blackbox operations
+import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.lib.mpatchlibrary;
+
+modeltype ECore uses ecore('http://www.eclipse.org/emf/2002/Ecore');
+modeltype EmfDiff uses diff('http://www.eclipse.org/emf/compare/diff/1.1');
+modeltype MPatch uses mpatch('http://www.eclipse.org/emf/compare/mpatch/1.0');
+
+
+transformation emfdiff2mpatch(in emfdiff : EmfDiff, out mpatch : MPatch);
+
+main() {
+	log('starting transformation...', emfdiff);
+	emfdiff.objectsOfType(DiffModel)->map toMPatchModel();
+	log('transformation finished!', this);
+}
+
+
+-- main mapping: an emfdiff diffmodel is mapped to an mpatch
+mapping EmfDiff::DiffModel::toMPatchModel() : MPatch::MPatchModel {
+	init {
+		-- lets check whether we got a diff from two models
+		assert fatal (self.leftRoots->notEmpty() and self.rightRoots->notEmpty())
+			with log('Expecting leftRoots and rightRoots non-empty in the emfdiff!', self);
+		assert error (self.ancestorRoots->isEmpty())
+			with log('Expecting ancestorRoots to be empty in the emfdiff!', self);
+
+		-- a bag containing all relevant DiffElements:
+		var diffElements := self.allSubobjects()[DiffElement]
+			->reject(oclIsTypeOf(DiffGroup)) -- here we can easily filter for particular types
+	}
+
+	-- unfortunately the resource is not part of the ECore model but only a datatype.
+	-- so in order to get information about the source models, i.e. the path, we need to blackbox it (toUriString)!
+	oldModel := self.rightRoots->iterate(eobj; uris : String = '' | uris.concat(eobj.eResource().toUriString()).concat(' '));
+	newModel := self.leftRoots->iterate(eobj; uris : String = '' | uris.concat(eobj.eResource().toUriString()).concat(' '));
+	result.emfdiff := self.oclAsType(EObject).eResource().toUriString();
+
+	changes := diffElements->map toIndepChange()->asOrderedSet();
+}
+
+-- mapping for abstract DiffElement: 
+-- - if the DiffElement is of a concrete sub type for which another mapping exists (e.g. DiffGroup::toIndepChange),
+--   then the other mapping is called; however, after the init-section of the other mapping, this mapping is called!
+--   the reason is that here we can add additional logic for all transformations, e.g. logging.
+-- - if it is called for an unknown type, the entire transformation is aborted with an appropriate log message.
+mapping DiffElement::toIndepChange() : IndepChange {
+	init {
+		-- check whether the result is already initialized, i.e. the mapping operates on a known sub type;
+		-- if not, it is an unknown change type.
+		if result = null or result.oclIsUndefined() then
+			result := self.map toUnknownChange()
+		endif
+		
+		-- this was too strict because any time new change types exist, the whole transformation fails!
+		--assert fatal (result <> null) 
+		--	with log('Unsupported diff element -- please implement transformation for it: ' + self.metaClassName(), self);
+
+		-- some logging output to keep track of the transformed elements
+		-- FIXME: the logging of UpdateReference's produces IllegalArgumentException when transformation operates on emfdiff _files_ (pk)
+		--log('> ' + self.metaClassName() + ' -> ' + result.metaClassName(), self)
+	}
+}
+
+
+-- mapping for all unknown change types
+mapping DiffElement::toUnknownChange() : mpatch::UnknownChange {
+	info := '(' + self.metaClassName() + '): "' + self.repr() + '"';
+	-- correspondingElement := -- FIXME: I don't know how to determine any corresponding element... (pk)
+}
+
+
+-- mapping for groups: currently not used because we create a different structure in the mpatch later.
+mapping DiffGroup::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object ChangeGroup {}
+	}
+	-- in some diff groups, the parent is not set.
+	correspondingElement := 
+		if not self.rightParent.oclIsUndefined() then
+			self.rightParent.toSymbolicReference()
+		else null endif
+}
+
+-- mapping for conflicting elements: abort transformation with an appropriate log message.
+mapping ConflictingDiffElement::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		assert fatal (false)
+			with log('Conflicting elements are not supported! Please use this transformation on non-conflicting diffs only!', self);
+	}
+}
+
+-- mapping for moved elements
+mapping MoveModelElement::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepMoveElementChange {
+			correspondingElement := self.rightElement.toSymbolicReference();
+			oldContainment := self.rightElement.eContainmentFeature();
+			newContainment := self.leftElement.eContainmentFeature();
+			
+			-- for whatever reason, EMF Compare refers to the left target as the old parent in the new model,
+			-- and the right target points to the new parent in the old model!
+			--oldParent := self.leftTarget.toSymbolicReference();
+			--newParent := self.rightTarget.toSymbolicReference();
+			
+			-- fix: directly get the container instead of relying on the targets of EMF Compare
+			oldParent := self.rightElement.eContainer().toSymbolicReference();
+			newParent := self.leftElement.eContainer().toSymbolicReference();
+		}
+	}
+}
+
+-- mapping for removed elements
+mapping ModelElementChangeRightTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepRemoveElementChange {
+			correspondingElement := self.rightElement.eContainer().toSymbolicReference();
+			containment := self.rightElement.eContainmentFeature();
+
+			-- this model descriptor is intended to store a sub-model which can be re-build later on.
+			-- non-serializable attributes are not relevant here, so we say 'false' here.
+			subModel := self.rightElement.toModelDescriptor(true);
+		}
+	}
+}
+
+-- mapping for added elements
+mapping ModelElementChangeLeftTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepAddElementChange {
+			correspondingElement := self.rightParent.toSymbolicReference();
+			containment := self.leftElement.eContainmentFeature();
+			
+			-- this model descriptor is intended to store a sub-model which can be re-build later on.
+			-- non-serializable attributes are not relevant here, so we say 'false' here.
+			subModel := self.leftElement.toModelDescriptor(true);
+		}
+	}
+}
+
+-- mapping for changed attributes
+mapping UpdateAttribute::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepUpdateAttributeChange {
+			changedAttribute := self.attribute;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			oldValue := self.rightElement.eGet(self.attribute);
+			newValue := self.leftElement.eGet(self.attribute);
+		}
+	}
+}
+
+-- mapping for removed attributs (i.e. the cardinality of this attribute is >1)
+mapping AttributeChangeRightTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepRemoveAttributeChange {
+			changedAttribute := self.attribute;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			value := self.rightTarget;
+		}
+	}
+}
+
+-- mapping for added attributes (i.e. the cardinality of this attribute is >1)
+mapping AttributeChangeLeftTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepAddAttributeChange {
+			changedAttribute := self.attribute;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			value := self.leftTarget;
+		}
+	}
+}
+
+-- mapping for a changed reference
+mapping UpdateReference::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepUpdateReferenceChange {
+			reference := self.reference;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			
+			-- unfortunately we need to figure out from the _model_, whether a reference is null
+			var rightTarget := self.rightElement.eGet(reference);
+			var leftTarget := self.leftElement.eGet(reference);
+			oldReference := 
+				if not (rightTarget.oclIsUndefined()) then
+					--self.rightTarget.toSymbolicReference() -- this might be false information!!!
+					rightTarget.oclAsType(EObject).toSymbolicReference()
+				else null endif;
+			newReference := 
+				if not (leftTarget.oclIsUndefined()) then
+					--self.leftTarget.toSymbolicReference() -- this might be false information!!!
+					leftTarget.oclAsType(EObject).toSymbolicReference()
+				else null endif
+		}
+	}
+}
+
+-- mapping for removed references (i.e. the cardinality of this reference is >1)
+mapping ReferenceChangeRightTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepRemoveReferenceChange {
+			reference := self.reference;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			changedReference := self.rightTarget.toSymbolicReference();
+		}
+	}
+}
+
+-- mapping for added references (i.e. the cardinality of this reference is >1)
+mapping ReferenceChangeLeftTarget::toIndepChange() : IndepChange inherits DiffElement::toIndepChange {
+	init {
+		result := object IndepAddReferenceChange {
+			reference := self.reference;
+			correspondingElement := self.rightElement.toSymbolicReference();
+			changedReference := self.leftTarget.toSymbolicReference();
+		}
+	}
+}
+
+
+

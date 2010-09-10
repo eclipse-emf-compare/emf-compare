@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Emfdiff to MPatch Transformation
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Require-Bundle: org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.compare.mpatch.common,
+ org.eclipse.emf.compare.diff;bundle-version="1.0.0",
+ org.eclipse.emf.compare.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.m2m.qvt.oml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.Emfdiff2mpatchActivator
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util
+Bundle-Vendor: Technical University of Denmark
+
