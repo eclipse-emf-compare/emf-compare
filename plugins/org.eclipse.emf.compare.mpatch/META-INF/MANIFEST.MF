@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MPatch
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: Technical University of Denmark
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch,
+ org.eclipse.emf.compare.mpatch.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.emf.compare.mpatch.Activator

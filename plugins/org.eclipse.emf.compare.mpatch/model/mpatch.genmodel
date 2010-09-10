@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2010 Technical University of Denmark.&#xD;&#xA;All rights reserved. This program and the accompanying materials &#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0 &#xD;&#xA;which accompanies this distribution, and is available at &#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html &#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;   Patrick Koenemann, DTU Informatics - initial API and implementation"
+    modelDirectory="/org.eclipse.emf.compare.mpatch/src" modelPluginID="org.eclipse.emf.compare.mpatch"
+    templateDirectory="" modelName="MPatch" editPluginClass="org.eclipse.emf.compare.mpatch.provider.MPatchEditPlugin"
+    editorPluginClass="org.eclipse.emf.compare.mpatch.presentation.MPatchEditorPlugin"
+    testSuiteClass="org.eclipse.emf.compare.mpatch.tests.MPatchAllTests" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>mpatch.ecore</foreignModel>
+  <genPackages prefix="MPatch" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
+      ecorePackage="mpatch.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="mpatch.ecore#//ChangeType">
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeType/element"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeType/attribute"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeType/reference"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeType/group"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeType/unknown"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="mpatch.ecore#//ChangeKind">
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Addition"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Deletion"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Change"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Move"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Group"/>
+      <genEnumLiterals ecoreEnumLiteral="mpatch.ecore#//ChangeKind/Unknown"/>
+    </genEnums>
+    <genClasses ecoreClass="mpatch.ecore#//MPatchModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//MPatchModel/changes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//MPatchModel/oldModel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//MPatchModel/newModel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//MPatchModel/emfdiff"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepChange">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/correspondingElement"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepChange/changeKind"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepChange/changeType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/dependsOn"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/dependants"/>
+    </genClasses>
+    <genClasses ecoreClass="mpatch.ecore#//ChangeGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//ChangeGroup/subChanges"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepElementChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddRemElementChange">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepAddRemElementChange/subModel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepAddRemElementChange/containment"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IndepAddRemElementChange/subModelReference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddElementChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepRemoveElementChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAttributeChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepAttributeChange/changedAttribute"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddRemAttributeChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepAddRemAttributeChange/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepMoveElementChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepMoveElementChange/oldContainment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepMoveElementChange/newContainment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepMoveElementChange/oldParent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepMoveElementChange/newParent"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddAttributeChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepRemoveAttributeChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepUpdateAttributeChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepUpdateAttributeChange/oldValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepUpdateAttributeChange/newValue"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepReferenceChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepReferenceChange/reference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddRemReferenceChange">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepAddRemReferenceChange/changedReference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepAddReferenceChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepRemoveReferenceChange"/>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IndepUpdateReferenceChange">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepUpdateReferenceChange/oldReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepUpdateReferenceChange/newReference"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IElementReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IElementReference/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IElementReference/uriReference"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IElementReference/upperBound"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IElementReference/lowerBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IElementReference/label"/>
+      <genOperations ecoreOperation="mpatch.ecore#//IElementReference/resolve">
+        <genParameters ecoreParameter="mpatch.ecore#//IElementReference/resolve/model"/>
+      </genOperations>
+      <genOperations ecoreOperation="mpatch.ecore#//IElementReference/resolvesEqual">
+        <genParameters ecoreParameter="mpatch.ecore#//IElementReference/resolvesEqual/other"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//IModelDescriptor">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/crossReferences"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/allCrossReferences"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/selfReference"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/allSelfReferences"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/subModelDescriptors"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IModelDescriptor/descriptorUris"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IModelDescriptor/type"/>
+      <genOperations ecoreOperation="mpatch.ecore#//IModelDescriptor/applyCrossReferences">
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/applyCrossReferences/createdObject"/>
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/applyCrossReferences/resolvedCrossReferences"/>
+      </genOperations>
+      <genOperations ecoreOperation="mpatch.ecore#//IModelDescriptor/applyStructure">
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/applyStructure/modelElement"/>
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/applyStructure/containment"/>
+      </genOperations>
+      <genOperations ecoreOperation="mpatch.ecore#//IModelDescriptor/describesEqual">
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/describesEqual/other"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//ElementReferenceToEObjectMap">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//ElementReferenceToEObjectMap/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//ElementReferenceToEObjectMap/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="mpatch.ecore#//EObjectToIModelDescriptorMap">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//EObjectToIModelDescriptorMap/value"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//EObjectToIModelDescriptorMap/key"/>
+    </genClasses>
+    <genClasses ecoreClass="mpatch.ecore#//UnknownChange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//UnknownChange/info"/>
+    </genClasses>
+    <genClasses ecoreClass="mpatch.ecore#//ModelDescriptorReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//ModelDescriptorReference/resolvesTo"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
