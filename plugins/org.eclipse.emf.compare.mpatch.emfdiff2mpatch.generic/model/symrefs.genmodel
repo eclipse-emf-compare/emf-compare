@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=" Copyright (c) 2010 Technical University of Denmark.&#xD;&#xA; All rights reserved. This program and the accompanying materials &#xD;&#xA; are made available under the terms of the Eclipse Public License v1.0 &#xD;&#xA; which accompanies this distribution, and is available at &#xD;&#xA; http://www.eclipse.org/legal/epl-v10.html &#xD;&#xA; &#xD;&#xA; Contributors:&#xD;&#xA;    Patrick Koenemann, DTU Informatics - initial API and implementation"
+    modelDirectory="/org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic/symrefsrc"
+    editDirectory="/org.eclipse.emf.compare.mpatch.emfdiff2mpatch.edit/src" editorDirectory="/org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.editor/src"
+    modelPluginID="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic" modelName="Symrefs"
+    editPluginClass="org.eclipse.emf.compare.mpatch.symrefs.provider.SymrefsEditPlugin"
+    editorPluginClass="org.eclipse.emf.compare.mpatch.symrefs.presentation.SymrefsEditorPlugin"
+    testSuiteClass="org.eclipse.emf.compare.mpatch.symrefs.tests.SymrefsAllTests"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    editPluginID="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.edit" editorPluginID="org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.editor"
+    usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.emf.compare.mpatch/model/mpatch.genmodel#//mpatch">
+  <foreignModel>symrefs.ecore</foreignModel>
+  <genPackages prefix="Symrefs" basePackage="org.eclipse.emf.compare.mpatch" disposableProviderFactory="true"
+      ecorePackage="symrefs.ecore#/">
+    <genClasses ecoreClass="symrefs.ecore#//ExternalElementReference"/>
+    <genClasses ecoreClass="symrefs.ecore#//IdEmfReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute symrefs.ecore#//IdEmfReference/idAttributeValue"/>
+    </genClasses>
+    <genClasses ecoreClass="symrefs.ecore#//ElementSetReference">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference symrefs.ecore#//ElementSetReference/conditions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference symrefs.ecore#//ElementSetReference/context"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="symrefs.ecore#//Condition">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference symrefs.ecore#//Condition/elementReference"/>
+      <genOperations ecoreOperation="symrefs.ecore#//Condition/collectValidElements">
+        <genParameters ecoreParameter="symrefs.ecore#//Condition/collectValidElements/model"/>
+      </genOperations>
+      <genOperations ecoreOperation="symrefs.ecore#//Condition/sameCondition">
+        <genParameters ecoreParameter="symrefs.ecore#//Condition/sameCondition/other"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="symrefs.ecore#//OclCondition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute symrefs.ecore#//OclCondition/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute symrefs.ecore#//OclCondition/checkType"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

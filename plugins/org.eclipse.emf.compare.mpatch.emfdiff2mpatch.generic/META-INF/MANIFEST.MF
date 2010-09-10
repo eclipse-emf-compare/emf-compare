@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Generic emfdiff2mpatch creators
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.Activator
+Require-Bundle: org.eclipse.emf.compare.mpatch.common,
+ org.eclipse.emf.ecore.edit,
+ org.eclipse.emf.query.ocl,
+ org.eclipse.ocl.ecore
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.descriptor,
+ org.eclipse.emf.compare.mpatch.descriptor.util,
+ org.eclipse.emf.compare.mpatch.symrefs,
+ org.eclipse.emf.compare.mpatch.symrefs.util
+Bundle-Vendor: Technical University of Denmark
