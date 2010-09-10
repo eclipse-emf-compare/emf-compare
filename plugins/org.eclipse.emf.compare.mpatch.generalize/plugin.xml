@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startscopeexpansion"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.generalize.actions.ScopeExpensionAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.generalize.ScopeExpansionAction"
+               label="Generalization: Scope Expansion"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startrefgeneralize"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.generalize.actions.UnboundSymbolicReferencesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.generalize.UnboundSymbolicReferencesAction"
+               label="Generalization: Unbound Symbolic References"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startmergechanges"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.generalize.actions.MergeChangesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.generalize.MergeChangesAction"
+               label="Generalization: Merge Changes"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.generalize.impl.ScopeExpansion">
+      </difftransformation>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.generalize.impl.UnboundSymbolicReferencesWeakening">
+      </difftransformation>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.generalize.impl.MergeChanges">
+      </difftransformation>
+   </extension>
+
+</plugin>
