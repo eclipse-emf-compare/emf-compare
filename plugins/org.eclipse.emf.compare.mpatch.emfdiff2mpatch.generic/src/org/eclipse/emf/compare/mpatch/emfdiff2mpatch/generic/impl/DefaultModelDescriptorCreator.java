@@ -21,12 +21,12 @@ import org.eclipse.emf.compare.mpatch.descriptor.EMFModelDescriptor;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.util.QvtlibHelper;
 import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
 import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
+import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
 
 /**
  * The default model descriptor creator.
@@ -207,15 +207,7 @@ public class DefaultModelDescriptorCreator implements IModelDescriptorCreator {
 		if (!serializable)
 			return true;
 
-		// ETypedElement.eGenericType is introduced in EMF since 2.5 and is more or less derived from eType.
-		// eGenericType (child!) is in particular set if eType (reference) is set!
-		// So I assume it is safe to ignore all generic types in the differences.
-		// At least all tests pass so far...
-		if (EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE.equals(feature)
-				|| EcorePackage.Literals.ECLASS__EGENERIC_SUPER_TYPES.equals(feature))
-			return false;
-
-		return !feature.isTransient() && !feature.isDerived() && feature.isChangeable();
+		return MPatchUtil.isRelevantFeature(feature);
 	}
 
 	/**

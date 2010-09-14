@@ -8,17 +8,20 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: EMFModelDescriptorImpl.java,v 1.1 2010/09/10 15:32:55 cbrun Exp $
+ * $Id: EMFModelDescriptorImpl.java,v 1.2 2010/09/14 09:45:46 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.descriptor.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -32,6 +35,7 @@ import org.eclipse.emf.compare.mpatch.descriptor.DescriptorPackage;
 import org.eclipse.emf.compare.mpatch.descriptor.EMFModelDescriptor;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.Activator;
 import org.eclipse.emf.compare.mpatch.util.ExtEcoreUtils;
+import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -562,6 +566,138 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 		}
 
 		return true;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 */
+	public EMap<EObject, IModelDescriptor> isDescriptorFor(EObject element, boolean checkAttributes) {
+		final EMap<EObject, IModelDescriptor> descriptorMap = new BasicEMap<EObject, IModelDescriptor>();
+		if (isDescriptorFor(element, descriptorMap, checkAttributes))
+			return descriptorMap;
+		return null;
+	}
+
+	private boolean isDescriptorFor(final EObject element, final EMap<EObject, IModelDescriptor> descriptorMap, boolean checkAttributes) {
+		if (!element.eClass().equals(getType()))
+			return false;
+		if (checkAttributes && !checkAttributes(element))
+			return false;
+		
+		// check all sub descriptors!
+		for (EReference subReference : getSubDescriptors().keySet()) {
+			final List<?> children;
+			if (subReference.isMany()) {
+				children = (List<?>) element.eGet(subReference);
+			} else {
+				final Object child = element.eGet(subReference);
+				children = child == null ? null : Collections.singletonList(child);
+			}
+			final List<EMFModelDescriptor> subDescriptors = new ArrayList<EMFModelDescriptor>(getSubDescriptors().get(subReference));
+
+			// quick checks for emptyness
+			if ((subDescriptors == null || subDescriptors.isEmpty()) && 
+					(children == null || children.isEmpty()))
+				continue;
+			if ((subDescriptors == null || subDescriptors.isEmpty()) ^ 
+					(children == null || children.isEmpty()))
+				return false;
+			if (children.size() != subDescriptors.size())
+				return false;
+			
+			// that gets ugly for many children! because we have to do n^2 check!!!
+			children: for (Object child : children) {
+				for (int i = 0; i < subDescriptors.size(); i++) {
+					final EMFModelDescriptorImpl subDescriptor = (EMFModelDescriptorImpl) subDescriptors.get(i);
+					
+					// expensive recursive call
+					if (subDescriptor.isDescriptorFor((EObject)child, descriptorMap, checkAttributes)) {
+						subDescriptors.remove(i); // remove it to avoid false duplicate matches
+						continue children;
+					}
+				}
+				return false; // no descriptor found for the current child!
+			}
+		}
+		descriptorMap.put(element, this);
+		return true;
+	}
+
+	private boolean checkAttributes(final EObject element) {
+		final Set<EAttribute> checkedAttributes = new HashSet<EAttribute>();
+		for (EAttribute eAttribute : getAttributes().keySet()) {
+			checkedAttributes.add(eAttribute);
+			final EList<Object> describedValue = getAttributes().get(eAttribute);
+			final Object actualValue = element.eGet(eAttribute);
+			
+			// common checks
+			if (actualValue == null && (describedValue == null || describedValue.isEmpty()))
+				continue;
+			if (actualValue == null ^ (describedValue == null || describedValue.isEmpty()))
+				return false;
+				
+			if (eAttribute.isMany()) {
+				
+				// check all values!
+				final List<?> actualList = (List<?>) actualValue;
+				if (actualList.size() != describedValue.size())
+					return false;
+				for (Object object : actualList) {
+					if (!describedValue.contains(object))
+						return false;
+				}
+			} else {
+				
+				// simple check of primitive values
+				if (actualValue == null && (describedValue == null || describedValue.isEmpty()))
+					continue;
+				if (describedValue.size() == 1 && actualValue.equals(describedValue.get(0)))
+					continue;
+				return false;
+			}
+		}
+		
+		// all attributes covered?
+		final List<EAttribute> toCheck = new ArrayList<EAttribute>(element.eClass().getEAllAttributes());
+		toCheck.removeAll(checkedAttributes);
+		for (EAttribute eAttribute : toCheck) {
+			if (!MPatchUtil.isRelevantFeature(eAttribute))
+				continue;
+			
+			// all not yet checked attributes must the default value
+			final Object value = element.eGet(eAttribute);
+			final Object defaultValue = eAttribute.getDefaultValue();
+			if (eAttribute.isMany()) {
+				if (value == null || ((List<?>)value).size() == 0) { // both null or empty?
+					if (defaultValue != null && defaultValue instanceof List<?> && !((List<?>)defaultValue).isEmpty())
+						return false;
+				} else if (defaultValue instanceof List<?>) { // actual comparison
+					final List<?> defaultValues = (List<?>)defaultValue;
+					final List<?> actualValues = (List<?>)value;
+					if (defaultValues.size() != actualValues.size()) // same number of values?
+						return false;
+					// check for inclusion, both ways!
+					for (Object object : actualValues)
+						if (!defaultValues.contains(object))
+							return false;
+					for (Object object : defaultValues)
+						if (!actualValues.contains(object))
+							return false;
+				}
+					
+			} else {
+				if (value == null) { // default value must be null, too
+					if (defaultValue != null)
+						return false;
+				} else if (!value.equals(defaultValue)) { // actual equality check
+					return false;
+				}
+			}
+		}
+		
+		return true; // all seems to be ok :-)
 	}
 
 	/**
