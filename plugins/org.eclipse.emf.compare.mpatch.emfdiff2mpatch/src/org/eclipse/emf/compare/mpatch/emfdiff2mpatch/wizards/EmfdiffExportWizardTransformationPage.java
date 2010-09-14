@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.mpatch.MPatchModel;
+import org.eclipse.emf.compare.mpatch.common.util.CommonUtils;
 import org.eclipse.emf.compare.mpatch.common.util.ExtensionManager;
 import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchTransformation;
@@ -29,8 +30,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -50,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * It ask the user for:
  * <ul>
  * <li>The symbolic reference creator
- * <li>The model descirptor creator
+ * <li>The model descriptor creator
  * <li>Additional transformations
  * </ul>
  * 
@@ -81,9 +80,8 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 
 	private Text infoText;
 
-	/** Disable check for mandatory transformations. */
-	private boolean expertMode = false;
-	
+	private Label warningLabel;
+
 	/**
 	 * Constructor for this page.
 	 * 
@@ -105,7 +103,8 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 		layout.verticalSpacing = 9;
 		{
 			final Label label1 = new Label(container, SWT.NULL);
-			label1.setText("Additional transformations for " + MPatchConstants.MPATCH_SHORT_NAME + " configuration:");
+			label1.setText("Additional transformations for " + MPatchConstants.MPATCH_SHORT_NAME
+					+ " creation (in execution order):");
 			final GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
 			gd1.horizontalSpan = 2;
 			label1.setLayoutData(gd1);
@@ -148,6 +147,14 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 			infoGroup.setLayout(new FillLayout());
 			infoText = new Text(infoGroup, SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 		}
+		if (ExtensionManager.isShowMandatoryTransformationsSet()) {
+			warningLabel = new Label(container, SWT.WRAP);
+			final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			warningLabel.setLayoutData(gd);
+			warningLabel.setForeground(container.getShell().getDisplay().getSystemColor(SWT.COLOR_DARK_RED));
+			warningLabel.setText(" \n ");
+		}
 		{
 			new Label(container, SWT.NULL).setText(MPatchConstants.SYMBOLIC_REFERENCES_NAME + " Creator:");
 			symrefCombo = new Combo(container, SWT.READ_ONLY);
@@ -161,12 +168,6 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 			final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.horizontalSpan = 2;
 			label2.setLayoutData(gd);
-			label2.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					expertMode = true;
-				}
-			});
 		}
 
 		initialize();
@@ -230,10 +231,14 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 	}
 
 	private void initialize() {
-		// prepare transformations, first all mandatory transformations
+		// prepare transformations; first all mandatory transformations, if required.
 		selectedTransformations = new ArrayList<String>(ExtensionManager.getSelectedOptionalTransformations());
-		selectedTransformations.addAll(ExtensionManager.getMandatoryTransformations());
 		orderedTransformations = new ArrayList<String>(allTransformations.keySet());
+		if (ExtensionManager.isShowMandatoryTransformationsSet()) {
+			selectedTransformations.addAll(ExtensionManager.getMandatoryTransformations());
+		} else {
+			orderedTransformations.removeAll(ExtensionManager.getMandatoryTransformations());
+		}
 
 		// initialize table
 		transformationTableViewer.setLabelProvider(new LabelProvider());
@@ -250,7 +255,7 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 				.getAllModelDescriptorCreators();
 		descriptorCombo.setItems(allDescriptorCreators.keySet().toArray(new String[0]));
 		descriptorCombo.setText(ExtensionManager.getSelectedModelDescriptorCreator().getLabel());
-		
+
 		dialogChanged();
 	}
 
@@ -273,13 +278,26 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 	private void dialogChanged() {
 		transformationTableViewer.setInput(orderedTransformations);
 		String msg = null;
+		final List<String> missing = new ArrayList<String>();
 		for (TableItem item : transformationTableViewer.getTable().getItems()) {
 			final String label = item.getText();
 			final boolean checked = selectedTransformations.contains(label);
-			item.setChecked(checked);
-			if (!checked && !expertMode && !allTransformations.get(label).isOptional()) {
-				msg = (msg == null ? "" : msg + " ") + label + " is a mandatory transformation!";
+			if (!checked && !allTransformations.get(label).isOptional()) {
+				missing.add(label);
 			}
+			item.setChecked(checked);
+		}
+
+		// since it is an explicit choice, we allow users to process (msg remains null) but we put a warning.
+		if (ExtensionManager.isShowMandatoryTransformationsSet()) {
+			String warning = " \n ";
+			if (!missing.isEmpty()) {
+				warning = missing.size() == 1 ? " '" + missing.get(0) + "' is" : "s '"
+						+ CommonUtils.join(missing, "', '") + "' are";
+				warning = "Warning: Mandatory transformation" + warning + " required for "
+						+ MPatchConstants.MPATCH_SHORT_NAME + " to be properly applicable!";
+			}
+			warningLabel.setText(warning);
 		}
 		updateStatus(msg);
 	}
@@ -291,6 +309,12 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 	 */
 	public List<IMPatchTransformation> getTransformations() {
 		final List<IMPatchTransformation> result = new ArrayList<IMPatchTransformation>();
+		if (!ExtensionManager.isShowMandatoryTransformationsSet()) {
+			// add mandatory transformations, if not already contained in selectedTransformations
+			for (String label : ExtensionManager.getMandatoryTransformations()) {
+				result.add(allTransformations.get(label));
+			}
+		}
 		for (String label : selectedTransformations) {
 			result.add(allTransformations.get(label));
 		}
