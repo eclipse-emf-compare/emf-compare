@@ -20,12 +20,13 @@ import java.util.Map;
 
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
 import org.eclipse.emf.compare.mpatch.IElementReference;
+import org.eclipse.emf.compare.mpatch.IndepAddElementChange;
 import org.eclipse.emf.compare.mpatch.IndepChange;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
 import org.eclipse.emf.compare.mpatch.UnknownChange;
-import org.eclipse.emf.compare.mpatch.apply.util.MPatchValidator.ValidationResult;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
+import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences.ValidationResult;
 import org.eclipse.emf.compare.mpatch.util.ExtEcoreUtils;
 import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
 import org.eclipse.emf.ecore.EObject;
@@ -73,10 +74,11 @@ public class MPatchResolver {
 		final Map<IElementReference, List<EObject>> rawResult = new HashMap<IElementReference, List<EObject>>();
 		final Map<IndepChange, Map<IElementReference, List<EObject>>> resolution = new LinkedHashMap<IndepChange, Map<IElementReference, List<EObject>>>();
 		final Map<IElementReference, List<IElementReference>> equalRefs = new LinkedHashMap<IElementReference, List<IElementReference>>();
+		final Map<IndepChange, ValidationResult> validation = new LinkedHashMap<IndepChange, ValidationResult>();
 		final ResolvedSymbolicReferences result = new ResolvedSymbolicReferences(mpatch, model, direction, resolution,
-				rawResult, equalRefs);
+				rawResult, equalRefs, validation);
 
-		// 1. resolve all symbolic references
+		// 1. resolve all (!) symbolic references
 		resolveRawSymbolicReferences(result);
 
 		// 2. prepare and fill result
@@ -86,8 +88,9 @@ public class MPatchResolver {
 
 		// 3. remove invalid states!
 		final boolean forward = direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
-		for (IndepChange change : result.getResolutionByChange().keySet()) {
-			checkStateResolution(change, result.getResolutionByChange().get(change), false, forward);
+		final List<IndepChange> orderedChanges = MPatchValidator.orderChanges(result.getResolutionByChange().keySet(), forward);
+		for (IndepChange change : orderedChanges) {
+			checkStateResolution(change, result, false, forward);
 		}
 		
 		// 4. return wrapper object
@@ -167,7 +170,7 @@ public class MPatchResolver {
 
 		} else if (!(change instanceof UnknownChange)) {
 
-			// fill map only for the relevant referencing, depending on the direction
+			// fill map only for the relevant references, depending on the direction
 			final Map<IElementReference, List<EObject>> map = new HashMap<IElementReference, List<EObject>>();
 
 			// regular symrefs
@@ -198,8 +201,8 @@ public class MPatchResolver {
 	 * 
 	 * @param change
 	 *            The change to check.
-	 * @param resolution
-	 *            The resolution for this particular change.
+	 * @param mapping
+	 *            The resolution of all changes.
 	 * @param reduce
 	 *            If <code>true</code>, then the resolutions might be reduced to the maximum number of allowed elements
 	 *            as defined by the upper bound. However, it might remove good matches, too!
@@ -208,29 +211,43 @@ public class MPatchResolver {
 	 * @return <code>true</code>, if the state is valid or could be fixed. <code>false</code> if the state could not be
 	 *         fixed.
 	 */
-	public static boolean checkStateResolution(IndepChange change, Map<IElementReference, List<EObject>> resolution,
+	public static boolean checkStateResolution(IndepChange change, ResolvedSymbolicReferences mapping,
 			boolean reduce, boolean forward) {
 
-		final ValidationResult allValidStates = MPatchValidator.validateElementState(change, resolution, true, forward);
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
+
+		final ValidationResult allValidStates = MPatchValidator.validateElementState(change, mapping, true, forward);
 
 		switch (allValidStates) {
-		case SUCCESSFUL:
+		case STATE_BEFORE:
 			// cool, this one is fine!
+			
+			// maybe there are false additions we need to clean up?
+			if (change instanceof IndepAddElementChange) {
+				final List<EObject> resolvedAdditions = changeMapping.get(((IndepAddElementChange) change).getSubModelReference());
+				if (resolvedAdditions != null && !resolvedAdditions.isEmpty()) {
+					resolvedAdditions.clear();
+				}
+			}
+			return true;
+
+		case STATE_AFTER:
+			// this one is also fine!
 			return true;
 
 		case UNKNOWN_CHANGE:
 			// Oups.. where does that one come from?! anyway.. let's kick it out!
 			return false;
 
-		case INVALID_STATE:
+		case STATE_INVALID:
 			// ok, this one needs further investigation. maybe we can validate it by removing some corresponding
 			// elements! Lets check that:
-			if (resolution.get(change.getCorrespondingElement()).size() <= 1)
+			if (changeMapping.get(change.getCorrespondingElement()).size() <= 1)
 				return false; // we cannot do much if there is just one element with an invalid state!
-			final ValidationResult anyValidState = MPatchValidator.validateElementState(change, resolution, false,
+			final ValidationResult anyValidState = MPatchValidator.validateElementState(change, mapping, false,
 					forward);
-			if (ValidationResult.SUCCESSFUL.equals(anyValidState)) {
-				return filterValidStates(change, resolution, change.getCorrespondingElement().getUpperBound(), reduce, forward);
+			if (ValidationResult.STATE_BEFORE.equals(anyValidState) || ValidationResult.STATE_AFTER.equals(anyValidState)) {
+				return filterValidStates(change, mapping, change.getCorrespondingElement().getUpperBound(), reduce, forward);
 			}
 			return false; // if there is not even one valid state (strict was false!), we cannot do much...
 
@@ -238,7 +255,7 @@ public class MPatchResolver {
 			// Some reference was not resolved successfully. We cannot do much here if it's not the corresponding
 			// element that failed. So let's check that!
 			final IElementReference symref = change.getCorrespondingElement();
-			final List<EObject> elements = resolution.get(symref);
+			final List<EObject> elements = changeMapping.get(symref);
 			if (elements == null || elements.isEmpty())
 				return false; // no resolution - not valid!
 			final boolean valid = MPatchValidator.validateResolution(symref, elements);
@@ -246,7 +263,7 @@ public class MPatchResolver {
 				return false; // nope.. we cannot solve invalid cross references...
 			if (symref.getUpperBound() < elements.size() && elements.size() > 1) {
 				// ok, here we can do something! Let's just remove those whose states are invalid!
-				return filterValidStates(change, resolution, symref.getUpperBound(), reduce, forward);
+				return filterValidStates(change, mapping, symref.getUpperBound(), reduce, forward);
 			}
 			return false; // I don't know how we could resolve the references now... kick it out!
 
@@ -265,8 +282,8 @@ public class MPatchResolver {
 	 * 
 	 * @param change
 	 *            The change under investigation.
-	 * @param resolution
-	 *            The resolution of this change.
+	 * @param mapping
+	 *            The resolution of all changes.
 	 * @param maxElements
 	 *            The maximum number of resolved corresponding elements allowed.
 	 * @param reduce
@@ -277,18 +294,21 @@ public class MPatchResolver {
 	 * @return <code>true</code> if the resolution could be fixed for the given conditions, <code>false</code>
 	 *         otherwise.
 	 */
-	private static boolean filterValidStates(IndepChange change, Map<IElementReference, List<EObject>> resolution,
+	private static boolean filterValidStates(IndepChange change, ResolvedSymbolicReferences mapping,
 			int maxElements, boolean reduce, boolean forward) {
+		
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
+
 		// unfortunately, we don't have individual state testing opportunities, so we do that for each resolved
 		// corresponding element individually!
-		final List<EObject> resolvedElements = resolution.get(change.getCorrespondingElement());
+		final List<EObject> resolvedElements = changeMapping.get(change.getCorrespondingElement());
 		final List<EObject> allResolvedElements = new ArrayList<EObject>(resolvedElements);
 		final List<EObject> validElements = new ArrayList<EObject>(resolvedElements.size());
 		for (EObject element : allResolvedElements) {
 			resolvedElements.clear(); // let's clear it temporarily to test the current element
 			resolvedElements.add(element);
-			final ValidationResult state = MPatchValidator.validateElementState(change, resolution, true, forward);
-			if (ValidationResult.SUCCESSFUL.equals(state))
+			final ValidationResult state = MPatchValidator.validateElementState(change, mapping, true, forward);
+			if (ValidationResult.STATE_BEFORE.equals(state) || ValidationResult.STATE_AFTER.equals(state))
 				validElements.add(element);
 		}
 		resolvedElements.clear();

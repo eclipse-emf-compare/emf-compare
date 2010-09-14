@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -184,11 +185,31 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 				final ResourceSet resourceSet = new ResourceSetImpl();
 				final Resource modelResource = resourceSet.getResource(uri, true);
 				if (modelResource.getContents().size() != 1) {
-					updateStatus("At the moment, only one root object is allowed!");
+
+					/*
+					 * Special case in RSA: instances of DynamicEObject are further root objects which 
+					 * store some documentation on the model. Assuming that a model conforms to a specific
+					 * meta model, we can generalize this setting and ignore all dynamic EObjects here.
+					 */
+					int counter = 0;
+					for (EObject obj : modelResource.getContents())
+						if (!(obj instanceof DynamicEObjectImpl)) 
+							counter++;
 					viewer.setInput(modelResource);
-					uri = null;
-					return;
-				} else if (modelResource.getContents().get(0) instanceof EObject) {
+					if (counter > 1) {
+						updateStatus("At the moment, only one root object is allowed!");
+						uri = null;
+						return;
+					} else if (counter == 1) {
+						// safe! :-D
+					} else if (counter == 0) {
+						updateStatus("Only dynamic objects found in model - please make sure that your model conforms to a registered meta model!");
+						uri = null;
+						return;
+					}
+				} 
+				
+				if (modelResource.getContents().get(0) instanceof EObject) {
 					((ApplyWizard) getWizard()).setModelResource(modelResource);
 					viewer.setInput(modelResource);
 				} else {

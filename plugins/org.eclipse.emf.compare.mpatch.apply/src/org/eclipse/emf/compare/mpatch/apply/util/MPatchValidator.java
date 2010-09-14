@@ -12,13 +12,14 @@ package org.eclipse.emf.compare.mpatch.apply.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.mpatch.IElementReference;
+import org.eclipse.emf.compare.mpatch.IModelDescriptor;
 import org.eclipse.emf.compare.mpatch.IndepAddAttributeChange;
 import org.eclipse.emf.compare.mpatch.IndepAddElementChange;
 import org.eclipse.emf.compare.mpatch.IndepAddReferenceChange;
@@ -38,7 +39,8 @@ import org.eclipse.emf.compare.mpatch.ModelDescriptorReference;
 import org.eclipse.emf.compare.mpatch.UnknownChange;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchResolution;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
-import org.eclipse.emf.compare.mpatch.util.MPatchUtil;
+import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences.ValidationResult;
+import org.eclipse.emf.compare.mpatch.util.ExtEcoreUtils;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -52,40 +54,6 @@ import org.eclipse.emf.ecore.EReference;
 public final class MPatchValidator {
 
 	/**
-	 * Classification of validation result (
-	 * {@link MPatchValidator#validateElementState(IndepChange, Map, boolean, boolean)}).<br><br>
-	 * 
-	 * {@link ValidationResult#SUCCESSFUL} - No problems at all.<br>
-	 * {@link ValidationResult#REFERENCE} - Wrong number of resolved references.<br>
-	 * {@link ValidationResult#INVALID_STATE} - The state before the change cannot be found.<br>
-	 * {@link ValidationResult#UNKNOWN_CHANGE} - The change is unknown.
-	 */
-	public static enum ValidationResult {
-		/** no problems at all. */
-		SUCCESSFUL,
-		/** wrong number of resolved references. */
-		REFERENCE, 
-		/** the state before the change cannot be found. */
-		INVALID_STATE,
-		/** the change is unknown. */
-		UNKNOWN_CHANGE,
-	}
-
-	/**
-	 * A mapping from {@link ValidationResult} to a human-readable String.
-	 */
-	public static final Map<ValidationResult, String> VALIDATION_RESULTS;
-
-	static {
-		final Map<ValidationResult, String> messageMap = new HashMap<ValidationResult, String>();
-		messageMap.put(ValidationResult.SUCCESSFUL, "ok");
-		messageMap.put(ValidationResult.REFERENCE, "check reference resolutions");
-		messageMap.put(ValidationResult.INVALID_STATE, "invalid state in resolved model elements");
-		messageMap.put(ValidationResult.UNKNOWN_CHANGE, "unknown change");
-		VALIDATION_RESULTS = Collections.unmodifiableMap(messageMap);
-	}
-
-	/**
 	 * Validate a resolution of symbolic references. It just calls
 	 * {@link MPatchValidator#validateResolution(IElementReference, Collection)} for all symbolic references in
 	 * {@link ResolvedSymbolicReferences#result()} and returns a collection of changes which did not resolve correctly.
@@ -97,50 +65,53 @@ public final class MPatchValidator {
 	 * @param mapping
 	 *            A mapping of resolved symbolic references to a model; typically created by {@link MPatchResolver} and
 	 *            maybe modified by {@link IMPatchResolution}.
-	 * @return A list of changes for which not all symbolic references were resolved successfully.
+	 * @return A list of changes for which not all symbolic references were resolved successfully or the state before or
+	 *         after the change could not be found.
 	 */
 	public static List<IndepChange> validateResolutions(ResolvedSymbolicReferences mapping) {
-		final List<IndepChange> result = new ArrayList<IndepChange>();
+		final Set<IndepChange> result = new HashSet<IndepChange>();
 
-		// iterate over all IndepChanges
+		// update validation states!
+		validateElementStates(mapping, false);
+
+		// iterate over all selected IndepChanges
 		for (IndepChange change : mapping.getResolutionByChange().keySet()) {
 
-			// filter unknown changes!
-			if (change instanceof UnknownChange) {
+			// check state first
+			final ValidationResult valid = mapping.getValidation().get(change);
+			if (!ValidationResult.STATE_BEFORE.equals(valid) && !ValidationResult.STATE_AFTER.equals(valid)) {
 				result.add(change);
 				continue;
 			}
 
-			final Map<IElementReference, List<EObject>> symrefs = mapping.getResolutionByChange().get(change);
+			// make sure all changes the current change depends on are also validated!
+			if (!mapping.getResolutionByChange().keySet().containsAll(change.getDependsOn())) {
+				result.add(change);
+			}
+		}
+
+		// iterate over all selected IndepChanges again to find violations of model descriptor references
+		for (IndepChange change : mapping.getResolutionByChange().keySet()) {
+			if (result.contains(change))
+				continue; // already invalid!
 
 			// iterate over all symbolic references of the current change
+			final Map<IElementReference, List<EObject>> symrefs = mapping.getResolutionByChange().get(change);
 			for (IElementReference ref : symrefs.keySet()) {
 				if (ref instanceof ModelDescriptorReference) {
 
 					// special case: modeldescriptorreferences cannot be checked now - but change with model descriptor
 					// must be valid!
-					final IndepChange otherChange = MPatchUtil.getChangeFor(ref);
+					final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
+							((ModelDescriptorReference) ref).getResolvesTo(),
+							MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE);
 					if (result.contains(otherChange))
-						result.add(otherChange);
-				} else {
-
-					// for all others: check the resolution!
-					if (!validateResolution(ref, symrefs.get(ref))) {
-						if (result.contains(change))
-							result.add(change);
-						break;
-					}
+						result.add(change);
 				}
-			}
-
-			// make sure all changes the current change depends on are also validated!
-			if (!mapping.getResolutionByChange().keySet().containsAll(change.getDependsOn())) {
-				if (result.contains(change))
-					result.add(change);
 			}
 		}
 
-		return result;
+		return new ArrayList<IndepChange>(result);
 	}
 
 	/**
@@ -179,8 +150,11 @@ public final class MPatchValidator {
 	}
 
 	/**
-	 * Check that all changes are resolved to the correct elements which satisfy the precondition of the change. For
-	 * example for an attribute change, check that the actual attribute exists having the value before the change.
+	 * Check that all changes are resolved to the correct elements which represent either the state before or after the
+	 * change. For example for an attribute change, check that the actual attribute exists having the value either
+	 * before of after the change.
+	 * 
+	 * The result is stored in {@link ResolvedSymbolicReferences#getValidation()}.
 	 * 
 	 * Note that {@link UnknownChange}s are not allowed at all!
 	 * 
@@ -191,37 +165,31 @@ public final class MPatchValidator {
 	 *            E.g. in case of an attribute change, the value of the state before must exist for all corresponding
 	 *            elements. If <code>strict = false</code>, then just one elements must at least fulfill the
 	 *            precondition.
-	 * 
-	 * @return A list of all changes which could not be verified successfully.
 	 */
-	public static List<IndepChange> validateElementStates(ResolvedSymbolicReferences mapping, boolean strict) {
+	static void validateElementStates(ResolvedSymbolicReferences mapping, boolean strict) {
 		final boolean forward = mapping.getDirection() == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
-		final List<IndepChange> result = new ArrayList<IndepChange>();
-		for (IndepChange change : mapping.getResolutionByChange().keySet()) {
 
-			// filter unknown changes!
-			if (change instanceof UnknownChange) {
-				result.add(change);
-				continue;
-			}
+		// The validation requires the changes to be ordered reverted!
+		final List<IndepChange> orderedChanges = orderChanges(mapping.getResolutionByChange().keySet(), !forward);
+
+		for (IndepChange change : orderedChanges) {
 
 			// if invalid, add it to the result
-			final ValidationResult state = validateElementState(change, mapping.getResolutionByChange().get(change),
-					strict, forward);
-			if (!ValidationResult.SUCCESSFUL.equals(state))
-				result.add(change);
+			final ValidationResult state = validateElementState(change, mapping, strict, forward);
+			mapping.getValidation().put(change, state);
 		}
-		return result;
 	}
 
 	/**
-	 * Check whether the state before the change (with respect to the direction for which the symbolic references were
-	 * resolved) can be found in the model.
+	 * Check whether the state before or after the change (with respect to the direction for which the symbolic
+	 * references were resolved) can be found in the model.
+	 * 
+	 * Note that {@link UnknownChange}s are not allowed at all!
 	 * 
 	 * @param change
 	 *            The change which is going to be checked.
-	 * @param mapping
-	 *            The resolved symbolic references for this change.
+	 * @param changeMapping
+	 *            The resolved symbolic references for all changes.
 	 * @param strict
 	 *            If strict is <code>true</code>, then the property is checked for all resolved corresponding elements.
 	 *            E.g. in case of an attribute change, the value of the state before must exist for all corresponding
@@ -229,10 +197,11 @@ public final class MPatchValidator {
 	 *            precondition.
 	 * @param forward
 	 *            Indicates the direction of resolution and thus determines the state which is going to be checked.
-	 * @return Please check {@link ValidationResult} for details.
+	 * @return Please see {@link ValidationResult} for details.
 	 */
-	public static ValidationResult validateElementState(IndepChange change,
-			final Map<IElementReference, List<EObject>> mapping, boolean strict, boolean forward) {
+	static ValidationResult validateElementState(IndepChange change, final ResolvedSymbolicReferences mapping,
+			boolean strict, boolean forward) {
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
 
 		// unknown change?
 		if (change instanceof UnknownChange) {
@@ -240,28 +209,36 @@ public final class MPatchValidator {
 		}
 
 		// we need at least one corresponding element!
-		if (mapping == null || mapping.get(change.getCorrespondingElement()).size() == 0)
+		if (changeMapping == null || changeMapping.get(change.getCorrespondingElement()).size() == 0)
 			return ValidationResult.REFERENCE;
 
 		// check sure that all symbolic references are resolved correctly before checking state
-		for (IElementReference symref : mapping.keySet()) {
-			if (!validateResolution(symref, mapping.get(symref)))
+		for (IElementReference symref : changeMapping.keySet()) {
+			/*
+			 * The self reference of model descriptors is an exception here. THe change might even be valid if it is not
+			 * resolved!
+			 */
+			if (symref.eContainer() instanceof IModelDescriptor)
+				continue;
+
+			// check all other regularly.
+			if (!validateResolution(symref, changeMapping.get(symref)))
 				return ValidationResult.REFERENCE;
 		}
 
 		if (forward) { // resolve unchanged state
 			if (change instanceof IndepAddElementChange) {
-				return validateAddElementState((IndepAddElementChange) change, mapping, strict);
+				return validateAddElementState((IndepAddElementChange) change, changeMapping, strict);
 			} else if (change instanceof IndepRemoveElementChange) {
-				return validateRemoveElementState((IndepRemoveElementChange) change, mapping, strict);
+				return validateRemoveElementState((IndepRemoveElementChange) change, changeMapping, strict);
 			} else if (change instanceof IndepMoveElementChange) {
-				return validateMoveElementState((IndepMoveElementChange) change, mapping, strict, true);
+				return validateMoveElementState((IndepMoveElementChange) change, changeMapping, strict, true);
 			} else if (change instanceof IndepAddAttributeChange) {
-				return validateAddAttributeState((IndepAddAttributeChange) change, mapping, strict);
+				return validateAddAttributeState((IndepAddAttributeChange) change, changeMapping, strict);
 			} else if (change instanceof IndepRemoveAttributeChange) {
-				return validateRemoveAttributeState((IndepRemoveAttributeChange) change, mapping, strict);
+				return validateRemoveAttributeState((IndepRemoveAttributeChange) change, changeMapping, strict);
 			} else if (change instanceof IndepUpdateAttributeChange) {
-				return validateUpdateAttributeState((IndepUpdateAttributeChange) change, mapping, strict, true);
+				return validateUpdateAttributeState((IndepUpdateAttributeChange) change, changeMapping, strict, true);
 			} else if (change instanceof IndepAddReferenceChange) {
 				return validateAddReferenceState((IndepAddReferenceChange) change, mapping, strict);
 			} else if (change instanceof IndepRemoveReferenceChange) {
@@ -269,21 +246,21 @@ public final class MPatchValidator {
 			} else if (change instanceof IndepUpdateReferenceChange) {
 				return validateUpdateReferenceState((IndepUpdateReferenceChange) change, mapping, strict, true);
 			} else
-				throw new IllegalArgumentException("Unknown change type: " + change);
+				throw new IllegalArgumentException("Unknown change type: " + change.eClass().getName());
 
 		} else { // resolve changed (backward)
 			if (change instanceof IndepAddElementChange) {
-				return validateRemoveElementState((IndepAddElementChange) change, mapping, strict);
+				return validateRemoveElementState((IndepAddElementChange) change, changeMapping, strict);
 			} else if (change instanceof IndepRemoveElementChange) {
-				return validateAddElementState((IndepRemoveElementChange) change, mapping, strict);
+				return validateAddElementState((IndepRemoveElementChange) change, changeMapping, strict);
 			} else if (change instanceof IndepMoveElementChange) {
-				return validateMoveElementState((IndepMoveElementChange) change, mapping, strict, false);
+				return validateMoveElementState((IndepMoveElementChange) change, changeMapping, strict, false);
 			} else if (change instanceof IndepAddAttributeChange) {
-				return validateRemoveAttributeState((IndepAddAttributeChange) change, mapping, strict);
+				return validateRemoveAttributeState((IndepAddAttributeChange) change, changeMapping, strict);
 			} else if (change instanceof IndepRemoveAttributeChange) {
-				return validateAddAttributeState((IndepRemoveAttributeChange) change, mapping, strict);
+				return validateAddAttributeState((IndepRemoveAttributeChange) change, changeMapping, strict);
 			} else if (change instanceof IndepUpdateAttributeChange) {
-				return validateUpdateAttributeState((IndepUpdateAttributeChange) change, mapping, strict, false);
+				return validateUpdateAttributeState((IndepUpdateAttributeChange) change, changeMapping, strict, false);
 			} else if (change instanceof IndepAddReferenceChange) {
 				return validateRemoveReferenceState((IndepAddReferenceChange) change, mapping, strict);
 			} else if (change instanceof IndepRemoveReferenceChange) {
@@ -291,116 +268,240 @@ public final class MPatchValidator {
 			} else if (change instanceof IndepUpdateReferenceChange) {
 				return validateUpdateReferenceState((IndepUpdateReferenceChange) change, mapping, strict, false);
 			} else
-				throw new IllegalArgumentException("Unknown change type: " + change);
+				throw new IllegalArgumentException("Unknown change type: " + change.eClass().getName());
 		}
 	}
 
 	/**
-	 * Check that the element refers to the object before the change for all (<code>strict = true</code>) or for at
-	 * least one (<code>strict = false</code>) corresponding element.
+	 * Check that the element refers to the object before or after the change for all (<code>strict = true</code>) or
+	 * for at least one (<code>strict = false</code>) corresponding element.
+	 * 
+	 * <ol>
+	 * <li>Determine source and target symbolic references depending on direction.
+	 * <li>Get source and target resolutions (might result in {@link ValidationResult#REFERENCE}.
+	 * <li>Check for all corresponding elements:<br>
+	 * Is the source or the target element set? (might result in {@link ValidationResult#STATE_INVALID}.
+	 * <li>Return {@link ValidationResult#STATE_BEFORE} or {@link ValidationResult#STATE_AFTER}, depending on
+	 * <code>strict</code>.
+	 * </ol>
 	 */
 	protected static ValidationResult validateUpdateReferenceState(IndepUpdateReferenceChange change,
-			Map<IElementReference, List<EObject>> map, boolean strict, boolean forward) {
+			ResolvedSymbolicReferences mapping, boolean strict, boolean forward) {
 
-		// we must only have one target element!
-		final IElementReference newSymRef = forward ? change.getOldReference() : change.getNewReference();
-		final EObject targetElement;
-		if (newSymRef != null) {
-			final Collection<EObject> targetElements = map.get(newSymRef);
-			if (targetElements.size() > 1)
-				return ValidationResult.REFERENCE;
-			targetElement = targetElements.iterator().next();
-		} else
-			targetElement = null;
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
 
-		for (EObject element : map.get(change.getCorrespondingElement())) {
-			final Object currentTarget = element.eGet(change.getReference());
+		// get symrefs for source and target
+		final IElementReference beforeSymRef = forward ? change.getOldReference() : change.getNewReference();
+		final IElementReference afterSymRef = !forward ? change.getOldReference() : change.getNewReference();
 
-			// we need this distinction to prevent nullpointer exceptions in the comparison
-			if (targetElement == null) {
-				if (strict && currentTarget != null) {
-					return ValidationResult.INVALID_STATE; // we found one that does not have the expected ref
-				} else if (!strict && currentTarget == null) {
-					return ValidationResult.SUCCESSFUL; // we found one with the expected ref, so we are done :)
+		// check symrefs
+		final SymRefCheck beforeCheck = new SymRefCheck(beforeSymRef, changeMapping, change.getReference().getEType(),
+				1);
+		final SymRefCheck afterCheck = new SymRefCheck(afterSymRef, changeMapping, change.getReference().getEType(), 1);
+		if (beforeCheck.validationResult != null)
+			return beforeCheck.validationResult;
+		if (afterCheck.validationResult != null)
+			return afterCheck.validationResult;
+		final EObject beforeElement = beforeCheck.internal || beforeCheck.symRef == null ? null : beforeCheck.elements
+				.get(0);
+		final EObject afterElement = afterCheck.internal || afterCheck.symRef == null ? null : afterCheck.elements
+				.get(0);
+
+		// collect status of all corresponding elements
+		final ResultAccumulator result = new ResultAccumulator();
+		for (EObject element : changeMapping.get(change.getCorrespondingElement())) {
+			final Object currentElement = element.eGet(change.getReference());
+
+			if (beforeCheck.internal) {
+				final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
+						((ModelDescriptorReference) beforeCheck.symRef).getResolvesTo(),
+						MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE);
+
+				// now we need to check whether the transitive resolution equals current element
+				if (currentElement == null) {
+					// if the actual element is empty, it is only a valid state (after), if the (deletion) change of the
+					// model descriptor is also state after.
+					if (ValidationResult.STATE_AFTER.equals(mapping.getValidation().get(otherChange))) {
+						result.after = true;
+					} else {
+						result.invalid = true; // there must be an element but it isn't!
+					}
+				} else {
+					// We need to check whether currentElement is described by the model descriptor of this internal
+					// reference!
+					if (ValidationResult.STATE_BEFORE.equals(mapping.getValidation().get(otherChange))) {
+						/*
+						 * Strictly spoken, we must make sure that currentElement is the one that will be deleted by the
+						 * internal model descriptor. But since the deletion does not include a check whether all
+						 * sub-elements are precisely as expected, we cannot ensure that. So lets just assume that the
+						 * current element is the correct one... SHouldn't be a big deal since it's just the
+						 * validation...
+						 */
+						result.before = true;
+					}
+				}
+			} else if (currentElement == null && beforeElement == null) {
+				result.before = true;
+			} else if (currentElement != null && currentElement.equals(beforeElement)) {
+				result.before = true;
+			}
+			if (afterCheck.internal) {
+				/*
+				 * If afterCheck.internal, then it's only state_after if the change of the internal reference is also
+				 * state_after!
+				 */
+				final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
+						((ModelDescriptorReference) afterCheck.symRef).getResolvesTo(),
+						MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE);
+				final ValidationResult otherState = mapping.getValidation().get(otherChange);
+				if (ValidationResult.STATE_AFTER.equals(otherState)) {
+					result.after |= currentElement != null;
+				} else {
+					result.invalid = true;
 				}
 			} else {
-				if (strict && !targetElement.equals(currentTarget)) {
-					return ValidationResult.INVALID_STATE; // we found one that does not have the expected ref
-				} else if (!strict && targetElement.equals(currentTarget)) {
-					return ValidationResult.SUCCESSFUL; // we found one with the expected ref, so we are done :)
+				if (currentElement == null && afterElement == null) {
+					result.after = true;
+				} else if (currentElement != null && currentElement.equals(afterElement)) {
+					result.after = true;
 				}
 			}
 		}
-		// strict ? (all refs as expected) : (no ref as expected)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Checks that at least one referred element exist for all (<code>strict = true</code>) or for at least one (
 	 * <code>strict = false</code>) corresponding element.
+	 * 
+	 * <ol>
+	 * <li>Get symbolic reference.
+	 * <li>Get resolution (might result in {@link ValidationResult#REFERENCE}.
+	 * <li>Check type (might result in {@link ValidationResult#STATE_INVALID}.
+	 * <li>Check for all corresponding elements:<br>
+	 * Is the element set? (might result in {@link ValidationResult#STATE_INVALID}.
+	 * <li>Return {@link ValidationResult#STATE_BEFORE} or {@link ValidationResult#STATE_AFTER}, depending on
+	 * <code>strict</code>.
+	 * </ol>
 	 */
 	protected static ValidationResult validateRemoveReferenceState(IndepAddRemReferenceChange change,
-			Map<IElementReference, List<EObject>> map, boolean strict) {
+			ResolvedSymbolicReferences mapping, boolean strict) {
 
-		// check if there are at all elements to remove
-		final Collection<EObject> targetElements = map.get(change.getChangedReference());
-		if (targetElements.size() == 0)
-			return ValidationResult.REFERENCE;
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
 
-		for (EObject element : map.get(change.getCorrespondingElement())) {
+		final SymRefCheck symRefCheck = new SymRefCheck(change.getChangedReference(), changeMapping, change
+				.getReference().getEType(), change.getChangedReference().getUpperBound());
 
-			// which elements do exist here?
+		// check validation result
+		if (symRefCheck.validationResult != null)
+			return symRefCheck.validationResult;
+
+		final ResultAccumulator result = new ResultAccumulator();
+		for (EObject element : changeMapping.get(change.getCorrespondingElement())) {
+
+			// which elements are currently referenced
 			@SuppressWarnings("unchecked")
-			final EList<Object> rawList = (EList) element.eGet(change.getReference());
-			final List<Object> list = new ArrayList<Object>(rawList);
-			list.retainAll(targetElements);
+			final EList<EObject> rawList = (EList<EObject>) element.eGet(change.getReference());
+			final List<EObject> list = new ArrayList<EObject>(rawList);
 
-			if (strict && list.isEmpty()) {
-				return ValidationResult.INVALID_STATE; // no element exists which can be removed!
-			} else if (!strict && !list.isEmpty()) {
-				return ValidationResult.SUCCESSFUL; // there are elements to be removed -> were done here :)
+			if (symRefCheck.internal) {
+				final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
+						((ModelDescriptorReference) symRefCheck.symRef).getResolvesTo(),
+						MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE);
+				if (rawList.isEmpty()) {
+					// if the actual list is empty, it is only a valid state (after), if the change of the model
+					// descriptor is also state after.
+					if (ValidationResult.STATE_AFTER.equals(mapping.getValidation().get(otherChange))) {
+						result.after = true;
+					} else {
+						result.invalid = true; // there must be an element but it isn't!
+					}
+				} else {
+					/*
+					 * Like in validateUpdateReferenceState, we must check whether the model descriptor of the internal
+					 * reference describes any of the current list of elements. However, this is not easy, imagine the
+					 * model descriptor is part of a sub-model! They are (on purpose) not resolved. So we simply assume
+					 * that it is correct. Should work because it's just the validation.
+					 */
+					if (ValidationResult.STATE_BEFORE.equals(mapping.getValidation().get(otherChange))) {
+						result.before = true;
+					} else {
+						result.invalid = true;
+					}
+				}
+			} else { // no internal reference!
+
+				list.retainAll(symRefCheck.elements);
+
+				// there must be elements to remove
+				result.before |= !list.isEmpty();
+				// there are already elements removed
+				result.after |= list.size() < symRefCheck.elements.size();
 			}
 		}
-
-		// strict ? (ref(s) can be removed everywhere) : (none elements to be removed at all)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Checks that the referred element(s) do(es) not already exist, if it is a unique reference, for all (
 	 * <code>strict = true</code>) or for at least one (<code>strict = false</code>) corresponding element.
+	 * 
+	 * Almost the same as {@link MPatchValidator#validateRemoveElementState(IndepAddRemElementChange, Map, boolean)},
+	 * but the check is reversed.
 	 */
 	protected static ValidationResult validateAddReferenceState(IndepAddRemReferenceChange change,
-			Map<IElementReference, List<EObject>> map, boolean strict) {
+			ResolvedSymbolicReferences mapping, boolean strict) {
 
-		// Note: maybe these elements do not yet exist ;-)
-		// So we cannot check anything here :-/
-		return ValidationResult.SUCCESSFUL;
+		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
 
-		// check if there are at all elements to add
-		// final Collection<EObject> targetElements = map.get(change.getChangedReference());
-		// if (targetElements == null || targetElements.size() == 0)
-		// return false;
-		//
-		// // for non-unique collections, there is no problem at all!
-		// if (!change.getReference().isUnique())
-		// return true;
-		//
-		// for (EObject element : map.get(change.getCorrespondingElement())) {
-		//
-		// // which elements do already exist?
-		// @SuppressWarnings("unchecked")
-		// final EList<Object> rawList = (EList) element.eGet(change.getReference());
-		// final List<Object> list = new ArrayList<Object>(rawList);
-		// list.retainAll(targetElements);
-		//
-		// if (strict && list.size() == targetElements.size()) {
-		// return false; // there are no elements which can be added! return false..
-		// } else if (!strict && list.size() < targetElements.size()) {
-		// return true; // there are elements that can be added, so we are done here
-		// }
-		// }
-		// return strict; // strict ? (all target elements can be added) : (no element can be added any more)
+		final SymRefCheck symRefCheck = new SymRefCheck(change.getChangedReference(), changeMapping, change
+				.getReference().getEType(), change.getChangedReference().getUpperBound());
+
+		// check validation result
+		if (symRefCheck.validationResult != null)
+			return symRefCheck.validationResult;
+
+		final ResultAccumulator result = new ResultAccumulator();
+		if (symRefCheck.internal) {
+			/*
+			 * If it's an internal reference, it can always be added. However, if the internal model descriptor exactly
+			 * resolves to one of the elements, we found the state_after ;-)
+			 */
+			final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
+					((ModelDescriptorReference) symRefCheck.symRef).getResolvesTo(),
+					MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE);
+			final ValidationResult otherState = mapping.getValidation().get(otherChange);
+			if (ValidationResult.STATE_BEFORE.equals(otherState)) {
+				result.before = true;
+			} else if (ValidationResult.STATE_INVALID.equals(otherState)) {
+				result.invalid = true;
+			} else if (ValidationResult.STATE_AFTER.equals(otherState)) {
+				// since the addition is checked thoroughly (unlike RemoveReferenceState), the actual element must be
+				// resolved!
+				final Map<IElementReference, List<EObject>> otherMapping = mapping.getResolutionByChange().get(
+						otherChange);
+				final IElementReference selfReference = ((IndepAddRemElementChange) otherChange).getSubModelReference();
+				final List<EObject> addedElements = otherMapping.get(selfReference); // already added (roots of)
+																						// sub-models
+				final List<? extends EObject> allAddedElements = ExtEcoreUtils.flattenEObjects(addedElements);
+				symRefCheck.elements.addAll(allAddedElements);
+			}
+		}
+		for (EObject element : changeMapping.get(change.getCorrespondingElement())) {
+			// which elements are currently referenced
+			@SuppressWarnings("unchecked")
+			final EList<EObject> rawList = (EList<EObject>) element.eGet(change.getReference());
+			final List<EObject> list = new ArrayList<EObject>(rawList);
+			list.retainAll(symRefCheck.elements);
+
+			if (!symRefCheck.internal) {
+				// there must be elements that are not yet added (does not apply for internal reference)
+				result.before |= list.size() < symRefCheck.elements.size();
+			}
+			// there are already elements added
+			result.after |= !list.isEmpty();
+		}
+		return result.accumulate(strict);
 	}
 
 	/**
@@ -409,165 +510,253 @@ public final class MPatchValidator {
 	 */
 	protected static ValidationResult validateUpdateAttributeState(IndepUpdateAttributeChange change,
 			Map<IElementReference, List<EObject>> map, boolean strict, boolean forward) {
-		// get value depending on the direction
-		final Object value = forward ? change.getOldValue() : change.getNewValue();
-		for (EObject element : map.get(change.getCorrespondingElement())) {
-			final Object actualValue = element.eGet(change.getChangedAttribute());
 
-			// we need this distinction to prevent nullpointer exceptions in the comparison
-			if (value == null) {
-				if (strict && actualValue != null) {
-					return ValidationResult.INVALID_STATE; // we found one that does not have the expected value
-				} else if (!strict && actualValue == null) {
-					return ValidationResult.SUCCESSFUL; // we found one with the expected value, so we are done :)
-				}
+		// get value depending on the direction
+		final Object oldValue = forward ? change.getOldValue() : change.getNewValue();
+		final Object newValue = !forward ? change.getOldValue() : change.getNewValue();
+
+		// collect status of all corresponding elements
+		final ResultAccumulator result = new ResultAccumulator();
+		for (EObject element : map.get(change.getCorrespondingElement())) {
+			final Object currentValue = element.eGet(change.getChangedAttribute());
+			if (currentValue == null && oldValue == null) {
+				result.before = true;
+			} else if (currentValue != null && currentValue.equals(oldValue)) {
+				result.before = true;
+			} else if (currentValue == null && newValue == null) {
+				result.after = true;
+			} else if (currentValue != null && currentValue.equals(newValue)) {
+				result.after = true;
 			} else {
-				if (strict && !value.equals(actualValue)) {
-					return ValidationResult.INVALID_STATE; // we found one that does not have the expected value
-				} else if (!strict && value.equals(actualValue)) {
-					return ValidationResult.SUCCESSFUL; // we found one with the expected value, so we are done :)
-				}
+				result.invalid = true;
 			}
 		}
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Check if the attribute value does exist for all (<code>strict = true</code>) or for at least one (
 	 * <code>strict = false</code>) corresponding element.
+	 * 
+	 * This either returns {@link ValidationResult#STATE_BEFORE} or {@link ValidationResult#STATE_AFTER}, depending on
+	 * whether the value of interest does or does not exist in the current list.
 	 */
 	protected static ValidationResult validateRemoveAttributeState(IndepAddRemAttributeChange change,
 			Map<IElementReference, List<EObject>> map, boolean strict) {
+		// get value to remove
+		final Object value = change.getValue();
 
+		final ResultAccumulator result = new ResultAccumulator();
 		for (EObject element : map.get(change.getCorrespondingElement())) {
+			// get current value
 			@SuppressWarnings("unchecked")
-			final List<Object> values = (List) element.eGet(change.getChangedAttribute());
-			if (strict && !values.contains(change.getValue())) {
-				return ValidationResult.INVALID_STATE; // value does not exist and thus cannot be removed!
-			} else if (!strict && values.contains(change.getValue())) {
-				return ValidationResult.SUCCESSFUL; // we found a value which can be removed, so we are done
-			}
+			final EList<Object> currentValues = (EList<Object>) element.eGet(change.getChangedAttribute());
+
+			// the value must not yet exist
+			result.before |= currentValues.contains(value);
+			// the value does exist
+			result.after |= !currentValues.contains(value);
 		}
-		// strict ? (value is contained somewhere) : (value is not contained anywhere)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Check if the attribute value does not already exists for all (<code>strict = true</code>) or for at least one (
 	 * <code>strict = false</code>) corresponding element.
+	 * 
+	 * Almost the same as {@link MPatchValidator#validateRemoveAttributeState(IndepAddRemAttributeChange, Map, boolean)}
+	 * , but the check is reversed.
 	 */
 	protected static ValidationResult validateAddAttributeState(IndepAddRemAttributeChange change,
 			Map<IElementReference, List<EObject>> map, boolean strict) {
-		// if the values are not unique, then there is no problem at all
-		if (!change.getChangedAttribute().isUnique())
-			return ValidationResult.SUCCESSFUL;
+		// get value to add
+		final Object value = change.getValue();
 
+		final ResultAccumulator result = new ResultAccumulator();
 		for (EObject element : map.get(change.getCorrespondingElement())) {
+			// get current value
 			@SuppressWarnings("unchecked")
-			final List<Object> values = (List) element.eGet(change.getChangedAttribute());
-			if (strict && values.contains(change.getValue())) {
-				return ValidationResult.INVALID_STATE; // value does already exist and cannot be added any more!
-			} else if (!strict && !values.contains(change.getValue())) {
-				return ValidationResult.SUCCESSFUL; // value does not exist yet, so it can safely be added here :)
-			}
+			final EList<Object> currentValues = (EList<Object>) element.eGet(change.getChangedAttribute());
+
+			// the value does exist
+			result.before |= !currentValues.contains(value);
+			// the value must not exist
+			result.after |= currentValues.contains(value);
 		}
-		// strict ? (value is not yet contained anywhere) : (value is already contained everywhere)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Check if the element to move exists in the source element and that it is possible to add it to the target element
 	 * for all (<code>strict = true</code>) or for at least one (<code>strict = false</code>) corresponding element.
+	 * 
+	 * <ol>
+	 * <li>Determine old and new parents depending on direction.
+	 * <li>Check for all corresponding elements:<br>
+	 * Is the old or the new parent or neither of them set? (might result in {@link ValidationResult#STATE_INVALID}.
+	 * <li>Return {@link ValidationResult#STATE_BEFORE} or {@link ValidationResult#STATE_AFTER}, depending on
+	 * <code>strict</code>.
+	 * </ol>
 	 */
 	protected static ValidationResult validateMoveElementState(IndepMoveElementChange change,
 			Map<IElementReference, List<EObject>> map, boolean strict, boolean forward) {
 
-		// if we have many corresponding elements, check that the container can hold many of them!
+		// get the specification of the movement
 		final EReference oldContainment = forward ? change.getOldContainment() : change.getNewContainment();
 		final EReference newContainment = forward ? change.getNewContainment() : change.getOldContainment();
+		final IElementReference oldParentRef = forward ? change.getOldParent() : change.getNewParent();
+		final IElementReference newParentRef = !forward ? change.getOldParent() : change.getNewParent();
+		if (oldParentRef == null || newParentRef == null || oldContainment == null || newContainment == null)
+			throw new IllegalStateException(
+					"old and new parent and their containment features must be defined in the change but they are not!");
+
+		// if we have many corresponding elements, check that the container can hold many of them!
 		final Collection<EObject> correspondingElements = map.get(change.getCorrespondingElement());
 		if (!newContainment.isMany() && correspondingElements.size() > 1)
 			return ValidationResult.REFERENCE;
 
-		// get the old and the new parents
-		// Note: the new parent might not yet exist! ;-)
-		final IElementReference oldParentRef = forward ? change.getOldParent() : change.getNewParent();
-		// final IElementReference newParentRef = forward ? change.getNewParent() : change.getOldParent();
-		final Collection<EObject> oldParents = map.get(oldParentRef);
-		// final Collection<EObject> newParents = map.get(newParentRef);
-		if (oldParents.size() != 1/* || newParents.size() != 1 */)
-			return ValidationResult.REFERENCE;
-		final EObject oldParent = oldParents.iterator().next();
-		// final EObject newParent = newParents.iterator().next();
+		// get the old and the new parents and check the resolution
+		// Note: the new parent might not yet exist (being internal)!
+		final SymRefCheck oldParentCheck = new SymRefCheck(oldParentRef, map, oldContainment.getEContainingClass(), 1);
+		final SymRefCheck newParentCheck = new SymRefCheck(newParentRef, map, newContainment.getEContainingClass(), 1);
+		if (oldParentCheck.validationResult != null)
+			return oldParentCheck.validationResult;
+		if (newParentCheck.validationResult != null)
+			return newParentCheck.validationResult;
+		final EObject oldParent = oldParentCheck.internal ? null : oldParentCheck.elements.get(0);
+		final EObject newParent = newParentCheck.internal ? null : newParentCheck.elements.get(0);
 
-		for (final EObject toMove : correspondingElements) {
-			boolean canMove = oldParent.equals(toMove.eContainer())
-					&& oldContainment.equals(toMove.eContainmentFeature())
-			/* && (newContainment.isMany() || newParent.eGet(newContainment) == null) */;
-			if (strict && !canMove) {
-				return ValidationResult.INVALID_STATE; // if strict and it cannot move, then we return false
-			} else if (!strict && canMove) {
-				return ValidationResult.SUCCESSFUL; // if strict and it can move, we are done here
+		final ResultAccumulator result = new ResultAccumulator();
+		if (oldParentCheck.internal) {
+			// The internal references ensures via change dependency that the before-state is valid! This can occur when
+			// we move from a removed sub-model.
+			result.before = true;
+		} else {
+			for (EObject element : map.get(change.getCorrespondingElement())) {
+				// get current parent
+				final Object currentParent = element.eContainer();
+				final EReference currentContainment = element.eContainmentFeature();
+
+				// check state; NB: null values are NOT allowed here!
+				if (currentParent == null || currentContainment == null) {
+					result.invalid = true; // should never occur!
+				} else if (currentParent.equals(oldParent) && currentContainment.equals(oldContainment)) {
+					result.before = true;
+				} else if (currentParent.equals(newParent) && currentContainment.equals(newContainment)) {
+					result.after = true;
+				} else { // if newParentCheck.internal, then it's invalid! because we need state_before!
+					result.invalid = true;
+				}
 			}
 		}
-		// strict ? (all can be moved) : (none can be moved)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		return result.accumulate(strict);
 	}
 
 	/**
 	 * Check if the element to remove exists in at least one (<code>strict = false</code>) or in all (
 	 * <code>strict = true</code>) corresponding elements.
+	 * 
+	 * Get all elements to delete and check whether they are distributed over all parents.
+	 * 
+	 * Unlike {@link MPatchValidator#validateAddElementState(IndepAddRemElementChange, Map, boolean)}, this does not
+	 * check whether they elements to delete are really described by the model descriptors. This allows the user to
+	 * delete more elements than only strictly those that are deleted.
 	 */
 	protected static ValidationResult validateRemoveElementState(IndepAddRemElementChange change,
 			Map<IElementReference, List<EObject>> map, boolean strict) {
-		for (final EObject parent : map.get(change.getCorrespondingElement())) {
-			if (change.getContainment().isMany()) {
 
-				// get resolved list for that symbolic reference and the actual children and calculate intersection
-				@SuppressWarnings("unchecked")
-				final EList<Object> rawList = (EList) parent.eGet(change.getContainment());
-				final List<Object> toDelete = new ArrayList<Object>(rawList);
-				toDelete.retainAll(map.get(change.getSubModelReference()));
+		// get elements to delete
+		final SymRefCheck toDeleteCheck = new SymRefCheck(change.getSubModelReference(), map, change.getSubModel()
+				.getType(), change.getSubModelReference().getUpperBound());
+		if (toDeleteCheck.symRef == null || toDeleteCheck.internal)
+			throw new IllegalStateException("Submodel reference must neither be null nor an internal reference!");
+		final int elementCountToDelete = toDeleteCheck.elements.size();
 
-				if (strict && toDelete.isEmpty()) {
-					return ValidationResult.INVALID_STATE; // if strict and the intersection is empty, there is nothing
-					// which can be deleted
-				} else if (!strict && !toDelete.isEmpty()) {
-					return ValidationResult.SUCCESSFUL; // if non-strict and there is something to delete, we are done
-					// here
-				}
-			} else {
-				final Object toDelete = parent.eGet(change.getContainment());
-				if (strict && (toDelete == null || !map.get(change.getSubModelReference()).contains(toDelete))) {
-					return ValidationResult.INVALID_STATE; // if strict, then there is nothing to delete
-				} else if (!strict && toDelete != null && map.get(change.getSubModelReference()).contains(toDelete)) {
-					return ValidationResult.SUCCESSFUL; // if non-strict and there is something to delete, we are done
-					// here
+		final ResultAccumulator result = new ResultAccumulator();
+		if (elementCountToDelete > 0) {
+			for (final EObject parent : map.get(change.getCorrespondingElement())) {
+				if (change.getContainment().isMany()) {
+
+					// get the actual children and calculate intersection
+					@SuppressWarnings("unchecked")
+					final EList<EObject> rawList = (EList<EObject>) parent.eGet(change.getContainment());
+					final List<EObject> toDelete = new ArrayList<EObject>(rawList);
+					toDelete.retainAll(toDeleteCheck.elements);
+					toDeleteCheck.elements.removeAll(toDelete);
+
+					// there must be elements to remove
+					result.before |= !toDelete.isEmpty();
+
+				} else {
+					final Object toDelete = parent.eGet(change.getContainment());
+
+					// is it an element to delete? if so, remove it from toDeleteCheck and update result.before
+					result.invalid |= toDelete == null || !toDeleteCheck.elements.contains(toDelete);
+					result.before |= toDelete != null && toDeleteCheck.elements.remove(toDelete);
 				}
 			}
+		} else {
+			// no elements to delete...
+			result.after = true;
 		}
-		// strict ? (all exist) : (none exists)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		
+		// there are already elements removed
+		/*
+		 * In case the change cannot be applied to all resolved corresponding elements, setting result.after here
+		 * yields a wrong result. This setting hasn't been proven to be useful at all, so we deactivate it for the
+		 * time being.
+		 */
+//		result.after |= elementCountToDelete > toDeleteCheck.elements.size();
+		return result.accumulate(strict);
 	}
 
 	/**
-	 * If containment can hold many elements, this always evaluates to <code>true</code>. If not, then it depends on
-	 * <code>strict</code>: if <code>true</code>, then all corresponding elements must be able to add an element; if
-	 * <code>false</code>, then at least one corresponding element must be able to add an element.
+	 * If <code>strict</code> equals <code>true</code>, then all corresponding elements must be able to add an element;
+	 * if <code>false</code>, then at least one corresponding element must be able to add an element. With
+	 * {@link IModelDescriptor#isDescriptorOf(EObject)} it is also checked whether the element already exists.
 	 */
 	protected static ValidationResult validateAddElementState(IndepAddRemElementChange change,
-			Map<IElementReference, List<EObject>> mapping, boolean strict) {
-		if (change.getContainment().isMany())
-			return ValidationResult.SUCCESSFUL; // element can always be added
-		for (final EObject parent : mapping.get(change.getCorrespondingElement())) {
-			if (strict && parent.eGet(change.getContainment()) != null) {
-				return ValidationResult.INVALID_STATE;
-			} else if (!strict && parent.eGet(change.getContainment()) == null) {
-				return ValidationResult.SUCCESSFUL;
+			Map<IElementReference, List<EObject>> map, boolean strict) {
+
+		// get elements that might be instances of the added element already
+		final SymRefCheck toAddCheck = new SymRefCheck(change.getSubModelReference(), map, change.getSubModel()
+				.getType(), change.getSubModelReference().getUpperBound());
+		if (toAddCheck.symRef == null || toAddCheck.internal)
+			throw new IllegalStateException("Submodel reference must neither be null nor an internal reference!");
+
+		// are they really added elements or does the symbolic reference just match
+		for (int i = toAddCheck.elements.size() - 1; i >= 0; i--) {
+			final EObject element = toAddCheck.elements.get(i);
+			if (change.getSubModel().isDescriptorFor(element, true) == null)
+				toAddCheck.elements.remove(i);
+		}
+
+		final ResultAccumulator result = new ResultAccumulator();
+		for (final EObject parent : map.get(change.getCorrespondingElement())) {
+			if (change.getContainment().isMany()) {
+
+				// get the actual children and calculate intersection
+				@SuppressWarnings("unchecked")
+				final EList<EObject> rawList = (EList<EObject>) parent.eGet(change.getContainment());
+				final List<EObject> added = new ArrayList<EObject>(rawList);
+				added.retainAll(toAddCheck.elements);
+				toAddCheck.elements.removeAll(added);
+
+				// there must be elements to add
+				result.before |= added.isEmpty();
+				result.after |= !added.isEmpty();
+
+			} else {
+				final Object toAdd = parent.eGet(change.getContainment());
+
+				// is it possible to add the element? if so, remove it from toAddCheck and update result.before
+				result.invalid |= toAdd != null && !toAddCheck.elements.contains(toAdd);
+				result.before |= toAdd == null;
+				result.after |= toAddCheck.elements.remove(toAdd);
 			}
 		}
-		// strict ? (all are null) : (none is null)
-		return strict ? ValidationResult.SUCCESSFUL : ValidationResult.INVALID_STATE;
+		// there are already elements removed
+		return result.accumulate(strict);
 	}
 
 	/**
@@ -582,7 +771,7 @@ public final class MPatchValidator {
 	 *            {@link IndepUpdateReferenceChange#setNewReference(IElementReference)}.
 	 * @return A collection of references which are relevant for the given {@link EClass}.
 	 */
-	public static Collection<EReference> getImportantReferencesFor(EClass eClass, int direction) {
+	static Collection<EReference> getImportantReferencesFor(EClass eClass, int direction) {
 		final Collection<EReference> refs = new ArrayList<EReference>();
 		if (equalEClasses(eClass, MPatchPackage.Literals.CHANGE_GROUP)) {
 			// we are not interested in groups here!
@@ -590,40 +779,35 @@ public final class MPatchValidator {
 			// also skip unknown changes!
 		} else {
 
-			/*
-			 * I decided to resolve all reference! This might slow down the performance a bit, but at least we got as
-			 * many references resolved as available.
-			 */
-
 			refs.add(MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT);
 			if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_ADD_ELEMENT_CHANGE)) {
-				if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE__SUB_MODEL_REFERENCE);
-				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE__SUB_MODEL_REFERENCE);
+				// }
 			} else if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_REMOVE_ELEMENT_CHANGE)) {
-				if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE__SUB_MODEL_REFERENCE);
-				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE__SUB_MODEL_REFERENCE);
+				// }
 			} else if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE)) {
-//				if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__OLD_PARENT);
-//				} else if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__NEW_PARENT);
-//				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__OLD_PARENT);
+				// } else if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__NEW_PARENT);
+				// }
 			} else if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_ADD_REFERENCE_CHANGE)) {
-				if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE);
-				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE);
+				// }
 			} else if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_REMOVE_REFERENCE_CHANGE)) {
-				if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE);
-				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE);
+				// }
 			} else if (equalEClasses(eClass, MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE)) {
-//				if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__OLD_REFERENCE);
-//				} else if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
-					refs.add(MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__NEW_REFERENCE);
-//				}
+				// if (direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__OLD_REFERENCE);
+				// } else if (direction == ResolvedSymbolicReferences.RESOLVE_CHANGED) {
+				refs.add(MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__NEW_REFERENCE);
+				// }
 			}
 		}
 		return refs;
@@ -632,15 +816,87 @@ public final class MPatchValidator {
 	/**
 	 * Check whether two eclasses are equal.
 	 * 
-	 * @param eClass1 
-	 * 			An eclass.
-	 * @param eClass2 
-	 * 			Another eclass.
+	 * @param eClass1
+	 *            An eclass.
+	 * @param eClass2
+	 *            Another eclass.
 	 * @return <code>true</code>, if their classifier IDs equal; <code>false</code> otherwise.
 	 */
 	protected static boolean equalEClasses(EClass eClass1, EClass eClass2) {
 		// return eClass1.getInstanceClassName().equals(eClass2.getInstanceClassName());
 		return eClass1.getClassifierID() == eClass2.getClassifierID();
+	}
+
+	/**
+	 * Order the given changes according to their dependencies. So in order to result in a useful order, make sure that
+	 * the dependencies are set correctly.
+	 * 
+	 * The following order will be created: <br>
+	 * &lt;all changes which are dependants of deletions&gt; <br>
+	 * &lt;all deletions&gt; <br>
+	 * &lt;all additions&gt; <br>
+	 * &lt;all changes which depend on additions&gt;
+	 * 
+	 * @param changes
+	 *            Changes.
+	 * @param forward
+	 *            The direction of application.
+	 * @return A flat and ordered list of the input.
+	 */
+	public static List<IndepChange> orderChanges(final Set<IndepChange> changes, boolean forward) {
+
+		// 0. a list containing the resulting order
+		final List<IndepChange> list = new ArrayList<IndepChange>(changes.size());
+
+		// 1. iterate over all changes and put all additions and deletions to the list
+		for (IndepChange change : changes) {
+			if ((change instanceof IndepAddElementChange && forward)
+					|| ((change instanceof IndepRemoveElementChange && !forward))) {
+				list.add(change); // add additions
+			} else if ((change instanceof IndepRemoveElementChange && forward)
+					|| ((change instanceof IndepAddElementChange && !forward))) {
+				list.add(0, change); // insert deletions at the start
+			}
+		}
+
+		// 2. evaluate all dependencies:
+		// (iterate over a copy to be able to change the original list)
+		// -> this might introduce duplicates which need to be removed later!
+		for (IndepChange change : new ArrayList<IndepChange>(list)) {
+			if ((change instanceof IndepAddElementChange && forward)
+					|| ((change instanceof IndepRemoveElementChange && !forward))) {
+				list.addAll(change.getDependants());
+			} else if ((change instanceof IndepRemoveElementChange && forward)
+					|| ((change instanceof IndepAddElementChange && !forward))) {
+				list.addAll(0, change.getDependsOn());
+			}
+		}
+
+		// 3. add all changes which were not considered so far
+		final HashSet<IndepChange> tmpDiffs = new HashSet<IndepChange>(changes);
+		tmpDiffs.removeAll(list);
+		list.addAll(tmpDiffs);
+		list.retainAll(changes);
+
+		// 4. remove duplicates introduced in 2.
+		if (list.size() > changes.size()) {
+			final Set<IndepChange> elements = new HashSet<IndepChange>(changes.size());
+			for (int i = list.size() - 1; i >= 0; i--) {
+				if (elements.contains(list.get(i)))
+					list.remove(i);
+				else
+					elements.add(list.get(i));
+			}
+		}
+
+		// 5. double check that we do exactly have the number of changes we require!
+		if (list.size() != changes.size() || !changes.containsAll(list)) {
+			throw new IllegalStateException(
+					"The number of ordered changes does not equal the number of total changes! "
+							+ "Please check ordering algorithm!");
+		}
+
+		return list;
 	}
 
 }

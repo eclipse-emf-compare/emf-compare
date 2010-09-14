@@ -18,11 +18,13 @@ import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.apply.util.MPatchResolver;
 import org.eclipse.emf.compare.mpatch.apply.util.MPatchValidator;
 import org.eclipse.emf.compare.mpatch.binding.MPatchModelBinding;
-import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
+import org.eclipse.emf.compare.mpatch.common.util.CommonUtils;
 import org.eclipse.emf.compare.mpatch.common.util.ExtensionManager;
+import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchResolution;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchResolutionHost;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
+import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences.ValidationResult;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -43,6 +45,9 @@ import org.eclipse.swt.widgets.Label;
  * 
  */
 public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolutionHost {
+
+	/** Info text for showing to the user how the changes resolved. */
+	final String INFO_TEXT = "Selected changes: %d, to be applied: %d, already applied: %d, not resolved: %d, invalid state: %d";
 
 	/** The model to which the diff should be applied (from a previous page). */
 	private Resource modelResource;
@@ -171,7 +176,7 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 						resolvedElements = MPatchResolver.resolveSymbolicReferences(mpatch, modelTarget,
 								ResolvedSymbolicReferences.RESOLVE_UNCHANGED);
 					}
-
+					
 					// update this page
 					iDiffResolution.refineResolution(resolvedElements, this);
 					dialogChanged();
@@ -182,44 +187,49 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 		}
 	}
 
-	private boolean updateStatus(String message) {
+	private void updateStatus(String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
-		return message == null;
 	}
 
 	/** Notify the user if something is not right. */
-	private boolean dialogChanged() {
+	private void dialogChanged() {
+		final String infoText;
+		final String status;
 		if (resolvedElements != null) {
 			if (resolvedElements.getResolutionByChange().size() > 0) {
+				
+				// get statistics
 				final List<IndepChange> invalidResolutions = MPatchValidator.validateResolutions(resolvedElements);
 				final int unresolved = invalidResolutions.size();
 				final int total = resolvedElements.getResolutionByChange().keySet().size();
-				if (unresolved == 0) {
-					final int invalidStates = MPatchValidator.validateElementStates(resolvedElements, false).size();
-					if (invalidStates == 0) {
-						((ApplyWizard) getWizard()).setResolvedElements(resolvedElements);
-						infoLabel.setText((total - unresolved) + " / " + total + " resolved; "
-								+ (total - invalidStates) + " / " + total + " states validated");
-						return updateStatus(null);
-					} else {
-						infoLabel.setText((total - unresolved) + " / " + total + " resolved; "
-								+ (total - invalidStates) + " / " + total + " states validated");
-						return updateStatus("Not all changes can be applied properly!");
-					}
-				} else {
-					infoLabel.setText((total - unresolved) + " / " + total + " resolved");
-					return updateStatus("Not all " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + " resolved sufficiantly: "
-							+ labelProvider.getText(invalidResolutions.get(0)));
+				final int before = CommonUtils.filterByValue(resolvedElements.getValidation(), ValidationResult.STATE_BEFORE).size();
+				final int after = CommonUtils.filterByValue(resolvedElements.getValidation(), ValidationResult.STATE_AFTER).size();
+				final int invalid = CommonUtils.filterByValue(resolvedElements.getValidation(), ValidationResult.STATE_INVALID).size()
+						+ CommonUtils.filterByValue(resolvedElements.getValidation(), ValidationResult.REFERENCE).size();
+				
+				infoText = String.format(INFO_TEXT, total, before, after, unresolved, invalid);
+
+				// evaluate statistics
+				if (unresolved == 0 && invalid == 0) {
+					((ApplyWizard) getWizard()).setResolvedElements(resolvedElements);
+					status = null;
+				} else if (unresolved > 0) {
+					status  ="Not all " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + " resolved sufficiantly: "
+					+ labelProvider.getText(invalidResolutions.get(0));
+				} else { // invalid > 0
+					status = "Not all changes can be applied to the selected model elements!";
 				}
 			} else {
-				infoLabel.setText("Please select some changes.");
-				return updateStatus("No changes are selected!");
+				infoText = "Please select some changes.";
+				status = "No changes are selected!";
 			}
 		} else {
-			infoLabel.setText("There is an error in the resolution of " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + ".");
-			return updateStatus("There is an error in the resolution of " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + "!");
+			infoText = "There is an error in the resolution of " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + "!";
+			status = "There is an error in the resolution of " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + "!";
 		}
+		infoLabel.setText(infoText);
+		updateStatus(status);
 	}
 
 }
