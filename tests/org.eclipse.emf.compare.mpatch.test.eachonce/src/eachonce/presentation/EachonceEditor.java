@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: EachonceEditor.java,v 1.1 2010/09/10 15:40:34 cbrun Exp $
+ * $Id: EachonceEditor.java,v 1.2 2010/09/14 09:45:39 pkonemann Exp $
  *******************************************************************************/
 package eachonce.presentation;
 
@@ -1264,9 +1264,8 @@ public class EachonceEditor
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class key) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		if (key.equals(IContentOutlinePage.class)) {
 			return showOutlineView() ? getContentOutlinePage() : null;
 		}
