@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+ Copyright (c) 2010 Technical University of Denmark.
+ All rights reserved. This program and the accompanying materials 
+ are made available under the terms of the Eclipse Public License v1.0 
+ which accompanies this distribution, and is available at 
+ http://www.eclipse.org/legal/epl-v10.html 
+ 
+ Contributors:
+    Patrick Koenemann, DTU Informatics - initial API and implementation
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.grouping.startgrouping"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.transform.actions.GroupingAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.grouping.GroupingAction"
+               label="Transformation: Group Changes in MPatch"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/transform">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.DefaultMPatchGrouping">
+      </difftransformation>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.reverse.startreverse"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.transform.actions.ReverseAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.reverse.ReverseAction"
+               label="Transformation: Reverse MPatch Direction"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/transform">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.ReverseMPatch">
+      </difftransformation>
+   </extension>
+
+</plugin>

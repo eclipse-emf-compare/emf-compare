@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Miscellaneous MPatch Transformations
+Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.transform;singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Activator: org.eclipse.emf.compare.mpatch.transform.TransformActivator
+Require-Bundle: org.eclipse.emf.ecore.xmi,
+ org.eclipse.emf.compare.mpatch.common
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.eclipse.emf.compare.mpatch.transform.util
+Bundle-Vendor: Technical University of Denmark
