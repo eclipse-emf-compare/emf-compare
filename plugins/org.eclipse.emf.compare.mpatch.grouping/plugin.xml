@@ -11,6 +11,7 @@
     Patrick Koenemann, DTU Informatics - initial API and implementation
 -->
 <plugin>
+   <!-- PK: deactivated! see _OBSOLETE.txt for details. - ->   
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -37,5 +38,5 @@
             diff_transformation="org.eclipse.emf.compare.mpatch.grouping.impl.DefaultMPatchGrouping">
       </difftransformation>
    </extension>
-
+   <!- - -->
 </plugin>
