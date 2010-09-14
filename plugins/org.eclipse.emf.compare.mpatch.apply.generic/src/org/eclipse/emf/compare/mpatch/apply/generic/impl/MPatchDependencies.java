@@ -118,7 +118,7 @@ public class MPatchDependencies implements IMPatchTransformation {
 	public static int calculateDependencies(MPatchModel mpatch) {
 
 		// 1. get flat list of all changes
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		final List<IndepChange> changes = (List) ExtEcoreUtils.collectTypedElements(mpatch.getChanges(), Collections
 				.singleton(MPatchPackage.Literals.INDEP_CHANGE), true);
 

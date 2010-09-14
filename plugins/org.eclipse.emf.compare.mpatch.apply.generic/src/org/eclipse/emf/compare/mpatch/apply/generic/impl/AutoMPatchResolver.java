@@ -14,16 +14,13 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.eclipse.emf.compare.mpatch.IElementReference;
 import org.eclipse.emf.compare.mpatch.IndepChange;
 import org.eclipse.emf.compare.mpatch.apply.util.MPatchResolver;
 import org.eclipse.emf.compare.mpatch.apply.util.MPatchValidator;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * Helper class to automatically resolve all conflicts. In the worst case, all changes are ignored.
@@ -147,8 +144,7 @@ public class AutoMPatchResolver {
 		for (IndepChange change : changes) {
 
 			// get some helper variables and validate the change unstrictly
-			final Map<IElementReference, List<EObject>> resolution = mapping.getResolutionByChange().get(change);
-			if (!MPatchResolver.checkStateResolution(change, resolution, true, forward)) {
+			if (!MPatchResolver.checkStateResolution(change, mapping, true, forward)) {
 				mapping.getResolutionByChange().remove(change);
 			}
 		}
