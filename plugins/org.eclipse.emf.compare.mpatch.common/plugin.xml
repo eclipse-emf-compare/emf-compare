@@ -21,6 +21,7 @@
       <page
             class="org.eclipse.emf.compare.mpatch.common.preferences.MPatchPreferencesPage"
             id="org.eclipse.emf.compare.mpatch.common.preferences.MPatchPreferencesPage"
+            category="org.eclipse.emf.compare.ui.preferences.EMFComparePreferencesPage"
             name="MPatch">
       </page>
    </extension>

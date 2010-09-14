@@ -261,7 +261,7 @@ public class CommonUtils {
 		// } else if (snapshot instanceof ComparisonResourceSnapshot) {
 		// final ComparisonResourceSnapshot resourceSnapshop = (ComparisonResourceSnapshot) snapshot;
 		// if (resourceSnapshop.getDiff() != null && resourceSnapshop.getDiff().getOwnedElements().size() > 0) {
-		//				
+		//
 		// // check if there exist any changes at all
 		// if (criteria == DIFF_EMPTY) {
 		// for (final DiffElement diff : resourceSnapshop.getDiff().getOwnedElements()) {
@@ -273,19 +273,19 @@ public class CommonUtils {
 		// }
 		// }
 		// return true;
-		//				
+		//
 		// // check if the only diffelements are about ordering
 		// } else if (criteria == DIFF_ORDERINGS) {
 		// for (final TreeIterator<EObject> i = resourceSnapshop.getDiff().eAllContents(); i.hasNext();) {
 		// final EObject obj = i.next();
 		// // TODO
 		// }
-		//					
+		//
 		// // unknown criteria!
 		// } else {
 		// throw new IllegalArgumentException("Unknown criteria: " + criteria);
 		// }
-		//				
+		//
 		// } else {
 		// return true;
 		// }
@@ -328,6 +328,15 @@ public class CommonUtils {
 							// return the uri of the editor input otherwise
 							return uri;
 						}
+					}
+				} else {
+					// maybe GMF is loaded and it is a gmf diagram input?
+					try {
+						final URI uri = CommonGmfUtils.getUriFromEditorInput(editorInput);
+						if (uri != null)
+							return uri;
+					} catch (NoClassDefFoundError e) {
+						// do nothing..
 					}
 				}
 			} catch (Exception e) {
@@ -433,5 +442,25 @@ public class CommonUtils {
 		} catch (IOException e) {
 			throw new Error("StringBuilder should not throw IOExceptions!");
 		}
+	}
+
+	/**
+	 * Filter map elements by their value. The values are compared using {@link Object#equals(Object)}.
+	 * 
+	 * @param map
+	 *            A map.
+	 * @param value
+	 *            The value to filter.
+	 * @return A list of elements (subset of keys of <code>map</code>) which have the given <code>value</code>.
+	 */
+	public static <K, V> List<K> filterByValue(Map<K, V> map, V value) {
+		final ArrayList<K> result = new ArrayList<K>();
+		if (value != null) {
+			for (K key : map.keySet()) {
+				if (value.equals(map.get(key)))
+					result.add(key);
+			}
+		}
+		return result;
 	}
 }

@@ -11,6 +11,8 @@
 package org.eclipse.emf.compare.mpatch.extension;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,6 @@ import org.eclipse.emf.compare.mpatch.IndepReferenceChange;
 import org.eclipse.emf.compare.mpatch.binding.MPatchModelBinding;
 import org.eclipse.emf.compare.mpatch.binding.BindingFactory;
 import org.eclipse.emf.ecore.EObject;
-
 
 /**
  * This class is used to store the resolved binding for applying an mpatch to a particular model.<br>
@@ -43,6 +44,7 @@ public final class ResolvedSymbolicReferences {
 	private final EObject model;
 	private final int direction;
 	private final Map<IndepChange, Map<IElementReference, List<EObject>>> resolution;
+	private final Map<IndepChange, ValidationResult> validation;
 	private final Map<IElementReference, List<EObject>> resolutionRaw;
 	private final Map<IElementReference, List<IElementReference>> equallyResolvingReferences;
 	private final MPatchModelBinding binding;
@@ -54,19 +56,60 @@ public final class ResolvedSymbolicReferences {
 	public static final int RESOLVE_CHANGED = 2;
 
 	/**
+	 * Classification of validation result (
+	 * {@link MPatchValidator#validateElementState(IndepChange, Map, boolean, boolean)}).<br>
+	 * <br>
+	 * 
+	 * {@link ValidationResult#STATE_BEFORE} - State before the change found (=successful).<br>
+	 * {@link ValidationResult#STATE_AFTER} - State after the change found (=applied).<br>
+	 * {@link ValidationResult#STATE_INVALID} - Model elements resolved but neither state (before, after) could be
+	 * found.<br> {@link ValidationResult#REFERENCE} - Wrong number of resolved references.<br>
+	 * {@link ValidationResult#UNKNOWN_CHANGE} - The change is unknown.
+	 */
+	public static enum ValidationResult {
+		/** State before the change found (=successful). */
+		STATE_BEFORE,
+		/** State after the change found (=applied). */
+		STATE_AFTER,
+		/** Model elements resolved but neither state (before, after) could be found. */
+		STATE_INVALID,
+		/** Wrong number of resolved references. */
+		REFERENCE,
+		/** the change is unknown. */
+		UNKNOWN_CHANGE,
+	}
+
+	/**
+	 * A mapping from {@link ValidationResult} to a human-readable String.
+	 */
+	public static final Map<ValidationResult, String> VALIDATION_RESULTS;
+
+	static {
+		final Map<ValidationResult, String> messageMap = new HashMap<ValidationResult, String>();
+		messageMap.put(ValidationResult.STATE_BEFORE, "ok");
+		messageMap.put(ValidationResult.STATE_AFTER, "applied");
+		messageMap.put(ValidationResult.STATE_INVALID, "invalid state in model");
+		messageMap.put(ValidationResult.REFERENCE, "check reference resolutions");
+		messageMap.put(ValidationResult.UNKNOWN_CHANGE, "unknown change");
+		VALIDATION_RESULTS = Collections.unmodifiableMap(messageMap);
+	}
+
+	/**
 	 * Create a wrapper object for the resolution of symbolic references. See {@link IResolvedSymbolicReferences} for
 	 * details.
 	 */
 	public ResolvedSymbolicReferences(MPatchModel mpatch, EObject model, int direction,
 			Map<IndepChange, Map<IElementReference, List<EObject>>> resolution,
 			Map<IElementReference, List<EObject>> resolutionRaw,
-			Map<IElementReference, List<IElementReference>> equallyResolvingReferences) {
+			Map<IElementReference, List<IElementReference>> equallyResolvingReferences,
+			Map<IndepChange, ValidationResult> validation) {
 		this.mpatch = mpatch;
 		this.direction = direction;
 		this.model = model;
 		this.resolution = resolution;
 		this.resolutionRaw = resolutionRaw;
 		this.equallyResolvingReferences = equallyResolvingReferences;
+		this.validation = validation;
 		binding = BindingFactory.eINSTANCE.createMPatchModelBinding();
 		binding.setMPatchModel(mpatch);
 		binding.setModel(model);
@@ -130,8 +173,8 @@ public final class ResolvedSymbolicReferences {
 
 	/**
 	 * This returns the raw resolution of symbolic references.<br>
-	 * This means that all {@link IndepChange}s from the {@link MPatchModel} are mapped to a set of {@link EObject}
-	 * for which the resolution was performed.
+	 * This means that all {@link IndepChange}s from the {@link MPatchModel} are mapped to a set of {@link EObject} for
+	 * which the resolution was performed.
 	 */
 	public Map<IElementReference, List<EObject>> getRawResolution() {
 		return resolutionRaw;
@@ -151,4 +194,11 @@ public final class ResolvedSymbolicReferences {
 		return resolution;
 	}
 
+	/**
+	 * The result contains the states of all changes. It is the responsibility of the validator to update this map
+	 * accordingly after each validation.
+	 */
+	public Map<IndepChange, ValidationResult> getValidation() {
+		return validation;
+	}
 }

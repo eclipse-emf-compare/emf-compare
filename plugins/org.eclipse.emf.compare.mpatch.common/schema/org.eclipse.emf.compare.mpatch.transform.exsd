@@ -9,7 +9,7 @@
  Contributors:
     Patrick Koenemann, DTU Informatics - initial API and implementation
 
- $Id: org.eclipse.emf.compare.mpatch.transform.exsd,v 1.1 2010/09/10 15:26:10 cbrun Exp $
+ $Id: org.eclipse.emf.compare.mpatch.transform.exsd,v 1.2 2010/09/14 09:45:38 pkonemann Exp $
 -->
 <schema targetNamespace="org.eclipse.emf.compare.mpatch.common" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
@@ -73,7 +73,7 @@ The default priority is 1, i.e. if another extension with a higher priority exis
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.mpatch.transform.IDiffTransformation"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.compare.mpatch.extension.IMPatchTransformation"/>
                </appinfo>
             </annotation>
          </attribute>

@@ -56,6 +56,9 @@ public final class MPatchApplicationResult {
 	/** The set of changes that were applied successfully. */
 	public final Collection<IndepChange> successful;
 
+	/** The set of changes that were bound to existing elements. */
+	public final Collection<IndepChange> bound;
+	
 	/** The set of changes for which some (or all) cross-references could not be restored. */
 	public final Collection<IndepChange> crossReferences;
 
@@ -69,16 +72,19 @@ public final class MPatchApplicationResult {
 	 *            The overall status of application.
 	 * @param successful
 	 *            A collection of successfully applied {@link IndepChange}s.
+	 * @param bound
+	 *            A collection of {@link IndepChange}s that are already applied and bound to existing model elements.
 	 * @param crossReferences
 	 *            A collection of applied {@link IndepChange}s for which not all cross references have been restored
 	 *            successfully.
 	 * @param failed
 	 *            A collection of {@link IndepChange} which failed to be applied.
 	 */
-	public MPatchApplicationResult(ApplicationStatus status, Collection<IndepChange> successful,
+	public MPatchApplicationResult(ApplicationStatus status, Collection<IndepChange> successful, Collection<IndepChange> bound,
 			Collection<IndepChange> crossReferences, Collection<IndepChange> failed) {
 		this.status = status;
 		this.successful = Collections.unmodifiableCollection(successful);
+		this.bound = Collections.unmodifiableCollection(bound);
 		this.crossReferences = Collections.unmodifiableCollection(crossReferences);
 		this.failed = Collections.unmodifiableCollection(failed);
 	}
@@ -136,6 +142,9 @@ public final class MPatchApplicationResult {
 
 		// detailed summary:
 		msg.append(successful.size() + " changes were applied successfully.\n");
+		if (bound.size() > 0) {
+			msg.append(bound.size() + " changes were already applied.\n");
+		}
 		if (crossReferences.size() > 0) {
 			msg.append(crossReferences.size() + " changes with unsufficient cross-reference restoring:\n");
 			for (IndepChange change : crossReferences) {
