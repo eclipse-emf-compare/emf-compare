@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: MPatchEditor.java,v 1.1 2010/09/10 15:28:35 cbrun Exp $
+ * $Id: MPatchEditor.java,v 1.2 2010/09/14 09:45:47 pkonemann Exp $
  */
 package org.eclipse.emf.compare.mpatch.presentation;
 
@@ -1087,9 +1087,8 @@ public class MPatchEditor
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class key) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
 		if (key.equals(IContentOutlinePage.class)) {
 			return showOutlineView() ? getContentOutlinePage() : null;
 		}
