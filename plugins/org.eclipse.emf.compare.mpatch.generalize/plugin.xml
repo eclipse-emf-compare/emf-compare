@@ -25,6 +25,7 @@
                menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
          </action>
          <menu
+               icon="icons/diff_16.gif"
                id="org.eclipse.emf.compare.mpatch.mpatchmenu"
                label="MPatch"
                path="additions">
@@ -45,6 +46,7 @@
                menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
          </action>
          <menu
+               icon="icons/diff_16.gif"
                id="org.eclipse.emf.compare.mpatch.mpatchmenu"
                label="MPatch"
                path="additions">
@@ -65,6 +67,7 @@
                menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
          </action>
          <menu
+               icon="icons/diff_16.gif"
                id="org.eclipse.emf.compare.mpatch.mpatchmenu"
                label="MPatch"
                path="additions">

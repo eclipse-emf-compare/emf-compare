@@ -45,7 +45,7 @@ public class ScopeExpansion implements IMPatchTransformation {
 	 * All {@link String} comparisons matching {@link ScopeExpansion#EQUAL_REPLACE} are replaced by.<br>
 	 * <code>&lt;attribute name&gt;.containsIgnoreCase('&lt;value&gt;')</code>
 	 */
-	protected static final String EQUAL_REPLACEMENT = "$1.containsIgnoreCase('$2')";
+	protected static final String EQUAL_REPLACEMENT = "$1.checkSimilarity('$2', 0.7)";
 
 	/** Compiled pattern of {@link ScopeExpansion#EQUAL_REPLACE}. */
 	protected static final Pattern EQUAL_PATTERN = Pattern.compile(EQUAL_REPLACE);
