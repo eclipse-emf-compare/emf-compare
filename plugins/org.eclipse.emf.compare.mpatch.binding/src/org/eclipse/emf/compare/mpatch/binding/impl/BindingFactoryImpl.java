@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: BindingFactoryImpl.java,v 1.1 2010/09/10 15:27:17 cbrun Exp $
+ * $Id: BindingFactoryImpl.java,v 1.2 2010/09/14 09:45:45 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.binding.impl;
 
@@ -225,8 +225,6 @@ public class BindingFactoryImpl extends EFactoryImpl implements BindingFactory {
 		EObject noteContainer = noteElement;
 		while (!(noteContainer instanceof MPatchModelBinding) && noteContainer.eContainer() != null)
 			noteContainer = noteContainer.eContainer();
-		if (noteContainer == null)
-			throw new IllegalArgumentException("noteElement must be (indirectlyl) contained in a DiffModelElement!");
 		final Note aNote = createNote();
 		aNote.setNote(note);
 		((MPatchModelBinding)noteContainer).getAllNotes().add(aNote);
