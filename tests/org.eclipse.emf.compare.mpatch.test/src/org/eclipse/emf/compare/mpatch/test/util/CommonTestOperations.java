@@ -39,10 +39,11 @@ import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 import org.eclipse.emf.compare.mpatch.extension.MPatchApplicationResult;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
 import org.eclipse.emf.compare.mpatch.extension.MPatchApplicationResult.ApplicationStatus;
-import org.eclipse.emf.compare.mpatch.grouping.util.GroupingTransformation;
+import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences.ValidationResult;
 import org.eclipse.emf.compare.mpatch.symrefs.OclCondition;
 import org.eclipse.emf.compare.mpatch.symrefs.SymrefsPackage;
 import org.eclipse.emf.compare.mpatch.symrefs.util.OCLConditionHelper;
+import org.eclipse.emf.compare.mpatch.transform.util.GroupingTransformation;
 import org.eclipse.emf.compare.mpatch.util.ExtEcoreUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -89,10 +90,7 @@ public class CommonTestOperations {
 				+ descriptorCreator.getLabel();
 
 		// prepare models
-		final MPatchModel mpatch = CompareTestHelper.getMPatchFromUris(changed, unchanged, symrefCreator,
-				descriptorCreator);
-		assertNotNull("Preceeding transformation failed! Make sure mpatch can be produced for: " + unchanged + " and "
-				+ changed + " and " + info, mpatch);
+		final MPatchModel mpatch = createMPatch(unchanged, changed, symrefCreator, descriptorCreator, info);
 
 		ResourceSet resourceSet = new ResourceSetImpl(); // get new resource to not conflict with original models!
 		final EObject rightModel = CompareTestHelper.loadModel(unchanged, resourceSet).get(0);
@@ -100,6 +98,32 @@ public class CommonTestOperations {
 
 		// apply the differences and validate the result against the leftModel
 		createAndApplyMPatch(mpatch, rightModel, leftModel, null, info);
+	}
+
+	/**
+	 * Create MPatch from URIs and check that it is not <code>null</code>. No other checks are performed.
+	 * 
+	 * @param unchanged
+	 *            The URI of the unchanged version of a model.
+	 * @param changed
+	 *            The URI of the changed version of a model.
+	 * @param symrefCreator
+	 *            The symbolic reference creator used for this transformation.
+	 * @param descriptorCreator
+	 *            The model descriptor creator used for this transformation.
+	 * @param info
+	 *            Additional information to print in assert messages.
+	 * @return The calculated MPatch.
+	 */
+	public static MPatchModel createMPatch(String unchanged, String changed, ISymbolicReferenceCreator symrefCreator,
+			IModelDescriptorCreator descriptorCreator, String info) {
+
+		// prepare models
+		final MPatchModel mpatch = CompareTestHelper.getMPatchFromUris(changed, unchanged, symrefCreator,
+				descriptorCreator);
+		assertNotNull("Preceeding transformation failed! Make sure mpatch can be produced for: " + unchanged + " and "
+				+ changed + " and " + info, mpatch);
+		return mpatch;
 	}
 
 	/**
@@ -119,8 +143,8 @@ public class CommonTestOperations {
 		// compare with target model and check whether they differ
 		final ComparisonSnapshot differences = CommonUtils.createEmfdiff(appliedModel, originalChangedModel, false);
 		final Collection<DiffElement> violations = CommonUtils.analyzeDiff(differences, CommonUtils.DIFF_ORDERINGS);
-		assertTrue("difference application was not successful! " + info + " - Violations: " + violations, violations
-				.isEmpty());
+		assertTrue("difference application was not successful! " + info + " - Violations: " + violations,
+				violations.isEmpty());
 	}
 
 	/**
@@ -383,14 +407,20 @@ public class CommonTestOperations {
 			assertNotNull("Result of symbolic reference resolution must not be null!", mapping);
 
 			// validate resolution
-			final List<IndepChange> invalidChanges = MPatchValidator.validateResolutions(mapping);
-			assertTrue("Symbolic references of the following changes do not resolve correctly: " + invalidChanges,
-					invalidChanges.isEmpty());
-
-			// validate model states for changes
-			final List<IndepChange> invalidStateChanges = MPatchValidator.validateElementStates(mapping, true);
-			assertTrue("The model state of the following changes could not be found: " + invalidStateChanges,
-					invalidStateChanges.isEmpty());
+			final List<IndepChange> invalid = MPatchValidator.validateResolutions(mapping);
+			final List<IndepChange> refs = CommonUtils.filterByValue(mapping.getValidation(),
+					ValidationResult.REFERENCE);
+			final List<IndepChange> applied = CommonUtils.filterByValue(mapping.getValidation(),
+					ValidationResult.STATE_AFTER);
+			final List<IndepChange> state = CommonUtils.filterByValue(mapping.getValidation(),
+					ValidationResult.STATE_INVALID);
+			if (!invalid.isEmpty()) {
+				final String msg = "Resolution fail!%\nAlready applied: %s%\nInvalid state: %s%\nNot resolved: %s%\nOther reasons: %s";
+				invalid.removeAll(refs);
+				invalid.removeAll(applied);
+				invalid.removeAll(state);
+				fail(String.format(msg, applied.toString(), state.toString(), refs.toString(), invalid.toString()));
+			}
 
 		} catch (Exception e) {
 			fail("Symbolic reference resolution failed: " + e.getMessage());
@@ -426,8 +456,8 @@ public class CommonTestOperations {
 	public static void checkOclExpressions(MPatchModel mpatch) {
 
 		// get all ocl conditions from the mpatch
-		final List<EObject> oclConditions = ExtEcoreUtils.collectTypedElements(mpatch.getChanges(), Collections
-				.singleton(SymrefsPackage.Literals.OCL_CONDITION), true);
+		final List<EObject> oclConditions = ExtEcoreUtils.collectTypedElements(mpatch.getChanges(),
+				Collections.singleton(SymrefsPackage.Literals.OCL_CONDITION), true);
 
 		// iterate over them
 		for (EObject eObject : oclConditions) {

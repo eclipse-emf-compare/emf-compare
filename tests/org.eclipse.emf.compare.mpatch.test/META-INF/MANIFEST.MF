@@ -4,7 +4,7 @@ Bundle-Name: MPatch Tests
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test
 Bundle-Version: 1.0.1.qualifier
 Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
- org.eclipse.emf.compare.mpatch.grouping,
+ org.eclipse.emf.compare.mpatch.transform,
  org.junit4,
  org.eclipse.emf.compare.mpatch.apply,
  org.eclipse.emf.compare.mpatch.apply.generic,

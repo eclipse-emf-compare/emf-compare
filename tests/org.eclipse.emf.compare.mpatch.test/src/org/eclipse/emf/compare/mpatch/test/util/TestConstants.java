@@ -34,7 +34,7 @@ import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 public class TestConstants {
 
 	/** Prefix for workspace test files. */
-	public static final String PREFIX_WORKSPACE = "platform:/resource/org.eclipse.emf.compare.mpatch.test.tests/";
+	public static final String PREFIX_WORKSPACE = "platform:/resource/org.eclipse.emf.compare.mpatch.test/tests/";
 
 	/** Prefix for plugin test files. */
 	public static final String PREFIX_PLUGIN = "platform:/plugin/org.eclipse.emf.compare.mpatch.test/tests/";
@@ -135,6 +135,31 @@ public class TestConstants {
 	/** Changed version of eachonce model for merging changes. */
 	public static final String MERGE_EACHONCE_URI2 = "merge/changed.eachonce";
 
+	/** Unchanged version of eachonce model for individual add element change. */
+	public static final String INDIVIDUAL_ADD_REM_ELEMENT_URI1 = "individual/add_rem_element1.eachonce";
+	/** Changed version of eachonce model for individual add element change. */
+	public static final String INDIVIDUAL_ADD_REM_ELEMENT_URI2 = "individual/add_rem_element2.eachonce";
+	/** Unchanged version of eachonce model for individual move element change. */
+	public static final String INDIVIDUAL_MOVE_ELEMENT_URI1 = "individual/move_element1.eachonce";
+	/** Changed version of eachonce model for individual move element change. */
+	public static final String INDIVIDUAL_MOVE_ELEMENT_URI2 = "individual/move_element2.eachonce";
+	/** Unchanged version of eachonce model for individual add attribute change. */
+	public static final String INDIVIDUAL_ADD_REM_ATTRIBUTE_URI1 = "individual/add_rem_attribute1.eachonce";
+	/** Changed version of eachonce model for individual add attribute change. */
+	public static final String INDIVIDUAL_ADD_REM_ATTRIBUTE_URI2 = "individual/add_rem_attribute2.eachonce";
+	/** Unchanged version of eachonce model for individual update attribute change. */
+	public static final String INDIVIDUAL_UPDATE_ATTRIBUTE_URI1 = "individual/update_attribute1.eachonce";
+	/** Changed version of eachonce model for individual update attribute change. */
+	public static final String INDIVIDUAL_UPDATE_ATTRIBUTE_URI2 = "individual/update_attribute2.eachonce";
+	/** Unchanged version of eachonce model for individual add reference change. */
+	public static final String INDIVIDUAL_ADD_REM_REFERENCE_URI1 = "individual/add_rem_reference1.eachonce";
+	/** Changed version of eachonce model for individual add reference change. */
+	public static final String INDIVIDUAL_ADD_REM_REFERENCE_URI2 = "individual/add_rem_reference2.eachonce";
+	/** Unchanged version of eachonce model for individual update reference change. */
+	public static final String INDIVIDUAL_UPDATE_REFERENCE_URI1 = "individual/update_reference1.eachonce";
+	/** Changed version of eachonce model for individual update reference change. */
+	public static final String INDIVIDUAL_UPDATE_REFERENCE_URI2 = "individual/update_reference2.eachonce";
+	
 	/** The diff applier used in the tests. */
 	public static IMPatchApplication DIFF_APPLIER = ExtensionManager.getSelectedApplication();
 

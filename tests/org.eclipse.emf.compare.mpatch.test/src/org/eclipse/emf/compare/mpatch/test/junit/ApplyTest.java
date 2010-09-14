@@ -71,6 +71,7 @@ public class ApplyTest {
 		testApply(TestConstants.ECORE_URI1, TestConstants.ECORE_URI2);
 	}
 
+	/** Same as {@link IndividualTest#testApply}. */ 
 	private void testApply(String unchangedUri, String changedUri) {
 		for (ISymbolicReferenceCreator symrefCreator : TestConstants.SYM_REF_CREATORS) {
 			for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS) {
