@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: IModelDescriptor.java,v 1.1 2010/09/10 15:23:07 cbrun Exp $
+ * $Id: IModelDescriptor.java,v 1.2 2010/09/14 09:45:44 pkonemann Exp $
  */
 package org.eclipse.emf.compare.mpatch;
 
@@ -164,7 +164,7 @@ public interface IModelDescriptor extends EObject {
 	 * Please note that the references must be restored separately using <b>applyCrossReferences()</b>!
 	 * The reason for the separation is that the restoring of cross references requires all model elements to exist before.
 	 * 
-	 * The created object is returned.
+	 * The result is a map from all model elements within the containment tree of the created element to their respective model descriptors.
 	 * <!-- end-model-doc -->
 	 * @model mapType="org.eclipse.emf.compare.mpatch.EObjectToIModelDescriptorMap<org.eclipse.emf.ecore.EObject, org.eclipse.emf.compare.mpatch.IModelDescriptor>"
 	 * @generated
@@ -174,10 +174,27 @@ public interface IModelDescriptor extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This is a semantical equals-check; if the arguments and the object itself describe the same model elements, this operation must return true.
+	 * <!-- end-model-doc -->
 	 * @model
 	 * @generated
 	 */
 	boolean describesEqual(IModelDescriptor other);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This operation checks whether the given element is described by this model descriptor.
+	 * However, the check only includes the containment tree and optionally the elements' attributes, never their references!
+	 * 
+	 * Just like applyStructure, the result is a map from all model elements within the containment tree of the given element to their respective model descriptors.
+	 * <!-- end-model-doc -->
+	 * @model mapType="org.eclipse.emf.compare.mpatch.EObjectToIModelDescriptorMap<org.eclipse.emf.ecore.EObject, org.eclipse.emf.compare.mpatch.IModelDescriptor>"
+	 * @generated
+	 */
+	EMap<EObject, IModelDescriptor> isDescriptorFor(EObject element, boolean checkAttributes);
 
 	/**
 	 * <!-- begin-user-doc -->

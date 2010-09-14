@@ -111,9 +111,9 @@ public class ExtEcoreUtils {
 		}
 		try {
 			if (ref.isMany()) {
-				final List list = (List) obj.eGet(ref);
+				final List<Object> list = (List<Object>) obj.eGet(ref);
 				if (value instanceof List) {
-					final List valueList = (List) value;
+					final List<Object> valueList = (List<Object>) value;
 					for (final Object listValue : valueList) {
 						if (!list.contains(listValue) && !list.add(listValue)) {
 							return false;
@@ -127,7 +127,7 @@ public class ExtEcoreUtils {
 				return true;
 			} else {
 				if (value instanceof List) {
-					final List valueList = (List) value;
+					final List<Object> valueList = (List<Object>) value;
 					if (valueList.size() > 1) {
 						throw new IllegalArgumentException("Cannot set a list of values to a non-many feature!");
 					} else if (valueList.size() == 1) {

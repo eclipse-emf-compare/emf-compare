@@ -111,6 +111,10 @@
       <genOperations ecoreOperation="mpatch.ecore#//IModelDescriptor/describesEqual">
         <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/describesEqual/other"/>
       </genOperations>
+      <genOperations ecoreOperation="mpatch.ecore#//IModelDescriptor/isDescriptorFor">
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/isDescriptorFor/element"/>
+        <genParameters ecoreParameter="mpatch.ecore#//IModelDescriptor/isDescriptorFor/checkAttributes"/>
+      </genOperations>
     </genClasses>
     <genClasses image="false" ecoreClass="mpatch.ecore#//ElementReferenceToEObjectMap">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//ElementReferenceToEObjectMap/key"/>

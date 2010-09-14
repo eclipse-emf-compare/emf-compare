@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: MPatchPackageImpl.java,v 1.1 2010/09/10 15:23:07 cbrun Exp $
+ * $Id: MPatchPackageImpl.java,v 1.2 2010/09/14 09:45:44 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.impl;
 
@@ -1199,6 +1199,10 @@ public class MPatchPackageImpl extends EPackageImpl implements MPatchPackage {
 
 		op = addEOperation(iModelDescriptorEClass, ecorePackage.getEBoolean(), "describesEqual", 0, 1, IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getIModelDescriptor(), "other", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+		op = addEOperation(iModelDescriptorEClass, this.getEObjectToIModelDescriptorMap(), "isDescriptorFor", 0, -1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEObject(), "element", 0, 1, IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, ecorePackage.getEBoolean(), "checkAttributes", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(elementReferenceToEObjectMapEClass, Map.Entry.class, "ElementReferenceToEObjectMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getElementReferenceToEObjectMap_Key(), this.getIElementReference(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

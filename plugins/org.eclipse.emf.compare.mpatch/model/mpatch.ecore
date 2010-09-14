@@ -132,13 +132,23 @@
     </eOperations>
     <eOperations name="applyStructure" upperBound="-1" eType="#//EObjectToIModelDescriptorMap">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="This applies the described element to a given modelElement using the given containment.&#xD;&#xA;I.e. all model-descriptors restore their structure, that is the model elements and their attributes.&#xD;&#xA;&#xD;&#xA;Please note that the references must be restored separately using &lt;b>applyCrossReferences()&lt;/b>!&#xD;&#xA;The reason for the separation is that the restoring of cross references requires all model elements to exist before.&#xD;&#xA;&#xD;&#xA;The created object is returned."/>
+        <details key="documentation" value="This applies the described element to a given modelElement using the given containment.&#xD;&#xA;I.e. all model-descriptors restore their structure, that is the model elements and their attributes.&#xD;&#xA;&#xD;&#xA;Please note that the references must be restored separately using &lt;b>applyCrossReferences()&lt;/b>!&#xD;&#xA;The reason for the separation is that the restoring of cross references requires all model elements to exist before.&#xD;&#xA;&#xD;&#xA;The result is a map from all model elements within the containment tree of the created element to their respective model descriptors."/>
       </eAnnotations>
       <eParameters name="modelElement" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
       <eParameters name="containment" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EReference"/>
     </eOperations>
     <eOperations name="describesEqual" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This is a semantical equals-check; if the arguments and the object itself describe the same model elements, this operation must return true."/>
+      </eAnnotations>
       <eParameters name="other" eType="#//IModelDescriptor"/>
+    </eOperations>
+    <eOperations name="isDescriptorFor" upperBound="-1" eType="#//EObjectToIModelDescriptorMap">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="This operation checks whether the given element is described by this model descriptor.&#xD;&#xA;However, the check only includes the containment tree and optionally the elements' attributes, never their references!&#xD;&#xA;&#xD;&#xA;Just like applyStructure, the result is a map from all model elements within the containment tree of the given element to their respective model descriptors."/>
+      </eAnnotations>
+      <eParameters name="element" eType="ecore:EClass platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EObject"/>
+      <eParameters name="checkAttributes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="crossReferences" upperBound="-1"
         eType="#//IElementReference" changeable="false" volatile="true" transient="true"

@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
 import org.eclipse.emf.compare.mpatch.ChangeKind;
 import org.eclipse.emf.compare.mpatch.IElementReference;
@@ -31,16 +35,19 @@ import org.eclipse.emf.compare.mpatch.IndepMoveElementChange;
 import org.eclipse.emf.compare.mpatch.IndepUpdateReferenceChange;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.MPatchPackage;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * Helper class for miscellaneous operations related to {@link MPatchModel}.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- *
+ * 
  */
 public class MPatchUtil {
 
@@ -108,7 +115,7 @@ public class MPatchUtil {
 	 */
 	public static Map<ChangeKind, List<IndepChange>> collectChanges(IndepChange change) {
 		if (change instanceof ChangeGroup) {
-			return collectChanges(((ChangeGroup)change).getSubChanges());
+			return collectChanges(((ChangeGroup) change).getSubChanges());
 		} else {
 			final Map<ChangeKind, List<IndepChange>> map = new HashMap<ChangeKind, List<IndepChange>>();
 			addChangeToMap(map, change);
@@ -147,8 +154,8 @@ public class MPatchUtil {
 		list.add(change);
 	}
 
-	/** 
-	 * Helper method to add an element to a map of set of elements. 
+	/**
+	 * Helper method to add an element to a map of set of elements.
 	 */
 	public static <T, S> void addElementToSetMap(T key, S element, Map<T, Set<S>> map) {
 		Set<S> set = map.get(key);
@@ -159,8 +166,8 @@ public class MPatchUtil {
 		set.add(element);
 	}
 
-	/** 
-	 * Helper method to add an element to a map of list of elements. 
+	/**
+	 * Helper method to add an element to a map of list of elements.
 	 */
 	public static <T, S> void addElementToListMap(T key, S element, Map<T, List<S>> map) {
 		List<S> set = map.get(key);
@@ -324,4 +331,62 @@ public class MPatchUtil {
 		return parent instanceof IndepChange ? (IndepChange) parent : null;
 	}
 
+	/**
+	 * The addition and deletion of elements includes their features, {@link EAttribute}s and {@link EReference}s, to be
+	 * concrete. This method determines whether the feature is relevant to be stored, that is, whether it is
+	 * serializable. Criteria being checked are whether it is transient, derived, and changeable. Moreover, the generic
+	 * type is filtered.
+	 * 
+	 * @param feature
+	 *            A structured feature.
+	 * @return Whether it is relevant to be stored for deletions and additions, or not.
+	 */
+	public static boolean isRelevantFeature(EStructuralFeature feature) {
+		// ETypedElement.eGenericType is introduced in EMF since 2.5 and is more or less derived from eType.
+		// eGenericType (child!) is in particular set if eType (reference) is set!
+		// So I assume it is safe to ignore all generic types in the differences.
+		// At least all tests pass so far...
+		if (EcorePackage.Literals.ETYPED_ELEMENT__EGENERIC_TYPE.equals(feature)
+				|| EcorePackage.Literals.ECLASS__EGENERIC_SUPER_TYPES.equals(feature))
+			return false;
+
+		return !feature.isTransient() && !feature.isDerived() && feature.isChangeable();
+	}
+
+	/**
+	 * Iterate over the given differences and remove all {@link DiffElement}s which are of the type or subtype as
+	 * specified in <code>diffTypes</code>. If there are empty {@link DiffGroup}s left, they will be erased as well.
+	 * 
+	 * @param diff
+	 *            Differences.
+	 * @param diffTypes
+	 *            The types which shall be removed.
+	 * @return A list of all removed {@link DiffElement}s.
+	 */
+	public static List<DiffElement> removeDiffElementOfType(DiffModel diff, Set<EClass> diffTypes) {
+		final List<DiffElement> removed = new ArrayList<DiffElement>();
+
+		// don't ever delete diff groups explicitly
+		if (diffTypes.contains(DiffPackage.Literals.DIFF_GROUP))
+			throw new IllegalArgumentException("DiffGroups are not supported! This would erase all differences!");
+
+		// collect and iterate over all elements to be removed
+		final List<EObject> diffElementsToRemove = ExtEcoreUtils.collectTypedElements(diff.getDifferences(), diffTypes,
+				true);
+		for (EObject obj : diffElementsToRemove) {
+			EObject parent = obj.eContainer();
+
+			// remove element and store in result!
+			EcoreUtil.remove(obj);
+			removed.add((DiffElement) obj);
+
+			// if parent is empty group, remove it!
+			while (parent instanceof DiffElement && ((DiffElement) parent).getSubDiffElements().isEmpty()) {
+				final EObject newParent = parent.eContainer();
+				EcoreUtil.remove(parent);
+				parent = newParent;
+			}
+		}
+		return removed;
+	}
 }
