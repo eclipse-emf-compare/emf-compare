@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.test.junit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
