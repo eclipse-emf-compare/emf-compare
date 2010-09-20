@@ -68,16 +68,16 @@ public class ScopeExpansion implements IMPatchTransformation {
 	private static final String LABEL = "Scope Expansion";
 
 	/** Description for this transformation. */
-	private static final String DESCRIPTION = "This transformation expands the scope of changes by weakens the OCL condition of ElementSetReferences (consition-based "
+	private static final String DESCRIPTION = "This transformation expands the scope of changes by weakening the OCL condition of ElementSetReferences (consition-based "
 			+ MPatchConstants.SYMBOLIC_REFERENCES_NAME
 			+ "). This is an optional transformation and might change the result of "
 			+ MPatchConstants.MPATCH_SHORT_NAME
 			+ " application!\n\n"
-			+ "It widens the conditions for applying changes which makes changes also applicable to slightly changed models. "
+			+ "It widens the conditions for applying changes which makes changes also applicable to slightly different models. "
 			+ "The default OCL condition produced for condition-based symbolic references is "
 			+ "strictly bound to the original model element by primarily checking its attributes; "
-			+ "this transformation weakens the conditions from equality to a case-insensitive containment check.\n"
-			+ "Example: \"self.name = 'Library'\" becomes \"self.name.containsIgnoreCase('Library')\"";
+			+ "this transformation weakens the conditions from equality to a similarity check.\n"
+			+ "Example: \"self.name = 'Library'\" becomes \"self.name.checkSimilarity('Library', 0.7)\"";
 
 	/**
 	 * {@inheritDoc}
