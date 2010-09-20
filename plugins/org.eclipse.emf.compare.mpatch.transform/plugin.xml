@@ -66,5 +66,85 @@
             diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.ReverseMPatch">
       </difftransformation>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startscopeexpansion"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.transform.actions.ScopeExpensionAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.transform.ScopeExpansionAction"
+               label="Generalization: Scope Expansion"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startrefgeneralize"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.transform.actions.UnboundSymbolicReferencesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.generalize.UnboundSymbolicReferencesAction"
+               label="Generalization: Unbound Symbolic References"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.emf.compare.mpatch.generalize.startmergechanges"
+            nameFilter="*mpatch"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.emf.compare.mpatch.transform.actions.MergeChangesAction"
+               enablesFor="1"
+               id="org.eclipse.emf.compare.mpatch.generalize.MergeChangesAction"
+               label="Generalization: Merge Changes"
+               menubarPath="org.eclipse.emf.compare.mpatch.mpatchmenu/generalize">
+         </action>
+         <menu
+               icon="icons/diff_16.gif"
+               id="org.eclipse.emf.compare.mpatch.mpatchmenu"
+               label="MPatch"
+               path="additions">
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.ScopeExpansion">
+      </difftransformation>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.UnboundSymbolicReferencesWeakening">
+      </difftransformation>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.mpatch.transform">
+      <difftransformation
+            diff_transformation="org.eclipse.emf.compare.mpatch.transform.impl.MergeChanges">
+      </difftransformation>
+   </extension>
 </plugin>
