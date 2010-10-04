@@ -10,7 +10,7 @@
  Contributors:
     Patrick Koenemann, DTU Informatics - initial API and implementation
    
- $Id: tutorial.html,v 1.1 2010/09/30 20:31:24 pkonemann Exp $
+ $Id: tutorial.html,v 1.2 2010/10/04 16:18:57 pkonemann Exp $
 -->
 
 <html>
@@ -62,8 +62,15 @@
 <li>Resolution of symbolic references;<br />this page is the most important for MPatch application--in order to effectively use MPatches, you need to understand what happens here:<br />It defines to which model elements (the model was choosen in the previous step) each individual change should be applied.<br />The symbols have the following meaning:<br /><img src="images/tut_apply_blue.png" border="0" width="16" height="16" /> -- The number of resolved model elements does not match the required number<br /><img src="images/tut_apply_red.png" border="0" width="16" height="16" /> -- The change is not applicable to the set of selected model elements<br /> <img src="images/tut_apply_green.png" border="0" /> -- Resolution is ok, the change can be applied.<br />The number of resolved model elements can be changed by clicking the button [...] in the table cell which shows the resolved model elements.<br /><img src="images/apply3.png" border="0" alt="Resolve symbolic references" /><br />Note that a change can be applied to multiple model elements at once because if the 'Unbound Symbolic References' transformation was performed!<br />Note also that the user can make a selection by ticking (thus ignoring) changes, which is already done for the unknown changes.<br /><br /></li>
 <li>Storing an intermediate emfdiff (optional);<br />If the intermediate models should be saved after the application process (ticking <em>Store intermediate models</em> in step 3), then the wizards asks for a place to store the emfdiff file.<br /><br /></li>
 <li>Storing an intermediate model (optional);<br />If the intermediate models should be saved, the wizards asks for a place to store a copy of the model selected in step 2.<br /><br /></li>
-<li>Review all settings;<br />If <em>Review result with EMF Compare</em> is ticked, then a comparison of the unchanged and the changed model is opened afterwards.<br /><img src="images/apply4.png" border="0" alt="Review all settings" /><br /><br /></li>
-<li>Review result with EMF Compare (optional);<br />EMF Compare opens and shows all applied changes in a comparison view.<br />Please note that due to a <a href="http://modeldiff.imm.dtu.dk/modeldiff/index.php?option=com_content&view=article&catid=38%3Abugs-and-features&id=57%3Abug-visualization-of-differences-after-difference-application&Itemid=57">bug (or feature?!) in EMF Compare</a>, any changes in this view are discarded if the intermediate models are not saved.</li>
+<li>Review all settings;<br />
+When clicking <i>Finish</i>, a message confirms the application of the four changes. If <em>Review result with EMF Compare</em> is ticked, then a comparison of the unchanged and the changed model is opened afterwards.<br /><img src="images/apply4.png" border="0" alt="Review all settings" /><br /><img src="images/application.png" border="0" alt="Review all settings" /><br /><br /></li>
+<li>Review result with EMF Compare (optional);<br />EMF Compare opens and shows all applied changes in a comparison view. Please note that due to a <a href="/modeldiff/index.php?option=com_content&view=article&catid=38%3Abugs-and-features&id=57%3Abug-visualization-of-differences-after-difference-application&Itemid=57">bug (or feature?!) in EMF Compare</a>, any changes in this view are discarded if the intermediate models are not saved.<img src="images/final_compare.png" border="0" alt="Review all settings" /><br />
+Now we can see:
+<ul>
+<li><i>Citylibrary.authors</i> was added although the original class was <i>Library</i>.
+<li><i>Book.authors</i> (attribute) has been deleted although the original feature was called <i>author</i> and the book was located in another package.
+<li><i>Book.authors</i> (reference) has been added although the original class was located in another package.
+</ul></li>
 </ol>
 <p>Now you know the basic steps to use MPatches.</p>
 
