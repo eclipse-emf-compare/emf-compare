@@ -47,7 +47,7 @@
 	
 	<searchPath name="query">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/emf/query/downloads/drops/1.4.0">
+			<uri format="{0}/modeling/emf/query/downloads/drops/1.4.0/emf-query-SDK-1.4.0.zip">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
