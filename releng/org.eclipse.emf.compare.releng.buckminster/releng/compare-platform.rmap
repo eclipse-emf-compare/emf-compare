@@ -6,7 +6,7 @@
 	<locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="emf.query" />
 	<locator pattern="^org\.eclipse\.emf\.validation(?:\..+)?$" searchPathRef="emf.validation" />
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
-	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="mdt.ocl" />
+	<locator pattern="^org\.eclipse\.ocl\.ecore$" searchPathRef="mdt.ocl" />
 	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="m2m.qvto" />
 	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
