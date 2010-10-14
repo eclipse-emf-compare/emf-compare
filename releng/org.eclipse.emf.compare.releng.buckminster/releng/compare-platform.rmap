@@ -6,7 +6,7 @@
 	<locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="emf.query" />
 	<locator pattern="^org\.eclipse\.emf\.validation$" searchPathRef="emf.validation" />
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
-	<locator pattern="^org\.eclipse\.ocl\.ecore$" searchPathRef="mdt.ocl" />
+	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="ocl" />
 	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="m2m.qvto" />
 	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
@@ -37,9 +37,9 @@
 		</provider>
 	</searchPath>
 	
-	<searchPath name="mdt.ocl">
+    <searchPath name="ocl">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/mdt/ocl/downloads/drops/3.0.0/R201006141954/mdt-ocl-Update-3.0.0.zip">
+			<uri format="{0}/modeling/mdt/ocl/3_0/updates/milestones">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>

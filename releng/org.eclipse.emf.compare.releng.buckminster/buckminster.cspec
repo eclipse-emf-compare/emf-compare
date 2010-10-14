@@ -6,9 +6,9 @@
 		<cs:dependency name="org.eclipse.platform" componentType="eclipse.feature" />
 		<cs:dependency name="org.eclipse.emf.ecore.editor" componentType="eclipse.feature" />
 		<cs:dependency name="org.eclipse.team.svn.ui" componentType="osgi.bundle" />
-		<cs:dependency name="org.eclipse.emf.query" componentType="osgi.bundle" />
-		<cs:dependency name="org.eclipse.emf.validation" componentType="osgi.bundle" />
-		<cs:dependency name="org.eclipse.ocl.ecore" componentType="osgi.bundle" />
+		<cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature" />
+		<cs:dependency name="org.eclipse.emf.validation" componentType="eclipse.feature" />
+		<cs:dependency name="org.eclipse.ocl" componentType="eclipse.feature" />
 		<cs:dependency name="org.eclipse.m2m.qvt.om" componentType="osgi.bundle" />
 		<cs:dependency name="org.eclipse.pde.core" componentType="osgi.bundle" />
 		<cs:dependency name="org.junit" componentType="osgi.bundle" />
