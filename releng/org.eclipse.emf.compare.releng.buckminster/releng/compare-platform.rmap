@@ -3,11 +3,11 @@
 	xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0"
 >
 	<locator pattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" searchPathRef="local.releng" />
-	<locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="emf-query" />
-	<locator pattern="^org\.eclipse\.emf\.validation(?:\..+)?$" searchPathRef="emf-validation" />
+	<locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="emf.query" />
+	<locator pattern="^org\.eclipse\.emf\.validation(?:\..+)?$" searchPathRef="emf.validation" />
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
-	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="mdt-ocl" />
-	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="m2m-qvto" />
+	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="mdt.ocl" />
+	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="m2m.qvto" />
 	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
 
@@ -20,15 +20,7 @@
 		</provider>
 	</searchPath>
 
-	<searchPath name="emf">
-		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/emf/emf/updates/2.6milestones">
-				<bc:propertyRef key="eclipse.download" />
-			</uri>
-		</provider>
-	</searchPath>
-	
-	<searchPath name="emf-validation">
+	<searchPath name="emf.validation">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="{0}/modeling/emf/validation/downloads/drops/1.4.0">
 				<bc:propertyRef key="eclipse.download" />
@@ -37,7 +29,7 @@
 	</searchPath>
 	
 	
-	<searchPath name="emf-query">
+	<searchPath name="emf.query">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="{0}/modeling/emf/query/downloads/drops/1.4.0">
 				<bc:propertyRef key="eclipse.download" />
@@ -45,7 +37,7 @@
 		</provider>
 	</searchPath>
 	
-	<searchPath name="mdt-ocl">
+	<searchPath name="mdt.ocl">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="{0}/modeling/mdt/ocl/downloads/drops/3.0.0/R201006141954/mdt-ocl-Update-3.0.0.zip">
 				<bc:propertyRef key="eclipse.download" />
@@ -53,7 +45,7 @@
 		</provider>
 	</searchPath>
 	
-	<searchPath name="m2m-qvto">
+	<searchPath name="m2m.qvto">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="{0}/modeling/m2m/qvtoml/downloads/drops/3.0.1/R201009250708/m2m-qvtoml-Update-3.0.1.zip">
 				<bc:propertyRef key="eclipse.download" />
@@ -77,6 +69,16 @@
 			</uri>
 		</provider>
 	</searchPath>
+	
+	
+	<searchPath name="emf">
+		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+			<uri format="{0}/modeling/emf/emf/updates/2.6milestones">
+				<bc:propertyRef key="eclipse.download" />
+			</uri>
+		</provider>
+	</searchPath>
+	
 
 	<property key="checkout.location" value="${workspace.root}/" />
 	<property key="eclipse.download" value="http://download.eclipse.org" />
