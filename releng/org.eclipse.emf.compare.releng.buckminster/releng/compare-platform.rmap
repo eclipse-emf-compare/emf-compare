@@ -29,13 +29,6 @@
 	</searchPath>
 	
 	
-	<searchPath name="emf.query">
-		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/emf/query/downloads/drops/1.4.0">
-				<bc:propertyRef key="eclipse.download" />
-			</uri>
-		</provider>
-	</searchPath>
 	
     <searchPath name="ocl">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
@@ -47,7 +40,7 @@
 	
 	<searchPath name="query">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/emf/query/downloads/drops/1.4.0/emf-query-Update-1.4.0.zip">
+			<uri format="jar:{0}/modeling/emf/query/downloads/drops/1.4.0/emf-query-Update-1.4.0.zip!">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
