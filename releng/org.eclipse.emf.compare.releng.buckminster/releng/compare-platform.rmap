@@ -49,7 +49,7 @@
 	
 	<searchPath name="qvto">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="jar:{0}/modeling/m2m/qvtoml/downloads/drops/3.0.0/R201006151231/m2m-qvtoml-Update-3.0.0.zip!">
+			<uri format="jar:{0}/modeling/m2m/qvtoml/downloads/drops/3.0.0/R201006151231/m2m-qvtoml-SDK-3.0.0.zip!">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
