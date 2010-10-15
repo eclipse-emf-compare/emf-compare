@@ -4,10 +4,11 @@
 >
 	<locator pattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" searchPathRef="local.releng" />
 	<locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="query" />
-	<locator pattern="^org\.eclipse\.emf\.validation$" searchPathRef="emf.validation" />
+	<locator pattern="^org\.eclipse\.emf\.validation$" searchPathRef="validation" />
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
+	<locator pattern="^lpg\.runtime\.java$" searchPathRef="ocl" />
 	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="ocl" />
-	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="m2m.qvto" />
+	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="qvto" />
 	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
 
@@ -20,7 +21,7 @@
 		</provider>
 	</searchPath>
 
-	<searchPath name="emf.validation">
+	<searchPath name="validation">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="jar:{0}/modeling/emf/validation/downloads/drops/1.4.0/R201006151000/emf-validation-Update-1.4.0.zip!">
 				<bc:propertyRef key="eclipse.download" />
@@ -46,7 +47,7 @@
 		</provider>
 	</searchPath>
 	
-	<searchPath name="m2m.qvto">
+	<searchPath name="qvto">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="jar:{0}/modeling/m2m/qvtoml/downloads/drops/3.0.1/R201009250708/m2m-qvtoml-Update-3.0.1.zip!">
 				<bc:propertyRef key="eclipse.download" />
