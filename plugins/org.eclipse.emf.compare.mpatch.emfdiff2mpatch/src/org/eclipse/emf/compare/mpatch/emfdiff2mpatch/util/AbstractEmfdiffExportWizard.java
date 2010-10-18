@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.ui.dialogs.DiagnosticDialog;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.wizards.EmfdiffExportWizard
 import org.eclipse.emf.compare.mpatch.extension.IMPatchTransformation;
 import org.eclipse.emf.ecore.util.Diagnostician;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -43,7 +45,7 @@ import org.eclipse.ui.IWorkbench;
 public abstract class AbstractEmfdiffExportWizard extends Wizard implements INewWizard {
 
 	/** Result of the comparison this wizard is meant to export. */
-	private final List<ComparisonSnapshot> input = new ArrayList<ComparisonSnapshot>();
+	private ComparisonSnapshot input = null;
 
 	/** References the page displayed by this wizard. */
 	private EmfdiffExportWizardTransformationPage transformationPage;
@@ -70,12 +72,12 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 
 				// ensures no modification will be made to the input
 				// input.add((ComparisonSnapshot)EcoreUtil.copy(inputSnapshot));
-				input.add(inputSnapshot); // we do not modify the input, so it is safe to use it directly
+				input = inputSnapshot; // we do not modify the input, so it is safe to use it directly
 			}
 		}
 
 		// we cannot do anything if input is empty!
-		if (input.isEmpty()) {
+		if (input == null) {
 			final String message = "Cannot transform an emfdiff to " + MPatchConstants.MPATCH_SHORT_NAME
 					+ " if there is no emfdiff given!";
 			MessageDialog.openError(getShell(), "No emfdiff given!", message);
@@ -99,51 +101,82 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 	 */
 	@Override
 	public boolean performFinish() {
+		final boolean[] returnValue = new boolean[] { true }; // easy way to store return value
 		mPatch = null;
 		final StringBuffer details = new StringBuffer();
+		final List<IMPatchTransformation> transformations = transformationPage.getTransformations();
+
+		// use a progress monitor to create mpatch!
 		try {
-			mPatch = (MPatchModel) TransformationLauncher.transform(input, details,
-					transformationPage.getSymbolicReferenceCreator(), transformationPage.getModelDescriptorCreator())
-					.get(0);
-		} catch (final Exception e) {
-			Emfdiff2mpatchActivator.getDefault().logError(
-					"Could not export " + MPatchConstants.MPATCH_LONG_NAME + "!\n" + details.toString(), e);
-			MessageDialog.openError(getShell(), "Transformation failed",
-					"The Transformation failed! Please see the error log for details.\nError message: "
-							+ e.getMessage());
-			return false;
+			getContainer().run(false, false, new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+					monitor.beginTask("Creating...", 2 + 4 + (transformations.size() * 2) + 2 + 2);
+					monitor.worked(2); // PROGRESS MONITOR
+
+					try {
+						mPatch = (MPatchModel) TransformationLauncher.transform(input, details,
+								transformationPage.getSymbolicReferenceCreator(),
+								transformationPage.getModelDescriptorCreator());
+					} catch (final Exception e) {
+						Emfdiff2mpatchActivator.getDefault().logError(
+								"Could not export " + MPatchConstants.MPATCH_LONG_NAME + "!\n" + details.toString(), e);
+						MessageDialog.openError(
+								getShell(),
+								"Transformation failed",
+								"The Transformation failed! Please see the error log for details.\nError message: "
+										+ e.getMessage());
+						returnValue[0] = false;
+					}
+					monitor.worked(4); // PROGRESS MONITOR
+
+					if (returnValue[0]) { // only if emfdiff2mpatch transformation succeeded
+						// perform post-transformations
+						final StringBuffer result = new StringBuffer();
+						for (IMPatchTransformation transformation : transformations) {
+							try {
+								final int transformationResult = transformation.transform(mPatch);
+								result.append(transformation.getLabel() + ": " + transformationResult + "\n");
+
+								// if (!validateDiffWithMessage(mPatch, "Invalid mPatch by: " +
+								// transformation.getLabel()))
+								// return false;
+
+								monitor.worked(2); // PROGRESS MONITOR
+							} catch (Exception e) {
+								Emfdiff2mpatchActivator.getDefault().logError(
+										"Error in Transformation: " + transformation.getLabel(), e);
+								result.append(transformation.getLabel() + ": " + e.getMessage() + "\n");
+							}
+						}
+
+						if (!validateMPatchWithMessage(mPatch, MPatchConstants.MPATCH_SHORT_NAME
+								+ " cannot be validated successfully"))
+							result.append("\nWarning: Validation of " + MPatchConstants.MPATCH_SHORT_NAME
+									+ " failed!\n");
+						monitor.worked(2); // PROGRESS MONITOR
+
+						// ask user if the results are ok, otherwise abort
+						if (result.length() > 0) {
+							result.insert(0, "Transformation results:\n\n");
+							result.append("\nContinue saving the resulting " + MPatchConstants.MPATCH_SHORT_NAME
+									+ "?\n" + "('No' returns to the wizard)");
+							if (!MessageDialog.openQuestion(getShell(), MPatchConstants.MPATCH_SHORT_NAME
+									+ " creation results", result.toString())) {
+								returnValue[0] = false;
+							}
+						}
+					}
+					monitor.done(); // PROGRESS MONITOR
+				}
+			});
+		} catch (InvocationTargetException e) {
+		} catch (InterruptedException e) {
 		}
 
-		// perform post-transformations
-		final StringBuffer result = new StringBuffer();
-		for (IMPatchTransformation transformation : transformationPage.getTransformations()) {
-			try {
-				final int transformationResult = transformation.transform(mPatch);
-				result.append(transformation.getLabel() + ": " + transformationResult + "\n");
-
-				// if (!validateDiffWithMessage(mPatch, "Invalid mPatch by: " + transformation.getLabel()))
-				// return false;
-			} catch (Exception e) {
-				Emfdiff2mpatchActivator.getDefault().logError("Error in Transformation: " + transformation.getLabel(),
-						e);
-				result.append(transformation.getLabel() + ": " + e.getMessage() + "\n");
-			}
-		}
-
-		if (!validateMPatchWithMessage(mPatch, MPatchConstants.MPATCH_SHORT_NAME + " cannot be validated successfully"))
-			result.append("\nWarning: Validation of " + MPatchConstants.MPATCH_SHORT_NAME + " failed!\n");
-
-		// ask user if the results are ok, otherwise abort
-		if (result.length() > 0) {
-			result.insert(0, "Transformation results:\n\n");
-			result.append("\nContinue saving the resulting " + MPatchConstants.MPATCH_SHORT_NAME + "?\n"
-					+ "('No' returns to the wizard)");
-			if (!MessageDialog.openQuestion(getShell(), MPatchConstants.MPATCH_SHORT_NAME + " creation results", result.toString())) {
-				return false;
-			}
-		}
-
-		return true;
+		return returnValue[0];
 	}
 
 	/**
@@ -181,7 +214,8 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 	@Override
 	public void addPages() {
 		super.addPages();
-		transformationPage = new EmfdiffExportWizardTransformationPage(MPatchConstants.MPATCH_SHORT_NAME + " Configuration");
+		transformationPage = new EmfdiffExportWizardTransformationPage(MPatchConstants.MPATCH_SHORT_NAME
+				+ " Configuration");
 		addPage(transformationPage);
 	}
 }
