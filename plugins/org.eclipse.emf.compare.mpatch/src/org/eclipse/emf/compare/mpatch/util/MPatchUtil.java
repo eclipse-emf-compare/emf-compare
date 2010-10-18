@@ -201,7 +201,7 @@ public class MPatchUtil {
 	 */
 	public static String formatSymrefLabel(IElementReference symref) {
 		if (symref == null)
-			return "null";
+			return "<null>";
 
 		String label = symref.getLabel();
 		if (label == null || label.length() == 0) {
@@ -217,13 +217,14 @@ public class MPatchUtil {
 		if (symref.getType() != null) {
 			final String type = "<" + symref.getType().getName() + ">";
 
-			// maybe some label already has a type at front? (e.g. in UML)
-			if (label.startsWith(type) || label.replaceAll(" ", "").startsWith(type)) {
-				label = shorten(label, 30);
+			// maybe some label already has a type? (e.g. in UML)
+			final String shortLabel = shorten(label, 40);
+			if (shortLabel.contains(type) || shortLabel.replaceAll(" ", "").contains(type)) {
+				label = shortLabel;
 			} else
-				label = shorten(label, 20) + " " + type;
+				label = shorten(label, 30) + " " + type;
 		} else
-			label = shorten(label, 25);
+			label = shorten(label, 35);
 
 		return "[" + label + "]";
 	}
@@ -236,13 +237,38 @@ public class MPatchUtil {
 	 *            The symbolic reference.
 	 * @return The generic text for a symbolic reference.
 	 */
-	public static String getTextForSymref(IElementReference symref, String type) {
+	public static String getTextForSymref(IElementReference symref) {
 		final EStructuralFeature containment = symref.eContainingFeature();
-		final String prefix = containment == null ? "<no owner>" : containment.getName();
+		/*
+		 * The containment name was too long and too confusing for non-experts.
+		 * Use it only if we cannot find a better name!
+		 */
+//		final String prefix = containment == null ? "<no owner>" : containment.getName();
+		final String prefix;
+		if (MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT.equals(containment)) {
+			prefix = "target";
+		} else if (MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__NEW_PARENT.equals(containment)) {
+			prefix = "new parent";
+		} else if (MPatchPackage.Literals.INDEP_MOVE_ELEMENT_CHANGE__OLD_PARENT.equals(containment)) {
+			prefix = "old parent";
+		} else if (MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE__SUB_MODEL_REFERENCE.equals(containment)) {
+			prefix = "existing element";
+		} else if (MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE.equals(containment)) {
+			prefix = "changed reference";
+		} else if (MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__OLD_REFERENCE.equals(containment)) {
+			prefix = "old reference";
+		} else if (MPatchPackage.Literals.INDEP_UPDATE_REFERENCE_CHANGE__NEW_REFERENCE.equals(containment)) {
+			prefix = "new reference";
+		} else if (containment != null && "value".equals(containment.getName())) {
+			// this is most likely one of the cross references in model descriptors (whose meta model we cannot access here)
+			prefix = "cross reference";
+		} else {
+			prefix = containment == null ? "<no owner>" : containment.getName();
+		}
 		final int lower = symref.getLowerBound();
 		final int upper = symref.getUpperBound();
 		final String bounds = "[" + lower + (lower != upper ? ".." + (upper < 0 ? "*" : upper) : "") + "]";
-		return prefix + " " + bounds + " (" + type + ")";
+		return prefix + " " + bounds;
 	}
 
 	private static String shorten(String string, int limit) {
