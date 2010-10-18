@@ -11,17 +11,19 @@
 package org.eclipse.emf.compare.mpatch.apply.wizards;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.apply.ApplyActivator;
 import org.eclipse.emf.compare.mpatch.common.util.CommonUtils;
-import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.common.util.ExtensionManager;
+import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchApplication;
 import org.eclipse.emf.compare.mpatch.extension.MPatchApplicationResult;
 import org.eclipse.emf.compare.mpatch.extension.ResolvedSymbolicReferences;
@@ -37,6 +39,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -46,11 +49,10 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 
-
 /**
- * A wizard which takes an MPatch (instance of {@link MPatchModel}) and an emf model as input,
- * resolves all symbolic references of the diff, and creates a new emfdiff (instance of {@link ComparisonSnapshot}) and
- * a new model such that the emfdiff can be used to transfer the mpatch to the target model.<br>
+ * A wizard which takes an MPatch (instance of {@link MPatchModel}) and an emf model as input, resolves all symbolic
+ * references of the diff, and creates a new emfdiff (instance of {@link ComparisonSnapshot}) and a new model such that
+ * the emfdiff can be used to transfer the mpatch to the target model.<br>
  * <br>
  * <i>Example:</i>
  * <ol>
@@ -211,7 +213,7 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		// check the initial selection for a valid input file
 		for (Object obj : selection.toArray()) {
 			if (obj instanceof IFile) {
-				final IFile file = (IFile)obj;
+				final IFile file = (IFile) obj;
 				if (MPatchConstants.FILE_EXTENSION_MPATCH.equals(file.getFileExtension()) && mPatchFile == null) {
 					mPatchFile = file;
 				} else if (modelURI == null) {
@@ -225,12 +227,12 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		setWindowTitle("Apply " + MPatchConstants.MPATCH_LONG_NAME);
 		final URL imageURL = ApplyActivator.getDefault().getBundle().getEntry(ApplyWizard.WIZARD_ICON);
 		setDefaultPageImageDescriptor(ImageDescriptor.createFromURL(imageURL));
-		
+
 		// if a model is open, get its uri
 		if (modelURI == null) {
 			modelURI = CommonUtils.getCurrentEditorFileInputUri();
 		}
-		
+
 		// maybe the MPatch is open?! then erase the default model uri again...
 		if (modelURI != null && mPatchFile != null) {
 			final URI uri = URI.createPlatformResourceURI(mPatchFile.getFullPath().toString(), true);
@@ -250,72 +252,98 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final boolean reviewDiffApplication = summaryPage.reviewDiffApplication();
 		final EObject model = modelResource.getContents().get(0);
+		final boolean[] result = new boolean[] { true }; // easy way to store return value
 
 		try {
+			/*
+			 * Use a blocking progress monitor!
+			 */
+			getContainer().run(false, false, new IRunnableWithProgress() {
 
-			if (!saveIntermediateFiles && !reviewDiffApplication) {
-				MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements, saveBinding);
-				result.showDialog(getShell(), adapterFactory);
-				modelResource.save(null);
-			} else {
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-				final EObject copyModel = EcoreUtil.copy(model); // create a copy of the model
+					monitor.beginTask("Applying MPatch...", 10);
+					monitor.worked(2); // PROGRESS MONITOR
 
-				// initialize resources (which are required for EMF Compare to work
-				final Resource copyModelResource;
-				final Resource emfdiffResource;
-				if (saveIntermediateFiles) {
-					copyModelResource = new XMIResourceImpl(URI.createPlatformResourceURI(newModelFile.getFullPath()
-							.toString(), true));
-					emfdiffResource = new XMIResourceImpl(URI.createPlatformResourceURI(emfdiffFile.getFullPath()
-							.toString(), true));
-				} else {
-					copyModelResource = new ResourceImpl(modelResource.getURI());
-					emfdiffResource = new ResourceImpl();
+					try {
+						if (!saveIntermediateFiles && !reviewDiffApplication) {
+							MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements,
+									saveBinding);
+							result.showDialog(getShell(), adapterFactory);
+							modelResource.save(null);
+						} else {
+
+							final EObject copyModel = EcoreUtil.copy(model); // create a copy of the model
+
+							// initialize resources (which are required for EMF Compare to work
+							final Resource copyModelResource;
+							final Resource emfdiffResource;
+							if (saveIntermediateFiles) {
+								copyModelResource = new XMIResourceImpl(URI.createPlatformResourceURI(newModelFile
+										.getFullPath().toString(), true));
+								emfdiffResource = new XMIResourceImpl(URI.createPlatformResourceURI(emfdiffFile
+										.getFullPath().toString(), true));
+							} else {
+								copyModelResource = new ResourceImpl(modelResource.getURI());
+								emfdiffResource = new ResourceImpl();
+							}
+							copyModelResource.getContents().add(copyModel); // new model must be contained in a resource
+																			// beforehand
+							monitor.worked(2); // PROGRESS MONITOR
+
+							// apply differences!
+							MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements,
+									saveBinding);
+							monitor.worked(2); // PROGRESS MONITOR
+							result.showDialog(getShell(), adapterFactory);
+							modelResource.save(null);
+							final boolean useIds = false; // in case of id-based models, new ids were added!
+							final ComparisonSnapshot emfdiff = CommonUtils.createEmfdiff(model, copyModel, useIds);
+
+							// save resources, if necessary
+							if (saveIntermediateFiles) {
+								copyModelResource.save(null);
+								emfdiffResource.getContents().add(emfdiff);
+								emfdiffResource.save(null);
+								if (reviewDiffApplication)
+									IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), emfdiffFile);
+							} else if (reviewDiffApplication) {
+								CompareUI.openCompareEditor(new ModelCompareEditorInput(emfdiff));
+							}
+							monitor.worked(2); // PROGRESS MONITOR
+						}
+
+						// if storeBinding is true, save the binding!
+						if (saveBinding) {
+							try {
+								Resource bindingResource = new XMIResourceImpl(URI.createPlatformResourceURI(
+										bindingFile.getFullPath().toString(), true));
+								bindingResource.getContents().add(resolvedElements.getMPatchModelBinding());
+								bindingResource.save(null);
+							} catch (IOException e) {
+								ApplyActivator.getDefault().logError("An error occurred saving the binding.", e);
+								MessageDialog.openError(getShell(), "Could not save binding",
+										"An error occurred saving the binding.\nPlease check error log for details.\n\n"
+												+ e.getMessage());
+							}
+						}
+						monitor.done(); // PROGRESS MONITOR
+
+					} catch (final Exception e) {
+						ApplyActivator.getDefault().logError("An error occured while saving the selected files", e);
+						MessageDialog.openError(getShell(), "An error occured",
+								"An error occured while applying differences:\n" + e.getMessage());
+						result[0] = false;
+					}
 				}
-				copyModelResource.getContents().add(copyModel); // new model must be contained in a resource beforehand
+			});
 
-				// apply differences!
-				MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements, saveBinding);
-				result.showDialog(getShell(), adapterFactory);
-				modelResource.save(null);
-				final boolean useIds = false; // in case of id-based models, new ids were added!
-				final ComparisonSnapshot emfdiff = CommonUtils.createEmfdiff(model, copyModel, useIds);
-
-				// save resources, if necessary
-				if (saveIntermediateFiles) {
-					copyModelResource.save(null);
-					emfdiffResource.getContents().add(emfdiff);
-					emfdiffResource.save(null);
-					if (reviewDiffApplication)
-						IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), emfdiffFile);
-				} else if (reviewDiffApplication) {
-					CompareUI.openCompareEditor(new ModelCompareEditorInput(emfdiff));
-				}
-			}
-
-			// if storeBinding is true, save the binding!
-			if (saveBinding) {
-				try {
-					Resource bindingResource = new XMIResourceImpl(URI.createPlatformResourceURI(bindingFile
-							.getFullPath().toString(), true));
-					bindingResource.getContents().add(resolvedElements.getMPatchModelBinding());
-					bindingResource.save(null);
-				} catch (IOException e) {
-					ApplyActivator.getDefault().logError("An error occurred saving the binding.", e);
-					MessageDialog.openError(getShell(), "Could not save binding",
-							"An error occurred saving the binding.\nPlease check error log for details.\n\n"
-									+ e.getMessage());
-				}
-			}
-
-			return true;
-		} catch (final Exception e) {
-			ApplyActivator.getDefault().logError("An error occured while saving the selected files", e);
-			MessageDialog.openError(getShell(), "An error occured", "An error occured while applying differences:\n"
-					+ e.getMessage());
-			return false;
+		} catch (InvocationTargetException e) {
+		} catch (InterruptedException e) {
 		}
+
+		return result[0];
 	}
 
 	// //////////////////// Some getters and setters for commonly used data in the wizard
