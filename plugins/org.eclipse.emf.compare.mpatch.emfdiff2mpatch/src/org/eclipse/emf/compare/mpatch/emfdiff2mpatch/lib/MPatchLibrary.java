@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.emfdiff2mpatch.lib;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.mpatch.IElementReference;
 import org.eclipse.emf.compare.mpatch.IModelDescriptor;
+import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
+import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.m2m.qvt.oml.blackbox.java.Operation;
-
 
 /**
  * Blackbox library for a QVTo transformation from an emfdiff to an mpatch.<br>
@@ -26,8 +27,8 @@ import org.eclipse.m2m.qvt.oml.blackbox.java.Operation;
  * <li>Extracting a String representation the {@link URI} of a given {@link Resource}
  * </ul>
  * The first two functions are implemented as Eclipse extensions. Default implementations are provided with a low
- * priority in the package <code>org.eclipse.emf.compare.mpatch.qvtlib.impl</code>, so that other plugins may easily override or
- * extend the default behaviour.
+ * priority in the package <code>org.eclipse.emf.compare.mpatch.qvtlib.impl</code>, so that other plugins may easily
+ * override or extend the default behaviour.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
  */
@@ -40,7 +41,7 @@ public class MPatchLibrary {
 	 *            The resource.
 	 * @return A {@link String} representation of the resource's {@link URI}.
 	 */
-	@Operation(contextual = true)
+	// @Operation(contextual = true)
 	public String toUriString(Resource self) {
 		if (self == null || self.getURI() == null)
 			return null;
@@ -50,7 +51,7 @@ public class MPatchLibrary {
 	/**
 	 * @see {@link ISymbolicReferenceCreator#toSymbolicReference(EObject)}
 	 */
-	@Operation(contextual = true)
+	// @Operation(contextual = true)
 	public IElementReference toSymbolicReference(EObject self) {
 		return MPatchLibraryComponents.getSymbolicReferenceCreator().toSymbolicReference(self);
 	}
@@ -58,7 +59,7 @@ public class MPatchLibrary {
 	/**
 	 * @see {@link IModelDescriptorCreator#toModelDescriptor(EObject, boolean, ISymbolicReferenceCreator)}
 	 */
-	@Operation(contextual = true)
+	// @Operation(contextual = true)
 	public IModelDescriptor toModelDescriptor(EObject self, boolean serializable) {
 		return MPatchLibraryComponents.getModelDescriptorCreator().toModelDescriptor(self, serializable,
 				MPatchLibraryComponents.getSymbolicReferenceCreator());

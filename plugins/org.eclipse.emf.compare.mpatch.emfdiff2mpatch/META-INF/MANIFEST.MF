@@ -5,10 +5,9 @@ Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch;singleton:=tr
 Bundle-Version: 1.0.1.qualifier
 Require-Bundle: org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.compare.mpatch.common,
- org.eclipse.emf.compare.diff;bundle-version="1.0.0",
+ org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.ui,
- org.eclipse.ui.ide,
- org.eclipse.m2m.qvt.oml
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.Emfdiff2mpatchActivator
 Bundle-ActivationPolicy: lazy

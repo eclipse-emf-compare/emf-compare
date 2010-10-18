@@ -101,6 +101,7 @@
    </wizard>
 </extension>
 
+<!-- PK: qvto transformation was replaced by Java transformation - ->
    <extension
          point="org.eclipse.m2m.qvt.oml.javaBlackboxUnits">
       <library
@@ -114,6 +115,7 @@
          </metamodel>
       </library>
    </extension>
+<!- - -->
    <extension
          point="org.eclipse.ui.editorActions">
       <editorContribution
