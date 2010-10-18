@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: ElementSetReferenceItemProvider.java,v 1.1 2010/09/10 15:32:24 cbrun Exp $
+ * $Id: ElementSetReferenceItemProvider.java,v 1.2 2010/10/18 19:53:24 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.symrefs.provider;
 
@@ -243,7 +243,7 @@ public class ElementSetReferenceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final String basic = MPatchUtil.getTextForSymref((IElementReference)object, "set");
+		final String basic = MPatchUtil.getTextForSymref((IElementReference)object);
 		final String lab = MPatchUtil.formatSymrefLabel((IElementReference)object);
 		
 		return basic + (lab == null ? "" : " -> " + lab);

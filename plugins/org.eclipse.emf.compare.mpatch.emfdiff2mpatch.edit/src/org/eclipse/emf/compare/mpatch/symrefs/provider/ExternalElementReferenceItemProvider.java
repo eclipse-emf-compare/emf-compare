@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: ExternalElementReferenceItemProvider.java,v 1.1 2010/09/10 15:32:24 cbrun Exp $
+ * $Id: ExternalElementReferenceItemProvider.java,v 1.2 2010/10/18 19:53:24 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.symrefs.provider;
 
@@ -209,7 +209,7 @@ public class ExternalElementReferenceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final String basic = MPatchUtil.getTextForSymref((IElementReference)object, "external");
+		final String basic = MPatchUtil.getTextForSymref((IElementReference)object);
 		String lab = ((ExternalElementReference)object).getUriReference();
 		if (((ExternalElementReference)object).getLabel() != null)
 			lab += " " + MPatchUtil.formatSymrefLabel((ExternalElementReference)object);

@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: IdEmfReferenceItemProvider.java,v 1.1 2010/09/10 15:32:24 cbrun Exp $
+ * $Id: IdEmfReferenceItemProvider.java,v 1.2 2010/10/18 19:53:24 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.symrefs.provider;
 
@@ -232,7 +232,7 @@ public class IdEmfReferenceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final String basic = MPatchUtil.getTextForSymref((IElementReference)object, "id");
+		final String basic = MPatchUtil.getTextForSymref((IElementReference)object);
 		String lab = ((IdEmfReference)object).getIdAttributeValue();
 		if (((IdEmfReference)object).getLabel() != null)
 			lab += " " + MPatchUtil.formatSymrefLabel((IdEmfReference)object);
