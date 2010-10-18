@@ -14,7 +14,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.text.Format;
-import java.util.List;
 
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
@@ -151,16 +150,15 @@ public class PerformanceTest {
 //		 }
 
 		// prepare models
-		final List<ComparisonSnapshot> inModels = CompareTestHelper.getInModelsFromEmfCompare(leftModel, rightModel);
+		final ComparisonSnapshot emfdiff = CompareTestHelper.getEmfdiffFromEmfCompare(leftModel, rightModel);
 		times.setEmfdiff(); // emfdiff is built
-		List<EObject> outModels;
+		final MPatchModel mpatch;
 		try {
-			outModels = TransformationLauncher.transform(inModels, null, symrefCreator, descriptorCreator);
+			mpatch = TransformationLauncher.transform(emfdiff, null, symrefCreator, descriptorCreator);
 		} catch (Exception e) {
 			fail("transformation failed (" + info + "): " + e.getMessage());
 			return null;
 		}
-		final MPatchModel mpatch = (MPatchModel) outModels.get(0);
 		times.setMPatch(); // mpatch is built
 		assertNotNull("Preceeding transformation failed! " + info, mpatch);
 

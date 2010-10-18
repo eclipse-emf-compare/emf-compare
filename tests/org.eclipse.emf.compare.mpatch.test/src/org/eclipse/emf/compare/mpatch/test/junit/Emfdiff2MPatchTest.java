@@ -12,10 +12,10 @@ package org.eclipse.emf.compare.mpatch.test.junit;
 
 import static org.junit.Assert.fail;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
+import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util.TransformationLauncher;
 import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
 import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
@@ -66,10 +66,10 @@ public class Emfdiff2MPatchTest {
 	public void testTransformConflict() {
 		final List<EObject> inModels = CompareTestHelper.loadModel(TestConstants.CONFLICT_EMFDIFF_URI,
 				new ResourceSetImpl());
-		final ComparisonSnapshot inModel = (ComparisonSnapshot) inModels.get(0);
+		final ComparisonSnapshot emfdiff = (ComparisonSnapshot) inModels.get(0);
 		try {
 			// here it doesn't matter which symrefCreator and descriptorCreator we take!
-			TransformationLauncher.transform(Collections.singletonList(inModel), null,
+			TransformationLauncher.transform(emfdiff, null,
 					TestConstants.SYM_REF_CREATORS.iterator().next(), TestConstants.MODEL_DESCRIPTOR_CREATORS
 							.iterator().next());
 
@@ -83,14 +83,14 @@ public class Emfdiff2MPatchTest {
 	}
 
 	private void testTransformation(String unchangedUri, String changedUri, int numberOfChanges) {
-		final List<ComparisonSnapshot> inModels = CompareTestHelper.getInModelsFromEmfCompare(changedUri, unchangedUri);
+		final ComparisonSnapshot emfdiff = CompareTestHelper.getEmfdiffFromEmfCompare(changedUri, unchangedUri);
 		for (ISymbolicReferenceCreator symrefCreator : TestConstants.SYM_REF_CREATORS) {
 			for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS) {
 				try {
-					final List<EObject> outModels = TransformationLauncher.transform(inModels, null, symrefCreator,
+					final MPatchModel mpatch = TransformationLauncher.transform(emfdiff, null, symrefCreator,
 							descriptorCreator);
 
-					CommonTestOperations.checkForDifferences(outModels, numberOfChanges);
+					CommonTestOperations.checkForDifferences(mpatch, numberOfChanges);
 				} catch (final Exception e) {
 					fail("Transformation unexpectedly threw an exception with symrefDescriptor: " + symrefCreator
 							+ " and descriptorCreator: " + descriptorCreator + ": " + e.getMessage());

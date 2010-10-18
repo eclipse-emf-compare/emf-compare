@@ -14,7 +14,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.Diagnostic;
@@ -80,14 +79,14 @@ public class CompareTestHelper {
 	 *            The URI of the unchanged version.
 	 * @return The calculated emfdiff.
 	 */
-	public static List<ComparisonSnapshot> getInModelsFromEmfCompare(String leftUri, String rightUri) {
+	public static ComparisonSnapshot getEmfdiffFromEmfCompare(String leftUri, String rightUri) {
 		// Loading models
 		ResourceSet resourceSet = new ResourceSetImpl();
 		final EObject leftModel = loadModel(leftUri, resourceSet).get(0);
 		final EObject rightModel = loadModel(rightUri, resourceSet).get(0);
 
 		// delegate call
-		return getInModelsFromEmfCompare(leftModel, rightModel);
+		return getEmfdiffFromEmfCompare(leftModel, rightModel);
 	}
 
 	/**
@@ -99,12 +98,10 @@ public class CompareTestHelper {
 	 *            The unchanged version.
 	 * @return The calculated emfdiff.
 	 */
-	public static List<ComparisonSnapshot> getInModelsFromEmfCompare(EObject leftModel, EObject rightModel) {
-		final List<ComparisonSnapshot> result = new ArrayList<ComparisonSnapshot>();
+	public static ComparisonSnapshot getEmfdiffFromEmfCompare(EObject leftModel, EObject rightModel) {
 		ComparisonResourceSnapshot emfdiff = CommonUtils.createEmfdiff(leftModel, rightModel, true);
 		checkToString(emfdiff);
-		result.add(emfdiff);
-		return result;
+		return emfdiff;
 	}
 
 	/**
@@ -139,10 +136,9 @@ public class CompareTestHelper {
 	public static MPatchModel getMPatchFromUris(String leftUri, String rightUri,
 			ISymbolicReferenceCreator symrefCreator, IModelDescriptorCreator descriptorCreator) {
 		try {
-			final List<ComparisonSnapshot> inModels = getInModelsFromEmfCompare(leftUri, rightUri);
-			final List<EObject> outModels = TransformationLauncher.transform(inModels, null, symrefCreator,
-					descriptorCreator);
-			final MPatchModel mpatch = (MPatchModel) outModels.get(0);
+			final ComparisonSnapshot emfdiff = getEmfdiffFromEmfCompare(leftUri, rightUri);
+			final MPatchModel mpatch = TransformationLauncher
+					.transform(emfdiff, null, symrefCreator, descriptorCreator);
 
 			final String diagnostic = validateMPatch(mpatch);
 			assertNull("Transformation with symrefCreator: " + symrefCreator.getLabel() + " and descriptorCreator: "

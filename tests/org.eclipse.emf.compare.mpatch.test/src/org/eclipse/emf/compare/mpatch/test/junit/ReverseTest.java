@@ -136,7 +136,7 @@ public class ReverseTest {
 		final MPatchModel doubleReversed = EcoreUtil.copy(reversed);
 		ReverseTransformation.reverse(doubleReversed);
 		final ComparisonResourceSnapshot mpatchDiff = CommonUtils.createEmfdiff(original, doubleReversed);
-		final Collection<DiffElement> differences = CommonUtils.analyzeDiff(mpatchDiff, CommonUtils.DIFF_EMPTY);
+		final Collection<DiffElement> differences = CommonUtils.analyzeDiff(mpatchDiff, CommonUtils.DIFF_ORDERINGS);
 		assertTrue("Double reversed mpatch does not equal original mpatch (" + info + "): " + differences,
 				differences.isEmpty());
 	}

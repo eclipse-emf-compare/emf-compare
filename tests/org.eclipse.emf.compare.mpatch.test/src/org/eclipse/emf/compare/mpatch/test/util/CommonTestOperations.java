@@ -367,19 +367,13 @@ public class CommonTestOperations {
 	 * Check whether <code>outModel</code> contains an mpatch and that is has <code>count</code> (ungrouped) changes in
 	 * total.
 	 * 
-	 * @param outModels
+	 * @param mpatch
 	 *            It is supposed to be the result of {@link TransformationLauncher#transform(List, StringBuffer)}.
 	 * @param count
 	 *            The expected number of changed which is contained in the result.
 	 */
-	public static void checkForDifferences(List<EObject> outModels, int count) {
-		assertEquals("Transformation result contains a wrong number of output models!", 1, outModels.size());
-
-		final Object o = outModels.get(0);
-		assertTrue("Transformation result is not an mpatch!", o instanceof MPatchModel);
-
+	public static void checkForDifferences(MPatchModel mpatch, int count) {
 		// ignore unknown changes and groups here!
-		final MPatchModel mpatch = (MPatchModel) o;
 		int counter = 0;
 		for (IndepChange change : mpatch.getChanges()) {
 			if (!(change instanceof UnknownChange || change instanceof ChangeGroup)) {
