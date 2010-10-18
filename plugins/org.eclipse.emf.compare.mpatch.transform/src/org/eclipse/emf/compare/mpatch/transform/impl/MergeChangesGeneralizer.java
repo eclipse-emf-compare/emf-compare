@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.mpatch.transform.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,7 +183,7 @@ public class MergeChangesGeneralizer {
 		mergedSymbolicReference.setUpperBound(upperBound);
 		mergedSymbolicReference.getConditions().add(condition);
 		mergedSymbolicReference.setType(unmergedSymrefs.get(0).getType());
-		mergedSymbolicReference.setLabel("Merged: " + CommonUtils.join(labels, ", "));
+		mergedSymbolicReference.setLabel(createMergedLabel(labels));
 		mergedSymbolicReference.setUriReference("Merged: " + CommonUtils.join(uris, ", "));
 		if (!contexts.isEmpty()) {
 			final IElementReference context = mergeSymbolicReferences(contexts);
@@ -190,6 +191,13 @@ public class MergeChangesGeneralizer {
 		}
 
 		return mergedSymbolicReference;
+	}
+
+	private static String createMergedLabel(List<String> labels) {
+		if (labels == null || labels.isEmpty())
+			return "";
+		final HashSet<String> lab = new HashSet<String>(labels); // eliminate duplicates ;-)
+		return "Merged: " + CommonUtils.join(new ArrayList<String>(lab), ", ");
 	}
 
 	/**
