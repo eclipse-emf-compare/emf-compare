@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.mpatch.emfdiff2mpatch.actions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -61,13 +60,13 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	 * Shell.
 	 */
 	private Shell shell;
-	
+
 	/** Get some statistics. */
 	private int successes = 0;
-	
+
 	/** Get some statistics. */
 	private int failures = 0;
-	
+
 	/**
 	 * List of all currently selected containers.
 	 */
@@ -127,14 +126,12 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 			final EObject newModel = newResource.getContents().get(0);
 
 			final ComparisonResourceSnapshot emfdiff = CommonUtils.createEmfdiff(newModel, oldModel, false);
-			final List<ComparisonResourceSnapshot> inModels = Collections.singletonList(emfdiff);
 
 			final ISymbolicReferenceCreator symrefCreator = ExtensionManager.getSelectedSymbolicReferenceCreator();
 			final IModelDescriptorCreator descriptorCreator = ExtensionManager.getSelectedModelDescriptorCreator();
 
-			final List<EObject> outModels = TransformationLauncher.transform(inModels, null, symrefCreator,
-					descriptorCreator);
-			final MPatchModel mpatch = (MPatchModel) outModels.get(0);
+			final MPatchModel mpatch = TransformationLauncher
+					.transform(emfdiff, null, symrefCreator, descriptorCreator);
 
 			for (String label : ExtensionManager.getMandatoryTransformations()) {
 				final IMPatchTransformation trans = ExtensionManager.getAllTransformations().get(label);

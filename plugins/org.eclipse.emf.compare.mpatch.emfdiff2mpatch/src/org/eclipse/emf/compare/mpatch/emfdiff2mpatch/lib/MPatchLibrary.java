@@ -42,6 +42,8 @@ public class MPatchLibrary {
 	 */
 	@Operation(contextual = true)
 	public String toUriString(Resource self) {
+		if (self == null || self.getURI() == null)
+			return null;
 		return self.getURI().toString();
 	}
 

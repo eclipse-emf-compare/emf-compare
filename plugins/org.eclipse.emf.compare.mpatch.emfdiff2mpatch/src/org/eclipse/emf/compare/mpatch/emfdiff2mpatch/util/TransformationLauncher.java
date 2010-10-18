@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util;
 
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.Emfdiff2mpatchActivator;
+import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.impl.Emfdiff2Mpatch;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.lib.MPatchLibraryComponents;
 import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
 import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
@@ -58,7 +60,7 @@ public final class TransformationLauncher {
 	 * <code>http://www.eclipse.org/emf/compare/mpatch/1.0</code>, i.e. an object of type {@link MPatchModel} is
 	 * returned.
 	 * 
-	 * @param inModels
+	 * @param emfdiff
 	 *            An EMF Compare diff comparison snapshot.
 	 * @param output
 	 *            The console output of the qvto transformation engine (ignored if <code>null</code>).
@@ -70,7 +72,7 @@ public final class TransformationLauncher {
 	 * @throws Exception
 	 *             If the transformation was not successful.
 	 */
-	public static List<EObject> transform(List<? extends ComparisonSnapshot> inModels, StringBuffer output,
+	public static MPatchModel transform(ComparisonSnapshot emfdiff, StringBuffer output,
 			ISymbolicReferenceCreator symbolicReferenceCreator, IModelDescriptorCreator modelDescriptorCreator)
 			throws Exception {
 
@@ -79,16 +81,35 @@ public final class TransformationLauncher {
 		MPatchLibraryComponents.setSymbolicReferenceCreator(symbolicReferenceCreator);
 
 		// set resources of the models to compare for the symref creator so it knows what are external elements
-		final Set<Resource> modelResources = getModelResourcesFromEmfdiff((ComparisonSnapshot) inModels.get(0));
+		final Set<Resource> modelResources = getModelResourcesFromEmfdiff((ComparisonSnapshot) emfdiff);
 		symbolicReferenceCreator.setNonExternalResources(modelResources);
 
+		/*
+		 * Because of the critical dependency to qvto we should rather use a transformation that is coded in pure Java
+		 * :-/
+		 */
+		//return transformQVTo(emfdiff, output);
+		return transformJava(emfdiff, output);
+	}
+
+	/**
+	 * Realization of the transformation in pure Java + EMF.
+	 */
+	public static MPatchModel transformJava(ComparisonSnapshot emfdiff, StringBuffer output) {
+		return new Emfdiff2Mpatch().transform(emfdiff, output);
+	}
+
+	/**
+	 * Realization of the transformation in QVT Operational Mappings.
+	 */
+	public static MPatchModel transformQVTo(ComparisonSnapshot emfdiff, StringBuffer output) throws Exception {
 		// get the qvto transformation helper
 		final URI transformationSpecification = URI.createPlatformPluginURI(Emfdiff2mpatchActivator.PLUGIN_ID
 				+ TRANSFORMATION_SPECIFICATION, true);
 		final TransformationExecutor transformationExecuter = new TransformationExecutor(transformationSpecification);
 
 		// prepare input and output
-		final ModelExtent inputModels = new BasicModelExtent(inModels);
+		final ModelExtent inputModels = new BasicModelExtent(Collections.singletonList(emfdiff));
 		final ModelExtent outputModels = new BasicModelExtent();
 		final ExecutionContextImpl context = new ExecutionContextImpl();
 
@@ -117,7 +138,11 @@ public final class TransformationLauncher {
 			output.append(diagnostic.getMessage());
 			output.append(log.toString());
 		}
-		return outputModels.getContents();
+
+		final List<EObject> contents = outputModels.getContents();
+		if (contents != null && contents.size() == 1)
+			return (MPatchModel) contents.get(0);
+		throw new Exception("QVTo Transformation did not produce one single valid output model, but: " + contents);
 	}
 
 	/**
