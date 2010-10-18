@@ -303,15 +303,21 @@ public class MPatchResolver {
 		// corresponding element individually!
 		final List<EObject> resolvedElements = changeMapping.get(change.getCorrespondingElement());
 		final List<EObject> allResolvedElements = new ArrayList<EObject>(resolvedElements);
-		final List<EObject> validElements = new ArrayList<EObject>(resolvedElements.size());
+		final List<EObject> beforeElements = new ArrayList<EObject>(resolvedElements.size());
+		final List<EObject> afterElements = new ArrayList<EObject>(resolvedElements.size());
 		for (EObject element : allResolvedElements) {
 			resolvedElements.clear(); // let's clear it temporarily to test the current element
 			resolvedElements.add(element);
 			final ValidationResult state = MPatchValidator.validateElementState(change, mapping, true, forward);
-			if (ValidationResult.STATE_BEFORE.equals(state) || ValidationResult.STATE_AFTER.equals(state))
-				validElements.add(element);
+			if (ValidationResult.STATE_BEFORE.equals(state))
+				beforeElements.add(element);
+			else if (ValidationResult.STATE_AFTER.equals(state))
+				afterElements.add(element);
 		}
 		resolvedElements.clear();
+		
+		// If we got valid elements with state BEFORE, let's use them! otherwise we use AFTER.
+		final List<EObject> validElements = beforeElements.isEmpty() ? afterElements : beforeElements;
 
 		// now we filtered all valid elements!
 		// if there are too many, just get as much we need...

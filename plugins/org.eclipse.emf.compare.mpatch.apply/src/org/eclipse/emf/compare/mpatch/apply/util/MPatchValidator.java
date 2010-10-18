@@ -169,7 +169,10 @@ public final class MPatchValidator {
 	static void validateElementStates(ResolvedSymbolicReferences mapping, boolean strict) {
 		final boolean forward = mapping.getDirection() == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
 
-		// The validation requires the changes to be ordered reverted!
+		// clear previous validation states
+		mapping.getValidation().clear();
+		
+		// The validation requires the changes to be ordered!
 		final List<IndepChange> orderedChanges = orderChanges(mapping.getResolutionByChange().keySet(), !forward);
 
 		for (IndepChange change : orderedChanges) {
@@ -686,6 +689,7 @@ public final class MPatchValidator {
 
 					// there must be elements to remove
 					result.before |= !toDelete.isEmpty();
+					result.after |= toDelete.isEmpty();
 
 				} else {
 					final Object toDelete = parent.eGet(change.getContainment());
