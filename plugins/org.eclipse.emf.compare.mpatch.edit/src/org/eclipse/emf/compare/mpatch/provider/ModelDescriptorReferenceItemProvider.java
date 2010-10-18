@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: ModelDescriptorReferenceItemProvider.java,v 1.1 2010/09/10 15:28:06 cbrun Exp $
+ * $Id: ModelDescriptorReferenceItemProvider.java,v 1.2 2010/10/18 19:54:20 pkonemann Exp $
  */
 package org.eclipse.emf.compare.mpatch.provider;
 
@@ -238,7 +238,7 @@ public class ModelDescriptorReferenceItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		final String basic = MPatchUtil.getTextForSymref((IElementReference)object, "internal");
+		final String basic = MPatchUtil.getTextForSymref((IElementReference)object);
 		final String lab = MPatchUtil.formatSymrefLabel((IElementReference)object);
 		
 		return basic + (lab == null ? "" : " -> " + lab);
