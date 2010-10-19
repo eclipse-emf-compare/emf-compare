@@ -32,7 +32,7 @@
 	
     <searchPath name="ocl">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/mdt/ocl/3_0/updates/milestones">
+			<uri format="jar:{0}/modeling/mdt/ocl/downloads/drops/3.0.1/R201009240345/mdt-ocl-Update-3.0.1.zip!">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
