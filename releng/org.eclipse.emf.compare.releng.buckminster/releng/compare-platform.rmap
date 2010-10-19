@@ -8,6 +8,7 @@
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
 	<locator pattern="^lpg\.runtime\.java$" searchPathRef="ocl" />
 	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="ocl" />
+	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
 
 	<searchPath name="local.releng">
@@ -40,6 +41,14 @@
 	<searchPath name="query">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
 			<uri format="jar:{0}/modeling/emf/query/downloads/drops/1.4.0//R201006151000/emf-query-Update-1.4.0.zip!">
+				<bc:propertyRef key="eclipse.download" />
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="subversive">
+		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+			<uri format="{0}/technology/subversive/0.7/update-site">
 				<bc:propertyRef key="eclipse.download" />
 			</uri>
 		</provider>
