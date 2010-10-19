@@ -8,7 +8,6 @@
 	<locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="emf" />
 	<locator pattern="^lpg\.runtime\.java$" searchPathRef="ocl" />
 	<locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="ocl" />
-	<locator pattern="^org\.eclipse\.m2m\.qvt(?:\..+)?$" searchPathRef="qvto" />
 	<locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="subversive" />
 	<locator searchPathRef="platform" />
 
@@ -46,15 +45,6 @@
 			</uri>
 		</provider>
 	</searchPath>
-	
-	<searchPath name="qvto">
-		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="jar:{0}/modeling/m2m/qvtoml/downloads/drops/3.0.0/R201006151231/m2m-qvtoml-Update-3.0.0.zip!">
-				<bc:propertyRef key="eclipse.download" />
-			</uri>
-		</provider>
-	</searchPath>
-	
 
 	<searchPath name="subversive">
 		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
