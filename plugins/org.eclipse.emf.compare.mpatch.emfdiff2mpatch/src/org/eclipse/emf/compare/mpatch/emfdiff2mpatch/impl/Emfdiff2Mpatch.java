@@ -112,10 +112,12 @@ public class Emfdiff2Mpatch {
 		// get the DiffModel
 		final List<EObject> diffModels = ExtEcoreUtils.collectTypedElements(Collections.singletonList(emfdiff),
 				Collections.singleton(DiffPackage.Literals.DIFF_MODEL), true);
-		if (diffModels == null || diffModels.size() != 1)
+		if (diffModels == null || diffModels.size() != 1) {
+			log("Only one DiffModel is supported at the moment! Aborting transformation...", diffModels);
 			throw new IllegalArgumentException(
 					"At the moment, only emfdiffs with exactly one DiffModel contained are supported! Found: "
 							+ diffModels);
+		}
 		final DiffModel diffModel = (DiffModel) diffModels.get(0);
 
 		// call main mapping
@@ -127,16 +129,17 @@ public class Emfdiff2Mpatch {
 
 	/**
 	 * main mapping: an emfdiff diffmodel is mapped to an mpatch
-	 * 
-	 * @param diffModel
-	 * @return
 	 */
 	protected MPatchModel toMPatchModel(DiffModel diffModel) {
 		// lets check whether we got a diff from two models
-		if (diffModel.getLeftRoots().isEmpty() || diffModel.getRightRoots().isEmpty())
+		if (diffModel.getLeftRoots().isEmpty() || diffModel.getRightRoots().isEmpty()) {
+			log("leftRoots and rightRoots must not be empty in DiffModel! Aborting transformation...", diffModel);
 			throw new IllegalArgumentException("Expecting leftRoots and rightRoots non-empty in the DiffModel!");
-		if (!diffModel.getAncestorRoots().isEmpty())
+		}
+		if (!diffModel.getAncestorRoots().isEmpty()) {
+			log("ancestorRoots must be empty in DiffModel! Aborting transformation...", diffModel);
 			throw new IllegalArgumentException("Expecting ancestorRoots to be empty in the DiffModel!");
+		}
 
 		// create the mpatch and set properties
 		final MPatchModel mpatch = MPatchFactory.eINSTANCE.createMPatchModel();
@@ -146,8 +149,8 @@ public class Emfdiff2Mpatch {
 			leftUris.add(lib.toUriString(left.eResource()));
 		for (EObject right : diffModel.getRightRoots())
 			rightUris.add(lib.toUriString(right.eResource()));
-		mpatch.setNewModel(CommonUtils.join(leftUris, " ") + " ");
-		mpatch.setOldModel(CommonUtils.join(rightUris, " ") + " ");
+		mpatch.setNewModel(CommonUtils.join(leftUris, " "));
+		mpatch.setOldModel(CommonUtils.join(rightUris, " "));
 		mpatch.setEmfdiff(lib.toUriString(diffModel.eResource()));
 
 		// get all relevant diff elements and transform them
@@ -158,6 +161,7 @@ public class Emfdiff2Mpatch {
 				mpatch.getChanges().add(toIndepChange((DiffElement) diffElement));
 			}
 		}
+		log(mpatch.getChanges().size() + " DiffElements transformed.", null);
 		return mpatch;
 	}
 
@@ -172,6 +176,8 @@ public class Emfdiff2Mpatch {
 	 * </ul>
 	 */
 	protected IndepChange toIndepChange(DiffElement diffElement) {
+		log("  transforming DiffElement", diffElement);
+		
 		// in contrast to qvto, we have to check the type explicitly :-(
 		if (diffElement instanceof DiffGroup)
 			return toIndepChange((DiffGroup) diffElement);
@@ -221,6 +227,7 @@ public class Emfdiff2Mpatch {
 	 * mapping for conflicting elements: abort transformation with an appropriate log message.
 	 */
 	protected IndepChange toIndepChange(ConflictingDiffElement diffElement) {
+		log("Conflicting Diff Element found! Aborting transformation...", diffElement);
 		throw new IllegalArgumentException(
 				"Conflicting elements are not supported! Please use this transformation on non-conflicting diffs only! "
 						+ diffElement);
