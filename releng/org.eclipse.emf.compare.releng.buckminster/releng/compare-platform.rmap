@@ -73,5 +73,5 @@
 	
 
 	<property key="checkout.location" value="${workspace.root}/" />
-	<property key="eclipse.download" value="http://download.eclipse.org" />
+	<property key="eclipse.download" value="file:/home/data/httpd/download.eclipse.org" />
 </rmap>
