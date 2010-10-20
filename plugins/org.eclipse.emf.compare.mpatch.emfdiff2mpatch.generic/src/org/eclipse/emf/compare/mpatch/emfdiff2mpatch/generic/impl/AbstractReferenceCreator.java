@@ -47,7 +47,10 @@ abstract class AbstractReferenceCreator implements ISymbolicReferenceCreator {
 	@Override
 	public final IElementReference toSymbolicReference(EObject self) {
 
-		if (isExternalElement(self)) {
+		if (self == null) {
+			// error handling..
+			return null;
+		} else if (isExternalElement(self)) {
 			// for external references we need a special reference
 			return ExternalElementReferenceCreator.toSymbolicReference(self);
 		} else {
