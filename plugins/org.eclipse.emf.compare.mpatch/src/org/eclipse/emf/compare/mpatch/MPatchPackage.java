@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: MPatchPackage.java,v 1.1 2010/09/10 15:23:07 cbrun Exp $
+ * $Id: MPatchPackage.java,v 1.2 2010/10/20 09:22:23 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch;
 
@@ -184,13 +184,22 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_CHANGE__DEPENDANTS = 4;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_CHANGE__RESULTING_ELEMENT = 5;
+
+	/**
 	 * The number of structural features of the '<em>Indep Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INDEP_CHANGE_FEATURE_COUNT = 5;
+	int INDEP_CHANGE_FEATURE_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.mpatch.impl.ChangeGroupImpl <em>Change Group</em>}' class.
@@ -246,6 +255,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int CHANGE_GROUP__DEPENDANTS = INDEP_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE_GROUP__RESULTING_ELEMENT = INDEP_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Sub Changes</b></em>' containment reference list.
@@ -321,6 +339,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_ELEMENT_CHANGE__DEPENDANTS = INDEP_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ELEMENT_CHANGE__RESULTING_ELEMENT = INDEP_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The number of structural features of the '<em>Indep Element Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -383,6 +410,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_ADD_REM_ELEMENT_CHANGE__DEPENDANTS = INDEP_ELEMENT_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_REM_ELEMENT_CHANGE__RESULTING_ELEMENT = INDEP_ELEMENT_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Sub Model</b></em>' containment reference.
@@ -476,6 +512,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_ADD_ELEMENT_CHANGE__DEPENDANTS = INDEP_ADD_REM_ELEMENT_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_ELEMENT_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_ELEMENT_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Sub Model</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -565,6 +610,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_REMOVE_ELEMENT_CHANGE__DEPENDANTS = INDEP_ADD_REM_ELEMENT_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_REMOVE_ELEMENT_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_ELEMENT_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Sub Model</b></em>' containment reference.
@@ -658,6 +712,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_ATTRIBUTE_CHANGE__DEPENDANTS = INDEP_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ATTRIBUTE_CHANGE__RESULTING_ELEMENT = INDEP_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Changed Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -729,6 +792,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_ADD_REM_ATTRIBUTE_CHANGE__DEPENDANTS = INDEP_ATTRIBUTE_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_REM_ATTRIBUTE_CHANGE__RESULTING_ELEMENT = INDEP_ATTRIBUTE_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Changed Attribute</b></em>' reference.
@@ -811,6 +883,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_MOVE_ELEMENT_CHANGE__DEPENDANTS = INDEP_ELEMENT_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_MOVE_ELEMENT_CHANGE__RESULTING_ELEMENT = INDEP_ELEMENT_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Old Containment</b></em>' reference.
@@ -913,6 +994,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_ADD_ATTRIBUTE_CHANGE__DEPENDANTS = INDEP_ADD_REM_ATTRIBUTE_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_ATTRIBUTE_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_ATTRIBUTE_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Changed Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -995,6 +1085,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_REMOVE_ATTRIBUTE_CHANGE__DEPENDANTS = INDEP_ADD_REM_ATTRIBUTE_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_REMOVE_ATTRIBUTE_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_ATTRIBUTE_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Changed Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1075,6 +1174,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_UPDATE_ATTRIBUTE_CHANGE__DEPENDANTS = INDEP_ATTRIBUTE_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_UPDATE_ATTRIBUTE_CHANGE__RESULTING_ELEMENT = INDEP_ATTRIBUTE_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Changed Attribute</b></em>' reference.
@@ -1168,6 +1276,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_REFERENCE_CHANGE__DEPENDANTS = INDEP_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_REFERENCE_CHANGE__RESULTING_ELEMENT = INDEP_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1239,6 +1356,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_ADD_REM_REFERENCE_CHANGE__DEPENDANTS = INDEP_REFERENCE_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_REM_REFERENCE_CHANGE__RESULTING_ELEMENT = INDEP_REFERENCE_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1323,6 +1449,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_ADD_REFERENCE_CHANGE__DEPENDANTS = INDEP_ADD_REM_REFERENCE_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_ADD_REFERENCE_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_REFERENCE_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1405,6 +1540,15 @@ public interface MPatchPackage extends EPackage {
 	int INDEP_REMOVE_REFERENCE_CHANGE__DEPENDANTS = INDEP_ADD_REM_REFERENCE_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_REMOVE_REFERENCE_CHANGE__RESULTING_ELEMENT = INDEP_ADD_REM_REFERENCE_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1485,6 +1629,15 @@ public interface MPatchPackage extends EPackage {
 	 * @ordered
 	 */
 	int INDEP_UPDATE_REFERENCE_CHANGE__DEPENDANTS = INDEP_REFERENCE_CHANGE__DEPENDANTS;
+
+	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INDEP_UPDATE_REFERENCE_CHANGE__RESULTING_ELEMENT = INDEP_REFERENCE_CHANGE__RESULTING_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1798,6 +1951,15 @@ public interface MPatchPackage extends EPackage {
 	int UNKNOWN_CHANGE__DEPENDANTS = INDEP_CHANGE__DEPENDANTS;
 
 	/**
+	 * The feature id for the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_CHANGE__RESULTING_ELEMENT = INDEP_CHANGE__RESULTING_ELEMENT;
+
+	/**
 	 * The feature id for the '<em><b>Info</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2027,6 +2189,17 @@ public interface MPatchPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getIndepChange_Dependants();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.emf.compare.mpatch.IndepChange#getResultingElement <em>Resulting Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Resulting Element</em>'.
+	 * @see org.eclipse.emf.compare.mpatch.IndepChange#getResultingElement()
+	 * @see #getIndepChange()
+	 * @generated
+	 */
+	EReference getIndepChange_ResultingElement();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.mpatch.ChangeGroup <em>Change Group</em>}'.
@@ -2760,6 +2933,14 @@ public interface MPatchPackage extends EPackage {
 		 * @generated
 		 */
 		EReference INDEP_CHANGE__DEPENDANTS = eINSTANCE.getIndepChange_Dependants();
+
+		/**
+		 * The meta object literal for the '<em><b>Resulting Element</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference INDEP_CHANGE__RESULTING_ELEMENT = eINSTANCE.getIndepChange_ResultingElement();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emf.compare.mpatch.impl.ChangeGroupImpl <em>Change Group</em>}' class.

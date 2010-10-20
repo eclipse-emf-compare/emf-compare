@@ -37,6 +37,7 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute mpatch.ecore#//IndepChange/changeType"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/dependsOn"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/dependants"/>
+      <genFeatures property="None" createChild="false" ecoreFeature="ecore:EReference mpatch.ecore#//IndepChange/resultingElement"/>
     </genClasses>
     <genClasses ecoreClass="mpatch.ecore#//ChangeGroup">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mpatch.ecore#//ChangeGroup/subChanges"/>

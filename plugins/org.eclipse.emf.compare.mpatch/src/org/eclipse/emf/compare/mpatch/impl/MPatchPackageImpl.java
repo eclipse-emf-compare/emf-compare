@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: MPatchPackageImpl.java,v 1.2 2010/09/14 09:45:44 pkonemann Exp $
+ * $Id: MPatchPackageImpl.java,v 1.3 2010/10/20 09:22:23 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.impl;
 
@@ -407,6 +407,15 @@ public class MPatchPackageImpl extends EPackageImpl implements MPatchPackage {
 	 */
 	public EReference getIndepChange_Dependants() {
 		return (EReference)indepChangeEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getIndepChange_ResultingElement() {
+		return (EReference)indepChangeEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -971,6 +980,7 @@ public class MPatchPackageImpl extends EPackageImpl implements MPatchPackage {
 		createEAttribute(indepChangeEClass, INDEP_CHANGE__CHANGE_TYPE);
 		createEReference(indepChangeEClass, INDEP_CHANGE__DEPENDS_ON);
 		createEReference(indepChangeEClass, INDEP_CHANGE__DEPENDANTS);
+		createEReference(indepChangeEClass, INDEP_CHANGE__RESULTING_ELEMENT);
 
 		changeGroupEClass = createEClass(CHANGE_GROUP);
 		createEReference(changeGroupEClass, CHANGE_GROUP__SUB_CHANGES);
@@ -1118,6 +1128,7 @@ public class MPatchPackageImpl extends EPackageImpl implements MPatchPackage {
 		initEAttribute(getIndepChange_ChangeType(), this.getChangeType(), "changeType", "", 0, 1, IndepChange.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		initEReference(getIndepChange_DependsOn(), this.getIndepChange(), this.getIndepChange_Dependants(), "dependsOn", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getIndepChange_Dependants(), this.getIndepChange(), this.getIndepChange_DependsOn(), "dependants", null, 0, -1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getIndepChange_ResultingElement(), this.getIElementReference(), null, "resultingElement", null, 0, 1, IndepChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(changeGroupEClass, ChangeGroup.class, "ChangeGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getChangeGroup_SubChanges(), this.getIndepChange(), null, "subChanges", null, 0, -1, ChangeGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

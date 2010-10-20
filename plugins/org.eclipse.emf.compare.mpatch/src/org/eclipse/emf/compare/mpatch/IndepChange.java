@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: IndepChange.java,v 1.1 2010/09/10 15:23:07 cbrun Exp $
+ * $Id: IndepChange.java,v 1.2 2010/10/20 09:22:23 pkonemann Exp $
  */
 package org.eclipse.emf.compare.mpatch;
 
@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.mpatch.IndepChange#getChangeType <em>Change Type</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.mpatch.IndepChange#getDependsOn <em>Depends On</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.mpatch.IndepChange#getDependants <em>Dependants</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.mpatch.IndepChange#getResultingElement <em>Resulting Element</em>}</li>
  * </ul>
  * </p>
  *
@@ -139,5 +140,33 @@ public interface IndepChange extends EObject {
 	 * @generated
 	 */
 	EList<IndepChange> getDependants();
+
+	/**
+	 * Returns the value of the '<em><b>Resulting Element</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The corresponding element is the element that is actually changed. <br>
+	 * In case of an attribute- or reference-change, it is the owner of the attribute / reference.<br>
+	 * In case of an add- or remove-element-change, it is the parent of the added / removed element.<br>
+	 * In case of a move-element-change, it is the moved element.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Resulting Element</em>' containment reference.
+	 * @see #setResultingElement(IElementReference)
+	 * @see org.eclipse.emf.compare.mpatch.MPatchPackage#getIndepChange_ResultingElement()
+	 * @model containment="true"
+	 * @generated
+	 */
+	IElementReference getResultingElement();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.mpatch.IndepChange#getResultingElement <em>Resulting Element</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Resulting Element</em>' containment reference.
+	 * @see #getResultingElement()
+	 * @generated
+	 */
+	void setResultingElement(IElementReference value);
 
 } // IndepChange

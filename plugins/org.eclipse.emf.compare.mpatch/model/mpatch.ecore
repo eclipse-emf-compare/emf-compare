@@ -34,6 +34,12 @@
         eType="#//IndepChange" eOpposite="#//IndepChange/dependants"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependants" upperBound="-1"
         eType="#//IndepChange" eOpposite="#//IndepChange/dependsOn"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resultingElement" eType="#//IElementReference"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The corresponding element is the element that is actually changed. &lt;br>&#xD;&#xA;In case of an attribute- or reference-change, it is the owner of the attribute / reference.&lt;br>&#xD;&#xA;In case of an add- or remove-element-change, it is the parent of the added / removed element.&lt;br>&#xD;&#xA;In case of a move-element-change, it is the moved element."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChangeGroup" eSuperTypes="#//IndepChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subChanges" upperBound="-1"

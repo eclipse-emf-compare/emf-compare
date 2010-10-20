@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: IndepChangeImpl.java,v 1.1 2010/09/10 15:23:07 cbrun Exp $
+ * $Id: IndepChangeImpl.java,v 1.2 2010/10/20 09:22:23 pkonemann Exp $
  */
 package org.eclipse.emf.compare.mpatch.impl;
 
@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.eclipse.emf.compare.mpatch.impl.IndepChangeImpl#getChangeType <em>Change Type</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.mpatch.impl.IndepChangeImpl#getDependsOn <em>Depends On</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.mpatch.impl.IndepChangeImpl#getDependants <em>Dependants</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.mpatch.impl.IndepChangeImpl#getResultingElement <em>Resulting Element</em>}</li>
  * </ul>
  * </p>
  *
@@ -117,6 +118,16 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 	 * @ordered
 	 */
 	protected EList<IndepChange> dependants;
+
+	/**
+	 * The cached value of the '{@link #getResultingElement() <em>Resulting Element</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getResultingElement()
+	 * @generated
+	 * @ordered
+	 */
+	protected IElementReference resultingElement;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -245,6 +256,49 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public IElementReference getResultingElement() {
+		return resultingElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetResultingElement(IElementReference newResultingElement, NotificationChain msgs) {
+		IElementReference oldResultingElement = resultingElement;
+		resultingElement = newResultingElement;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT, oldResultingElement, newResultingElement);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setResultingElement(IElementReference newResultingElement) {
+		if (newResultingElement != resultingElement) {
+			NotificationChain msgs = null;
+			if (resultingElement != null)
+				msgs = ((InternalEObject)resultingElement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT, null, msgs);
+			if (newResultingElement != null)
+				msgs = ((InternalEObject)newResultingElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT, null, msgs);
+			msgs = basicSetResultingElement(newResultingElement, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT, newResultingElement, newResultingElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -271,6 +325,8 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 				return ((InternalEList<?>)getDependsOn()).basicRemove(otherEnd, msgs);
 			case MPatchPackage.INDEP_CHANGE__DEPENDANTS:
 				return ((InternalEList<?>)getDependants()).basicRemove(otherEnd, msgs);
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
+				return basicSetResultingElement(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -293,6 +349,8 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 				return getDependsOn();
 			case MPatchPackage.INDEP_CHANGE__DEPENDANTS:
 				return getDependants();
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
+				return getResultingElement();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -317,6 +375,9 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 				getDependants().clear();
 				getDependants().addAll((Collection<? extends IndepChange>)newValue);
 				return;
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
+				setResultingElement((IElementReference)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -337,6 +398,9 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 				return;
 			case MPatchPackage.INDEP_CHANGE__DEPENDANTS:
 				getDependants().clear();
+				return;
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
+				setResultingElement((IElementReference)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -360,6 +424,8 @@ public abstract class IndepChangeImpl extends EObjectImpl implements IndepChange
 				return dependsOn != null && !dependsOn.isEmpty();
 			case MPatchPackage.INDEP_CHANGE__DEPENDANTS:
 				return dependants != null && !dependants.isEmpty();
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
+				return resultingElement != null;
 		}
 		return super.eIsSet(featureID);
 	}
