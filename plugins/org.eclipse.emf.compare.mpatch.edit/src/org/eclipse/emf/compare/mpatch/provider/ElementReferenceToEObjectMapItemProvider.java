@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: ElementReferenceToEObjectMapItemProvider.java,v 1.1 2010/09/10 15:28:06 cbrun Exp $
+ * $Id: ElementReferenceToEObjectMapItemProvider.java,v 1.2 2010/10/20 09:22:21 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.provider;
 
@@ -179,71 +179,6 @@ public class ElementReferenceToEObjectMapItemProvider
 			(createChildParameter
 				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
 				 EcoreFactory.eINSTANCE.createEObject()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEAnnotation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEClass()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEDataType()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEEnum()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEEnumLiteral()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEFactory()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEOperation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEPackage()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEParameter()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEReference()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createEGenericType()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.ELEMENT_REFERENCE_TO_EOBJECT_MAP__VALUE,
-				 EcoreFactory.eINSTANCE.createETypeParameter()));
 	}
 
 	/**

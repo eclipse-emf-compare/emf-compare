@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: IndepChangeItemProvider.java,v 1.1 2010/09/10 15:28:06 cbrun Exp $
+ * $Id: IndepChangeItemProvider.java,v 1.2 2010/10/20 09:22:21 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.provider;
 
@@ -233,6 +233,7 @@ public class IndepChangeItemProvider
 		switch (notification.getFeatureID(IndepChange.class)) {
 			case MPatchPackage.INDEP_CHANGE__CHANGE_KIND:
 			case MPatchPackage.INDEP_CHANGE__CHANGE_TYPE:
+			case MPatchPackage.INDEP_CHANGE__RESULTING_ELEMENT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case MPatchPackage.INDEP_CHANGE__CORRESPONDING_ELEMENT:

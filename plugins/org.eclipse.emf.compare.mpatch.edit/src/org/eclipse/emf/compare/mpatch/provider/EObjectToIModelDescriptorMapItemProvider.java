@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: EObjectToIModelDescriptorMapItemProvider.java,v 1.1 2010/09/10 15:28:06 cbrun Exp $
+ * $Id: EObjectToIModelDescriptorMapItemProvider.java,v 1.2 2010/10/20 09:22:21 pkonemann Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.provider;
 
@@ -179,71 +179,6 @@ public class EObjectToIModelDescriptorMapItemProvider
 			(createChildParameter
 				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
 				 EcoreFactory.eINSTANCE.createEObject()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEAttribute()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEAnnotation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEClass()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEDataType()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEEnum()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEEnumLiteral()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEFactory()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEOperation()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEPackage()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEParameter()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEReference()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createEGenericType()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(MPatchPackage.Literals.EOBJECT_TO_IMODEL_DESCRIPTOR_MAP__KEY,
-				 EcoreFactory.eINSTANCE.createETypeParameter()));
 	}
 
 	/**
