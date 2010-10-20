@@ -48,61 +48,76 @@ import org.junit.Test;
  */
 public class ReverseTest {
 
+	private final static String ID_BASED_SYMREFS = "ID-based";
+	private final static String CONDITION_BASED_SYMREFS = "Condition-based";
+
 	/**
 	 * Reversed test with dependency cycle model.
 	 */
 	@Test
-	public void testDependencyCycle() {
-		testReversed(TestConstants.DEP_CYCLE_URI1, TestConstants.DEP_CYCLE_URI2);
+	public void testReverseDependencyCycle() {
+		testReversed(TestConstants.DEP_CYCLE_URI1, TestConstants.DEP_CYCLE_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.DEP_CYCLE_URI1, TestConstants.DEP_CYCLE_URI2, CONDITION_BASED_SYMREFS);
 	}
 
 	/**
 	 * Reversed test with dependency model.
 	 */
 	@Test
-	public void testApplyDifferencesDependency() {
-		testReversed(TestConstants.DEPENDENCY_URI1, TestConstants.DEPENDENCY_URI2);
+	public void testReverseDifferencesDependency() {
+		testReversed(TestConstants.DEPENDENCY_URI1, TestConstants.DEPENDENCY_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.DEPENDENCY_URI1, TestConstants.DEPENDENCY_URI2, CONDITION_BASED_SYMREFS);
 	}
 
 	/**
 	 * Reversed test with eachonce model.
 	 */
 	@Test
-	public void testApplyDifferencesEachonce() {
-		testReversed(TestConstants.EACHONCE_URI1, TestConstants.EACHONCE_URI2);
+	public void testReverseDifferencesEachonce() {
+		testReversed(TestConstants.EACHONCE_URI1, TestConstants.EACHONCE_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.EACHONCE_URI1, TestConstants.EACHONCE_URI2, CONDITION_BASED_SYMREFS);
 	}
 
-	/*
-	 * This test is not working because Ecore uses the path of the elements as URIs which are used as unique
-	 * identifiers. However, the identifier is not really unique because moved elements change their path and thus get a
-	 * different URI and thus a different identifier. A manual test, however, showed that all other changes were
-	 * reversed successfully :-D
+	/**
+	 * Reversed test with ecore model.
 	 */
-	// /**
-	// * Reversed test with ecore model.
-	// */
-	// @Test
-	// public void testApplyDifferencesEcore() {
-	// testReversed(TestConstants.ECORE_URI1, TestConstants.ECORE_URI2);
-	// }
+	@Test
+	public void testReverseDifferencesEcore() {
+		testReversed(TestConstants.ECORE_URI1, TestConstants.ECORE_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.ECORE_URI1, TestConstants.ECORE_URI2, CONDITION_BASED_SYMREFS);
+	}
 
 	/**
 	 * Reversed test with UML model.
 	 */
 	@Test
-	public void testApplyDifferencesUML() {
-		testReversed(TestConstants.UML_URI1, TestConstants.UML_URI2);
+	public void testReverseDifferencesUML() {
+		testReversed(TestConstants.UML_URI1, TestConstants.UML_URI2, ID_BASED_SYMREFS);
+		// condition-based does not work here, unfortunately, because one of the changes (cardinality from 0 to 1)
+		// resolves ambiguously in the reverted changes.
 	}
 
-	private void testReversed(String unchangedUri, String changedUri) {
-		/*
-		 * Unfortunately we cannot automatically test reversal of MPatches if condition-based symbolic references are
-		 * used. The reason is that the conditions contain attribute values - hence, all attribute changes cannot be
-		 * resolved!
-		 */
-		final ISymbolicReferenceCreator symrefCreator = ExtensionManager.getAllSymbolicReferenceCreators().get(
-				"ID-based");
-		assertNotNull("Please make sure that id-based symref creator is installed correctly!", symrefCreator);
+	/**
+	 * Reverse test with simple model.
+	 */
+	@Test
+	public void testReverseSimple() {
+		testReversed(TestConstants.SIMPLE_URI1, TestConstants.SIMPLE_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.SIMPLE_URI1, TestConstants.SIMPLE_URI2, CONDITION_BASED_SYMREFS);
+	}
+
+	/**
+	 * Reverse test with simple model.
+	 */
+	@Test
+	public void testReverseLibrary() {
+		testReversed(TestConstants.LIBRARY_URI1, TestConstants.LIBRARY_URI2, ID_BASED_SYMREFS);
+		testReversed(TestConstants.LIBRARY_URI1, TestConstants.LIBRARY_URI2, CONDITION_BASED_SYMREFS);
+	}
+
+	private void testReversed(String unchangedUri, String changedUri, String symrefs) {
+		final ISymbolicReferenceCreator symrefCreator = ExtensionManager.getAllSymbolicReferenceCreators().get(symrefs);
+		assertNotNull("Please make sure this symref creator is installed correctly: " + symrefs, symrefCreator);
 
 		// but we can test all model descriptors!
 		for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS) {
@@ -110,7 +125,6 @@ public class ReverseTest {
 			final String info = "symrefCreator: " + symrefCreator.getLabel() + ", descriptorCreator: "
 					+ descriptorCreator.getLabel();
 
-			// TODO: replace with CommonTextUtils.createMPatch(..) or similar...
 			// prepare models
 			final MPatchModel mpatch = CompareTestHelper.getMPatchFromUris(changedUri, unchangedUri, symrefCreator,
 					descriptorCreator);
