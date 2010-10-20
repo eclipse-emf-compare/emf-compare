@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.mpatch.ChangeGroup;
-import org.eclipse.emf.compare.mpatch.IElementReference;
 import org.eclipse.emf.compare.mpatch.IndepAddAttributeChange;
 import org.eclipse.emf.compare.mpatch.IndepAddElementChange;
 import org.eclipse.emf.compare.mpatch.IndepAddReferenceChange;
@@ -36,7 +35,6 @@ import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchTransformation;
 import org.eclipse.emf.compare.mpatch.util.ExtEcoreUtils;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -131,7 +129,7 @@ public class ReverseMPatch implements IMPatchTransformation {
 			final IndepChange indepChange = (IndepChange) change;
 			deps.put(indepChange, new ArrayList<IndepChange>(indepChange.getDependsOn()));
 		}
-		
+
 		// iterate over all changes that have dependencies and reverse them
 		for (IndepChange change : deps.keySet()) {
 			// this works because it is a bidirectional association :-D
@@ -183,13 +181,12 @@ public class ReverseMPatch implements IMPatchTransformation {
 	}
 
 	private static IndepChange reverseMoveElementChange(IndepMoveElementChange change) {
-		final IElementReference oldParent = change.getOldParent();
-		change.setOldParent(change.getNewParent());
-		change.setNewParent(oldParent);
-		final EReference oldContainment = change.getOldContainment();
-		change.setOldContainment(change.getNewContainment());
-		change.setNewContainment(oldContainment);
-		return change;
+		final IndepMoveElementChange newChange = MPatchFactory.eINSTANCE.createIndepMoveElementChange();
+		newChange.setOldContainment(change.getNewContainment());
+		newChange.setNewContainment(change.getOldContainment());
+		newChange.setOldParent(change.getNewParent());
+		newChange.setNewParent(change.getOldParent());
+		return reverseIndepChangeAndReplace(change, newChange);
 	}
 
 	private static IndepChange reverseAddAttributeChange(IndepAddAttributeChange change) {
@@ -207,10 +204,11 @@ public class ReverseMPatch implements IMPatchTransformation {
 	}
 
 	private static IndepChange reverseUpdateAttributeChange(IndepUpdateAttributeChange change) {
-		final Object oldValue = change.getOldValue();
-		change.setOldValue(change.getNewValue());
-		change.setNewValue(oldValue);
-		return change;
+		final IndepUpdateAttributeChange newChange = MPatchFactory.eINSTANCE.createIndepUpdateAttributeChange();
+		newChange.setChangedAttribute(change.getChangedAttribute());
+		newChange.setOldValue(change.getNewValue());
+		newChange.setNewValue(change.getOldValue());
+		return reverseIndepChangeAndReplace(change, newChange);
 	}
 
 	private static IndepChange reverseAddReferenceChange(IndepAddReferenceChange change) {
@@ -228,20 +226,30 @@ public class ReverseMPatch implements IMPatchTransformation {
 	}
 
 	private static IndepChange reverseUpdateReferenceChange(IndepUpdateReferenceChange change) {
-		final IElementReference oldReference = change.getOldReference();
-		change.setOldReference(change.getNewReference());
-		change.setNewReference(oldReference);
-		return change;
+		final IndepUpdateReferenceChange newChange = MPatchFactory.eINSTANCE.createIndepUpdateReferenceChange();
+		newChange.setOldReference(change.getNewReference());
+		newChange.setNewReference(change.getOldReference());
+		newChange.setReference(change.getReference());
+		return reverseIndepChangeAndReplace(change, newChange);
 	}
 
 	private static IndepChange reverseIndepChangeAndReplace(IndepChange oldChange, IndepChange newChange) {
-		newChange.setCorrespondingElement(oldChange.getCorrespondingElement());
+		/*
+		 * Lets see whether symbolic references of the changed version of the model elements exist. if not, just use the
+		 * corresponding element.
+		 */
+		if (oldChange.getResultingElement() != null) {
+			newChange.setCorrespondingElement(oldChange.getResultingElement());
+			newChange.setResultingElement(oldChange.getCorrespondingElement());
+		} else {
+			newChange.setCorrespondingElement(oldChange.getCorrespondingElement());
+		}
 		newChange.getDependants().addAll(oldChange.getDependants());
 		newChange.getDependsOn().addAll(oldChange.getDependsOn());
 		oldChange.getDependants().clear();
 		oldChange.getDependsOn().clear();
 		if (oldChange.eContainer() == null)
-			throw new IllegalStateException("The change must be contained somehwere: " + oldChange);
+			throw new IllegalStateException("The change must be contained somewhere: " + oldChange);
 		EcoreUtil.replace(oldChange, newChange);
 		return newChange;
 	}

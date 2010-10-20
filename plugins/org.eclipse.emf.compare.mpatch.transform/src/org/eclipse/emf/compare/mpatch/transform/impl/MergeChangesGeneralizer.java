@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.mpatch.symrefs.Condition;
 import org.eclipse.emf.compare.mpatch.symrefs.ElementSetReference;
 import org.eclipse.emf.compare.mpatch.symrefs.OclCondition;
 import org.eclipse.emf.compare.mpatch.symrefs.SymrefsFactory;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -85,8 +86,13 @@ public class MergeChangesGeneralizer {
 		 */
 		final IndepChange generalizedChange = (IndepChange) EcoreUtil.copy(changes.get(0));
 
-		// merge the corresponding elements
-		mergeCorrespondingElement(generalizedChange, changes);
+		// merge the corresponding elements and resulting reference, if available
+		mergeCorrespondingElement(generalizedChange, changes,
+				MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT);
+		if (changes.get(0).getResultingElement() != null) {
+			mergeCorrespondingElement(generalizedChange, changes,
+					MPatchPackage.Literals.INDEP_CHANGE__RESULTING_ELEMENT);
+		}
 
 		// we need to adjust the self reference of model descriptors, too!
 		if (MPatchPackage.Literals.INDEP_ADD_REM_ELEMENT_CHANGE.isInstance(generalizedChange)) {
@@ -117,24 +123,31 @@ public class MergeChangesGeneralizer {
 	}
 
 	/**
-	 * Merge the symbolic reference for corresponding elements.
+	 * Merge the symbolic references.
 	 * 
 	 * @param generalizedChange
-	 *            The generalized change that does not yet have a merged symbolic reference for the corresponding
-	 *            elements.
+	 *            The generalized change that does not yet have a merged symbolic reference for the given symbolic
+	 *            reference.
 	 * @param changes
 	 *            The original changes.
+	 * @param feature
+	 *            The feature that contains the symbolic reference to merge.
 	 */
-	private static void mergeCorrespondingElement(IndepChange generalizedChange, List<IndepChange> changes) {
+	private static void mergeCorrespondingElement(IndepChange generalizedChange, List<IndepChange> changes,
+			EReference feature) {
+		if (!MPatchPackage.Literals.IELEMENT_REFERENCE.equals(feature.getEType()))
+			throw new IllegalArgumentException("The given feature does not contain symbolic references: "
+					+ feature.getName());
+
 		// collect all symbolic references that are matter of the merge
 		final List<IElementReference> unmergedSymrefs = new ArrayList<IElementReference>();
 		for (IndepChange change : changes) {
-			unmergedSymrefs.add(change.getCorrespondingElement());
+			unmergedSymrefs.add((IElementReference) change.eGet(feature));
 		}
 
 		// do the merge and update the corresponding element symbolic reference!
 		final IElementReference mergedSymref = mergeSymbolicReferences(unmergedSymrefs);
-		generalizedChange.setCorrespondingElement(mergedSymref);
+		generalizedChange.eSet(feature, mergedSymref);
 	}
 
 	/**
@@ -242,7 +255,7 @@ public class MergeChangesGeneralizer {
 		} else {
 			expression = "true";
 		}
-		
+
 		// TODO: check whether the expression is syntactically correct
 		return expression;
 	}
