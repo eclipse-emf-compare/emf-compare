@@ -239,6 +239,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(MoveModelElement diffElement) {
 		final IndepMoveElementChange indepChange = MPatchFactory.eINSTANCE.createIndepMoveElementChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setOldContainment(diffElement.getRightElement().eContainmentFeature());
 		indepChange.setNewContainment(diffElement.getLeftElement().eContainmentFeature());
 
@@ -261,6 +262,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(ModelElementChangeRightTarget diffElement) {
 		final IndepRemoveElementChange indepChange = MPatchFactory.eINSTANCE.createIndepRemoveElementChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement().eContainer()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftParent()));
 		indepChange.setContainment(diffElement.getRightElement().eContainmentFeature());
 		indepChange.setSubModel(lib.toModelDescriptor(diffElement.getRightElement(), true));
 		return indepChange;
@@ -272,6 +274,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(ModelElementChangeLeftTarget diffElement) {
 		final IndepAddElementChange indepChange = MPatchFactory.eINSTANCE.createIndepAddElementChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightParent()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement().eContainer()));
 		indepChange.setContainment(diffElement.getLeftElement().eContainmentFeature());
 		indepChange.setSubModel(lib.toModelDescriptor(diffElement.getLeftElement(), true));
 		return indepChange;
@@ -283,6 +286,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(UpdateAttribute diffElement) {
 		final IndepUpdateAttributeChange indepChange = MPatchFactory.eINSTANCE.createIndepUpdateAttributeChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setChangedAttribute(diffElement.getAttribute());
 		indepChange.setOldValue(diffElement.getRightElement().eGet(diffElement.getAttribute()));
 		indepChange.setNewValue(diffElement.getLeftElement().eGet(diffElement.getAttribute()));
@@ -295,6 +299,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(AttributeChangeRightTarget diffElement) {
 		final IndepRemoveAttributeChange indepChange = MPatchFactory.eINSTANCE.createIndepRemoveAttributeChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setChangedAttribute(diffElement.getAttribute());
 		indepChange.setValue(diffElement.getRightTarget());
 		return indepChange;
@@ -306,6 +311,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(AttributeChangeLeftTarget diffElement) {
 		final IndepAddAttributeChange indepChange = MPatchFactory.eINSTANCE.createIndepAddAttributeChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setChangedAttribute(diffElement.getAttribute());
 		indepChange.setValue(diffElement.getLeftTarget());
 		return indepChange;
@@ -317,6 +323,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(UpdateReference diffElement) {
 		final IndepUpdateReferenceChange indepChange = MPatchFactory.eINSTANCE.createIndepUpdateReferenceChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setReference(diffElement.getReference());
 
 		// unfortunately we need to figure out from the _model_, whether a reference is null
@@ -336,6 +343,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(ReferenceChangeRightTarget diffElement) {
 		final IndepRemoveReferenceChange indepChange = MPatchFactory.eINSTANCE.createIndepRemoveReferenceChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setReference(diffElement.getReference());
 		indepChange.setChangedReference(lib.toSymbolicReference(diffElement.getRightTarget()));
 		return indepChange;
@@ -347,6 +355,7 @@ public class Emfdiff2Mpatch {
 	protected IndepChange toIndepChange(ReferenceChangeLeftTarget diffElement) {
 		final IndepAddReferenceChange indepChange = MPatchFactory.eINSTANCE.createIndepAddReferenceChange();
 		indepChange.setCorrespondingElement(lib.toSymbolicReference(diffElement.getRightElement()));
+		indepChange.setResultingElement(lib.toSymbolicReference(diffElement.getLeftElement()));
 		indepChange.setReference(diffElement.getReference());
 		indepChange.setChangedReference(lib.toSymbolicReference(diffElement.getLeftTarget()));
 		return indepChange;

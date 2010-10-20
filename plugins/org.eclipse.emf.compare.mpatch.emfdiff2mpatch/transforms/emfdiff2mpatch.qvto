@@ -8,7 +8,7 @@
 -- Contributors:
 --    Patrick Koenemann, DTU Informatics - initial API and implementation
 --
--- $Id: emfdiff2mpatch.qvto,v 1.1 2010/09/10 15:31:52 cbrun Exp $
+-- $Id: emfdiff2mpatch.qvto,v 1.2 2010/10/20 09:22:21 pkonemann Exp $
 --------------------------------------------------------------------------------
 
 
@@ -108,6 +108,7 @@ mapping MoveModelElement::toIndepChange() : IndepChange inherits DiffElement::to
 	init {
 		result := object IndepMoveElementChange {
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			oldContainment := self.rightElement.eContainmentFeature();
 			newContainment := self.leftElement.eContainmentFeature();
 			
@@ -128,6 +129,7 @@ mapping ModelElementChangeRightTarget::toIndepChange() : IndepChange inherits Di
 	init {
 		result := object IndepRemoveElementChange {
 			correspondingElement := self.rightElement.eContainer().toSymbolicReference();
+			resultingElement := self.leftParent.toSymbolicReference();
 			containment := self.rightElement.eContainmentFeature();
 
 			-- this model descriptor is intended to store a sub-model which can be re-build later on.
@@ -142,6 +144,7 @@ mapping ModelElementChangeLeftTarget::toIndepChange() : IndepChange inherits Dif
 	init {
 		result := object IndepAddElementChange {
 			correspondingElement := self.rightParent.toSymbolicReference();
+			resultingElement := self.leftElement.eContainer().toSymbolicReference();
 			containment := self.leftElement.eContainmentFeature();
 			
 			-- this model descriptor is intended to store a sub-model which can be re-build later on.
@@ -157,6 +160,7 @@ mapping UpdateAttribute::toIndepChange() : IndepChange inherits DiffElement::toI
 		result := object IndepUpdateAttributeChange {
 			changedAttribute := self.attribute;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			oldValue := self.rightElement.eGet(self.attribute);
 			newValue := self.leftElement.eGet(self.attribute);
 		}
@@ -169,6 +173,7 @@ mapping AttributeChangeRightTarget::toIndepChange() : IndepChange inherits DiffE
 		result := object IndepRemoveAttributeChange {
 			changedAttribute := self.attribute;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			value := self.rightTarget;
 		}
 	}
@@ -180,6 +185,7 @@ mapping AttributeChangeLeftTarget::toIndepChange() : IndepChange inherits DiffEl
 		result := object IndepAddAttributeChange {
 			changedAttribute := self.attribute;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			value := self.leftTarget;
 		}
 	}
@@ -191,6 +197,7 @@ mapping UpdateReference::toIndepChange() : IndepChange inherits DiffElement::toI
 		result := object IndepUpdateReferenceChange {
 			reference := self.reference;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			
 			-- unfortunately we need to figure out from the _model_, whether a reference is null
 			var rightTarget := self.rightElement.eGet(reference);
@@ -215,6 +222,7 @@ mapping ReferenceChangeRightTarget::toIndepChange() : IndepChange inherits DiffE
 		result := object IndepRemoveReferenceChange {
 			reference := self.reference;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			changedReference := self.rightTarget.toSymbolicReference();
 		}
 	}
@@ -226,6 +234,7 @@ mapping ReferenceChangeLeftTarget::toIndepChange() : IndepChange inherits DiffEl
 		result := object IndepAddReferenceChange {
 			reference := self.reference;
 			correspondingElement := self.rightElement.toSymbolicReference();
+			resultingElement := self.leftElement.toSymbolicReference();
 			changedReference := self.leftTarget.toSymbolicReference();
 		}
 	}
