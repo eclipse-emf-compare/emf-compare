@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.util;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -160,7 +160,7 @@ public class ExtEcoreUtils {
 	 */
 	public static List<? extends EObject> flattenEObjects(Collection<? extends EObject> elements) {
 		final ArrayList<EObject> result = new ArrayList<EObject>();
-		final Queue<EObject> queue = new ArrayDeque<EObject>();
+		final Queue<EObject> queue = new LinkedList<EObject>();
 		queue.addAll(elements);
 		while (!queue.isEmpty()) {
 			final EObject obj = queue.poll();
@@ -185,7 +185,7 @@ public class ExtEcoreUtils {
 	public static List<EObject> collectTypedElements(final List<? extends EObject> elements, final Set<EClass> types,
 			boolean includeSubtypes) {
 		final List<EObject> result = new ArrayList<EObject>();
-		final Queue<EObject> queue = new ArrayDeque<EObject>();
+		final Queue<EObject> queue = new LinkedList<EObject>();
 		queue.addAll(elements);
 		while (!queue.isEmpty()) {
 			final EObject element = queue.poll();
