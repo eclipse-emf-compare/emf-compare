@@ -58,7 +58,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -66,7 +65,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -74,7 +72,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 40;
 	}
@@ -82,7 +79,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -90,7 +86,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * See {@link DefaultMPatchGrouping#group(MPatchModel)}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return group(mpatch);
 	}

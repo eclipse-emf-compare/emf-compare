@@ -47,7 +47,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -55,7 +54,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -63,7 +61,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 10;
 	}
@@ -71,7 +68,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -80,7 +76,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	 * This weakening generalization changes the upper bound to unlimited of all symbolic references of type
 	 * {@link ElementSetReference}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return weakenBounds(mpatch);
 	}

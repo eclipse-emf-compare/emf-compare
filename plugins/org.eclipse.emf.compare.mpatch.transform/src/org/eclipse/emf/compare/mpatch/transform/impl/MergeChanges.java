@@ -65,7 +65,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -73,7 +72,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -81,7 +79,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 30;
 	}
@@ -89,7 +86,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -97,7 +93,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * See: {@value #DESCRIPTION}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return mergeChanges(mpatch);
 	}

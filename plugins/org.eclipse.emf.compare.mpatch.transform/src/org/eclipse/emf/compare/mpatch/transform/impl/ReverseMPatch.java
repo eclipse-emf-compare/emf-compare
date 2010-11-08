@@ -60,7 +60,6 @@ public class ReverseMPatch implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -68,7 +67,6 @@ public class ReverseMPatch implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -76,7 +74,6 @@ public class ReverseMPatch implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 80;
 	}
@@ -84,7 +81,6 @@ public class ReverseMPatch implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -92,7 +88,6 @@ public class ReverseMPatch implements IMPatchTransformation {
 	/**
 	 * See {@link DefaultMPatchGrouping#group(MPatchModel)}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return reverse(mpatch);
 	}
