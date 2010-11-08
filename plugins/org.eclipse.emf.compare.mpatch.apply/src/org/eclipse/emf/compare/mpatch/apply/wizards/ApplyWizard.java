@@ -208,7 +208,6 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		return true;
 	}
 
-	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// check the initial selection for a valid input file
 		for (Object obj : selection.toArray()) {
@@ -248,7 +247,6 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	 * <br>
 	 * In case the files cannot be saved, an error message will be shown to the user.
 	 */
-	@Override
 	public boolean performFinish() {
 		final boolean reviewDiffApplication = summaryPage.reviewDiffApplication();
 		final EObject model = modelResource.getContents().get(0);
@@ -260,7 +258,6 @@ public class ApplyWizard extends Wizard implements INewWizard {
 			 */
 			getContainer().run(false, false, new IRunnableWithProgress() {
 
-				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 					monitor.beginTask("Applying MPatch...", 10);

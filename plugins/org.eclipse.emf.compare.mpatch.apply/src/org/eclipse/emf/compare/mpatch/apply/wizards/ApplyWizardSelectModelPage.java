@@ -80,7 +80,6 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 		this.adapterFactory = adapterFactory;
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
 		final GridLayout layout = new GridLayout();
@@ -228,7 +227,6 @@ public class ApplyWizardSelectModelPage extends WizardPage implements ISelection
 		}
 	}
 
-	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		final ISelection selection = event.getSelection();
 		if (selection instanceof IStructuredSelection) {

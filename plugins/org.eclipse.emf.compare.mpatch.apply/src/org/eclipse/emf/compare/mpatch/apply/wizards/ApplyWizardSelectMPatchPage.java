@@ -74,7 +74,6 @@ public class ApplyWizardSelectMPatchPage extends WizardPage {
 		this.adapterFactory = adapterFactory;
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
 		final GridLayout layout = new GridLayout();

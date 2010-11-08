@@ -58,7 +58,6 @@ public class ApplyAction implements IObjectActionDelegate, IEditorActionDelegate
 	/**
 	 * This action simply takes the current selection and opens the wizard {@link ApplyWizard} with it.
 	 */
-	@Override
 	public void run(IAction action) {
 		// Create the wizard
 		final ApplyWizard wizard = new ApplyWizard();
@@ -73,7 +72,6 @@ public class ApplyAction implements IObjectActionDelegate, IEditorActionDelegate
 	/**
 	 * Enable action depending on the selection.
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = null;
 		if (selection instanceof IStructuredSelection) {
@@ -126,13 +124,11 @@ public class ApplyAction implements IObjectActionDelegate, IEditorActionDelegate
 	/**
 	 * Get Shell and workbench.
 	 */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 		workbench = targetPart.getSite().getWorkbenchWindow().getWorkbench();
 	}
 
-	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor != null) {
 			shell = targetEditor.getSite().getShell();

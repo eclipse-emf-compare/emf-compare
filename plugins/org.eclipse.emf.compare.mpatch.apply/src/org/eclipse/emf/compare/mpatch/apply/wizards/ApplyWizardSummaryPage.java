@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.apply.wizards;
 
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Queue;
 
 import org.eclipse.core.resources.IFile;
@@ -76,7 +76,6 @@ public class ApplyWizardSummaryPage extends WizardPage {
 		setDescription("Select a place where the information is stored.");
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
 		final GridLayout layout = new GridLayout();
@@ -164,7 +163,7 @@ public class ApplyWizardSummaryPage extends WizardPage {
 
 	private int countChanges(MPatchModel mpatch) {
 		int counter = 0;
-		Queue<IndepChange> queue = new ArrayDeque<IndepChange>();
+		Queue<IndepChange> queue = new LinkedList<IndepChange>();
 		queue.addAll(mpatch.getChanges());
 		while (!queue.isEmpty()) {
 			IndepChange change = queue.poll();

@@ -92,7 +92,6 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 		iDiffResolution = ExtensionManager.getSelectedResolution();
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
 		final GridLayout layout = new GridLayout();
@@ -149,7 +148,6 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 	/**
 	 * Update input from previous pages and re-resolve symbolic references, if necessary. Then, update the viewer.
 	 */
-	@Override
 	public boolean resolved(ResolvedSymbolicReferences mapping) {
 		resolvedElements = mapping;
 		dialogChanged();
