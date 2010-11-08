@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test.eachonce;singleton:=tru
 Bundle-Version: 1.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: eachonce,
  eachonce.util
 Require-Bundle: org.eclipse.core.runtime,
