@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
  org.eclipse.emf.query,
  org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Technical University of Denmark
