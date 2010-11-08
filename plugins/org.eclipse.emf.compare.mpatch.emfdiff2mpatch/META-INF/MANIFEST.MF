@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.ui,
  org.eclipse.ui.ide
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.Emfdiff2mpatchActivator
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util
