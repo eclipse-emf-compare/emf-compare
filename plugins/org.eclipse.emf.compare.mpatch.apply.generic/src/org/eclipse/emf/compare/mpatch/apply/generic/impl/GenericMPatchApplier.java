@@ -146,7 +146,6 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -156,7 +155,6 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * 
 	 * @return The application result.
 	 */
-	@Override
 	public MPatchApplicationResult applyMPatch(final ResolvedSymbolicReferences mapping, final boolean storeBinding) {
 
 		// 0. set up collections for return value

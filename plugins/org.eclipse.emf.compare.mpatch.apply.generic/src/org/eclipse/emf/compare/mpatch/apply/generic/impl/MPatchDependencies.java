@@ -62,7 +62,6 @@ public class MPatchDependencies implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -70,7 +69,6 @@ public class MPatchDependencies implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -78,7 +76,6 @@ public class MPatchDependencies implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 20;
 	}
@@ -86,7 +83,6 @@ public class MPatchDependencies implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return false;
 	}
@@ -94,7 +90,6 @@ public class MPatchDependencies implements IMPatchTransformation {
 	/**
 	 * See {@link MPatchDependencies#calculateDependencies(MPatchModel)}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return calculateDependencies(mpatch);
 	}

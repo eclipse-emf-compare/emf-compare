@@ -55,7 +55,6 @@ public class InternalReferences implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -63,7 +62,6 @@ public class InternalReferences implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -71,7 +69,6 @@ public class InternalReferences implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 10;
 	}
@@ -79,7 +76,6 @@ public class InternalReferences implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return false;
 	}
@@ -89,7 +85,6 @@ public class InternalReferences implements IMPatchTransformation {
 	 * 
 	 * @return Number of created internal references.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return createInternalReferences(mpatch);
 	}

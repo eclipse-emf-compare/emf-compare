@@ -257,7 +257,6 @@ class ElementSelectionDialogCellEditor extends DialogCellEditor {
 			return currentSelection;
 		}
 
-		@Override
 		@SuppressWarnings("unchecked")
 		public void selectionChanged(SelectionChangedEvent event) {
 			currentSelection.clear();

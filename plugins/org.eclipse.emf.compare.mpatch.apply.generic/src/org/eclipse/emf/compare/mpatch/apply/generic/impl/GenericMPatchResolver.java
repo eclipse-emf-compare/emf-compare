@@ -102,7 +102,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return "User-interactive " + MPatchConstants.SYMBOLIC_REFERENCES_NAME + " resolution";
 	}
@@ -122,7 +121,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	 * @param mapping
 	 *            The resolution that should be refined automatically.
 	 */
-	@Override
 	public void refineResolution(ResolvedSymbolicReferences mapping) {
 		AutoMPatchResolver.resolve(mapping);
 	}
@@ -136,7 +134,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	 * 
 	 * @see IMPatchResolution
 	 */
-	@Override
 	public void refineResolution(ResolvedSymbolicReferences mapping, IMPatchResolutionHost host) {
 		this.mapping = mapping;
 		this.host = host;
@@ -174,7 +171,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	 * 
 	 * @see IMPatchResolution
 	 */
-	@Override
 	public void buildResolutionGUI(final Composite parent, final AdapterFactory adapterFactory) {
 		this.adapterFactory = adapterFactory;
 		this.adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
@@ -251,7 +247,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void checkStateChanged(CheckStateChangedEvent event) {
 		final boolean newState = event.getChecked();
 
@@ -266,8 +261,7 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 		}
 
 	}
-
-	@Override
+	
 	public void selectionChanged(SelectionChangedEvent event) {
 		currentlySelectedElement = null;
 		if (event.getSelection() instanceof IStructuredSelection) {
@@ -427,7 +421,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 		 * <li>Any {@link IElementReference} might be refined (under certain conditions).
 		 * </ul>
 		 */
-		@Override
 		public boolean canModify(Object element, String property) {
 			if (element instanceof IndepAddElementChange && COLUMNS[2].equals(property))
 				return true; // existing elements can be bound to this change!
@@ -446,7 +439,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 			return true;
 		}
 
-		@Override
 		public Object getValue(Object element, String property) {
 			if (element instanceof IElementReference && COLUMNS[2].equals(property)) {
 				// give some useful information when the user clicks the field
@@ -474,7 +466,6 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 			return "click to edit"; // default string
 		}
 
-		@Override
 		public void modify(Object element, String property, Object value) {
 			if (COLUMNS[2].equals(property) && element instanceof TreeItem && value != null
 					&& value instanceof SymrefRefinement) {
