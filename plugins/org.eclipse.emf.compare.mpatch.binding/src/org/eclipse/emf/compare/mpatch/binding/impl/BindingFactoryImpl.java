@@ -8,7 +8,7 @@
  * Contributors:
  *    Patrick Koenemann, DTU Informatics - initial API and implementation
  *
- * $Id: BindingFactoryImpl.java,v 1.2 2010/09/14 09:45:45 pkonemann Exp $
+ * $Id: BindingFactoryImpl.java,v 1.3 2010/11/08 15:11:03 cbrun Exp $
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.binding.impl;
 
@@ -220,7 +220,6 @@ public class BindingFactoryImpl extends EFactoryImpl implements BindingFactory {
 		return (BindingPackage)getEPackage();
 	}
 
-	@Override
 	public void createNote(NoteElement noteElement, String note) {
 		EObject noteContainer = noteElement;
 		while (!(noteContainer instanceof MPatchModelBinding) && noteContainer.eContainer() != null)
@@ -246,7 +245,6 @@ public class BindingFactoryImpl extends EFactoryImpl implements BindingFactory {
 	 * (non-Javadoc)
 	 * @see org.eclipse.emf.compare.mpatch.diffbinding.MpatchbindingFactory#createChangeBindingForChange(org.eclipse.emf.compare.mpatch.IndepChange)
 	 */
-	@Override
 	public ChangeBinding createChangeBindingForChange(IndepChange change) {
 		ChangeBinding binding = null;
 		
@@ -296,7 +294,6 @@ public class BindingFactoryImpl extends EFactoryImpl implements BindingFactory {
 	 * (non-Javadoc)
 	 * @see org.eclipse.emf.compare.mpatch.diffbinding.MpatchbindingFactory#createElementBinding(org.eclipse.emf.compare.mpatch.IElementReference, org.eclipse.emf.ecore.EObject)
 	 */
-	@Override
 	public ElementChangeBinding createElementChangeBinding(IElementReference elementReference, EObject modelElement) {
 		final ElementChangeBinding binding = createElementChangeBinding();
 		binding.setElementReference(elementReference);
@@ -308,7 +305,6 @@ public class BindingFactoryImpl extends EFactoryImpl implements BindingFactory {
 	 * (non-Javadoc)
 	 * @see org.eclipse.emf.compare.mpatch.diffbinding.MpatchbindingFactory#createSubModelBinding(org.eclipse.emf.compare.mpatch.IModelDescriptor, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
 	 */
-	@Override
 	public SubModelBinding createSubModelBinding(final EMap<EObject, IModelDescriptor> modelDescriptors, final EObject element, 
 			final IElementReference parentReference, final EObject parent, final Map<EObject, SubModelBinding> addedElementToSubModelBindingMap) {
 	
