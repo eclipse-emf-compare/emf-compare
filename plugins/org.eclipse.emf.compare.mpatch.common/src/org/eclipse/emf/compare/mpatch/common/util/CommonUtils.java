@@ -11,12 +11,12 @@
 package org.eclipse.emf.compare.mpatch.common.util;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -375,7 +375,7 @@ public class CommonUtils {
 
 		// built result map
 		final Map<EObject, EObject> result = new HashMap<EObject, EObject>();
-		final Queue<MatchElement> queue = new ArrayDeque<MatchElement>();
+		final Queue<MatchElement> queue = new LinkedList<MatchElement>();
 		queue.addAll(match.getMatchedElements());
 		while (!queue.isEmpty()) {
 			final MatchElement matchElement = queue.poll();
