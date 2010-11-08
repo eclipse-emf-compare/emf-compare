@@ -164,7 +164,6 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 				comboboxValues.toArray(new String[0][0]), diffCreationGroup));
 	}
 
-	@Override
 	public void init(IWorkbench workbench) {
 		getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -228,7 +227,6 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 			infoText = new Text(group, SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
 			getList().addSelectionListener(new SelectionListener() {
 
-				@Override
 				public void widgetSelected(SelectionEvent e) {
 					String info = "";
 					if (getList().getSelectionCount() == 1) {
@@ -241,7 +239,6 @@ public class MPatchPreferencesPage extends FieldEditorPreferencePage implements 
 					infoText.setText(info);
 				}
 
-				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 			});

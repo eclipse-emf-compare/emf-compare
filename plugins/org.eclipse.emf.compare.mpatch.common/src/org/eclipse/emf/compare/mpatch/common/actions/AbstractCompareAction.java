@@ -124,7 +124,6 @@ public abstract class AbstractCompareAction implements IObjectActionDelegate {
 	 * @param action
 	 *            The calling action.
 	 */
-	@Override
 	public void run(IAction action) {
 		if (file != null) {
 
@@ -189,7 +188,6 @@ public abstract class AbstractCompareAction implements IObjectActionDelegate {
 	/**
 	 * Store the current selection.
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			final IStructuredSelection structuredSelection = (IStructuredSelection)selection;
@@ -210,7 +208,6 @@ public abstract class AbstractCompareAction implements IObjectActionDelegate {
 	/**
 	 * To get the shell.
 	 */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 	}
