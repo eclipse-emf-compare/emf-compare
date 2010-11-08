@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.apply.generic.impl;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -91,7 +91,7 @@ public class AutoMPatchResolver {
 		final Set<IndepChange> processed = new HashSet<IndepChange>(valid.size());
 
 		// remove all dependants of invalid changes
-		final Queue<IndepChange> queue2 = new ArrayDeque<IndepChange>();
+		final Queue<IndepChange> queue2 = new LinkedList<IndepChange>();
 		queue2.addAll(invalid);
 		processed.clear();
 		while (!queue2.isEmpty()) {
@@ -116,7 +116,7 @@ public class AutoMPatchResolver {
 		final Set<IndepChange> processed = new HashSet<IndepChange>(valid.size());
 
 		// collect all invalid changes in the dependency graph
-		final Queue<IndepChange> queue1 = new ArrayDeque<IndepChange>();
+		final Queue<IndepChange> queue1 = new LinkedList<IndepChange>();
 		queue1.addAll(valid);
 		while (!queue1.isEmpty()) {
 			final IndepChange change = queue1.poll();

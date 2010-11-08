@@ -6,6 +6,6 @@ Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.eclipse.emf.compare.mpatch.apply.generic.GenericApplyActivator
 Require-Bundle: org.eclipse.emf.compare.mpatch.apply
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.apply.generic.util
 Bundle-Vendor: Technical University of Denmark

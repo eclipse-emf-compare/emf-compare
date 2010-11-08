@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.apply.generic.impl;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -304,7 +304,7 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 		final List<IndepChange> collector = new ArrayList<IndepChange>();
 
 		// collect all changes according to the dependency graph which should also be selected / deselected
-		final Queue<IndepChange> queue = new ArrayDeque<IndepChange>();
+		final Queue<IndepChange> queue = new LinkedList<IndepChange>();
 		queue.add(change);
 		while (!queue.isEmpty()) {
 			final IndepChange change2 = queue.poll();
