@@ -6,7 +6,7 @@ Bundle-Version: 1.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.emf.compare.mpatch.presentation.MPatchEditorPlugin$Implementation
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: 
  org.eclipse.emf.compare.mpatch.presentation
 Require-Bundle: org.eclipse.core.runtime,
