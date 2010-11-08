@@ -100,20 +100,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.emf.compare.mpatch.generalize"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.compare.mpatch.grouping"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.compare.mpatch.transform"
          download-size="0"
          install-size="0"
