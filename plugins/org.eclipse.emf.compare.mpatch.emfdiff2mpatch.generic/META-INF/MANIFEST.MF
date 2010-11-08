@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.emf.compare.mpatch.common,
  org.eclipse.emf.query.ocl,
  org.eclipse.ocl.ecore
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.descriptor,
  org.eclipse.emf.compare.mpatch.descriptor.util,
  org.eclipse.emf.compare.mpatch.symrefs,
