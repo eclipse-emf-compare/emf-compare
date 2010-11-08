@@ -51,7 +51,6 @@ public class IdReferenceCreator extends AbstractReferenceCreator {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return "ID-based";
 	}

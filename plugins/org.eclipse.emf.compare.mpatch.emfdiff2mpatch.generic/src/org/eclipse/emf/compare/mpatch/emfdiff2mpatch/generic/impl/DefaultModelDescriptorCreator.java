@@ -43,7 +43,6 @@ public class DefaultModelDescriptorCreator implements IModelDescriptorCreator {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public IModelDescriptor toModelDescriptor(EObject self, boolean serializable,
 			ISymbolicReferenceCreator symbolicReferenceCreator) {
 
@@ -240,7 +239,6 @@ public class DefaultModelDescriptorCreator implements IModelDescriptorCreator {
 		return QvtlibHelper.clone(copyObject, eDataType);
 	}
 
-	@Override
 	public String getLabel() {
 		return "Default";
 	}

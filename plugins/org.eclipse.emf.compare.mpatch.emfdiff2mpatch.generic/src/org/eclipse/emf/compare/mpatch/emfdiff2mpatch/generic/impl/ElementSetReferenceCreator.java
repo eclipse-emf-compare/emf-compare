@@ -58,7 +58,6 @@ public class ElementSetReferenceCreator extends AbstractReferenceCreator {
 		return create(self, 1);
 	}
 
-	@Override
 	public String getLabel() {
 		return "Condition-based";
 	}

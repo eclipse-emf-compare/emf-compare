@@ -44,7 +44,6 @@ abstract class AbstractReferenceCreator implements ISymbolicReferenceCreator {
 	 * {@link AbstractReferenceCreator#createSymbolicReference(EObject)} is called. Otherwise,
 	 * {@link ExternalElementReferenceCreator} is used to create the symbolic reference.
 	 */
-	@Override
 	public final IElementReference toSymbolicReference(EObject self) {
 
 		if (self == null) {
@@ -107,7 +106,6 @@ abstract class AbstractReferenceCreator implements ISymbolicReferenceCreator {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void setNonExternalResources(Collection<Resource> resources) {
 		nonExternalResources = resources;
 	}
@@ -115,7 +113,6 @@ abstract class AbstractReferenceCreator implements ISymbolicReferenceCreator {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getUriString(EObject self) {
 		return QvtlibHelper.getUriString(self);
 	}
