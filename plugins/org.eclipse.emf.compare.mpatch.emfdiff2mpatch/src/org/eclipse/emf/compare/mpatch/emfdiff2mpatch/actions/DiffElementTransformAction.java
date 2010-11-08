@@ -61,7 +61,6 @@ public class DiffElementTransformAction implements IEditorActionDelegate, ISelec
 	private static final String DEFAULT_FILE_NAME = "result." + MPatchConstants.FILE_EXTENSION_MPATCH;
 
 	/** Get selection. */
-	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		setSelection(selection);
 	}
@@ -69,7 +68,6 @@ public class DiffElementTransformAction implements IEditorActionDelegate, ISelec
 	/**
 	 * Get site and set current action.
 	 */
-	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		// lets check if we need to change the selection listener
 		if (targetEditor != null && !targetEditor.getSite().equals(site)) {
@@ -85,7 +83,6 @@ public class DiffElementTransformAction implements IEditorActionDelegate, ISelec
 	/**
 	 * Get the selected DiffElements and call wizard.
 	 */
-	@Override
 	public void run(IAction action) {
 		if (selection.size() > 0) {
 			// create a container for all diffelements
@@ -119,7 +116,6 @@ public class DiffElementTransformAction implements IEditorActionDelegate, ISelec
 	}
 
 	/** Set selection. */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		setSelection(selection);
 	}

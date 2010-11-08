@@ -60,7 +60,6 @@ public class CompareAndTransformAction implements IObjectActionDelegate {
 	/**
 	 * Call EMF Compare to compare the selected files and call Apply MPatch Wizard afterwards.
 	 */
-	@Override
 	public void run(IAction action) {
 		if (oldFile != null && newFile != null) {
 
@@ -135,7 +134,6 @@ public class CompareAndTransformAction implements IObjectActionDelegate {
 	/**
 	 * Get the old and the new file from the current selection.
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		oldFile = null;
 		newFile = null;
@@ -153,7 +151,6 @@ public class CompareAndTransformAction implements IObjectActionDelegate {
 	}
 
 	/** Get the Shell. */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 	}

@@ -94,7 +94,6 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 		setDescription("Configuration of " + MPatchConstants.MPATCH_SHORT_NAME + " creation.");
 	}
 
-	@Override
 	public void createControl(Composite parent) {
 		final Composite container = new Composite(parent, SWT.NULL);
 		final GridLayout layout = new GridLayout();
@@ -174,7 +173,6 @@ public class EmfdiffExportWizardTransformationPage extends WizardPage implements
 		setControl(container);
 	}
 
-	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		upButton.setEnabled(!event.getSelection().isEmpty());
 		downButton.setEnabled(!event.getSelection().isEmpty());

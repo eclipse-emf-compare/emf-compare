@@ -61,7 +61,6 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 	 * @param inputSnapshot
 	 *            The {@link ModelInputSnapshot} that is to be exported by this wizard.
 	 */
-	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle("Save as " + MPatchConstants.MPATCH_LONG_NAME);
 		setNeedsProgressMonitor(true);
@@ -110,7 +109,6 @@ public abstract class AbstractEmfdiffExportWizard extends Wizard implements INew
 		try {
 			getContainer().run(false, false, new IRunnableWithProgress() {
 
-				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
 					monitor.beginTask("Creating...", 2 + 4 + (transformations.size() * 2) + 2 + 2);

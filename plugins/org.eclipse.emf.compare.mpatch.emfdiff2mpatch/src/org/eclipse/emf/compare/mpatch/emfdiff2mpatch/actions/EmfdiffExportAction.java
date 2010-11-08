@@ -50,7 +50,6 @@ public class EmfdiffExportAction implements IExportAction {
 		IMAGE = ImageDescriptor.createFromURL(imageURL).createImage();
 	}
 
-	@Override
 	public void exportSnapshot(ComparisonSnapshot snapshot) {
 		final EObject leftModel = CommonUtils.getModelFromEmfdiff(snapshot, true);
 		if (leftModel != null && leftModel.eResource() != null) {
@@ -61,22 +60,18 @@ public class EmfdiffExportAction implements IExportAction {
 		}
 	}
 
-	@Override
 	public Image getDisabledImage() {
 		return IMAGE;
 	}
 
-	@Override
 	public Image getEnabledImage() {
 		return IMAGE;
 	}
 
-	@Override
 	public String getText() {
 		return ACTION_TEXT;
 	}
 
-	@Override
 	public String getToolTipText() {
 		return TOOL_TIP_TEXT;
 	}

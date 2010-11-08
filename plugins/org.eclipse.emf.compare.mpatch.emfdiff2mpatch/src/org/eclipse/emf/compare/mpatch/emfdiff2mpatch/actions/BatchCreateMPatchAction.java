@@ -75,7 +75,6 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	/**
 	 * Call EMF Compare to compare the selected files and call Apply MPatch Wizard afterwards.
 	 */
-	@Override
 	public void run(IAction action) {
 		failures = 0;
 		successes = 0;
@@ -160,7 +159,6 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	/**
 	 * Get the old and the new file from the current selection.
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		containers.clear();
 		if (selection instanceof IStructuredSelection) {
@@ -175,7 +173,6 @@ public class BatchCreateMPatchAction implements IObjectActionDelegate {
 	}
 
 	/** Get the Shell. */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 }

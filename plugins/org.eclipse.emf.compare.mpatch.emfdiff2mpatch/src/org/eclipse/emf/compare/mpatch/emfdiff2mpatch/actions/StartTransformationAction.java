@@ -48,7 +48,6 @@ public class StartTransformationAction implements IObjectActionDelegate {
 	/**
 	 * Load emfdiff and call mpatch transformation wizard.
 	 */
-	@Override
 	public void run(IAction action) {
 		if (file != null) {
 
@@ -78,7 +77,6 @@ public class StartTransformationAction implements IObjectActionDelegate {
 	/**
 	 * Store the current selection.
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
@@ -97,7 +95,6 @@ public class StartTransformationAction implements IObjectActionDelegate {
 	}
 
 	/** Get the Shell. */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 	}
