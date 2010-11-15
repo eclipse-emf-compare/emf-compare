@@ -3,7 +3,7 @@
     <cs:dependencies>
         <cs:dependency name="org.eclipse.emf.ecore.editor" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.gmf.runtime" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.gmf.runtime.diagram.ui" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.emf.query.ocl" componentType="osgi.bundle"/>        
         <cs:dependency name="org.eclipse.emf.validation" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.jdt.junit4.runtime" componentType="osgi.bundle"/>
