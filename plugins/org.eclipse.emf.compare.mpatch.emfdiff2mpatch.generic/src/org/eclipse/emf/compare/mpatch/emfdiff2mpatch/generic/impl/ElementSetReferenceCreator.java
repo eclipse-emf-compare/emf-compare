@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.mpatch.symrefs.OclCondition;
 import org.eclipse.emf.compare.mpatch.symrefs.SymrefsFactory;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -118,7 +119,7 @@ public class ElementSetReferenceCreator extends AbstractReferenceCreator {
 
 	/**
 	 * This defines which attributes are used for building the OCL condition. The default implementation uses only the
-	 * primitive types contained in {@link ElementSetReferenceCreator#PRIMITIVE_TYPES}.
+	 * primitive types contained in {@link ElementSetReferenceCreator#PRIMITIVE_TYPES} and enumeration types.
 	 * 
 	 * Furthermore, all derived attributes are ignored. This is due to an issue with UML models.
 	 * 
@@ -129,6 +130,13 @@ public class ElementSetReferenceCreator extends AbstractReferenceCreator {
 	 * @return <code>true</code>, if the attribute should be part of the condition; <code>false</code> otherwise.
 	 */
 	protected boolean isRelevantAttribute(EAttribute eAttribute) {
+		
+		// is it an enumeration?
+		if (eAttribute.getEType() instanceof EEnum) {
+			return true;
+		}
+		
+		// is it one of the supported primitive types?
 		return PRIMITIVE_TYPES.contains(eAttribute.getEType().getInstanceClassName()) && !eAttribute.isDerived();
 	}
 
@@ -152,6 +160,14 @@ public class ElementSetReferenceCreator extends AbstractReferenceCreator {
 			// recursive call for lists :-)
 			return prefix + eAttribute.getName() + "->asSequence() = " + listAttributeToString((List<?>) obj);
 
+		} else if (obj instanceof Enum){
+			final Class<?> declaringClass = ((Enum<?>) obj).getDeclaringClass();
+			/*
+			 *  the quotes " are required to escape keywords, e.g. VisibilityKind::"package". 
+			 *  if the quotes are missing, then the visibility 'package' collides with the ocl keyword 'package'.
+			 */
+			return prefix + eAttribute.getName() + " = " + declaringClass.getSimpleName() + "::\"" + ((Enum<?>)obj).toString() + "\"";
+			
 		} else if (obj == null) {
 			// FIXME: unfortunately, the OCL implementation does not work with
 			// OclVoid as null! workaround: create set and check if it is empty :o)

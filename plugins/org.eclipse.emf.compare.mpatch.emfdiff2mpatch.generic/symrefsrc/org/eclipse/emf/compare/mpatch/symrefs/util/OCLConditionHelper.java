@@ -30,6 +30,7 @@ import org.eclipse.emf.query.statements.WHERE;
 import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.Query;
 import org.eclipse.ocl.ecore.OCL;
+import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 
 public class OCLConditionHelper {
@@ -116,7 +117,8 @@ public class OCLConditionHelper {
 			try {
 
 				// create the query (costly operation)
-				query = ocl.createQuery(helper.createQuery(condition.getExpression()));
+				final OCLExpression<EClassifier> oclExpression = helper.createQuery(condition.getExpression());
+				query = ocl.createQuery(oclExpression);
 			} catch (final ParserException e) {
 				Activator.getDefault().logError("Error while parsing ocl condition: " + condition.getExpression(), e);
 				return null;
