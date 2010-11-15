@@ -117,6 +117,10 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 			if (MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT.equals(feature))
 				return true;
 
+			// all resulting elements are weakenable (relevant for reversed mpatches)
+			if (MPatchPackage.Literals.INDEP_CHANGE__RESULTING_ELEMENT.equals(feature))
+				return true;
+
 			// changed references
 			if (MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE.equals(feature))
 				return true;
