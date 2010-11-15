@@ -10,6 +10,7 @@
   <rm:locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="helios"/>
   <rm:locator pattern="^org\.eclipse\.gmf(?:\..+)?$" searchPathRef="helios"/>
   <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="helios"/>
+  <rm:locator pattern="^.*$" searchPathRef="helios"/>
   <rm:locator searchPathRef="platform"/>
   <rm:searchPath name="local.releng">
     <rm:provider componentTypes="buckminster" readerType="local" mutable="false">
