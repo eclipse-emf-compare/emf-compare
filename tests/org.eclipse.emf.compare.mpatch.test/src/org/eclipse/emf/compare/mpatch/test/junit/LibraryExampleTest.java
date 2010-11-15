@@ -90,7 +90,7 @@ public class LibraryExampleTest {
 		assertEquals("Internal references were not created correctly!", 6, refs);
 		final int card = GeneralizeTransformation.unboundSymbolicReferences(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
-		assertEquals("Cardinality weakening was not performed correctly!", 12, card);
+		assertEquals("Cardinality weakening was not performed correctly!", 16, card);
 		final int str = GeneralizeTransformation.expandScope(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
 		assertTrue("String weakening was not performed correctly!", str >= 12);

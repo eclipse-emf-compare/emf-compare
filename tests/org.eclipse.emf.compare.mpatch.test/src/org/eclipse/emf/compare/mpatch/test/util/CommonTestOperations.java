@@ -460,6 +460,8 @@ public class CommonTestOperations {
 
 				// check whether we can create a condition for them (i.e. the condition is parseable)
 				final EObjectCondition condition = OCLConditionHelper.getWhereCondition(oclCondition);
+				if (condition == null)
+					OCLConditionHelper.getWhereCondition(oclCondition);
 				assertNotNull("The OCL expression could not be processed: " + oclCondition.getExpression(), condition);
 
 			} else

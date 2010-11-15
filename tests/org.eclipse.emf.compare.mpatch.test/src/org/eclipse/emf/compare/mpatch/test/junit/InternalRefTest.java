@@ -150,7 +150,7 @@ public class InternalRefTest {
 		assertEquals("Internal references were not created correctly!", 2, refs);
 		final int card = GeneralizeTransformation.unboundSymbolicReferences(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
-		assertEquals("Cardinality weakening was not performed correctly!", 5, card);
+		assertEquals("Cardinality weakening was not performed correctly!", 8, card);
 		final int str = GeneralizeTransformation.expandScope(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
 		assertTrue("String weakening was not performed correctly!", str >= 3);
