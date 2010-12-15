@@ -23,51 +23,52 @@
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
     </rm:provider>
-  </rm:searchPath>  	
+  </rm:searchPath>
   <rm:searchPath name="helios">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="http://download.eclipse.org/releases/helios/">        
+      <rm:uri format="{0}/releases/maintenance">
+        <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
-  </rm:searchPath>	
+  </rm:searchPath>
   <rm:searchPath name="validation">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/modeling/emf/updates/releases">
+      <rm:uri format="{0}/releases/staging">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="ocl">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-       <rm:uri format="{0}/modeling/mdt/ocl/3_0/updates/releases">
+      <rm:uri format="{0}/releases/staging">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="query">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/modeling/emf/updates/releases">
+      <rm:uri format="{0}/releases/staging">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="subversive">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/technology/subversive/0.7/update-site">
+      <rm:uri format="{0}/releases/staging">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="platform">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/eclipse/updates/3.6milestones">
+      <rm:uri format="{0}/eclipse/updates/3.7milestones">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="emf">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/modeling/emf/emf/updates/2.6milestones">
+      <rm:uri format="{0}/releases/staging">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
