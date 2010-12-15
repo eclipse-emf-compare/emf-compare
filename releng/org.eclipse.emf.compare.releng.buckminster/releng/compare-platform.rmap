@@ -14,7 +14,7 @@
   <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^javax(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="indigo-staging"/>
+  <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="helios"/>
   <rm:locator searchPathRef="platform"/>
   <rm:searchPath name="local.releng">
     <rm:provider componentTypes="buckminster" readerType="local" mutable="false">
