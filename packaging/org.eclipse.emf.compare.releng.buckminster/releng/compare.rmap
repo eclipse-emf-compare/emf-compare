@@ -1,73 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
-  <rm:property key="source.repository.location" value=":pserver:anonymous@dev.eclipse.org:/cvsroot/modeling"/>
-  <rm:locator pattern="^org\.eclipse\.emf\.compare\.(?:releng|build)(?:\..+)?$" searchPathRef="releng"/>
+  <rm:property key="source.repository.location" value="git://git.eclipse.org/gitroot/emfcompare/org.eclipse.emf.compare.git"/>
+  <rm:locator pattern="^org\.eclipse\.emf\.compare\.(?:releng|build)(?:\..+)?$" searchPathRef="compare"/>
   <rm:locator pattern="^org\.eclipse\.emf\.compare(?:\..+)?$" searchPathRef="compare"/>
   <rm:locator pattern="^org\.eclipse\.test$" searchPathRef="eclipse.test"/>
   <rm:locator pattern="^org\.eclipse\.ant\.optional\.junit$" searchPathRef="eclipse.test"/>
   <rm:searchPath name="compare">
-    <rm:provider componentTypes="osgi.bundle" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/plugins/{1}">
+   <rm:provider readerType="git" componentTypes="osgi.bundle" mutable="false">
+     <rm:uri format="{0}/plugins/{1}">
         <bc:propertyRef key="source.repository.location"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/plugins/{1}-feature">
+   </rm:provider>
+   <rm:provider readerType="git" componentTypes="osgi.bundle" mutable="false">
+     <rm:uri format="{0}/packaging/{1}">
         <bc:propertyRef key="source.repository.location"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/doc/{1}">
+   </rm:provider>
+   <rm:provider readerType="git" componentTypes="eclipse.feature" mutable="false">
+     <rm:uri format="{0}/packaging/{1}-feature">
         <bc:propertyRef key="source.repository.location"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/doc/{1}-feature">
+   </rm:provider>
+   <rm:provider readerType="git" componentTypes="buckminster" mutable="false">
+     <rm:uri format="{0}/packaging/{1}">
         <bc:propertyRef key="source.repository.location"/>
         <bc:propertyRef key="buckminster.component"/>
       </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/examples/{1}">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/examples/{1}-feature">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="osgi.bundle" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/tests/{1}">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/tests/{1}-feature">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
-  <rm:searchPath name="releng">
-    <rm:provider componentTypes="buckminster" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/releng/{1}">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
-    <rm:provider componentTypes="eclipse.feature" readerType="cvs" mutable="false">
-      <rm:uri format="{0},org.eclipse.emf/org.eclipse.emf.compare/releng/{1}-feature">
-        <bc:propertyRef key="source.repository.location"/>
-        <bc:propertyRef key="buckminster.component"/>
-      </rm:uri>
-    </rm:provider>
+   </rm:provider>
   </rm:searchPath>
   <rm:searchPath name="eclipse.test">
     <rm:provider componentTypes="osgi.bundle" readerType="cvs" mutable="false">
