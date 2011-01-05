@@ -4,7 +4,6 @@
   <rm:property key="eclipse.download" value="file:/home/data/httpd/download.eclipse.org"/>
   <rm:locator pattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" searchPathRef="local.releng"/>
   <rm:locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.eclipse\.emf\.codegen(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.emf\.validation(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^lpg\.runtime\.java$" searchPathRef="indigo-staging"/>

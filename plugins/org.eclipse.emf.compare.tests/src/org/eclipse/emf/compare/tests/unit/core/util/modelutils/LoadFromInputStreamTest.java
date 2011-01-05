@@ -21,6 +21,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.emf.codegen.ecore.genmodel.GenModelPackage;
 import org.eclipse.emf.compare.tests.EMFCompareTestPlugin;
 import org.eclipse.emf.compare.tests.util.FileUtils;
 import org.eclipse.emf.compare.util.ModelUtils;
@@ -62,6 +63,7 @@ public class LoadFromInputStreamTest extends TestCase {
 	 */
 	public LoadFromInputStreamTest() {
 		File inputDir = null;
+		GenModelPackage.eINSTANCE.getNsURI();
 		try {
 			inputDir = new File(FileLocator.toFileURL(
 					EMFCompareTestPlugin.getDefault().getBundle().getEntry(INPUT_DIRECTORY)).getFile());
@@ -141,8 +143,8 @@ public class LoadFromInputStreamTest extends TestCase {
 
 	/**
 	 * Tests {@link ModelUtils#load(InputStream, String, ResourceSet)} with a valid InputStream and
-	 * <code>null</code> as a resourceSet. Expects a {@link NullPointerException} to be thrown no matter
-	 * what the filename is.
+	 * <code>null</code> as a resourceSet. Expects a {@link NullPointerException} to be thrown no matter what
+	 * the filename is.
 	 * 
 	 * @throws IOException
 	 *             Allows us not to catch it. Test just fails if thrown.

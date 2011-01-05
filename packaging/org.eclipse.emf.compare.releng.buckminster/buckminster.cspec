@@ -5,6 +5,7 @@
         <cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.gmf" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.emf.query.ocl" componentType="osgi.bundle"/>        
+        <cs:dependency name="org.eclipse.emf.codegen.ecore" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.emf.validation" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.jdt.junit4.runtime" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.ocl" componentType="eclipse.feature"/>
