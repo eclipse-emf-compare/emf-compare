@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rm:rmap xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0" xmlns:rm="http://www.eclipse.org/buckminster/RMap-1.0">
-  <rm:property key="source.repository.location" value="git://git.eclipse.org/gitroot/emfcompare/org.eclipse.emf.compare.git"/>
+  <rm:property key="source.repository.location" value="git://git.eclipse.org/gitroot/emfcompare/org.eclipse.emf.compare.git,/org.eclipse.emf.compare"/>
   <rm:locator pattern="^org\.eclipse\.emf\.compare\.(?:releng|build)(?:\..+)?$" searchPathRef="compare"/>
   <rm:locator pattern="^org\.eclipse\.emf\.compare(?:\..+)?$" searchPathRef="compare"/>
   <rm:locator pattern="^org\.eclipse\.test$" searchPathRef="eclipse.test"/>
