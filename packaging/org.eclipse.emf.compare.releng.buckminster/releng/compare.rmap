@@ -8,8 +8,8 @@
   <rm:searchPath name="compare">
    <rm:provider readerType="git" componentTypes="osgi.bundle" mutable="false">
      <rm:uri format="{0},plugins/{1}">
-        <bc:propertyRef key="buckminster.component"/>          
         <bc:propertyRef key="workspace.root"/>
+        <bc:propertyRef key="buckminster.component"/>          
      </rm:uri>
    </rm:provider>
    <rm:provider readerType="git" componentTypes="osgi.bundle" mutable="false">
