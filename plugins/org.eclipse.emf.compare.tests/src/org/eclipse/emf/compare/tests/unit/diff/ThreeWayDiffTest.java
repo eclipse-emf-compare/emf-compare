@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.diff;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.tests.util.EcoreModelUtils;
 import org.eclipse.emf.compare.util.EFactory;
+import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -58,7 +60,7 @@ public class ThreeWayDiffTest extends TestCase {
 	 * @throws FactoryException
 	 *             Thrown if the comparison fails somehow.
 	 */
-	public void test3WayDiffDifferentModelsLocalChange() throws FactoryException {
+	public void test3WayDiffDifferentModelsLocalChange() throws Exception {
 		final int writerCount = 3;
 		final int bookPerWriterCount = 5;
 		final long seed = System.nanoTime();
@@ -303,8 +305,10 @@ public class ThreeWayDiffTest extends TestCase {
 	 * failures, we expect to find a RemoteRemoveModelElement and a RemoteUpdateAttribute in the result.
 	 * Externalized here to avoid copy/pasting within the two tests making use of it.
 	 * </p>
+	 * 
+	 * @throws IOException
 	 */
-	private void internalTest3WayDistinctModelsLocalChange() {
+	private void internalTest3WayDistinctModelsLocalChange() throws IOException {
 		internalModifyModel(testResource2.getContents().get(0));
 
 		MatchModel match = null;
@@ -330,6 +334,9 @@ public class ThreeWayDiffTest extends TestCase {
 				elementCount++;
 			}
 		}
+
+		String v1 = ModelUtils.serialize(testResource1.getContents().get(0));
+		String v2 = ModelUtils.serialize(testResource2.getContents().get(0));
 
 		// We're expecting two changes, one of which being an addition
 		assertEquals("Unexpected count of differences.", 2, elementCount);

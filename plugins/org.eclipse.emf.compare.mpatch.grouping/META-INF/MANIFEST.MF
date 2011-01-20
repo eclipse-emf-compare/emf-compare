@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Restructuring MPatches
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.grouping;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.1.2.qualifier
 Bundle-Activator: org.eclipse.emf.compare.mpatch.grouping.GroupingActivator
 Require-Bundle: org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.compare.mpatch.common
