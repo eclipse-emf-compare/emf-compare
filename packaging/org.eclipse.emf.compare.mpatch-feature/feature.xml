@@ -2,21 +2,33 @@
 <feature
       id="org.eclipse.emf.compare.mpatch"
       label="Model Patch Support"
-      version="1.1.0.qualifier"
+      version="1.1.2.qualifier"
       provider-name="Eclipse.org">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+     Model Independant Patch Support
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      /*  
+* Copyright (c)  2010 Technical University of Denmark.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License
+v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+*/
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="%licenseURL">
+      %license
    </license>
 
+   <url>
+      <update label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
+      <discovery label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
+   </url>
    <plugin
          id="org.eclipse.emf.compare.mpatch"
          download-size="0"

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.all"
       label="%featureName"
-      version="1.1.1.qualifier"
+      version="1.1.2.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -21,13 +21,15 @@ v1.0
 */
    </copyright>
 
-  <license url="%licenseURL">%license</license>  
-   
+   <license url="%licenseURL">
+      %license
+   </license>
+
    <url>
-      <discovery label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
       <update label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
+      <discovery label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
    </url>
-   
+
    <includes
          id="org.eclipse.emf.compare.sdk"
          version="0.0.0"/>
