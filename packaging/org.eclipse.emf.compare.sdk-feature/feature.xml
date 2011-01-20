@@ -21,12 +21,13 @@
  */
    </copyright>
 
-  
-  <license url="%licenseURL">%license</license>   
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <url>
-      <discovery label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
       <update label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
+      <discovery label="Eclipse Modeling" url="http://www.eclipse.org/modeling/updates"/>
    </url>
 
    <includes
@@ -39,6 +40,10 @@
 
    <includes
          id="org.eclipse.emf.compare.source"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.compare.ui.capabilities"
          version="0.0.0"/>
 
 </feature>
