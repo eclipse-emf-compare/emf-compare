@@ -15,6 +15,9 @@
 	<feature id="org.eclipse.emf.compare.team.subversive" version="0.0.0">
 		<category name="compare" />
 	</feature>
+	<feature id="org.eclipse.emf.compare.mpatch" version="0.0.0">
+		<category name="compare" />
+	</feature>
 	<feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
 		<category name="compare" />
 	</feature>
