@@ -5,6 +5,7 @@
 		<cs:dependency name="org.eclipse.emf.compare.releng.buckminster" componentType="buckminster" />
 		<cs:dependency name="org.eclipse.emf.compare.tests" componentType="eclipse.feature" />
 		<cs:dependency name="org.eclipse.emf.compare.epatch.tests" componentType="osgi.bundle" />
+		<cs:dependency name="org.eclipse.emf.compare.mpatch.test" componentType="osgi.bundle" />
 	</cs:dependencies>
 
 	<cs:actions>
