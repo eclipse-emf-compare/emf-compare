@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.nl1"
       label="EMF Compare localization Feature"
-      version="1.1.2.qualifier"
+      version="1.2.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>

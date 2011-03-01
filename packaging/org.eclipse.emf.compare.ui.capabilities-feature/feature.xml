@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.compare.ui.capabilities"
       label="%featureName"
-      version="1.1.2.qualifier"
+      version="1.2.0.qualifier"
       provider-name="%providerName">
 
    <description>
