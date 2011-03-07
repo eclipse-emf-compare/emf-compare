@@ -74,15 +74,15 @@ public class EMFComparePlugin extends Plugin {
 			if (blocker) {
 				severity = IStatus.ERROR;
 			}
-			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
-					.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity,
+					EMFCompareMessages.getString("EMFComparePlugin.ElementNotFound"), e)); //$NON-NLS-1$
 		} else {
 			int severity = IStatus.WARNING;
 			if (blocker) {
 				severity = IStatus.ERROR;
 			}
-			log(new Status(severity, PLUGIN_ID, severity, EMFCompareMessages
-					.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
+			log(new Status(severity, PLUGIN_ID, severity,
+					EMFCompareMessages.getString("EMFComparePlugin.JavaException"), e)); //$NON-NLS-1$
 		}
 	}
 
@@ -181,7 +181,7 @@ public class EMFComparePlugin extends Plugin {
 	 * This will initialize the core preferences to their default values.
 	 */
 	private void initializeDefaultPreferences() {
-		final IEclipsePreferences defaultCorePreferences = new DefaultScope().getNode(PLUGIN_ID);
+		final IEclipsePreferences defaultCorePreferences = DefaultScope.INSTANCE.getNode(PLUGIN_ID);
 		defaultCorePreferences.putInt(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFComparePreferenceConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
 		/*
