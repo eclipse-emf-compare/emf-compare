@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
+import org.eclipse.emf.compare.diff.internal.DiffCollectionsHelper;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchPackage;
@@ -49,6 +50,11 @@ public abstract class AbstractCheck {
 	protected final EcoreUtil.CrossReferencer crossReferencer;
 
 	/**
+	 * utility class to easily matches lists.
+	 */
+	protected DiffCollectionsHelper matcherHelper;
+
+	/**
 	 * Instantiates the checker given the current crossreferencing members of the diff engine.
 	 * 
 	 * @param referencer
@@ -57,6 +63,7 @@ public abstract class AbstractCheck {
 	 */
 	public AbstractCheck(EcoreUtil.CrossReferencer referencer) {
 		crossReferencer = referencer;
+		matcherHelper = new DiffCollectionsHelper(referencer);
 	}
 
 	/**
@@ -119,8 +126,8 @@ public abstract class AbstractCheck {
 	 */
 	protected final EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
 		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
-			throw new IllegalArgumentException(EMFCompareDiffMessages
-					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					EMFCompareDiffMessages.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
 		}
 		EObject matchedEObject = null;
 		if (crossReferencer != null) {

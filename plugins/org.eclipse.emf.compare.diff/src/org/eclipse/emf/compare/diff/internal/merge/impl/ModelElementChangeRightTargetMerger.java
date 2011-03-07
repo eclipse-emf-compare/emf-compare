@@ -54,9 +54,9 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 			try {
 				int elementIndex = -1;
 				if (ref.isMany()) {
-					Object containmentRefVal = element.eContainer().eGet(ref);
+					final Object containmentRefVal = element.eContainer().eGet(ref);
 					if (containmentRefVal instanceof List) {
-						List listVal = (List)containmentRefVal;
+						final List listVal = (List)containmentRefVal;
 						elementIndex = listVal.indexOf(element);
 					}
 				}
@@ -109,10 +109,13 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 		super.undoInTarget();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean canUndoInTarget() {
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
-		boolean isRightElementNotNull = theDiff.getRightElement() != null;
+		final boolean isRightElementNotNull = theDiff.getRightElement() != null;
 		return isRightElementNotNull;
 	}
 }

@@ -10,12 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.merge;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
-import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -29,7 +24,6 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -170,76 +164,76 @@ public class DefaultMerger implements IMerger {
 	 *            Object to remove all references to.
 	 */
 	protected void removeDanglingReferences(EObject deletedObject) {
-		EObject root = EcoreUtil.getRootContainer(deletedObject);
-		if (root instanceof ComparisonResourceSnapshot) {
-			root = ((ComparisonResourceSnapshot)root).getDiff();
-		}
-		if (root != null) {
-			// FIXME performance, find a way to cache this referencer
-			final Resource res = root.eResource();
-			final EcoreUtil.CrossReferencer referencer;
-			if (res != null && res.getResourceSet() != null) {
-				referencer = new EcoreUtil.CrossReferencer(res.getResourceSet()) {
-					private static final long serialVersionUID = 616050158241084372L;
-
-					// initializer for this anonymous class
-					{
-						crossReference();
-					}
-
-					@Override
-					protected boolean crossReference(EObject eObject, EReference eReference,
-							EObject crossReferencedEObject) {
-						if (eReference.isChangeable() && !eReference.isDerived())
-							return crossReferencedEObject.eResource() == null;
-						return false;
-					}
-				};
-			} else if (res != null) {
-				referencer = new EcoreUtil.CrossReferencer(res) {
-					private static final long serialVersionUID = 616050158241084372L;
-
-					// initializer for this anonymous class
-					{
-						crossReference();
-					}
-
-					@Override
-					protected boolean crossReference(EObject eObject, EReference eReference,
-							EObject crossReferencedEObject) {
-						if (eReference.isChangeable() && !eReference.isDerived())
-							return crossReferencedEObject.eResource() == null;
-						return false;
-					}
-				};
-			} else {
-				referencer = new EcoreUtil.CrossReferencer(root) {
-					private static final long serialVersionUID = 616050158241084372L;
-
-					// initializer for this anonymous class
-					{
-						crossReference();
-					}
-
-					@Override
-					protected boolean crossReference(EObject eObject, EReference eReference,
-							EObject crossReferencedEObject) {
-						if (eReference.isChangeable() && !eReference.isDerived())
-							return crossReferencedEObject.eResource() == null;
-						return false;
-					}
-				};
-			}
-			final Iterator<Map.Entry<EObject, Collection<EStructuralFeature.Setting>>> i = referencer
-					.entrySet().iterator();
-			while (i.hasNext()) {
-				final Map.Entry<EObject, Collection<EStructuralFeature.Setting>> entry = i.next();
-				final Iterator<EStructuralFeature.Setting> j = entry.getValue().iterator();
-				while (j.hasNext()) {
-					EcoreUtil.remove(j.next(), entry.getKey());
-				}
-			}
-		}
+		// EObject root = EcoreUtil.getRootContainer(deletedObject);
+		// if (root instanceof ComparisonResourceSnapshot) {
+		// root = ((ComparisonResourceSnapshot)root).getDiff();
+		// }
+		// if (root != null) {
+		// // FIXME performance, find a way to cache this referencer
+		// final Resource res = root.eResource();
+		// final EcoreUtil.CrossReferencer referencer;
+		// if (res != null && res.getResourceSet() != null) {
+		// referencer = new EcoreUtil.CrossReferencer(res.getResourceSet()) {
+		// private static final long serialVersionUID = 616050158241084372L;
+		//
+		// // initializer for this anonymous class
+		// {
+		// crossReference();
+		// }
+		//
+		// @Override
+		// protected boolean crossReference(EObject eObject, EReference eReference,
+		// EObject crossReferencedEObject) {
+		// if (eReference.isChangeable() && !eReference.isDerived())
+		// return crossReferencedEObject.eResource() == null;
+		// return false;
+		// }
+		// };
+		// } else if (res != null) {
+		// referencer = new EcoreUtil.CrossReferencer(res) {
+		// private static final long serialVersionUID = 616050158241084372L;
+		//
+		// // initializer for this anonymous class
+		// {
+		// crossReference();
+		// }
+		//
+		// @Override
+		// protected boolean crossReference(EObject eObject, EReference eReference,
+		// EObject crossReferencedEObject) {
+		// if (eReference.isChangeable() && !eReference.isDerived())
+		// return crossReferencedEObject.eResource() == null;
+		// return false;
+		// }
+		// };
+		// } else {
+		// referencer = new EcoreUtil.CrossReferencer(root) {
+		// private static final long serialVersionUID = 616050158241084372L;
+		//
+		// // initializer for this anonymous class
+		// {
+		// crossReference();
+		// }
+		//
+		// @Override
+		// protected boolean crossReference(EObject eObject, EReference eReference,
+		// EObject crossReferencedEObject) {
+		// if (eReference.isChangeable() && !eReference.isDerived())
+		// return crossReferencedEObject.eResource() == null;
+		// return false;
+		// }
+		// };
+		// }
+		// final Iterator<Map.Entry<EObject, Collection<EStructuralFeature.Setting>>> i = referencer
+		// .entrySet().iterator();
+		// while (i.hasNext()) {
+		// final Map.Entry<EObject, Collection<EStructuralFeature.Setting>> entry = i.next();
+		// final Iterator<EStructuralFeature.Setting> j = entry.getValue().iterator();
+		// while (j.hasNext()) {
+		// EcoreUtil.remove(j.next(), entry.getKey());
+		// }
+		// }
+		// }
 	}
 
 	/**

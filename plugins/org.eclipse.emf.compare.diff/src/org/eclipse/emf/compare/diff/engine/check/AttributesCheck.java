@@ -14,7 +14,9 @@ package org.eclipse.emf.compare.diff.engine.check;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
@@ -29,7 +31,6 @@ import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -127,23 +128,7 @@ public class AttributesCheck extends AbstractCheck {
 	 * @return <code>true</code> if the <code>left</code> value is distinct from the <code>right</code> value.
 	 */
 	protected boolean areDistinctValues(Object left, Object right) {
-		final boolean distinct;
-		if (left instanceof EEnumLiteral && right instanceof EEnumLiteral) {
-			final StringBuilder value1 = new StringBuilder();
-			value1.append(((EEnumLiteral)left).getLiteral()).append(((EEnumLiteral)left).getValue());
-			final StringBuilder value2 = new StringBuilder();
-			value2.append(((EEnumLiteral)right).getLiteral()).append(((EEnumLiteral)right).getValue());
-			distinct = !value1.toString().equals(value2.toString());
-		} else if (left instanceof EObject && right instanceof EObject) {
-			// [248442] This will handle FeatureMapEntries detection
-			distinct = left != getMatchedEObject((EObject)right);
-		} else if (left != null && left.getClass().isArray()) {
-			// [299641] compare arrays by their content instead of instance equality
-			distinct = areDistinctArrays(left, right);
-		} else {
-			distinct = left != null && !left.equals(right) || left == null && left != right;
-		}
-		return distinct;
+		return matcherHelper.areDistinctValues(left, right);
 	}
 
 	/**
@@ -222,8 +207,8 @@ public class AttributesCheck extends AbstractCheck {
 		if (attribute.isMany()) {
 			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
 					mapping.getLeftElement(), attributeName));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attributeName));
+			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getRightElement(), attributeName));
 
 			if (leftValue.size() != rightValue.size()) {
 				distinct = true;
@@ -249,8 +234,8 @@ public class AttributesCheck extends AbstractCheck {
 		}
 
 		if (distinct) {
-			createNonConflictingAttributeChange(root, attribute, mapping.getLeftElement(), mapping
-					.getRightElement());
+			createNonConflictingAttributeChange(root, attribute, mapping.getLeftElement(),
+					mapping.getRightElement());
 		}
 	}
 
@@ -279,10 +264,10 @@ public class AttributesCheck extends AbstractCheck {
 		if (attribute.isMany()) {
 			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
 					mapping.getLeftElement(), attributeName));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attributeName));
-			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getOriginElement(), attributeName));
+			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getRightElement(), attributeName));
+			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getOriginElement(), attributeName));
 
 			for (Object right : rightValue) {
 				rightDistinctFromOrigin = !attributeListContains(ancestorValue, right);
@@ -314,8 +299,8 @@ public class AttributesCheck extends AbstractCheck {
 
 		// non conflicting change
 		if (leftDistinctFromOrigin && !rightDistinctFromOrigin) {
-			createNonConflictingAttributeChange(root, attribute, mapping.getLeftElement(), mapping
-					.getRightElement());
+			createNonConflictingAttributeChange(root, attribute, mapping.getLeftElement(),
+					mapping.getRightElement());
 			// only latest from head has changed
 		} else if (rightDistinctFromOrigin && !leftDistinctFromOrigin) {
 			createRemoteAttributeChange(root, attribute, mapping);
@@ -373,10 +358,10 @@ public class AttributesCheck extends AbstractCheck {
 		} else {
 			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
 					mapping.getLeftElement(), attribute.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attribute.getName()));
-			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getOriginElement(), attribute.getName()));
+			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getRightElement(), attribute.getName()));
+			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getOriginElement(), attribute.getName()));
 
 			for (final Object aValue : leftValue) {
 				if (!attributeListContains(rightValue, aValue)) {
@@ -426,8 +411,8 @@ public class AttributesCheck extends AbstractCheck {
 		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute,
 		// EObject, EObject)
 		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(), mapping
-				.getRightElement());
+		createNonConflictingAttributeChange(dummyGroup, attribute, mapping.getLeftElement(),
+				mapping.getRightElement());
 
 		if (dummyGroup.getSubDiffElements().size() > 0) {
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
@@ -460,12 +445,17 @@ public class AttributesCheck extends AbstractCheck {
 	private void createNonConflictingAttributeChange(DiffGroup root, EAttribute attribute,
 			EObject leftElement, EObject rightElement) throws FactoryException {
 		if (attribute.isMany()) {
-			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(leftElement, attribute
-					.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(rightElement, attribute
-					.getName()));
-			for (final Object aValue : leftValue) {
-				if (!attributeListContains(rightValue, aValue)) {
+			final List<Object> rightValues = convertFeatureMapList(EFactory.eGetAsList(rightElement,
+					attribute.getName()));
+			final List<Object> leftValues = convertFeatureMapList(EFactory.eGetAsList(leftElement,
+					attribute.getName()));
+
+			final Set<Object> uniqueLeftValues = new LinkedHashSet(leftValues);
+			final Set<Object> uniqueRightValues = new LinkedHashSet(rightValues);
+
+			for (final Object aValue : uniqueLeftValues) {
+				for (int i = 0; i < matcherHelper.getNumberOfMissingOccurrence(leftValues, rightValues,
+						aValue); i++) {
 					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
 							.createAttributeChangeLeftTarget();
 					operation.setAttribute(attribute);
@@ -474,9 +464,11 @@ public class AttributesCheck extends AbstractCheck {
 					operation.setLeftTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
+
 			}
-			for (final Object aValue : rightValue) {
-				if (!attributeListContains(leftValue, aValue)) {
+			for (final Object aValue : uniqueRightValues) {
+				for (int i = 0; i < matcherHelper.getNumberOfMissingOccurrence(rightValues, leftValues,
+						aValue); i++) {
 					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
 							.createAttributeChangeRightTarget();
 					operation.setAttribute(attribute);
@@ -485,6 +477,7 @@ public class AttributesCheck extends AbstractCheck {
 					operation.setRightTarget(aValue);
 					root.getSubDiffElements().add(operation);
 				}
+
 			}
 		} else {
 			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
@@ -515,8 +508,8 @@ public class AttributesCheck extends AbstractCheck {
 		if (attribute.isMany()) {
 			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
 					mapping.getLeftElement(), attribute.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(mapping
-					.getRightElement(), attribute.getName()));
+			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
+					mapping.getRightElement(), attribute.getName()));
 			for (final Object aValue : leftValue) {
 				// if the value is present in the right (latest) but not in the
 				// left (working copy), it's been removed remotely

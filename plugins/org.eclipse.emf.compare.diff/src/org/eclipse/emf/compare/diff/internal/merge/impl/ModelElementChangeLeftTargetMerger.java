@@ -70,9 +70,9 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			try {
 				int elementIndex = -1;
 				if (ref.isMany()) {
-					Object containmentRefVal = element.eContainer().eGet(ref);
+					final Object containmentRefVal = element.eContainer().eGet(ref);
 					if (containmentRefVal instanceof List) {
-						List listVal = (List)containmentRefVal;
+						final List listVal = (List)containmentRefVal;
 						elementIndex = listVal.indexOf(element);
 					}
 				}

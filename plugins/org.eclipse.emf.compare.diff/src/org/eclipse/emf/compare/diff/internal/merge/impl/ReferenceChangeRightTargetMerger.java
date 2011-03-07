@@ -53,16 +53,16 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 		final EObject leftTarget = theDiff.getLeftTarget();
 
 		// FIXME respect ordering!
-		EReference reference = theDiff.getReference();
+		final EReference reference = theDiff.getReference();
 
 		// ordering handling:
 		int index = -1;
 		if (reference.isMany()) {
 
-			EObject rightElement = theDiff.getRightElement();
-			Object fightRefValue = rightElement.eGet(reference);
+			final EObject rightElement = theDiff.getRightElement();
+			final Object fightRefValue = rightElement.eGet(reference);
 			if (fightRefValue instanceof List) {
-				List refRightValueList = (List)fightRefValue;
+				final List refRightValueList = (List)fightRefValue;
 				index = refRightValueList.indexOf(rightTarget);
 			}
 		}

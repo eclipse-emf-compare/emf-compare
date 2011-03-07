@@ -62,8 +62,8 @@ public class TestContainmentRemove extends MergeTestBase {
 		EPackage leftPackage = (EPackage)leftModel;
 		EPackage rightPackage = (EPackage)rightModel;
 
-		assertNotNull("Left eFactoryInstance is not null ", leftPackage.getEFactoryInstance());
-		assertNotNull("Right eFactoryInstance is not null ", rightPackage.getEFactoryInstance());
+		assertNotNull("Left eFactoryInstance is null ", leftPackage.getEFactoryInstance());
+		assertNotNull("Right eFactoryInstance is null ", rightPackage.getEFactoryInstance());
 
 	}
 }

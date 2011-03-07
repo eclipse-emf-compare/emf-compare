@@ -66,10 +66,10 @@ public class AttributeChangeLeftTargetMerger extends DefaultMerger {
 		try {
 			int valueIndex = -1;
 			if (attr.isMany()) {
-				EObject leftElement = theDiff.getLeftElement();
-				Object leftValues = leftElement.eGet(attr);
+				final EObject leftElement = theDiff.getLeftElement();
+				final Object leftValues = leftElement.eGet(attr);
 				if (leftValues instanceof List) {
-					List leftValuesList = (List)leftValues;
+					final List leftValuesList = (List)leftValues;
 					valueIndex = leftValuesList.indexOf(value);
 				}
 			}

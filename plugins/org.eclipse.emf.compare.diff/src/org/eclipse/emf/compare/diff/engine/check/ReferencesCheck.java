@@ -133,10 +133,10 @@ public class ReferencesCheck extends AbstractCheck {
 		 * We'll need to compute the added and removed reference values from the cross referencing of
 		 * unmatched elements as they haven't been processed yet.
 		 */
-		final List<EObject> leftElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
-				.eGetAsList(mapping.getLeftElement(), reference.getName()));
-		final List<EObject> rightElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
-				.eGetAsList(mapping.getRightElement(), reference.getName()));
+		final List<EObject> leftElementReferences = new ArrayList<EObject>(
+				(List<EObject>)EFactory.eGetAsList(mapping.getLeftElement(), reference.getName()));
+		final List<EObject> rightElementReferences = new ArrayList<EObject>(
+				(List<EObject>)EFactory.eGetAsList(mapping.getRightElement(), reference.getName()));
 		final List<Integer> removedIndices = new ArrayList<Integer>();
 		// Purge "left" list of all reference values that have been added to it
 		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
@@ -205,10 +205,10 @@ public class ReferencesCheck extends AbstractCheck {
 	protected void checkReferenceOrderChange(DiffGroup root, EReference reference, EObject leftElement,
 			EObject rightElement, List<ReferenceChangeLeftTarget> addedReferences,
 			List<ReferenceChangeRightTarget> removedReferences) throws FactoryException {
-		final List<EObject> leftElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
-				.eGetAsList(leftElement, reference.getName()));
-		final List<EObject> rightElementReferences = new ArrayList<EObject>((List<EObject>)EFactory
-				.eGetAsList(rightElement, reference.getName()));
+		final List<EObject> leftElementReferences = new ArrayList<EObject>(
+				(List<EObject>)EFactory.eGetAsList(leftElement, reference.getName()));
+		final List<EObject> rightElementReferences = new ArrayList<EObject>(
+				(List<EObject>)EFactory.eGetAsList(rightElement, reference.getName()));
 		final List<Integer> removedIndices = new ArrayList<Integer>(removedReferences.size());
 		// Purge "left" list of all reference values that have been added to it
 		for (final ReferenceChangeLeftTarget added : addedReferences) {
@@ -265,8 +265,8 @@ public class ReferencesCheck extends AbstractCheck {
 	 */
 	protected void checkReferenceUpdates(DiffGroup root, Match2Elements mapping, EReference reference)
 			throws FactoryException {
-		createNonConflictingReferencesUpdate(root, reference, mapping.getLeftElement(), mapping
-				.getRightElement());
+		createNonConflictingReferencesUpdate(root, reference, mapping.getLeftElement(),
+				mapping.getRightElement());
 	}
 
 	/**
@@ -285,12 +285,12 @@ public class ReferencesCheck extends AbstractCheck {
 	protected void checkReferenceUpdates(DiffGroup root, Match3Elements mapping, EReference reference)
 			throws FactoryException {
 		final String referenceName = reference.getName();
-		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getLeftElement(), referenceName));
-		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getRightElement(), referenceName));
-		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getOriginElement(), referenceName));
+		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getLeftElement(), referenceName));
+		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getRightElement(), referenceName));
+		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getOriginElement(), referenceName));
 
 		// Checks if there're conflicts
 		if (isConflictual(reference, leftReferences, rightReferences, ancestorReferences)) {
@@ -345,8 +345,8 @@ public class ReferencesCheck extends AbstractCheck {
 			}
 			// Check for references order changes
 			if (reference.isOrdered()) {
-				checkReferenceOrderChange(root, reference, mapping.getLeftElement(), mapping
-						.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
+				checkReferenceOrderChange(root, reference, mapping.getLeftElement(),
+						mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
 			}
 		}
 
@@ -462,8 +462,8 @@ public class ReferencesCheck extends AbstractCheck {
 		// We'll use this diffGroup to make use of #createNonConflictingAttributeChange(DiffGroup, EAttribute,
 		// EObject, EObject)
 		final DiffGroup dummyGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		createNonConflictingReferencesUpdate(dummyGroup, reference, mapping.getLeftElement(), mapping
-				.getRightElement());
+		createNonConflictingReferencesUpdate(dummyGroup, reference, mapping.getLeftElement(),
+				mapping.getRightElement());
 
 		if (dummyGroup.getSubDiffElements().size() > 0) {
 			final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
@@ -586,8 +586,8 @@ public class ReferencesCheck extends AbstractCheck {
 					// value since this added value itself has no match.
 					createDiff = true;
 				} else {
-					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(EcoreUtil
-							.getURI(addedValue), EcoreUtil.getURI(deletedValue));
+					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(
+							EcoreUtil.getURI(addedValue), EcoreUtil.getURI(deletedValue));
 					if (uriSimilarity < similarReferenceURIThreshold) {
 						createDiff = true;
 					}
@@ -885,12 +885,12 @@ public class ReferencesCheck extends AbstractCheck {
 			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
 			throws FactoryException {
 		final String referenceName = reference.getName();
-		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getLeftElement(), referenceName));
-		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getRightElement(), referenceName));
-		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(mapping
-				.getOriginElement(), referenceName));
+		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getLeftElement(), referenceName));
+		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getRightElement(), referenceName));
+		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getOriginElement(), referenceName));
 
 		// populates remotely added references list
 		for (final Object right : rightReferences) {

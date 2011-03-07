@@ -20,6 +20,7 @@ public class AllMergeTests {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(TestContainmentRemoveMany.class);
 		suite.addTestSuite(TestContainmentOrderAddMany.class);
+		suite.addTestSuite(DanglingReferenceOnTwoAdds.class);
 		suite.addTestSuite(NonUniqueAttributeOrderTest.class);
 		suite.addTestSuite(NonContainmentOrderTest.class);
 		suite.addTestSuite(ContainmentOrderTest.class);

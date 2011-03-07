@@ -359,7 +359,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            the settings to update.
 	 * @param optionMap
 	 *            the match options.
-	 *@since 1.1
+	 * @since 1.1
 	 */
 	protected void updateSettings(MatchSettings settings, Map<String, Object> optionMap) {
 		if (optionMap != null && optionMap.size() > 0) {
@@ -406,7 +406,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            The scope to restrict which content of the left object is processed.
 	 * @param rightObject
 	 *            Right of the two objects to compare.
-	 *@param rightScope
+	 * @param rightScope
 	 *            The scope to restrict which content of the left object is processed.
 	 * @return {@link MatchModel} for these two objects' comparison.
 	 */
@@ -486,8 +486,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		startMonitor(monitor, size << 1);
 
 		// see if scope provider was passed in via option, otherwise create default one
-		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap, leftRoot
-				.eResource(), rightRoot.eResource(), ancestor.eResource());
+		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(optionMap,
+				leftRoot.eResource(), rightRoot.eResource(), ancestor.eResource());
 
 		final IMatchScope leftScope = scopeProvider.getLeftScope();
 		final IMatchScope rightScope = scopeProvider.getRightScope();
@@ -495,8 +495,8 @@ public class GenericMatchEngine implements IMatchEngine {
 
 		if (leftScope.isInScope(leftRoot.eResource()) && rightScope.isInScope(rightRoot.eResource())
 				&& ancestorScope.isInScope(ancestor.eResource())) {
-			result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope, ancestor
-					.eResource(), ancestorScope, monitor);
+			result = doMatch(leftRoot.eResource(), leftScope, rightRoot.eResource(), rightScope,
+					ancestor.eResource(), ancestorScope, monitor);
 		}
 
 		return result;
@@ -653,6 +653,15 @@ public class GenericMatchEngine implements IMatchEngine {
 			result = doMatch(leftResource, leftScope, rightResource, rightScope, ancestorResource,
 					ancestorScope, monitor);
 		}
+		Set<EObject> alreadyUnmatched = new LinkedHashSet<EObject>();
+		for (UnmatchElement unmatched : new LinkedHashSet<UnmatchElement>(result.getUnmatchedElements())) {
+			if (alreadyUnmatched.contains(unmatched.getElement())) {
+				EcoreUtil.remove(unmatched);
+			} else {
+				alreadyUnmatched.add(unmatched.getElement());
+			}
+
+		}
 		return result;
 	}
 
@@ -753,8 +762,8 @@ public class GenericMatchEngine implements IMatchEngine {
 
 			if (correspondingMatch != null) {
 				final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-				match.setSimilarity(set3WaySimilarity(nextLeftMatch.getLeftElement(), correspondingMatch
-						.getLeftElement(), correspondingMatch.getRightElement()));
+				match.setSimilarity(set3WaySimilarity(nextLeftMatch.getLeftElement(),
+						correspondingMatch.getLeftElement(), correspondingMatch.getRightElement()));
 				match.setLeftElement(nextLeftMatch.getLeftElement());
 				match.setRightElement(correspondingMatch.getLeftElement());
 				match.setOriginElement(correspondingMatch.getRightElement());
@@ -807,8 +816,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		final Iterator<Match2Elements> it = mappings.iterator();
 		while (it.hasNext()) {
 			final Match2Elements map = it.next();
-			final Match2Elements match = recursiveMappings(map.getLeftElement(), list1Scope, map
-					.getRightElement(), list2Scope, monitor);
+			final Match2Elements match = recursiveMappings(map.getLeftElement(), list1Scope,
+					map.getRightElement(), list2Scope, monitor);
 			redirectedAdd(root, SUBMATCH_ELEMENT_NAME, match);
 		}
 	}
@@ -924,8 +933,8 @@ public class GenericMatchEngine implements IMatchEngine {
 			checker.init(leftResource, rightResource);
 
 			monitor.subTask(EMFCompareMatchMessages.getString("DifferencesServices.monitor.roots")); //$NON-NLS-1$
-			final List<Match2Elements> matchedRoots = mapLists(leftContents, rightContents, structuredOptions
-					.getSearchWindow(), monitor);
+			final List<Match2Elements> matchedRoots = mapLists(leftContents, rightContents,
+					structuredOptions.getSearchWindow(), monitor);
 			stillToFindFromModel1.clear();
 			stillToFindFromModel2.clear();
 			final List<EObject> unmatchedLeftRoots = new ArrayList<EObject>(leftContents);
@@ -1059,10 +1068,10 @@ public class GenericMatchEngine implements IMatchEngine {
 		final List<Match2Elements> rightExternal2WayMappings = new ArrayList<Match2Elements>(
 				externalRefMappings);
 
-		final List<MatchElement> root1MatchedElements = new ArrayList<MatchElement>(root1AncestorMatch
-				.getMatchedElements());
-		final List<MatchElement> root2MatchedElements = new ArrayList<MatchElement>(root2AncestorMatch
-				.getMatchedElements());
+		final List<MatchElement> root1MatchedElements = new ArrayList<MatchElement>(
+				root1AncestorMatch.getMatchedElements());
+		final List<MatchElement> root2MatchedElements = new ArrayList<MatchElement>(
+				root2AncestorMatch.getMatchedElements());
 
 		// populates the unmatched elements list for later use
 		// There cannot be any conflicts on those, as neither has an ancestor
@@ -1079,8 +1088,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				final Match2Elements root1Match = (Match2Elements)root1MatchedElements.get(0);
 				final Match2Elements root2Match = (Match2Elements)root2MatchedElements.get(0);
 
-				subMatchRoot.setSimilarity(set3WaySimilarity(root1Match.getLeftElement(), root2Match
-						.getLeftElement(), root2Match.getRightElement()));
+				subMatchRoot.setSimilarity(set3WaySimilarity(root1Match.getLeftElement(),
+						root2Match.getLeftElement(), root2Match.getRightElement()));
 				subMatchRoot.setLeftElement(root1Match.getLeftElement());
 				subMatchRoot.setRightElement(root2Match.getLeftElement());
 				subMatchRoot.setOriginElement(root2Match.getRightElement());
@@ -1232,8 +1241,8 @@ public class GenericMatchEngine implements IMatchEngine {
 		double similarity = 0d;
 		try {
 
-			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1), NameSimilarity
-					.findName(obj2));
+			similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.findName(obj1),
+					NameSimilarity.findName(obj2));
 		} catch (final FactoryException e) {
 			// fails silently, will return a similarity of 0d
 		}
@@ -1256,8 +1265,8 @@ public class GenericMatchEngine implements IMatchEngine {
 	@Deprecated
 	protected double contentSimilarity(EObject obj1, EObject obj2) throws FactoryException {
 		double similarity = 0d;
-		similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1), NameSimilarity
-				.contentValue(obj2));
+		similarity = NameSimilarity.nameSimilarityMetric(NameSimilarity.contentValue(obj1),
+				NameSimilarity.contentValue(obj2));
 		return similarity;
 	}
 
@@ -1356,8 +1365,8 @@ public class GenericMatchEngine implements IMatchEngine {
 
 						if (match1.getRightElement() == match2.getRightElement()) {
 							final Match3Elements match = MatchFactory.eINSTANCE.createMatch3Elements();
-							match.setSimilarity(set3WaySimilarity(match1.getLeftElement(), match2
-									.getLeftElement(), match2.getRightElement()));
+							match.setSimilarity(set3WaySimilarity(match1.getLeftElement(),
+									match2.getLeftElement(), match2.getRightElement()));
 							match.setLeftElement(match1.getLeftElement());
 							match.setRightElement(match2.getLeftElement());
 							match.setOriginElement(match2.getRightElement());
@@ -1611,8 +1620,11 @@ public class GenericMatchEngine implements IMatchEngine {
 			final Match2Elements subMapping = it.next();
 			// As we know source and target are similars, we call recursive
 			// mappings onto these objects
-			EFactory.eAdd(mapping, SUBMATCH_ELEMENT_NAME, recursiveMappings(subMapping.getLeftElement(),
-					current1Scope, subMapping.getRightElement(), current2Scope, monitor));
+			EFactory.eAdd(
+					mapping,
+					SUBMATCH_ELEMENT_NAME,
+					recursiveMappings(subMapping.getLeftElement(), current1Scope,
+							subMapping.getRightElement(), current2Scope, monitor));
 		}
 
 		// we also have to match those elements, which are directly referenced but not contained in the

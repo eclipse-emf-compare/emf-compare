@@ -158,8 +158,8 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		if (matchedValue != null) {
 			put(actualValue, matchedValue);
-			List targetList = (List<Object>)target.eGet(targetReference);
-			int targetListSize = targetList.size();
+			final List targetList = (List<Object>)target.eGet(targetReference);
+			final int targetListSize = targetList.size();
 			if (index > -1 && index < targetListSize) {
 				targetList.add(index, matchedValue);
 			} else {

@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.eclipse.emf.compare.tests.merge.AllMergeTests;
 import org.eclipse.emf.compare.tests.unit.core.CoreTestSuite;
 import org.eclipse.emf.compare.tests.unit.diff.DiffTestSuite;
 import org.eclipse.emf.compare.tests.unit.match.MatchTestSuite;
@@ -49,6 +50,7 @@ public class AllTests extends TestCase implements IApplication {
 		final TestSuite suite = new TestSuite("EMF Compare test suite");
 		suite.addTest(CoreTestSuite.suite());
 		suite.addTest(MatchTestSuite.suite());
+		suite.addTest(AllMergeTests.suite());
 		// This will be null if memory setting is too low
 		final Test diffSuite = DiffTestSuite.suite();
 		if (diffSuite != null)
@@ -65,7 +67,7 @@ public class AllTests extends TestCase implements IApplication {
 	 */
 	public Object start(IApplicationContext context) throws Exception {
 		TestRunner.run(suite());
-		return Arrays.asList(new String[] {"Please see raw test suite output for details."}); //$NON-NLS-1$
+		return Arrays.asList(new String[] {"Please see raw test suite output for details." }); //$NON-NLS-1$
 	}
 
 	/**

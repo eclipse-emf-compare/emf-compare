@@ -83,8 +83,8 @@ public final class EFactory {
 			if (arg != null) {
 				final Object manyValue = object.eGet(feature);
 				if (manyValue instanceof BasicEList) {
-					BasicEList<? super T> basicEList = (BasicEList<? super T>)manyValue;
-					int listSize = basicEList.size();
+					final BasicEList<? super T> basicEList = (BasicEList<? super T>)manyValue;
+					final int listSize = basicEList.size();
 					if (elementIndex > -1 && elementIndex < listSize) {
 						basicEList.addUnique(elementIndex, arg);
 					} else {

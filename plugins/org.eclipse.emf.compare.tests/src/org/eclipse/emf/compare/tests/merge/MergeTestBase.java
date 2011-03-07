@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 /**
@@ -84,15 +83,17 @@ public abstract class MergeTestBase extends TestCase {
 		MergeService.merge(differences, isLeftToRight);
 		postMergeHook(isLeftToRight);
 
-		boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
+		String expected = ModelUtils.serialize(testLeftModel);
+		String actual = ModelUtils.serialize(testRightModel);
+		assertEquals(expected, actual);
 
-		if (false == mergeOK) {
-
-			System.err.println("Expected :\n" + ModelUtils.serialize(expectedModel));
-			System.err.println("Actual   :\n" + ModelUtils.serialize(rightModel));
-
-			fail(" Merge (leftToRight=" + isLeftToRight + ")failed ");
-		}
+		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
+		// if (false == mergeOK) {
+		//
+		// System.err.println("Expected :\n" + expected);
+		// System.err.println("Actual   :\n" + actual);
+		// fail(" Merge (leftToRight=" + isLeftToRight + ")failed ");
+		// }
 	}
 
 	/**

@@ -47,10 +47,10 @@ public class AttributeChangeRightTargetMerger extends DefaultMerger {
 		try {
 			int valueIndex = -1;
 			if (attr.isMany()) {
-				EObject rightElement = theDiff.getRightElement();
-				Object rightValues = rightElement.eGet(attr);
+				final EObject rightElement = theDiff.getRightElement();
+				final Object rightValues = rightElement.eGet(attr);
 				if (rightValues instanceof List) {
-					List rightValuesList = (List)rightValues;
+					final List rightValuesList = (List)rightValues;
 					valueIndex = rightValuesList.indexOf(value);
 				}
 			}
