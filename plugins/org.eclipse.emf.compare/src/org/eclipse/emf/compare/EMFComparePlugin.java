@@ -181,7 +181,7 @@ public class EMFComparePlugin extends Plugin {
 	 * This will initialize the core preferences to their default values.
 	 */
 	private void initializeDefaultPreferences() {
-		final IEclipsePreferences defaultCorePreferences = DefaultScope.INSTANCE.getNode(PLUGIN_ID);
+		final IEclipsePreferences defaultCorePreferences = new DefaultScope().getNode(PLUGIN_ID);
 		defaultCorePreferences.putInt(EMFComparePreferenceConstants.PREFERENCES_KEY_SEARCH_WINDOW,
 				EMFComparePreferenceConstants.PREFERENCES_DEFAULT_SEARCH_WINDOW);
 		/*
