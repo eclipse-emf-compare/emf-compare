@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Technical University of Denmark.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors:
+ *    Patrick Koenemann, DTU Informatics - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.match.engine;
 
 import java.util.Collections;
@@ -19,7 +29,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 public class TwoWayModelMatchFragments extends TestCase {
 	/** Current VM's encoding name. */
 	private static final String ENCODING_STRING = System.getProperty("file.encoding");
-	
+
 	/** Current machine's line separator. */
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -28,37 +38,68 @@ public class TwoWayModelMatchFragments extends TestCase {
 		super.setUp();
 	}
 
-	String expected = "<?xml version=\"1.0\" encoding=\"" + ENCODING_STRING + "\"?>" + LINE_SEPARATOR
-			+ "<diff:DiffModel xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:diff=\"http://www.eclipse.org/emf/compare/diff/1.1\">" + LINE_SEPARATOR
-			+ "  <ownedElements xsi:type=\"diff:DiffGroup\">" + LINE_SEPARATOR
-			+ "    <subDiffElements xsi:type=\"diff:DiffGroup\">" + LINE_SEPARATOR
-			+ "      <subDiffElements xsi:type=\"diff:DiffGroup\">" + LINE_SEPARATOR
-			+ "        <subDiffElements xsi:type=\"diff:UpdateAttribute\">" + LINE_SEPARATOR
-			+ "          <attribute href=\"http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name\"/>" + LINE_SEPARATOR
-			+ "          <leftElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#//ClassInParent\"/>" + LINE_SEPARATOR
-			+ "          <rightElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>" + LINE_SEPARATOR
-			+ "        </subDiffElements>" + LINE_SEPARATOR
-			+ "        <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>" + LINE_SEPARATOR
-			+ "      </subDiffElements>" + LINE_SEPARATOR
-			+ "      <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#/\"/>" + LINE_SEPARATOR
-			+ "    </subDiffElements>" + LINE_SEPARATOR
-			+ "    <subDiffElements xsi:type=\"diff:DiffGroup\">" + LINE_SEPARATOR
-			+ "      <subDiffElements xsi:type=\"diff:DiffGroup\">" + LINE_SEPARATOR
-			+ "        <subDiffElements xsi:type=\"diff:ReferenceChangeRightTarget\">" + LINE_SEPARATOR
-			+ "          <reference href=\"http://www.eclipse.org/emf/2002/Ecore#//EClass/eSuperTypes\"/>" + LINE_SEPARATOR
-			+ "          <rightElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#//ClassInChild\"/>" + LINE_SEPARATOR
-			+ "          <leftElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/child.ecore#//ClassInChild\"/>" + LINE_SEPARATOR
-			+ "          <rightTarget href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>" + LINE_SEPARATOR
-			+ "          <leftTarget href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#//ClassInParent\"/>" + LINE_SEPARATOR
-			+ "        </subDiffElements>" + LINE_SEPARATOR
-			+ "        <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#//ClassInChild\"/>" + LINE_SEPARATOR
-			+ "      </subDiffElements>" + LINE_SEPARATOR
-			+ "      <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#/\"/>" + LINE_SEPARATOR
-			+ "    </subDiffElements>" + LINE_SEPARATOR
-			+ "  </ownedElements>" + LINE_SEPARATOR
-			+ "  <leftRoots href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#/\"/>" + LINE_SEPARATOR
-			+ "  <rightRoots href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#/\"/>" + LINE_SEPARATOR
-			+ "</diff:DiffModel>" + LINE_SEPARATOR;
+	String expected = "<?xml version=\"1.0\" encoding=\""
+			+ ENCODING_STRING
+			+ "\"?>"
+			+ LINE_SEPARATOR
+			+ "<diff:DiffModel xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:diff=\"http://www.eclipse.org/emf/compare/diff/1.1\">"
+			+ LINE_SEPARATOR
+			+ "  <ownedElements xsi:type=\"diff:DiffGroup\">"
+			+ LINE_SEPARATOR
+			+ "    <subDiffElements xsi:type=\"diff:DiffGroup\">"
+			+ LINE_SEPARATOR
+			+ "      <subDiffElements xsi:type=\"diff:DiffGroup\">"
+			+ LINE_SEPARATOR
+			+ "        <subDiffElements xsi:type=\"diff:UpdateAttribute\">"
+			+ LINE_SEPARATOR
+			+ "          <attribute href=\"http://www.eclipse.org/emf/2002/Ecore#//ENamedElement/name\"/>"
+			+ LINE_SEPARATOR
+			+ "          <leftElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#//ClassInParent\"/>"
+			+ LINE_SEPARATOR
+			+ "          <rightElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>"
+			+ LINE_SEPARATOR
+			+ "        </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "        <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>"
+			+ LINE_SEPARATOR
+			+ "      </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "      <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#/\"/>"
+			+ LINE_SEPARATOR
+			+ "    </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "    <subDiffElements xsi:type=\"diff:DiffGroup\">"
+			+ LINE_SEPARATOR
+			+ "      <subDiffElements xsi:type=\"diff:DiffGroup\">"
+			+ LINE_SEPARATOR
+			+ "        <subDiffElements xsi:type=\"diff:ReferenceChangeRightTarget\">"
+			+ LINE_SEPARATOR
+			+ "          <reference href=\"http://www.eclipse.org/emf/2002/Ecore#//EClass/eSuperTypes\"/>"
+			+ LINE_SEPARATOR
+			+ "          <rightElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#//ClassInChild\"/>"
+			+ LINE_SEPARATOR
+			+ "          <leftElement href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/child.ecore#//ClassInChild\"/>"
+			+ LINE_SEPARATOR
+			+ "          <rightTarget href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#//ClassInParentRenamed\"/>"
+			+ LINE_SEPARATOR
+			+ "          <leftTarget href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#//ClassInParent\"/>"
+			+ LINE_SEPARATOR
+			+ "        </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "        <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#//ClassInChild\"/>"
+			+ LINE_SEPARATOR
+			+ "      </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "      <rightParent href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/child.ecore#/\"/>"
+			+ LINE_SEPARATOR
+			+ "    </subDiffElements>"
+			+ LINE_SEPARATOR
+			+ "  </ownedElements>"
+			+ LINE_SEPARATOR
+			+ "  <leftRoots href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v1/parent.ecore#/\"/>"
+			+ LINE_SEPARATOR
+			+ "  <rightRoots href=\"platform:/plugin/org.eclipse.emf.compare.tests/inputs/fragment/v2/parent.ecore#/\"/>"
+			+ LINE_SEPARATOR + "</diff:DiffModel>" + LINE_SEPARATOR;
 
 	public void testFragmentedEcoresResourceSetMatch() throws Exception {
 		ResourceSet leftSet = new ResourceSetImpl();

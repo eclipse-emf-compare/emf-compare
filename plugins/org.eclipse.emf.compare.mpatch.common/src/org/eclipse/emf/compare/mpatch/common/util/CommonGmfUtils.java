@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010 Technical University of Denmark.
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0 
+ * which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html 
+ * 
+ * Contributors:
+ *    Patrick Koenemann, DTU Informatics - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.common.util;
 
 import org.eclipse.emf.common.util.URI;
@@ -8,12 +18,10 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 
 /**
- * Internally used to locate GMF-based diagram editor input.
- * 
- * Please note that this class is optional! It might not be loaded if GMF is not loaded!
+ * Internally used to locate GMF-based diagram editor input. Please note that this class is optional! It might
+ * not be loaded if GMF is not loaded!
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class CommonGmfUtils {
 
@@ -22,25 +30,28 @@ public class CommonGmfUtils {
 	 * 
 	 * @param editorInput
 	 *            The editor input.
-	 * @return The {@link URI} of the model to which the diagram editor belongs or <code>null</code> if none is found.
+	 * @return The {@link URI} of the model to which the diagram editor belongs or <code>null</code> if none
+	 *         is found.
 	 */
 	static URI getUriFromEditorInput(IEditorInput editorInput) {
 		if (editorInput instanceof IDiagramEditorInput) {
-			final IDiagramEditorInput diagramEditorInput = (IDiagramEditorInput) editorInput;
+			final IDiagramEditorInput diagramEditorInput = (IDiagramEditorInput)editorInput;
 			final Diagram diagram = diagramEditorInput.getDiagram();
 
 			// is the element set and is that our model?
 			if (diagram.getElement() != null) {
 				final Resource resource = diagram.getElement().eResource();
-				if (resource != null && resource.getURI() != null)
+				if (resource != null && resource.getURI() != null) {
 					return resource.getURI();
+				}
 			}
 
 			// RSA, for instance, stores diagrams in annotations.
 			if (diagram.eContainer() != null && diagram.eContainer() instanceof EAnnotation) {
 				final Resource resource = diagram.eResource();
-				if (resource != null && resource.getURI() != null)
+				if (resource != null && resource.getURI() != null) {
 					return resource.getURI();
+				}
 			}
 		}
 		return null;
