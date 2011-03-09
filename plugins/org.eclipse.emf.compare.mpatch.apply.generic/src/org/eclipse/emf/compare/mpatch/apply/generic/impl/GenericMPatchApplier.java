@@ -77,14 +77,11 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
- * The default implementation of the mpatch application interface.
- * 
- * This implementation changes the target model according to previously resolved symbolic references (
- * {@link ResolvedSymbolicReferences}, created by {@link MPatchResolver} and possibly refined by implementations of
- * {@link IMPatchResolution}).
+ * The default implementation of the mpatch application interface. This implementation changes the target
+ * model according to previously resolved symbolic references ( {@link ResolvedSymbolicReferences}, created by
+ * {@link MPatchResolver} and possibly refined by implementations of {@link IMPatchResolution}).
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class GenericMPatchApplier implements IMPatchApplication {
 
@@ -113,21 +110,31 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	/** All differences in the order in which they must be applied. */
 	protected List<IndepChange> orderedChanges;
 
-	/** A container to collect all deletions (when adding elements to it, their respective parent will loose them. */
-	protected final EObject deletionContainer = ExtEcoreUtils.wrapInGenericContainer(Collections.<EObject> emptyList());
+	/**
+	 * A container to collect all deletions (when adding elements to it, their respective parent will loose
+	 * them.
+	 */
+	protected final EObject deletionContainer = ExtEcoreUtils.wrapInGenericContainer(Collections
+			.<EObject> emptyList());
 
 	/** The particular collection in the deletionContainer. */
 	@SuppressWarnings("unchecked")
-	protected final EList<EObject> deletedSubmodels = (EList<EObject>) deletionContainer.eGet(deletionContainer
-			.eClass().getEStructuralFeature("children"));
+	protected final EList<EObject> deletedSubmodels = (EList<EObject>)deletionContainer
+			.eGet(deletionContainer.eClass().getEStructuralFeature("children"));
 
 	/** Store a flattened collection of deletions for further symbolic reference resolution. */
 	protected final Collection<EObject> flatDeletions = new ArrayList<EObject>();
 
-	/** Flat (!) mapping from all added elements of submodels to their respective change for returning statistics. */
+	/**
+	 * Flat (!) mapping from all added elements of submodels to their respective change for returning
+	 * statistics.
+	 */
 	protected final Map<EObject, IndepAddRemElementChange> addedElementToChangeMap = new LinkedHashMap<EObject, IndepAddRemElementChange>();
 
-	/** Flat (!) mapping from symrefs of all added elements to their respective elements for dynamic symref resolution. */
+	/**
+	 * Flat (!) mapping from symrefs of all added elements to their respective elements for dynamic symref
+	 * resolution.
+	 */
 	protected final Map<IElementReference, Set<EObject>> addedElementSymrefToElementsMap = new LinkedHashMap<IElementReference, Set<EObject>>();
 
 	/** Flat (!) mapping from all added (sub)elements to their model descriptor for cross-reference restoring. */
@@ -155,7 +162,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * 
 	 * @return The application result.
 	 */
-	public MPatchApplicationResult applyMPatch(final ResolvedSymbolicReferences mapping, final boolean storeBinding) {
+	public MPatchApplicationResult applyMPatch(final ResolvedSymbolicReferences mapping,
+			final boolean storeBinding) {
 
 		// 0. set up collections for return value
 		final Collection<IndepChange> successfulChanges = new LinkedList<IndepChange>();
@@ -177,18 +185,18 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		for (final IndepChange indepChange : orderedChanges) {
 			try {
 				switch (applyChange(indepChange, mapping, forward, storeBinding)) {
-				case SUCCESSFUL:
-					successfulChanges.add(indepChange);
-					break;
-				case BOUND:
-					boundChanges.add(indepChange);
-					break;
-				case REFERENCES:
-					failedReferenceChanges.add(indepChange);
-					break;
-				case FAILED:
-					failedChanges.add(indepChange);
-					break;
+					case SUCCESSFUL:
+						successfulChanges.add(indepChange);
+						break;
+					case BOUND:
+						boundChanges.add(indepChange);
+						break;
+					case REFERENCES:
+						failedReferenceChanges.add(indepChange);
+						break;
+					case FAILED:
+						failedChanges.add(indepChange);
+						break;
 				}
 			} catch (final Exception e) {
 				failedChanges.add(indepChange);
@@ -202,8 +210,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		final ApplicationStatus status = failedChanges.isEmpty() ? failedReferenceChanges.isEmpty() ? ApplicationStatus.SUCCESSFUL
 				: ApplicationStatus.REFERENCES
 				: ApplicationStatus.FAILURE;
-		final MPatchApplicationResult result = new MPatchApplicationResult(status, successfulChanges, boundChanges,
-				failedReferenceChanges, failedChanges);
+		final MPatchApplicationResult result = new MPatchApplicationResult(status, successfulChanges,
+				boundChanges, failedReferenceChanges, failedChanges);
 
 		// 4. add notes to binding
 		if (storeBinding) {
@@ -222,16 +230,19 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		final BindingFactory factory = BindingFactory.eINSTANCE;
 
 		// note for root element
-		factory.createNote(mapping.getMPatchModelBinding(), "Binding was created on " + TIME_FORMAT.format(new Date())
-				+ " by '" + LABEL + "'.\n" + "Application result:\n" + result.getMessage(ADAPTER_FACTORY));
+		factory.createNote(mapping.getMPatchModelBinding(),
+				"Binding was created on " + TIME_FORMAT.format(new Date()) + " by '" + LABEL + "'.\n"
+						+ "Application result:\n" + result.getMessage(ADAPTER_FACTORY));
 
 		// iterator over all change bindings
 		for (ChangeBinding changeBinding : mapping.getMPatchModelBinding().getChangeBindings()) {
-			factory.createNote(changeBinding, "Binding for change: " + labels.getText(changeBinding.getChange()));
-			
+			factory.createNote(changeBinding,
+					"Binding for change: " + labels.getText(changeBinding.getChange()));
+
 			// only continue if change was applied successfully
-			if (!result.successful.contains(changeBinding.getChange()))
+			if (!result.successful.contains(changeBinding.getChange())) {
 				continue;
+			}
 
 			// check the validation result
 			final String validation = result.successful.contains(changeBinding.getChange()) ? "applied to"
@@ -241,43 +252,55 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 			// notes for corresponding elements
 			for (ElementChangeBinding elementChangeBinding : changeBinding.getCorrespondingElements()) {
-				factory.createNote(elementChangeBinding,
-						"Change " + validation + ": " + labels.getText(elementChangeBinding.getModelElement()) + "\n"
-								+ "Resolved by: " + labels.getText(elementChangeBinding.getElementReference()));
+				factory.createNote(
+						elementChangeBinding,
+						"Change " + validation + ": "
+								+ labels.getText(elementChangeBinding.getModelElement()) + "\n"
+								+ "Resolved by: "
+								+ labels.getText(elementChangeBinding.getElementReference()));
 			}
 
 			// notes for add reference element change binding
 			if (changeBinding instanceof AddReferenceChangeBinding) {
-				final AddReferenceChangeBinding addReferenceChangeBinding = (AddReferenceChangeBinding) changeBinding;
-				for (ElementChangeBinding elementChangeBinding : addReferenceChangeBinding.getChangedReference()) {
-					factory.createNote(elementChangeBinding,
-							"Reference added to: " + labels.getText(elementChangeBinding.getModelElement()) + "\n"
-									+ "Resolved by: " + labels.getText(elementChangeBinding.getElementReference()));
+				final AddReferenceChangeBinding addReferenceChangeBinding = (AddReferenceChangeBinding)changeBinding;
+				for (ElementChangeBinding elementChangeBinding : addReferenceChangeBinding
+						.getChangedReference()) {
+					factory.createNote(
+							elementChangeBinding,
+							"Reference added to: " + labels.getText(elementChangeBinding.getModelElement())
+									+ "\n" + "Resolved by: "
+									+ labels.getText(elementChangeBinding.getElementReference()));
 				}
 			}
 
 			// notes for update reference element change binding
 			if (changeBinding instanceof UpdateReferenceChangeBinding) {
-				final UpdateReferenceChangeBinding updateReferenceChangeBinding = (UpdateReferenceChangeBinding) changeBinding;
-				final ElementChangeBinding elementChangeBinding = updateReferenceChangeBinding.getNewReference();
-				if (elementChangeBinding != null)
-					factory.createNote(elementChangeBinding,
-							"Reference added to: " + labels.getText(elementChangeBinding.getModelElement()) + "\n"
-									+ "Resolved by: " + labels.getText(elementChangeBinding.getElementReference()));
+				final UpdateReferenceChangeBinding updateReferenceChangeBinding = (UpdateReferenceChangeBinding)changeBinding;
+				final ElementChangeBinding elementChangeBinding = updateReferenceChangeBinding
+						.getNewReference();
+				if (elementChangeBinding != null) {
+					factory.createNote(
+							elementChangeBinding,
+							"Reference added to: " + labels.getText(elementChangeBinding.getModelElement())
+									+ "\n" + "Resolved by: "
+									+ labels.getText(elementChangeBinding.getElementReference()));
+				}
 			}
 
 			// notes for moved element change binding
 			if (changeBinding instanceof MoveElementChangeBinding) {
-				final MoveElementChangeBinding moveElementChangeBinding = (MoveElementChangeBinding) changeBinding;
+				final MoveElementChangeBinding moveElementChangeBinding = (MoveElementChangeBinding)changeBinding;
 				final ElementChangeBinding elementChangeBinding = moveElementChangeBinding.getNewParent();
-				factory.createNote(elementChangeBinding,
-						"Moved to: " + labels.getText(elementChangeBinding.getModelElement()) + "\n" + "Resolved by: "
+				factory.createNote(
+						elementChangeBinding,
+						"Moved to: " + labels.getText(elementChangeBinding.getModelElement()) + "\n"
+								+ "Resolved by: "
 								+ labels.getText(elementChangeBinding.getElementReference()));
 			}
 
 			// notes for added sub models
 			if (changeBinding instanceof AddElementChangeBinding) {
-				final AddElementChangeBinding compoundBinding = (AddElementChangeBinding) changeBinding;
+				final AddElementChangeBinding compoundBinding = (AddElementChangeBinding)changeBinding;
 				addNotesToSubModelBinding(compoundBinding.getSubModelReferences(), labels);
 			}
 		}
@@ -290,10 +313,10 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			ILabelProvider labels) {
 		for (ElementChangeBinding binding : subModelReferences) {
 			if (binding instanceof SubModelBinding) {
-				final SubModelBinding subModelBinding = (SubModelBinding) binding;
+				final SubModelBinding subModelBinding = (SubModelBinding)binding;
 				BindingFactory.eINSTANCE.createNote(binding,
-						"Added model element: " + labels.getText(subModelBinding.getSelfElement()) + "\n" + "Parent: "
-								+ labels.getText(binding.getModelElement()));
+						"Added model element: " + labels.getText(subModelBinding.getSelfElement()) + "\n"
+								+ "Parent: " + labels.getText(binding.getModelElement()));
 				addNotesToSubModelBinding(subModelBinding.getSubModelReferences(), labels);
 			} else {
 				BindingFactory.eINSTANCE.createNote(binding,
@@ -307,10 +330,11 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * Cross references must only be restored for added (sub) elements.
 	 * 
 	 * @param successfulChanges
-	 *            A collection of successful changes; if cross-references could be restored, the change is removed here.
+	 *            A collection of successful changes; if cross-references could be restored, the change is
+	 *            removed here.
 	 * @param failedReferenceChanges
-	 *            A collection of changes for which the cross-reference restoration failed; changes are thus added here
-	 *            in such a case.
+	 *            A collection of changes for which the cross-reference restoration failed; changes are thus
+	 *            added here in such a case.
 	 * @param binding
 	 *            The binding.
 	 */
@@ -327,13 +351,15 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			// do we have cross references at all?
 			final IModelDescriptor descriptor = addedElementToModelDescriptorMap.get(addedElement);
 			final EList<IElementReference> crossReferences = descriptor.getCrossReferences();
-			if (crossReferences.isEmpty())
+			if (crossReferences.isEmpty()) {
 				continue;
+			}
 
 			// 2. resolve all cross references for that element :-)
 			final EMap<IElementReference, EList<EObject>> crossReferenceResolutions = new BasicEMap<IElementReference, EList<EObject>>();
 			for (IElementReference crossRef : crossReferences) {
-				final Collection<EObject> resolution = resolveSymbolicReference(binding, flatDeletions, crossRef);
+				final Collection<EObject> resolution = resolveSymbolicReference(binding, flatDeletions,
+						crossRef);
 				crossReferenceResolutions.put(crossRef, new BasicEList<EObject>(resolution));
 			}
 
@@ -364,25 +390,27 @@ public class GenericMPatchApplier implements IMPatchApplication {
 			if (successfulChanges.remove(change)) {
 				if (!failedReferenceChanges.add(change)) {
 					throw new IllegalStateException(
-							"For some reason, the following change cannot be moved to another collection: " + change);
+							"For some reason, the following change cannot be moved to another collection: "
+									+ change);
 				}
 			} else if (!failedReferenceChanges.contains(change)) {
-				throw new IllegalStateException("If the change is in not listed in any statistics collection: "
-						+ change);
+				throw new IllegalStateException(
+						"If the change is in not listed in any statistics collection: " + change);
 			}
 		}
 	}
 
 	/**
-	 * Apply the given atomic change to the given model, having the symbolic references resolved in the given binding.
+	 * Apply the given atomic change to the given model, having the symbolic references resolved in the given
+	 * binding.
 	 * 
 	 * @param indepChange
 	 *            The change which should be applied.
 	 * @param binding
 	 *            A resolution of symbolic references.
 	 * @param forward
-	 *            The direction in which the changes should be applied (<code>true</code> = forward, <code>false</code>
-	 *            = backward).
+	 *            The direction in which the changes should be applied (<code>true</code> = forward,
+	 *            <code>false</code> = backward).
 	 * @param storeBinding
 	 *            If set, a {@link ChangeBinding} will be created and added to
 	 *            {@link ResolvedSymbolicReferences#getMPatchModelBinding()}.
@@ -400,13 +428,14 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 		// for the time being, only forward application is supported!
 		if (!forward) {
-			throw new UnsupportedOperationException("Only forward application of " + MPatchConstants.MPATCH_SHORT_NAME
+			throw new UnsupportedOperationException("Only forward application of "
+					+ MPatchConstants.MPATCH_SHORT_NAME
 					+ " is supported so far! Please use the Reversal transformation of "
 					+ MPatchConstants.MPATCH_SHORT_NAME + " for a reversing changes.");
 			/*
-			 * PK: my original plan was to make the mpatch declarative and applicable in both ways. However, it turned
-			 * out o be easier to leave the application direction just one way and to offer an additional transformation
-			 * that reverses the mpatch.
+			 * PK: my original plan was to make the mpatch declarative and applicable in both ways. However,
+			 * it turned out o be easier to leave the application direction just one way and to offer an
+			 * additional transformation that reverses the mpatch.
 			 */
 		}
 
@@ -432,56 +461,57 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		// forward: ADD ELEMENT; backward: REMOVE ELEMENT
 		if ((indepChange instanceof IndepAddElementChange && forward)
 				|| (indepChange instanceof IndepRemoveElementChange && !forward)) {
-			result = applyAddElementChange((IndepAddRemElementChange) indepChange, correspondingElements, binding,
-					(AddElementChangeBinding) changeBinding);
+			result = applyAddElementChange((IndepAddRemElementChange)indepChange, correspondingElements,
+					binding, (AddElementChangeBinding)changeBinding);
 
 			// forward: REMOVE ELEMENT; backward: ADD ELEMENT
 		} else if ((indepChange instanceof IndepRemoveElementChange && forward)
 				|| (indepChange instanceof IndepAddElementChange && !forward)) {
-			result = applyRemoveElementChange((IndepAddRemElementChange) indepChange, correspondingElements, binding,
-					(RemoveElementChangeBinding) changeBinding);
+			result = applyRemoveElementChange((IndepAddRemElementChange)indepChange, correspondingElements,
+					binding, (RemoveElementChangeBinding)changeBinding);
 
 			// MOVE ELEMENT
 		} else if ((indepChange instanceof IndepMoveElementChange)) {
-			result = applyMoveElementChange((IndepMoveElementChange) indepChange, correspondingElements, binding,
-					forward, (MoveElementChangeBinding) changeBinding);
+			result = applyMoveElementChange((IndepMoveElementChange)indepChange, correspondingElements,
+					binding, forward, (MoveElementChangeBinding)changeBinding);
 
 			// forward: ADD ATTRIBUTE; backward: REMOVE ATTRIBUTE
 		} else if ((indepChange instanceof IndepAddAttributeChange && forward)
 				|| (indepChange instanceof IndepRemoveAttributeChange && !forward)) {
-			result = applyAddAttributeChange((IndepAddRemAttributeChange) indepChange, correspondingElements,
-					(AttributeChangeBinding) changeBinding);
+			result = applyAddAttributeChange((IndepAddRemAttributeChange)indepChange, correspondingElements,
+					(AttributeChangeBinding)changeBinding);
 
 			// forward: REMOVE ATTRIBUTE; backward: ADD ATTRIBUTE
 		} else if ((indepChange instanceof IndepRemoveAttributeChange && forward)
 				|| (indepChange instanceof IndepAddAttributeChange && !forward)) {
-			result = applyRemoveAttributeChange((IndepAddRemAttributeChange) indepChange, correspondingElements,
-					(AttributeChangeBinding) changeBinding);
+			result = applyRemoveAttributeChange((IndepAddRemAttributeChange)indepChange,
+					correspondingElements, (AttributeChangeBinding)changeBinding);
 
 			// CHANGE ATTRIBUTE
 		} else if (indepChange instanceof IndepUpdateAttributeChange) {
-			result = applyUpdateAttributeChange((IndepUpdateAttributeChange) indepChange, correspondingElements,
-					forward, (AttributeChangeBinding) changeBinding);
+			result = applyUpdateAttributeChange((IndepUpdateAttributeChange)indepChange,
+					correspondingElements, forward, (AttributeChangeBinding)changeBinding);
 
 			// forward: ADD REFERENCE; backward: REMOVE REFERENCE
 		} else if ((indepChange instanceof IndepAddReferenceChange && forward)
 				|| (indepChange instanceof IndepRemoveReferenceChange && !forward)) {
-			result = applyAddReferenceChange((IndepAddRemReferenceChange) indepChange, correspondingElements, binding,
-					(AddReferenceChangeBinding) changeBinding);
+			result = applyAddReferenceChange((IndepAddRemReferenceChange)indepChange, correspondingElements,
+					binding, (AddReferenceChangeBinding)changeBinding);
 
 			// forward: REMOVE REFERENCE; backward: ADD REFERENCE
 		} else if ((indepChange instanceof IndepRemoveReferenceChange && forward)
 				|| (indepChange instanceof IndepAddReferenceChange && !forward)) {
-			result = applyRemoveReferenceChange((IndepAddRemReferenceChange) indepChange, correspondingElements,
-					binding, (RemoveReferenceChangeBinding) changeBinding);
+			result = applyRemoveReferenceChange((IndepAddRemReferenceChange)indepChange,
+					correspondingElements, binding, (RemoveReferenceChangeBinding)changeBinding);
 
 			// CHANGE REFERENCE
 		} else if (indepChange instanceof IndepUpdateReferenceChange) {
-			result = applyUpdateReferenceChange((IndepUpdateReferenceChange) indepChange, correspondingElements,
-					binding, forward, (UpdateReferenceChangeBinding) changeBinding);
+			result = applyUpdateReferenceChange((IndepUpdateReferenceChange)indepChange,
+					correspondingElements, binding, forward, (UpdateReferenceChangeBinding)changeBinding);
 
-		} else
+		} else {
 			throw new UnsupportedOperationException("Unknown change type: " + indepChange);
+		}
 
 		return result;
 	}
@@ -498,15 +528,16 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 		// since we know that a reference was _changed_ (and not added or removed), we have to deal with
 		// a single reference
-		final IElementReference objectReference = forward ? referenceChange.getNewReference() : referenceChange
-				.getOldReference();
+		final IElementReference objectReference = forward ? referenceChange.getNewReference()
+				: referenceChange.getOldReference();
 
 		// do the costly symbolic reference resolution before the iteration
 		EObject referencedObject = null;
 		if (objectReference != null) { // also null might be possible!
 
 			// we need to find the model element first and then set it!
-			final Collection<EObject> references = resolveSymbolicReference(binding, flatDeletions, objectReference);
+			final Collection<EObject> references = resolveSymbolicReference(binding, flatDeletions,
+					objectReference);
 
 			// we can expect exactly one model element! return false otherwise.
 			if (references == null || references.size() != 1) {
@@ -516,8 +547,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 			// add element binding, if not null
 			if (changeBinding != null) {
-				changeBinding.setNewReference(BindingFactory.eINSTANCE.createElementChangeBinding(objectReference,
-						referencedObject));
+				changeBinding.setNewReference(BindingFactory.eINSTANCE.createElementChangeBinding(
+						objectReference, referencedObject));
 			}
 		}
 
@@ -534,12 +565,12 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 				// 2.2 also null might be possible!
 				if (objectReference == null) {
-					
+
 					// already null?
 					if (element.eGet(referenceChange.getReference()) == null) {
 						result = ApplicationResult.BOUND;
 					}
-					
+
 					// apply!!!
 					element.eSet(referenceChange.getReference(), null);
 					if (element.eGet(referenceChange.getReference()) == null) {
@@ -548,13 +579,15 @@ public class GenericMPatchApplier implements IMPatchApplication {
 				} else {
 
 					// already that reference?
-					if (referencedObject.equals(element.eGet(referenceChange.getReference()))) {
+					if (referencedObject != null
+							&& referencedObject.equals(element.eGet(referenceChange.getReference()))) {
 						result = ApplicationResult.BOUND;
 					}
-					
+
 					// 2.4 now lets set the reference!
 					element.eSet(referenceChange.getReference(), referencedObject);
-					if (referencedObject.equals(element.eGet(referenceChange.getReference()))) {
+					if (referencedObject != null
+							&& referencedObject.equals(element.eGet(referenceChange.getReference()))) {
 						result = ApplicationResult.SUCCESSFUL;
 					}
 				}
@@ -564,8 +597,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	}
 
 	/**
-	 * Remove a reference described by a symbolic reference from a collection of references from all corresponding
-	 * elements.
+	 * Remove a reference described by a symbolic reference from a collection of references from all
+	 * corresponding elements.
 	 * 
 	 * @return <code>true</code>, if at least one reference was removed.
 	 */
@@ -585,13 +618,14 @@ public class GenericMPatchApplier implements IMPatchApplication {
 									referenceChange.getCorrespondingElement(), element));
 				}
 
-				// 2.1 since we know that a reference was _added_ (and not changed), we have to deal with a list
+				// 2.1 since we know that a reference was _added_ (and not changed), we have to deal with a
+				// list
 				@SuppressWarnings("unchecked")
-				final EList<?> list = (EList<EObject>) element.eGet(referenceChange.getReference());
+				final EList<?> list = (EList<EObject>)element.eGet(referenceChange.getReference());
 
 				// 2.2 find the element(s) to add here
-				final Collection<EObject> changedReferenceResolution = resolveSymbolicReference(binding, flatDeletions,
-						referenceChange.getChangedReference());
+				final Collection<EObject> changedReferenceResolution = resolveSymbolicReference(binding,
+						flatDeletions, referenceChange.getChangedReference());
 				for (final EObject removedObject : changedReferenceResolution) {
 					if (removedObject != null) {
 
@@ -632,8 +666,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		if (changeBinding != null) {
 			for (EObject modelElement : addedObjects) {
 				changeBinding.getChangedReference().add(
-						BindingFactory.eINSTANCE.createElementChangeBinding(referenceChange.getChangedReference(),
-								modelElement));
+						BindingFactory.eINSTANCE.createElementChangeBinding(
+								referenceChange.getChangedReference(), modelElement));
 			}
 		}
 
@@ -648,17 +682,19 @@ public class GenericMPatchApplier implements IMPatchApplication {
 									referenceChange.getCorrespondingElement(), element));
 				}
 
-				// 2.1 since we know that a reference was _added_ (and not changed), we have to deal with a list
+				// 2.1 since we know that a reference was _added_ (and not changed), we have to deal with a
+				// list
 				@SuppressWarnings("unchecked")
-				final EList<EObject> list = (EList<EObject>) element.eGet(referenceChange.getReference());
+				final EList<EObject> list = (EList<EObject>)element.eGet(referenceChange.getReference());
 
 				for (final EObject addedObject : addedObjects) {
 					if (addedObject != null) {
 
 						if (list.contains(addedObject)) {
 							// already applied
-							if (!ApplicationResult.SUCCESSFUL.equals(result))
+							if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 								result = ApplicationResult.BOUND;
+							}
 						} else if (list.add(addedObject)) {
 
 							// 2.3 add right object to list
@@ -691,21 +727,26 @@ public class GenericMPatchApplier implements IMPatchApplication {
 									attributeChange.getCorrespondingElement(), element));
 				}
 
-				// since we know that an attribute was _changed_ (and not added or removed), we have to deal with a
+				// since we know that an attribute was _changed_ (and not added or removed), we have to deal
+				// with a
 				// single attribute
-				final Object attributeValue = forward ? attributeChange.getNewValue() : attributeChange.getOldValue();
-				
+				final Object attributeValue = forward ? attributeChange.getNewValue() : attributeChange
+						.getOldValue();
+
 				// is it already the new value?
 				if ((attributeValue == null && element.eGet(attributeChange.getChangedAttribute()) == null)
-						|| (attributeValue != null && attributeValue.equals(element.eGet(attributeChange.getChangedAttribute())))) {
-					if (!ApplicationResult.SUCCESSFUL.equals(result))
+						|| (attributeValue != null && attributeValue.equals(element.eGet(attributeChange
+								.getChangedAttribute())))) {
+					if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 						result = ApplicationResult.BOUND;
+					}
 				} else {
-				
+
 					// otherwise set new value!
 					element.eSet(attributeChange.getChangedAttribute(), attributeValue);
 					if ((attributeValue == null && element.eGet(attributeChange.getChangedAttribute()) == null)
-							|| attributeValue.equals(element.eGet(attributeChange.getChangedAttribute()))) {
+							|| (attributeValue != null && attributeValue.equals(element.eGet(attributeChange
+									.getChangedAttribute())))) {
 						result = ApplicationResult.SUCCESSFUL;
 					}
 				}
@@ -735,8 +776,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 				}
 
 				// since we know that an attribute was _added_ (and not changed), we have to deal with a list
-				final EList<?> list = (EList<?>) element.eGet(attributeChange.getChangedAttribute());
-				
+				final EList<?> list = (EList<?>)element.eGet(attributeChange.getChangedAttribute());
+
 				// remove the value!
 				if (list.remove(attributeChange.getValue())) {
 					result = ApplicationResult.SUCCESSFUL;
@@ -771,12 +812,13 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 				// since we know that an attribute was _added_ (and not changed), we have to deal with a list
 				@SuppressWarnings("unchecked")
-				final EList<Object> list = (EList<Object>) element.eGet(attributeChange.getChangedAttribute());
-				
+				final EList<Object> list = (EList<Object>)element.eGet(attributeChange.getChangedAttribute());
+
 				// already applied?
 				if (list.contains(attributeChange.getValue())) {
-					if (!ApplicationResult.SUCCESSFUL.equals(result))
+					if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 						result = ApplicationResult.BOUND;
+					}
 				} else if (list.add(attributeChange.getValue())) {
 					result = ApplicationResult.SUCCESSFUL;
 				}
@@ -791,22 +833,23 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * @return <code>true</code>, if at least one element was moved.
 	 */
 	protected ApplicationResult applyMoveElementChange(final IndepMoveElementChange elementChange,
-			final Collection<EObject> correspondingElements, final ResolvedSymbolicReferences binding, boolean forward,
-			final MoveElementChangeBinding changeBinding) {
+			final Collection<EObject> correspondingElements, final ResolvedSymbolicReferences binding,
+			boolean forward, final MoveElementChangeBinding changeBinding) {
 		ApplicationResult result = ApplicationResult.FAILED;
 
 		// 2. get the new parent (we don't need the old one here)
 		final IElementReference newParentReference = forward ? elementChange.getNewParent() : elementChange
 				.getOldParent();
-		final Collection<EObject> newParents = resolveSymbolicReference(binding, flatDeletions, newParentReference);
+		final Collection<EObject> newParents = resolveSymbolicReference(binding, flatDeletions,
+				newParentReference);
 		if (newParents != null && newParents.size() == 1) {
 			final EObject newParent = newParents.iterator().next();
 			if (newParent != null) {
 
 				// add element binding, if not null
 				if (changeBinding != null) {
-					changeBinding.setNewParent(BindingFactory.eINSTANCE.createElementChangeBinding(newParentReference,
-							newParent));
+					changeBinding.setNewParent(BindingFactory.eINSTANCE.createElementChangeBinding(
+							newParentReference, newParent));
 				}
 
 				// 3. get containment
@@ -816,15 +859,16 @@ public class GenericMPatchApplier implements IMPatchApplication {
 				// 4. perform the move(s)
 				if (containment.isMany()) {
 					@SuppressWarnings("unchecked")
-					final EList<EObject> list = (EList<EObject>) newParent.eGet(containment);
+					final EList<EObject> list = (EList<EObject>)newParent.eGet(containment);
 					for (final EObject moveElement : correspondingElements) {
 
 						// get elements to move
 						if (moveElement != null) {
 							// already moved?
 							if (list.contains(moveElement)) {
-								if (!ApplicationResult.SUCCESSFUL.equals(result))
+								if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 									result = ApplicationResult.BOUND;
+								}
 							} else if (list.add(moveElement)) {
 								result = ApplicationResult.SUCCESSFUL;
 
@@ -838,7 +882,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 						}
 					}
 
-					// we allow movement for single references only for one element and if the reference is 'free'
+					// we allow movement for single references only for one element and if the reference is
+					// 'free'
 				} else if (correspondingElements.size() == 1 && !newParent.eIsSet(containment)) {
 					final EObject moveElement = correspondingElements.iterator().next();
 
@@ -847,9 +892,10 @@ public class GenericMPatchApplier implements IMPatchApplication {
 
 						// is it already moved?
 						if (moveElement.equals(newParent.eGet(containment))) {
-							if (!ApplicationResult.SUCCESSFUL.equals(result))
+							if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 								result = ApplicationResult.BOUND;
-							
+							}
+
 							// add element binding, if not null
 							if (changeBinding != null) {
 								changeBinding.getCorrespondingElements().add(
@@ -861,7 +907,7 @@ public class GenericMPatchApplier implements IMPatchApplication {
 							newParent.eSet(containment, moveElement);
 							if (moveElement.equals(newParent.eGet(containment))) {
 								result = ApplicationResult.SUCCESSFUL;
-	
+
 								// add element binding, if not null
 								if (changeBinding != null) {
 									changeBinding.getCorrespondingElements().add(
@@ -878,10 +924,10 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	}
 
 	/**
-	 * Remove all elements from the corresponding elements which satisfy the symbolic reference of the sub model.
+	 * Remove all elements from the corresponding elements which satisfy the symbolic reference of the sub
+	 * model.
 	 * 
 	 * @param binding
-	 * 
 	 * @return <code>true</code>, if at least one element was removed.
 	 */
 	protected ApplicationResult applyRemoveElementChange(final IndepAddRemElementChange elementChange,
@@ -933,24 +979,28 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	 * @return <code>true</code>, if at least one element was added successfully.
 	 */
 	protected ApplicationResult applyAddElementChange(final IndepAddRemElementChange elementChange,
-			final Collection<EObject> correspondingElements, ResolvedSymbolicReferences binding, final AddElementChangeBinding changeBinding) {
+			final Collection<EObject> correspondingElements, ResolvedSymbolicReferences binding,
+			final AddElementChangeBinding changeBinding) {
 		ApplicationResult result = ApplicationResult.FAILED;
 
 		// maybe the element already exists? then they should have been resolved!
 		/*
-		 * Fix: resolveSymbolicReferences includes raw resolutions, but this is exactly what we do not want here!
-		 * So we get the set of resolved references directly from the binding. 
+		 * Fix: resolveSymbolicReferences includes raw resolutions, but this is exactly what we do not want
+		 * here! So we get the set of resolved references directly from the binding.
 		 */
-//		final Collection<EObject> maybeAddedElements = resolveSymbolicReference(binding, flatDeletions, elementChange.getSubModelReference());
-		final Collection<EObject> maybeAddedElements = binding.getResolutionByChange().get(elementChange).get(elementChange.getSubModelReference());
+		// final Collection<EObject> maybeAddedElements = resolveSymbolicReference(binding, flatDeletions,
+		// elementChange.getSubModelReference());
+		final Collection<EObject> maybeAddedElements = binding.getResolutionByChange().get(elementChange)
+				.get(elementChange.getSubModelReference());
 		final Map<EObject, EMap<EObject, IModelDescriptor>> addedElements = new LinkedHashMap<EObject, EMap<EObject, IModelDescriptor>>();
 		for (EObject added : maybeAddedElements) {
-			final EMap<EObject, IModelDescriptor> descriptors = elementChange.getSubModel().isDescriptorFor(added, false);
+			final EMap<EObject, IModelDescriptor> descriptors = elementChange.getSubModel().isDescriptorFor(
+					added, false);
 			if (descriptors != null) {
 				addedElements.put(added, descriptors);
 			}
 		}
-		
+
 		for (final EObject parent : correspondingElements) {
 			if (parent != null) {
 
@@ -958,47 +1008,55 @@ public class GenericMPatchApplier implements IMPatchApplication {
 				boolean found = false;
 				for (EObject added : addedElements.keySet()) {
 					if (parent.equals(added.eContainer())) {
-						if (!ApplicationResult.SUCCESSFUL.equals(result))
+						if (!ApplicationResult.SUCCESSFUL.equals(result)) {
 							result = ApplicationResult.BOUND;
+						}
 
 						final EMap<EObject, IModelDescriptor> submodelDescriptors = addedElements.get(added);
 						for (EObject element : submodelDescriptors.keySet()) {
-							final IElementReference selfReference = submodelDescriptors.get(element).getSelfReference();
+							final IElementReference selfReference = submodelDescriptors.get(element)
+									.getSelfReference();
 							addElementToSetMap(selfReference, element, addedElementSymrefToElementsMap);
 						}
-						
+
 						// add element binding, if not null
 						if (changeBinding != null) {
-							final SubModelBinding subBinding = BindingFactory.eINSTANCE.createSubModelBinding(
-									submodelDescriptors, added, elementChange.getCorrespondingElement(), parent,
-									addedElementToSubModelBindingMap);
+							final SubModelBinding subBinding = BindingFactory.eINSTANCE
+									.createSubModelBinding(submodelDescriptors, added,
+											elementChange.getCorrespondingElement(), parent,
+											addedElementToSubModelBindingMap);
 							changeBinding.getSubModelReferences().add(subBinding);
 						}
-						
+
 						found = true;
 					}
 				}
 
 				if (!found) {
-					// references are added later because there might be cyclic cross references with other added elements
-					final EMap<EObject, IModelDescriptor> submodelDescriptors = elementChange.getSubModel().applyStructure(
-							parent, elementChange.getContainment());
+					// references are added later because there might be cyclic cross references with other
+					// added elements
+					final EMap<EObject, IModelDescriptor> submodelDescriptors = elementChange.getSubModel()
+							.applyStructure(parent, elementChange.getContainment());
 					if (submodelDescriptors != null && !submodelDescriptors.isEmpty()) {
-						result = ApplicationResult.SUCCESSFUL; // return true if it was successfully applied at least once!
-	
+						result = ApplicationResult.SUCCESSFUL; // return true if it was successfully applied
+																// at least once!
+
 						for (EObject element : submodelDescriptors.keySet()) {
-							final IElementReference selfReference = submodelDescriptors.get(element).getSelfReference();
+							final IElementReference selfReference = submodelDescriptors.get(element)
+									.getSelfReference();
 							addElementToSetMap(selfReference, element, addedElementSymrefToElementsMap);
 							addedElementToChangeMap.put(element, elementChange);
 							addedElementToModelDescriptorMap.put(element, submodelDescriptors.get(element));
 							if (selfReference.equals(elementChange.getSubModel().getSelfReference())) {
-								// addedSubmodels.add(element); // obsolete because we introduced modeldescriptorreferences
-	
+								// addedSubmodels.add(element); // obsolete because we introduced
+								// modeldescriptorreferences
+
 								// add element binding, if not null
 								if (changeBinding != null) {
-									final SubModelBinding subBinding = BindingFactory.eINSTANCE.createSubModelBinding(
-											submodelDescriptors, element, elementChange.getCorrespondingElement(), parent,
-											addedElementToSubModelBindingMap);
+									final SubModelBinding subBinding = BindingFactory.eINSTANCE
+											.createSubModelBinding(submodelDescriptors, element,
+													elementChange.getCorrespondingElement(), parent,
+													addedElementToSubModelBindingMap);
 									changeBinding.getSubModelReferences().add(subBinding);
 								}
 							}
@@ -1021,8 +1079,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	}
 
 	/**
-	 * Resolve the given symbolic reference to concrete model elements. Take into account that other elements might have
-	 * been added or deleted in the meantime.
+	 * Resolve the given symbolic reference to concrete model elements. Take into account that other elements
+	 * might have been added or deleted in the meantime.
 	 * 
 	 * @param binding
 	 *            The initial resolution of all symbolic references.
@@ -1035,13 +1093,15 @@ public class GenericMPatchApplier implements IMPatchApplication {
 	protected Collection<EObject> resolveSymbolicReference(ResolvedSymbolicReferences binding,
 			Collection<EObject> flatDeletions, IElementReference symref) {
 
-		// if symbolic reference is a ModelDescriptorReference and the model descriptor has already been applied,
+		// if symbolic reference is a ModelDescriptorReference and the model descriptor has already been
+		// applied,
 		// it is quite easy to resolve ;-) Otherwise we need to go on as before.
 		if (symref instanceof ModelDescriptorReference) {
-			final IModelDescriptor descriptor = ((ModelDescriptorReference) symref).getResolvesTo();
+			final IModelDescriptor descriptor = ((ModelDescriptorReference)symref).getResolvesTo();
 			final Set<EObject> elements = addedElementSymrefToElementsMap.get(descriptor.getSelfReference());
-			if (elements != null)
+			if (elements != null) {
 				return elements;
+			}
 		}
 
 		// was there a refinement of this reference?
@@ -1068,8 +1128,8 @@ public class GenericMPatchApplier implements IMPatchApplication {
 		}
 
 		/*
-		 * This is obsolete since we introduced ModelDescriptorReferences! Good: It eliminates an expensive resolve-call
-		 * :-)
+		 * This is obsolete since we introduced ModelDescriptorReferences! Good: It eliminates an expensive
+		 * resolve-call :-)
 		 */
 		// add to the result those matching elements that have been added earlier
 		// for (EObject addedElement : addedSubmodels) {

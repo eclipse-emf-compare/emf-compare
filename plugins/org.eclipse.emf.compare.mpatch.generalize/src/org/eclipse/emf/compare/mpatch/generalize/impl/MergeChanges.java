@@ -38,11 +38,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 
 /**
- * This transformation analyzes all changes in the given MPatch and merges similar changes. This extends their scope and
- * makes them applicable to more models.
+ * This transformation analyzes all changes in the given MPatch and merges similar changes. This extends their
+ * scope and makes them applicable to more models.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class MergeChanges implements IMPatchTransformation {
 
@@ -65,7 +64,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -73,7 +71,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -81,7 +78,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 30;
 	}
@@ -89,7 +85,6 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -97,15 +92,14 @@ public class MergeChanges implements IMPatchTransformation {
 	/**
 	 * See: {@value #DESCRIPTION}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return mergeChanges(mpatch);
 	}
 
 	/**
-	 * This method first analyzes all given changes in the MPatch in order to find mergable changes. Then it creates
-	 * generalized changes for all finds, updates dependencies and cross-references, and finally removes all changes
-	 * that were replaced by a generalized change.
+	 * This method first analyzes all given changes in the MPatch in order to find mergable changes. Then it
+	 * creates generalized changes for all finds, updates dependencies and cross-references, and finally
+	 * removes all changes that were replaced by a generalized change.
 	 * 
 	 * @param mpatch
 	 *            An MPatch.
@@ -135,11 +129,12 @@ public class MergeChanges implements IMPatchTransformation {
 	 * @param mpatch
 	 *            The MPatch containing the changes.
 	 * @param generalizedChanges
-	 *            The mapping from all newly created generalized changes their sets of non-generalized changed from
-	 *            which they were created from.
+	 *            The mapping from all newly created generalized changes their sets of non-generalized changed
+	 *            from which they were created from.
 	 * @return The number of successfully added generalized changes.
 	 */
-	private static int replaceChanges(MPatchModel mpatch, Map<IndepChange, List<IndepChange>> generalizedChanges) {
+	private static int replaceChanges(MPatchModel mpatch,
+			Map<IndepChange, List<IndepChange>> generalizedChanges) {
 		final ChangeGroup group = MPatchFactory.eINSTANCE.createChangeGroup();
 		final Set<ChangeGroup> oldGroups = new HashSet<ChangeGroup>();
 		int counter = 0;
@@ -160,21 +155,23 @@ public class MergeChanges implements IMPatchTransformation {
 		}
 
 		// if there are changes in that group, we have to add it!
-		if (!group.getSubChanges().isEmpty())
+		if (!group.getSubChanges().isEmpty()) {
 			mpatch.getChanges().add(group);
-		
+		}
+
 		// clean up empty groups
 		for (ChangeGroup changeGroup : oldGroups) {
-			if (changeGroup.getSubChanges().isEmpty())
+			if (changeGroup.getSubChanges().isEmpty()) {
 				EcoreUtil.delete(changeGroup);
+			}
 		}
 
 		return counter;
 	}
 
 	/**
-	 * Update the dependencies of the given generalized change by calculating the union of all dependencies in the list
-	 * changes.
+	 * Update the dependencies of the given generalized change by calculating the union of all dependencies in
+	 * the list changes.
 	 * 
 	 * @param generalizedChange
 	 *            The generalized change without any dependencies.
@@ -183,7 +180,8 @@ public class MergeChanges implements IMPatchTransformation {
 	 * @param mpatch
 	 *            The root container.
 	 */
-	private static void updateDependencies(IndepChange generalizedChange, List<IndepChange> changes, MPatchModel mpatch) {
+	private static void updateDependencies(IndepChange generalizedChange, List<IndepChange> changes,
+			MPatchModel mpatch) {
 		for (IndepChange change : changes) {
 
 			// dependencies are just unions
@@ -197,15 +195,14 @@ public class MergeChanges implements IMPatchTransformation {
 			/*
 			 * Now we got the problem of cross references _to_ 'change', e.g. references from other
 			 * ModelDescriptorReferences. We have to detect them and replace them with references to
-			 * 'generalizedChange'. This should be done in a generic way, maybe there will be other cases of cross
-			 * references in the future!
-			 * 
-			 * Cross reference _from_ change are not a problem because we copied them :-)
+			 * 'generalizedChange'. This should be done in a generic way, maybe there will be other cases of
+			 * cross references in the future! Cross reference _from_ change are not a problem because we
+			 * copied them :-)
 			 */
-			final List<? extends EObject> flattenedChange = ExtEcoreUtils
-					.flattenEObjects(Collections.singleton(change));
-			final Map<EObject, Collection<Setting>> crossReferences = UsageCrossReferencer.findAll(flattenedChange,
-					mpatch);
+			final List<? extends EObject> flattenedChange = ExtEcoreUtils.flattenEObjects(Collections
+					.singleton(change));
+			final Map<EObject, Collection<Setting>> crossReferences = UsageCrossReferencer.findAll(
+					flattenedChange, mpatch);
 			Map<EObject, EObject> match = null;
 			for (EObject oldTarget : crossReferences.keySet()) {
 				for (Setting setting : crossReferences.get(oldTarget)) {
@@ -213,11 +210,13 @@ public class MergeChanges implements IMPatchTransformation {
 					final EObject owner = setting.getEObject();
 
 					// check whether this cross reference is relevant
-					if (feature == null || feature.isDerived() || !feature.isChangeable())
+					if (feature == null || feature.isDerived() || !feature.isChangeable()) {
 						continue;
+					}
 					if (MPatchPackage.Literals.INDEP_CHANGE__DEPENDANTS.equals(feature)
-							|| MPatchPackage.Literals.INDEP_CHANGE__DEPENDS_ON.equals(feature))
+							|| MPatchPackage.Literals.INDEP_CHANGE__DEPENDS_ON.equals(feature)) {
 						continue;
+					}
 
 					// some debug info
 					// System.out.println("owner: " + owner);
@@ -225,12 +224,14 @@ public class MergeChanges implements IMPatchTransformation {
 					// System.out.println("old target: " + oldTarget);
 
 					// copy cross reference "owner.feature = target"
-					if (match == null)
+					if (match == null) {
 						match = CommonUtils.getMatchingObjects(change, generalizedChange);
+					}
 					final EObject newTarget = match.get(oldTarget);
-					if (newTarget == null)
+					if (newTarget == null) {
 						throw new IllegalStateException(
 								"We should ALWAYS get a match here since generalized is a COPY of change!!!");
+					}
 					updateReference(owner, feature, oldTarget, newTarget);
 				}
 			}
@@ -249,20 +250,22 @@ public class MergeChanges implements IMPatchTransformation {
 	 * @param newTarget
 	 *            The new target of the reference.
 	 */
-	private static void updateReference(EObject owner, EStructuralFeature feature, EObject oldTarget, EObject newTarget) {
+	private static void updateReference(EObject owner, EStructuralFeature feature, EObject oldTarget,
+			EObject newTarget) {
 		// unset oldOwner.feature = target
 		EcoreUtil.remove(owner, feature, oldTarget);
 
 		// set newOwner.feature = target
 		if (feature.isMany()) {
 			@SuppressWarnings("unchecked")
-			final List<EObject> list = (List<EObject>) owner.eGet(feature);
+			final List<EObject> list = (List<EObject>)owner.eGet(feature);
 			list.add(newTarget);
 
 			// validate
-			if (!list.contains(newTarget))
-				throw new RuntimeException("Could not move reference to merged change! Feature: " + feature.getName()
-						+ ", owner: " + owner);
+			if (!list.contains(newTarget)) {
+				throw new RuntimeException("Could not move reference to merged change! Feature: "
+						+ feature.getName() + ", owner: " + owner);
+			}
 		} else {
 			owner.eSet(feature, newTarget);
 		}
@@ -274,12 +277,14 @@ public class MergeChanges implements IMPatchTransformation {
 	 * 
 	 * @param elements
 	 *            A list of elements that should be deleted.
-	 * @param A set of {@link ChangeGroup}s in which the deleted elements were contained.
+	 * @param A
+	 *            set of {@link ChangeGroup}s in which the deleted elements were contained.
 	 */
 	private static void deleteElements(List<? extends EObject> elements, Set<ChangeGroup> groups) {
 		for (EObject element : elements) {
-			if (element.eContainer() != null && element.eContainer() instanceof ChangeGroup)
-				groups.add((ChangeGroup) element.eContainer());
+			if (element.eContainer() != null && element.eContainer() instanceof ChangeGroup) {
+				groups.add((ChangeGroup)element.eContainer());
+			}
 			/*
 			 * this is a real delete, i.e. all cross-references are removed recursively!
 			 */
@@ -288,9 +293,9 @@ public class MergeChanges implements IMPatchTransformation {
 	}
 
 	/**
-	 * This adds a generalized change in the MPatch. If all changes from which it was created are located in the same
-	 * container, then the generalized change will be created in it. Otherwise it will be put in the given
-	 * <code>group</code>.
+	 * This adds a generalized change in the MPatch. If all changes from which it was created are located in
+	 * the same container, then the generalized change will be created in it. Otherwise it will be put in the
+	 * given <code>group</code>.
 	 * 
 	 * @param mpatch
 	 *            The root MPatch model.
@@ -307,8 +312,9 @@ public class MergeChanges implements IMPatchTransformation {
 		// if all changes have the same parent, find it!
 		EObject parent = null;
 		for (IndepChange indepChange : changes) {
-			if (indepChange.eContainer() == null)
+			if (indepChange.eContainer() == null) {
 				throw new IllegalStateException("Change is not contained anywhere! " + indepChange);
+			}
 			if (parent == null) {
 				parent = indepChange.eContainer();
 			} else if (!parent.equals(indepChange.eContainer())) {
@@ -320,7 +326,7 @@ public class MergeChanges implements IMPatchTransformation {
 		if (parent instanceof ChangeGroup) {
 
 			// if we got one common parent, add our change to it!
-			final ChangeGroup commonGroup = (ChangeGroup) parent;
+			final ChangeGroup commonGroup = (ChangeGroup)parent;
 			commonGroup.getSubChanges().add(generalizedChange);
 		} else if (mpatch.equals(parent)) {
 
@@ -347,30 +353,34 @@ public class MergeChanges implements IMPatchTransformation {
 			final List<List<IndepChange>> filteredList = filterChanges(list);
 			if (filteredList != null) {
 				// eliminate null lists, empty lists, and single-valued lists
-				for (int i = filteredList.size() - 1; i >= 0; i--)
-					if (filteredList.get(i) == null || filteredList.get(i).size() <= 1)
+				for (int i = filteredList.size() - 1; i >= 0; i--) {
+					if (filteredList.get(i) == null || filteredList.get(i).size() <= 1) {
 						filteredList.remove(i);
-				if (!filteredList.isEmpty())
+					}
+				}
+				if (!filteredList.isEmpty()) {
 					filteredChanges.addAll(filteredList);
+				}
 			}
 		}
 		return filteredChanges;
 	}
 
 	/**
-	 * From the given list of changes (all having the same type!), check which of them are generalizable. Group them
-	 * together and return these groups.
+	 * From the given list of changes (all having the same type!), check which of them are generalizable.
+	 * Group them together and return these groups.
 	 * 
 	 * @param list
 	 *            A list of changes of the same type.
-	 * @return A collection of lists, each containing a set of generalizable changes. Note that all changes are
-	 *         returned! That is, all changes that are not generalizable are returned in singleton lists.
+	 * @return A collection of lists, each containing a set of generalizable changes. Note that all changes
+	 *         are returned! That is, all changes that are not generalizable are returned in singleton lists.
 	 */
 	public static List<List<IndepChange>> filterChanges(List<IndepChange> list) {
 		final ArrayList<List<IndepChange>> result = new ArrayList<List<IndepChange>>();
 		outer: for (final IndepChange change : list) {
 			for (List<IndepChange> filtered : result) {
-				final IndepChange otherChange = filtered.get(0); // it is sufficient to compare it to one element only
+				final IndepChange otherChange = filtered.get(0); // it is sufficient to compare it to one
+																	// element only
 				if (MergeChangesCompare.generalizable(change, otherChange)) {
 					filtered.add(change);
 					continue outer;
@@ -406,10 +416,11 @@ public class MergeChanges implements IMPatchTransformation {
 	 * @param typedChanges
 	 *            An accumulator for sorting changes by their type.
 	 */
-	private static void collectedTypedChanges(EList<IndepChange> changes, Map<EClass, List<IndepChange>> typedChanges) {
+	private static void collectedTypedChanges(EList<IndepChange> changes,
+			Map<EClass, List<IndepChange>> typedChanges) {
 		for (IndepChange change : changes) {
 			if (change instanceof ChangeGroup) {
-				collectedTypedChanges(((ChangeGroup) change).getSubChanges(), typedChanges);
+				collectedTypedChanges(((ChangeGroup)change).getSubChanges(), typedChanges);
 			} else {
 				MPatchUtil.addElementToListMap(change.eClass(), change, typedChanges);
 			}
@@ -423,12 +434,14 @@ public class MergeChanges implements IMPatchTransformation {
 	 *            A collection of generalizable changes.
 	 * @return A map from generalized changes to their original changes.
 	 */
-	private static Map<IndepChange, List<IndepChange>> generalizeChanges(List<List<IndepChange>> filteredChanges) {
+	private static Map<IndepChange, List<IndepChange>> generalizeChanges(
+			List<List<IndepChange>> filteredChanges) {
 		final Map<IndepChange, List<IndepChange>> generalizedChanges = new LinkedHashMap<IndepChange, List<IndepChange>>();
 		for (List<IndepChange> changes : filteredChanges) {
 			final IndepChange generalizedChange = MergeChangesGeneralizer.generalizeChanges(changes);
-			if (generalizedChange != null)
+			if (generalizedChange != null) {
 				generalizedChanges.put(generalizedChange, changes);
+			}
 		}
 		return generalizedChanges;
 	}

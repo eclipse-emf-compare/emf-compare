@@ -38,13 +38,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Test;
 
-
 /**
- * This test case is about performance: by setting some parameters, the number of differences and the size of the model
- * can be varied.
+ * This test case is about performance: by setting some parameters, the number of differences and the size of
+ * the model can be varied.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class PerformanceTest {
 
@@ -79,26 +77,33 @@ public class PerformanceTest {
 			+ "--------+-------+---------+--------+--------+------+------+---------+------+--------+---------+-------+--------+----------------";
 
 	/**
-	 * Run the performance test with the parameters given in <code>lowerBound</code>, <code>upperBound</code>, and
-	 * <code>step</code>.
+	 * Run the performance test with the parameters given in <code>lowerBound</code>, <code>upperBound</code>,
+	 * and <code>step</code>.
 	 */
 	@Test
 	public void testPerformance() {
 		System.out.println(header);
 
 		/*
-		 *  test for the performance documentation in the paper:
+		 * test for the performance documentation in the paper:
 		 */
-		// System.out.println(prettyPrint(100, testPerformance(100, ExtensionManager.getAllSymbolicReferenceCreators()
-		// .get("ID-based"), TestConstants.modelDescriptorCreators.iterator().next()), "id performance test"));
+		// System.out.println(prettyPrint(100, testPerformance(100,
+		// ExtensionManager.getAllSymbolicReferenceCreators()
+		// .get("ID-based"), TestConstants.modelDescriptorCreators.iterator().next()),
+		// "id performance test"));
 		// if("".isEmpty())return;
 
 		// iterate from 50 to 500 classes in the model to find out the limit
-		for (int i = lowerBound; i <= upperBound; i += step)
-			for (ISymbolicReferenceCreator symrefCreator : TestConstants.SYM_REF_CREATORS)
-				for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS)
-					System.out.println(prettyPrint(i * 6, testPerformance(i, symrefCreator, descriptorCreator),
-							"descriptor: " + descriptorCreator.getLabel() + ", symref: " + symrefCreator.getLabel()));
+		for (int i = lowerBound; i <= upperBound; i += step) {
+			for (ISymbolicReferenceCreator symrefCreator : TestConstants.SYM_REF_CREATORS) {
+				for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS) {
+					System.out
+							.println(prettyPrint(i * 6, testPerformance(i, symrefCreator, descriptorCreator),
+									"descriptor: " + descriptorCreator.getLabel() + ", symref: "
+											+ symrefCreator.getLabel()));
+				}
+			}
+		}
 
 	}
 
@@ -122,8 +127,9 @@ public class PerformanceTest {
 	private static String intToFixedWidthString(long i, int strlen) {
 		StringBuffer result = new StringBuffer();
 		String str = String.valueOf(i);
-		for (int j = 0; j < strlen - str.length(); j++)
+		for (int j = 0; j < strlen - str.length(); j++) {
 			result.append(" ");
+		}
 		result.append(str);
 		return result.toString();
 	}
@@ -141,13 +147,13 @@ public class PerformanceTest {
 		EObject leftModel = buildChangedModel(TestConstants.PERFORMANCE_URI2, resourceSet, size);
 		times.setBuilt(); // models are built
 
-//		 try { // store models without doing anything, e.g. to see test models
-//		 rightModel.eResource().save(null);
-//		 leftModel.eResource().save(null);
-//		 return times;
-//		 } catch (Exception e) {
-//		 fail("Could not save models: " + e.getMessage());
-//		 }
+		// try { // store models without doing anything, e.g. to see test models
+		// rightModel.eResource().save(null);
+		// leftModel.eResource().save(null);
+		// return times;
+		// } catch (Exception e) {
+		// fail("Could not save models: " + e.getMessage());
+		// }
 
 		// prepare models
 		final ComparisonSnapshot emfdiff = CompareTestHelper.getEmfdiffFromEmfCompare(leftModel, rightModel);
@@ -181,15 +187,17 @@ public class PerformanceTest {
 
 	private static EObject buildChangedModel(String uriString, ResourceSet resourceSet, int size) {
 		// get package of interest
-		final EPackage pack = (EPackage) CompareTestHelper.loadModel(uriString, resourceSet).get(0);
+		final EPackage pack = (EPackage)CompareTestHelper.loadModel(uriString, resourceSet).get(0);
 		EPackage newPlace = null;
-		for (EPackage p : pack.getESubpackages())
-			if ("newPlace".equals(p.getName()))
+		for (EPackage p : pack.getESubpackages()) {
+			if ("newPlace".equals(p.getName())) {
 				newPlace = p;
+			}
+		}
 		assertNotNull("Cannot find package 'newPlace'", newPlace);
 
 		// get some classifiers we need later
-		EClass superType = (EClass) pack.getEClassifier("SuperType");
+		EClass superType = (EClass)pack.getEClassifier("SuperType");
 		EClassifier oldReferenceTarget = pack.getEClassifier("OldReferenceTarget");
 		EClassifier newReferenceTarget = pack.getEClassifier("NewReferenceTarget");
 		assertNotNull("Cannot find classifier 'SuperType'", superType);
@@ -218,6 +226,7 @@ public class PerformanceTest {
 			// add everthing properly
 			c.getEStructuralFeatures().add(a);
 			c.getEStructuralFeatures().add(r);
+			assert newPlace != null;
 			newPlace.getEClassifiers().add(c);
 		}
 		return pack;
@@ -225,11 +234,13 @@ public class PerformanceTest {
 
 	private static EObject buildUnchangedModel(String uriString, ResourceSet resourceSet, int size) {
 		// get package of interest
-		final EPackage pack = (EPackage) CompareTestHelper.loadModel(uriString, resourceSet).get(0);
+		final EPackage pack = (EPackage)CompareTestHelper.loadModel(uriString, resourceSet).get(0);
 		EPackage oldPlace = null;
-		for (EPackage p : pack.getESubpackages())
-			if ("oldPlace".equals(p.getName()))
+		for (EPackage p : pack.getESubpackages()) {
+			if ("oldPlace".equals(p.getName())) {
 				oldPlace = p;
+			}
+		}
 		assertNotNull("Cannot find package 'oldPlace'", oldPlace);
 
 		// get some classifiers we need later
@@ -268,6 +279,7 @@ public class PerformanceTest {
 			o.getEParameters().add(p2);
 			c.getEOperations().add(o);
 			c.getEStructuralFeatures().add(r);
+			assert oldPlace != null;
 			oldPlace.getEClassifiers().add(c);
 		}
 		return pack;

@@ -21,22 +21,19 @@ import org.eclipse.emf.compare.mpatch.symrefs.ElementSetReference;
 import org.eclipse.emf.compare.mpatch.symrefs.OclCondition;
 
 /**
- * Transformation for extending the scope of changes by weakening OCL conditions of {@link ElementSetReference}s.
- * 
- * Example:<br>
+ * Transformation for extending the scope of changes by weakening OCL conditions of
+ * {@link ElementSetReference}s. Example:<br>
  * <code>&lt;attribute name&gt; = '&lt;value&gt;'</code><br>
  * is replaced with<br>
  * <code>&lt;attribute name&gt;.containsIgnoreCase('&lt;value&gt;')</code>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class ScopeExpansion implements IMPatchTransformation {
 
 	/**
-	 * The regular expression for searching substrings that should be replaced.
-	 * 
-	 * All {@link String} comparisons, example:<br>
+	 * The regular expression for searching substrings that should be replaced. All {@link String}
+	 * comparisons, example:<br>
 	 * <code>&lt;attribute name&gt; = '&lt;value&gt;'</code>
 	 */
 	protected static final String EQUAL_REPLACE = "([a-zA-Z0-9]+)\\s*=\\s*'([^']*)'";
@@ -51,8 +48,8 @@ public class ScopeExpansion implements IMPatchTransformation {
 	protected static final Pattern EQUAL_PATTERN = Pattern.compile(EQUAL_REPLACE);
 
 	/**
-	 * Additional weakening for UML models: removal of the attribute 'qualifiedName' which requires the element being
-	 * located in the original place.
+	 * Additional weakening for UML models: removal of the attribute 'qualifiedName' which requires the
+	 * element being located in the original place.
 	 */
 	protected static final String UML_REPLACE = "and\\s*qualifiedName\\s*=\\s*'[^']*'";
 
@@ -82,7 +79,6 @@ public class ScopeExpansion implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -90,7 +86,6 @@ public class ScopeExpansion implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -98,7 +93,6 @@ public class ScopeExpansion implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 20;
 	}
@@ -106,7 +100,6 @@ public class ScopeExpansion implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -114,16 +107,13 @@ public class ScopeExpansion implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return weakenOCLConditions(mpatch);
 	}
 
 	/**
-	 * This iterates over all {@link ElementSetReference}s of the given {@link MPatchModel} and modifies the OCL
-	 * conditions as follows.
-	 * 
-	 * <code>&lt;attribute name&gt; = '&lt;value&gt;'</code><br>
+	 * This iterates over all {@link ElementSetReference}s of the given {@link MPatchModel} and modifies the
+	 * OCL conditions as follows. <code>&lt;attribute name&gt; = '&lt;value&gt;'</code><br>
 	 * is replaced with<br>
 	 * <code>&lt;attribute name&gt;.containsIgnoreCase('&lt;value&gt;')</code>
 	 * 
@@ -135,9 +125,10 @@ public class ScopeExpansion implements IMPatchTransformation {
 		int counter = 0;
 		for (IElementReference ref : WeakeningHelper.getWeakenableSymbolicReferences(mpatch)) {
 			if (ref instanceof ElementSetReference) {
-				for (Condition condition : ((ElementSetReference) ref).getConditions()) {
-					if (weakenStringCondition(condition))
+				for (Condition condition : ((ElementSetReference)ref).getConditions()) {
+					if (weakenStringCondition(condition)) {
 						counter++;
+					}
 				}
 			}
 		}
@@ -153,7 +144,7 @@ public class ScopeExpansion implements IMPatchTransformation {
 	 */
 	protected static boolean weakenStringCondition(Condition condition) {
 		if (condition instanceof OclCondition) {
-			final OclCondition oclCondition = (OclCondition) condition;
+			final OclCondition oclCondition = (OclCondition)condition;
 
 			final String oldExpr = oclCondition.getExpression();
 			final String umlExpr = UML_PATTERN.matcher(oldExpr).replaceAll(UML_REPLACEMENT);

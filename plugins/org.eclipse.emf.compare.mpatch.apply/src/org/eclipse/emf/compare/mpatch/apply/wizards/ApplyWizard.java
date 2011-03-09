@@ -50,9 +50,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 
 /**
- * A wizard which takes an MPatch (instance of {@link MPatchModel}) and an emf model as input, resolves all symbolic
- * references of the diff, and creates a new emfdiff (instance of {@link ComparisonSnapshot}) and a new model such that
- * the emfdiff can be used to transfer the mpatch to the target model.<br>
+ * A wizard which takes an MPatch (instance of {@link MPatchModel}) and an emf model as input, resolves all
+ * symbolic references of the diff, and creates a new emfdiff (instance of {@link ComparisonSnapshot}) and a
+ * new model such that the emfdiff can be used to transfer the mpatch to the target model.<br>
  * <br>
  * <i>Example:</i>
  * <ol>
@@ -66,7 +66,6 @@ import org.eclipse.ui.ide.IDE;
  * </ol>
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class ApplyWizard extends Wizard implements INewWizard {
 
@@ -79,8 +78,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	boolean saveIntermediateFiles;
 
 	/**
-	 * Defines whether the binding between the differences and the model, to which the differences were applied, should
-	 * be saved into a file.
+	 * Defines whether the binding between the differences and the model, to which the differences were
+	 * applied, should be saved into a file.
 	 */
 	boolean saveBinding;
 
@@ -114,7 +113,10 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	/** The result of the page asking the user for the file to which the new model should be saved. */
 	protected IFile newModelFile;
 
-	/** The result of the page asking the user for the file for the binding between the differences and the model. */
+	/**
+	 * The result of the page asking the user for the file for the binding between the differences and the
+	 * model.
+	 */
 	private IFile bindingFile;
 
 	private ApplyWizardResolvePage symbolicReferenceResolutionPage;
@@ -154,8 +156,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
 		// now lets create the pages
-		selectMPatchPage = new ApplyWizardSelectMPatchPage("Select " + MPatchConstants.MPATCH_LONG_NAME, mPatchFile,
-				adapterFactory);
+		selectMPatchPage = new ApplyWizardSelectMPatchPage("Select " + MPatchConstants.MPATCH_LONG_NAME,
+				mPatchFile, adapterFactory);
 		selectModelPage = new ApplyWizardSelectModelPage("Select Model", modelURI, adapterFactory);
 		symbolicReferenceResolutionPage = new ApplyWizardResolvePage("Resolve "
 				+ MPatchConstants.SYMBOLIC_REFERENCES_NAME, adapterFactory);
@@ -198,12 +200,15 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean canFinish() {
 		for (IWizardPage page : getPages()) {
-			if (!saveIntermediateFiles && (page.equals(storeModelPage) || page.equals(storeDiffPage)))
+			if (!saveIntermediateFiles && (page.equals(storeModelPage) || page.equals(storeDiffPage))) {
 				continue;
-			if (!saveBinding && page.equals(storeBindingPage))
+			}
+			if (!saveBinding && page.equals(storeBindingPage)) {
 				continue;
-			if (!page.isPageComplete())
+			}
+			if (!page.isPageComplete()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -212,8 +217,9 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		// check the initial selection for a valid input file
 		for (Object obj : selection.toArray()) {
 			if (obj instanceof IFile) {
-				final IFile file = (IFile) obj;
-				if (MPatchConstants.FILE_EXTENSION_MPATCH.equals(file.getFileExtension()) && mPatchFile == null) {
+				final IFile file = (IFile)obj;
+				if (MPatchConstants.FILE_EXTENSION_MPATCH.equals(file.getFileExtension())
+						&& mPatchFile == null) {
 					mPatchFile = file;
 				} else if (modelURI == null) {
 					modelURI = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
@@ -242,15 +248,16 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * At last, new {@link Resource}s for the new model and the emfdiff are created and the respective objects are
-	 * saved. If that was successful, the EMF Compare editor is opened.<br>
+	 * At last, new {@link Resource}s for the new model and the emfdiff are created and the respective objects
+	 * are saved. If that was successful, the EMF Compare editor is opened.<br>
 	 * <br>
 	 * In case the files cannot be saved, an error message will be shown to the user.
 	 */
+	@Override
 	public boolean performFinish() {
 		final boolean reviewDiffApplication = summaryPage.reviewDiffApplication();
 		final EObject model = modelResource.getContents().get(0);
-		final boolean[] result = new boolean[] { true }; // easy way to store return value
+		final boolean[] result = new boolean[] {true}; // easy way to store return value
 
 		try {
 			/*
@@ -258,7 +265,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 			 */
 			getContainer().run(false, false, new IRunnableWithProgress() {
 
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
 
 					monitor.beginTask("Applying MPatch...", 10);
 					monitor.worked(2); // PROGRESS MONITOR
@@ -277,15 +285,16 @@ public class ApplyWizard extends Wizard implements INewWizard {
 							final Resource copyModelResource;
 							final Resource emfdiffResource;
 							if (saveIntermediateFiles) {
-								copyModelResource = new XMIResourceImpl(URI.createPlatformResourceURI(newModelFile
-										.getFullPath().toString(), true));
-								emfdiffResource = new XMIResourceImpl(URI.createPlatformResourceURI(emfdiffFile
-										.getFullPath().toString(), true));
+								copyModelResource = new XMIResourceImpl(URI.createPlatformResourceURI(
+										newModelFile.getFullPath().toString(), true));
+								emfdiffResource = new XMIResourceImpl(URI.createPlatformResourceURI(
+										emfdiffFile.getFullPath().toString(), true));
 							} else {
 								copyModelResource = new ResourceImpl(modelResource.getURI());
 								emfdiffResource = new ResourceImpl();
 							}
-							copyModelResource.getContents().add(copyModel); // new model must be contained in a resource
+							copyModelResource.getContents().add(copyModel); // new model must be contained in
+																			// a resource
 																			// beforehand
 							monitor.worked(2); // PROGRESS MONITOR
 
@@ -296,15 +305,18 @@ public class ApplyWizard extends Wizard implements INewWizard {
 							result.showDialog(getShell(), adapterFactory);
 							modelResource.save(null);
 							final boolean useIds = false; // in case of id-based models, new ids were added!
-							final ComparisonSnapshot emfdiff = CommonUtils.createEmfdiff(model, copyModel, useIds);
+							final ComparisonSnapshot emfdiff = CommonUtils.createEmfdiff(model, copyModel,
+									useIds);
 
 							// save resources, if necessary
 							if (saveIntermediateFiles) {
 								copyModelResource.save(null);
 								emfdiffResource.getContents().add(emfdiff);
 								emfdiffResource.save(null);
-								if (reviewDiffApplication)
-									IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), emfdiffFile);
+								if (reviewDiffApplication) {
+									IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(),
+											emfdiffFile);
+								}
 							} else if (reviewDiffApplication) {
 								CompareUI.openCompareEditor(new ModelCompareEditorInput(emfdiff));
 							}
@@ -319,7 +331,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 								bindingResource.getContents().add(resolvedElements.getMPatchModelBinding());
 								bindingResource.save(null);
 							} catch (IOException e) {
-								ApplyActivator.getDefault().logError("An error occurred saving the binding.", e);
+								ApplyActivator.getDefault().logError("An error occurred saving the binding.",
+										e);
 								MessageDialog.openError(getShell(), "Could not save binding",
 										"An error occurred saving the binding.\nPlease check error log for details.\n\n"
 												+ e.getMessage());
@@ -328,7 +341,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 						monitor.done(); // PROGRESS MONITOR
 
 					} catch (final Exception e) {
-						ApplyActivator.getDefault().logError("An error occured while saving the selected files", e);
+						ApplyActivator.getDefault().logError(
+								"An error occured while saving the selected files", e);
 						MessageDialog.openError(getShell(), "An error occured",
 								"An error occured while applying differences:\n" + e.getMessage());
 						result[0] = false;
@@ -365,7 +379,8 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		this.modelResource = modelResource;
 	}
 
-	// /** A copy of the input model in <code>modelResource</code> which in the end contains all applied differences. */
+	// /** A copy of the input model in <code>modelResource</code> which in the end contains all applied
+	// differences. */
 	// void setNewModel(EObject newModel) {
 	// this.newModel = newModel;
 	// }
@@ -410,12 +425,18 @@ public class ApplyWizard extends Wizard implements INewWizard {
 		return bindingFile;
 	}
 
-	/** The specific model element in <code>modelResource</code> from the page asking the user for the target model. */
+	/**
+	 * The specific model element in <code>modelResource</code> from the page asking the user for the target
+	 * model.
+	 */
 	void setModelTarget(EObject modelTarget) {
 		this.modelTarget = modelTarget;
 	}
 
-	/** The specific model element in <code>modelResource</code> from the page asking the user for the target model. */
+	/**
+	 * The specific model element in <code>modelResource</code> from the page asking the user for the target
+	 * model.
+	 */
 	EObject getModelTarget() {
 		return modelTarget;
 	}

@@ -49,34 +49,43 @@ import org.eclipse.emf.ecore.util.EObjectEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>EMF Model Descriptor</b></em>'. <!--
  * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getCrossReferences <em>Cross References</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAllCrossReferences <em>All Cross References</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSelfReference <em>Self Reference</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAllSelfReferences <em>All Self References</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSubModelDescriptors <em>Sub Model Descriptors</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getDescriptorUris <em>Descriptor Uris</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSubDescriptors <em>Sub Descriptors</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getReferences <em>References</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getDescriptorUri <em>Descriptor Uri</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getCrossReferences <em>
+ * Cross References</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAllCrossReferences <em>
+ * All Cross References</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSelfReference <em>Self
+ * Reference</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAllSelfReferences <em>
+ * All Self References</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSubModelDescriptors
+ * <em>Sub Model Descriptors</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getDescriptorUris <em>
+ * Descriptor Uris</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getType <em>Type</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getAttributes <em>
+ * Attributes</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getSubDescriptors <em>Sub
+ * Descriptors</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getReferences <em>
+ * References</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.mpatch.descriptor.impl.EMFModelDescriptorImpl#getDescriptorUri <em>
+ * Descriptor Uri</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescriptor {
 
 	/**
-	 * The cached value of the '{@link #getSelfReference() <em>Self Reference</em>}' containment reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getSelfReference() <em>Self Reference</em>}' containment reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getSelfReference()
 	 * @generated
@@ -85,8 +94,8 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected IElementReference selfReference;
 
 	/**
-	 * The cached value of the '{@link #getType() <em>Type</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * The cached value of the '{@link #getType() <em>Type</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
 	 * @see #getType()
 	 * @generated
@@ -95,9 +104,9 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected EClass type;
 
 	/**
-	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' map. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getAttributes()
 	 * @generated
 	 * @ordered
@@ -105,9 +114,9 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected EMap<EAttribute, EList<Object>> attributes;
 
 	/**
-	 * The cached value of the '{@link #getSubDescriptors() <em>Sub Descriptors</em>}' map.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getSubDescriptors() <em>Sub Descriptors</em>}' map. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getSubDescriptors()
 	 * @generated
 	 * @ordered
@@ -115,9 +124,9 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected EMap<EReference, EList<EMFModelDescriptor>> subDescriptors;
 
 	/**
-	 * The cached value of the '{@link #getReferences() <em>References</em>}' map.
-	 * <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getReferences() <em>References</em>}' map. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getReferences()
 	 * @generated
 	 * @ordered
@@ -125,9 +134,9 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected EMap<EReference, EList<IElementReference>> references;
 
 	/**
-	 * The default value of the '{@link #getDescriptorUri() <em>Descriptor Uri</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #getDescriptorUri() <em>Descriptor Uri</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDescriptorUri()
 	 * @generated
 	 * @ordered
@@ -135,9 +144,9 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	protected static final String DESCRIPTOR_URI_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDescriptorUri() <em>Descriptor Uri</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getDescriptorUri() <em>Descriptor Uri</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getDescriptorUri()
 	 * @generated
 	 * @ordered
@@ -146,6 +155,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected EMFModelDescriptorImpl() {
@@ -154,6 +164,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -162,12 +173,13 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public EList<IElementReference> getCrossReferences() {
-		final EList<IElementReference> references = new EObjectEList<IElementReference>(IElementReference.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ALL_CROSS_REFERENCES);
+		final EList<IElementReference> references = new EObjectEList<IElementReference>(
+				IElementReference.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ALL_CROSS_REFERENCES);
 		for (EList<IElementReference> list : getReferences().values()) {
 			references.addAll(list);
 		}
@@ -191,6 +203,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public IElementReference getSelfReference() {
@@ -199,34 +212,50 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public NotificationChain basicSetSelfReference(IElementReference newSelfReference, NotificationChain msgs) {
 		IElementReference oldSelfReference = selfReference;
 		selfReference = newSelfReference;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, oldSelfReference, newSelfReference);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, oldSelfReference,
+					newSelfReference);
+			if (msgs == null) {
+				msgs = notification;
+			} else {
+				msgs.add(notification);
+			}
 		}
 		return msgs;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSelfReference(IElementReference newSelfReference) {
 		if (newSelfReference != selfReference) {
 			NotificationChain msgs = null;
-			if (selfReference != null)
-				msgs = ((InternalEObject)selfReference).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, null, msgs);
-			if (newSelfReference != null)
-				msgs = ((InternalEObject)newSelfReference).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, null, msgs);
+			if (selfReference != null) {
+				msgs = ((InternalEObject)selfReference).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
+						- DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, null, msgs);
+			}
+			if (newSelfReference != null) {
+				msgs = ((InternalEObject)newSelfReference).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
+						- DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, null, msgs);
+			}
 			msgs = basicSetSelfReference(newSelfReference, msgs);
-			if (msgs != null) msgs.dispatch();
+			if (msgs != null) {
+				msgs.dispatch();
+			}
+		} else if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, newSelfReference,
+					newSelfReference));
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DescriptorPackage.EMF_MODEL_DESCRIPTOR__SELF_REFERENCE, newSelfReference, newSelfReference));
 	}
 
 	/**
@@ -235,7 +264,8 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	 * @generated NOT
 	 */
 	public EList<String> getDescriptorUris() {
-		final EList<String> uris = new EDataTypeUniqueEList<String>(String.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URIS);
+		final EList<String> uris = new EDataTypeUniqueEList<String>(String.class, this,
+				DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URIS);
 		uris.add(getDescriptorUri());
 		for (EList<EMFModelDescriptor> list : getSubDescriptors().values()) {
 			for (EMFModelDescriptor emfModelDescriptor : list) {
@@ -251,13 +281,15 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	 * @generated NOT
 	 */
 	public EList<IElementReference> getAllSelfReferences() {
-		final EList<IElementReference> selves = new EObjectEList<IElementReference>(IElementReference.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ALL_SELF_REFERENCES);
+		final EList<IElementReference> selves = new EObjectEList<IElementReference>(IElementReference.class,
+				this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ALL_SELF_REFERENCES);
 		final Queue<EMFModelDescriptor> queue = new LinkedList<EMFModelDescriptor>();
 		queue.add(this);
 		while (!queue.isEmpty()) {
 			final EMFModelDescriptor descriptor = queue.poll();
 			selves.add(descriptor.getSelfReference());
-			for (final Collection<EMFModelDescriptor> subModelDescriptors : descriptor.getSubDescriptors().values()) {
+			for (final Collection<EMFModelDescriptor> subModelDescriptors : descriptor.getSubDescriptors()
+					.values()) {
 				queue.addAll(subModelDescriptors);
 			}
 		}
@@ -265,12 +297,13 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public EList<IModelDescriptor> getSubModelDescriptors() {
-		final EList<IModelDescriptor> descriptors = new EObjectEList<IModelDescriptor>(IModelDescriptor.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__SUB_MODEL_DESCRIPTORS);
+		final EList<IModelDescriptor> descriptors = new EObjectEList<IModelDescriptor>(
+				IModelDescriptor.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__SUB_MODEL_DESCRIPTORS);
 		for (List<EMFModelDescriptor> list : getSubDescriptors().values()) {
 			descriptors.addAll(list);
 		}
@@ -279,6 +312,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass getType() {
@@ -286,8 +320,10 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 			InternalEObject oldType = (InternalEObject)type;
 			type = (EClass)eResolveProxy(oldType);
 			if (type != oldType) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, DescriptorPackage.EMF_MODEL_DESCRIPTOR__TYPE, oldType, type));
+				if (eNotificationRequired()) {
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							DescriptorPackage.EMF_MODEL_DESCRIPTOR__TYPE, oldType, type));
+				}
 			}
 		}
 		return type;
@@ -295,6 +331,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EClass basicGetType() {
@@ -303,50 +340,65 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setType(EClass newType) {
 		EClass oldType = type;
 		type = newType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DescriptorPackage.EMF_MODEL_DESCRIPTOR__TYPE, oldType, type));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__TYPE, oldType, type));
+		}
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EMap<EAttribute, EList<Object>> getAttributes() {
 		if (attributes == null) {
-			attributes = new EcoreEMap<EAttribute,EList<Object>>(DescriptorPackage.Literals.EATTRIBUTE_TO_OBJECT_MAP, EAttributeToObjectMapImpl.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ATTRIBUTES);
+			attributes = new EcoreEMap<EAttribute, EList<Object>>(
+					DescriptorPackage.Literals.EATTRIBUTE_TO_OBJECT_MAP, EAttributeToObjectMapImpl.class,
+					this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__ATTRIBUTES);
 		}
 		return attributes;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EMap<EReference, EList<EMFModelDescriptor>> getSubDescriptors() {
 		if (subDescriptors == null) {
-			subDescriptors = new EcoreEMap<EReference,EList<EMFModelDescriptor>>(DescriptorPackage.Literals.EREFERENCE_TO_DESCRIPTOR_MAP, EReferenceToDescriptorMapImpl.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__SUB_DESCRIPTORS);
+			subDescriptors = new EcoreEMap<EReference, EList<EMFModelDescriptor>>(
+					DescriptorPackage.Literals.EREFERENCE_TO_DESCRIPTOR_MAP,
+					EReferenceToDescriptorMapImpl.class, this,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__SUB_DESCRIPTORS);
 		}
 		return subDescriptors;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EMap<EReference, EList<IElementReference>> getReferences() {
 		if (references == null) {
-			references = new EcoreEMap<EReference,EList<IElementReference>>(DescriptorPackage.Literals.EREFERENCE_TO_ELEMENT_REFERENCE_MAP, EReferenceToElementReferenceMapImpl.class, this, DescriptorPackage.EMF_MODEL_DESCRIPTOR__REFERENCES);
+			references = new EcoreEMap<EReference, EList<IElementReference>>(
+					DescriptorPackage.Literals.EREFERENCE_TO_ELEMENT_REFERENCE_MAP,
+					EReferenceToElementReferenceMapImpl.class, this,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__REFERENCES);
 		}
 		return references;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getDescriptorUri() {
@@ -355,13 +407,16 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setDescriptorUri(String newDescriptorUri) {
 		String oldDescriptorUri = descriptorUri;
 		descriptorUri = newDescriptorUri;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URI, oldDescriptorUri, descriptorUri));
+		if (eNotificationRequired()) {
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URI, oldDescriptorUri, descriptorUri));
+		}
 	}
 
 	/**
@@ -384,8 +439,8 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 		// do this recursively and add sub elements
 		for (final EReference containment : getSubDescriptors().keySet()) {
 			for (final EMFModelDescriptor subDescriptor : getSubDescriptors().get(containment)) {
-				final EObject subElement = ((EMFModelDescriptorImpl) subDescriptor).applyObject(appliedSubDescriptors,
-						submodelElements);
+				final EObject subElement = ((EMFModelDescriptorImpl)subDescriptor).applyObject(
+						appliedSubDescriptors, submodelElements);
 				if (!ExtEcoreUtils.setStructuralFeature(object, containment, subElement)) {
 					throw new IllegalArgumentException(
 							"Something is wrong here because we could not add a child as defined in the model descriptor!");
@@ -416,7 +471,8 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 					// set the object(s), if available
 					if (resolvedElements == null || resolvedElements.isEmpty()) {
 						result.add(symRef);
-					} else if (!ExtEcoreUtils.setStructuralFeature(createdObject, reference, resolvedElements)) {
+					} else if (!ExtEcoreUtils
+							.setStructuralFeature(createdObject, reference, resolvedElements)) {
 						result.add(symRef);
 					}
 				} catch (Exception e) {
@@ -461,10 +517,11 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	 *            <code>object</code>.
 	 * @return A list of attributes which <b>failed</b> to restore.
 	 */
-	private List<EAttribute> applyAttributes(EObject object, Map<EMFModelDescriptor, EObject> appliedSubDescriptors) {
+	private List<EAttribute> applyAttributes(EObject object,
+			Map<EMFModelDescriptor, EObject> appliedSubDescriptors) {
 		List<EAttribute> result = applyAttributes(object);
 		for (EMFModelDescriptor subDescriptor : appliedSubDescriptors.keySet()) {
-			result.addAll(((EMFModelDescriptorImpl) subDescriptor).applyAttributes(appliedSubDescriptors
+			result.addAll(((EMFModelDescriptorImpl)subDescriptor).applyAttributes(appliedSubDescriptors
 					.get(subDescriptor)));
 		}
 		return result;
@@ -495,41 +552,49 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 		// something went wrong here!
 		System.out
 				.println("EMFModelDescriptor.apply was not successful! We should really add more error handling here!");
-		Activator.getDefault().logError(
-				"EMFModelDescriptor.apply was not successful! We should really add more error handling here!");
+		Activator
+				.getDefault()
+				.logError(
+						"EMFModelDescriptor.apply was not successful! We should really add more error handling here!");
 		return null;
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * Check whether two model descriptors describe the same model element. Cross-references, sub-elements, and
-	 * attributes will be checked.
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> Check whether two model descriptors describe the same model element.
+	 * Cross-references, sub-elements, and attributes will be checked. <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public boolean describesEqual(IModelDescriptor other) {
-		
+
 		// obvious checks..
-		if (other == null || !(other instanceof EMFModelDescriptor))
+		if (other == null || !(other instanceof EMFModelDescriptor)) {
 			return false;
+		}
 		final EMFModelDescriptor other2 = (EMFModelDescriptor)other;
-		if (getType() == null || !getType().equals(other2.getType()))
+		if (getType() == null || !getType().equals(other2.getType())) {
 			return false;
-		if (getReferences().size() != other2.getReferences().size())
+		}
+		if (getReferences().size() != other2.getReferences().size()) {
 			return false;
-		if (getAttributes().size() != other2.getAttributes().size())
+		}
+		if (getAttributes().size() != other2.getAttributes().size()) {
 			return false;
-		if (getSubDescriptors().size() != other2.getSubDescriptors().size())
+		}
+		if (getSubDescriptors().size() != other2.getSubDescriptors().size()) {
 			return false;
+		}
 
 		// check all cross-references
 		for (EReference ref : getReferences().keySet()) {
-			if (getReferences().get(ref).size() != other2.getReferences().get(ref).size())
+			if (getReferences().get(ref).size() != other2.getReferences().get(ref).size()) {
 				return false;
+			}
 			outer: for (IElementReference crossRef1 : getReferences().get(ref)) {
 				for (IElementReference crossRef2 : other2.getReferences().get(ref)) {
-					if (crossRef1 != null && crossRef1.resolvesEqual(crossRef2))
+					if (crossRef1 != null && crossRef1.resolvesEqual(crossRef2)) {
 						continue outer;
+					}
 				}
 				return false; // no counterpart for crossRef1 found!
 			}
@@ -537,29 +602,33 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 		// check all attributes!
 		for (EAttribute attr : getAttributes().keySet()) {
-			if (getAttributes().get(attr).size() != other2.getAttributes().get(attr).size())
+			if (getAttributes().get(attr).size() != other2.getAttributes().get(attr).size()) {
 				return false;
+			}
 			outer: for (Object value1 : getAttributes().get(attr)) {
 				for (Object value2 : other2.getAttributes().get(attr)) {
-					if (value1 != null && value1.equals(value2))
+					if (value1 != null && value1.equals(value2)) {
 						continue outer;
+					}
 				}
 				return false; // no counterpart for crossRef1 found!
 			}
 		}
-		
+
 		// check all sub-model descriptors
 		for (EReference ref : getSubDescriptors().keySet()) {
-			if (getSubDescriptors().get(ref).size() != other2.getSubDescriptors().get(ref).size())
+			if (getSubDescriptors().get(ref).size() != other2.getSubDescriptors().get(ref).size()) {
 				return false;
+			}
 			outer: for (IModelDescriptor subMd1 : getSubDescriptors().get(ref)) {
 				/*
-				 * These are expensive checks! But what should we do?! there is no qualifier for model descriptors and, in
-				 * fact, they are not sorted!
+				 * These are expensive checks! But what should we do?! there is no qualifier for model
+				 * descriptors and, in fact, they are not sorted!
 				 */
 				for (IModelDescriptor subMd2 : other2.getSubDescriptors().get(ref)) {
-					if (subMd1.describesEqual(subMd2))
-						continue outer; 
+					if (subMd1.describesEqual(subMd2)) {
+						continue outer;
+					}
 				}
 				return false; // no counterpart for subMd1 found!
 			}
@@ -569,49 +638,56 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public EMap<EObject, IModelDescriptor> isDescriptorFor(EObject element, boolean checkAttributes) {
 		final EMap<EObject, IModelDescriptor> descriptorMap = new BasicEMap<EObject, IModelDescriptor>();
-		if (isDescriptorFor(element, descriptorMap, checkAttributes))
+		if (isDescriptorFor(element, descriptorMap, checkAttributes)) {
 			return descriptorMap;
+		}
 		return null;
 	}
 
-	private boolean isDescriptorFor(final EObject element, final EMap<EObject, IModelDescriptor> descriptorMap, boolean checkAttributes) {
-		if (!element.eClass().equals(getType()))
+	private boolean isDescriptorFor(final EObject element,
+			final EMap<EObject, IModelDescriptor> descriptorMap, boolean checkAttributes) {
+		if (!element.eClass().equals(getType())) {
 			return false;
-		if (checkAttributes && !checkAttributes(element))
+		}
+		if (checkAttributes && !checkAttributes(element)) {
 			return false;
-		
+		}
+
 		// check all sub descriptors!
 		for (EReference subReference : getSubDescriptors().keySet()) {
 			final List<?> children;
 			if (subReference.isMany()) {
-				children = (List<?>) element.eGet(subReference);
+				children = (List<?>)element.eGet(subReference);
 			} else {
 				final Object child = element.eGet(subReference);
 				children = child == null ? null : Collections.singletonList(child);
 			}
-			final List<EMFModelDescriptor> subDescriptors = new ArrayList<EMFModelDescriptor>(getSubDescriptors().get(subReference));
+			final List<EMFModelDescriptor> subDescriptors = new ArrayList<EMFModelDescriptor>(
+					getSubDescriptors().get(subReference));
 
 			// quick checks for emptyness
-			if ((subDescriptors == null || subDescriptors.isEmpty()) && 
-					(children == null || children.isEmpty()))
+			if (subDescriptors.isEmpty() && (children == null || children.isEmpty())) {
 				continue;
-			if ((subDescriptors == null || subDescriptors.isEmpty()) ^ 
-					(children == null || children.isEmpty()))
+			}
+			if (subDescriptors.isEmpty() ^ (children == null || children.isEmpty())) {
 				return false;
-			if (children.size() != subDescriptors.size())
+			}
+			if (children == null || children.size() != subDescriptors.size()) {
 				return false;
-			
+			}
+
 			// that gets ugly for many children! because we have to do n^2 check!!!
 			children: for (Object child : children) {
 				for (int i = 0; i < subDescriptors.size(); i++) {
-					final EMFModelDescriptorImpl subDescriptor = (EMFModelDescriptorImpl) subDescriptors.get(i);
-					
+					final EMFModelDescriptorImpl subDescriptor = (EMFModelDescriptorImpl)subDescriptors
+							.get(i);
+
 					// expensive recursive call
 					if (subDescriptor.isDescriptorFor((EObject)child, descriptorMap, checkAttributes)) {
 						subDescriptors.remove(i); // remove it to avoid false duplicate matches
@@ -631,77 +707,95 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 			checkedAttributes.add(eAttribute);
 			final EList<Object> describedValue = getAttributes().get(eAttribute);
 			final Object actualValue = element.eGet(eAttribute);
-			
+
 			// common checks
-			if (actualValue == null && (describedValue == null || describedValue.isEmpty()))
+			if (actualValue == null && (describedValue == null || describedValue.isEmpty())) {
 				continue;
-			if (actualValue == null ^ (describedValue == null || describedValue.isEmpty()))
+			}
+			if (actualValue == null ^ (describedValue == null || describedValue.isEmpty())) {
 				return false;
-				
+			}
+
 			if (eAttribute.isMany()) {
-				
+
 				// check all values!
-				final List<?> actualList = (List<?>) actualValue;
-				if (actualList.size() != describedValue.size())
+				final List<?> actualList = (List<?>)actualValue;
+				if (actualList == null || describedValue == null
+						|| actualList.size() != describedValue.size()) {
 					return false;
+				}
 				for (Object object : actualList) {
-					if (!describedValue.contains(object))
+					if (!describedValue.contains(object)) {
 						return false;
+					}
 				}
 			} else {
-				
+
 				// simple check of primitive values
-				if (actualValue == null && (describedValue == null || describedValue.isEmpty()))
+				if (actualValue == null && (describedValue == null || describedValue.isEmpty())) {
 					continue;
-				if (describedValue.size() == 1 && actualValue.equals(describedValue.get(0)))
+				}
+				if (describedValue != null && actualValue != null && describedValue.size() == 1
+						&& actualValue.equals(describedValue.get(0))) {
 					continue;
+				}
 				return false;
 			}
 		}
-		
+
 		// all attributes covered?
 		final List<EAttribute> toCheck = new ArrayList<EAttribute>(element.eClass().getEAllAttributes());
 		toCheck.removeAll(checkedAttributes);
 		for (EAttribute eAttribute : toCheck) {
-			if (!MPatchUtil.isRelevantFeature(eAttribute))
+			if (!MPatchUtil.isRelevantFeature(eAttribute)) {
 				continue;
-			
+			}
+
 			// all not yet checked attributes must the default value
 			final Object value = element.eGet(eAttribute);
 			final Object defaultValue = eAttribute.getDefaultValue();
 			if (eAttribute.isMany()) {
 				if (value == null || ((List<?>)value).size() == 0) { // both null or empty?
-					if (defaultValue != null && defaultValue instanceof List<?> && !((List<?>)defaultValue).isEmpty())
+					if (defaultValue != null && defaultValue instanceof List<?>
+							&& !((List<?>)defaultValue).isEmpty()) {
 						return false;
+					}
 				} else if (defaultValue instanceof List<?>) { // actual comparison
 					final List<?> defaultValues = (List<?>)defaultValue;
 					final List<?> actualValues = (List<?>)value;
-					if (defaultValues.size() != actualValues.size()) // same number of values?
+					if (defaultValues.size() != actualValues.size()) {
 						return false;
+					}
 					// check for inclusion, both ways!
-					for (Object object : actualValues)
-						if (!defaultValues.contains(object))
+					for (Object object : actualValues) {
+						if (!defaultValues.contains(object)) {
 							return false;
-					for (Object object : defaultValues)
-						if (!actualValues.contains(object))
+						}
+					}
+					for (Object object : defaultValues) {
+						if (!actualValues.contains(object)) {
 							return false;
+						}
+					}
 				}
-					
+
 			} else {
 				if (value == null) { // default value must be null, too
-					if (defaultValue != null)
+					if (defaultValue != null) {
 						return false;
+					}
 				} else if (!value.equals(defaultValue)) { // actual equality check
 					return false;
 				}
 			}
 		}
-		
+
 		return true; // all seems to be ok :-)
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -721,6 +815,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -739,17 +834,28 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URIS:
 				return getDescriptorUris();
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__TYPE:
-				if (resolve) return getType();
+				if (resolve) {
+					return getType();
+				}
 				return basicGetType();
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__ATTRIBUTES:
-				if (coreType) return getAttributes();
-				else return getAttributes().map();
+				if (coreType) {
+					return getAttributes();
+				} else {
+					return getAttributes().map();
+				}
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__SUB_DESCRIPTORS:
-				if (coreType) return getSubDescriptors();
-				else return getSubDescriptors().map();
+				if (coreType) {
+					return getSubDescriptors();
+				} else {
+					return getSubDescriptors().map();
+				}
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__REFERENCES:
-				if (coreType) return getReferences();
-				else return getReferences().map();
+				if (coreType) {
+					return getReferences();
+				} else {
+					return getReferences().map();
+				}
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URI:
 				return getDescriptorUri();
 		}
@@ -758,6 +864,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -787,6 +894,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -816,6 +924,7 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -842,18 +951,22 @@ public class EMFModelDescriptorImpl extends EObjectImpl implements EMFModelDescr
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__REFERENCES:
 				return references != null && !references.isEmpty();
 			case DescriptorPackage.EMF_MODEL_DESCRIPTOR__DESCRIPTOR_URI:
-				return DESCRIPTOR_URI_EDEFAULT == null ? descriptorUri != null : !DESCRIPTOR_URI_EDEFAULT.equals(descriptorUri);
+				return DESCRIPTOR_URI_EDEFAULT == null ? descriptorUri != null : !DESCRIPTOR_URI_EDEFAULT
+						.equals(descriptorUri);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy()) {
+			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (descriptorUri: ");

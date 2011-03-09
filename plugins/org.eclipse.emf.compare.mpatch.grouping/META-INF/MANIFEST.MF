@@ -7,6 +7,6 @@ Bundle-Activator: org.eclipse.emf.compare.mpatch.grouping.GroupingActivator
 Require-Bundle: org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.compare.mpatch.common
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.grouping.util
 Bundle-Vendor: Technical University of Denmark

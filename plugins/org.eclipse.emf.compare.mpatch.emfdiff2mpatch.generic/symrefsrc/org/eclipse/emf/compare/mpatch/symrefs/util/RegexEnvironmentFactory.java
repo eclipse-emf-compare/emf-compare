@@ -35,27 +35,31 @@ class RegexEnvironmentFactory extends EcoreEnvironmentFactory {
 		super(reg);
 	}
 
+	@Override
 	public Environment<EPackage, EClassifier, EOperation, EStructuralFeature, EEnumLiteral, EParameter, EObject, CallOperationAction, SendSignalAction, Constraint, EClass, EObject> createEnvironment() {
 		RegexEnvironment result = new RegexEnvironment(getEPackageRegistry());
 		result.setFactory(this);
 		return result;
 	}
 
+	@Override
 	public Environment<EPackage, EClassifier, EOperation, EStructuralFeature, EEnumLiteral, EParameter, EObject, CallOperationAction, SendSignalAction, Constraint, EClass, EObject> createEnvironment(
 			Environment<EPackage, EClassifier, EOperation, EStructuralFeature, EEnumLiteral, EParameter, EObject, CallOperationAction, SendSignalAction, Constraint, EClass, EObject> parent) {
 		if (!(parent instanceof RegexEnvironment)) {
 			throw new IllegalArgumentException("Parent environment must be my environment: " + parent);
 		}
 
-		RegexEnvironment result = new RegexEnvironment((RegexEnvironment) parent);
+		RegexEnvironment result = new RegexEnvironment((RegexEnvironment)parent);
 		result.setFactory(this);
 		return result;
 	}
 
+	@Override
 	public EvaluationEnvironment<EClassifier, EOperation, EStructuralFeature, EClass, EObject> createEvaluationEnvironment() {
 		return new RegexEvaluationEnvironment();
 	}
 
+	@Override
 	public EvaluationEnvironment<EClassifier, EOperation, EStructuralFeature, EClass, EObject> createEvaluationEnvironment(
 			EvaluationEnvironment<EClassifier, EOperation, EStructuralFeature, EClass, EObject> parent) {
 		return new RegexEvaluationEnvironment(parent);

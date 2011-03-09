@@ -27,7 +27,7 @@ public class Activator extends Plugin {
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -38,6 +38,7 @@ public class Activator extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -47,6 +48,7 @@ public class Activator extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -54,15 +56,15 @@ public class Activator extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
 		return plugin;
 	}
 
-	////////////// SOME LOGGING
-	
+	// //////////// SOME LOGGING
+
 	public void logError(String error) {
 		logError(error, null);
 	}
@@ -71,9 +73,7 @@ public class Activator extends Plugin {
 		if (error == null && throwable != null) {
 			error = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.ERROR, PLUGIN_ID,
-						IStatus.OK, error, throwable));
+		getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, error, throwable));
 		debug(error, throwable);
 	}
 
@@ -85,12 +85,10 @@ public class Activator extends Plugin {
 		if (message == null && throwable != null) {
 			message = throwable.getMessage();
 		}
-		getLog().log(
-				new Status(IStatus.INFO, PLUGIN_ID,
-						IStatus.OK, message, throwable));
+		getLog().log(new Status(IStatus.INFO, PLUGIN_ID, IStatus.OK, message, throwable));
 		debug(message, throwable);
 	}
-	
+
 	private void debug(String message, Throwable throwable) {
 		if (!isDebugging()) {
 			return;

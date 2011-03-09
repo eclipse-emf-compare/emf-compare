@@ -7,6 +7,6 @@ Bundle-Activator: org.eclipse.emf.compare.mpatch.generalize.GeneralizeActivator
 Require-Bundle: org.eclipse.emf.compare.mpatch.common,
  org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.generalize.util
 Bundle-Vendor: Technical University of Denmark

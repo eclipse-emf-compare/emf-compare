@@ -17,13 +17,11 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * This implementation created an {@link IdEmfReference} as symbolic reference for a given model element.
- * 
  * {@link IdEmfReference}s use the {@link URI} fragment of the given model element as the ID. This makes these
- * references generically applicable for all EMF models. The cardinality of those implementations, however, is always
- * <code>[1..1]</code>.
+ * references generically applicable for all EMF models. The cardinality of those implementations, however, is
+ * always <code>[1..1]</code>.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
- * 
  */
 public class IdReferenceCreator extends AbstractReferenceCreator {
 
@@ -34,6 +32,7 @@ public class IdReferenceCreator extends AbstractReferenceCreator {
 	 *            The object for which an id-based reference should be created.
 	 * @return The created symbolic reference based on the last {@link URI} fragment as id.
 	 */
+	@Override
 	protected IdEmfReference createSymbolicReference(EObject self) {
 
 		// create the id-based symbolic reference

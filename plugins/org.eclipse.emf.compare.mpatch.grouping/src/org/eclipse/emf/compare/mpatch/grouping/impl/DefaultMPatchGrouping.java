@@ -24,8 +24,8 @@ import org.eclipse.emf.compare.mpatch.ChangeGroup;
 import org.eclipse.emf.compare.mpatch.IElementReference;
 import org.eclipse.emf.compare.mpatch.IModelDescriptor;
 import org.eclipse.emf.compare.mpatch.IndepChange;
-import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.MPatchFactory;
+import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.UnknownChange;
 import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
 import org.eclipse.emf.compare.mpatch.extension.IMPatchTransformation;
@@ -58,7 +58,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -66,7 +65,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -74,7 +72,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 40;
 	}
@@ -82,7 +79,6 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -90,16 +86,14 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * See {@link DefaultMPatchGrouping#group(MPatchModel)}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return group(mpatch);
 	}
 
 	/**
-	 * This is a default implementation of the mpatch grouping.
-	 * 
-	 * Note that it makes use of the uri attribute of symbolic references to identify symbolic references which point to
-	 * the same elements. Subclasses may change this behavior.
+	 * This is a default implementation of the mpatch grouping. Note that it makes use of the uri attribute of
+	 * symbolic references to identify symbolic references which point to the same elements. Subclasses may
+	 * change this behavior.
 	 * 
 	 * @param mpatch
 	 *            The ungrouped mpatch.
@@ -120,8 +114,8 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	}
 
 	/**
-	 * This checks that the diff does not already contain groups. Furthermore, it returns all changes that should be
-	 * restructured.
+	 * This checks that the diff does not already contain groups. Furthermore, it returns all changes that
+	 * should be restructured.
 	 * 
 	 * @param mpatch
 	 *            The input mpatch.
@@ -134,8 +128,8 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 		final Set<IndepChange> changes = new HashSet<IndepChange>();
 		for (final IndepChange change : mpatch.getChanges()) {
 			if (change instanceof ChangeGroup) {
-				throw new IllegalArgumentException("Input expected not to contain groups, but it already does:\n"
-						+ change);
+				throw new IllegalArgumentException(
+						"Input expected not to contain groups, but it already does:\n" + change);
 			}
 			changes.add(change);
 		}
@@ -149,20 +143,19 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 
 	/**
 	 * This analyzes the given changes and collects them according to common symbolic references.<br>
-	 * First, {@link DefaultMPatchGrouping#fillMaps(Set)} is used to calculate all relations between the changes and
-	 * symbolic references. Second, all changes having any symbolic reference in common, are grouped together.
+	 * First, {@link DefaultMPatchGrouping#fillMaps(Set)} is used to calculate all relations between the
+	 * changes and symbolic references. Second, all changes having any symbolic reference in common, are
+	 * grouped together.
 	 * 
 	 * @param changes
 	 *            A set of unordered and ungrouped changes.
-	 * @return A set of groups, such that all containing {@link IndepChange}s do not interfere with others from a
-	 *         different group.
+	 * @return A set of groups, such that all containing {@link IndepChange}s do not interfere with others
+	 *         from a different group.
 	 */
 	protected static Set<Set<IndepChange>> analyzeChanges(Set<IndepChange> changes) {
 		/*
-		 * initialize intermediate data structure:
-		 * 
-		 * 1. change -> ref* (set of all uris it uses) 2. ref -> change* (set of all changes in which the reference is
-		 * used)
+		 * initialize intermediate data structure: 1. change -> ref* (set of all uris it uses) 2. ref ->
+		 * change* (set of all changes in which the reference is used)
 		 */
 		final T2<Map<IndepChange, Set<String>>, Map<String, Set<IndepChange>>> maps = fillMaps(changes);
 
@@ -203,9 +196,11 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	/**
 	 * Look for all symbolic references ({@link IElementReference}) in the given set of {@link IndepChange}s.<br>
 	 * <ol>
-	 * <li>The first part of the result ({@link T2#s}) maps each {@link IndepChange} to all symbolic references it uses.
-	 * <li>The second part of the result ({@link T2#t}) maps each symbolic reference (as a String representation
-	 * determined by {@link DefaultMPatchGrouping#getSymbolicReferenceRepresentative(IElementReference)}) to all
+	 * <li>The first part of the result ({@link T2#s}) maps each {@link IndepChange} to all symbolic
+	 * references it uses.
+	 * <li>The second part of the result ({@link T2#t}) maps each symbolic reference (as a String
+	 * representation determined by
+	 * {@link DefaultMPatchGrouping#getSymbolicReferenceRepresentative(IElementReference)}) to all
 	 * {@link IndepChange}s in which they are used.
 	 * </ol>
 	 * <br>
@@ -216,7 +211,8 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	 */
 	// SuppressWarning because of the cast to List<EObject>
 	@SuppressWarnings("unchecked")
-	protected static T2<Map<IndepChange, Set<String>>, Map<String, Set<IndepChange>>> fillMaps(Set<IndepChange> changes) {
+	protected static T2<Map<IndepChange, Set<String>>, Map<String, Set<IndepChange>>> fillMaps(
+			Set<IndepChange> changes) {
 		final Map<IndepChange, Set<String>> changeToRefMap = new HashMap<IndepChange, Set<String>>();
 		final Map<String, Set<IndepChange>> refToChangeMap = new HashMap<String, Set<IndepChange>>();
 
@@ -248,7 +244,7 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 				// now lets create string representatives for all symbolic references
 				for (final EObject eObject : children) {
 					if (eObject instanceof IModelDescriptor) {
-						final IModelDescriptor descriptor = (IModelDescriptor) eObject;
+						final IModelDescriptor descriptor = (IModelDescriptor)eObject;
 
 						// consider all requiredReferences as well as all selfReferences
 						final Collection<IElementReference> descriptorReferences = new ArrayList<IElementReference>();
@@ -258,21 +254,23 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 
 							// collect references for the current change
 							references.add(getSymbolicReferenceRepresentative(ref));
-							addElementToSetMap(getSymbolicReferenceRepresentative(ref), change, refToChangeMap);
+							addElementToSetMap(getSymbolicReferenceRepresentative(ref), change,
+									refToChangeMap);
 
 						}
 					} else if (eObject instanceof IElementReference) {
 
 						// collect references for the current change
 						references.add(getSymbolicReferenceRepresentative((IElementReference)eObject));
-						addElementToSetMap(getSymbolicReferenceRepresentative((IElementReference)eObject), change,
-								refToChangeMap);
+						addElementToSetMap(getSymbolicReferenceRepresentative((IElementReference)eObject),
+								change, refToChangeMap);
 					}
 				}
 			}
 			changeToRefMap.put(change, references);
 		}
-		return new T2<Map<IndepChange, Set<String>>, Map<String, Set<IndepChange>>>(changeToRefMap, refToChangeMap);
+		return new T2<Map<IndepChange, Set<String>>, Map<String, Set<IndepChange>>>(changeToRefMap,
+				refToChangeMap);
 	}
 
 	/** Helper method to add an element to a map of set of elements. */
@@ -286,24 +284,26 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 	}
 
 	/**
-	 * The default implementation uses {@link IElementReference#getUriReference()} to identify common target elements of
-	 * symbolic references. Subclasses may refine this behavior.
+	 * The default implementation uses {@link IElementReference#getUriReference()} to identify common target
+	 * elements of symbolic references. Subclasses may refine this behavior.
 	 * 
 	 * @param reference
 	 *            A symbolic reference.
-	 * @return A {@link String} representative for the target element of this particular {@link IElementReference}.
+	 * @return A {@link String} representative for the target element of this particular
+	 *         {@link IElementReference}.
 	 */
 	protected static String getSymbolicReferenceRepresentative(IElementReference reference) {
 		final String uriReference = reference.getUriReference();
-		if (uriReference.indexOf("#") > 0)
+		if (uriReference.indexOf("#") > 0) {
 			return uriReference.substring(uriReference.indexOf("#"));
-		else
+		} else {
 			return uriReference;
+		}
 	}
 
 	/**
-	 * This changes the input {@link MPatchModel} according to the given set of changes. To this end, it creates
-	 * {@link ChangeGroup}s and moves all changes accordingly.
+	 * This changes the input {@link MPatchModel} according to the given set of changes. To this end, it
+	 * creates {@link ChangeGroup}s and moves all changes accordingly.
 	 * 
 	 * @param mpatch
 	 *            The input mpatch which will be restructured.
@@ -321,13 +321,14 @@ public class DefaultMPatchGrouping implements IMPatchTransformation {
 		return changeGroups.size(); // returns 0, if nothing was changed
 	}
 
-	/** 
-	 * Simple immutable triple wrapper class. 
-	 *
+	/**
+	 * Simple immutable triple wrapper class.
+	 * 
 	 * @author Patrick Koenemann (pk@imm.dtu.dk)
 	 */
 	private static class T2<S, T> {
 		public final S s;
+
 		public final T t;
 
 		public T2(S s, T t) {

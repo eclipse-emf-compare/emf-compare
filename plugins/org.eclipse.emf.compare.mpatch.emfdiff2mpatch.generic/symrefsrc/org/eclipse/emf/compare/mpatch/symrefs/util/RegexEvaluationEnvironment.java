@@ -31,6 +31,7 @@ class RegexEvaluationEnvironment extends EcoreEvaluationEnvironment {
 		super(parent);
 	}
 
+	@Override
 	public Object callOperation(EOperation operation, int opcode, Object source, Object[] args) {
 		if (operation.getEAnnotation("RegexEnvironment") == null) {
 			// not one of our custom operations
@@ -38,44 +39,47 @@ class RegexEvaluationEnvironment extends EcoreEvaluationEnvironment {
 		}
 
 		if (RegexEnvironment.REGEX_MATCH_OPERATION_NAME.equals(operation.getName())) {
-			Pattern pattern = Pattern.compile((String) args[0]);
-			Matcher matcher = pattern.matcher((String) source);
+			Pattern pattern = Pattern.compile((String)args[0]);
+			Matcher matcher = pattern.matcher((String)source);
 			return matcher.matches() ? matcher.group() : null;
 
 		} else if (RegexEnvironment.CONTAINS_OPERATION_NAME.equals(operation.getName())) {
-			if (source == null)
+			if (source == null) {
 				return args[0] == null;
-			return ((String) source).contains((String) args[0]);
+			}
+			return ((String)source).contains((String)args[0]);
 
 		} else if (RegexEnvironment.CONTAINS_IGNORE_CASE_OPERATION_NAME.equals(operation.getName())) {
-			if (source == null)
+			if (source == null) {
 				return args[0] == null;
-			return ((String) source).toLowerCase().contains(((String) args[0]).toLowerCase());
+			}
+			return ((String)source).toLowerCase().contains(((String)args[0]).toLowerCase());
 
 		} else if (RegexEnvironment.CHECK_SIMILARITY_OPERATION_NAME.equals(operation.getName())) {
-			if (source == null)
+			if (source == null) {
 				source = "";
-			final String target = args[0] == null ? "" : (String) args[0];
+			}
+			final String target = args[0] == null ? "" : (String)args[0];
 			final Double similarity = (Double)args[1];
-			return checkSimilarity((String) source, target, similarity);
+			return checkSimilarity((String)source, target, similarity);
 
 		} else {
 
-			throw new UnsupportedOperationException("Unknown operation: " + operation.getName()); // unknown operation
+			throw new UnsupportedOperationException("Unknown operation: " + operation.getName()); // unknown
+																									// operation
 		}
 	}
 
 	/**
-	 * Calculate the similarity <code>s</code> of two strings <code>source</code> and <code>target</code> and compare it against the given threshold.<br>
+	 * Calculate the similarity <code>s</code> of two strings <code>source</code> and <code>target</code> and
+	 * compare it against the given threshold.<br>
 	 * <br>
-	 * 
 	 * If <code>1 = s</code>, then the two strings are equal.<br>
 	 * If <code>1 &gt; s &gt; 0.5</code>, then one of the strings is a substring of the other.<br>
 	 * If <code>0.5 &gt; s &gt; 0</code>, then they are a little bit similar.<br>
 	 * If <code>s = 0</code>, then they are completely different.<br>
 	 * In general, the higher the value, the more similar they are.<br>
 	 * <br>
-	 * 
 	 * Examples:
 	 * <ul>
 	 * <li>"id", "id" --&gt; 1
@@ -89,8 +93,8 @@ class RegexEvaluationEnvironment extends EcoreEvaluationEnvironment {
 	 * <li>"id", "wired" --&gt; 0.2
 	 * <li>"person", "season" --&gt; 0.34
 	 * </ul>
-	 * 
-	 * A threshold of <code>0.7</code> is a recommended value for most cases to consider two Strings of being similar.
+	 * A threshold of <code>0.7</code> is a recommended value for most cases to consider two Strings of being
+	 * similar.
 	 * 
 	 * @return Whether the similarity satisfies the threshold.
 	 */
@@ -115,14 +119,16 @@ class RegexEvaluationEnvironment extends EcoreEvaluationEnvironment {
 		} else if (b.toLowerCase().equals(a.toLowerCase())) { // equal ignoring case
 			similarity = 0.9;
 		} else if (b.toLowerCase().contains(a.toLowerCase())) { // containment ignoring case
-			if (threshold > 0.9)
+			if (threshold > 0.9) {
 				return false; // we can get at most 0.9 here!
+			}
 			similarity = 0.4 + 1.25 * al / (bl + 2 * al);
 		} else {
-			if (threshold > 0.5)
+			if (threshold > 0.5) {
 				return false; // we can get at most 0.5 here!
+			}
 			final int distance = LevenshteinDistance.calculateDistance(a, b); // else
-			similarity = 0.5 - (double) distance / 2d / bl;
+			similarity = 0.5 - distance / 2d / bl;
 		}
 		// System.out.println(a + " , " + b + " --> " + similarity);
 		return similarity >= threshold;

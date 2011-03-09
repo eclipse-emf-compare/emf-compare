@@ -27,7 +27,7 @@ public class GenericApplyActivator extends Plugin {
 
 	// The shared instance
 	private static GenericApplyActivator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -38,6 +38,7 @@ public class GenericApplyActivator extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -47,6 +48,7 @@ public class GenericApplyActivator extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -54,13 +56,13 @@ public class GenericApplyActivator extends Plugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static GenericApplyActivator getDefault() {
 		return plugin;
 	}
-	
+
 	// //////////// SOME LOGGING
 
 	public void logError(String error) {

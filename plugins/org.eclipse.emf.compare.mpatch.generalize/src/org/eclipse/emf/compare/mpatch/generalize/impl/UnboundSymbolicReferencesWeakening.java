@@ -21,10 +21,10 @@ import org.eclipse.emf.compare.mpatch.symrefs.ElementSetReference;
 import org.eclipse.emf.ecore.EReference;
 
 /**
- * This Unbound Symbolic References generalization changes the upper bound to unlimited of all symbolic references of
- * type {@link ElementSetReference}. In other words, all changes are not only applicable once but might be applied
- * several times. In order to make it work, the symbolic references themselves should also be weakened, e.g. by the
- * {@link ScopeExpansion} transformation.
+ * This Unbound Symbolic References generalization changes the upper bound to unlimited of all symbolic
+ * references of type {@link ElementSetReference}. In other words, all changes are not only applicable once
+ * but might be applied several times. In order to make it work, the symbolic references themselves should
+ * also be weakened, e.g. by the {@link ScopeExpansion} transformation.
  * 
  * @author Patrick Koenemann (pk@imm.dtu.dk)
  */
@@ -47,7 +47,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getLabel() {
 		return LABEL;
 	}
@@ -55,7 +54,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String getDescription() {
 		return DESCRIPTION;
 	}
@@ -63,7 +61,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public int getPriority() {
 		return 10;
 	}
@@ -71,7 +68,6 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isOptional() {
 		return true;
 	}
@@ -80,14 +76,13 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 	 * This weakening generalization changes the upper bound to unlimited of all symbolic references of type
 	 * {@link ElementSetReference}.
 	 */
-	@Override
 	public int transform(MPatchModel mpatch) {
 		return weakenBounds(mpatch);
 	}
 
 	/**
-	 * Set {@link IElementReference#setUpperBound(int)} to <code>-1</code> for all weakenable symbolic references.
-	 * {@link WeakeningHelper} is used to determine those references.
+	 * Set {@link IElementReference#setUpperBound(int)} to <code>-1</code> for all weakenable symbolic
+	 * references. {@link WeakeningHelper} is used to determine those references.
 	 * 
 	 * @return The number of symbolic references whose upper bounds were updated.
 	 */
@@ -96,9 +91,11 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 		for (IElementReference ref : WeakeningHelper.getWeakenableSymbolicReferences(mpatch)) {
 
 			// not all symbolic references allow unbound resolutions
-			if (isWeakenable((IElementReference) ref))
-				if (ref.setUpperBound(-1))
+			if (isWeakenable(ref)) {
+				if (ref.setUpperBound(-1)) {
 					counter++;
+				}
+			}
 		}
 		return counter;
 	}
@@ -113,22 +110,26 @@ public class UnboundSymbolicReferencesWeakening implements IMPatchTransformation
 		// only these types of symrefs are weakenable:
 		if (ref instanceof ElementSetReference || ref instanceof ModelDescriptorReference) {
 
-			if (ref.eContainer() == null)
+			if (ref.eContainer() == null) {
 				throw new IllegalArgumentException(MPatchConstants.SYMBOLIC_REFERENCE_NAME
 						+ " must be contained somewhere: " + ref);
+			}
 			final EReference feature = ref.eContainmentFeature();
 
 			// all corresponding elements are weakenable
-			if (MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT.equals(feature))
+			if (MPatchPackage.Literals.INDEP_CHANGE__CORRESPONDING_ELEMENT.equals(feature)) {
 				return true;
+			}
 
 			// changed references
-			if (MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE.equals(feature))
+			if (MPatchPackage.Literals.INDEP_ADD_REM_REFERENCE_CHANGE__CHANGED_REFERENCE.equals(feature)) {
 				return true;
+			}
 
 			// cross references in model descriptors
-			if (DescriptorPackage.Literals.EREFERENCE_TO_ELEMENT_REFERENCE_MAP__VALUE.equals(feature))
+			if (DescriptorPackage.Literals.EREFERENCE_TO_ELEMENT_REFERENCE_MAP__VALUE.equals(feature)) {
 				return true;
+			}
 		}
 
 		return false;
