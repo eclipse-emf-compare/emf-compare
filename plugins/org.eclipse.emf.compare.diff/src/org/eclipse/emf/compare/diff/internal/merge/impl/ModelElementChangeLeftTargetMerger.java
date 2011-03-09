@@ -95,7 +95,7 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 			if (op instanceof ReferenceChangeLeftTarget) {
 				final ReferenceChangeLeftTarget link = (ReferenceChangeLeftTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
-				if (link.getRightTarget().equals(element)) {
+				if (link.getRightTarget() != null && link.getRightTarget().equals(element)) {
 					link.setLeftTarget(newOne);
 				}
 			} else if (op instanceof ReferenceOrderChange) {
