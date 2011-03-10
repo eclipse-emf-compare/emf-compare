@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.diff.service.IDiffEngineSelector;
 import org.eclipse.emf.compare.match.service.IMatchEngineSelector;
 import org.eclipse.emf.compare.match.service.MatchEngineDescriptor;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
@@ -58,8 +59,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 						result = dialog.getResult()[0];
 					}
 				} else {
-					throw new EMFCompareException(EMFCompareUIMessages
-							.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
+					throw new EMFCompareException(
+							EMFCompareUIMessages.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
 				}
 
 				return result;
@@ -94,8 +95,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 						result = dialog.getResult()[0];
 					}
 				} else {
-					throw new EMFCompareException(EMFCompareUIMessages
-							.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
+					throw new EMFCompareException(
+							EMFCompareUIMessages.getString("VisualEngineSelector.Dialog.Cancel")); //$NON-NLS-1$
 				}
 
 				return result;
@@ -128,8 +129,11 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 				if (descriptor.getIcon().length() > 0) {
 					final String contributor = descriptor.getElement().getDeclaringExtension()
 							.getNamespaceIdentifier();
-					image = AbstractUIPlugin.imageDescriptorFromPlugin(contributor, descriptor.getIcon())
-							.createImage();
+					ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(contributor,
+							descriptor.getIcon());
+					if (imageDescriptor != null) {
+						image = imageDescriptor.createImage();
+					}
 				}
 			} else if (element instanceof DiffEngineDescriptor) {
 				final DiffEngineDescriptor descriptor = (DiffEngineDescriptor)element;
@@ -137,8 +141,11 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 				if (descriptor.getIcon().length() > 0) {
 					final String contributor = descriptor.getElement().getDeclaringExtension()
 							.getNamespaceIdentifier();
-					image = AbstractUIPlugin.imageDescriptorFromPlugin(contributor, descriptor.getIcon())
-							.createImage();
+					ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(contributor,
+							descriptor.getIcon());
+					if (imageDescriptor != null) {
+						image = imageDescriptor.createImage();
+					}
 				}
 			}
 
