@@ -12,8 +12,8 @@
   <rm:locator pattern="^org\.eclipse\.gmf(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.gef(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.draw2d(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="indigo-staging"/>
+  <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="orbit"/>
+  <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^javax(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator searchPathRef="platform"/>
@@ -39,11 +39,18 @@
       </rm:uri>
     </rm:provider>
   </rm:searchPath>
+  <rm:searchPath name="orbit">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+      <rm:uri format="{0}/tools/orbit/downloads/drops/S20110304120314/repository">
+        <bc:propertyRef key="eclipse.download"/>
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>  
   <rm:searchPath name="platform">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:uri format="{0}/eclipse/updates/3.7milestones">
         <bc:propertyRef key="eclipse.download"/>
       </rm:uri>
     </rm:provider>
-  </rm:searchPath>  
+  </rm:searchPath>   
 </rm:rmap>
