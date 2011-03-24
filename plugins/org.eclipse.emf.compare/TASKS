@@ -1,0 +1,55 @@
+___ TODO ___
+ - complete documentation and tutorials
+      - coding a match engine
+      - extending diff metamodel
+ - cleaning up API, Extensible Factor system for generic engine
+ - supporting dependencies design for merging
+ - weight annotations for metamodels
+ 
+___ DONE ___
+27/11/2007 - API broken for match engines : added method in interface org.eclipse.emf.compare.match.api.MatchEngine for content comparison.
+07/11/2007 - DiffService, MatchService and MergeService modified to allow full standalone usage
+05/11/2007 - Enabled internationalization
+29/10/2007 - Merger API greatly modified. A new extension point appears to provide a list of merger associated to DiffElements.
+	- org.eclipse.emf.compare.diff.merge.service.MergeService has been modified and is now the main mean of merging.
+	- Events are now fired before and after 1) a merge operation (merging of one or more diffs) and 2) a diff merge (for each difference).
+		Clients can register listeners for these event via MergeService#addMergeListener(IMergeListener).
+	- org.eclipse.emf.compare.diff.merge.service.MergeFactory has been modified and will now parse registered extensions to check for provided mergers.
+	- about MergerProviders and priorities, priority takes precedence over file extension :
+		- plugin A provides mergers for its own DiffElements (DiffB, DiffC) and overrides the behavior of core DiffElement (DiffA), all with "normal" priority and targeted to uml extensions (.uml)
+		- plugin B provides mergers overriding the behavior of core DiffElements (DiffA) with priority "high" and target to all file extensions (*)
+		- for an uml model (model.uml) the merger used for DiffB and DiffC will be the ones provided by plugin A, whereas  DiffA will be merged with the merger provided by plugin B
+		- when two plugins provide distinct mergers for the same DiffElement with the same priority, file extension takes precedence
+26/10/2007 - priorities of all contributed extensions (match engine, diff engine, ...) is now "lowest"
+18/10/2007 - created preferences to ignore XMI ID when comparing and to supress drawing of differences markers
+16/10/2007 - modified match to allow an options map to be passed as argument
+04/10/2007 - UI package refactoring
+	org.eclipse.emf.compare.ui.contentmergeviewer.* => org.eclipse.emf.compare.ui.viewer.content.*
+	org.eclipse.emf.compare.ui.contentprovider.PropertyContentProvider => org.eclipse.emf.compare.ui.viewer.content.part.property.PropertyContentProvider
+	org.eclipse.emf.compare.ui.contentprovider.ModelStructureMergeContentProvider => org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeContentProvider
+	org.eclipse.emf.compare.ui.contentprovider.ModelContentMergeContentProvider => org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider
+	org.eclipse.emf.compare.ui.structuremergeviewer.* => org.eclipse.emf.compare.ui.viewer.structure.*
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeViewerPart => org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeViewerPart
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergeTreePart => org.eclipse.emf.compare.ui.viewer.content.part.tree.ModelContentMergeTreePart
+	org.eclipse.emf.compare.ui.viewerparts.ModelContentMergePropertyPart => org.eclipse.emf.compare.ui.viewer.content.part.property.ModelContentMergePropertyPart
+14/08/2007 - using functional ID through Ecore ID
+14/08/2007 - diff extension API
+14/08/2007 - export diff as API
+30/07/2007 - (DRAFT) - export diff as... extension point
+30/07/2007 - 3 Way compare
+10/07/2007 - suppress unused code
+05/07/2007 - better browsing when using XMI_ID
+28/06/2007 - merge on moveoperation
+14/06/2007 - cleanup GUI 
+07/06/2007 - open .diff files with compare editor
+10/05/2007 - (LAURENT) dynamic icons for diff model using the element icons
+23/04/2007 - remove UML2 dependencie for icons and use item providers for others
+17/04/2007 - hierarchy in diff model
+16/04/2007 - handle the case where many elements still need to be mapped 
+ without reaching a n^n complexity => using a max window
+16/04/2007 - use StringBuffer
+13/04/2007 - maplists should map with the best matching of the list (not the first)
+13/04/2007 - filter unused metamodel elements  (for instance many stuffs in UML are not really used in models..)
+12/04/2007 - progress monitor and cancel support
+12/04/2007 - cleaning up UI (remove uneeded buttons, diagram tabs...)
+12/04/2007 - save diff action

@@ -127,8 +127,8 @@ public final class MatchService {
 	 */
 	public static MatchModel doMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> options) throws InterruptedException {
-		final IMatchEngine engine = getBestMatchEngine(leftRoot.eResource(), rightRoot.eResource(),
-				ancestor.eResource());
+		final IMatchEngine engine = getBestMatchEngine(leftRoot.eResource(), rightRoot.eResource(), ancestor
+				.eResource());
 		final MatchModel result = engine.modelMatch(leftRoot, rightRoot, ancestor, options);
 		engine.reset();
 		return result;
@@ -241,8 +241,8 @@ public final class MatchService {
 		applyExternalFilter(scopeProvider);
 
 		final List<Resource> remainingLeftResources = new ArrayList<Resource>(leftResourceSet.getResources());
-		final List<Resource> remainingRightResources = new ArrayList<Resource>(
-				rightResourceSet.getResources());
+		final List<Resource> remainingRightResources = new ArrayList<Resource>(rightResourceSet
+				.getResources());
 
 		applyScopeFilter(leftScope, remainingLeftResources);
 		applyScopeFilter(rightScope, remainingRightResources);
@@ -329,10 +329,10 @@ public final class MatchService {
 		final IMatchScope ancestorScope = scopeProvider.getAncestorScope();
 		applyExternalFilter(scopeProvider);
 		final List<Resource> remainingLeftResources = new ArrayList<Resource>(leftResourceSet.getResources());
-		final List<Resource> remainingRightResources = new ArrayList<Resource>(
-				rightResourceSet.getResources());
-		final List<Resource> remainingAncestorResources = new ArrayList<Resource>(
-				ancestorResourceSet.getResources());
+		final List<Resource> remainingRightResources = new ArrayList<Resource>(rightResourceSet
+				.getResources());
+		final List<Resource> remainingAncestorResources = new ArrayList<Resource>(ancestorResourceSet
+				.getResources());
 		applyScopeFilter(leftScope, remainingLeftResources);
 		applyScopeFilter(rightScope, remainingRightResources);
 		applyScopeFilter(ancestorScope, remainingAncestorResources);
