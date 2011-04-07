@@ -6,7 +6,7 @@
          name="EMF Compare Model Provider"
          point="org.eclipse.core.resources.modelProviders">
       <modelProvider
-            class="org.eclipse.emf.compare.logical.EMFModelProvider">
+            class="org.eclipse.emf.compare.logical.model.EMFModelProvider">
       </modelProvider>
       <enablement>
          <and>
@@ -33,11 +33,21 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="org.eclipse.emf.compare.logical.ContentTypePropertyTester"
+            class="org.eclipse.emf.compare.logical.common.ContentTypePropertyTester"
             id="org.eclipse.emf.compare.contentTypeTester"
             namespace="org.eclipse.emf.compare.contentType"
             properties="contentTypeId"
             type="org.eclipse.core.resources.IResource">
       </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.emf.compare.logical.model.EMFModelProvider"
+            class="org.eclipse.emf.compare.logical.adapter.EMFAdapterFactory">
+         <adapter
+               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
+         </adapter>
+      </factory>
    </extension>
 </plugin>
