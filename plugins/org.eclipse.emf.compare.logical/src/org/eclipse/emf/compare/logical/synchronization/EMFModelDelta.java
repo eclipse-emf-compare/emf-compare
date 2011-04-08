@@ -102,28 +102,14 @@ public class EMFModelDelta extends EMFDelta {
 	@Override
 	public void clear() {
 		super.clear();
-		// FIXME is this really where the unloading should be done?
-		if (localResourceSet != null) {
-			for (Resource resource : localResourceSet.getResources()) {
-				resource.unload();
-			}
-			localResourceSet.getResources().clear();
-			localResourceSet = null;
-		}
-		if (remoteResourceSet != null) {
-			for (Resource resource : remoteResourceSet.getResources()) {
-				resource.unload();
-			}
-			remoteResourceSet.getResources().clear();
-			remoteResourceSet = null;
-		}
-		if (ancestorResourceSet != null) {
-			for (Resource resource : ancestorResourceSet.getResources()) {
-				resource.unload();
-			}
-			ancestorResourceSet.getResources().clear();
-			ancestorResourceSet = null;
-		}
+
+		/*
+		 * FIXME we're nulling out the references, but the resource mapping isn't disposed ... where could we
+		 * unload the resources?
+		 */
+		localResourceSet = null;
+		remoteResourceSet = null;
+		ancestorResourceSet = null;
 	}
 
 	/**
@@ -179,8 +165,8 @@ public class EMFModelDelta extends EMFDelta {
 
 		// Extract the emf and physcial resources from the scope
 		ResourceMapping[] mappings = context.getScope().getMappings();
-		Set<Resource> emfResourcesInScope = new LinkedHashSet<Resource>(mappings.length);
-		Set<IResource> iResourcesInScope = new LinkedHashSet<IResource>(mappings.length);
+		Set<Resource> emfResourcesInScope = new LinkedHashSet<Resource>();
+		Set<IResource> iResourcesInScope = new LinkedHashSet<IResource>();
 		for (ResourceMapping mapping : mappings) {
 			if (modelProviderId.equals(mapping.getModelProviderId()) && mapping instanceof EMFResourceMapping) {
 				Object modelObject = ((EMFResourceMapping)mapping).getModelObject();
