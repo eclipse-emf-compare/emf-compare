@@ -12,22 +12,22 @@ package org.eclipse.emf.compare.logical.synchronization;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.internal.events.ResourceDelta;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.IDiffTree;
@@ -37,22 +37,25 @@ import org.eclipse.team.core.mapping.IResourceDiff;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 
 /**
- * This class will serve as a super class of all elements describing deltas between EMF models.
+ * This class will serve as the root of our logical model deltas.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
-public class EMFModelDelta {
-	/** Children of this delta. */
-	private final List<EMFModelDelta> children = new ArrayList<EMFModelDelta>();
-
-	/** Parent of this delta. */
-	private EMFModelDelta parent;
-
+public class EMFModelDelta extends EMFDelta {
 	/** Identifier of the model provider for which this delta has been created. */
 	private String modelProviderId;
 
 	/** Synchronization context of this delta. */
 	private ISynchronizationContext context;
+
+	/** Keeps track of the local resource set for which this instance holds deltas. */
+	private ResourceSet localResourceSet;
+
+	/** Keeps track of the remote resource set for which this instance holds deltas. */
+	private ResourceSet remoteResourceSet;
+
+	/** Keeps track of the ancestor resource set for which this instance holds deltas. */
+	private ResourceSet ancestorResourceSet;
 
 	/**
 	 * Creates the root of our model delta.
@@ -63,21 +66,9 @@ public class EMFModelDelta {
 	 *            Identifier of the model provider for which this delta should be created.
 	 */
 	private EMFModelDelta(ISynchronizationContext context, String modelProviderId) {
+		super(null);
 		this.modelProviderId = modelProviderId;
 		this.context = context;
-	}
-
-	/**
-	 * Creates a new child delta under the given parent.
-	 * 
-	 * @param parent
-	 *            Parent of the new delta. Can be <code>null</code> for root deltas.
-	 */
-	private EMFModelDelta(EMFModelDelta parent) {
-		this.parent = parent;
-		if (parent != null) {
-			parent.addChild(this);
-		}
 	}
 
 	/**
@@ -88,21 +79,103 @@ public class EMFModelDelta {
 	 *            Synchronization context of this delta.
 	 * @param modelProviderId
 	 *            Identifier of the model provider for which this delta should be created.
+	 * @param monitor
+	 *            Monitor on which to display progress information.
 	 * @return The created Synchronization delta.
+	 * @throws CoreException
+	 *             Thrown when the comparison failed somehow.
 	 */
-	public static EMFModelDelta createDelta(ISynchronizationContext context, String modelProviderId) {
+	public static EMFModelDelta createDelta(ISynchronizationContext context, String modelProviderId,
+			IProgressMonitor monitor) throws CoreException {
 		EMFModelDelta delta = new EMFModelDelta(context, modelProviderId);
 
-		delta.initialize();
+		delta.initialize(monitor);
 
 		return delta;
 	}
 
 	/**
-	 * This will be called internally to create or reset the comparison delta.
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#clear()
 	 */
-	private void initialize() {
-		children.clear();
+	@Override
+	public void clear() {
+		super.clear();
+		// FIXME is this really where the unloading should be done?
+		if (localResourceSet != null) {
+			for (Resource resource : localResourceSet.getResources()) {
+				resource.unload();
+			}
+			localResourceSet.getResources().clear();
+			localResourceSet = null;
+		}
+		if (remoteResourceSet != null) {
+			for (Resource resource : remoteResourceSet.getResources()) {
+				resource.unload();
+			}
+			remoteResourceSet.getResources().clear();
+			remoteResourceSet = null;
+		}
+		if (ancestorResourceSet != null) {
+			for (Resource resource : ancestorResourceSet.getResources()) {
+				resource.unload();
+			}
+			ancestorResourceSet.getResources().clear();
+			ancestorResourceSet = null;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#getAncestor()
+	 */
+	@Override
+	public Object getAncestor() {
+		return ancestorResourceSet;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#getLocal()
+	 */
+	@Override
+	public Object getLocal() {
+		return localResourceSet;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#getRemote()
+	 */
+	@Override
+	public Object getRemote() {
+		return remoteResourceSet;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#getDiff()
+	 */
+	@Override
+	public IDiff getDiff() {
+		return null;
+	}
+
+	/**
+	 * This will be called internally to create or reset the comparison delta.
+	 * 
+	 * @param monitor
+	 *            Monitor on which to display progress information.
+	 * @throws CoreException
+	 *             Thrown if we did not manage to load the remote resources.
+	 */
+	private void initialize(IProgressMonitor monitor) throws CoreException {
+		clear();
 
 		// Extract the emf and physcial resources from the scope
 		ResourceMapping[] mappings = context.getScope().getMappings();
@@ -118,9 +191,11 @@ public class EMFModelDelta {
 
 			}
 		}
-		if (emfResourcesInScope.size() != iResourcesInScope.size()) {
+		if (emfResourcesInScope.size() <= 0 || emfResourcesInScope.size() != iResourcesInScope.size()) {
 			// FIXME throw exception
 		}
+
+		initializeResourceSets(emfResourcesInScope.iterator().next().getResourceSet());
 
 		// Compute the delta for each resource
 		IDiffTree diffTree = context.getDiffTree();
@@ -134,7 +209,7 @@ public class EMFModelDelta {
 
 			if (delta != null && delta.getKind() != IDiff.NO_CHANGE) {
 				if (delta instanceof IThreeWayDiff) {
-					handleThreeWayDiff((IThreeWayDiff)delta, emfResource);
+					handleThreeWayDiff((IThreeWayDiff)delta, emfResource, monitor);
 				} else {
 					// FIXME handleTwoWayDiff()
 				}
@@ -143,41 +218,70 @@ public class EMFModelDelta {
 	}
 
 	/**
+	 * This will be called once from {@link #initialize(IProgressMonitor)} in order to set the local, remote
+	 * and ancestor to their respective values.
+	 * 
+	 * @param local
+	 *            The local resource set.
+	 */
+	private void initializeResourceSets(ResourceSet local) {
+		localResourceSet = local;
+		remoteResourceSet = createResourceSet(local);
+		ancestorResourceSet = createResourceSet(local);
+	}
+
+	/**
 	 * Handles three-way deltas.
 	 * 
 	 * @param delta
 	 *            The delta we are to build EMF deltas for.
+	 * @param localVariant
+	 *            Local variant of the resource being compared.
+	 * @param monitor
+	 *            Monitor on which to display progress information.
+	 * @throws CoreException
+	 *             Thrown if we did not manage to load the remote variants of the resource.
 	 */
-	private void handleThreeWayDiff(IThreeWayDiff delta, Resource localVariant) {
+	private void handleThreeWayDiff(IThreeWayDiff delta, Resource localVariant, IProgressMonitor monitor)
+			throws CoreException {
 		IResourceDiff remoteChange = (IResourceDiff)delta.getRemoteChange();
+		URI resourceURI = localVariant.getURI();
 		if (remoteChange != null) {
 			IFileRevision remoteVariant = remoteChange.getAfterState();
-			Resource remoteResource = loadRemoteResource(localResource, remoteVariant.getStorage(monitor));
+			Resource remoteResource = loadRemoteResource(remoteResourceSet, resourceURI,
+					remoteVariant.getStorage(monitor));
 
 			IFileRevision baseVariant = remoteChange.getBeforeState();
-			Resource baseResource = createRemoteResource(localResource, baseVariant.getStorage(monitor));
+			Resource ancestorResource = loadRemoteResource(ancestorResourceSet, resourceURI,
+					baseVariant.getStorage(monitor));
 
-			ResourceDelta resourceDelta = new ResourceDelta(this, localResource, baseResource,
-					remoteResource, delta);
-			DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, baseResource);
+			EMFResourceDelta resourceDelta = new EMFResourceDelta(this, delta, localVariant, remoteResource,
+					ancestorResource);
+			// FIXME
+			// DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, ancestorResource);
 		} else {
-			// FIXME No remote change. for now, assume that remote == base
+			// FIXME No remote change; thus no remote resource. For now, assume that remote == base.
 			IResourceDiff localChange = (IResourceDiff)(delta).getLocalChange();
 
 			IFileRevision baseVariant = localChange.getBeforeState();
-			Resource remoteResource = createRemoteResource(localResource, baseVariant.getStorage(monitor));
-			Resource baseResource = createRemoteResource(localResource, baseVariant.getStorage(monitor));
+			Resource remoteResource = loadRemoteResource(remoteResourceSet, resourceURI,
+					baseVariant.getStorage(monitor));
+			Resource ancestorResource = loadRemoteResource(ancestorResourceSet, resourceURI,
+					baseVariant.getStorage(monitor));
 
-			ResourceDelta resourceDelta = new ResourceDelta(this, localResource, baseResource,
-					remoteResource, delta);
-			DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, baseResource);
+			EMFResourceDelta resourceDelta = new EMFResourceDelta(this, delta, localVariant, remoteResource,
+					ancestorResource);
+			// FIXME
+			// DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, ancestorResource);
 		}
 	}
 
 	/**
 	 * This will try and load a resoruce corresponding to the given local variant from the given storage.
 	 * 
-	 * @param localVariant
+	 * @param resourceSet
+	 *            The resource set in which to load the model.
+	 * @param resourceURI
 	 *            Local variant of the resource we need read from <em>storage</em>.
 	 * @param storage
 	 *            The storage from which to read a remote resource.
@@ -185,17 +289,9 @@ public class EMFModelDelta {
 	 * @throws CoreException
 	 *             Thrown if we did not manage to load the specified resource from the specified storage.
 	 */
-	private Resource loadRemoteResource(Resource localVariant, IStorage storage) throws CoreException {
-		// "copy" the local resource set for the remote variant
-		ResourceSet localResourceSet = localVariant.getResourceSet();
-
-		ResourceSet resourceSet = new ResourceSetImpl();
-		resourceSet.setPackageRegistry(localResourceSet.getPackageRegistry());
-		resourceSet.setResourceFactoryRegistry(localResourceSet.getResourceFactoryRegistry());
-		resourceSet.setURIConverter(localResourceSet.getURIConverter());
-
-		URI localURI = localVariant.getURI();
-		Resource remoteResource = resourceSet.createResource(localURI);
+	private Resource loadRemoteResource(ResourceSet resourceSet, URI resourceURI, IStorage storage)
+			throws CoreException {
+		Resource remoteResource = resourceSet.createResource(resourceURI);
 
 		InputStream remoteStream = null;
 		try {
@@ -217,23 +313,21 @@ public class EMFModelDelta {
 	}
 
 	/**
-	 * Return all of the children of this delta.
+	 * Creates a new {@link ResourceSet} with the given <em>base</em>. This new resource set will share its
+	 * {@link EPackage.Registry package registry}, {@link Resource.Factory.Registry resource factory registry}
+	 * and {@link URIConverter URI converter} with the given <em>base</em>.
 	 * 
-	 * @return All of the children of this delta.
+	 * @param base
+	 *            The base resource set from which to copy registries.
+	 * @return The newly created resource set.
 	 */
-	public List<EMFModelDelta> getChildren() {
-		return new ArrayList<EMFModelDelta>(children);
-	}
+	private ResourceSet createResourceSet(ResourceSet base) {
+		ResourceSet resourceSet = new ResourceSetImpl();
 
-	/**
-	 * Adds a new child to this delta, making sure that the new child's parent reference point to
-	 * <code>this</code> aftewards.
-	 * 
-	 * @param child
-	 *            The child that is to be added to this delta.
-	 */
-	public void addChild(EMFModelDelta child) {
-		children.add(child);
-		child.parent = this;
+		resourceSet.setPackageRegistry(base.getPackageRegistry());
+		resourceSet.setResourceFactoryRegistry(base.getResourceFactoryRegistry());
+		resourceSet.setURIConverter(base.getURIConverter());
+
+		return resourceSet;
 	}
 }

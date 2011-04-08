@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.logical.synchronization;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.resources.mapping.ResourceMapping;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.SynchronizationCompareAdapter;
@@ -59,9 +60,11 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	 *            The context from which to retrieve comparison information.
 	 * @param monitor
 	 *            Monitor on which to display progress information.
+	 * @throws CoreException
+	 *             Thrown if the comparison failed somehow.
 	 */
-	public void initialize(ISynchronizationContext context, IProgressMonitor monitor) {
-		EMFModelDelta delta = EMFModelDelta.createDelta(context, modelProviderId);
+	public void initialize(ISynchronizationContext context, IProgressMonitor monitor) throws CoreException {
+		EMFModelDelta delta = EMFModelDelta.createDelta(context, modelProviderId, monitor);
 	}
 
 	/**

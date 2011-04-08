@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.logical.synchronization.view;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -99,7 +100,11 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 				}
 
 				if (emfCompareAdapter != null) {
-					emfCompareAdapter.initialize(context, monitor);
+					try {
+						emfCompareAdapter.initialize(context, monitor);
+					} catch (CoreException e) {
+						// FIXME we couldn't carry on with the comparison. Log and let Eclipse do its job
+					}
 				}
 
 				Display.getDefault().asyncExec(new Runnable() {

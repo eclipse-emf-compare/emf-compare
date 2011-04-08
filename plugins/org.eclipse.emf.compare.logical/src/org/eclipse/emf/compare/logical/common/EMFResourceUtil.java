@@ -14,6 +14,9 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -52,5 +55,30 @@ public final class EMFResourceUtil {
 			// FIXME handle this gracefully
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * This will try and find the {@link IResource} containing the given EMF {@link Resource}. Note that the
+	 * returned resource might not exist in the workspace if the EMF {@link Resource} has been loaded from a
+	 * repository.
+	 * 
+	 * @param eResource
+	 *            The logical resource for which we need a physical resource.
+	 * @return The {@link IResource} that contains the given EMF {@link Resource}.
+	 */
+	public static final IResource findIResource(Resource eResource) {
+		URI uri = eResource.getURI();
+		IResource iResource = null;
+		if (uri != null) {
+			if (uri.isPlatformResource()) {
+				IPath path = new Path(uri.trimFragment().toPlatformString(true));
+				iResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			} else {
+				// FIXME URI should be deresolved against the workspace root
+				IPath path = new Path(uri.trimFragment().path());
+				iResource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+			}
+		}
+		return iResource;
 	}
 }

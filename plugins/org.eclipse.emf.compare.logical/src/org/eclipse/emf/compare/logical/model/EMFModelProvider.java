@@ -53,7 +53,6 @@ public class EMFModelProvider extends ModelProvider {
 		 * TODO check that this also works when synchronizing a folder containing a fragmented model which
 		 * fragment(s) are located in another folder.
 		 */
-		// TODO what additional information can the context provide us?
 		if (resource instanceof IFile && resource.exists() && resource.isAccessible()) {
 			return getMappings((IFile)resource, monitor);
 		}
