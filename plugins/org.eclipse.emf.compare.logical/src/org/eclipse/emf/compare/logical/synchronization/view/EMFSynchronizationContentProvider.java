@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.synchronization.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceTraversal;
@@ -22,12 +25,15 @@ import org.eclipse.emf.compare.logical.common.EMFLogicalModelMessages;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFCompareAdapter;
+import org.eclipse.emf.compare.logical.synchronization.EMFDelta;
+import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
 import org.eclipse.emf.compare.logical.synchronization.EMFSaveableBuffer;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 import org.eclipse.team.ui.mapping.SynchronizationContentProvider;
@@ -41,6 +47,9 @@ import org.eclipse.team.ui.mapping.SynchronizationContentProvider;
 public class EMFSynchronizationContentProvider extends SynchronizationContentProvider {
 	/** This will be used to determine icons and labels of the EObjects. */
 	private final AdapterFactoryContentProvider delegateContentProvider;
+
+	/** Initialization is a long running process; and we do not want to initialize this more than once. */
+	private boolean isInitializing;
 
 	/**
 	 * Instantiates our content provider.
@@ -56,8 +65,8 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	public void dispose() {
-		super.dispose();
 		delegateContentProvider.dispose();
+		super.dispose();
 	}
 
 	/**
@@ -77,7 +86,7 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected boolean isInitialized(ISynchronizationContext context) {
-		return context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY) != null;
+		return !isInitializing && context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY) != null;
 	}
 
 	/**
@@ -87,36 +96,40 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected void requestInitialization(final ISynchronizationContext context) {
-		Job emfSynchronizationJob = new Job(EMFLogicalModelMessages.getString("synchronize.job.label")) { //$NON-NLS-1$
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				EMFCompareAdapter emfCompareAdapter = null;
-				ModelProvider modelProvider = getModelProvider();
-				if (modelProvider instanceof EMFModelProvider) {
-					Object adapter = modelProvider.getAdapter(ISynchronizationCompareAdapter.class);
-					if (adapter instanceof EMFCompareAdapter) {
-						emfCompareAdapter = (EMFCompareAdapter)adapter;
+		if (!isInitializing) {
+			isInitializing = true;
+			Job emfSynchronizationJob = new Job(EMFLogicalModelMessages.getString("synchronize.job.label")) { //$NON-NLS-1$
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					EMFCompareAdapter emfCompareAdapter = null;
+					ModelProvider modelProvider = getModelProvider();
+					if (modelProvider instanceof EMFModelProvider) {
+						Object adapter = modelProvider.getAdapter(ISynchronizationCompareAdapter.class);
+						if (adapter instanceof EMFCompareAdapter) {
+							emfCompareAdapter = (EMFCompareAdapter)adapter;
+						}
 					}
+
+					if (emfCompareAdapter != null) {
+						try {
+							emfCompareAdapter.initialize(context, monitor);
+						} catch (CoreException e) {
+							// FIXME we couldn't carry on with the comparison. Log and let Eclipse do its job
+						}
+					}
+
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							refresh();
+						}
+					});
+
+					isInitializing = false;
+					return Status.OK_STATUS;
 				}
-
-				if (emfCompareAdapter != null) {
-					try {
-						emfCompareAdapter.initialize(context, monitor);
-					} catch (CoreException e) {
-						// FIXME we couldn't carry on with the comparison. Log and let Eclipse do its job
-					}
-				}
-
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						refresh();
-					}
-				});
-
-				return Status.OK_STATUS;
-			}
-		};
-		emfSynchronizationJob.schedule();
+			};
+			emfSynchronizationJob.schedule();
+		}
 	}
 
 	/**
@@ -127,7 +140,20 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected Object[] getChildrenInContext(ISynchronizationContext context, Object parent, Object[] children) {
-		// FIXME Override this by browsing the EMF Delta
+		Object cachedDelta = context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
+		if (cachedDelta instanceof EMFModelDelta) {
+			EMFModelDelta delta = (EMFModelDelta)cachedDelta;
+			List<Object> childrenInScope = new ArrayList<Object>();
+			for (Object child : children) {
+				EMFDelta childDelta = delta.getChildDeltaFor(child);
+				if (childDelta != null
+						&& (childDelta.getKind() == IDiff.NO_CHANGE || includeDirection(childDelta
+								.getDirection()))) {
+					childrenInScope.add(child);
+				}
+			}
+			return childrenInScope.toArray(new Object[childrenInScope.size()]);
+		}
 		return super.getChildrenInContext(context, parent, children);
 	}
 

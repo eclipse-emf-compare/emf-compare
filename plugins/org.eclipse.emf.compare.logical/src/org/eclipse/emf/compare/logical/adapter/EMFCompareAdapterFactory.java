@@ -20,7 +20,7 @@ import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
-public class EMFAdapterFactory implements IAdapterFactory {
+public class EMFCompareAdapterFactory implements IAdapterFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -29,10 +29,9 @@ public class EMFAdapterFactory implements IAdapterFactory {
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		Object adapter = null;
-		if (adaptableObject instanceof EMFModelProvider) {
-			if (adapterType == ISynchronizationCompareAdapter.class) {
-				adapter = new EMFCompareAdapter(EMFModelProvider.PROVIDER_ID);
-			}
+		if (adaptableObject instanceof EMFModelProvider
+				&& adapterType == ISynchronizationCompareAdapter.class) {
+			adapter = new EMFCompareAdapter(EMFModelProvider.PROVIDER_ID);
 		}
 		return adapter;
 	}

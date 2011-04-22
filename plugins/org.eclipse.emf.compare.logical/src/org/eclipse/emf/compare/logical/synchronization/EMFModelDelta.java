@@ -10,30 +10,38 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.synchronization;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.compare.EMFCompareException;
+import org.eclipse.emf.compare.EMFComparePlugin;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
+import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
-import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
+import org.eclipse.emf.compare.match.metamodel.MatchFactory;
+import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
+import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.compare.ui.internal.VisualEngineSelector;
+import org.eclipse.emf.compare.util.EMFCompareMap;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.URIConverter;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.core.diff.IDiff;
 import org.eclipse.team.core.diff.IDiffTree;
-import org.eclipse.team.core.diff.IThreeWayDiff;
-import org.eclipse.team.core.history.IFileRevision;
-import org.eclipse.team.core.mapping.IResourceDiff;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 
 /**
@@ -56,6 +64,9 @@ public class EMFModelDelta extends EMFDelta {
 
 	/** Keeps track of the ancestor resource set for which this instance holds deltas. */
 	private ResourceSet ancestorResourceSet;
+
+	/** Cached result of this comparison. */
+	private ComparisonSnapshot comparisonSnapshot;
 
 	/**
 	 * Creates the root of our model delta.
@@ -90,8 +101,20 @@ public class EMFModelDelta extends EMFDelta {
 		EMFModelDelta delta = new EMFModelDelta(context, modelProviderId);
 
 		delta.initialize(monitor);
+		context.getCache().put(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY, delta);
 
 		return delta;
+	}
+
+	/**
+	 * This will return the cached delta within the given context.
+	 * 
+	 * @param context
+	 *            Context from which to retrieve the cached delta.
+	 * @return The cached delta.
+	 */
+	public static EMFModelDelta getDelta(ISynchronizationContext context) {
+		return (EMFModelDelta)context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
 	}
 
 	/**
@@ -101,8 +124,6 @@ public class EMFModelDelta extends EMFDelta {
 	 */
 	@Override
 	public void clear() {
-		super.clear();
-
 		/*
 		 * FIXME we're nulling out the references, but the resource mapping isn't disposed ... where could we
 		 * unload the resources?
@@ -110,6 +131,10 @@ public class EMFModelDelta extends EMFDelta {
 		localResourceSet = null;
 		remoteResourceSet = null;
 		ancestorResourceSet = null;
+
+		comparisonSnapshot = null;
+
+		super.clear();
 	}
 
 	/**
@@ -153,6 +178,74 @@ public class EMFModelDelta extends EMFDelta {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#getPath()
+	 */
+	@Override
+	public IPath getPath() {
+		return Path.EMPTY;
+	}
+
+	/**
+	 * Returns the underlying comparison snapshot.
+	 * 
+	 * @return The underlying comparison snapshot.
+	 */
+	public ComparisonSnapshot getComparisonSnapshot() {
+		return comparisonSnapshot;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.logical.synchronization.EMFDelta#createChildren()
+	 */
+	@Override
+	protected void createChildren() {
+		IDiffTree diffTree = context.getDiffTree();
+
+		if (comparisonSnapshot instanceof ComparisonResourceSetSnapshot) {
+			ComparisonResourceSetSnapshot resourceSetSnapshot = (ComparisonResourceSetSnapshot)comparisonSnapshot;
+
+			for (DiffModel diffModel : resourceSetSnapshot.getDiffResourceSet().getDiffModels()) {
+				// Are there any differences in this model?
+				if (diffModel.getSubchanges() <= 0) {
+					continue;
+				}
+
+				// Find all three resources
+				Resource local = null;
+				Resource remote = null;
+				Resource ancestor = null;
+				Iterator<EObject> leftRootsIterator = diffModel.getLeftRoots().iterator();
+				while (local == null && leftRootsIterator.hasNext()) {
+					EObject leftRoot = leftRootsIterator.next();
+					local = leftRoot.eResource();
+				}
+				Iterator<EObject> rightRootsIterator = diffModel.getRightRoots().iterator();
+				while (remote == null && rightRootsIterator.hasNext()) {
+					EObject rightRoot = rightRootsIterator.next();
+					remote = rightRoot.eResource();
+				}
+				Iterator<EObject> ancestorRootsIterator = diffModel.getAncestorRoots().iterator();
+				while (ancestor == null && ancestorRootsIterator.hasNext()) {
+					EObject ancestorRoot = ancestorRootsIterator.next();
+					ancestor = ancestorRoot.eResource();
+				}
+
+				IResource localResource = EMFResourceUtil.findIResource(local);
+				if (localResource != null) {
+					IDiff diff = diffTree.getDiff(localResource.getFullPath());
+					new EMFResourceDelta(this, diffModel, diff, local, remote, ancestor);
+				}
+			}
+		} else {
+			// We only allow for resource set comparisons
+		}
+	}
+
+	/**
 	 * This will be called internally to create or reset the comparison delta.
 	 * 
 	 * @param monitor
@@ -162,158 +255,88 @@ public class EMFModelDelta extends EMFDelta {
 	 */
 	private void initialize(IProgressMonitor monitor) throws CoreException {
 		clear();
+		// FIXME monitor.subTask("comparing models")
 
-		// Extract the emf and physcial resources from the scope
+		// Retrieve all three resource sets from the scope
 		ResourceMapping[] mappings = context.getScope().getMappings();
-		Set<Resource> emfResourcesInScope = new LinkedHashSet<Resource>();
-		Set<IResource> iResourcesInScope = new LinkedHashSet<IResource>();
 		for (ResourceMapping mapping : mappings) {
 			if (modelProviderId.equals(mapping.getModelProviderId()) && mapping instanceof EMFResourceMapping) {
-				Object modelObject = ((EMFResourceMapping)mapping).getModelObject();
-				if (modelObject instanceof Resource) {
-					emfResourcesInScope.add((Resource)modelObject);
-					iResourcesInScope.add(((EMFResourceMapping)mapping).getIResource());
-				}
-
+				localResourceSet = ((EMFResourceMapping)mapping).getLocalResourceSet();
+				remoteResourceSet = ((EMFResourceMapping)mapping).getRemoteResourceSet();
+				ancestorResourceSet = ((EMFResourceMapping)mapping).getAncestorResourceSet();
 			}
 		}
-		if (emfResourcesInScope.size() <= 0 || emfResourcesInScope.size() != iResourcesInScope.size()) {
-			// FIXME throw exception
-		}
 
-		initializeResourceSets(emfResourcesInScope.iterator().next().getResourceSet());
+		// Ask EMF Compare to compute the DiffModel
+		comparisonSnapshot = compare(localResourceSet, remoteResourceSet, ancestorResourceSet, monitor);
 
-		// Compute the delta for each resource
-		IDiffTree diffTree = context.getDiffTree();
-		Iterator<Resource> emfResourcesIterator = emfResourcesInScope.iterator();
-		Iterator<IResource> iResourcesIterator = iResourcesInScope.iterator();
-		while (emfResourcesIterator.hasNext() && iResourcesIterator.hasNext()) {
-			Resource emfResource = emfResourcesIterator.next();
-			IResource iResource = iResourcesIterator.next();
-
-			IDiff delta = diffTree.getDiff(iResource.getFullPath());
-
-			if (delta != null && delta.getKind() != IDiff.NO_CHANGE) {
-				if (delta instanceof IThreeWayDiff) {
-					handleThreeWayDiff((IThreeWayDiff)delta, emfResource, monitor);
-				} else {
-					// FIXME handleTwoWayDiff()
-				}
-			}
-		}
+		// Then prepare the delta
+		createChildren();
 	}
 
 	/**
-	 * This will be called once from {@link #initialize(IProgressMonitor)} in order to set the local, remote
-	 * and ancestor to their respective values.
+	 * This will delegate to the EMF Compare core in order to compare the logical model contained in the given
+	 * resource sets.
 	 * 
 	 * @param local
-	 *            The local resource set.
-	 */
-	private void initializeResourceSets(ResourceSet local) {
-		localResourceSet = local;
-		remoteResourceSet = createResourceSet(local);
-		ancestorResourceSet = createResourceSet(local);
-	}
-
-	/**
-	 * Handles three-way deltas.
-	 * 
-	 * @param delta
-	 *            The delta we are to build EMF deltas for.
-	 * @param localVariant
-	 *            Local variant of the resource being compared.
+	 *            The resource set containing the local variant of the logical model.
+	 * @param remote
+	 *            The resource set containing the remote variant of the logical model.
+	 * @param ancestor
+	 *            The resource set containing the ancestor variant of the logical model.
 	 * @param monitor
 	 *            Monitor on which to display progress information.
-	 * @throws CoreException
-	 *             Thrown if we did not manage to load the remote variants of the resource.
+	 * @return The result of this comparison.
 	 */
-	private void handleThreeWayDiff(IThreeWayDiff delta, Resource localVariant, IProgressMonitor monitor)
-			throws CoreException {
-		IResourceDiff remoteChange = (IResourceDiff)delta.getRemoteChange();
-		URI resourceURI = localVariant.getURI();
-		if (remoteChange != null) {
-			IFileRevision remoteVariant = remoteChange.getAfterState();
-			Resource remoteResource = loadRemoteResource(remoteResourceSet, resourceURI,
-					remoteVariant.getStorage(monitor));
-
-			IFileRevision baseVariant = remoteChange.getBeforeState();
-			Resource ancestorResource = loadRemoteResource(ancestorResourceSet, resourceURI,
-					baseVariant.getStorage(monitor));
-
-			EMFResourceDelta resourceDelta = new EMFResourceDelta(this, delta, localVariant, remoteResource,
-					ancestorResource);
-			// FIXME
-			// DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, ancestorResource);
-		} else {
-			// FIXME No remote change; thus no remote resource. For now, assume that remote == base.
-			IResourceDiff localChange = (IResourceDiff)(delta).getLocalChange();
-
-			IFileRevision baseVariant = localChange.getBeforeState();
-			Resource remoteResource = loadRemoteResource(remoteResourceSet, resourceURI,
-					baseVariant.getStorage(monitor));
-			Resource ancestorResource = loadRemoteResource(ancestorResourceSet, resourceURI,
-					baseVariant.getStorage(monitor));
-
-			EMFResourceDelta resourceDelta = new EMFResourceDelta(this, delta, localVariant, remoteResource,
-					ancestorResource);
-			// FIXME
-			// DELTA_TREE_BUILDER.buildDelta(resourceDelta, remoteResource, ancestorResource);
+	private ComparisonSnapshot compare(ResourceSet local, ResourceSet remote, ResourceSet ancestor,
+			IProgressMonitor monitor) {
+		// Note that the ancestor can legitimately be null
+		if (local == null || remote == null) {
+			// FIXME throw something at user's face
 		}
+
+		MatchService.setMatchEngineSelector(new VisualEngineSelector());
+		DiffService.setDiffEngineSelector(new VisualEngineSelector());
+
+		ComparisonSnapshot comparisonResult = doResourceSetCompare(local, remote, ancestor, monitor);
+
+		comparisonResult.setDate(Calendar.getInstance().getTime());
+
+		return comparisonResult;
 	}
 
-	/**
-	 * This will try and load a resoruce corresponding to the given local variant from the given storage.
-	 * 
-	 * @param resourceSet
-	 *            The resource set in which to load the model.
-	 * @param resourceURI
-	 *            Local variant of the resource we need read from <em>storage</em>.
-	 * @param storage
-	 *            The storage from which to read a remote resource.
-	 * @return The loaded resource.
-	 * @throws CoreException
-	 *             Thrown if we did not manage to load the specified resource from the specified storage.
-	 */
-	private Resource loadRemoteResource(ResourceSet resourceSet, URI resourceURI, IStorage storage)
-			throws CoreException {
-		Resource remoteResource = resourceSet.createResource(resourceURI);
+	private ComparisonSnapshot doResourceSetCompare(ResourceSet local, ResourceSet remote,
+			ResourceSet ancestor, IProgressMonitor monitor) {
+		final ComparisonResourceSetSnapshot snapshot = DiffFactory.eINSTANCE
+				.createComparisonResourceSetSnapshot();
+		snapshot.setDiffResourceSet(DiffFactory.eINSTANCE.createDiffResourceSet());
+		snapshot.setMatchResourceSet(MatchFactory.eINSTANCE.createMatchResourceSet());
 
-		InputStream remoteStream = null;
 		try {
-			remoteStream = storage.getContents();
-			remoteResource.load(remoteStream, Collections.emptyMap());
-		} catch (IOException e) {
-			// FIXME log
-		} finally {
-			if (remoteStream != null) {
-				try {
-					remoteStream.close();
-				} catch (IOException e) {
-					// FIXME log
-				}
+			final Map<String, Object> options = new EMFCompareMap<String, Object>();
+			options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+			final MatchResourceSet match;
+			if (ancestor == null) {
+				options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(local,
+						remote));
+				match = MatchService.doResourceSetMatch(local, remote, options);
+			} else {
+				options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(local,
+						remote, ancestor));
+				match = MatchService.doResourceSetMatch(local, remote, ancestor, options);
 			}
+
+			final DiffResourceSet diff = DiffService.doDiff(match, ancestor != null);
+			snapshot.setDiffResourceSet(diff);
+			snapshot.setMatchResourceSet(match);
+		} catch (final InterruptedException e) {
+			EMFComparePlugin.log(e, false);
+		} catch (final EMFCompareException e) {
+			EMFComparePlugin.log(e, false);
 		}
 
-		return remoteResource;
+		return snapshot;
 	}
 
-	/**
-	 * Creates a new {@link ResourceSet} with the given <em>base</em>. This new resource set will share its
-	 * {@link EPackage.Registry package registry}, {@link Resource.Factory.Registry resource factory registry}
-	 * and {@link URIConverter URI converter} with the given <em>base</em>.
-	 * 
-	 * @param base
-	 *            The base resource set from which to copy registries.
-	 * @return The newly created resource set.
-	 */
-	private ResourceSet createResourceSet(ResourceSet base) {
-		ResourceSet resourceSet = new ResourceSetImpl();
-
-		resourceSet.setPackageRegistry(base.getPackageRegistry());
-		resourceSet.setResourceFactoryRegistry(base.getResourceFactoryRegistry());
-		resourceSet.setURIConverter(base.getURIConverter());
-
-		return resourceSet;
-	}
 }

@@ -3,7 +3,7 @@
 <plugin>
    <extension
          id="org.eclipse.emf.compare.model.provider"
-         name="EMF Compare Model Provider"
+         name="EMF Compare"
          point="org.eclipse.core.resources.modelProviders">
       <modelProvider
             class="org.eclipse.emf.compare.logical.model.EMFModelProvider">
@@ -44,10 +44,60 @@
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.emf.compare.logical.model.EMFModelProvider"
-            class="org.eclipse.emf.compare.logical.adapter.EMFAdapterFactory">
+            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
          <adapter
                type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
          </adapter>
       </factory>
+   </extension>
+   
+   <extension
+         point="org.eclipse.compare.structureMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewerCreator"
+            extensions="EMF.TYPE"
+            id="org.eclipse.emf.compare.logical.ModelStructureMergeViewer"/>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewerCreator"
+            extensions="EMF.TYPE"
+            id="org.eclipse.emf.compare.logical.ModelContentMergeViewer"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding 
+         viewerId="org.eclipse.team.ui.navigatorViewer">                     
+         <includes>                     
+            <contentExtension   
+               pattern="org.eclipse.emf.compare.navigator.extension" 
+               isRoot="true"/> 
+         </includes>   
+       </viewerContentBinding>   
+   </extension>
+   <extension
+         point="org.eclipse.team.ui.teamContentProviders">
+      <teamContentProvider
+            contentExtensionId="org.eclipse.emf.compare.navigator.extension"
+            modelProviderId="org.eclipse.emf.compare.model.provider">
+      </teamContentProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            id="org.eclipse.emf.compare.navigator.extension"
+            contentProvider="org.eclipse.emf.compare.logical.synchronization.view.EMFSynchronizationContentProvider"
+            labelProvider="org.eclipse.emf.compare.logical.synchronization.view.EMFSynchronizationLabelProvider"
+            name="EMF Compare">
+         <enablement>
+           <or>         
+            <instanceof value="org.eclipse.emf.compare.logical.model.EMFModelProvider"/>
+            <instanceof value="org.eclipse.team.core.mapping.ISynchronizationScope"/>
+            <instanceof value="org.eclipse.team.core.mapping.ISynchronizationContext"/> 
+           </or>
+         </enablement>
+       </navigatorContent>
    </extension>
 </plugin>

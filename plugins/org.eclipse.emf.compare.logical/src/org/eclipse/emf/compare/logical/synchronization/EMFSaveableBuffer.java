@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.SaveableComparison;
 
 /**
@@ -30,6 +31,9 @@ import org.eclipse.team.ui.mapping.SaveableComparison;
 public class EMFSaveableBuffer extends SaveableComparison {
 	/** Cache key for the logical model buffer within the synchronization cache. */
 	public static final String SYNCHRONIZATION_CACHE_KEY = EMFModelProvider.PROVIDER_ID + ".sync.cache"; //$NON-NLS-1$
+
+	/** Cache key for our saveable comparison buffer. */
+	private static final String SAVEABLE_BUFFER = "org.eclipse.emf.compare.logical.saveable.buffer"; //$NON-NLS-1$
 
 	/** Human-readable name of this saveable. */
 	private final String name;
@@ -48,6 +52,35 @@ public class EMFSaveableBuffer extends SaveableComparison {
 	public EMFSaveableBuffer(String name, ResourceSet resourceSet) {
 		this.name = name;
 		this.resourceSet = resourceSet;
+	}
+
+	/**
+	 * Returns the saveable buffer cached within the given context.
+	 * 
+	 * @param context
+	 *            Context from which to retrieve the cached buffer.
+	 * @return The cached buffer.
+	 */
+	public static EMFSaveableBuffer getBuffer(ISynchronizationContext context) {
+		return (EMFSaveableBuffer)context.getCache().get(SAVEABLE_BUFFER);
+	}
+
+	/**
+	 * Creates a buffer and caches it in the given context.
+	 * 
+	 * @param context
+	 *            Context in which to cache our buffer.
+	 */
+	public static void createBuffer(ISynchronizationContext context) {
+		EMFModelDelta delta = EMFModelDelta.getDelta(context);
+		Object localObject = delta.getLocal();
+		if (localObject instanceof ResourceSet) {
+			// FIXME Where is this "name" displayed? externalize
+			context.getCache().put(SAVEABLE_BUFFER,
+					new EMFSaveableBuffer("EMF Compare", (ResourceSet)localObject));
+		} else {
+			// FIXME log
+		}
 	}
 
 	/**
