@@ -66,8 +66,10 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		((WizardNewFileCreationPage)getPage("newFilePage1")) //$NON-NLS-1$
-				.setFileName("result." + fileExtension); //$NON-NLS-1$
+		final WizardNewFileCreationPage wizardNewFileCreationPage = (WizardNewFileCreationPage)getPage("newFilePage1"); //$NON-NLS-1$
+		wizardNewFileCreationPage.setFileName("result." + fileExtension); //$NON-NLS-1$
+		wizardNewFileCreationPage.setAllowExistingResources(true);
+
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
 		// ensures no modification will be made to the input
-		input = (ComparisonSnapshot)EcoreUtil.copy(inputSnapshot);
+		input = EcoreUtil.copy(inputSnapshot);
 	}
 
 	/**
