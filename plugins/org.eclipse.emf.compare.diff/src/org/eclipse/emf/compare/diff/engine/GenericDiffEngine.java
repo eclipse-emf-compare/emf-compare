@@ -79,13 +79,14 @@ public class GenericDiffEngine implements IDiffEngine {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc}.
 	 * 
 	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
 	 *      boolean)
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
 		matchCrossReferencer = new EcoreUtil.CrossReferencer(match) {
+			/** Generic Serial ID. */
 			private static final long serialVersionUID = 1L;
 
 			/** initializer. */
@@ -247,8 +248,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		final EObject leftElement = matchElement.getLeftElement();
 		final EObject rightElement = matchElement.getRightElement();
 		if (leftElement.eContainmentFeature() != null && rightElement.eContainmentFeature() != null) {
-			if (!leftElement.eContainmentFeature().getName().equals(
-					rightElement.eContainmentFeature().getName())
+			if (!leftElement.eContainmentFeature().getName()
+					.equals(rightElement.eContainmentFeature().getName())
 					&& getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
 				createUpdateContainmentOperation(current, leftElement, rightElement);
 			}
@@ -275,21 +276,21 @@ public class GenericDiffEngine implements IDiffEngine {
 
 		final boolean leftChangedContainment = originElement.eContainmentFeature() != null
 				&& leftElement.eContainmentFeature() != null
-				&& !leftElement.eContainmentFeature().getName().equals(
-						originElement.eContainmentFeature().getName())
+				&& !leftElement.eContainmentFeature().getName()
+						.equals(originElement.eContainmentFeature().getName())
 				&& getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(
 						originElement.eContainer());
 		final boolean rightChangedContainment = originElement.eContainmentFeature() != null
 				&& rightElement.eContainmentFeature() != null
-				&& !rightElement.eContainmentFeature().getName().equals(
-						originElement.eContainmentFeature().getName())
+				&& !rightElement.eContainmentFeature().getName()
+						.equals(originElement.eContainmentFeature().getName())
 				&& getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(
 						originElement.eContainer());
 
 		// effective change
 		if (getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())
-				&& !leftElement.eContainmentFeature().getName().equals(
-						rightElement.eContainmentFeature().getName())) {
+				&& !leftElement.eContainmentFeature().getName()
+						.equals(rightElement.eContainmentFeature().getName())) {
 			// conflicting change
 			if (leftChangedContainment && rightChangedContainment) {
 				final UpdateContainmentFeature updateContainment = DiffFactory.eINSTANCE
@@ -616,8 +617,8 @@ public class GenericDiffEngine implements IDiffEngine {
 	 */
 	protected final EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
 		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
-			throw new IllegalArgumentException(EMFCompareDiffMessages
-					.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					EMFCompareDiffMessages.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
 		}
 		EObject matchedEObject = null;
 		final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);

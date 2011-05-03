@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.ui.viewer.content;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
@@ -156,24 +157,27 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 * @return <code>true</code> if the resource has related changes, <code>false</code> otherwise.
 	 */
 	private boolean hasChanged(Resource res, DiffResourceSet diffResourceSet, Side side) {
-		for (DiffModel diffModel : diffResourceSet.getDiffModels()) {
+		boolean changed = false;
+		final Iterator<DiffModel> diffIterator = diffResourceSet.getDiffModels().iterator();
+		while (!changed && diffIterator.hasNext()) {
+			final DiffModel diffModel = diffIterator.next();
 			// diff model does not have ref to its covered resource, so
 			// we have to indirectly check if the diff models root are within the contents of the resource
 			if (side == Side.LEFT) {
 				if (res.getContents().containsAll(diffModel.getLeftRoots())) {
-					return diffModel.getSubchanges() != 0;
+					changed = diffModel.getSubchanges() != 0;
 				}
 			} else if (side == Side.RIGHT) {
 				if (res.getContents().containsAll(diffModel.getRightRoots())) {
-					return diffModel.getSubchanges() != 0;
+					changed = diffModel.getSubchanges() != 0;
 				}
 			} else { // ancestor side
 				if (res.getContents().containsAll(diffModel.getAncestorRoots())) {
-					return diffModel.getSubchanges() != 0;
+					changed = diffModel.getSubchanges() != 0;
 				}
 			}
 		}
-		return false;
+		return changed;
 	}
 
 	/**

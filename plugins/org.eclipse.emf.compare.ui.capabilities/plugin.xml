@@ -20,8 +20,7 @@ Contributors:
       </activity>
       <activityPatternBinding
             activityId="org.eclipse.emf.compare.ui.capabilities"
-            pattern="org\.eclipse\.emf\.compare\.ui/.*">
-      </activityPatternBinding>
+            pattern="org\.eclipse\.emf\.compare\.ui.*"/>
       <categoryActivityBinding
             activityId="org.eclipse.emf.compare.ui.capabilities"
             categoryId="org.eclipse.categories.teamCategory">
