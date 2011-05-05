@@ -22,7 +22,6 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.EMFCompareMatchMessages;
@@ -207,11 +206,11 @@ public class GenericMatchEngine implements IMatchEngine {
 					rightObjectAncestorMatch.getMatchedElements());
 
 			// populates the unmatched elements list for later use
-			for (final Object unmatch : leftObjectAncestorMatch.getUnmatchedElements()) {
-				remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
+			for (final UnmatchElement unmatch : leftObjectAncestorMatch.getUnmatchedElements()) {
+				remainingUnmatchedElements.add(unmatch);
 			}
-			for (final Object unmatch : rightObjectAncestorMatch.getUnmatchedElements()) {
-				remainingUnmatchedElements.add(((UnmatchElement)unmatch).getElement());
+			for (final UnmatchElement unmatch : rightObjectAncestorMatch.getUnmatchedElements()) {
+				remainingUnmatchedElements.add(unmatch);
 			}
 			try {
 				Match3Elements subMatchRoot = null;
@@ -241,47 +240,10 @@ public class GenericMatchEngine implements IMatchEngine {
 				processNotFoundElements(root, subMatchRoot);
 				// #createSub3Match(MatchModel, Match3Element, Match2Elements,
 				// Match2Elements) will have updated "remainingUnmatchedElements"
-				final Set<EObject> remainingLeft = new LinkedHashSet<EObject>();
-				final Set<EObject> remainingRight = new LinkedHashSet<EObject>();
-				for (final EObject unmatched : remainingUnmatchedElements) {
-					if (unmatched.eResource() == leftObject.eResource()) {
-						remainingLeft.add(unmatched);
-						final TreeIterator<EObject> iterator = unmatched.eAllContents();
-						while (iterator.hasNext()) {
-							remainingLeft.add(iterator.next());
-						}
-					} else if (unmatched.eResource() == rightObject.eResource()) {
-						remainingRight.add(unmatched);
-						final TreeIterator<EObject> iterator = unmatched.eAllContents();
-						while (iterator.hasNext()) {
-							remainingRight.add(iterator.next());
-						}
-					}
-				}
-				stillToFindFromModel1.clear();
-				stillToFindFromModel2.clear();
-				final List<Match2Elements> mappings = mapLists(new ArrayList<EObject>(remainingLeft),
-						new ArrayList<EObject>(remainingRight), structuredOptions.getSearchWindow(), monitor);
-				for (final Match2Elements map : mappings) {
-					final Match3Elements subMatch = MatchFactory.eINSTANCE.createMatch3Elements();
-					subMatch.setLeftElement(map.getLeftElement());
-					subMatch.setRightElement(map.getRightElement());
-					if (subMatchRoot == null) {
-						redirectedAdd(root, MATCH_ELEMENT_NAME, subMatch);
-					} else {
-						redirectedAdd(subMatchRoot, SUBMATCH_ELEMENT_NAME, subMatch);
-					}
-				}
-				final Map<EObject, Boolean> unmatchedElements = new EMFCompareMap<EObject, Boolean>();
-				for (final EObject unmatch : stillToFindFromModel1) {
-					unmatchedElements.put(unmatch, false);
-					createThreeWayUnmatchElements(root, unmatchedElements, true);
-				}
-				unmatchedElements.clear();
-				for (final EObject remoteUnmatch : stillToFindFromModel2) {
-					unmatchedElements.put(remoteUnmatch, true);
-					createThreeWayUnmatchElements(root, unmatchedElements, false);
-				}
+				processSingleUnmatchedElements(leftObject.eResource(), rightObject.eResource(), root,
+						subMatchRoot, monitor);
+				processUnmatchedMatch2Elements(leftObject.eResource(), rightObject.eResource(), root,
+						subMatchRoot);
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, false);
 			} catch (final InterruptedException e) {
