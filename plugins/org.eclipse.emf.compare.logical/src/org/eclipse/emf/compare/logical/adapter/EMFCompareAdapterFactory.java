@@ -10,9 +10,16 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.adapter;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
+import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFCompareAdapter;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 
 /**
@@ -29,9 +36,17 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	@SuppressWarnings("rawtypes")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		Object adapter = null;
-		if (adaptableObject instanceof EMFModelProvider
-				&& adapterType == ISynchronizationCompareAdapter.class) {
-			adapter = new EMFCompareAdapter(EMFModelProvider.PROVIDER_ID);
+		if (adapterType == ISynchronizationCompareAdapter.class) {
+			if (adaptableObject instanceof EMFModelProvider || adaptableObject instanceof EObject
+					|| adaptableObject instanceof Resource) {
+				adapter = new EMFCompareAdapter(EMFModelProvider.PROVIDER_ID);
+			}
+		} else if (adapterType == ResourceMapping.class) {
+			if (adaptableObject instanceof EObject) {
+				adapter = createResourceMapping((EObject)adaptableObject);
+			} else if (adaptableObject instanceof Resource) {
+				adapter = createResourceMapping((Resource)adaptableObject);
+			}
 		}
 		return adapter;
 	}
@@ -44,5 +59,35 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	@SuppressWarnings("rawtypes")
 	public Class[] getAdapterList() {
 		return new Class[] {ISynchronizationCompareAdapter.class,};
+	}
+
+	/**
+	 * This will try and create a resource mapping for the given EObject.
+	 * 
+	 * @param eObject
+	 *            The EObject for which we need a resource mapping.
+	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
+	 */
+	private ResourceMapping createResourceMapping(EObject eObject) {
+		Resource eResource = eObject.eResource();
+		if (eResource != null) {
+			return createResourceMapping(eResource);
+		}
+		return null;
+	}
+
+	/**
+	 * This will try and create a resource mapping for the given Resource.
+	 * 
+	 * @param eResource
+	 *            The EMF Resource for which we need a resource mapping.
+	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
+	 */
+	private ResourceMapping createResourceMapping(Resource eResource) {
+		IResource iResource = EMFResourceUtil.findIResource(eResource);
+		if (iResource instanceof IFile) {
+			return new EMFResourceMapping((IFile)iResource, eResource, EMFModelProvider.PROVIDER_ID);
+		}
+		return null;
 	}
 }

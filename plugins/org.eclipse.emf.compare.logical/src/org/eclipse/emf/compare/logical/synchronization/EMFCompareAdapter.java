@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.synchronization;
 
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
@@ -18,13 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
-import org.eclipse.emf.compare.logical.EMFCompareInput;
-import org.eclipse.emf.compare.logical.EObjectTypedElement;
 import org.eclipse.emf.compare.logical.LogicalModelCompareInput;
-import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.SynchronizationCompareAdapter;
 import org.eclipse.ui.IMemento;
@@ -52,17 +47,31 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * @see org.eclipse.team.ui.mapping.SynchronizationCompareAdapter#hasCompareInput(org.eclipse.team.core.mapping.ISynchronizationContext,
+	 *      java.lang.Object)
+	 */
+	@Override
+	public boolean hasCompareInput(ISynchronizationContext context, Object object) {
+		EMFModelDelta delta = EMFModelDelta.getDelta(context);
+		return delta != null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
 	 * @see org.eclipse.team.ui.mapping.SynchronizationCompareAdapter#asCompareInput(org.eclipse.team.core.mapping.ISynchronizationContext,
 	 *      java.lang.Object)
 	 */
 	@Override
-	public ICompareInput asCompareInput(ISynchronizationContext context, Object o) {
+	public ICompareInput asCompareInput(ISynchronizationContext context, Object object) {
 		EMFModelDelta delta = EMFModelDelta.getDelta(context);
 
 		ICompareInput input = null;
 		if (delta != null) {
-			if (o instanceof EObject) {
-				input = asCompareInput(context, delta, (EObject)o);
+			if (object instanceof EObject) {
+				input = asCompareInput(context, delta, (EObject)object);
+			} else if (object instanceof Resource) {
+				input = asCompareInput(context, delta, (Resource)object);
 			} else {
 				input = asCompareInput(delta);
 			}
@@ -96,33 +105,25 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	 */
 	private ICompareInput asCompareInput(ISynchronizationContext context, EMFModelDelta modelDelta,
 			EObject object) {
-		EMFDelta delta = modelDelta.getChildDeltaFor(object);
-		if (delta == null) {
-			return asCompareInput(context, modelDelta);
-		}
+		// FIXME is there a way to set the initial selection of the compare editor? for now, ignore it.
+		return asCompareInput(modelDelta);
+	}
 
-		EMFSaveableBuffer buffer = EMFSaveableBuffer.getBuffer(context);
-		ILabelProvider labelProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
-
-		Object localObject = delta.getLocal();
-		Object remoteObject = delta.getRemote();
-		Object ancestorObject = delta.getAncestor();
-
-		ITypedElement local = null;
-		ITypedElement remote = null;
-		ITypedElement ancestor = null;
-
-		if (localObject instanceof EObject) {
-			local = new EObjectTypedElement((EObject)local, labelProvider);
-		}
-		if (remoteObject instanceof EObject) {
-			remote = new EObjectTypedElement((EObject)remote, labelProvider);
-		}
-		if (ancestorObject instanceof EObject) {
-			ancestor = new EObjectTypedElement((EObject)ancestor, labelProvider);
-		}
-
-		return new EMFCompareInput(buffer, delta, ancestor, local, remote);
+	/**
+	 * Creates a new Compare input for the given EMF Resource given the pre-computed delta.
+	 * 
+	 * @param context
+	 *            Context from which to extract the saveable buffer.
+	 * @param modelDelta
+	 *            Comparison delta from which to focus on a given EMF Resource.
+	 * @param resource
+	 *            The EMF Resource to focus on.
+	 * @return The created compare input.
+	 */
+	private ICompareInput asCompareInput(ISynchronizationContext context, EMFModelDelta modelDelta,
+			Resource resource) {
+		// FIXME is there a way to set the initial selection of the compare editor? for now, ignore it.
+		return asCompareInput(modelDelta);
 	}
 
 	/**

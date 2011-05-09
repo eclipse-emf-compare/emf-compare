@@ -49,6 +49,28 @@
                type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
          </adapter>
       </factory>
+<!--FIXME Remove this factory once tested : this will have to be configured per project on their elements.-->
+      <factory
+            adaptableType="org.eclipse.emf.ecore.EObject"
+            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
+         <adapter
+               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
+         </adapter>
+         <adapter
+               type="org.eclipse.core.resources.mapping.ResourceMapping">
+         </adapter>
+      </factory>
+<!--FIXME Remove this one too : this will have to be configured per project on their elements.-->
+      <factory
+            adaptableType="org.eclipse.emf.ecore.resource.Resource"
+            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
+         <adapter
+               type="org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter">
+         </adapter>
+         <adapter
+               type="org.eclipse.core.resources.mapping.ResourceMapping">
+         </adapter>
+      </factory>
    </extension>
    
    <extension
