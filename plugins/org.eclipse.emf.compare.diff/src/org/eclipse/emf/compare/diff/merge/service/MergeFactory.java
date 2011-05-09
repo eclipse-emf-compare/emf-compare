@@ -35,8 +35,9 @@ import org.eclipse.emf.ecore.EObject;
  * The merge factory allows the creation of a merger from any kind of {@link DiffElement}.
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @noextend This class is not intended to be subclassed by clients.
  */
-public final class MergeFactory {
+public abstract class MergeFactory {
 	/** Wild card for file extensions. */
 	private static final String ALL_EXTENSIONS = "*"; //$NON-NLS-1$
 
@@ -204,8 +205,8 @@ public final class MergeFactory {
 	 */
 	private static void parseExtensionMetadata() {
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-					MERGER_PROVIDER_EXTENSION_POINT).getExtensions();
+			final IExtension[] extensions = Platform.getExtensionRegistry()
+					.getExtensionPoint(MERGER_PROVIDER_EXTENSION_POINT).getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
 				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < configElements.length; j++) {
