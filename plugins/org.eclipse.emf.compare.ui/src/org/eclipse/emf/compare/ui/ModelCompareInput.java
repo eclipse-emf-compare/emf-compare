@@ -19,6 +19,9 @@ import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -64,6 +67,9 @@ public class ModelCompareInput implements ICompareInput {
 	/** The compare input we've originaly been fed. */
 	private ICompareInput initialInput;
 
+	/** If a comparison has already been made, this will hold the corresponding snapshot. */
+	private ComparisonSnapshot comparisonSnapshot;
+
 	/**
 	 * Creates a CompareInput given the resulting {@link org.eclipse.emf.compare.match.diff.match.MatchModel
 	 * match} and {@link org.eclipse.emf.compare.match.diff.diff.DiffModel diff} of the comparison.
@@ -104,8 +110,7 @@ public class ModelCompareInput implements ICompareInput {
 	 *            The input provider which has been used for this comparison.
 	 * @since 1.1
 	 */
-	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel,
-			ICompareInputDetailsProvider provider) {
+	public ModelCompareInput(MatchModel matchModel, DiffModel diffModel, ICompareInputDetailsProvider provider) {
 		this(matchModel, diffModel);
 		if (provider != null) {
 			leftResource = provider.getLeftResource();
@@ -136,6 +141,30 @@ public class ModelCompareInput implements ICompareInput {
 			ancestorResource = provider.getAncestorResource();
 			initialInput = provider.getCompareInput();
 		}
+	}
+
+	/**
+	 * Constructs a {@link ModelCompareInput} wrapped around the given Comparison snapshot.
+	 * 
+	 * @param snapshot
+	 *            Snapshot of the input's comparison.
+	 * @since 1.2
+	 */
+	public ModelCompareInput(ComparisonResourceSetSnapshot snapshot) {
+		this(snapshot.getMatchResourceSet(), snapshot.getDiffResourceSet());
+		this.comparisonSnapshot = snapshot;
+	}
+
+	/**
+	 * Constructs a {@link ModelCompareInput} wrapped around the given Comparison snapshot.
+	 * 
+	 * @param snapshot
+	 *            Snapshot of the input's comparison.
+	 * @since 1.2
+	 */
+	public ModelCompareInput(ComparisonResourceSnapshot snapshot) {
+		this(snapshot.getMatch(), snapshot.getDiff());
+		this.comparisonSnapshot = snapshot;
 	}
 
 	/**
@@ -202,7 +231,7 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement ancestor = null;
 		if (ancestorResource != null) {
 			if (ancestorResource.getContents().size() > 0) {
-				ancestor = new TypedElementWrapper(ancestorResource.getContents().get(0));
+				ancestor = createTypedElement(ancestorResource.getContents().get(0));
 			}
 		} else {
 			MatchModel matchModel = null;
@@ -212,7 +241,7 @@ public class ModelCompareInput implements ICompareInput {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
 			if (matchModel != null && !matchModel.getAncestorRoots().isEmpty()) {
-				ancestor = new TypedElementWrapper(matchModel.getAncestorRoots().get(0));
+				ancestor = createTypedElement(matchModel.getAncestorRoots().get(0));
 			}
 		}
 		return ancestor;
@@ -239,6 +268,16 @@ public class ModelCompareInput implements ICompareInput {
 			}
 		}
 		return ancestorResource;
+	}
+
+	/**
+	 * Returns the comparison snapshot initially fed to this compare input.
+	 * 
+	 * @return The comparison snapshot initially fed to this compare input.
+	 * @since 1.2
+	 */
+	public ComparisonSnapshot getComparisonSnapshot() {
+		return comparisonSnapshot;
 	}
 
 	/**
@@ -329,7 +368,7 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement left = null;
 		if (leftResource != null) {
 			if (leftResource.getContents().size() > 0) {
-				left = new TypedElementWrapper(leftResource.getContents().get(0));
+				left = createTypedElement(leftResource.getContents().get(0));
 			}
 		} else {
 			MatchModel matchModel = null;
@@ -339,9 +378,9 @@ public class ModelCompareInput implements ICompareInput {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
 			if (matchModel == null || matchModel.getLeftRoots().isEmpty()) {
-				left = new TypedElementWrapper(null);
+				left = createTypedElement(null);
 			} else {
-				left = new TypedElementWrapper(matchModel.getLeftRoots().get(0));
+				left = createTypedElement(matchModel.getLeftRoots().get(0));
 			}
 		}
 		return left;
@@ -407,7 +446,7 @@ public class ModelCompareInput implements ICompareInput {
 		ITypedElement right = null;
 		if (rightResource != null) {
 			if (rightResource.getContents().size() > 0) {
-				right = new TypedElementWrapper(rightResource.getContents().get(0));
+				right = createTypedElement(rightResource.getContents().get(0));
 			}
 		} else {
 			MatchModel matchModel = null;
@@ -417,9 +456,9 @@ public class ModelCompareInput implements ICompareInput {
 				matchModel = ((MatchResourceSet)match).getMatchModels().get(0);
 			}
 			if (matchModel == null || matchModel.getRightRoots().isEmpty()) {
-				right = new TypedElementWrapper(null);
+				right = createTypedElement(null);
 			} else {
-				right = new TypedElementWrapper(matchModel.getRightRoots().get(0));
+				right = createTypedElement(matchModel.getRightRoots().get(0));
 			}
 		}
 		return right;
@@ -495,5 +534,18 @@ public class ModelCompareInput implements ICompareInput {
 		for (final ICompareInputChangeListener listener : inputChangeListeners) {
 			listener.compareInputChanged(this);
 		}
+	}
+
+	/**
+	 * Creates the {@link ITypedElement} that is to be returned from all three of {@link #getAncestor()},
+	 * {@link #getLeft()} and {@link #getRight()}.
+	 * 
+	 * @param eObject
+	 *            EObject we are to wrap within an {@link ITypedElement}.
+	 * @return {@link ITypedElement} to be returned for this compare input's sides.
+	 * @since 1.2
+	 */
+	protected ITypedElement createTypedElement(EObject eObject) {
+		return new TypedElementWrapper(eObject);
 	}
 }

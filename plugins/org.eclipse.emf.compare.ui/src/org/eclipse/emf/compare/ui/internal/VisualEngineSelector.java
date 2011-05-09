@@ -129,8 +129,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 				if (descriptor.getIcon().length() > 0) {
 					final String contributor = descriptor.getElement().getDeclaringExtension()
 							.getNamespaceIdentifier();
-					ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(contributor,
-							descriptor.getIcon());
+					final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+							contributor, descriptor.getIcon());
 					if (imageDescriptor != null) {
 						image = imageDescriptor.createImage();
 					}
@@ -141,8 +141,8 @@ public class VisualEngineSelector implements IMatchEngineSelector, IDiffEngineSe
 				if (descriptor.getIcon().length() > 0) {
 					final String contributor = descriptor.getElement().getDeclaringExtension()
 							.getNamespaceIdentifier();
-					ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(contributor,
-							descriptor.getIcon());
+					final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+							contributor, descriptor.getIcon());
 					if (imageDescriptor != null) {
 						image = imageDescriptor.createImage();
 					}

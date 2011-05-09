@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -201,9 +202,16 @@ public class ModelStructureMergeViewer extends TreeViewer {
 
 		super.inputChanged(input, oldInput);
 		if (input != null) {
-			if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
-				final ComparisonSnapshot snapshot = ModelComparator.getComparator(configuration)
-						.getComparisonResult();
+			final ComparisonSnapshot snapshot;
+			if (input instanceof ModelCompareInput
+					&& ((ModelCompareInput)input).getComparisonSnapshot() != null) {
+				snapshot = ((ModelCompareInput)input).getComparisonSnapshot();
+			} else if (!(input instanceof ComparisonSnapshot) && input != oldInput) {
+				snapshot = ModelComparator.getComparator(configuration).getComparisonResult();
+			} else {
+				snapshot = null;
+			}
+			if (snapshot != null) {
 				Object match = null;
 				// check whether a resource or resource set comparison was performed
 				if (snapshot instanceof ComparisonResourceSnapshot) {
