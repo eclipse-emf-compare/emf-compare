@@ -30,8 +30,9 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * instances of classifiers.
  * 
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ * @noextend This class is not intended to be subclassed by clients.
  */
-public final class EFactory {
+public abstract class EFactory {
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */

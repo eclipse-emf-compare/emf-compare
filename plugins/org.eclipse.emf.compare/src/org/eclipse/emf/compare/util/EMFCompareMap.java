@@ -24,8 +24,8 @@ import org.eclipse.emf.compare.EMFCompareMessages;
 /**
  * Implementation of a map that stores its content using an hash table.
  * <p>
- * <it>Initial capacity</it> and <it>load factor</it> greatly affect the map's performances. <it>Capacity</it>
- * is the number of elements the map can contain and the <it>load factor</it> represents how much the hash
+ * <em>Initial capacity</em> and <em>load factor</em> greatly affect the map's performances. <em>Capacity</em>
+ * is the number of elements the map can contain and the <em>load factor</em> represents how much the hash
  * table can be filled before it is automatically rehashed.
  * </p>
  * <p>
@@ -212,7 +212,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 					result = true;
 					break;
 				} else if (value != null
-						&& (values[i] == value || (values[i] != null && values[i].equals(value)))) {
+						&& (values[i] == value || values[i] != null && values[i].equals(value))) {
 					result = true;
 					break;
 				}
@@ -448,7 +448,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 	 *            Desired number of additional elements.
 	 */
 	protected void checkCapacity(int desiredSlots) {
-		if (desiredSlots > (threshold - size())) {
+		if (desiredSlots > threshold - size()) {
 			resize(getNearestPrime((int)Math.ceil(desiredSlots + size() / loadFactor) + 1));
 		}
 	}
@@ -493,7 +493,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		} else if ((isPrime & 1) == 0) {
 			nearestPrime = getNearestPrime(isPrime + 1);
 		} else if (isPrime % 6 != 1 && isPrime % 6 != 5) {
-			nearestPrime = getNearestPrime(isPrime + 5 - (isPrime % 6));
+			nearestPrime = getNearestPrime(isPrime + 5 - isPrime % 6);
 		} else {
 			for (final int prime : FIRST_PRIMES) {
 				if (isPrime % prime == 0) {
@@ -525,7 +525,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 
 					boolean pass = false;
 					for (int j = 1; j < r; j++) {
-						if (y != (isPrime - 1)) {
+						if (y != isPrime - 1) {
 							pass = true;
 							break;
 						}
@@ -565,7 +565,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 		K current = keys[index];
 
 		if (current != null && (current == REMOVED_ENTRY || !equal(current, effectiveKey))) {
-			final int hashProbe = 1 + (hash % (length - 2));
+			final int hashProbe = 1 + hash % (length - 2);
 
 			while (current != null && (current == REMOVED_ENTRY || !equal(current, effectiveKey))) {
 				index -= hashProbe;
@@ -606,7 +606,7 @@ public class EMFCompareMap<K, V> implements Map<K, V>, Serializable, Cloneable {
 			return -index - 1;
 		else {
 			// This slot is already associated.
-			final int hashProbe = 1 + (hash % (length - 2));
+			final int hashProbe = 1 + hash % (length - 2);
 
 			if (current != REMOVED_ENTRY) {
 				while (current != null && current != REMOVED_ENTRY && !equal(current, key)) {
