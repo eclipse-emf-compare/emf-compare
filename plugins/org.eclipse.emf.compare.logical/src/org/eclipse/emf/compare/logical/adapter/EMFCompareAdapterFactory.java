@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFCompareAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 
 /**
@@ -46,6 +47,8 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 				adapter = createResourceMapping((EObject)adaptableObject);
 			} else if (adaptableObject instanceof Resource) {
 				adapter = createResourceMapping((Resource)adaptableObject);
+			} else if (adaptableObject instanceof IFile) {
+				adapter = createResourceMapping((IFile)adaptableObject);
 			}
 		}
 		return adapter;
@@ -87,6 +90,23 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 		IResource iResource = EMFResourceUtil.findIResource(eResource);
 		if (iResource instanceof IFile) {
 			return new EMFResourceMapping((IFile)iResource, eResource, EMFModelProvider.PROVIDER_ID);
+		}
+		return null;
+	}
+
+	/**
+	 * This will try and create a resource mapping for the given IFile.
+	 * 
+	 * @param iFile
+	 *            The IFile for which we need a resource mapping.
+	 * @return The resource mapping if it could be created, <code>null</code> otherwise.
+	 */
+	private ResourceMapping createResourceMapping(IFile iFile) {
+		if (iFile.exists() && iFile.isAccessible()) {
+			Resource eResource = EMFResourceUtil.getResource(iFile, new ResourceSetImpl());
+			if (eResource != null) {
+				return new EMFResourceMapping(iFile, eResource, EMFModelProvider.PROVIDER_ID);
+			}
 		}
 		return null;
 	}

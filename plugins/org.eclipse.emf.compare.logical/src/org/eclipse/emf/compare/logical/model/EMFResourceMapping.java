@@ -177,8 +177,13 @@ public class EMFResourceMapping extends ResourceMapping {
 					}
 				}
 
-				EcoreUtil.resolveAll(remoteResourceSet);
-				EcoreUtil.resolveAll(ancestorResourceSet);
+				// There is a chance that the resource did not exist on the repository
+				if (remoteResourceSet != null) {
+					EcoreUtil.resolveAll(remoteResourceSet);
+				}
+				if (ancestorResourceSet != null) {
+					EcoreUtil.resolveAll(ancestorResourceSet);
+				}
 			}
 
 			resolvePhysicalResources();

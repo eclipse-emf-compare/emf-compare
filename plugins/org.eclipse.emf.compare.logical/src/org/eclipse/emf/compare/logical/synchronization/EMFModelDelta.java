@@ -261,9 +261,13 @@ public class EMFModelDelta extends EMFDelta {
 		ResourceMapping[] mappings = context.getScope().getMappings();
 		for (ResourceMapping mapping : mappings) {
 			if (modelProviderId.equals(mapping.getModelProviderId()) && mapping instanceof EMFResourceMapping) {
-				localResourceSet = ((EMFResourceMapping)mapping).getLocalResourceSet();
-				remoteResourceSet = ((EMFResourceMapping)mapping).getRemoteResourceSet();
-				ancestorResourceSet = ((EMFResourceMapping)mapping).getAncestorResourceSet();
+				EMFResourceMapping emfMapping = (EMFResourceMapping)mapping;
+				if (emfMapping.getLocalResourceSet() != null && emfMapping.getRemoteResourceSet() != null
+						&& emfMapping.getAncestorResourceSet() != null) {
+					localResourceSet = emfMapping.getLocalResourceSet();
+					remoteResourceSet = emfMapping.getRemoteResourceSet();
+					ancestorResourceSet = emfMapping.getAncestorResourceSet();
+				}
 			}
 		}
 
