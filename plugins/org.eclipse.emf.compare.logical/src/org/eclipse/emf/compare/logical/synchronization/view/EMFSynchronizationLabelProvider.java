@@ -13,6 +13,9 @@ package org.eclipse.emf.compare.logical.synchronization.view;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.logical.synchronization.EMFDelta;
+import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
+import org.eclipse.emf.compare.logical.synchronization.EMFSaveableBuffer;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -65,10 +68,13 @@ public class EMFSynchronizationLabelProvider extends SynchronizationLabelProvide
 	 */
 	@Override
 	protected IDiff getDiff(Object element) {
-		/*
-		 * FIXME this is used to decorate icons with incoming, outgoing and conflict icons. Find a way to get
-		 * DiffElement and adapt it to an IDiff of the correct kind.
-		 */
+		Object cachedDelta = getContext().getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
+		if (cachedDelta instanceof EMFModelDelta) {
+			EMFDelta elementDelta = ((EMFModelDelta)cachedDelta).getChildDeltaFor(element);
+			if (elementDelta != null) {
+				return elementDelta.getDiff();
+			}
+		}
 		return super.getDiff(element);
 	}
 

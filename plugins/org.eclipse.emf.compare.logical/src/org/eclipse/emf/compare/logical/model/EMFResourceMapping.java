@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.logical.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,6 +30,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
 import org.eclipse.emf.compare.logical.common.RevisionedURIConverter;
+import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
+import org.eclipse.emf.compare.logical.extension.ModelResolverDescriptor;
+import org.eclipse.emf.compare.util.ModelIdentifier;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -54,7 +58,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	private final Resource emfResource;
 
 	/** Keep reference to the local resource set. */
-	private final ResourceSet localResourceSet;
+	private ResourceSet localResourceSet;
 
 	/** Keep reference to the remote resource set. */
 	private ResourceSet remoteResourceSet;
@@ -67,6 +71,9 @@ public class EMFResourceMapping extends ResourceMapping {
 
 	/** This will keep track of the {@link IResource}s this logical model spans. */
 	private Set<IResource> iResourcesInScope;
+
+	/** We will use this boolean to prevent us from resolving the full logical model more than once. */
+	private boolean isResolved;
 
 	/**
 	 * Instantiates our mapping given both the physical {@link IResource} and the logical {@link Resource}.
@@ -93,15 +100,6 @@ public class EMFResourceMapping extends ResourceMapping {
 	@Override
 	public Object getModelObject() {
 		return emfResource;
-	}
-
-	/**
-	 * Returns this mapping's physical resource.
-	 * 
-	 * @return This mapping's physical resource.
-	 */
-	public IResource getIResource() {
-		return file;
 	}
 
 	/**
@@ -140,32 +138,61 @@ public class EMFResourceMapping extends ResourceMapping {
 	@Override
 	public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor)
 			throws CoreException {
-		if (context instanceof RemoteResourceMappingContext) {
-			RemoteResourceMappingContext remoteContext = (RemoteResourceMappingContext)context;
+		if (!isResolved) {
+			resolveLocalResourceSet();
 
-			IStorage remoteContents = remoteContext.fetchRemoteContents(file, monitor);
-			IStorage ancestorContents = remoteContext.fetchBaseContents(file, monitor);
+			if (context instanceof RemoteResourceMappingContext) {
+				RemoteResourceMappingContext remoteContext = (RemoteResourceMappingContext)context;
 
-			if (remoteContents != null) {
-				remoteResourceSet = createRemoteResourceSet(file, remoteContents);
-				resolveRemoteResourceSet(emfResource.getURI(), remoteContents, remoteResourceSet);
+				for (Resource eResource : localResourceSet.getResources()) {
+					final IFile localFile;
+					if (eResource == emfResource) {
+						localFile = file;
+					} else {
+						localFile = (IFile)EMFResourceUtil.findIResource(eResource);
+					}
+
+					IStorage remoteContents = remoteContext.fetchRemoteContents(localFile, monitor);
+					IStorage ancestorContents = remoteContext.fetchBaseContents(localFile, monitor);
+
+					if (remoteContents != null) {
+						if (remoteResourceSet == null) {
+							remoteResourceSet = createRemoteResourceSet(localFile, remoteContents);
+						} else {
+							RevisionedURIConverter converter = (RevisionedURIConverter)remoteResourceSet
+									.getURIConverter();
+							converter.setStorage(remoteContents);
+						}
+						loadRemoteResource(eResource.getURI(), remoteContents, remoteResourceSet);
+					}
+					if (ancestorContents != null) {
+						if (ancestorResourceSet == null) {
+							ancestorResourceSet = createRemoteResourceSet(localFile, ancestorContents);
+						} else {
+							RevisionedURIConverter converter = (RevisionedURIConverter)ancestorResourceSet
+									.getURIConverter();
+							converter.setStorage(ancestorContents);
+						}
+						loadRemoteResource(eResource.getURI(), ancestorContents, ancestorResourceSet);
+					}
+				}
+
+				EcoreUtil.resolveAll(remoteResourceSet);
+				EcoreUtil.resolveAll(ancestorResourceSet);
 			}
-			if (ancestorContents != null) {
-				ancestorResourceSet = createRemoteResourceSet(file, ancestorContents);
-				resolveRemoteResourceSet(emfResource.getURI(), ancestorContents, ancestorResourceSet);
-			}
+
+			resolvePhysicalResources();
+
+			isResolved = true;
 		}
-
-		resolveLocalResourceSet();
 
 		/*
 		 * All of our resource sets are now fully resolved. Browse them to find all IResources than constitute
 		 * this logical model, whether they exist locally or not.
 		 */
-		Set<IResource> physicalResources = resolvePhysicalResources();
 
 		ResourceTraversal traversal = new ResourceTraversal(
-				physicalResources.toArray(new IResource[physicalResources.size()]), IResource.DEPTH_ONE,
+				iResourcesInScope.toArray(new IResource[iResourcesInScope.size()]), IResource.DEPTH_ONE,
 				IResource.NONE);
 
 		return new ResourceTraversal[] {traversal,};
@@ -252,15 +279,23 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * @return The list of all logical resources that constitute this model.
 	 */
 	private void resolveLocalResourceSet() {
-		if (localResourceSet != emfResource.getResourceSet()) {
-			// FIXME throw exception of some kind
+		Iterator<ModelResolverDescriptor> modelResolverIterator = EMFCompareExtensionRegistry
+				.getRegisteredModelResolvers().iterator();
+		boolean resolved = false;
+		while (!resolved && modelResolverIterator.hasNext()) {
+			ModelResolverDescriptor descriptor = modelResolverIterator.next();
+			if (descriptor.canResolve(new ModelIdentifier(emfResource))) {
+				descriptor.getModelResolver().resolve(file, emfResource);
+				resolved = true;
+			}
 		}
-		EcoreUtil.resolveAll(localResourceSet);
+		if (!resolved) {
+			EcoreUtil.resolveAll(localResourceSet);
+		}
 	}
 
 	/**
-	 * Loads the given <em>storage</em> as an EMF {@link Resource} in the given resource set, then resolve the
-	 * whole logical model.
+	 * Loads the given <em>storage</em> as an EMF {@link Resource} in the given resource set..
 	 * 
 	 * @param resourceURI
 	 *            URI of the resource contained in <em>storage</em>.
@@ -271,7 +306,7 @@ public class EMFResourceMapping extends ResourceMapping {
 	 * @throws CoreException
 	 *             Thrown if we cannot load this storage as an EMF {@link Resource}.
 	 */
-	private static void resolveRemoteResourceSet(URI resourceURI, IStorage storage, ResourceSet resourceSet)
+	private static void loadRemoteResource(URI resourceURI, IStorage storage, ResourceSet resourceSet)
 			throws CoreException {
 		Resource resource = resourceSet.createResource(resourceURI);
 
@@ -290,8 +325,6 @@ public class EMFResourceMapping extends ResourceMapping {
 				}
 			}
 		}
-
-		EcoreUtil.resolveAll(resourceSet);
 	}
 
 	/**

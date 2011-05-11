@@ -41,19 +41,33 @@ import org.eclipse.team.core.history.IFileRevision;
  */
 public class RevisionedURIConverter extends DelegatingURIConverter {
 	/** The revision of the base resource. This revision's timestamp will be used to resolve proxies. */
-	private final IFileRevision baseRevision;
+	private IFileRevision baseRevision;
 
 	/**
 	 * Instantiates our URI converter given its delegate.
 	 * 
 	 * @param delegate
 	 *            Our delegate URI converter.
+	 * @param storage
+	 *            IStorage of the base revision against which this URI converter should resolve URIs.
 	 * @throws CoreException
 	 *             This will be thrown if we couldn't adapt the given <em>storage</em> into a file revision.
 	 */
 	public RevisionedURIConverter(URIConverter delegate, IStorage storage) throws CoreException {
 		super(delegate);
 
+		setStorage(storage);
+	}
+
+	/**
+	 * Sets the storage of the base revision against which this URI converter is to resolve URIs.
+	 * 
+	 * @param storage
+	 *            IStorage of the base revision against which this URI converter should resolve URIs.
+	 * @throws CoreException
+	 *             This will be thrown if we couldn't adapt the given <em>storage</em> into a file revision.
+	 */
+	public void setStorage(IStorage storage) throws CoreException {
 		Object revision = storage.getAdapter(IFileRevision.class);
 		if (!(revision instanceof IFileRevision)) {
 			revision = Platform.getAdapterManager().getAdapter(storage, IFileRevision.class);
