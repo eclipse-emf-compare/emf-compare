@@ -399,14 +399,13 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			String text = null;
 			if (object instanceof AbstractDiffExtension) {
 				text = ((AbstractDiffExtension)object).getText();
-			} else {
-				if (object instanceof IFile) {
-					text = ((IFile)object).getName();
-				} else if (object instanceof Resource) {
-					text = ((Resource)object).getURI().lastSegment();
-				} else {
-					text = adapterProvider.getText(object);
-				}
+			} else if (object instanceof IFile) {
+				text = ((IFile)object).getName();
+			} else if (object instanceof Resource) {
+				text = ((Resource)object).getURI().lastSegment();
+			}
+			if (text == null || "".equals(text)) { //$NON-NLS-1$
+				text = adapterProvider.getText(object);
 			}
 			return text;
 		}
