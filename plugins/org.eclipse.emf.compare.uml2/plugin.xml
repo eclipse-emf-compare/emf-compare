@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.eclipse.org/emf/compare/diff/uml2/1.0"
+            class="org.eclipse.emf.compare.uml2diff.UML2DiffPackage"
+            genModel="model/diff_extension.genmodel"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.diff.engine">
+      <diffengine
+            engineClass="org.eclipse.emf.compare.uml2.diff.UML2DiffEngine"
+            fileExtension="uml"
+            label="UML2 Diff Engine"
+            priority="highest">
+      </diffengine>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.eclipse.emf.compare.uml2.match.UML2MatchEngine"
+            fileExtension="uml"
+            label="UML2 Match Engine"
+            priority="highest">
+      </matchengine>
+   </extension>
+
+</plugin>
