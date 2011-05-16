@@ -22,6 +22,8 @@ import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.ui.CompareTextDialog;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.export.ExportMenu;
 import org.eclipse.emf.compare.ui.internal.ModelComparator;
@@ -29,6 +31,10 @@ import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -40,10 +46,12 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -63,6 +71,13 @@ public class ModelStructureMergeViewer extends TreeViewer {
 
 	/** This is the action displaying the "export diff as..." menu. */
 	protected ExportMenu exportMenu;
+
+	/**
+	 * The Dialog for the text comparison.
+	 * 
+	 * @since 1.2
+	 */
+	protected CompareTextDialog textDialog;
 
 	/**
 	 * Allows us to ignore a selection event in the content viewer if it is one caused by a selection event in
@@ -143,7 +158,7 @@ public class ModelStructureMergeViewer extends TreeViewer {
 
 	/**
 	 * This will initialize the "save as emfdiff" action and put its icon in the {@link CompareViewerPane}
-	 * toolbar.
+	 * toolbar. It will also initializes the contextual menu for the text comparison action.
 	 */
 	protected void createToolItems() {
 		final ToolBarManager tbm = CompareViewerPane.getToolBarManager(getControl().getParent());
@@ -153,6 +168,48 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		tbm.add(new Separator("IO")); //$NON-NLS-1$
 		tbm.appendToGroup("IO", exportMenu); //$NON-NLS-1$
 		tbm.update(true);
+
+		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			/**
+			 * {@inheritDoc}
+			 * 
+			 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
+			 */
+			public void menuAboutToShow(IMenuManager manager) {
+				final Action action = new CompareTextAction();
+				action.setText(EMFCompareUIMessages.getString("CompareTextDialog_labelAction")); //$NON-NLS-1$
+
+				if (action.isEnabled())
+					manager.add(action);
+			}
+		});
+		final Menu menu = menuMgr.createContextMenu(getTree());
+		getTree().setMenu(menu);
+
+		getCompareConfiguration().getContainer().getWorkbenchPart().getSite()
+				.registerContextMenu(menuMgr, this);
+
+	}
+
+	/**
+	 * Returns the {@link UpdateAttribute} that is selected in the Tree if any.
+	 * 
+	 * @return The {@link UpdateAttribute} that is selected in the Tree if any, <code>null</code> otherwise.
+	 * @since 1.2
+	 */
+	protected UpdateAttribute getUpdateAttribute() {
+		final TreeItem[] items = getTree().getSelection();
+
+		if (items.length > 0) {
+			final TreeItem item = items[0];
+			if (item.getData() instanceof UpdateAttribute) {
+				return (UpdateAttribute)item.getData();
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -401,6 +458,63 @@ public class ModelStructureMergeViewer extends TreeViewer {
 				}
 			}
 			return text;
+		}
+	}
+
+	/**
+	 * Textual comparison action.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class CompareTextAction extends Action {
+		/**
+		 * Enhances visibility of the default constructor.
+		 */
+		public CompareTextAction() {
+			// Enhances visibility of the default constructor.
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.action.Action#isEnabled()
+		 */
+		@Override
+		public boolean isEnabled() {
+			final UpdateAttribute element = getUpdateAttribute();
+			if (element != null) {
+				return element.getAttribute().getEType().getInstanceClass().isAssignableFrom(String.class);
+			}
+			return false;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.action.Action#run()
+		 */
+		@Override
+		public void run() {
+			super.run();
+
+			final UpdateAttribute element = getUpdateAttribute();
+			if (element != null) {
+				if (textDialog != null) {
+					textDialog.setInput(element);
+					textDialog.getShell().setActive();
+				} else {
+					textDialog = new CompareTextDialog(getTree().getShell(), element,
+							ModelStructureMergeViewer.this, getInput());
+					textDialog.create();
+					textDialog.getShell().addDisposeListener(new DisposeListener() {
+						public void widgetDisposed(DisposeEvent e) {
+							textDialog = null;
+						}
+					});
+					textDialog.setBlockOnOpen(false);
+					textDialog.open();
+				}
+			}
 		}
 	}
 }

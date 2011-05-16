@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -59,5 +60,22 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+	}
+
+	/**
+	 * Returns the dialog settings section corresponding to the given <em>name</em>, creating it if needed.
+	 * 
+	 * @param name
+	 *            Name of the dialog settings section that is to be retrieved.
+	 * @return The dialog settings section corresponding to the given <em>name</em>, creating it if needed.
+	 * @since 1.2
+	 */
+	public IDialogSettings getDialogSettingsSection(String name) {
+		final IDialogSettings dialogSettings = getDialogSettings();
+		IDialogSettings section = dialogSettings.getSection(name);
+		if (section == null) {
+			section = dialogSettings.addNewSection(name);
+		}
+		return section;
 	}
 }

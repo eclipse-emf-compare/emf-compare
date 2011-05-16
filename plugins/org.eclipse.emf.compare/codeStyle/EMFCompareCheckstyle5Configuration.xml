@@ -328,7 +328,7 @@ Checkstyle 5.0 compatible
   <module name="RegexpSingleline">
     <property name="severity" value="error"/>
     <property name="id" value="illegal.regex.encoding"/>
-    <property name="format" value="[^a-zA-Z0-9_!:;,\.\+\(\)/\\\]\[{}\-\*&lt;&gt;%@\&amp; \|\t\n&quot;' =$#\r\?éèàê\^]"/>
+    <property name="format" value="[^a-zA-Z0-9_!:;,\.\+\(\)/\\\]\[{}\-\*&lt;&gt;%@\&amp; \|\t\n&quot;' =$#\r\?éèàê\^~]"/>
     <property name="message" value="Character could cause encoding issue."/>
   </module>
   <module name="SuppressionCommentFilter"/>
