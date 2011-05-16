@@ -12,6 +12,9 @@ package org.eclipse.emf.compare.logical.extension;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.emf.compare.util.ModelIdentifier;
 
 /**
@@ -142,13 +145,18 @@ public class ModelResolverDescriptor {
 			}
 		} else if (contentType != null) {
 			String[] validContentTypes = contentType.split(VALUE_SEPARATOR);
-			for (String validContentType : validContentTypes) {
-				canResolve = identifier.getContentType().equals(validContentType);
+			IContentTypeManager ctManager = Platform.getContentTypeManager();
+			for (int i = 0; i < validContentTypes.length && !canResolve; i++) {
+				IContentType expected = ctManager.getContentType(validContentTypes[i].trim());
+				IContentType actual = ctManager.getContentType(identifier.getContentType());
+				if (expected != null && actual != null) {
+					canResolve = actual.isKindOf(expected);
+				}
 			}
 		} else if (namespace != null) {
 			String[] validNamespaces = namespace.split(VALUE_SEPARATOR);
 			for (String validNamespace : validNamespaces) {
-				canResolve = identifier.getNamespace().matches(validNamespace);
+				canResolve = identifier.getNamespace().matches(validNamespace.trim());
 			}
 		}
 		return canResolve;

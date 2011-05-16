@@ -58,6 +58,11 @@ public class ContentTypePropertyTester extends PropertyTester {
 	 */
 	private boolean hasContentType(IFile resource, String contentTypeId) {
 		IContentTypeManager ctManager = Platform.getContentTypeManager();
+		IContentType expected = ctManager.getContentType(contentTypeId);
+		if (expected == null) {
+			return false;
+		}
+
 		InputStream resourceContent = null;
 		IContentType[] contentTypes = null;
 		try {
@@ -72,18 +77,19 @@ public class ContentTypePropertyTester extends PropertyTester {
 				try {
 					resourceContent.close();
 				} catch (IOException e) {
-					// would have already been catched by the outer try, leave the stream open
+					// would have already been caught by the outer try, leave the stream open
 				}
 			}
 		}
 
+		boolean hasContentType = false;
 		if (contentTypes != null) {
-			for (IContentType type : contentTypes) {
-				if (type.getId().equals(contentTypeId)) {
-					return true;
+			for (int i = 0; i < contentTypes.length && !hasContentType; i++) {
+				if (contentTypes[i].isKindOf(expected)) {
+					hasContentType = true;
 				}
 			}
 		}
-		return false;
+		return hasContentType;
 	}
 }

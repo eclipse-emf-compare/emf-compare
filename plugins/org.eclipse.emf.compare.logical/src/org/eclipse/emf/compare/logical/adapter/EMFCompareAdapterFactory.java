@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.logical.synchronization.EMFCompareAdapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 
@@ -89,7 +90,10 @@ public class EMFCompareAdapterFactory implements IAdapterFactory {
 	private ResourceMapping createResourceMapping(Resource eResource) {
 		IResource iResource = EMFResourceUtil.findIResource(eResource);
 		if (iResource instanceof IFile) {
-			return new EMFResourceMapping((IFile)iResource, eResource, EMFModelProvider.PROVIDER_ID);
+			// We'll use our own Resource Set to resolve the logical model
+			ResourceSet resourceSet = new ResourceSetImpl();
+			Resource emfResource = resourceSet.getResource(eResource.getURI(), true);
+			return new EMFResourceMapping((IFile)iResource, emfResource, EMFModelProvider.PROVIDER_ID);
 		}
 		return null;
 	}

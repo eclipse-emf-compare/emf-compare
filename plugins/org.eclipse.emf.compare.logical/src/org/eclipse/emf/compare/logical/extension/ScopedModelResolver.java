@@ -36,6 +36,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
 public class ScopedModelResolver implements IModelResolver {
+	/** Keeps track of the resources we've already walked up. */
+	private Set<Resource> walkedResources = new HashSet<Resource>();
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -114,6 +117,10 @@ public class ScopedModelResolver implements IModelResolver {
 	protected Set<Resource> findCrossReferencingResources(EcoreUtil.CrossReferencer crossReferencer,
 			Resource baseResource) {
 		Set<Resource> crossReferencingResources = new HashSet<Resource>();
+		if (walkedResources.contains(baseResource)) {
+			return crossReferencingResources;
+		}
+		walkedResources.add(baseResource);
 
 		for (EObject root : baseResource.getContents()) {
 			crossReferencingResources.addAll(findCrossReferencingResources(crossReferencer, root));
@@ -126,7 +133,7 @@ public class ScopedModelResolver implements IModelResolver {
 		}
 
 		// We also need to walk up the cross referencing tree of those cross referencing resources
-		for (Resource crossReferencing : crossReferencingResources) {
+		for (Resource crossReferencing : new HashSet<Resource>(crossReferencingResources)) {
 			crossReferencingResources
 					.addAll(findCrossReferencingResources(crossReferencer, crossReferencing));
 		}

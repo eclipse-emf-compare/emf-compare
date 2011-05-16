@@ -258,16 +258,50 @@ public class EMFModelDelta extends EMFDelta {
 		// FIXME monitor.subTask("comparing models")
 
 		// Retrieve all three resource sets from the scope
-		ResourceMapping[] mappings = context.getScope().getMappings();
+		ResourceMapping[] mappings = EMFCompareAdapter.getAdditionalMappings(context);
+		if (mappings == null) {
+			mappings = context.getScope().getMappings();
+		}
+
 		for (ResourceMapping mapping : mappings) {
 			if (modelProviderId.equals(mapping.getModelProviderId()) && mapping instanceof EMFResourceMapping) {
 				EMFResourceMapping emfMapping = (EMFResourceMapping)mapping;
-				if (emfMapping.getLocalResourceSet() != null && emfMapping.getRemoteResourceSet() != null
-						&& emfMapping.getAncestorResourceSet() != null) {
-					localResourceSet = emfMapping.getLocalResourceSet();
-					remoteResourceSet = emfMapping.getRemoteResourceSet();
-					ancestorResourceSet = emfMapping.getAncestorResourceSet();
+				ResourceSet local = emfMapping.getLocalResourceSet();
+				ResourceSet remote = emfMapping.getRemoteResourceSet();
+				ResourceSet ancestor = emfMapping.getAncestorResourceSet();
+				// If any one of these is null, continue on to the next mapping
+				if (local == null || remote == null || ancestor == null) {
+					// Continue
+				} else if (localResourceSet == null
+						|| localResourceSet.getResources().size() < local.getResources().size()) {
+					localResourceSet = local;
+					remoteResourceSet = remote;
+					ancestorResourceSet = ancestor;
 				}
+			}
+		}
+
+		/*
+		 * If all three resource sets were null on all mappings, try to force their resolution (called when
+		 * using right-click > compare with... actions from an EMF model editor).
+		 */
+		if (localResourceSet == null) {
+			// Seek an EMFResourceMapping
+			EMFResourceMapping emfMapping = null;
+			for (int i = 0; i < mappings.length && emfMapping == null; i++) {
+				ResourceMapping mapping = mappings[i];
+				if (modelProviderId.equals(mapping.getModelProviderId())
+						&& mapping instanceof EMFResourceMapping) {
+					emfMapping = (EMFResourceMapping)mapping;
+				}
+			}
+
+			if (emfMapping != null) {
+				emfMapping.forceResolving(context.getScope().getContext(), monitor);
+
+				localResourceSet = emfMapping.getLocalResourceSet();
+				remoteResourceSet = emfMapping.getRemoteResourceSet();
+				ancestorResourceSet = emfMapping.getAncestorResourceSet();
 			}
 		}
 

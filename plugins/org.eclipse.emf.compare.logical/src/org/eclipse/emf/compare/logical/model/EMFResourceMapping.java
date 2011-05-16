@@ -204,6 +204,25 @@ public class EMFResourceMapping extends ResourceMapping {
 	}
 
 	/**
+	 * Forces the re-resolution of this resource mapping in the given context.
+	 * 
+	 * @param context
+	 *            Context in which to replay the model resolving.
+	 * @param monitor
+	 *            Monitor on which to display progress information.
+	 * @throws CoreException
+	 *             Thrown if we cannot resolve the logical model in this context.
+	 */
+	public void forceResolving(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
+		isResolved = false;
+		remoteResourceSet = null;
+		ancestorResourceSet = null;
+		iResourcesInScope = null;
+
+		getTraversals(context, monitor);
+	}
+
+	/**
 	 * Returns the resource set in which the local variant of the logical model has been loaded.
 	 * 
 	 * @return The resource set in which the local variant of the logical model has been loaded.

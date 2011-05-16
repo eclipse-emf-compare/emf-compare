@@ -572,7 +572,7 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 								.getAdapterManager().getAdapter(modelProvider,
 										ISynchronizationCompareAdapter.class);
 						// FIXME until 345415 is fixed, we need to find the proper model provider from here...
-						// ... which requires non-API things.
+						// ... which requires access to non-API things.
 						final Field contextField = input.getClass().getDeclaredField("context"); //$NON-NLS-1$
 						contextField.setAccessible(true);
 						final ISynchronizationContext context = (ISynchronizationContext)contextField

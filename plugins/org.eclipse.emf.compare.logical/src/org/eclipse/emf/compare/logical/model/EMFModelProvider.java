@@ -15,11 +15,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -57,6 +59,18 @@ public class EMFModelProvider extends ModelProvider {
 			return getMappings((IFile)resource, monitor);
 		}
 		return super.getMappings(resource, context, monitor);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.core.resources.mapping.ModelProvider#validateChange(org.eclipse.core.resources.IResourceDelta,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IStatus validateChange(IResourceDelta delta, IProgressMonitor monitor) {
+		// FIXME code this
+		return super.validateChange(delta, monitor);
 	}
 
 	/**

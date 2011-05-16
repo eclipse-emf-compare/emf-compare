@@ -11,13 +11,17 @@
 package org.eclipse.emf.compare.logical.synchronization;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.logical.LogicalModelCompareInput;
+import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
@@ -33,6 +37,10 @@ import org.eclipse.ui.IMemento;
 public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	/** Identifier of the model this adapter will compare. */
 	private final String modelProviderId;
+
+	/** We may need to provide additional mappings to the scope. */
+	private static final String EMF_ADDITIONAL_MAPPINGS = EMFModelProvider.PROVIDER_ID
+			+ ".additional.mappings"; //$NON-NLS-1$
 
 	/**
 	 * Instantiates our adapter given the identifier of the logical model to compare.
@@ -65,6 +73,27 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	@Override
 	public ICompareInput asCompareInput(ISynchronizationContext context, Object object) {
 		EMFModelDelta delta = EMFModelDelta.getDelta(context);
+		if (delta == null) {
+			/*
+			 * We'll be here when using "Compare With" actions on a folder, then "open in compare editor" for
+			 * one of the files that are part of an EMF model.
+			 */
+			try {
+				final ResourceMapping[] mappings = context.getScope().getMappings();
+				if (object instanceof IResource
+						&& mappings.length == 1
+						&& "org.eclipse.core.resources.modelProvider".equals(mappings[0].getModelProviderId())) { //$NON-NLS-1$
+					ResourceMapping[] additionalMappings = ((EMFModelProvider)ModelProvider
+							.getModelProviderDescriptor(modelProviderId).getModelProvider()).getMappings(
+							(IResource)object, context.getScope().getContext(), new NullProgressMonitor());
+					context.getCache().put(EMFCompareAdapter.EMF_ADDITIONAL_MAPPINGS, additionalMappings);
+				}
+				initialize(context, new NullProgressMonitor());
+				delta = EMFModelDelta.getDelta(context);
+			} catch (CoreException e) {
+				// FIXME log
+			}
+		}
 
 		ICompareInput input = null;
 		if (delta != null) {
@@ -77,6 +106,17 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 			}
 		}
 		return input;
+	}
+
+	/**
+	 * If we needed to retrieve additional mappings for the given context's scope, this will return them.
+	 * 
+	 * @param context
+	 *            The context to check for additional mappings.
+	 * @return The additional mappings for the given context if any, <code>null</code> otherwise.
+	 */
+	public static ResourceMapping[] getAdditionalMappings(ISynchronizationContext context) {
+		return (ResourceMapping[])context.getCache().get(EMFCompareAdapter.EMF_ADDITIONAL_MAPPINGS);
 	}
 
 	/**
@@ -147,8 +187,7 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	 * @see org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter#restore(org.eclipse.ui.IMemento)
 	 */
 	public ResourceMapping[] restore(IMemento memento) {
-		// Don't restore
-		return null;
+		return new ResourceMapping[0];
 	}
 
 	/**

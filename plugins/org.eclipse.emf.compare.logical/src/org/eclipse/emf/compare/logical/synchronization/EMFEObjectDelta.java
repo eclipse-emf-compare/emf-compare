@@ -202,7 +202,17 @@ public class EMFEObjectDelta extends EMFDelta {
 			return false;
 		}
 
-		return EcoreUtil.getURI(localObject).equals(EcoreUtil.getURI((EObject)object));
+		// Local and remote could be null, but all three can not
+		final URI objectURI;
+		if (localObject != null) {
+			objectURI = EcoreUtil.getURI(localObject);
+		} else if (remoteObject != null) {
+			objectURI = EcoreUtil.getURI(remoteObject);
+		} else {
+			objectURI = EcoreUtil.getURI(ancestorObject);
+		}
+
+		return objectURI.equals(EcoreUtil.getURI((EObject)object));
 	}
 
 	/**

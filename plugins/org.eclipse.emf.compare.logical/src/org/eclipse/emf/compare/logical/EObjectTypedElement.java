@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -20,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
-public class EObjectTypedElement implements ITypedElement {
+public class EObjectTypedElement implements ITypedElement, IStreamContentAccessor {
 	/** This will be used as the type of our wrappers in order to determine the structure and content viewers. */
 	public static final String EMF_TYPE = "EMF.TYPE"; //$NON-NLS-1$
 
@@ -46,6 +51,19 @@ public class EObjectTypedElement implements ITypedElement {
 		this.eObject = eObject;
 		this.name = labelProvider.getText(eObject);
 		this.image = labelProvider.getImage(eObject);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IStreamContentAccessor#getContents()
+	 */
+	public InputStream getContents() throws CoreException {
+		/*
+		 * FIXME this method and its corresponding 'implements' have only been implemented here in order to
+		 * work around bug 293926. Remove this as soon as this bug is fixed.
+		 */
+		return new ByteArrayInputStream(new byte[] {' '});
 	}
 
 	/**

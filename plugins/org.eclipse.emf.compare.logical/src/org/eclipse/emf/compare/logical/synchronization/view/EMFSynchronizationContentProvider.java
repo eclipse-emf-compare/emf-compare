@@ -29,7 +29,7 @@ import org.eclipse.emf.compare.logical.synchronization.EMFDelta;
 import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
 import org.eclipse.emf.compare.logical.synchronization.EMFSaveableBuffer;
 import org.eclipse.emf.compare.util.AdapterUtils;
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Display;
@@ -186,17 +186,20 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected Object getModelRoot() {
+		ResourceSet modelRoot = null;
 		// Try and find the current resource set
 		ResourceMapping[] mappings = getScope().getMappings();
 		for (ResourceMapping mapping : mappings) {
 			if (EMFModelProvider.PROVIDER_ID.equals(mapping.getModelProviderId())
 					&& mapping instanceof EMFResourceMapping) {
-				Object modelObject = ((EMFResourceMapping)mapping).getModelObject();
-				if (modelObject instanceof Resource) {
-					return ((Resource)modelObject).getResourceSet();
+				EMFResourceMapping emfMapping = (EMFResourceMapping)mapping;
+				ResourceSet local = emfMapping.getLocalResourceSet();
+
+				if (modelRoot == null || modelRoot.getResources().size() < local.getResources().size()) {
+					modelRoot = local;
 				}
 			}
 		}
-		return null;
+		return modelRoot;
 	}
 }
