@@ -13,10 +13,12 @@ Contributors:
 <plugin>
    <extension-point id="org.eclipse.emf.compare.ui.export" name="org.eclipse.emf.compare.ui.export" schema="schema/org.eclipse.emf.compare.ui.export.exsd"/>
    <extension-point id="org.eclipse.emf.compare.ui.team.handler" name="org.eclipse.emf.compare.ui.team.handler" schema="schema/org.eclipse.emf.compare.team.handler.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.ui.diff.filter" name="org.eclipse.emf.compare.ui.diff.filter" schema="schema/org.eclipse.emf.compare.ui.diff.filter.exsd"/>
+   <extension-point id="org.eclipse.emf.compare.ui.diff.group" name="org.eclipse.emf.compare.ui.diff.group" schema="schema/org.eclipse.emf.compare.ui.diff.group.exsd"/>
    <extension
          point="org.eclipse.compare.contentMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewerCreator"
+            class="org.eclipse.emf.compare.ui.viewer.content.ParameterizedContentMergeViewerCreator"
             id="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"/>
       <contentTypeBinding
             contentMergeViewerId="org.eclipse.emf.compare.ui.contentmergeviewer.ModelContentMergeViewer"
@@ -32,7 +34,7 @@ Contributors:
    <extension
          point="org.eclipse.compare.structureMergeViewers">
       <viewer
-            class="org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewerCreator"
+            class="org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewerCreator"
             extensions="*"
             id="org.eclipse.emf.compare.ui.structuremergeviewer.ModelStructureMergeViewer"/>
       <contentTypeBinding
@@ -92,5 +94,41 @@ Contributors:
             class="org.eclipse.emf.compare.ui.internal.RevisionComparisonHandler"
             id="org.eclipse.emf.compare.ui.internal.HistoryComparisonHandler">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.diff.group">
+      <groupingFacility
+            class="org.eclipse.emf.compare.ui.viewer.group.ChangesKindGrouping"
+            id="changes.kind"
+            name="Per kind of changes">
+         <group
+               icon="additions"
+               id="additions"
+               name="additions">
+         </group>
+         <group
+               icon="removes"
+               id="removes"
+               name="removes">
+         </group>
+         <group
+               icon="updates"
+               id="updates"
+               name="updates">
+         </group>
+         <group
+               icon="others"
+               id="others"
+               name="others">
+         </group>
+      </groupingFacility>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.diff.filter">
+      <filter
+            class="org.eclipse.emf.compare.ui.viewer.filter.AddedFilter"
+            id="addElements"
+            name="Added elements">
+      </filter>
    </extension>
 </plugin>

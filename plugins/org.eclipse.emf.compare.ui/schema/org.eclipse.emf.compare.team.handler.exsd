@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.emf.compare.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.emf.compare.ui" id="org.eclipse.emf.compare.team.handler" name="org.eclipse.emf.compare.team.handler"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          This extension point is used to add specific code for resources handling when EMF Compare is called by given team providers. For example, subversive creates input that cannot be accessed without casting to their own classes, which would draw a dependency to them. Since this cannot be done within EMF Compare, an external team handler is necessary.
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -61,18 +61,18 @@
                <documentation>
                   The fully qualified name of an action extending &lt;code&gt;org.eclipse.emf.compare.ui.AbstractTeamHandler&lt;/code&gt;
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.emf.compare.ui.AbstractTeamHandler:"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          0.8
       </documentation>
@@ -81,5 +81,20 @@
 
 
 
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2006, 2011 Obeo.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+    Obeo - initial API and implementation
+      </documentation>
+   </annotation>
 
 </schema>

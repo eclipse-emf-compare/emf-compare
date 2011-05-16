@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui;
 
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterExtensionRegistryListener;
+import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterRegistry;
+import org.eclipse.emf.compare.ui.viewer.group.DifferenceGroupExtensionRegistryListener;
+import org.eclipse.emf.compare.ui.viewer.group.DifferenceGroupingFacilityRegistry;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -25,6 +31,12 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 
 	/** This plugin's shared instance. */
 	private static EMFCompareUIPlugin plugin;
+
+	/** The listener for the filters extension management. */
+	private static DifferenceFilterExtensionRegistryListener filterExtensionRegistryListener = new DifferenceFilterExtensionRegistryListener();
+
+	/** The listener for the groups extension management. */
+	private static DifferenceGroupExtensionRegistryListener groupExtensionRegistryListener = new DifferenceGroupExtensionRegistryListener();
 
 	/** Default Constructor. */
 	public EMFCompareUIPlugin() {
@@ -49,6 +61,16 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		registry.addListener(filterExtensionRegistryListener,
+				DifferenceFilterRegistry.DIFF_FILTER_EXTENSION_POINT);
+		DifferenceFilterRegistry.INSTANCE.parseInitialContributions();
+
+		registry.addListener(groupExtensionRegistryListener,
+				DifferenceGroupingFacilityRegistry.DIFF_GROUPING_EXTENSION_POINT);
+		DifferenceGroupingFacilityRegistry.INSTANCE.parseInitialContributions();
 	}
 
 	/**
@@ -59,6 +81,14 @@ public class EMFCompareUIPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+		registry.removeListener(filterExtensionRegistryListener);
+		DifferenceFilterRegistry.INSTANCE.clearRegistry();
+
+		registry.removeListener(groupExtensionRegistryListener);
+		DifferenceGroupingFacilityRegistry.INSTANCE.clearRegistry();
+
 		super.stop(context);
 	}
 

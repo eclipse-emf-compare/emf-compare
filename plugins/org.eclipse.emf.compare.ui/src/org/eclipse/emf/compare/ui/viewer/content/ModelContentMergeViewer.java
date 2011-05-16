@@ -247,34 +247,22 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	public Canvas getCenterPart() {
 		if (canvas == null && !getControl().isDisposed()) {
-			canvas = new AbstractCenterPart((Composite)getControl()) {
-				@Override
-				public void doPaint(GC gc) {
-					if (!ModelContentMergeViewer.shouldDrawDiffMarkers() || getInput() == null)
-						return;
-					final List<ModelContentMergeTabItem> leftVisible = leftPart.getVisibleElements();
-					final List<ModelContentMergeTabItem> rightVisible = rightPart.getVisibleElements();
-					final List<DiffElement> visibleDiffs = retainVisibleDiffs(leftVisible, rightVisible);
-					// we don't clear selection when the last diff is merged so this could happen
-					if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null) {
-						visibleDiffs.addAll(currentSelection);
-					}
-					for (final DiffElement diff : visibleDiffs) {
-						if (!(diff instanceof DiffGroup)) {
-							final ModelContentMergeTabItem leftUIItem = leftPart.getUIItem(diff);
-							final ModelContentMergeTabItem rightUIItem = rightPart.getUIItem(diff);
-							if (leftUIItem != null && rightUIItem != null) {
-								drawLine(gc, leftUIItem, rightUIItem);
-							}
-						}
-					}
-				}
-			};
+			canvas = getCenterCanvas();
 		}
 		if (canvas != null) {
 			canvas.moveAbove(null);
 		}
 		return canvas;
+	}
+
+	/**
+	 * Builds the {@link CenterCanvas}. This method is useful to be overridden.
+	 * 
+	 * @return The {@link CenterCanvas}.
+	 * @since 1.2
+	 */
+	protected CenterCanvas getCenterCanvas() {
+		return new CenterCanvas((Composite)getControl());
 	}
 
 	/**
@@ -854,8 +842,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	private void createPropertiesSyncHandlers(ModelContentMergeTabFolder... parts) {
 		if (parts.length < 2) {
-			throw new IllegalArgumentException(EMFCompareUIMessages
-					.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					EMFCompareUIMessages.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
 		}
 
 		// horizontal synchronization
@@ -876,8 +864,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 */
 	private void createTreeSyncHandlers(ModelContentMergeTabFolder... parts) {
 		if (parts.length < 2) {
-			throw new IllegalArgumentException(EMFCompareUIMessages
-					.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					EMFCompareUIMessages.getString("ModelContentMergeViewer.illegalSync")); //$NON-NLS-1$
 		}
 
 		handleHSync(leftPart.getTreePart(), rightPart.getTreePart(), ancestorPart.getTreePart());
@@ -1065,5 +1053,67 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		public void updateCenter() {
 			ModelContentMergeViewer.this.updateCenter();
 		}
+	}
+
+	/**
+	 * An AbstractCenterPart which computes the graphical lines that it has to draw in relation to the visible
+	 * difference elements.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 * @since 1.2
+	 */
+	public class CenterCanvas extends AbstractCenterPart {
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param parent
+		 *            The parent composite.
+		 */
+		public CenterCanvas(Composite parent) {
+			super(parent);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.ui.viewer.content.part.AbstractCenterPart#doPaint(org.eclipse.swt.graphics.GC)
+		 */
+		@Override
+		public void doPaint(GC gc) {
+			if (!ModelContentMergeViewer.shouldDrawDiffMarkers() || getInput() == null)
+				return;
+			final List<ModelContentMergeTabItem> leftVisible = leftPart.getVisibleElements();
+			final List<ModelContentMergeTabItem> rightVisible = rightPart.getVisibleElements();
+			final List<DiffElement> visibleDiffs = retainVisibleDiffs(leftVisible, rightVisible);
+			// we don't clear selection when the last diff is merged so this could happen
+			if (currentSelection.size() > 0 && currentSelection.get(0).eContainer() != null) {
+				visibleDiffs.addAll(currentSelection);
+			}
+			for (final DiffElement diff : visibleDiffs) {
+				if (hasLineBeDrawn(diff)) {
+					final ModelContentMergeTabItem leftUIItem = leftPart.getUIItem(diff);
+					final ModelContentMergeTabItem rightUIItem = rightPart.getUIItem(diff);
+					drawLine(gc, leftUIItem, rightUIItem);
+				}
+			}
+		}
+
+		/**
+		 * Check if the line has to be drawn in relation to the difference element.
+		 * 
+		 * @param diff
+		 *            the difference element.
+		 * @return true if it has to be drawn, false otherwise.
+		 */
+		protected boolean hasLineBeDrawn(final DiffElement diff) {
+			if (!(diff instanceof DiffGroup)) {
+				final ModelContentMergeTabItem leftUIItem = leftPart.getUIItem(diff);
+				final ModelContentMergeTabItem rightUIItem = rightPart.getUIItem(diff);
+				return leftUIItem != null && rightUIItem != null;
+			}
+			return false;
+		}
+
 	}
 }
