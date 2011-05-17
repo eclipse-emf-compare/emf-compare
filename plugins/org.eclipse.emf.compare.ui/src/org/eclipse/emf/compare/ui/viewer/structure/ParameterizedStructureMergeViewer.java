@@ -30,6 +30,8 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A {@link ModelStructureMergeViewer} which manages the group and filter functionalities.
@@ -88,7 +90,7 @@ public class ParameterizedStructureMergeViewer extends ModelStructureMergeViewer
 			final FiltersMenu filtersMenu = new FiltersMenu(this);
 			try {
 				final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
-						.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/filter.png"))); //$NON-NLS-1$
+						.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/filter.gif"))); //$NON-NLS-1$
 				filtersMenu.setImageDescriptor(imgDesc);
 			} catch (IOException e) {
 				// No management
@@ -98,13 +100,9 @@ public class ParameterizedStructureMergeViewer extends ModelStructureMergeViewer
 
 		if (DifferenceGroupingFacilityRegistry.INSTANCE.getDescriptors().size() > 0) {
 			final GroupsMenu groupsMenu = new GroupsMenu(this);
-			try {
-				final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
-						.getBundle(EMFCompareUIPlugin.PLUGIN_ID).getEntry("icons/full/category.png"))); //$NON-NLS-1$
-				groupsMenu.setImageDescriptor(imgDesc);
-			} catch (IOException e) {
-				// No management
-			}
+			final ImageDescriptor imgDesc = PlatformUI.getWorkbench().getSharedImages()
+					.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);
+			groupsMenu.setImageDescriptor(imgDesc);
 			tbm.appendToGroup(orderingGroupName, groupsMenu);
 		}
 	}
