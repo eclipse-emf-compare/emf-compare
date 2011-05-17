@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-	<feature id="org.eclipse.emf.compare" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.all" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.doc" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.sdk" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.team.subversive" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.mpatch" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
-		<category name="compare" />
-	</feature>
-	<category-def name="compare" label="EMF Compare">
-		<description>
-			EMF Compare features.
+   <feature id="org.eclipse.emf.compare" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.all" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.doc" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.sdk" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.team.subversive" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.mpatch" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
+      <category name="compare"/>
+   </feature>
+   <feature url="features/org.eclipse.emf.compare.uml2_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.uml2" version="1.2.0.qualifier">
+      <category name="compare"/>
+   </feature>
+   <category-def name="compare" label="EMF Compare">
+      <description>
+         EMF Compare features.
       </description>
-	</category-def>
+   </category-def>
 </site>

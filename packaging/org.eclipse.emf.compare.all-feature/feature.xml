@@ -6,28 +6,20 @@
       provider-name="%providerName">
 
    <description>
-      Includes all plugins of EMF Compare
+      %description
    </description>
 
-   <copyright>
-      /*  
-* Copyright (c) 2009 Obeo.
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License
-v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-* 
-*/
+   <copyright url="%copyrightURL">
+      %copyright
    </copyright>
 
    <license url="%licenseURL">
       %license
    </license>
-
+   
    <url>
-      <update label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
-      <discovery label="Eclipse Modeling Project Updates" url="http://www.eclipse.org/modeling/updates"/>
+      <update label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
+      <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
    </url>
 
    <includes
@@ -40,6 +32,10 @@ v1.0
 
    <includes
          id="org.eclipse.emf.compare.team.subversive"
+         version="0.0.0"/>
+         
+   <includes
+         id="org.eclipse.emf.compare.uml2"
          version="0.0.0"/>
 
 </feature>
