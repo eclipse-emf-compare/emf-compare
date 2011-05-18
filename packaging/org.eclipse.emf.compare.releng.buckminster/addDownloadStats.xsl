@@ -7,7 +7,7 @@ http://www.eclipse.org/legal/epl-v10.html
 
 Contributors:
 Gregoire Dupe (Mia-Software) - initial contribution
-Laurent Goubet (Obeo) - modification for Acceleo download stats
+Laurent Goubet (Obeo) - modification for EMF Compare download stats
 -->
 <xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version="1.0">
 	<xsl:output encoding="UTF-8" method="xml" indent="yes" />
