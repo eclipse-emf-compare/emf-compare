@@ -613,6 +613,8 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		final Resource resource;
 		if (input instanceof TypedElementWrapper) {
 			resource = ((TypedElementWrapper)input).getObject().eResource();
+		} else if (input instanceof List<?>) {
+			resource = (Resource)((List<?>)input).get(0);
 		} else {
 			resource = (Resource)input;
 		}
