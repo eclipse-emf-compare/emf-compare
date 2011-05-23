@@ -164,9 +164,9 @@ public final class DiffService {
 		for (final UnmatchModel unmatch : matchResourceSet.getUnmatchedModels()) {
 			ResourceDependencyChange dependencyChange;
 			if (unmatch.getSide() == Side.LEFT) {
-				dependencyChange = DiffFactory.eINSTANCE.createResourceDependencyChangeLeftTarget();
-			} else {
 				dependencyChange = DiffFactory.eINSTANCE.createResourceDependencyChangeRightTarget();
+			} else {
+				dependencyChange = DiffFactory.eINSTANCE.createResourceDependencyChangeLeftTarget();
 			}
 			if (unmatch.isRemote()) {
 				dependencyChange.setRemote(true);
@@ -364,8 +364,8 @@ public final class DiffService {
 	private static void parseExtensionMetadata() {
 		// FIXME Should be externalized in a DiffExtensionRegistry
 		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
-			final IExtension[] extensions = Platform.getExtensionRegistry()
-					.getExtensionPoint(DIFF_EXTENSION_EXTENSION_POINT).getExtensions();
+			final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
+					DIFF_EXTENSION_EXTENSION_POINT).getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
 				final IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < configElements.length; j++) {
