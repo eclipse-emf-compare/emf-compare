@@ -764,10 +764,10 @@ public class ReferencesCheck extends AbstractCheck {
 		EObject leftTarget = getMatchedEObject(addedValue);
 		EObject rightTarget = getMatchedEObject(deletedValue);
 		// checks if target are defined remotely
-		if (leftTarget == null) {
+		if (leftTarget == null && addedValue != null) {
 			leftTarget = deletedValue;
 		}
-		if (rightTarget == null) {
+		if (rightTarget == null && deletedValue != null) {
 			rightTarget = addedValue;
 		}
 
