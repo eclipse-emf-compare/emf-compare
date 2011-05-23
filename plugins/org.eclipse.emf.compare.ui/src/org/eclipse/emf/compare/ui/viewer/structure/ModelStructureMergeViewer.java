@@ -423,14 +423,15 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			Image image = null;
 			if (object instanceof AbstractDiffExtension) {
 				image = (Image)((AbstractDiffExtension)object).getImage();
-			}
-			if (object instanceof IFile) {
+			} else if (object instanceof IFile) {
 				image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-			} else {
-				if (image == null) {
-					image = adapterProvider.getImage(object);
-				}
 			}
+
+			// fallback to ItemProvider
+			if (image == null) {
+				image = adapterProvider.getImage(object);
+			}
+
 			return image;
 		}
 
@@ -448,15 +449,17 @@ public class ModelStructureMergeViewer extends TreeViewer {
 			String text = null;
 			if (object instanceof AbstractDiffExtension) {
 				text = ((AbstractDiffExtension)object).getText();
-			} else {
-				if (object instanceof IFile) {
-					text = ((IFile)object).getName();
-				} else if (object instanceof Resource) {
-					text = ((Resource)object).getURI().lastSegment();
-				} else {
-					text = adapterProvider.getText(object);
-				}
+			} else if (object instanceof IFile) {
+				text = ((IFile)object).getName();
+			} else if (object instanceof Resource) {
+				text = ((Resource)object).getURI().lastSegment();
 			}
+
+			// fallback to ItemProvider
+			if (text == null || "".equals(text)) { //$NON-NLS-1$
+				text = adapterProvider.getText(object);
+			}
+
 			return text;
 		}
 	}
