@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
@@ -76,15 +75,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			final Resource res = ((ModelCompareInput)element).getAncestorResource();
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
-					content = new ArrayList<Resource>();
-					for (Resource resource : res.getResourceSet().getResources()) {
-						if (hasChanged(resource, (DiffResourceSet)diff, null)) {
-							((List<Resource>)content).add(resource);
-						}
-					}
-					if (((List<Resource>)content).isEmpty()) {
-						content = null;
-					}
+					content = new ArrayList<Resource>(res.getResourceSet().getResources());
 				}
 			} else if (diff instanceof DiffModel) {
 				content = res;
@@ -126,21 +117,14 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			final Resource res = ((ModelCompareInput)element).getLeftResource();
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
-					content = new ArrayList<Resource>();
-					for (Resource resource : res.getResourceSet().getResources()) {
-						if (hasChanged(resource, (DiffResourceSet)diff, Side.LEFT)) {
-							((List<Resource>)content).add(resource);
-						}
-					}
-					if (((List<Resource>)content).isEmpty()) {
-						content = null;
-					}
+					content = new ArrayList<Resource>(res.getResourceSet().getResources());
 				}
 			} else if (diff instanceof DiffModel) {
 				content = res;
 			}
-		} else if (element instanceof ICompareInput)
+		} else if (element instanceof ICompareInput) {
 			content = ((ICompareInput)element).getLeft();
+		}
 		return content;
 	}
 
@@ -212,15 +196,7 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			final Resource res = ((ModelCompareInput)element).getRightResource();
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
-					content = new ArrayList<Resource>();
-					for (Resource resource : res.getResourceSet().getResources()) {
-						if (hasChanged(resource, (DiffResourceSet)diff, Side.RIGHT)) {
-							((List<Resource>)content).add(resource);
-						}
-					}
-					if (((List<Resource>)content).isEmpty()) {
-						content = null;
-					}
+					content = new ArrayList<Resource>(res.getResourceSet().getResources());
 				}
 			} else if (diff instanceof DiffModel) {
 				content = res;
