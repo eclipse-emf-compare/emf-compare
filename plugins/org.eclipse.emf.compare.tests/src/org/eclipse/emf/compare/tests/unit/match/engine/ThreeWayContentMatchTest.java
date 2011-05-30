@@ -139,14 +139,13 @@ public class ThreeWayContentMatchTest extends TestCase {
 					elementCount++;
 				}
 
-				// Note : need to add 2 to the element count this none of the two roots has been counted yet
-				assertEquals("contentMatch() shouldn't have found a match element.", elementCount + 2, match
+				// Note : need to add 3 to the element count this none of the three roots has been counted yet
+				assertEquals("contentMatch() shouldn't have found a match element.", elementCount + 3, match
 						.getUnmatchedElements().size());
 
 				// We shouldn't find a single MatchElement
-				assertTrue("contentMatch() found a matched element in the compared objects", match
-						.getMatchedElements() == null
-						|| match.getMatchedElements().size() == 0);
+				assertTrue("contentMatch() found a matched element in the compared objects",
+						match.getMatchedElements() == null || match.getMatchedElements().size() == 0);
 			}
 		}
 	}
@@ -217,8 +216,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 					final EObject nextMatch = matchIterator.next();
 					if (nextMatch instanceof Match2Elements
 							&& ((Match2Elements)nextMatch).getLeftElement().equals(next)
-							|| (nextMatch instanceof UnmatchElement && ((UnmatchElement)nextMatch)
-									.getElement().equals(next))) {
+							|| nextMatch instanceof UnmatchElement
+							&& ((UnmatchElement)nextMatch).getElement().equals(next)) {
 						found = true;
 						break;
 					}
@@ -245,9 +244,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 					elementCount + 1, matchElementCount);
 
 			// We shouldn't find a single UnMatchElement
-			assertTrue("contentMatch() found an unmatched element in the compared objects", match
-					.getUnmatchedElements() == null
-					|| match.getUnmatchedElements().size() == 0);
+			assertTrue("contentMatch() found an unmatched element in the compared objects",
+					match.getUnmatchedElements() == null || match.getUnmatchedElements().size() == 0);
 		}
 	}
 
@@ -261,8 +259,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 		final String failNPE = "contentMatch() with null objects did not throw the expected NullPointerException.";
 		final String failInterrupt = "modelMatch() with null objects threw an unexpected InterruptedException.";
 		try {
-			MatchService.doContentMatch(null, EcoreFactory.eINSTANCE.createEObject(), EcoreFactory.eINSTANCE
-					.createEObject(), getOptions());
+			MatchService.doContentMatch(null, EcoreFactory.eINSTANCE.createEObject(),
+					EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (final NullPointerException e) {
 			// This was expected behavior
@@ -270,8 +268,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), null, EcoreFactory.eINSTANCE
-					.createEObject(), getOptions());
+			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), null,
+					EcoreFactory.eINSTANCE.createEObject(), getOptions());
 			fail(failNPE);
 		} catch (final NullPointerException e) {
 			// This was expected behavior
@@ -279,8 +277,8 @@ public class ThreeWayContentMatchTest extends TestCase {
 			fail(failInterrupt);
 		}
 		try {
-			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(), EcoreFactory.eINSTANCE
-					.createEObject(), null, getOptions());
+			MatchService.doContentMatch(EcoreFactory.eINSTANCE.createEObject(),
+					EcoreFactory.eINSTANCE.createEObject(), null, getOptions());
 			fail(failNPE);
 		} catch (final NullPointerException e) {
 			// This was expected behavior
