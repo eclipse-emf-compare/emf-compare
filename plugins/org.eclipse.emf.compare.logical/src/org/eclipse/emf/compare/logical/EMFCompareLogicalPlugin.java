@@ -22,12 +22,12 @@ import org.osgi.framework.BundleContext;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
-public class Activator extends Plugin {
+public class EMFCompareLogicalPlugin extends Plugin {
 	/** The plug-in ID. */
 	public static final String PLUGIN_ID = "org.eclipse.emf.compare.logical"; //$NON-NLS-1$
 
 	/** This plugin's shared instance. */
-	private static Activator plugin;
+	private static EMFCompareLogicalPlugin plugin;
 
 	/** The registry listener that will be used to react to model provider changes. */
 	private ModelResolverRegistryListener modelProviderListener = new ModelResolverRegistryListener();
@@ -68,7 +68,7 @@ public class Activator extends Plugin {
 	 * 
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static EMFCompareLogicalPlugin getDefault() {
 		return plugin;
 	}
 }

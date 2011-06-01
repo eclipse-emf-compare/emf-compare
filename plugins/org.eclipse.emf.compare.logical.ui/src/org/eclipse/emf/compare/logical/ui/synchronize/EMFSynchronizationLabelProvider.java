@@ -8,14 +8,14 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.synchronization.view;
+package org.eclipse.emf.compare.logical.ui.synchronize;
 
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.resources.mapping.ResourceMapping;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.synchronization.EMFDelta;
 import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
-import org.eclipse.emf.compare.logical.synchronization.EMFSaveableBuffer;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -68,7 +68,7 @@ public class EMFSynchronizationLabelProvider extends SynchronizationLabelProvide
 	 */
 	@Override
 	protected IDiff getDiff(Object element) {
-		Object cachedDelta = getContext().getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
+		Object cachedDelta = getContext().getCache().get(EMFModelProvider.SYNCHRONIZATION_CACHE_KEY);
 		if (cachedDelta instanceof EMFModelDelta) {
 			EMFDelta elementDelta = ((EMFModelDelta)cachedDelta).getChildDeltaFor(element);
 			if (elementDelta != null) {

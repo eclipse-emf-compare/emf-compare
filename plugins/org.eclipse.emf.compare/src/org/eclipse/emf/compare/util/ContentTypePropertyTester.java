@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.common;
+package org.eclipse.emf.compare.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +24,8 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
  * This will be used as a property tester for plugin.xml 'enablement' values. Specifically, we'll use this to
  * check whether a given IFile has a given content type ID.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 1.2
  */
 public class ContentTypePropertyTester extends PropertyTester {
 	/** Name of the property we'll test with this tester. */
@@ -56,9 +57,9 @@ public class ContentTypePropertyTester extends PropertyTester {
 	 *            Fully qualified identifier of the content type this <em>resource</em> has to feature.
 	 * @return <code>true</code> if the given {@link IFile} has the given content type.
 	 */
-	private boolean hasContentType(IFile resource, String contentTypeId) {
-		IContentTypeManager ctManager = Platform.getContentTypeManager();
-		IContentType expected = ctManager.getContentType(contentTypeId);
+	private static boolean hasContentType(IFile resource, String contentTypeId) {
+		final IContentTypeManager ctManager = Platform.getContentTypeManager();
+		final IContentType expected = ctManager.getContentType(contentTypeId);
 		if (expected == null) {
 			return false;
 		}

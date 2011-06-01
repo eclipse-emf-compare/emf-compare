@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.team.core.diff.IDiff;
 
@@ -132,7 +132,7 @@ public class EMFResourceDelta extends EMFDelta {
 	 */
 	@Override
 	public IPath getPath() {
-		IResource localIResource = EMFResourceUtil.findIResource(localResource);
+		IResource localIResource = EclipseModelUtils.findIResource(localResource);
 		if (localIResource != null) {
 			return localIResource.getFullPath();
 		}
@@ -152,8 +152,8 @@ public class EMFResourceDelta extends EMFDelta {
 		}
 
 		boolean isDelta = false;
-		IResource localIResource = EMFResourceUtil.findIResource(localResource);
-		IResource compareTo = EMFResourceUtil.findIResource((Resource)object);
+		IResource localIResource = EclipseModelUtils.findIResource(localResource);
+		IResource compareTo = EclipseModelUtils.findIResource((Resource)object);
 		if (localIResource != null && compareTo != null) {
 			isDelta = localIResource.getFullPath().equals(compareTo.getFullPath());
 		}

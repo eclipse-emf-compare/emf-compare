@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.common;
+package org.eclipse.emf.compare.logical;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.logical.Activator;
+import org.eclipse.emf.compare.util.DelegatingURIConverter;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.team.core.RepositoryProvider;
 import org.eclipse.team.core.history.IFileHistory;
@@ -76,7 +76,7 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 		if (revision instanceof IFileRevision) {
 			baseRevision = (IFileRevision)revision;
 		} else {
-			throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+			throw new CoreException(new Status(IStatus.ERROR, EMFCompareLogicalPlugin.PLUGIN_ID,
 					EMFLogicalModelMessages.getString("storage.adapt.failure", storage.getFullPath()))); //$NON-NLS-1$
 		}
 	}
@@ -84,7 +84,7 @@ public class RevisionedURIConverter extends DelegatingURIConverter {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.logical.common.DelegatingURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
+	 * @see org.eclipse.emf.compare.util.DelegatingURIConverter#createInputStream(org.eclipse.emf.common.util.URI,
 	 *      java.util.Map)
 	 */
 	@Override

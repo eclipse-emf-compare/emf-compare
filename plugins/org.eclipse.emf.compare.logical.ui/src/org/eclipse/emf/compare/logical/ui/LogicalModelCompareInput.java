@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical;
+package org.eclipse.emf.compare.logical.ui;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;

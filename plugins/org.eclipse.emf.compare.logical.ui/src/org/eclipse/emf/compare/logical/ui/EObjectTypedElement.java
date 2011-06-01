@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical;
+package org.eclipse.emf.compare.logical.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -29,9 +29,6 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 	/** This will be used as the type of our wrappers in order to determine the structure and content viewers. */
 	public static final String EMF_TYPE = "EMF.TYPE"; //$NON-NLS-1$
 
-	/** The wrapped EObject. */
-	private final EObject eObject;
-
 	/** Name of the wrapped EObject. */
 	private final String name;
 
@@ -48,7 +45,6 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 	 *            Label provider for the <em>eObject</em>'s text and icon.
 	 */
 	public EObjectTypedElement(EObject eObject, ILabelProvider labelProvider) {
-		this.eObject = eObject;
 		this.name = labelProvider.getText(eObject);
 		this.image = labelProvider.getImage(eObject);
 	}

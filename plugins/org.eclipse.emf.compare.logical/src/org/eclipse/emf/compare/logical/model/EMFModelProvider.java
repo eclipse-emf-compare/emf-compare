@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.logical.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,11 @@ import org.eclipse.core.resources.mapping.ResourceMappingContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.team.core.mapping.ISynchronizationContext;
 
 /**
  * This implementation of a {@link ModelProvider} will be used to provide the logical model associated with
@@ -40,6 +42,37 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 public class EMFModelProvider extends ModelProvider {
 	/** ID of this model provider. Must match the definition from the plugin.xml. */
 	public static final String PROVIDER_ID = "org.eclipse.emf.compare.model.provider"; //$NON-NLS-1$
+
+	/** Cache key for the logical model buffer within the synchronization cache. */
+	public static final String SYNCHRONIZATION_CACHE_KEY = EMFModelProvider.PROVIDER_ID + ".sync.cache"; //$NON-NLS-1$
+
+	/** We may need to provide additional mappings to the scope. */
+	private static final String EMF_ADDITIONAL_MAPPINGS = EMFModelProvider.PROVIDER_ID
+			+ ".additional.mappings"; //$NON-NLS-1$
+
+	/**
+	 * Caches the given mappings within the given synchronization context.
+	 * 
+	 * @param context
+	 *            Context in which to cache the given additional mappings.
+	 * @param additionalMappings
+	 *            Additional mappings discovered for this context.
+	 */
+	public static void cacheAdditionalMappings(ISynchronizationContext context,
+			ResourceMapping[] additionalMappings) {
+		context.getCache().put(EMFModelProvider.EMF_ADDITIONAL_MAPPINGS, additionalMappings);
+	}
+
+	/**
+	 * If we needed to retrieve additional mappings for the given context's scope, this will return them.
+	 * 
+	 * @param context
+	 *            The context to check for additional mappings.
+	 * @return The additional mappings for the given context if any, <code>null</code> otherwise.
+	 */
+	public static ResourceMapping[] getAdditionalMappings(ISynchronizationContext context) {
+		return (ResourceMapping[])context.getCache().get(EMFModelProvider.EMF_ADDITIONAL_MAPPINGS);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -85,9 +118,13 @@ public class EMFModelProvider extends ModelProvider {
 	private ResourceMapping[] getMappings(IFile file, IProgressMonitor monitor) {
 		List<ResourceMapping> mappings = new ArrayList<ResourceMapping>();
 		// FIXME find a way to dispose of this resource set
-		Resource resource = EMFResourceUtil.getResource(file, createLogicalModelResourceSet());
-		if (resource != null) {
-			mappings.add(new EMFResourceMapping(file, resource, PROVIDER_ID));
+		try {
+			Resource resource = EclipseModelUtils.getResource(file, createLogicalModelResourceSet());
+			if (resource != null) {
+				mappings.add(new EMFResourceMapping(file, resource, PROVIDER_ID));
+			}
+		} catch (IOException e) {
+			// return an empty array
 		}
 		return mappings.toArray(new ResourceMapping[mappings.size()]);
 	}

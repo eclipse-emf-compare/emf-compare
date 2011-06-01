@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
@@ -63,8 +63,12 @@ public class ModelResourceVisitor implements IResourceVisitor {
 			}
 
 			if (isModel) {
-				EMFResourceUtil.getResource(file, resourceSet);
-				return true;
+				try {
+					EclipseModelUtils.getResource(file, resourceSet);
+					return true;
+				} catch (IOException e) {
+					// will return false;
+				}
 			}
 			return false;
 		}

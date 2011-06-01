@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.synchronization;
+package org.eclipse.emf.compare.logical.ui.synchronize;
 
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.core.resources.IResource;
@@ -20,8 +20,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
-import org.eclipse.emf.compare.logical.LogicalModelCompareInput;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
+import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
+import org.eclipse.emf.compare.logical.ui.LogicalModelCompareInput;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.team.core.mapping.ISynchronizationContext;
@@ -34,13 +35,9 @@ import org.eclipse.ui.IMemento;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
-public class EMFCompareAdapter extends SynchronizationCompareAdapter {
+public class EMFCompareSynchronizationAdapter extends SynchronizationCompareAdapter {
 	/** Identifier of the model this adapter will compare. */
 	private final String modelProviderId;
-
-	/** We may need to provide additional mappings to the scope. */
-	private static final String EMF_ADDITIONAL_MAPPINGS = EMFModelProvider.PROVIDER_ID
-			+ ".additional.mappings"; //$NON-NLS-1$
 
 	/**
 	 * Instantiates our adapter given the identifier of the logical model to compare.
@@ -48,7 +45,7 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	 * @param modelProviderId
 	 *            Identifier of the model this adapter will compare.
 	 */
-	public EMFCompareAdapter(String modelProviderId) {
+	public EMFCompareSynchronizationAdapter(String modelProviderId) {
 		this.modelProviderId = modelProviderId;
 	}
 
@@ -86,7 +83,7 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 					ResourceMapping[] additionalMappings = ((EMFModelProvider)ModelProvider
 							.getModelProviderDescriptor(modelProviderId).getModelProvider()).getMappings(
 							(IResource)object, context.getScope().getContext(), new NullProgressMonitor());
-					context.getCache().put(EMFCompareAdapter.EMF_ADDITIONAL_MAPPINGS, additionalMappings);
+					EMFModelProvider.cacheAdditionalMappings(context, additionalMappings);
 				}
 				initialize(context, new NullProgressMonitor());
 				delta = EMFModelDelta.getDelta(context);
@@ -106,17 +103,6 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 			}
 		}
 		return input;
-	}
-
-	/**
-	 * If we needed to retrieve additional mappings for the given context's scope, this will return them.
-	 * 
-	 * @param context
-	 *            The context to check for additional mappings.
-	 * @return The additional mappings for the given context if any, <code>null</code> otherwise.
-	 */
-	public static ResourceMapping[] getAdditionalMappings(ISynchronizationContext context) {
-		return (ResourceMapping[])context.getCache().get(EMFCompareAdapter.EMF_ADDITIONAL_MAPPINGS);
 	}
 
 	/**
@@ -178,7 +164,6 @@ public class EMFCompareAdapter extends SynchronizationCompareAdapter {
 	 */
 	public void initialize(ISynchronizationContext context, IProgressMonitor monitor) throws CoreException {
 		EMFModelDelta.createDelta(context, modelProviderId, monitor);
-		EMFSaveableBuffer.createBuffer(context);
 	}
 
 	/**

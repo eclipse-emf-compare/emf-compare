@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -86,8 +87,8 @@ public final class EclipseModelUtils {
 			registry = Resource.Factory.Registry.INSTANCE;
 			resourceFactory = registry.getContentTypeToFactoryMap().get(contentType);
 			if (resourceFactory != null) {
-				resourceSet.getResourceFactoryRegistry().getContentTypeToFactoryMap().put(contentType,
-						resourceFactory);
+				resourceSet.getResourceFactoryRegistry().getContentTypeToFactoryMap()
+						.put(contentType, resourceFactory);
 			}
 		}
 
@@ -169,8 +170,8 @@ public final class EclipseModelUtils {
 		} catch (IOException e) {
 			// If it failed, load the file assuming it is in the plugins
 			resourceSet.getResources().remove(modelResource);
-			modelResource = ModelUtils.createResource(URI.createPlatformPluginURI(file.getFullPath()
-					.toOSString(), true), resourceSet);
+			modelResource = ModelUtils.createResource(
+					URI.createPlatformPluginURI(file.getFullPath().toOSString(), true), resourceSet);
 			try {
 				modelResource.load(Collections.emptyMap());
 			} catch (IOException ee) {
@@ -201,5 +202,53 @@ public final class EclipseModelUtils {
 	 */
 	public static EObject load(IPath path, ResourceSet resourceSet) throws IOException {
 		return load(ResourcesPlugin.getWorkspace().getRoot().getFile(path), resourceSet);
+	}
+
+	/**
+	 * Returns the EMF {@link Resource} saved within the given {@link IFile}.
+	 * 
+	 * @param file
+	 *            The file from which to load an EMF {@link Resource}.
+	 * @param resourceSet
+	 *            The resource set in which to load the model.
+	 * @return The EMF {@link Resource} saved within the given {@link IFile}.
+	 * @throws IOException
+	 *             If the given file cannot be loaded.
+	 * @since 1.2
+	 */
+	public static Resource getResource(IFile file, ResourceSet resourceSet) throws IOException {
+		for (Resource resource : resourceSet.getResources()) {
+			if (resource.getURI().toString().equals(file.getFullPath().toString())) {
+				return resource;
+			}
+		}
+		return ModelUtils.load(URI.createPlatformResourceURI(file.getFullPath().toString(), true),
+				resourceSet).eResource();
+	}
+
+	/**
+	 * This will try and find the {@link IResource} containing the given EMF {@link Resource}. Note that the
+	 * returned resource might not exist in the workspace if the EMF {@link Resource} has been loaded from a
+	 * repository.
+	 * 
+	 * @param eResource
+	 *            The logical resource for which we need a physical resource.
+	 * @return The {@link IResource} that contains the given EMF {@link Resource}.
+	 * @since 1.2
+	 */
+	public static IResource findIResource(Resource eResource) {
+		final URI uri = eResource.getURI();
+		IResource iResource = null;
+		if (uri != null) {
+			if (uri.isPlatformResource()) {
+				final IPath path = new Path(uri.trimFragment().toPlatformString(true));
+				iResource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			} else {
+				// FIXME URI should be deresolved against the workspace root
+				final IPath path = new Path(uri.trimFragment().path());
+				iResource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+			}
+		}
+		return iResource;
 	}
 }

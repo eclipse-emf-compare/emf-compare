@@ -28,15 +28,15 @@ import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
+import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.service.MatchService;
-import org.eclipse.emf.compare.ui.internal.VisualEngineSelector;
 import org.eclipse.emf.compare.util.EMFCompareMap;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -101,7 +101,7 @@ public class EMFModelDelta extends EMFDelta {
 		EMFModelDelta delta = new EMFModelDelta(context, modelProviderId);
 
 		delta.initialize(monitor);
-		context.getCache().put(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY, delta);
+		context.getCache().put(EMFModelProvider.SYNCHRONIZATION_CACHE_KEY, delta);
 
 		return delta;
 	}
@@ -114,7 +114,7 @@ public class EMFModelDelta extends EMFDelta {
 	 * @return The cached delta.
 	 */
 	public static EMFModelDelta getDelta(ISynchronizationContext context) {
-		return (EMFModelDelta)context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
+		return (EMFModelDelta)context.getCache().get(EMFModelProvider.SYNCHRONIZATION_CACHE_KEY);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class EMFModelDelta extends EMFDelta {
 					ancestor = ancestorRoot.eResource();
 				}
 
-				IResource localResource = EMFResourceUtil.findIResource(local);
+				IResource localResource = EclipseModelUtils.findIResource(local);
 				if (localResource != null) {
 					IDiff diff = diffTree.getDiff(localResource.getFullPath());
 					new EMFResourceDelta(this, diffModel, diff, local, remote, ancestor);
@@ -258,7 +258,7 @@ public class EMFModelDelta extends EMFDelta {
 		// FIXME monitor.subTask("comparing models")
 
 		// Retrieve all three resource sets from the scope
-		ResourceMapping[] mappings = EMFCompareAdapter.getAdditionalMappings(context);
+		ResourceMapping[] mappings = EMFModelProvider.getAdditionalMappings(context);
 		if (mappings == null) {
 			mappings = context.getScope().getMappings();
 		}
@@ -332,9 +332,6 @@ public class EMFModelDelta extends EMFDelta {
 		if (local == null || remote == null) {
 			// FIXME throw something at user's face
 		}
-
-		MatchService.setMatchEngineSelector(new VisualEngineSelector());
-		DiffService.setDiffEngineSelector(new VisualEngineSelector());
 
 		ComparisonSnapshot comparisonResult = doResourceSetCompare(local, remote, ancestor, monitor);
 

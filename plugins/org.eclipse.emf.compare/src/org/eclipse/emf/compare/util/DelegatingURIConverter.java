@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.common;
+package org.eclipse.emf.compare.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,8 @@ import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 /**
  * This implementation of an {@link URIConverter URI Converter} will delegate all calls to another.
  * 
- * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
+ * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @since 1.2
  */
 public class DelegatingURIConverter extends ExtensibleURIConverterImpl {
 	/** Our delegate {@link URIConverter}. */
@@ -34,11 +35,11 @@ public class DelegatingURIConverter extends ExtensibleURIConverterImpl {
 	/**
 	 * Instantiates our {@link URIConverter} given its delegate.
 	 * 
-	 * @param delegate
+	 * @param delegateURIConverter
 	 *            Our delegate {@link URIConverter}.
 	 */
-	public DelegatingURIConverter(URIConverter delegate) {
-		this.delegate = delegate;
+	public DelegatingURIConverter(URIConverter delegateURIConverter) {
+		this.delegate = delegateURIConverter;
 
 		// Reset what has been done by the super constructor
 		uriHandlers.clear();

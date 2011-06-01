@@ -28,10 +28,10 @@ import org.eclipse.core.resources.mapping.ResourceTraversal;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.logical.common.EMFResourceUtil;
-import org.eclipse.emf.compare.logical.common.RevisionedURIConverter;
+import org.eclipse.emf.compare.logical.RevisionedURIConverter;
 import org.eclipse.emf.compare.logical.extension.EMFCompareExtensionRegistry;
 import org.eclipse.emf.compare.logical.extension.ModelResolverDescriptor;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelIdentifier;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -149,7 +149,7 @@ public class EMFResourceMapping extends ResourceMapping {
 					if (eResource == emfResource) {
 						localFile = file;
 					} else {
-						localFile = (IFile)EMFResourceUtil.findIResource(eResource);
+						localFile = (IFile)EclipseModelUtils.findIResource(eResource);
 					}
 
 					IStorage remoteContents = remoteContext.fetchRemoteContents(localFile, monitor);
@@ -269,7 +269,7 @@ public class EMFResourceMapping extends ResourceMapping {
 			if (eResource == emfResource) {
 				iResourcesInScope.add(file);
 			} else {
-				IResource iResource = EMFResourceUtil.findIResource(eResource);
+				IResource iResource = EclipseModelUtils.findIResource(eResource);
 				if (iResource != null) {
 					iResourcesInScope.add(iResource);
 				}
@@ -278,7 +278,7 @@ public class EMFResourceMapping extends ResourceMapping {
 
 		if (remoteResourceSet != null) {
 			for (Resource eResource : remoteResourceSet.getResources()) {
-				IResource iResource = EMFResourceUtil.findIResource(eResource);
+				IResource iResource = EclipseModelUtils.findIResource(eResource);
 				if (iResource != null) {
 					iResourcesInScope.add(iResource);
 				}
@@ -287,7 +287,7 @@ public class EMFResourceMapping extends ResourceMapping {
 
 		if (ancestorResourceSet != null) {
 			for (Resource eResource : ancestorResourceSet.getResources()) {
-				IResource iResource = EMFResourceUtil.findIResource(eResource);
+				IResource iResource = EclipseModelUtils.findIResource(eResource);
 				if (iResource != null) {
 					iResourcesInScope.add(iResource);
 				}

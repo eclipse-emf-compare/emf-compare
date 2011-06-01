@@ -8,7 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *******************************************************************************/
-package org.eclipse.emf.compare.logical.synchronization.view;
+package org.eclipse.emf.compare.logical.ui.synchronize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.compare.logical.common.EMFLogicalModelMessages;
+import org.eclipse.emf.compare.logical.EMFLogicalModelMessages;
 import org.eclipse.emf.compare.logical.model.EMFModelProvider;
 import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
-import org.eclipse.emf.compare.logical.synchronization.EMFCompareAdapter;
 import org.eclipse.emf.compare.logical.synchronization.EMFDelta;
 import org.eclipse.emf.compare.logical.synchronization.EMFModelDelta;
-import org.eclipse.emf.compare.logical.synchronization.EMFSaveableBuffer;
 import org.eclipse.emf.compare.util.AdapterUtils;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -86,7 +84,7 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected boolean isInitialized(ISynchronizationContext context) {
-		return !isInitializing && context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY) != null;
+		return !isInitializing && context.getCache().get(EMFModelProvider.SYNCHRONIZATION_CACHE_KEY) != null;
 	}
 
 	/**
@@ -101,12 +99,12 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 			Job emfSynchronizationJob = new Job(EMFLogicalModelMessages.getString("synchronize.job.label")) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					EMFCompareAdapter emfCompareAdapter = null;
+					EMFCompareSynchronizationAdapter emfCompareAdapter = null;
 					ModelProvider modelProvider = getModelProvider();
 					if (modelProvider instanceof EMFModelProvider) {
 						Object adapter = modelProvider.getAdapter(ISynchronizationCompareAdapter.class);
-						if (adapter instanceof EMFCompareAdapter) {
-							emfCompareAdapter = (EMFCompareAdapter)adapter;
+						if (adapter instanceof EMFCompareSynchronizationAdapter) {
+							emfCompareAdapter = (EMFCompareSynchronizationAdapter)adapter;
 						}
 					}
 
@@ -140,7 +138,7 @@ public class EMFSynchronizationContentProvider extends SynchronizationContentPro
 	 */
 	@Override
 	protected Object[] getChildrenInContext(ISynchronizationContext context, Object parent, Object[] children) {
-		Object cachedDelta = context.getCache().get(EMFSaveableBuffer.SYNCHRONIZATION_CACHE_KEY);
+		Object cachedDelta = context.getCache().get(EMFModelProvider.SYNCHRONIZATION_CACHE_KEY);
 		if (cachedDelta instanceof EMFModelDelta) {
 			EMFModelDelta delta = (EMFModelDelta)cachedDelta;
 			List<Object> childrenInScope = new ArrayList<Object>();
