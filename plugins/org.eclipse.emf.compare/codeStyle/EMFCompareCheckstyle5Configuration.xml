@@ -321,14 +321,14 @@ Checkstyle 5.0 compatible
   <module name="RegexpSingleline">
     <property name="severity" value="error"/>
     <property name="format" value="Copyright\s\(c\)\s(20[0-9]{2},?\s)+"/>
-    <property name="message" value="Copyright must be present in the file with the pattern &quot;Copyright (c) 2006, 2011 Obeo.&quot;"/>
+    <property name="message" value="Copyright must be present in the file with the pattern &quot;Copyright (c) 2006, 2009 Obeo.&quot;"/>
     <property name="minimum" value="1"/>
     <property name="maximum" value="1"/>
   </module>
   <module name="RegexpSingleline">
     <property name="severity" value="error"/>
     <property name="id" value="illegal.regex.encoding"/>
-    <property name="format" value="[^a-zA-Z0-9_!:;,\.\+\(\)/\\\]\[{}\-\*&lt;&gt;%@\&amp; \|\t\n&quot;' =$#\r\?éèàê\^~]"/>
+    <property name="format" value="[^a-zA-Z0-9_!:;,\.\+\(\)/\\\]\[{}\-\*&lt;&gt;%@\&amp; \|\t\n&quot;' =$#\r\?éèàê\^]"/>
     <property name="message" value="Character could cause encoding issue."/>
   </module>
   <module name="SuppressionCommentFilter"/>

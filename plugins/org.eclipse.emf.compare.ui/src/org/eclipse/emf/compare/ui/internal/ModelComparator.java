@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.ui.internal;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,10 +25,14 @@ import java.util.Set;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.IResourceProvider;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.mapping.IModelProviderDescriptor;
+import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -54,6 +59,7 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.ICompareInputDetailsProvider;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.util.EMFCompareMap;
@@ -69,6 +75,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.team.core.mapping.ISynchronizationContext;
+import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -210,8 +218,8 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 	 * This will parse {@link #TEAM_HANDLERS_EXTENSION_POINT} for team handlers.
 	 */
 	private static void parseExtensionMetaData() {
-		final IExtension[] extensions = Platform.getExtensionRegistry().getExtensionPoint(
-				TEAM_HANDLERS_EXTENSION_POINT).getExtensions();
+		final IExtension[] extensions = Platform.getExtensionRegistry()
+				.getExtensionPoint(TEAM_HANDLERS_EXTENSION_POINT).getExtensions();
 		// The RevisionComparisonHandler will be added last in the registry to allow clients override
 		TeamHandlerDescriptor revisionHandler = null;
 		for (final IExtension extension : extensions) {
@@ -265,8 +273,8 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 
 			configuration.setLeftEditable(configuration.isLeftEditable() && !isLeftRemote());
 			configuration.setRightEditable(configuration.isRightEditable() && !isRightRemote());
-			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME, end.getTime()
-					- start.getTime());
+			configuration.setProperty(EMFCompareConstants.PROPERTY_COMPARISON_TIME,
+					end.getTime() - start.getTime());
 			if (isLeftRemote()) {
 				if (doResourceMatchOnly) {
 					configuration.setLeftLabel(EMFCompareUIMessages.getString(EMFCompareUIMessages
@@ -472,6 +480,12 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			rightElement = input.getRight();
 			ancestorElement = input.getAncestor();
 
+			// check whether this comparison hasn't already been played (workaround for #345415)
+			if (handleResourceMapping(input)) {
+				loadingSucceeded = true;
+				return loadingSucceeded;
+			}
+
 			try {
 				// This will be sufficient when comparing local resources
 				loadingSucceeded = handleLocalResources(leftElement, rightElement, ancestorElement);
@@ -528,6 +542,64 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 			// input was the same as the last
 		}
 		return loadingSucceeded;
+	}
+
+	/**
+	 * This is a workaround for bug 345415 and needs to be removed ASAP when this bug is fixed. Basically,
+	 * Platform/Compare does not call our ModelProvider when using the action
+	 * "right-click > Open In Compare Editor". We then do the work ourselves here... but with insufficient
+	 * information. We'll need to access non-API fields along the way.
+	 * 
+	 * @param input
+	 *            The input we've been fed by Platform/Compare.
+	 * @return <code>true</code> if we managed to find a ResourceMapping with a {@link ModelCompareInput}
+	 *         corresponding to <em>input</em>, <code>false</code> otherwise.
+	 */
+	private boolean handleResourceMapping(ICompareInput input) {
+		final IResourceProvider resourceProvider = (IResourceProvider)Platform.getAdapterManager()
+				.getAdapter(leftElement, IResourceProvider.class);
+		if (resourceProvider != null) {
+			final IResource localResource = resourceProvider.getResource();
+			final IModelProviderDescriptor[] descriptors = ModelProvider.getModelProviderDescriptors();
+			for (int i = 0; i < descriptors.length; i++) {
+				final IModelProviderDescriptor descriptor = descriptors[i];
+				try {
+					final IResource[] resources = descriptor
+							.getMatchingResources(new IResource[] {localResource, });
+					if (resources.length > 0) {
+						final ModelProvider modelProvider = descriptor.getModelProvider();
+						final ISynchronizationCompareAdapter compareAdapter = (ISynchronizationCompareAdapter)Platform
+								.getAdapterManager().getAdapter(modelProvider,
+										ISynchronizationCompareAdapter.class);
+						// FIXME until 345415 is fixed, we need to find the proper model provider from here...
+						// ... which requires access to non-API things.
+						final Field contextField = input.getClass().getDeclaredField("context"); //$NON-NLS-1$
+						contextField.setAccessible(true);
+						final ISynchronizationContext context = (ISynchronizationContext)contextField
+								.get(input);
+						final ICompareInput actualInput = compareAdapter.asCompareInput(context,
+								localResource);
+
+						if (actualInput instanceof ModelCompareInput) {
+							comparisonResult = ((ModelCompareInput)actualInput).getComparisonSnapshot();
+							return true;
+						}
+					}
+				} catch (CoreException e) {
+					// FIXME log
+				} catch (SecurityException e) {
+					// FIXME remove when 345415 is fixed
+				} catch (NoSuchFieldException e) {
+					// FIXME remove when 345415 is fixed
+				} catch (IllegalArgumentException e) {
+					// FIXME remove when 345415 is fixed
+				} catch (IllegalAccessException e) {
+					// FIXME remove when 345415 is fixed
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
