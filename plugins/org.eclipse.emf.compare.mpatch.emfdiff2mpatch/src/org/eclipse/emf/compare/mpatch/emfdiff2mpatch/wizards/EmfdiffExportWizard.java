@@ -88,7 +88,8 @@ public class EmfdiffExportWizard extends AbstractEmfdiffExportWizard {
 	public void addPages() {
 		final String fileName = file == null ? "result." + MPatchConstants.FILE_EXTENSION_MPATCH : file.getName();
 		
-		page = new EmfdiffExportWizardPage(MPatchConstants.MPATCH_LONG_NAME + " export", new StructuredSelection(file));
+		page = new EmfdiffExportWizardPage(MPatchConstants.MPATCH_LONG_NAME + " export", 
+				file == null ? StructuredSelection.EMPTY : new StructuredSelection(file));
 		page.setTitle(MPatchConstants.MPATCH_LONG_NAME);
 		page.setDescription("Transforms emfdiff into " + MPatchConstants.MPATCH_LONG_NAME + ".");
 		page.setFileName(fileName);
