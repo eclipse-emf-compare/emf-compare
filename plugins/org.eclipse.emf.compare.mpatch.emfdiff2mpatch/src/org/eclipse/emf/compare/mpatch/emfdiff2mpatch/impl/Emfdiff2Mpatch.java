@@ -157,12 +157,28 @@ public class Emfdiff2Mpatch {
 		final List<EObject> diffElements = ExtEcoreUtils.collectTypedElements(diffModel.getOwnedElements(),
 				Collections.singleton(DiffPackage.Literals.DIFF_ELEMENT), true);
 		for (EObject diffElement : diffElements) {
-			if (!(diffElement instanceof DiffGroup)) {
+			if (shallTransform((DiffElement) diffElement)) {
 				mpatch.getChanges().add(toIndepChange((DiffElement) diffElement));
 			}
 		}
 		log(mpatch.getChanges().size() + " DiffElements transformed.", null);
 		return mpatch;
+	}
+
+	/**
+	 * This returns true if the given {@link DiffElement} shall be transformed to mpatch.
+	 * 
+	 * Subclasses may override this helper method to change this behavior.
+	 */
+	protected boolean shallTransform(DiffElement diffElement) {
+		// no groups! grouping may be added later.
+		if (diffElement instanceof DiffGroup)
+			return false;
+		// ignore this element if it is hidden by another diff element
+		if (!diffElement.getIsHiddenBy().isEmpty())
+			return false;
+		// otherwise return true
+		return true;
 	}
 
 	/**
