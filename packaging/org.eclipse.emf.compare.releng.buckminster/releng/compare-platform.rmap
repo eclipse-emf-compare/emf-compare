@@ -46,13 +46,13 @@
       </rm:uri>
     </rm:provider>
   </rm:searchPath>  
-  <searchPath name="gmf">
-		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-			<uri format="{0}/modeling/gmp/updates/milestones">
-				<bc:propertyRef key="eclipse.download" />
-			</uri>
-		</provider>
-	</searchPath>
+  <rm:searchPath name="gmf">
+    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+      <rm:uri format="{0}/modeling/gmp/updates/milestones">
+        <bc:propertyRef key="eclipse.download" />
+      </rm:uri>
+    </rm:provider>
+  </rm:searchPath>   
   <rm:searchPath name="platform">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:uri format="{0}/eclipse/updates/3.7milestones">
