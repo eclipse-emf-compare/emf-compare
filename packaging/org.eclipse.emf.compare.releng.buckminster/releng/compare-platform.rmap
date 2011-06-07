@@ -9,11 +9,11 @@
   <rm:locator pattern="^lpg\.runtime\.java$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.uml2(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.eclipse\.gmf(?:\..+)?$" searchPathRef="indigo-staging"/>
+  <rm:locator pattern="^org\.eclipse\.gmf(?:\..+)?$" searchPathRef="gmf"/>
   <rm:locator pattern="^org\.eclipse\.gef(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator pattern="^org\.eclipse\.draw2d(?:\..+)?$" searchPathRef="indigo-staging"/>
-  <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="orbit"/>
-  <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="orbit"/>
+  <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="gmf"/>
+  <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="gmf"/>
   <rm:locator pattern="^javax(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="indigo-staging"/>
   <rm:locator searchPathRef="platform"/>
@@ -46,13 +46,13 @@
       </rm:uri>
     </rm:provider>
   </rm:searchPath>  
-  <rm:searchPath name="orbit_batik">
-    <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
-      <rm:uri format="{0}/tools/orbit/downloads/drops/S20110422041657/repository">
-        <bc:propertyRef key="eclipse.download"/>
-      </rm:uri>
-    </rm:provider>
-  </rm:searchPath>
+  <searchPath name="gmf">
+		<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
+			<uri format="{0}/modeling/gmp/updates/milestones">
+				<bc:propertyRef key="eclipse.download" />
+			</uri>
+		</provider>
+	</searchPath>
   <rm:searchPath name="platform">
     <rm:provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false">
       <rm:uri format="{0}/eclipse/updates/3.7milestones">
