@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MPatch Example Models
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.example
 Bundle-Version: 1.2.0.qualifier
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin

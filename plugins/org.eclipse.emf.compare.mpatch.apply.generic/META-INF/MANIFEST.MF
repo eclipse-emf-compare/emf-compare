@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Generic MPatch Applier
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.apply.generic;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.mpatch.apply.generic.GenericApplyActivator
@@ -8,4 +8,5 @@ Require-Bundle: org.eclipse.emf.compare.mpatch.apply
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.apply.generic.util
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin

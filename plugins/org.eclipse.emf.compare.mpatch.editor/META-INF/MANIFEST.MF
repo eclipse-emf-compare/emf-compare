@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MPatch Editor
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.editor;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-ClassPath: .
@@ -16,4 +16,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName

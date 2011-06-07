@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MPatch Tests
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test
 Bundle-Version: 1.2.0.qualifier
 Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
@@ -15,4 +15,5 @@ Require-Bundle: org.eclipse.emf.compare.mpatch.emfdiff2mpatch,
  org.eclipse.emf.compare.mpatch.test.eachonce
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin

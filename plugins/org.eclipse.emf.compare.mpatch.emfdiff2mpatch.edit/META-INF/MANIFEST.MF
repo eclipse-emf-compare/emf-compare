@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.edit;singleto
 Bundle-Version: 1.2.0.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.eclipse.emf.compare.mpatch.EditPlugin$Implementation
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.emf.compare.mpatch.symrefs.provider

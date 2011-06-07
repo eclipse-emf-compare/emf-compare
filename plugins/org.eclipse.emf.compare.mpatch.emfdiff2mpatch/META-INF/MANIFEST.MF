@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Emfdiff to MPatch Transformation
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Require-Bundle: org.eclipse.emf.ecore.xmi,
@@ -12,5 +12,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.Emfdiff2mpatchActivator
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 

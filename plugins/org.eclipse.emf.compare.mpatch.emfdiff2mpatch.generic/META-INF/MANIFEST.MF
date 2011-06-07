@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Generic emfdiff2mpatch creators
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.emf.compare.mpatch.emfdiff2mpatch.generic.Activator
@@ -14,4 +14,5 @@ Export-Package: org.eclipse.emf.compare.mpatch.descriptor,
  org.eclipse.emf.compare.mpatch.descriptor.util,
  org.eclipse.emf.compare.mpatch.symrefs,
  org.eclipse.emf.compare.mpatch.symrefs.util
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin

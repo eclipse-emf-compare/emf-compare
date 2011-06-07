@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Commonly used fragments for MPatches
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.common;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
@@ -19,4 +19,5 @@ Export-Package: org.eclipse.emf.compare.mpatch.common.actions,
  org.eclipse.emf.compare.mpatch.extension
 Bundle-Activator: org.eclipse.emf.compare.mpatch.common.CommonMPatchPlugin
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
