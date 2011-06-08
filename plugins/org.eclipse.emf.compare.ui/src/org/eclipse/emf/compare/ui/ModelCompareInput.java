@@ -148,7 +148,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * 
 	 * @param snapshot
 	 *            Snapshot of the input's comparison.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	public ModelCompareInput(ComparisonResourceSetSnapshot snapshot) {
 		this(snapshot.getMatchResourceSet(), snapshot.getDiffResourceSet());
@@ -160,7 +160,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * 
 	 * @param snapshot
 	 *            Snapshot of the input's comparison.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	public ModelCompareInput(ComparisonResourceSnapshot snapshot) {
 		this(snapshot.getMatch(), snapshot.getDiff());
@@ -274,7 +274,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * Returns the comparison snapshot initially fed to this compare input.
 	 * 
 	 * @return The comparison snapshot initially fed to this compare input.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	public ComparisonSnapshot getComparisonSnapshot() {
 		return comparisonSnapshot;
@@ -543,7 +543,7 @@ public class ModelCompareInput implements ICompareInput {
 	 * @param eObject
 	 *            EObject we are to wrap within an {@link ITypedElement}.
 	 * @return {@link ITypedElement} to be returned for this compare input's sides.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	protected ITypedElement createTypedElement(EObject eObject) {
 		return new TypedElementWrapper(eObject);

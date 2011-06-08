@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
  * check whether a given IFile has a given content type ID.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 1.2
+ * @since 1.3
  */
 public class ContentTypePropertyTester extends PropertyTester {
 	/** Name of the property we'll test with this tester. */

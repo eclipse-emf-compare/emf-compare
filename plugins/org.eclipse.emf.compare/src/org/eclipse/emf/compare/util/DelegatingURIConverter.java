@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
  * This implementation of an {@link URIConverter URI Converter} will delegate all calls to another.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 1.2
+ * @since 1.3
  */
 public class DelegatingURIConverter extends ExtensibleURIConverterImpl {
 	/** Our delegate {@link URIConverter}. */

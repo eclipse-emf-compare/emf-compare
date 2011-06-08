@@ -214,7 +214,7 @@ public final class EclipseModelUtils {
 	 * @return The EMF {@link Resource} saved within the given {@link IFile}.
 	 * @throws IOException
 	 *             If the given file cannot be loaded.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	public static Resource getResource(IFile file, ResourceSet resourceSet) throws IOException {
 		for (Resource resource : resourceSet.getResources()) {
@@ -234,7 +234,7 @@ public final class EclipseModelUtils {
 	 * @param eResource
 	 *            The logical resource for which we need a physical resource.
 	 * @return The {@link IResource} that contains the given EMF {@link Resource}.
-	 * @since 1.2
+	 * @since 1.3
 	 */
 	public static IResource findIResource(Resource eResource) {
 		final URI uri = eResource.getURI();
