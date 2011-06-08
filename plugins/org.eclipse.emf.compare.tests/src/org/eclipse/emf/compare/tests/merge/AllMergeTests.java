@@ -26,6 +26,8 @@ public class AllMergeTests {
 		suite.addTestSuite(ContainmentOrderTest.class);
 		suite.addTestSuite(AttributeOrderTest.class);
 		suite.addTestSuite(TestContainmentRemove.class);
+		suite.addTestSuite(SimpleEcoreHistoryMerge.class);
+		suite.addTestSuite(UMLHistoryMerge.class);
 		// $JUnit-END$
 		return suite;
 	}
