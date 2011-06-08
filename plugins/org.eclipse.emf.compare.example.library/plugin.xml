@@ -27,21 +27,21 @@
    <extension point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.emf.compare.example.library.writers.util.WritersResourceImpl"
-            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
+            class="org.eclipse.emf.compare.logical.ui.adapter.EMFCompareAdapterFactory">
          <adapter
                type="org.eclipse.core.resources.mapping.ResourceMapping">
          </adapter>
       </factory>
       <factory
             adaptableType="org.eclipse.emf.compare.example.library.library.util.LibraryResourceImpl"
-            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
+            class="org.eclipse.emf.compare.logical.ui.adapter.EMFCompareAdapterFactory">
          <adapter
                type="org.eclipse.core.resources.mapping.ResourceMapping">
          </adapter>
       </factory>
       <factory
             adaptableType="org.eclipse.emf.compare.example.library.books.util.BooksResourceImpl"
-            class="org.eclipse.emf.compare.logical.adapter.EMFCompareAdapterFactory">
+            class="org.eclipse.emf.compare.logical.ui.adapter.EMFCompareAdapterFactory">
          <adapter
                type="org.eclipse.core.resources.mapping.ResourceMapping">
          </adapter>
