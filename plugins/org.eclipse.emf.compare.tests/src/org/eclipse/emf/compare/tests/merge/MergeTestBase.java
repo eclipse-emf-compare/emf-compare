@@ -69,8 +69,8 @@ public abstract class MergeTestBase extends TestCase {
 	 */
 	protected void doPerformTest(boolean isLeftToRight) throws Exception {
 
-		EObject testLeftModel = isLeftToRight ? leftModel : rightModel;
-		EObject testRightModel = isLeftToRight ? rightModel : leftModel;
+		EObject testLeftModel = leftModel;
+		EObject testRightModel = rightModel;
 
 		Map<String, Object> options = Collections.emptyMap();
 
@@ -115,10 +115,24 @@ public abstract class MergeTestBase extends TestCase {
 	}
 
 	public void testLeftToRight() throws Exception {
-		doPerformTest(true);
+		if (leftModel != null && rightModel != null)
+			doPerformTest(true);
 	}
 
 	public void testRightToLeft() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(false);
+	}
+
+	protected void mergeAllDiffsLeftToRight(EObject left, EObject right) throws Exception {
+		leftModel = left;
+		rightModel = right;
+		doPerformTest(true);
+	}
+
+	protected void mergeAllDiffsRightToLeft(EObject left, EObject right) throws Exception {
+		leftModel = left;
+		rightModel = right;
 		doPerformTest(false);
 	}
 }
