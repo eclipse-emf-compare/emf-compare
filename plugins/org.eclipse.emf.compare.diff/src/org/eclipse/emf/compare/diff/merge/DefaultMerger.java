@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
@@ -307,11 +308,15 @@ public class DefaultMerger implements IMerger {
 		if (diff instanceof ReferenceChange) {
 			final EReference reference = ((ReferenceChange)diff).getReference();
 			if (reference == EcorePackage.eINSTANCE.getEClass_ESuperTypes()) {
-				final EObject referenceType;
+				EObject referenceType = null;
 				if (diff instanceof ReferenceChangeLeftTarget) {
 					referenceType = ((ReferenceChangeLeftTarget)diff).getRightTarget();
-				} else {
+				} else if (diff instanceof ReferenceChangeRightTarget) {
 					referenceType = ((ReferenceChangeRightTarget)diff).getLeftTarget();
+				} else if (diff instanceof UpdateReference) {
+					referenceType = ((UpdateReference)diff).getLeftTarget();
+				} else {
+					// we did cover all the subclasses, we should have a RferenceOrderChange
 				}
 				for (final DiffElement siblingDiff : ((DiffGroup)diff.eContainer()).getSubDiffElements()) {
 					if (siblingDiff instanceof ModelElementChangeLeftTarget) {
