@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test meta model for MPatches
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.mpatch.test.eachonce;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.3.0.qualifier
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
@@ -15,4 +15,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.xmi
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.emf.common.ui
-Bundle-Vendor: Technical University of Denmark
+Bundle-Vendor: %providerName

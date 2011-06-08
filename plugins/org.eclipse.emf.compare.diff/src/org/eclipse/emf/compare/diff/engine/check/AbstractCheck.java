@@ -51,6 +51,8 @@ public abstract class AbstractCheck {
 
 	/**
 	 * utility class to easily matches lists.
+	 * 
+	 * @since 1.2
 	 */
 	protected DiffCollectionsHelper matcherHelper;
 
