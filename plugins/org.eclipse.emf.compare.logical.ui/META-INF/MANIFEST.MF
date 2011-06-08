@@ -19,3 +19,6 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-Activator: org.eclipse.emf.compare.logical.ui.EMFCompareLogicalUIPlugin
+Export-Package: org.eclipse.emf.compare.logical.ui,
+ org.eclipse.emf.compare.logical.ui.adapter,
+ org.eclipse.emf.compare.logical.ui.synchronize
