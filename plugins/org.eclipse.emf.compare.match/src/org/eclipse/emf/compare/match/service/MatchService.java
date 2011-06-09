@@ -358,15 +358,13 @@ public final class MatchService {
 			final Resource matchedRight = findMatchingResource(res, remainingRightResources);
 			final Resource matchedAncestor = findMatchingResource(res, remainingAncestorResources);
 			if (matchedRight != null && findMatchingResource(matchedRight, remainingLeftResources) == res) {
+				remainingLeftResources.remove(res);
+				remainingRightResources.remove(matchedRight);
 				if (matchedAncestor != null
 						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
-					remainingLeftResources.remove(res);
-					remainingRightResources.remove(matchedRight);
 					remainingAncestorResources.remove(matchedAncestor);
 					match.getMatchModels().add(doResourceMatch(res, matchedRight, matchedAncestor, options));
 				} else {
-					remainingLeftResources.remove(res);
-					remainingRightResources.remove(matchedRight);
 					match.getMatchModels().add(doResourceMatch(res, matchedRight, options));
 				}
 			} else {

@@ -24,6 +24,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 
@@ -259,17 +260,33 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveLeftContent(Object element, byte[] bytes) {
-		// FIXME save whole resource Set
 		// FIXME automatic saves
 		if (element instanceof ModelCompareInput) {
 			final ModelCompareInput input = (ModelCompareInput)element;
 			if (input.getLeftResource() != null) {
-				try {
-					input.getLeftResource().save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					EMFComparePlugin.log(e.getMessage(), false);
+				final ResourceSet rs = input.getLeftResource().getResourceSet();
+				if (rs == null) {
+					safeSave(input.getLeftResource());
+				} else {
+					for (Resource res : rs.getResources()) {
+						safeSave(res);
+					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * Saves the given resource while catching and logging potential exceptiions.
+	 * 
+	 * @param res
+	 *            The resource that is to be saved.
+	 */
+	private void safeSave(Resource res) {
+		try {
+			res.save(Collections.EMPTY_MAP);
+		} catch (IOException e) {
+			EMFComparePlugin.log(e.getMessage(), false);
 		}
 	}
 
@@ -280,15 +297,17 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *      byte[])
 	 */
 	public void saveRightContent(Object element, byte[] bytes) {
-		// FIXME save whole resource Set
 		// FIXME automatic saves
 		if (element instanceof ModelCompareInput) {
 			final ModelCompareInput input = (ModelCompareInput)element;
 			if (input.getRightResource() != null) {
-				try {
-					input.getRightResource().save(Collections.EMPTY_MAP);
-				} catch (IOException e) {
-					EMFComparePlugin.log(e.getMessage(), false);
+				final ResourceSet rs = input.getRightResource().getResourceSet();
+				if (rs == null) {
+					safeSave(input.getRightResource());
+				} else {
+					for (Resource res : rs.getResources()) {
+						safeSave(res);
+					}
 				}
 			}
 		}

@@ -437,19 +437,23 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			setLeftDirty(false);
 
 			((ModelCompareInput)getInput()).copy(diffs, leftToRight);
-			if (((ModelCompareInput)getInput()).getDiff() instanceof DiffModel) {
-				final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE
-						.createComparisonResourceSnapshot();
-				snap.setDiff((DiffModel)((ModelCompareInput)getInput()).getDiff());
-				snap.setMatch((MatchModel)((ModelCompareInput)getInput()).getMatch());
-				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
-			} else {
-				final ComparisonResourceSetSnapshot snap = DiffFactory.eINSTANCE
-						.createComparisonResourceSetSnapshot();
-				snap.setDiffResourceSet((DiffResourceSet)((ModelCompareInput)getInput()).getDiff());
-				snap.setMatchResourceSet((MatchResourceSet)((ModelCompareInput)getInput()).getMatch());
-				configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+			ComparisonSnapshot snapshot = ((ModelCompareInput)getInput()).getComparisonSnapshot();
+			if (snapshot == null) {
+				if (((ModelCompareInput)getInput()).getDiff() instanceof DiffModel) {
+					final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE
+							.createComparisonResourceSnapshot();
+					snap.setDiff((DiffModel)((ModelCompareInput)getInput()).getDiff());
+					snap.setMatch((MatchModel)((ModelCompareInput)getInput()).getMatch());
+					snapshot = snap;
+				} else {
+					final ComparisonResourceSetSnapshot snap = DiffFactory.eINSTANCE
+							.createComparisonResourceSetSnapshot();
+					snap.setDiffResourceSet((DiffResourceSet)((ModelCompareInput)getInput()).getDiff());
+					snap.setMatchResourceSet((MatchResourceSet)((ModelCompareInput)getInput()).getMatch());
+					snapshot = snap;
+				}
 			}
+			configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snapshot);
 			leftDirty |= !leftToRight && configuration.isLeftEditable();
 			rightDirty |= leftToRight && configuration.isRightEditable();
 			setLeftDirty(leftDirty);

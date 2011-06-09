@@ -36,6 +36,7 @@ import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
@@ -99,14 +100,35 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 	 */
 	@Override
 	public void saveChanges(IProgressMonitor monitor) {
-		// FIXME save whole resource Set
+		if (preparedInput.getLeftResource() != null) {
+			final ResourceSet rs = preparedInput.getLeftResource().getResourceSet();
+			if (rs == null)
+				safeSave(preparedInput.getLeftResource());
+			else
+				for (Resource res : rs.getResources()) {
+					safeSave(res);
+				}
+		}
+		if (preparedInput.getRightResource() != null) {
+			final ResourceSet rs = preparedInput.getRightResource().getResourceSet();
+			if (rs == null)
+				safeSave(preparedInput.getRightResource());
+			else
+				for (Resource res : rs.getResources()) {
+					safeSave(res);
+				}
+		}
+	}
+
+	/**
+	 * Saves the given resource while catching and logging potential exceptiions.
+	 * 
+	 * @param res
+	 *            The resource that is to be saved.
+	 */
+	private void safeSave(Resource res) {
 		try {
-			if (preparedInput.getLeftResource() != null) {
-				preparedInput.getLeftResource().save(Collections.EMPTY_MAP);
-			}
-			if (preparedInput.getRightResource() != null) {
-				preparedInput.getRightResource().save(Collections.EMPTY_MAP);
-			}
+			res.save(Collections.EMPTY_MAP);
 		} catch (IOException e) {
 			EMFComparePlugin.log(e.getMessage(), false);
 		}
