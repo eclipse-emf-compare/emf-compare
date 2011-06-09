@@ -51,6 +51,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
 public class EMFResourceMapping extends ResourceMapping {
+	/** We'll use this as the scheme of our remotely loaded resources. */
+	public static final String REMOTE_RESOURCE_SCHEME = "remote"; //$NON-NLS-1$
+
 	/** The physical resource of this mapping. */
 	private final IFile file;
 
@@ -332,7 +335,12 @@ public class EMFResourceMapping extends ResourceMapping {
 	 */
 	private static void loadRemoteResource(URI resourceURI, IStorage storage, ResourceSet resourceSet)
 			throws CoreException {
-		Resource resource = resourceSet.createResource(resourceURI);
+		String resourcePath = resourceURI.path();
+		if (resourceURI.isPlatform()) {
+			resourcePath = resourcePath.substring(resourcePath.indexOf('/') + 1);
+		}
+		URI actualURI = URI.createURI(REMOTE_RESOURCE_SCHEME + ':' + '/' + resourcePath);
+		Resource resource = resourceSet.createResource(actualURI);
 
 		InputStream remoteStream = null;
 		try {

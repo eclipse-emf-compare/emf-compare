@@ -51,4 +51,23 @@
          </enablement>
        </navigatorContent>
    </extension>
+   <!--
+      Providing the structure and content viewers that should be used with our Typed Element
+   -->
+   <extension
+         point="org.eclipse.compare.structureMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewerCreator"
+            extensions="EMF.TYPE"
+            id="org.eclipse.emf.compare.logical.ModelStructureMergeViewer"
+            label="%structureViewerLabel"/>
+   </extension>
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewerCreator"
+            extensions="EMF.TYPE"
+            id="org.eclipse.emf.compare.logical.ModelContentMergeViewer"
+            label="%contentViewerLabel"/>
+   </extension>
 </plugin>

@@ -13,19 +13,30 @@ package org.eclipse.emf.compare.logical.ui;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.eclipse.compare.IEditableContent;
 import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.compare.logical.model.EMFResourceMapping;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
  * This implementation of an {@link ITypedElement} will allow us to wrap an EObject.
+ * <p>
+ * Implementing {@link IStreamContentAccessor} allows us to bypass bug 293926 so that our viewers are properly
+ * instantiated from the synchronize view's navigator.
+ * </p>
+ * <p>
+ * Implementing {@link IEditableContent} allows us to trick org.eclipse.compare into thinking that we are
+ * editable, thus enabling the "copy" actions in the content viewer.
+ * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">laurent Goubet</a>
  */
-public class EObjectTypedElement implements ITypedElement, IStreamContentAccessor {
+public class EObjectTypedElement implements ITypedElement, IStreamContentAccessor, IEditableContent {
 	/** This will be used as the type of our wrappers in order to determine the structure and content viewers. */
 	public static final String EMF_TYPE = "EMF.TYPE"; //$NON-NLS-1$
 
@@ -34,6 +45,9 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 
 	/** Icon of the wrapped EObject. */
 	private final Image image;
+
+	/** <code>true</code> if the underlying object is in a local resource, <code>false</code> otherwise. */
+	private final boolean isEditable;
 
 	/**
 	 * Wraps the given <em>eObject</em> within a new {@link ITypedElement}, using the given
@@ -47,6 +61,13 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 	public EObjectTypedElement(EObject eObject, ILabelProvider labelProvider) {
 		this.name = labelProvider.getText(eObject);
 		this.image = labelProvider.getImage(eObject);
+		Resource resource = eObject.eResource();
+		if (resource != null && resource.getURI() != null) {
+			isEditable = !EMFResourceMapping.REMOTE_RESOURCE_SCHEME.equals(eObject.eResource().getURI()
+					.scheme());
+		} else {
+			isEditable = false;
+		}
 	}
 
 	/**
@@ -87,5 +108,33 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 	 */
 	public String getType() {
 		return EMF_TYPE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#isEditable()
+	 */
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#replace(org.eclipse.compare.ITypedElement,
+	 *      org.eclipse.compare.ITypedElement)
+	 */
+	public ITypedElement replace(ITypedElement dest, ITypedElement src) {
+		return dest;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.IEditableContent#setContent(byte[])
+	 */
+	public void setContent(byte[] newContent) {
+		// TODO can we use this instead of our own save?
 	}
 }
