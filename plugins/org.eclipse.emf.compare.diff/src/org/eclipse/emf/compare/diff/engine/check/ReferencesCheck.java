@@ -140,7 +140,7 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<Integer> removedIndices = new ArrayList<Integer>();
 		// Purge "left" list of all reference values that have been added to it
 		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
-			if (isUnmatched(leftValue))
+			if (isUnmatched(leftValue) || leftValue.eContainer() != getMatchedEObject(leftValue).eContainer())
 				leftElementReferences.remove(leftValue);
 		}
 		for (EObject rightValue : new ArrayList<EObject>(rightElementReferences)) {
@@ -210,6 +210,17 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<EObject> rightElementReferences = new ArrayList<EObject>(
 				(List<EObject>)EFactory.eGetAsList(rightElement, reference.getName()));
 		final List<Integer> removedIndices = new ArrayList<Integer>(removedReferences.size());
+
+		final List<EObject> leftElementReferencesCopy = new ArrayList<EObject>(leftElementReferences);
+		final List<EObject> rightElementReferencesCopy = new ArrayList<EObject>(rightElementReferences);
+
+		for (EObject addedReference : leftElementReferencesCopy) {
+			rightElementReferences.remove(addedReference);
+		}
+		for (EObject deletedReference : rightElementReferencesCopy) {
+			leftElementReferences.remove(deletedReference);
+		}
+
 		// Purge "left" list of all reference values that have been added to it
 		for (final ReferenceChangeLeftTarget added : addedReferences) {
 			leftElementReferences.remove(added.getLeftTarget());
@@ -329,6 +340,16 @@ public class ReferencesCheck extends AbstractCheck {
 								reference, addedValue, deletedValue));
 			}
 		} else {
+			final List<EObject> addedReferencesCopy = new ArrayList<EObject>(addedReferences);
+			final List<EObject> deletedReferencesCopy = new ArrayList<EObject>(deletedReferences);
+
+			for (EObject addedReference : addedReferencesCopy) {
+				deletedReferences.remove(addedReference);
+			}
+			for (EObject deletedReference : deletedReferencesCopy) {
+				addedReferences.remove(deletedReference);
+			}
+
 			final List<ReferenceChangeLeftTarget> addedReferencesDiffs = new ArrayList<ReferenceChangeLeftTarget>(
 					addedReferences.size());
 			final List<ReferenceChangeRightTarget> removedReferencesDiffs = new ArrayList<ReferenceChangeRightTarget>(
@@ -599,6 +620,18 @@ public class ReferencesCheck extends AbstractCheck {
 				}
 			}
 		} else {
+			// check that added references are not in deleted references (FIXME: may be necessary to add non
+			// resolved proxy handling)
+			final List<EObject> addedReferencesCopy = new ArrayList<EObject>(addedReferences);
+			final List<EObject> deletedReferencesCopy = new ArrayList<EObject>(deletedReferences);
+
+			for (EObject addedReference : addedReferencesCopy) {
+				deletedReferences.remove(addedReference);
+			}
+			for (EObject deletedReference : deletedReferencesCopy) {
+				addedReferences.remove(deletedReference);
+			}
+
 			final List<ReferenceChangeLeftTarget> addedReferencesDiffs = new ArrayList<ReferenceChangeLeftTarget>(
 					addedReferences.size());
 			final List<ReferenceChangeRightTarget> removedReferencesDiffs = new ArrayList<ReferenceChangeRightTarget>(
