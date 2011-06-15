@@ -40,8 +40,6 @@ public final class ResourceSimilarity {
 	public static Resource findMatchingResource(Resource resource, List<Resource> candidates) {
 		final double resourceSimilarityThreshold = 0.7d;
 		final URI referenceURI = resource.getURI();
-		if (candidates.size() == 1)
-			return candidates.get(0);
 
 		Resource mostSimilar = null;
 		double highestSimilarity = -1;
