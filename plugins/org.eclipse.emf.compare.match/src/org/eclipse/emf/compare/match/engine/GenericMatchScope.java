@@ -113,7 +113,7 @@ public class GenericMatchScope implements IMatchScope {
 	 * 
 	 * @param newResource
 	 *            The resource that is to be added to this scope.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected void addToScope(Resource newResource) {
 		resourcesInScope.add(newResource);
@@ -169,7 +169,7 @@ public class GenericMatchScope implements IMatchScope {
 	 * 
 	 * @param resourceSet
 	 *            the resource set to resolve.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected void resolveAll(ResourceSet resourceSet) {
 		if (resourceSet != null) {

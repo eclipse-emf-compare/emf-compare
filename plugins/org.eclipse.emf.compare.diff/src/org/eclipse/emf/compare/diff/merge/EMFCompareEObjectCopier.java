@@ -286,7 +286,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            object referenced from <em>eObject</em> that needs to be copied or found in the target
 	 *            resource.
 	 * @return Copy of the referenced object, located in the target resource if we could find it.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected Object findReferencedObjectCopy(Object referencedObject) {
 		// If not an EObject, copy it and return

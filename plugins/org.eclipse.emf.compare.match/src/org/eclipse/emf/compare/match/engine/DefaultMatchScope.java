@@ -36,7 +36,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * </p>
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 1.3
+ * @since 1.2
  */
 public class DefaultMatchScope extends GenericMatchScope {
 	/**

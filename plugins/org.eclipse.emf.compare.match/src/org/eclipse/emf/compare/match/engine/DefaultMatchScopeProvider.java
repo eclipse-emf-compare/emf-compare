@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  * {@link DefaultMatchScope} for all scopes.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
- * @since 1.3
+ * @since 1.2
  */
 public class DefaultMatchScopeProvider implements IMatchScopeProvider {
 	/** The match scope used for the left side of comparison. */
