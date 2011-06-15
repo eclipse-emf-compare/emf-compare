@@ -46,7 +46,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
-import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
+import org.eclipse.emf.compare.match.engine.DefaultMatchScopeProvider;
 import org.eclipse.emf.compare.match.metamodel.MatchFactory;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
@@ -306,11 +306,11 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 					// do comparison
 					final MatchModel match;
 					if (getAncestorResource() == null) {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
 								getLeftResource(), getRightResource()));
 						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(), options);
 					} else {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
 								getLeftResource(), getRightResource(), getAncestorResource()));
 						match = MatchService.doResourceMatch(getLeftResource(), getRightResource(),
 								getAncestorResource(), options);
@@ -353,12 +353,12 @@ public final class ModelComparator implements ICompareInputDetailsProvider {
 					// do comparison
 					final MatchResourceSet match;
 					if (getAncestorResource() == null) {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
 								getLeftResource().getResourceSet(), getRightResource().getResourceSet()));
 						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),
 								getRightResource().getResourceSet(), options);
 					} else {
-						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new GenericMatchScopeProvider(
+						options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new DefaultMatchScopeProvider(
 								getLeftResource().getResourceSet(), getRightResource().getResourceSet(),
 								getAncestorResource().getResourceSet()));
 						match = MatchService.doResourceSetMatch(getLeftResource().getResourceSet(),

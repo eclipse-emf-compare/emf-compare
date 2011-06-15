@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.compare.match.engine.DefaultMatchScopeProvider;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
-import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
 import org.eclipse.emf.compare.match.engine.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.IMatchScope;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -59,7 +59,7 @@ public class UML2MatchEngine extends GenericMatchEngine {
 		}
 	}
 
-	private static class UML2MatchScopeProvider extends GenericMatchScopeProvider {
+	private static class UML2MatchScopeProvider extends DefaultMatchScopeProvider {
 
 		public UML2MatchScopeProvider(Resource leftResource, Resource rightResource) {
 			super(leftResource, rightResource);

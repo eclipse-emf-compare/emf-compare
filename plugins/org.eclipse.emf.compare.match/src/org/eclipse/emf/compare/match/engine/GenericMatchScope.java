@@ -57,7 +57,7 @@ public class GenericMatchScope implements IMatchScope {
 			eObjectsInScope.add(next);
 			if (next.eResource() != null && !resourcesInScope.contains(next.eResource())) {
 				resolveAll(next.eResource().getResourceSet());
-				resourcesInScope.add(next.eResource());
+				addToScope(next.eResource());
 			}
 		}
 	}
@@ -72,7 +72,7 @@ public class GenericMatchScope implements IMatchScope {
 	 */
 	public GenericMatchScope(Resource scope) {
 		resolveAll(scope.getResourceSet());
-		this.resourcesInScope.add(scope);
+		addToScope(scope);
 	}
 
 	/**
@@ -85,7 +85,9 @@ public class GenericMatchScope implements IMatchScope {
 	 */
 	public GenericMatchScope(ResourceSet scope) {
 		resolveAll(scope);
-		this.resourcesInScope.addAll(scope.getResources());
+		for (Resource res : scope.getResources()) {
+			addToScope(res);
+		}
 	}
 
 	/**
@@ -104,6 +106,17 @@ public class GenericMatchScope implements IMatchScope {
 			return false;
 		}
 		return isInScope(resource);
+	}
+
+	/**
+	 * Adds the given resource to the set of resources considered in this scope.
+	 * 
+	 * @param newResource
+	 *            The resource that is to be added to this scope.
+	 * @since 1.3
+	 */
+	protected void addToScope(Resource newResource) {
+		resourcesInScope.add(newResource);
 	}
 
 	/**
@@ -156,8 +169,9 @@ public class GenericMatchScope implements IMatchScope {
 	 * 
 	 * @param resourceSet
 	 *            the resource set to resolve.
+	 * @since 1.3
 	 */
-	private void resolveAll(ResourceSet resourceSet) {
+	protected void resolveAll(ResourceSet resourceSet) {
 		if (resourceSet != null) {
 			final List<Resource> resources = resourceSet.getResources();
 			for (int i = 0; i < resources.size(); ++i) {
@@ -169,7 +183,6 @@ public class GenericMatchScope implements IMatchScope {
 						// Resolves cross references by simply visiting them.
 						objectChildren.next();
 					}
-					resourcesInScope.add(eObject.eResource());
 				}
 			}
 		}
