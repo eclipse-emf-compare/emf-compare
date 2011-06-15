@@ -18,8 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.compare.EMFCompareException;
-import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
@@ -30,6 +29,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
@@ -152,15 +152,30 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		final EObject copy;
 		final EObject targetValue = get(value);
 		if (targetValue != null) {
-			copy = get(value);
+			copy = targetValue;
 		} else if (mergeLinkedDiff(value)) {
 			// referenced object was an unmatched one and we managed to merge its corresponding diff
 			copy = get(value);
 		} else {
-			throw new EMFCompareException(EMFCompareDiffMessages.getString(
-					"EMFCompareEObjectCopier.MergeFailure", value, targetReference)); //$NON-NLS-1$
+			copy = copy(value);
 		}
-		((List<Object>)target.eGet(targetReference)).add(copy);
+		if (copy.eIsProxy() && copy instanceof InternalEObject) {
+			// only add if the element is not already there.
+			URI proxURI = ((InternalEObject)copy).eProxyURI();
+			boolean found = false;
+			Iterator<Object> it = ((List<Object>)target.eGet(targetReference)).iterator();
+			while (!found && it.hasNext()) {
+				Object obj = it.next();
+				if (obj instanceof InternalEObject) {
+					found = proxURI.equals(((InternalEObject)obj).eProxyURI());
+				}
+			}
+			if (!found)
+				((List<Object>)target.eGet(targetReference)).add(copy);
+
+		} else {
+			((List<Object>)target.eGet(targetReference)).add(copy);
+		}
 		return copy;
 	}
 
