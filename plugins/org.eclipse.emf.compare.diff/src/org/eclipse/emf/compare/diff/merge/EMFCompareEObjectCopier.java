@@ -253,7 +253,8 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 						// else => don't take any action, this has already been handled
 					} else {
 						// referenced object lies in another resource, simply reference it
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
+						final Object copyReferencedObject = findReferencedObjectCopy(referencedEObject);
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedObject);
 					}
 				}
 			}
@@ -269,13 +270,62 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				} else if (mergeLinkedDiff((EObject)referencedEObject)) {
 					// referenced object was an unmatched one and we managed to merge its corresponding diff
 					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
-					// else => don't take any action, this has already been handled
 				} else {
-					// referenced object lies in another resource, simply reference it
-					copyEObject.eSet(getTarget(eReference), referencedEObject);
+					final Object copyReferencedObject = findReferencedObjectCopy(referencedEObject);
+					copyEObject.eSet(getTarget(eReference), copyReferencedObject);
 				}
 			}
 		}
+	}
+
+	/**
+	 * We couldn't find a copy of <em>referencedObject</em>. We still need to find its matched object in the
+	 * target resource in order not to simply reference the "old" resource from a copied object.
+	 * 
+	 * @param referencedObject
+	 *            object referenced from <em>eObject</em> that needs to be copied or found in the target
+	 *            resource.
+	 * @return Copy of the referenced object, located in the target resource if we could find it.
+	 * @since 1.3
+	 */
+	protected Object findReferencedObjectCopy(Object referencedObject) {
+		// If not an EObject, copy it and return
+		if (!(referencedObject instanceof EObject)) {
+			return referencedObject;
+		}
+
+		Object copyReferencedObject = referencedObject;
+
+		final EObject referencedEObject = (EObject)referencedObject;
+		// Is the referencedObject in either left or right?
+		final Resource referencedResource = referencedEObject.eResource();
+		final Resource left = diffModel.getLeftRoots().get(0).eResource();
+		final Resource right = diffModel.getRightRoots().get(0).eResource();
+		if (referencedResource == left) {
+			/*
+			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
+			 * has already been copied
+			 */
+			final String proxyURI = referencedResource.getURIFragment(referencedEObject);
+			copyReferencedObject = right.getEObject(proxyURI);
+			if (copyReferencedObject == null) {
+				// FIXME can we find the referenced object without the match model?
+			}
+		} else if (referencedResource == right) {
+			/*
+			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
+			 * has already been copied
+			 */
+			final String proxyURI = referencedResource.getURIFragment(referencedEObject);
+			copyReferencedObject = left.getEObject(proxyURI);
+			if (copyReferencedObject == null) {
+				// FIXME can we find the referenced object without the match model?
+			}
+		} else {
+			// Reference lies in another resource. Simply copy it
+			copyReferencedObject = referencedObject;
+		}
+		return copyReferencedObject;
 	}
 
 	/**
