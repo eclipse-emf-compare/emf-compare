@@ -51,9 +51,9 @@ public final class MatchScopeProviderUtil {
 		IMatchScopeProvider scopeProvider = getScopeProvider(options);
 		if (scopeProvider == null) {
 			if (resourceSets.length == 2) {
-				scopeProvider = new GenericMatchScopeProvider(resourceSets[0], resourceSets[1]);
+				scopeProvider = new DefaultMatchScopeProvider(resourceSets[0], resourceSets[1]);
 			} else {
-				scopeProvider = new GenericMatchScopeProvider(resourceSets[0], resourceSets[1],
+				scopeProvider = new DefaultMatchScopeProvider(resourceSets[0], resourceSets[1],
 						resourceSets[2]);
 			}
 		}
@@ -78,9 +78,9 @@ public final class MatchScopeProviderUtil {
 		IMatchScopeProvider scopeProvider = getScopeProvider(options);
 		if (scopeProvider == null) {
 			if (resources.length == 2) {
-				scopeProvider = new GenericMatchScopeProvider(resources[0], resources[1]);
+				scopeProvider = new DefaultMatchScopeProvider(resources[0], resources[1]);
 			} else {
-				scopeProvider = new GenericMatchScopeProvider(resources[0], resources[1], resources[2]);
+				scopeProvider = new DefaultMatchScopeProvider(resources[0], resources[1], resources[2]);
 			}
 		}
 		return scopeProvider;
@@ -104,9 +104,9 @@ public final class MatchScopeProviderUtil {
 		IMatchScopeProvider scopeProvider = getScopeProvider(options);
 		if (scopeProvider == null) {
 			if (eObjects.length == 2) {
-				scopeProvider = new GenericMatchScopeProvider(eObjects[0], eObjects[1]);
+				scopeProvider = new DefaultMatchScopeProvider(eObjects[0], eObjects[1]);
 			} else {
-				scopeProvider = new GenericMatchScopeProvider(eObjects[0], eObjects[1], eObjects[2]);
+				scopeProvider = new DefaultMatchScopeProvider(eObjects[0], eObjects[1], eObjects[2]);
 			}
 		}
 		return scopeProvider;
