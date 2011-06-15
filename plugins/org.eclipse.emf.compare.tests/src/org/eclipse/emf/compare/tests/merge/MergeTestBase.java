@@ -83,8 +83,15 @@ public abstract class MergeTestBase extends TestCase {
 		MergeService.merge(differences, isLeftToRight);
 		postMergeHook(isLeftToRight);
 
-		String expected = ModelUtils.serialize(testLeftModel);
-		String actual = ModelUtils.serialize(testRightModel);
+		String leftModelString = ModelUtils.serialize(testLeftModel);
+		String rightModelString = ModelUtils.serialize(testRightModel);
+		String expected = leftModelString;
+		String actual = rightModelString;
+		if (!isLeftToRight) {
+			expected = rightModelString;
+			actual = leftModelString;
+		}
+
 		assertEquals(expected, actual);
 
 		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
