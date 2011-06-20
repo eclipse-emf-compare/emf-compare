@@ -30,24 +30,6 @@ public interface UML2DiffFactory extends EFactory {
 	UML2DiffFactory eINSTANCE = org.eclipse.emf.compare.uml2diff.impl.UML2DiffFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>UML Abstraction Change Left Target</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>UML Abstraction Change Left Target</em>'.
-	 * @generated
-	 */
-	UMLAbstractionChangeLeftTarget createUMLAbstractionChangeLeftTarget();
-
-	/**
-	 * Returns a new object of class '<em>UML Abstraction Change Right Target</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>UML Abstraction Change Right Target</em>'.
-	 * @generated
-	 */
-	UMLAbstractionChangeRightTarget createUMLAbstractionChangeRightTarget();
-
-	/**
 	 * Returns a new object of class '<em>UML Association Change Left Target</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -64,6 +46,168 @@ public interface UML2DiffFactory extends EFactory {
 	 * @generated
 	 */
 	UMLAssociationChangeRightTarget createUMLAssociationChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Association Branch Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Association Branch Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLAssociationBranchChangeLeftTarget createUMLAssociationBranchChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Association Branch Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Association Branch Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLAssociationBranchChangeRightTarget createUMLAssociationBranchChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Dependency Branch Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Dependency Branch Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLDependencyBranchChangeLeftTarget createUMLDependencyBranchChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Dependency Branch Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Dependency Branch Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLDependencyBranchChangeRightTarget createUMLDependencyBranchChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Generalization Set Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Generalization Set Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLGeneralizationSetChangeLeftTarget createUMLGeneralizationSetChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Generalization Set Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Generalization Set Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLGeneralizationSetChangeRightTarget createUMLGeneralizationSetChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Dependency Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Dependency Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLDependencyChangeLeftTarget createUMLDependencyChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Dependency Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Dependency Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLDependencyChangeRightTarget createUMLDependencyChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Extend Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Extend Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLExtendChangeLeftTarget createUMLExtendChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Extend Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Extend Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLExtendChangeRightTarget createUMLExtendChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Execution Specification Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Execution Specification Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLExecutionSpecificationChangeLeftTarget createUMLExecutionSpecificationChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Execution Specification Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Execution Specification Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLExecutionSpecificationChangeRightTarget createUMLExecutionSpecificationChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Destruction Event Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Destruction Event Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLDestructionEventChangeLeftTarget createUMLDestructionEventChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Destruction Event Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Destruction Event Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLDestructionEventChangeRightTarget createUMLDestructionEventChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Interval Constraint Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Interval Constraint Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLIntervalConstraintChangeLeftTarget createUMLIntervalConstraintChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Interval Constraint Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Interval Constraint Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLIntervalConstraintChangeRightTarget createUMLIntervalConstraintChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Message Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Message Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLMessageChangeLeftTarget createUMLMessageChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Message Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Message Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLMessageChangeRightTarget createUMLMessageChangeRightTarget();
 
 	/**
 	 * Returns a new object of class '<em>UML Stereotype Attribute Change Left Target</em>'.
@@ -109,6 +253,42 @@ public interface UML2DiffFactory extends EFactory {
 	 * @generated
 	 */
 	UMLStereotypeApplicationRemoval createUMLStereotypeApplicationRemoval();
+
+	/**
+	 * Returns a new object of class '<em>UML Stereotype Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Stereotype Reference Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLStereotypeReferenceChangeLeftTarget createUMLStereotypeReferenceChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Stereotype Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Stereotype Reference Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLStereotypeReferenceChangeRightTarget createUMLStereotypeReferenceChangeRightTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Stereotype Update Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Stereotype Update Reference</em>'.
+	 * @generated
+	 */
+	UMLStereotypeUpdateReference createUMLStereotypeUpdateReference();
+
+	/**
+	 * Returns a new object of class '<em>UML Stereotype Reference Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Stereotype Reference Order Change</em>'.
+	 * @generated
+	 */
+	UMLStereotypeReferenceOrderChange createUMLStereotypeReferenceOrderChange();
 
 	/**
 	 * Returns the package supported by this factory.

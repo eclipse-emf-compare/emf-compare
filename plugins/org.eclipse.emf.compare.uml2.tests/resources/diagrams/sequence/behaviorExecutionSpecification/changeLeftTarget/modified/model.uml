@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_-v6joIePEeCZc5gH2ZbOxA" name="model">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_-0Ob4IePEeCZc5gH2ZbOxA" name="interaction0">
+    <lifeline xmi:id="_DgogoIeQEeCZc5gH2ZbOxA" name="Lifeline0"/>
+    <lifeline xmi:id="_EjXwAIeQEeCZc5gH2ZbOxA" name="Lifeline1"/>
+    <lifeline xmi:id="_FF_78IeQEeCZc5gH2ZbOxA" name="Lifeline2" coveredBy="_C9WeUIeZEeCA2M3LBPUcyw _C9YTgIeZEeCA2M3LBPUcyw _C9XscIeZEeCA2M3LBPUcyw"/>
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_C9WeUIeZEeCA2M3LBPUcyw" name="BehaviorExecSpec0Start0" covered="_FF_78IeQEeCZc5gH2ZbOxA" event="_C9UpIIeZEeCA2M3LBPUcyw" execution="_C9XscIeZEeCA2M3LBPUcyw"/>
+    <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_C9XscIeZEeCA2M3LBPUcyw" name="BehaviorExecSpec0" covered="_FF_78IeQEeCZc5gH2ZbOxA" start="_C9WeUIeZEeCA2M3LBPUcyw" finish="_C9YTgIeZEeCA2M3LBPUcyw"/>
+    <fragment xmi:type="uml:ExecutionOccurrenceSpecification" xmi:id="_C9YTgIeZEeCA2M3LBPUcyw" name="BehaviorExecSpec0Finish0" covered="_FF_78IeQEeCZc5gH2ZbOxA" event="_C9V3QIeZEeCA2M3LBPUcyw" execution="_C9XscIeZEeCA2M3LBPUcyw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:ExecutionEvent" xmi:id="_C9UpIIeZEeCA2M3LBPUcyw" name="ExecutionEvent0"/>
+  <packagedElement xmi:type="uml:ExecutionEvent" xmi:id="_C9V3QIeZEeCA2M3LBPUcyw" name="ExecutionEvent1"/>
+</uml:Model>

@@ -80,52 +80,6 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 	}
 
 	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeLeftTarget} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected UMLAbstractionChangeLeftTargetItemProvider umlAbstractionChangeLeftTargetItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeLeftTarget}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createUMLAbstractionChangeLeftTargetAdapter() {
-		if (umlAbstractionChangeLeftTargetItemProvider == null) {
-			umlAbstractionChangeLeftTargetItemProvider = new UMLAbstractionChangeLeftTargetItemProvider(this);
-		}
-
-		return umlAbstractionChangeLeftTargetItemProvider;
-	}
-
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeRightTarget} instances.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected UMLAbstractionChangeRightTargetItemProvider umlAbstractionChangeRightTargetItemProvider;
-
-	/**
-	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeRightTarget}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Adapter createUMLAbstractionChangeRightTargetAdapter() {
-		if (umlAbstractionChangeRightTargetItemProvider == null) {
-			umlAbstractionChangeRightTargetItemProvider = new UMLAbstractionChangeRightTargetItemProvider(this);
-		}
-
-		return umlAbstractionChangeRightTargetItemProvider;
-	}
-
-	/**
 	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLAssociationChangeLeftTarget} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -169,6 +123,420 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 		}
 
 		return umlAssociationChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLAssociationBranchChangeLeftTargetItemProvider umlAssociationBranchChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLAssociationBranchChangeLeftTargetAdapter() {
+		if (umlAssociationBranchChangeLeftTargetItemProvider == null) {
+			umlAssociationBranchChangeLeftTargetItemProvider = new UMLAssociationBranchChangeLeftTargetItemProvider(this);
+		}
+
+		return umlAssociationBranchChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLAssociationBranchChangeRightTargetItemProvider umlAssociationBranchChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLAssociationBranchChangeRightTargetAdapter() {
+		if (umlAssociationBranchChangeRightTargetItemProvider == null) {
+			umlAssociationBranchChangeRightTargetItemProvider = new UMLAssociationBranchChangeRightTargetItemProvider(this);
+		}
+
+		return umlAssociationBranchChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDependencyBranchChangeLeftTargetItemProvider umlDependencyBranchChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDependencyBranchChangeLeftTargetAdapter() {
+		if (umlDependencyBranchChangeLeftTargetItemProvider == null) {
+			umlDependencyBranchChangeLeftTargetItemProvider = new UMLDependencyBranchChangeLeftTargetItemProvider(this);
+		}
+
+		return umlDependencyBranchChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDependencyBranchChangeRightTargetItemProvider umlDependencyBranchChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDependencyBranchChangeRightTargetAdapter() {
+		if (umlDependencyBranchChangeRightTargetItemProvider == null) {
+			umlDependencyBranchChangeRightTargetItemProvider = new UMLDependencyBranchChangeRightTargetItemProvider(this);
+		}
+
+		return umlDependencyBranchChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLGeneralizationSetChangeLeftTargetItemProvider umlGeneralizationSetChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLGeneralizationSetChangeLeftTargetAdapter() {
+		if (umlGeneralizationSetChangeLeftTargetItemProvider == null) {
+			umlGeneralizationSetChangeLeftTargetItemProvider = new UMLGeneralizationSetChangeLeftTargetItemProvider(this);
+		}
+
+		return umlGeneralizationSetChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLGeneralizationSetChangeRightTargetItemProvider umlGeneralizationSetChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLGeneralizationSetChangeRightTargetAdapter() {
+		if (umlGeneralizationSetChangeRightTargetItemProvider == null) {
+			umlGeneralizationSetChangeRightTargetItemProvider = new UMLGeneralizationSetChangeRightTargetItemProvider(this);
+		}
+
+		return umlGeneralizationSetChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDependencyChangeLeftTargetItemProvider umlDependencyChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDependencyChangeLeftTargetAdapter() {
+		if (umlDependencyChangeLeftTargetItemProvider == null) {
+			umlDependencyChangeLeftTargetItemProvider = new UMLDependencyChangeLeftTargetItemProvider(this);
+		}
+
+		return umlDependencyChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDependencyChangeRightTargetItemProvider umlDependencyChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDependencyChangeRightTargetAdapter() {
+		if (umlDependencyChangeRightTargetItemProvider == null) {
+			umlDependencyChangeRightTargetItemProvider = new UMLDependencyChangeRightTargetItemProvider(this);
+		}
+
+		return umlDependencyChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLExtendChangeLeftTargetItemProvider umlExtendChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLExtendChangeLeftTargetAdapter() {
+		if (umlExtendChangeLeftTargetItemProvider == null) {
+			umlExtendChangeLeftTargetItemProvider = new UMLExtendChangeLeftTargetItemProvider(this);
+		}
+
+		return umlExtendChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLExtendChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLExtendChangeRightTargetItemProvider umlExtendChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLExtendChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLExtendChangeRightTargetAdapter() {
+		if (umlExtendChangeRightTargetItemProvider == null) {
+			umlExtendChangeRightTargetItemProvider = new UMLExtendChangeRightTargetItemProvider(this);
+		}
+
+		return umlExtendChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLExecutionSpecificationChangeLeftTargetItemProvider umlExecutionSpecificationChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLExecutionSpecificationChangeLeftTargetAdapter() {
+		if (umlExecutionSpecificationChangeLeftTargetItemProvider == null) {
+			umlExecutionSpecificationChangeLeftTargetItemProvider = new UMLExecutionSpecificationChangeLeftTargetItemProvider(this);
+		}
+
+		return umlExecutionSpecificationChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLExecutionSpecificationChangeRightTargetItemProvider umlExecutionSpecificationChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLExecutionSpecificationChangeRightTargetAdapter() {
+		if (umlExecutionSpecificationChangeRightTargetItemProvider == null) {
+			umlExecutionSpecificationChangeRightTargetItemProvider = new UMLExecutionSpecificationChangeRightTargetItemProvider(this);
+		}
+
+		return umlExecutionSpecificationChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDestructionEventChangeLeftTargetItemProvider umlDestructionEventChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDestructionEventChangeLeftTargetAdapter() {
+		if (umlDestructionEventChangeLeftTargetItemProvider == null) {
+			umlDestructionEventChangeLeftTargetItemProvider = new UMLDestructionEventChangeLeftTargetItemProvider(this);
+		}
+
+		return umlDestructionEventChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLDestructionEventChangeRightTargetItemProvider umlDestructionEventChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLDestructionEventChangeRightTargetAdapter() {
+		if (umlDestructionEventChangeRightTargetItemProvider == null) {
+			umlDestructionEventChangeRightTargetItemProvider = new UMLDestructionEventChangeRightTargetItemProvider(this);
+		}
+
+		return umlDestructionEventChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLIntervalConstraintChangeLeftTargetItemProvider umlIntervalConstraintChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLIntervalConstraintChangeLeftTargetAdapter() {
+		if (umlIntervalConstraintChangeLeftTargetItemProvider == null) {
+			umlIntervalConstraintChangeLeftTargetItemProvider = new UMLIntervalConstraintChangeLeftTargetItemProvider(this);
+		}
+
+		return umlIntervalConstraintChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLIntervalConstraintChangeRightTargetItemProvider umlIntervalConstraintChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLIntervalConstraintChangeRightTargetAdapter() {
+		if (umlIntervalConstraintChangeRightTargetItemProvider == null) {
+			umlIntervalConstraintChangeRightTargetItemProvider = new UMLIntervalConstraintChangeRightTargetItemProvider(this);
+		}
+
+		return umlIntervalConstraintChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLMessageChangeLeftTargetItemProvider umlMessageChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLMessageChangeLeftTargetAdapter() {
+		if (umlMessageChangeLeftTargetItemProvider == null) {
+			umlMessageChangeLeftTargetItemProvider = new UMLMessageChangeLeftTargetItemProvider(this);
+		}
+
+		return umlMessageChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLMessageChangeRightTargetItemProvider umlMessageChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLMessageChangeRightTargetAdapter() {
+		if (umlMessageChangeRightTargetItemProvider == null) {
+			umlMessageChangeRightTargetItemProvider = new UMLMessageChangeRightTargetItemProvider(this);
+		}
+
+		return umlMessageChangeRightTargetItemProvider;
 	}
 
 	/**
@@ -287,6 +655,98 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLStereotypeReferenceChangeLeftTargetItemProvider umlStereotypeReferenceChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLStereotypeReferenceChangeLeftTargetAdapter() {
+		if (umlStereotypeReferenceChangeLeftTargetItemProvider == null) {
+			umlStereotypeReferenceChangeLeftTargetItemProvider = new UMLStereotypeReferenceChangeLeftTargetItemProvider(this);
+		}
+
+		return umlStereotypeReferenceChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLStereotypeReferenceChangeRightTargetItemProvider umlStereotypeReferenceChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLStereotypeReferenceChangeRightTargetAdapter() {
+		if (umlStereotypeReferenceChangeRightTargetItemProvider == null) {
+			umlStereotypeReferenceChangeRightTargetItemProvider = new UMLStereotypeReferenceChangeRightTargetItemProvider(this);
+		}
+
+		return umlStereotypeReferenceChangeRightTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLStereotypeUpdateReferenceItemProvider umlStereotypeUpdateReferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLStereotypeUpdateReferenceAdapter() {
+		if (umlStereotypeUpdateReferenceItemProvider == null) {
+			umlStereotypeUpdateReferenceItemProvider = new UMLStereotypeUpdateReferenceItemProvider(this);
+		}
+
+		return umlStereotypeUpdateReferenceItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceOrderChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLStereotypeReferenceOrderChangeItemProvider umlStereotypeReferenceOrderChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceOrderChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLStereotypeReferenceOrderChangeAdapter() {
+		if (umlStereotypeReferenceOrderChangeItemProvider == null) {
+			umlStereotypeReferenceOrderChangeItemProvider = new UMLStereotypeReferenceOrderChangeItemProvider(this);
+		}
+
+		return umlStereotypeReferenceOrderChangeItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -385,15 +845,35 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 	 * @generated
 	 */
 	public void dispose() {
-		if (umlAbstractionChangeLeftTargetItemProvider != null) umlAbstractionChangeLeftTargetItemProvider.dispose();
-		if (umlAbstractionChangeRightTargetItemProvider != null) umlAbstractionChangeRightTargetItemProvider.dispose();
 		if (umlAssociationChangeLeftTargetItemProvider != null) umlAssociationChangeLeftTargetItemProvider.dispose();
 		if (umlAssociationChangeRightTargetItemProvider != null) umlAssociationChangeRightTargetItemProvider.dispose();
+		if (umlAssociationBranchChangeLeftTargetItemProvider != null) umlAssociationBranchChangeLeftTargetItemProvider.dispose();
+		if (umlAssociationBranchChangeRightTargetItemProvider != null) umlAssociationBranchChangeRightTargetItemProvider.dispose();
+		if (umlDependencyBranchChangeLeftTargetItemProvider != null) umlDependencyBranchChangeLeftTargetItemProvider.dispose();
+		if (umlDependencyBranchChangeRightTargetItemProvider != null) umlDependencyBranchChangeRightTargetItemProvider.dispose();
+		if (umlGeneralizationSetChangeLeftTargetItemProvider != null) umlGeneralizationSetChangeLeftTargetItemProvider.dispose();
+		if (umlGeneralizationSetChangeRightTargetItemProvider != null) umlGeneralizationSetChangeRightTargetItemProvider.dispose();
+		if (umlDependencyChangeLeftTargetItemProvider != null) umlDependencyChangeLeftTargetItemProvider.dispose();
+		if (umlDependencyChangeRightTargetItemProvider != null) umlDependencyChangeRightTargetItemProvider.dispose();
+		if (umlExtendChangeLeftTargetItemProvider != null) umlExtendChangeLeftTargetItemProvider.dispose();
+		if (umlExtendChangeRightTargetItemProvider != null) umlExtendChangeRightTargetItemProvider.dispose();
+		if (umlExecutionSpecificationChangeLeftTargetItemProvider != null) umlExecutionSpecificationChangeLeftTargetItemProvider.dispose();
+		if (umlExecutionSpecificationChangeRightTargetItemProvider != null) umlExecutionSpecificationChangeRightTargetItemProvider.dispose();
+		if (umlDestructionEventChangeLeftTargetItemProvider != null) umlDestructionEventChangeLeftTargetItemProvider.dispose();
+		if (umlDestructionEventChangeRightTargetItemProvider != null) umlDestructionEventChangeRightTargetItemProvider.dispose();
+		if (umlIntervalConstraintChangeLeftTargetItemProvider != null) umlIntervalConstraintChangeLeftTargetItemProvider.dispose();
+		if (umlIntervalConstraintChangeRightTargetItemProvider != null) umlIntervalConstraintChangeRightTargetItemProvider.dispose();
+		if (umlMessageChangeLeftTargetItemProvider != null) umlMessageChangeLeftTargetItemProvider.dispose();
+		if (umlMessageChangeRightTargetItemProvider != null) umlMessageChangeRightTargetItemProvider.dispose();
 		if (umlStereotypeAttributeChangeLeftTargetItemProvider != null) umlStereotypeAttributeChangeLeftTargetItemProvider.dispose();
 		if (umlStereotypeAttributeChangeRightTargetItemProvider != null) umlStereotypeAttributeChangeRightTargetItemProvider.dispose();
 		if (umlStereotypeUpdateAttributeItemProvider != null) umlStereotypeUpdateAttributeItemProvider.dispose();
 		if (umlStereotypeApplicationAdditionItemProvider != null) umlStereotypeApplicationAdditionItemProvider.dispose();
 		if (umlStereotypeApplicationRemovalItemProvider != null) umlStereotypeApplicationRemovalItemProvider.dispose();
+		if (umlStereotypeReferenceChangeLeftTargetItemProvider != null) umlStereotypeReferenceChangeLeftTargetItemProvider.dispose();
+		if (umlStereotypeReferenceChangeRightTargetItemProvider != null) umlStereotypeReferenceChangeRightTargetItemProvider.dispose();
+		if (umlStereotypeUpdateReferenceItemProvider != null) umlStereotypeUpdateReferenceItemProvider.dispose();
+		if (umlStereotypeReferenceOrderChangeItemProvider != null) umlStereotypeReferenceOrderChangeItemProvider.dispose();
 	}
 
 }

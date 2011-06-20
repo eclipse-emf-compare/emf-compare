@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"
+            class="org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.UML2CompareTestProfilePackage"
+            genModel="model/UML2CompareTestProfile.genmodel"/>
+   </extension>
+   
+   <extension point="org.eclipse.uml2.uml.generated_package">
+	   <profile
+	         uri="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"
+	         location="platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/uml2.compare.testprofile.profile.uml#_hZFTgIwkEeC_FYHMbTTxXw">
+	   </profile>
+   </extension>
+
+</plugin>

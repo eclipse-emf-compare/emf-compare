@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.match.MatchOptions;
-import org.eclipse.emf.compare.match.engine.DefaultMatchScopeProvider;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
+import org.eclipse.emf.compare.match.engine.GenericMatchScopeProvider;
 import org.eclipse.emf.compare.match.engine.IMatchEngine;
 import org.eclipse.emf.compare.match.engine.IMatchScope;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
@@ -44,6 +45,75 @@ public class UML2MatchEngine extends GenericMatchEngine {
 		return super.resourceMatch(leftResource, rightResource, optionMap);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	@Override
+	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
+			Map<String, Object> optionMap) {
+		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
+				rightObject, ancestor));
+		return super.contentMatch(leftObject, rightObject, ancestor, optionMap);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#contentMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	@Override
+	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
+		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
+				rightObject));
+		return super.contentMatch(leftObject, rightObject, optionMap);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	@Override
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
+			Map<String, Object> optionMap) throws InterruptedException {
+		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
+				rightRoot, ancestor));
+		return super.modelMatch(leftRoot, rightRoot, ancestor, optionMap);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#modelMatch(org.eclipse.emf.ecore.EObject,
+	 *      org.eclipse.emf.ecore.EObject, java.util.Map)
+	 */
+	@Override
+	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
+			throws InterruptedException {
+		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
+				rightRoot));
+		return super.modelMatch(leftRoot, rightRoot, optionMap);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.match.engine.GenericMatchEngine#resourceMatch(org.eclipse.emf.ecore.resource.Resource,
+	 *      org.eclipse.emf.ecore.resource.Resource, org.eclipse.emf.ecore.resource.Resource, java.util.Map)
+	 */
+	@Override
+	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
+			Map<String, Object> optionMap) throws InterruptedException {
+		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftResource,
+				rightResource, ancestorResource));
+		return super.resourceMatch(leftResource, rightResource, ancestorResource, optionMap);
+	}
+
 	@Override
 	protected List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
 		List<EObject> result = new ArrayList<EObject>(super.getScopeInternalContents(eObject, scope));
@@ -59,7 +129,28 @@ public class UML2MatchEngine extends GenericMatchEngine {
 		}
 	}
 
-	private static class UML2MatchScopeProvider extends DefaultMatchScopeProvider {
+	private static class UML2MatchScopeProvider extends GenericMatchScopeProvider {
+
+		public UML2MatchScopeProvider(EObject leftObject, EObject rightObject, EObject ancestorObject) {
+			super(leftObject, rightObject, ancestorObject);
+		}
+
+		public UML2MatchScopeProvider(EObject leftObject, EObject rightObject) {
+			super(leftObject, rightObject);
+		}
+
+		public UML2MatchScopeProvider(Resource leftResource, Resource rightResource, Resource ancestorResource) {
+			super(leftResource, rightResource, ancestorResource);
+		}
+
+		public UML2MatchScopeProvider(ResourceSet leftResourceSet, ResourceSet rightResourceSet,
+				ResourceSet ancestorResourceSet) {
+			super(leftResourceSet, rightResourceSet, ancestorResourceSet);
+		}
+
+		public UML2MatchScopeProvider(ResourceSet leftResourceSet, ResourceSet rightResourceSet) {
+			super(leftResourceSet, rightResourceSet);
+		}
 
 		public UML2MatchScopeProvider(Resource leftResource, Resource rightResource) {
 			super(leftResource, rightResource);
@@ -91,7 +182,8 @@ public class UML2MatchEngine extends GenericMatchEngine {
 		}
 
 		public boolean isInScope(EObject eObject) {
-			return fParentScope.isInScope(eObject) && UMLUtil.getStereotype(eObject) == null;
+			boolean isStereotypeApplication = UMLUtil.getStereotype(eObject) != null;
+			return fParentScope.isInScope(eObject) && !isStereotypeApplication;
 		}
 
 		public boolean isInScope(Resource resource) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ModelElements="http://www.eclipse.org/papyrus/0.7.0/SysML/ModelElements" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/papyrus/0.7.0/SysML/ModelElements http://www.eclipse.org/papyrus/0.7.0/SysML#//modelelements">
+  <uml:Model xmi:id="_94mkoHxsEeCJOrA24Ue2iw" name="aModel">
+    <packagedElement xmi:type="uml:Package" xmi:id="_BYEVIHxtEeCJOrA24Ue2iw" name="aPack">
+      <packagedElement xmi:type="uml:Class" xmi:id="_C4IZsHxtEeCJOrA24Ue2iw" name="aClass">
+        <ownedAttribute xmi:id="_mxkQcHyUEeCw7raschXiNQ" name="aProperty"/>
+      </packagedElement>
+      <profileApplication xmi:id="_K57JQHyWEeCw7raschXiNQ">
+        <eAnnotations xmi:id="_K57JQXyWEeCw7raschXiNQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+          <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/0.7.0/SysML#//modelelements"/>
+        </eAnnotations>
+        <appliedProfile href="pathmap://SysML_PROFILES/SysML.profile.uml#_Gx8MgLX7EduFmqQsrNB9lw"/>
+      </profileApplication>
+    </packagedElement>
+  </uml:Model>
+  <ModelElements:ViewPoint xmi:id="_MmuCQHyWEeCw7raschXiNQ" base_Class="_C4IZsHxtEeCJOrA24Ue2iw">
+    <languages>fr</languages>
+    <languages>en</languages>
+    <languages>de</languages>
+  </ModelElements:ViewPoint>
+</xmi:XMI>

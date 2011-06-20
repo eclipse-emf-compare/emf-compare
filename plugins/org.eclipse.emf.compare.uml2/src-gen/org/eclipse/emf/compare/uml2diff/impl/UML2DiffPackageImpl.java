@@ -11,135 +11,321 @@
 package org.eclipse.emf.compare.uml2diff.impl;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
-import org.eclipse.emf.compare.uml2diff.UMLAbstractionChange;
-import org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeLeftTarget;
-import org.eclipse.emf.compare.uml2diff.UMLAbstractionChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChange;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChange;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChange;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceOrderChange;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateAttribute;
-
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.uml2.uml.UMLPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Package</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
  * @generated
  */
 public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage {
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlDiffExtensionEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass umlAbstractionChangeEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass umlAbstractionChangeLeftTargetEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass umlAbstractionChangeRightTargetEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlAssociationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlAssociationChangeLeftTargetEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlAssociationChangeRightTargetEClass = null;
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlAssociationBranchChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlAssociationBranchChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlAssociationBranchChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyBranchChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyBranchChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyBranchChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlGeneralizationSetChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlGeneralizationSetChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlGeneralizationSetChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDependencyChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExtendChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExtendChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExtendChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExecutionSpecificationChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExecutionSpecificationChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlExecutionSpecificationChangeRightTargetEClass = null;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDestructionEventChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDestructionEventChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlDestructionEventChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlIntervalConstraintChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlIntervalConstraintChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlIntervalConstraintChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlMessageChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlMessageChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlMessageChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypePropertyChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeAttributeChangeLeftTargetEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeAttributeChangeRightTargetEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeUpdateAttributeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeApplicationChangeEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeApplicationAdditionEClass = null;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass umlStereotypeApplicationRemovalEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlStereotypeReferenceChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlStereotypeReferenceChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlStereotypeUpdateReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlStereotypeReferenceOrderChangeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -149,8 +335,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	 * factory method {@link #init init()}, which also performs
 	 * initialization of the package, or returns the registered package,
 	 * if one already exists.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#eNS_URI
 	 * @see #init()
@@ -161,8 +346,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -172,8 +356,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	 * 
 	 * <p>This method is used to initialize {@link UML2DiffPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @see #eNS_URI
 	 * @see #createPackageContents()
 	 * @see #initializePackageContents()
@@ -189,6 +372,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 
 		// Initialize simple dependencies
 		DiffPackage.eINSTANCE.eClass();
+		UMLPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theUML2DiffPackage.createPackageContents();
@@ -206,8 +390,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLDiffExtension() {
@@ -215,35 +398,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getUMLAbstractionChange() {
-		return umlAbstractionChangeEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getUMLAbstractionChangeLeftTarget() {
-		return umlAbstractionChangeLeftTargetEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getUMLAbstractionChangeRightTarget() {
-		return umlAbstractionChangeRightTargetEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLAssociationChange() {
@@ -251,8 +406,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLAssociationChangeLeftTarget() {
@@ -260,8 +414,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLAssociationChangeRightTarget() {
@@ -269,8 +422,232 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLAssociationBranchChange() {
+		return umlAssociationBranchChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLAssociationBranchChangeLeftTarget() {
+		return umlAssociationBranchChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLAssociationBranchChangeRightTarget() {
+		return umlAssociationBranchChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyBranchChange() {
+		return umlDependencyBranchChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyBranchChangeLeftTarget() {
+		return umlDependencyBranchChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyBranchChangeRightTarget() {
+		return umlDependencyBranchChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLGeneralizationSetChange() {
+		return umlGeneralizationSetChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLGeneralizationSetChangeLeftTarget() {
+		return umlGeneralizationSetChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLGeneralizationSetChangeRightTarget() {
+		return umlGeneralizationSetChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyChange() {
+		return umlDependencyChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyChangeLeftTarget() {
+		return umlDependencyChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDependencyChangeRightTarget() {
+		return umlDependencyChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExtendChange() {
+		return umlExtendChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExtendChangeLeftTarget() {
+		return umlExtendChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExtendChangeRightTarget() {
+		return umlExtendChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExecutionSpecificationChange() {
+		return umlExecutionSpecificationChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExecutionSpecificationChangeLeftTarget() {
+		return umlExecutionSpecificationChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLExecutionSpecificationChangeRightTarget() {
+		return umlExecutionSpecificationChangeRightTargetEClass;
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDestructionEventChange() {
+		return umlDestructionEventChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDestructionEventChangeLeftTarget() {
+		return umlDestructionEventChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLDestructionEventChangeRightTarget() {
+		return umlDestructionEventChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLIntervalConstraintChange() {
+		return umlIntervalConstraintChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLIntervalConstraintChangeLeftTarget() {
+		return umlIntervalConstraintChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLIntervalConstraintChangeRightTarget() {
+		return umlIntervalConstraintChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLMessageChange() {
+		return umlMessageChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLMessageChangeLeftTarget() {
+		return umlMessageChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLMessageChangeRightTarget() {
+		return umlMessageChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypePropertyChange() {
@@ -278,17 +655,15 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getUMLStereotypePropertyChange_StereotypeApplications() {
+	public EReference getUMLStereotypePropertyChange_Stereotype() {
 		return (EReference)umlStereotypePropertyChangeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeAttributeChangeLeftTarget() {
@@ -296,8 +671,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeAttributeChangeRightTarget() {
@@ -305,8 +679,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeUpdateAttribute() {
@@ -314,8 +687,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeApplicationChange() {
@@ -323,8 +695,15 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUMLStereotypeApplicationChange_Stereotype() {
+		return (EReference)umlStereotypeApplicationChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeApplicationAddition() {
@@ -332,8 +711,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EClass getUMLStereotypeApplicationRemoval() {
@@ -341,8 +719,39 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLStereotypeReferenceChangeLeftTarget() {
+		return umlStereotypeReferenceChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLStereotypeReferenceChangeRightTarget() {
+		return umlStereotypeReferenceChangeRightTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLStereotypeUpdateReference() {
+		return umlStereotypeUpdateReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLStereotypeReferenceOrderChange() {
+		return umlStereotypeReferenceOrderChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public UML2DiffFactory getUML2DiffFactory() {
@@ -350,8 +759,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -359,8 +767,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -370,20 +777,68 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		// Create classes and their features
 		umlDiffExtensionEClass = createEClass(UML_DIFF_EXTENSION);
 
-		umlAbstractionChangeEClass = createEClass(UML_ABSTRACTION_CHANGE);
-
-		umlAbstractionChangeLeftTargetEClass = createEClass(UML_ABSTRACTION_CHANGE_LEFT_TARGET);
-
-		umlAbstractionChangeRightTargetEClass = createEClass(UML_ABSTRACTION_CHANGE_RIGHT_TARGET);
-
 		umlAssociationChangeEClass = createEClass(UML_ASSOCIATION_CHANGE);
 
 		umlAssociationChangeLeftTargetEClass = createEClass(UML_ASSOCIATION_CHANGE_LEFT_TARGET);
 
 		umlAssociationChangeRightTargetEClass = createEClass(UML_ASSOCIATION_CHANGE_RIGHT_TARGET);
 
+		umlAssociationBranchChangeEClass = createEClass(UML_ASSOCIATION_BRANCH_CHANGE);
+
+		umlAssociationBranchChangeLeftTargetEClass = createEClass(UML_ASSOCIATION_BRANCH_CHANGE_LEFT_TARGET);
+
+		umlAssociationBranchChangeRightTargetEClass = createEClass(UML_ASSOCIATION_BRANCH_CHANGE_RIGHT_TARGET);
+
+		umlDependencyBranchChangeEClass = createEClass(UML_DEPENDENCY_BRANCH_CHANGE);
+
+		umlDependencyBranchChangeLeftTargetEClass = createEClass(UML_DEPENDENCY_BRANCH_CHANGE_LEFT_TARGET);
+
+		umlDependencyBranchChangeRightTargetEClass = createEClass(UML_DEPENDENCY_BRANCH_CHANGE_RIGHT_TARGET);
+
+		umlGeneralizationSetChangeEClass = createEClass(UML_GENERALIZATION_SET_CHANGE);
+
+		umlGeneralizationSetChangeLeftTargetEClass = createEClass(UML_GENERALIZATION_SET_CHANGE_LEFT_TARGET);
+
+		umlGeneralizationSetChangeRightTargetEClass = createEClass(UML_GENERALIZATION_SET_CHANGE_RIGHT_TARGET);
+
+		umlDependencyChangeEClass = createEClass(UML_DEPENDENCY_CHANGE);
+
+		umlDependencyChangeLeftTargetEClass = createEClass(UML_DEPENDENCY_CHANGE_LEFT_TARGET);
+
+		umlDependencyChangeRightTargetEClass = createEClass(UML_DEPENDENCY_CHANGE_RIGHT_TARGET);
+
+		umlExtendChangeEClass = createEClass(UML_EXTEND_CHANGE);
+
+		umlExtendChangeLeftTargetEClass = createEClass(UML_EXTEND_CHANGE_LEFT_TARGET);
+
+		umlExtendChangeRightTargetEClass = createEClass(UML_EXTEND_CHANGE_RIGHT_TARGET);
+
+		umlExecutionSpecificationChangeEClass = createEClass(UML_EXECUTION_SPECIFICATION_CHANGE);
+
+		umlExecutionSpecificationChangeLeftTargetEClass = createEClass(UML_EXECUTION_SPECIFICATION_CHANGE_LEFT_TARGET);
+
+		umlExecutionSpecificationChangeRightTargetEClass = createEClass(UML_EXECUTION_SPECIFICATION_CHANGE_RIGHT_TARGET);
+
+		umlDestructionEventChangeEClass = createEClass(UML_DESTRUCTION_EVENT_CHANGE);
+
+		umlDestructionEventChangeLeftTargetEClass = createEClass(UML_DESTRUCTION_EVENT_CHANGE_LEFT_TARGET);
+
+		umlDestructionEventChangeRightTargetEClass = createEClass(UML_DESTRUCTION_EVENT_CHANGE_RIGHT_TARGET);
+
+		umlIntervalConstraintChangeEClass = createEClass(UML_INTERVAL_CONSTRAINT_CHANGE);
+
+		umlIntervalConstraintChangeLeftTargetEClass = createEClass(UML_INTERVAL_CONSTRAINT_CHANGE_LEFT_TARGET);
+
+		umlIntervalConstraintChangeRightTargetEClass = createEClass(UML_INTERVAL_CONSTRAINT_CHANGE_RIGHT_TARGET);
+
+		umlMessageChangeEClass = createEClass(UML_MESSAGE_CHANGE);
+
+		umlMessageChangeLeftTargetEClass = createEClass(UML_MESSAGE_CHANGE_LEFT_TARGET);
+
+		umlMessageChangeRightTargetEClass = createEClass(UML_MESSAGE_CHANGE_RIGHT_TARGET);
+
 		umlStereotypePropertyChangeEClass = createEClass(UML_STEREOTYPE_PROPERTY_CHANGE);
-		createEReference(umlStereotypePropertyChangeEClass, UML_STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE_APPLICATIONS);
+		createEReference(umlStereotypePropertyChangeEClass, UML_STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE);
 
 		umlStereotypeAttributeChangeLeftTargetEClass = createEClass(UML_STEREOTYPE_ATTRIBUTE_CHANGE_LEFT_TARGET);
 
@@ -392,15 +847,23 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlStereotypeUpdateAttributeEClass = createEClass(UML_STEREOTYPE_UPDATE_ATTRIBUTE);
 
 		umlStereotypeApplicationChangeEClass = createEClass(UML_STEREOTYPE_APPLICATION_CHANGE);
+		createEReference(umlStereotypeApplicationChangeEClass, UML_STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE);
 
 		umlStereotypeApplicationAdditionEClass = createEClass(UML_STEREOTYPE_APPLICATION_ADDITION);
 
 		umlStereotypeApplicationRemovalEClass = createEClass(UML_STEREOTYPE_APPLICATION_REMOVAL);
+
+		umlStereotypeReferenceChangeLeftTargetEClass = createEClass(UML_STEREOTYPE_REFERENCE_CHANGE_LEFT_TARGET);
+
+		umlStereotypeReferenceChangeRightTargetEClass = createEClass(UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET);
+
+		umlStereotypeUpdateReferenceEClass = createEClass(UML_STEREOTYPE_UPDATE_REFERENCE);
+
+		umlStereotypeReferenceOrderChangeEClass = createEClass(UML_STEREOTYPE_REFERENCE_ORDER_CHANGE);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -408,8 +871,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -423,7 +885,7 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 
 		// Obtain other dependent packages
 		DiffPackage theDiffPackage = (DiffPackage)EPackage.Registry.INSTANCE.getEPackage(DiffPackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+		UMLPackage theUMLPackage = (UMLPackage)EPackage.Registry.INSTANCE.getEPackage(UMLPackage.eNS_URI);
 
 		// Create type parameters
 
@@ -432,16 +894,56 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		// Add supertypes to classes
 		umlDiffExtensionEClass.getESuperTypes().add(theDiffPackage.getDiffElement());
 		umlDiffExtensionEClass.getESuperTypes().add(theDiffPackage.getAbstractDiffExtension());
-		umlAbstractionChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
-		umlAbstractionChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
-		umlAbstractionChangeLeftTargetEClass.getESuperTypes().add(this.getUMLAbstractionChange());
-		umlAbstractionChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
-		umlAbstractionChangeRightTargetEClass.getESuperTypes().add(this.getUMLAbstractionChange());
 		umlAssociationChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
 		umlAssociationChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
 		umlAssociationChangeLeftTargetEClass.getESuperTypes().add(this.getUMLAssociationChange());
 		umlAssociationChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
 		umlAssociationChangeRightTargetEClass.getESuperTypes().add(this.getUMLAssociationChange());
+		umlAssociationBranchChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlAssociationBranchChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlAssociationBranchChangeLeftTargetEClass.getESuperTypes().add(this.getUMLAssociationBranchChange());
+		umlAssociationBranchChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlAssociationBranchChangeRightTargetEClass.getESuperTypes().add(this.getUMLAssociationBranchChange());
+		umlDependencyBranchChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlDependencyBranchChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getReferenceChangeLeftTarget());
+		umlDependencyBranchChangeLeftTargetEClass.getESuperTypes().add(this.getUMLDependencyBranchChange());
+		umlDependencyBranchChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getReferenceChangeRightTarget());
+		umlDependencyBranchChangeRightTargetEClass.getESuperTypes().add(this.getUMLDependencyBranchChange());
+		umlGeneralizationSetChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlGeneralizationSetChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlGeneralizationSetChangeLeftTargetEClass.getESuperTypes().add(this.getUMLGeneralizationSetChange());
+		umlGeneralizationSetChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlGeneralizationSetChangeRightTargetEClass.getESuperTypes().add(this.getUMLGeneralizationSetChange());
+		umlDependencyChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlDependencyChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlDependencyChangeLeftTargetEClass.getESuperTypes().add(this.getUMLDependencyChange());
+		umlDependencyChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlDependencyChangeRightTargetEClass.getESuperTypes().add(this.getUMLDependencyChange());
+		umlExtendChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlExtendChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlExtendChangeLeftTargetEClass.getESuperTypes().add(this.getUMLExtendChange());
+		umlExtendChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlExtendChangeRightTargetEClass.getESuperTypes().add(this.getUMLExtendChange());
+		umlExecutionSpecificationChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlExecutionSpecificationChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlExecutionSpecificationChangeLeftTargetEClass.getESuperTypes().add(this.getUMLExecutionSpecificationChange());
+		umlExecutionSpecificationChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlExecutionSpecificationChangeRightTargetEClass.getESuperTypes().add(this.getUMLExecutionSpecificationChange());
+		umlDestructionEventChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlDestructionEventChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlDestructionEventChangeLeftTargetEClass.getESuperTypes().add(this.getUMLDestructionEventChange());
+		umlDestructionEventChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlDestructionEventChangeRightTargetEClass.getESuperTypes().add(this.getUMLDestructionEventChange());
+		umlIntervalConstraintChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlIntervalConstraintChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlIntervalConstraintChangeLeftTargetEClass.getESuperTypes().add(this.getUMLIntervalConstraintChange());
+		umlIntervalConstraintChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlIntervalConstraintChangeRightTargetEClass.getESuperTypes().add(this.getUMLIntervalConstraintChange());
+		umlMessageChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlMessageChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlMessageChangeLeftTargetEClass.getESuperTypes().add(this.getUMLMessageChange());
+		umlMessageChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlMessageChangeRightTargetEClass.getESuperTypes().add(this.getUMLMessageChange());
 		umlStereotypePropertyChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
 		umlStereotypeAttributeChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getAttributeChangeLeftTarget());
 		umlStereotypeAttributeChangeLeftTargetEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
@@ -454,15 +956,17 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlStereotypeApplicationAdditionEClass.getESuperTypes().add(this.getUMLStereotypeApplicationChange());
 		umlStereotypeApplicationRemovalEClass.getESuperTypes().add(theDiffPackage.getUpdateModelElement());
 		umlStereotypeApplicationRemovalEClass.getESuperTypes().add(this.getUMLStereotypeApplicationChange());
+		umlStereotypeReferenceChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getReferenceChangeLeftTarget());
+		umlStereotypeReferenceChangeLeftTargetEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
+		umlStereotypeReferenceChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getReferenceChangeRightTarget());
+		umlStereotypeReferenceChangeRightTargetEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
+		umlStereotypeUpdateReferenceEClass.getESuperTypes().add(theDiffPackage.getUpdateReference());
+		umlStereotypeUpdateReferenceEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
+		umlStereotypeReferenceOrderChangeEClass.getESuperTypes().add(theDiffPackage.getReferenceOrderChange());
+		umlStereotypeReferenceOrderChangeEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(umlDiffExtensionEClass, UMLDiffExtension.class, "UMLDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(umlAbstractionChangeEClass, UMLAbstractionChange.class, "UMLAbstractionChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(umlAbstractionChangeLeftTargetEClass, UMLAbstractionChangeLeftTarget.class, "UMLAbstractionChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(umlAbstractionChangeRightTargetEClass, UMLAbstractionChangeRightTarget.class, "UMLAbstractionChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(umlAssociationChangeEClass, UMLAssociationChange.class, "UMLAssociationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -470,8 +974,62 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 
 		initEClass(umlAssociationChangeRightTargetEClass, UMLAssociationChangeRightTarget.class, "UMLAssociationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(umlAssociationBranchChangeEClass, UMLAssociationBranchChange.class, "UMLAssociationBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlAssociationBranchChangeLeftTargetEClass, UMLAssociationBranchChangeLeftTarget.class, "UMLAssociationBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlAssociationBranchChangeRightTargetEClass, UMLAssociationBranchChangeRightTarget.class, "UMLAssociationBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyBranchChangeEClass, UMLDependencyBranchChange.class, "UMLDependencyBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyBranchChangeLeftTargetEClass, UMLDependencyBranchChangeLeftTarget.class, "UMLDependencyBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyBranchChangeRightTargetEClass, UMLDependencyBranchChangeRightTarget.class, "UMLDependencyBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlGeneralizationSetChangeEClass, UMLGeneralizationSetChange.class, "UMLGeneralizationSetChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlGeneralizationSetChangeLeftTargetEClass, UMLGeneralizationSetChangeLeftTarget.class, "UMLGeneralizationSetChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlGeneralizationSetChangeRightTargetEClass, UMLGeneralizationSetChangeRightTarget.class, "UMLGeneralizationSetChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyChangeEClass, UMLDependencyChange.class, "UMLDependencyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyChangeLeftTargetEClass, UMLDependencyChangeLeftTarget.class, "UMLDependencyChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDependencyChangeRightTargetEClass, UMLDependencyChangeRightTarget.class, "UMLDependencyChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExtendChangeEClass, UMLExtendChange.class, "UMLExtendChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExtendChangeLeftTargetEClass, UMLExtendChangeLeftTarget.class, "UMLExtendChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExtendChangeRightTargetEClass, UMLExtendChangeRightTarget.class, "UMLExtendChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExecutionSpecificationChangeEClass, UMLExecutionSpecificationChange.class, "UMLExecutionSpecificationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExecutionSpecificationChangeLeftTargetEClass, UMLExecutionSpecificationChangeLeftTarget.class, "UMLExecutionSpecificationChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlExecutionSpecificationChangeRightTargetEClass, UMLExecutionSpecificationChangeRightTarget.class, "UMLExecutionSpecificationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDestructionEventChangeEClass, UMLDestructionEventChange.class, "UMLDestructionEventChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDestructionEventChangeLeftTargetEClass, UMLDestructionEventChangeLeftTarget.class, "UMLDestructionEventChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlDestructionEventChangeRightTargetEClass, UMLDestructionEventChangeRightTarget.class, "UMLDestructionEventChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlIntervalConstraintChangeEClass, UMLIntervalConstraintChange.class, "UMLIntervalConstraintChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlIntervalConstraintChangeLeftTargetEClass, UMLIntervalConstraintChangeLeftTarget.class, "UMLIntervalConstraintChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlIntervalConstraintChangeRightTargetEClass, UMLIntervalConstraintChangeRightTarget.class, "UMLIntervalConstraintChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlMessageChangeEClass, UMLMessageChange.class, "UMLMessageChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlMessageChangeLeftTargetEClass, UMLMessageChangeLeftTarget.class, "UMLMessageChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlMessageChangeRightTargetEClass, UMLMessageChangeRightTarget.class, "UMLMessageChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(umlStereotypePropertyChangeEClass, UMLStereotypePropertyChange.class, "UMLStereotypePropertyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUMLStereotypePropertyChange_StereotypeApplications(), theEcorePackage.getEObject(), null, "stereotypeApplications", null, 0, -1, UMLStereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUMLStereotypePropertyChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(umlStereotypeAttributeChangeLeftTargetEClass, UMLStereotypeAttributeChangeLeftTarget.class, "UMLStereotypeAttributeChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -480,13 +1038,22 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		initEClass(umlStereotypeUpdateAttributeEClass, UMLStereotypeUpdateAttribute.class, "UMLStereotypeUpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(umlStereotypeApplicationChangeEClass, UMLStereotypeApplicationChange.class, "UMLStereotypeApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUMLStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(umlStereotypeApplicationAdditionEClass, UMLStereotypeApplicationAddition.class, "UMLStereotypeApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(umlStereotypeApplicationRemovalEClass, UMLStereotypeApplicationRemoval.class, "UMLStereotypeApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(umlStereotypeReferenceChangeLeftTargetEClass, UMLStereotypeReferenceChangeLeftTarget.class, "UMLStereotypeReferenceChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlStereotypeReferenceChangeRightTargetEClass, UMLStereotypeReferenceChangeRightTarget.class, "UMLStereotypeReferenceChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlStereotypeUpdateReferenceEClass, UMLStereotypeUpdateReference.class, "UMLStereotypeUpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlStereotypeReferenceOrderChangeEClass, UMLStereotypeReferenceOrderChange.class, "UMLStereotypeReferenceOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		// Create resource
 		createResource(eNS_URI);
 	}
 
-} //UML2DiffPackageImpl
+} // UML2DiffPackageImpl

@@ -4,25 +4,55 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2011 Obeo.&#xA;All rights reserved. This program and the accompanying materials&#xA;are made available under the terms of the Eclipse Public License v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/epl-v10.html&#xA;&#xA;Contributors:&#xA;    Obeo - initial API and implementation"
     modelDirectory="/org.eclipse.emf.compare.uml2/src-gen" editDirectory="/org.eclipse.emf.compare.uml2.edit/src"
     modelPluginID="org.eclipse.emf.compare.uml2" modelName="UML2Diff" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="5.0" copyrightFields="false" language="" usedGenPackages="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.genmodel#//diff platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.emf.compare.match/model/match.genmodel#//match">
+    complianceLevel="5.0" copyrightFields="false" language="" usedGenPackages="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.genmodel#//diff platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore platform:/plugin/org.eclipse.emf.compare.match/model/match.genmodel#//match platform:/plugin/org.eclipse.uml2.uml/model/UML.genmodel#//uml">
   <foreignModel>uml2diff.ecore</foreignModel>
   <genPackages prefix="UML2Diff" basePackage="org.eclipse.emf.compare" disposableProviderFactory="true"
       ecorePackage="uml2diff.ecore#/">
     <genClasses ecoreClass="uml2diff.ecore#//UMLDiffExtension"/>
-    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLAbstractionChange"/>
-    <genClasses ecoreClass="uml2diff.ecore#//UMLAbstractionChangeLeftTarget"/>
-    <genClasses ecoreClass="uml2diff.ecore#//UMLAbstractionChangeRightTarget"/>
     <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLAssociationChange"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLAssociationChangeLeftTarget"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLAssociationChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLAssociationBranchChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLAssociationBranchChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLAssociationBranchChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLDependencyBranchChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDependencyBranchChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDependencyBranchChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLGeneralizationSetChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLGeneralizationSetChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLGeneralizationSetChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLDependencyChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDependencyChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDependencyChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLExtendChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLExtendChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLExtendChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLExecutionSpecificationChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLExecutionSpecificationChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLExecutionSpecificationChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLDestructionEventChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDestructionEventChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLDestructionEventChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLIntervalConstraintChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLIntervalConstraintChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLIntervalConstraintChangeRightTarget"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLMessageChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLMessageChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLMessageChangeRightTarget"/>
     <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLStereotypePropertyChange">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2diff.ecore#//UMLStereotypePropertyChange/stereotypeApplications"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2diff.ecore#//UMLStereotypePropertyChange/stereotype"/>
     </genClasses>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeAttributeChangeLeftTarget"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeAttributeChangeRightTarget"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeUpdateAttribute"/>
-    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLStereotypeApplicationChange"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLStereotypeApplicationChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2diff.ecore#//UMLStereotypeApplicationChange/stereotype"/>
+    </genClasses>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeApplicationAddition"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeApplicationRemoval"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeReferenceChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeReferenceChangeRightTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeUpdateReference"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeReferenceOrderChange"/>
   </genPackages>
 </genmodel:GenModel>

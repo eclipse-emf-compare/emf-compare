@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-05-31T10:26:42.538+0200">
+  <diffResourceSet>
+    <diffModels>
+      <ownedElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:DiffGroup">
+          <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1">
+            <leftParent href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+            <rightElement href="../original/model.uml#_wIBUwIagEeC2r487YRB8BA"/>
+          </subDiffElements>
+          <subDiffElements xsi:type="uml2diff:UMLDependencyChangeRightTarget" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
+            <leftParent href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+            <rightElement href="../original/model.uml#_wIBUwIagEeC2r487YRB8BA"/>
+          </subDiffElements>
+          <rightParent href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+        </subDiffElements>
+      </ownedElements>
+      <leftRoots href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+      <rightRoots href="../original/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+    </diffModels>
+  </diffResourceSet>
+  <matchResourceSet>
+    <matchModels>
+      <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#_rvCiUYagEeC2r487YRB8BA"/>
+          <rightElement href="../original/model.uml#_rvCiUYagEeC2r487YRB8BA"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#_smB0sIagEeC2r487YRB8BA"/>
+          <rightElement href="../original/model.uml#_smB0sIagEeC2r487YRB8BA"/>
+        </subMatchElements>
+        <leftElement href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+        <rightElement href="../original/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+      </matchedElements>
+      <unmatchedElements side="Right">
+        <element href="../original/model.uml#_wIBUwIagEeC2r487YRB8BA"/>
+      </unmatchedElements>
+      <leftRoots href="../modified/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+      <rightRoots href="../original/model.uml#_SSnEIIYEEeC_LdOTKS1r7g"/>
+    </matchModels>
+  </matchResourceSet>
+</diff:ComparisonResourceSetSnapshot>
