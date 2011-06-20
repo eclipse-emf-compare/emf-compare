@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_SSnEIIYEEeC_LdOTKS1r7g" name="model">
+  <packagedElement xmi:type="uml:Class" xmi:id="_gtltsIYJEeC_LdOTKS1r7g" name="Class0" clientDependency="_qObKwIYJEeC_LdOTKS1r7g"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_g-1OsIYJEeC_LdOTKS1r7g" name="Class1"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_qObKwIYJEeC_LdOTKS1r7g" name="Dependency0" supplier="_g-1OsIYJEeC_LdOTKS1r7g" client="_gtltsIYJEeC_LdOTKS1r7g"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_sYGXkYYKEeC3-NIxzC-z2Q" name="Class2"/>
+</uml:Model>

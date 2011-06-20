@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-06-14T11:00:53.497+0200">
+  <diffResourceSet>
+    <diffModels>
+      <ownedElements xsi:type="diff:DiffGroup">
+        <subDiffElements xsi:type="diff:DiffGroup">
+          <subDiffElements xsi:type="diff:DiffGroup">
+            <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.1">
+              <rightParent href="../original/model.uml#__HpjcIdpEeCq9MraWB7Llg"/>
+              <leftElement href="../modified/model.uml#_ZT1jgIdqEeCq9MraWB7Llg"/>
+            </subDiffElements>
+            <rightParent href="../original/model.uml#__HpjcIdpEeCq9MraWB7Llg"/>
+          </subDiffElements>
+          <subDiffElements xsi:type="diff:DiffGroup">
+            <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.1">
+              <rightParent href="../original/model.uml#__eJ-8IdpEeCq9MraWB7Llg"/>
+              <leftElement href="../modified/model.uml#_ZTsZkIdqEeCq9MraWB7Llg"/>
+            </subDiffElements>
+            <subDiffElements xsi:type="uml2diff:UMLExtendChangeLeftTarget" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.0">
+              <rightParent href="../original/model.uml#__eJ-8IdpEeCq9MraWB7Llg"/>
+              <leftElement href="../modified/model.uml#_ZTsZkIdqEeCq9MraWB7Llg"/>
+            </subDiffElements>
+            <rightParent href="../original/model.uml#__eJ-8IdpEeCq9MraWB7Llg"/>
+          </subDiffElements>
+          <rightParent href="../original/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+        </subDiffElements>
+      </ownedElements>
+      <leftRoots href="../modified/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+      <rightRoots href="../original/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+    </diffModels>
+  </diffResourceSet>
+  <matchResourceSet>
+    <matchModels>
+      <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#_83gFwIdpEeCq9MraWB7Llg"/>
+          <rightElement href="../original/model.uml#_83gFwIdpEeCq9MraWB7Llg"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#_-x-1cIdpEeCq9MraWB7Llg"/>
+          <rightElement href="../original/model.uml#_-x-1cIdpEeCq9MraWB7Llg"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#__HpjcIdpEeCq9MraWB7Llg"/>
+          <rightElement href="../original/model.uml#__HpjcIdpEeCq9MraWB7Llg"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <leftElement href="../modified/model.uml#__eJ-8IdpEeCq9MraWB7Llg"/>
+          <rightElement href="../original/model.uml#__eJ-8IdpEeCq9MraWB7Llg"/>
+        </subMatchElements>
+        <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+          <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
+            <leftElement href="../modified/model.uml#_-fpIQIdpEeCq9MraWB7Llg"/>
+            <rightElement href="../original/model.uml#_-fpIQIdpEeCq9MraWB7Llg"/>
+          </subMatchElements>
+          <leftElement href="../modified/model.uml#_Fr898IdqEeCq9MraWB7Llg"/>
+          <rightElement href="../original/model.uml#_Fr898IdqEeCq9MraWB7Llg"/>
+        </subMatchElements>
+        <leftElement href="../modified/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+        <rightElement href="../original/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+      </matchedElements>
+      <unmatchedElements>
+        <element href="../modified/model.uml#_ZT1jgIdqEeCq9MraWB7Llg"/>
+      </unmatchedElements>
+      <unmatchedElements>
+        <element href="../modified/model.uml#_ZTsZkIdqEeCq9MraWB7Llg"/>
+      </unmatchedElements>
+      <leftRoots href="../modified/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+      <rightRoots href="../original/model.uml#_7VF30YdpEeCq9MraWB7Llg"/>
+    </matchModels>
+  </matchResourceSet>
+</diff:ComparisonResourceSetSnapshot>

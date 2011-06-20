@@ -58,12 +58,4 @@ public interface IDiffExtensionFactory {
 	 * @return
 	 */
 	DiffElement getParentDiff(DiffElement input);
-
-	/**
-	 * Returns the associated {@link UML2DiffEngine}.
-	 * 
-	 * @return the associated {@link UML2DiffEngine}.
-	 */
-	UML2DiffEngine getEngine();
-
 }

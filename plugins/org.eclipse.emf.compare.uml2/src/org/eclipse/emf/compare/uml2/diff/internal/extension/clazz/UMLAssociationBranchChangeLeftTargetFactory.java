@@ -1,0 +1,44 @@
+package org.eclipse.emf.compare.uml2.diff.internal.extension.clazz;
+
+import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
+import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.uml2.uml.Association;
+import org.eclipse.uml2.uml.Property;
+
+public class UMLAssociationBranchChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
+
+	public UMLAssociationBranchChangeLeftTargetFactory(UML2DiffEngine engine,
+			EcoreUtil.CrossReferencer crossReferencer) {
+		super(engine, crossReferencer);
+	}
+
+	public boolean handles(DiffElement input) {
+		return input instanceof ModelElementChangeLeftTarget
+				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof Property
+				&& ((ModelElementChangeLeftTarget)input).getLeftElement().eContainer() instanceof Association
+				&& ((Association)((Property)((ModelElementChangeLeftTarget)input).getLeftElement())
+						.eContainer()).getMemberEnds().size() > 2;
+	}
+
+	public AbstractDiffExtension create(DiffElement input) {
+		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
+
+		UMLAssociationBranchChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
+				.createUMLAssociationBranchChangeLeftTarget();
+
+		ret.getHideElements().add(changeLeftTarget);
+
+		ret.setRemote(input.isRemote());
+		ret.setRightParent(changeLeftTarget.getRightParent());
+		ret.setLeftElement(changeLeftTarget.getLeftElement());
+
+		return ret;
+	}
+
+}

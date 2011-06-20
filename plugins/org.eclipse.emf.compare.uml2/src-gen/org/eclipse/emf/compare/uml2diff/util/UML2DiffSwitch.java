@@ -20,9 +20,14 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.uml2diff.*;
 
 import org.eclipse.emf.ecore.EClass;
@@ -110,39 +115,6 @@ public class UML2DiffSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case UML2DiffPackage.UML_ABSTRACTION_CHANGE: {
-				UMLAbstractionChange umlAbstractionChange = (UMLAbstractionChange)theEObject;
-				T result = caseUMLAbstractionChange(umlAbstractionChange);
-				if (result == null) result = caseUMLDiffExtension(umlAbstractionChange);
-				if (result == null) result = caseDiffElement(umlAbstractionChange);
-				if (result == null) result = caseAbstractDiffExtension(umlAbstractionChange);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case UML2DiffPackage.UML_ABSTRACTION_CHANGE_LEFT_TARGET: {
-				UMLAbstractionChangeLeftTarget umlAbstractionChangeLeftTarget = (UMLAbstractionChangeLeftTarget)theEObject;
-				T result = caseUMLAbstractionChangeLeftTarget(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseModelElementChangeLeftTarget(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseUMLAbstractionChange(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseModelElementChange(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseUMLDiffExtension(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseDiffElement(umlAbstractionChangeLeftTarget);
-				if (result == null) result = caseAbstractDiffExtension(umlAbstractionChangeLeftTarget);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case UML2DiffPackage.UML_ABSTRACTION_CHANGE_RIGHT_TARGET: {
-				UMLAbstractionChangeRightTarget umlAbstractionChangeRightTarget = (UMLAbstractionChangeRightTarget)theEObject;
-				T result = caseUMLAbstractionChangeRightTarget(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseModelElementChangeRightTarget(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseUMLAbstractionChange(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseModelElementChange(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseUMLDiffExtension(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseDiffElement(umlAbstractionChangeRightTarget);
-				if (result == null) result = caseAbstractDiffExtension(umlAbstractionChangeRightTarget);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case UML2DiffPackage.UML_ASSOCIATION_CHANGE: {
 				UMLAssociationChange umlAssociationChange = (UMLAssociationChange)theEObject;
 				T result = caseUMLAssociationChange(umlAssociationChange);
@@ -173,6 +145,303 @@ public class UML2DiffSwitch<T> {
 				if (result == null) result = caseUMLDiffExtension(umlAssociationChangeRightTarget);
 				if (result == null) result = caseDiffElement(umlAssociationChangeRightTarget);
 				if (result == null) result = caseAbstractDiffExtension(umlAssociationChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ASSOCIATION_BRANCH_CHANGE: {
+				UMLAssociationBranchChange umlAssociationBranchChange = (UMLAssociationBranchChange)theEObject;
+				T result = caseUMLAssociationBranchChange(umlAssociationBranchChange);
+				if (result == null) result = caseUMLDiffExtension(umlAssociationBranchChange);
+				if (result == null) result = caseDiffElement(umlAssociationBranchChange);
+				if (result == null) result = caseAbstractDiffExtension(umlAssociationBranchChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ASSOCIATION_BRANCH_CHANGE_LEFT_TARGET: {
+				UMLAssociationBranchChangeLeftTarget umlAssociationBranchChangeLeftTarget = (UMLAssociationBranchChangeLeftTarget)theEObject;
+				T result = caseUMLAssociationBranchChangeLeftTarget(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseUMLAssociationBranchChange(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlAssociationBranchChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ASSOCIATION_BRANCH_CHANGE_RIGHT_TARGET: {
+				UMLAssociationBranchChangeRightTarget umlAssociationBranchChangeRightTarget = (UMLAssociationBranchChangeRightTarget)theEObject;
+				T result = caseUMLAssociationBranchChangeRightTarget(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseUMLAssociationBranchChange(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlAssociationBranchChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_BRANCH_CHANGE: {
+				UMLDependencyBranchChange umlDependencyBranchChange = (UMLDependencyBranchChange)theEObject;
+				T result = caseUMLDependencyBranchChange(umlDependencyBranchChange);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyBranchChange);
+				if (result == null) result = caseDiffElement(umlDependencyBranchChange);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyBranchChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_BRANCH_CHANGE_LEFT_TARGET: {
+				UMLDependencyBranchChangeLeftTarget umlDependencyBranchChangeLeftTarget = (UMLDependencyBranchChangeLeftTarget)theEObject;
+				T result = caseUMLDependencyBranchChangeLeftTarget(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseReferenceChangeLeftTarget(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseUMLDependencyBranchChange(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseReferenceChange(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyBranchChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_BRANCH_CHANGE_RIGHT_TARGET: {
+				UMLDependencyBranchChangeRightTarget umlDependencyBranchChangeRightTarget = (UMLDependencyBranchChangeRightTarget)theEObject;
+				T result = caseUMLDependencyBranchChangeRightTarget(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseReferenceChangeRightTarget(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseUMLDependencyBranchChange(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseReferenceChange(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyBranchChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_GENERALIZATION_SET_CHANGE: {
+				UMLGeneralizationSetChange umlGeneralizationSetChange = (UMLGeneralizationSetChange)theEObject;
+				T result = caseUMLGeneralizationSetChange(umlGeneralizationSetChange);
+				if (result == null) result = caseUMLDiffExtension(umlGeneralizationSetChange);
+				if (result == null) result = caseDiffElement(umlGeneralizationSetChange);
+				if (result == null) result = caseAbstractDiffExtension(umlGeneralizationSetChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_GENERALIZATION_SET_CHANGE_LEFT_TARGET: {
+				UMLGeneralizationSetChangeLeftTarget umlGeneralizationSetChangeLeftTarget = (UMLGeneralizationSetChangeLeftTarget)theEObject;
+				T result = caseUMLGeneralizationSetChangeLeftTarget(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseUMLGeneralizationSetChange(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlGeneralizationSetChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_GENERALIZATION_SET_CHANGE_RIGHT_TARGET: {
+				UMLGeneralizationSetChangeRightTarget umlGeneralizationSetChangeRightTarget = (UMLGeneralizationSetChangeRightTarget)theEObject;
+				T result = caseUMLGeneralizationSetChangeRightTarget(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseUMLGeneralizationSetChange(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlGeneralizationSetChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_CHANGE: {
+				UMLDependencyChange umlDependencyChange = (UMLDependencyChange)theEObject;
+				T result = caseUMLDependencyChange(umlDependencyChange);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyChange);
+				if (result == null) result = caseDiffElement(umlDependencyChange);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_CHANGE_LEFT_TARGET: {
+				UMLDependencyChangeLeftTarget umlDependencyChangeLeftTarget = (UMLDependencyChangeLeftTarget)theEObject;
+				T result = caseUMLDependencyChangeLeftTarget(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseUMLDependencyChange(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlDependencyChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DEPENDENCY_CHANGE_RIGHT_TARGET: {
+				UMLDependencyChangeRightTarget umlDependencyChangeRightTarget = (UMLDependencyChangeRightTarget)theEObject;
+				T result = caseUMLDependencyChangeRightTarget(umlDependencyChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlDependencyChangeRightTarget);
+				if (result == null) result = caseUMLDependencyChange(umlDependencyChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlDependencyChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDependencyChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlDependencyChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDependencyChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXTEND_CHANGE: {
+				UMLExtendChange umlExtendChange = (UMLExtendChange)theEObject;
+				T result = caseUMLExtendChange(umlExtendChange);
+				if (result == null) result = caseUMLDiffExtension(umlExtendChange);
+				if (result == null) result = caseDiffElement(umlExtendChange);
+				if (result == null) result = caseAbstractDiffExtension(umlExtendChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXTEND_CHANGE_LEFT_TARGET: {
+				UMLExtendChangeLeftTarget umlExtendChangeLeftTarget = (UMLExtendChangeLeftTarget)theEObject;
+				T result = caseUMLExtendChangeLeftTarget(umlExtendChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlExtendChangeLeftTarget);
+				if (result == null) result = caseUMLExtendChange(umlExtendChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlExtendChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlExtendChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlExtendChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlExtendChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXTEND_CHANGE_RIGHT_TARGET: {
+				UMLExtendChangeRightTarget umlExtendChangeRightTarget = (UMLExtendChangeRightTarget)theEObject;
+				T result = caseUMLExtendChangeRightTarget(umlExtendChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlExtendChangeRightTarget);
+				if (result == null) result = caseUMLExtendChange(umlExtendChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlExtendChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlExtendChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlExtendChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlExtendChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXECUTION_SPECIFICATION_CHANGE: {
+				UMLExecutionSpecificationChange umlExecutionSpecificationChange = (UMLExecutionSpecificationChange)theEObject;
+				T result = caseUMLExecutionSpecificationChange(umlExecutionSpecificationChange);
+				if (result == null) result = caseUMLDiffExtension(umlExecutionSpecificationChange);
+				if (result == null) result = caseDiffElement(umlExecutionSpecificationChange);
+				if (result == null) result = caseAbstractDiffExtension(umlExecutionSpecificationChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXECUTION_SPECIFICATION_CHANGE_LEFT_TARGET: {
+				UMLExecutionSpecificationChangeLeftTarget umlExecutionSpecificationChangeLeftTarget = (UMLExecutionSpecificationChangeLeftTarget)theEObject;
+				T result = caseUMLExecutionSpecificationChangeLeftTarget(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseUMLExecutionSpecificationChange(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlExecutionSpecificationChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_EXECUTION_SPECIFICATION_CHANGE_RIGHT_TARGET: {
+				UMLExecutionSpecificationChangeRightTarget umlExecutionSpecificationChangeRightTarget = (UMLExecutionSpecificationChangeRightTarget)theEObject;
+				T result = caseUMLExecutionSpecificationChangeRightTarget(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseUMLExecutionSpecificationChange(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlExecutionSpecificationChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DESTRUCTION_EVENT_CHANGE: {
+				UMLDestructionEventChange umlDestructionEventChange = (UMLDestructionEventChange)theEObject;
+				T result = caseUMLDestructionEventChange(umlDestructionEventChange);
+				if (result == null) result = caseUMLDiffExtension(umlDestructionEventChange);
+				if (result == null) result = caseDiffElement(umlDestructionEventChange);
+				if (result == null) result = caseAbstractDiffExtension(umlDestructionEventChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DESTRUCTION_EVENT_CHANGE_LEFT_TARGET: {
+				UMLDestructionEventChangeLeftTarget umlDestructionEventChangeLeftTarget = (UMLDestructionEventChangeLeftTarget)theEObject;
+				T result = caseUMLDestructionEventChangeLeftTarget(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseUMLDestructionEventChange(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDestructionEventChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_DESTRUCTION_EVENT_CHANGE_RIGHT_TARGET: {
+				UMLDestructionEventChangeRightTarget umlDestructionEventChangeRightTarget = (UMLDestructionEventChangeRightTarget)theEObject;
+				T result = caseUMLDestructionEventChangeRightTarget(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseUMLDestructionEventChange(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlDestructionEventChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlDestructionEventChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_INTERVAL_CONSTRAINT_CHANGE: {
+				UMLIntervalConstraintChange umlIntervalConstraintChange = (UMLIntervalConstraintChange)theEObject;
+				T result = caseUMLIntervalConstraintChange(umlIntervalConstraintChange);
+				if (result == null) result = caseUMLDiffExtension(umlIntervalConstraintChange);
+				if (result == null) result = caseDiffElement(umlIntervalConstraintChange);
+				if (result == null) result = caseAbstractDiffExtension(umlIntervalConstraintChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_INTERVAL_CONSTRAINT_CHANGE_LEFT_TARGET: {
+				UMLIntervalConstraintChangeLeftTarget umlIntervalConstraintChangeLeftTarget = (UMLIntervalConstraintChangeLeftTarget)theEObject;
+				T result = caseUMLIntervalConstraintChangeLeftTarget(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseUMLIntervalConstraintChange(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlIntervalConstraintChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_INTERVAL_CONSTRAINT_CHANGE_RIGHT_TARGET: {
+				UMLIntervalConstraintChangeRightTarget umlIntervalConstraintChangeRightTarget = (UMLIntervalConstraintChangeRightTarget)theEObject;
+				T result = caseUMLIntervalConstraintChangeRightTarget(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseUMLIntervalConstraintChange(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlIntervalConstraintChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_MESSAGE_CHANGE: {
+				UMLMessageChange umlMessageChange = (UMLMessageChange)theEObject;
+				T result = caseUMLMessageChange(umlMessageChange);
+				if (result == null) result = caseUMLDiffExtension(umlMessageChange);
+				if (result == null) result = caseDiffElement(umlMessageChange);
+				if (result == null) result = caseAbstractDiffExtension(umlMessageChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_MESSAGE_CHANGE_LEFT_TARGET: {
+				UMLMessageChangeLeftTarget umlMessageChangeLeftTarget = (UMLMessageChangeLeftTarget)theEObject;
+				T result = caseUMLMessageChangeLeftTarget(umlMessageChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlMessageChangeLeftTarget);
+				if (result == null) result = caseUMLMessageChange(umlMessageChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlMessageChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlMessageChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlMessageChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlMessageChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_MESSAGE_CHANGE_RIGHT_TARGET: {
+				UMLMessageChangeRightTarget umlMessageChangeRightTarget = (UMLMessageChangeRightTarget)theEObject;
+				T result = caseUMLMessageChangeRightTarget(umlMessageChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlMessageChangeRightTarget);
+				if (result == null) result = caseUMLMessageChange(umlMessageChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlMessageChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlMessageChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlMessageChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlMessageChangeRightTarget);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -254,6 +523,54 @@ public class UML2DiffSwitch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_CHANGE_LEFT_TARGET: {
+				UMLStereotypeReferenceChangeLeftTarget umlStereotypeReferenceChangeLeftTarget = (UMLStereotypeReferenceChangeLeftTarget)theEObject;
+				T result = caseUMLStereotypeReferenceChangeLeftTarget(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseReferenceChangeLeftTarget(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseUMLStereotypePropertyChange(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseReferenceChange(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlStereotypeReferenceChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET: {
+				UMLStereotypeReferenceChangeRightTarget umlStereotypeReferenceChangeRightTarget = (UMLStereotypeReferenceChangeRightTarget)theEObject;
+				T result = caseUMLStereotypeReferenceChangeRightTarget(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseReferenceChangeRightTarget(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseUMLStereotypePropertyChange(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseReferenceChange(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlStereotypeReferenceChangeRightTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_STEREOTYPE_UPDATE_REFERENCE: {
+				UMLStereotypeUpdateReference umlStereotypeUpdateReference = (UMLStereotypeUpdateReference)theEObject;
+				T result = caseUMLStereotypeUpdateReference(umlStereotypeUpdateReference);
+				if (result == null) result = caseUpdateReference(umlStereotypeUpdateReference);
+				if (result == null) result = caseUMLStereotypePropertyChange(umlStereotypeUpdateReference);
+				if (result == null) result = caseReferenceChange(umlStereotypeUpdateReference);
+				if (result == null) result = caseUMLDiffExtension(umlStereotypeUpdateReference);
+				if (result == null) result = caseDiffElement(umlStereotypeUpdateReference);
+				if (result == null) result = caseAbstractDiffExtension(umlStereotypeUpdateReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_ORDER_CHANGE: {
+				UMLStereotypeReferenceOrderChange umlStereotypeReferenceOrderChange = (UMLStereotypeReferenceOrderChange)theEObject;
+				T result = caseUMLStereotypeReferenceOrderChange(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseReferenceOrderChange(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseUMLStereotypePropertyChange(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseReferenceChange(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseUMLDiffExtension(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseDiffElement(umlStereotypeReferenceOrderChange);
+				if (result == null) result = caseAbstractDiffExtension(umlStereotypeReferenceOrderChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -270,51 +587,6 @@ public class UML2DiffSwitch<T> {
 	 * @generated
 	 */
 	public T caseUMLDiffExtension(UMLDiffExtension object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>UML Abstraction Change</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>UML Abstraction Change</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseUMLAbstractionChange(UMLAbstractionChange object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>UML Abstraction Change Left Target</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>UML Abstraction Change Left Target</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseUMLAbstractionChangeLeftTarget(UMLAbstractionChangeLeftTarget object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>UML Abstraction Change Right Target</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>UML Abstraction Change Right Target</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseUMLAbstractionChangeRightTarget(UMLAbstractionChangeRightTarget object) {
 		return null;
 	}
 
@@ -360,6 +632,411 @@ public class UML2DiffSwitch<T> {
 	 * @generated
 	 */
 	public T caseUMLAssociationChangeRightTarget(UMLAssociationChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Association Branch Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Association Branch Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLAssociationBranchChange(UMLAssociationBranchChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Association Branch Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Association Branch Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLAssociationBranchChangeLeftTarget(UMLAssociationBranchChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Association Branch Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Association Branch Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLAssociationBranchChangeRightTarget(UMLAssociationBranchChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Branch Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Branch Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyBranchChange(UMLDependencyBranchChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Branch Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Branch Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyBranchChangeLeftTarget(UMLDependencyBranchChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Branch Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Branch Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyBranchChangeRightTarget(UMLDependencyBranchChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Generalization Set Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLGeneralizationSetChange(UMLGeneralizationSetChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Generalization Set Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Generalization Set Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLGeneralizationSetChangeLeftTarget(UMLGeneralizationSetChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Generalization Set Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Generalization Set Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLGeneralizationSetChangeRightTarget(UMLGeneralizationSetChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyChange(UMLDependencyChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyChangeLeftTarget(UMLDependencyChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Dependency Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Dependency Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDependencyChangeRightTarget(UMLDependencyChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Extend Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Extend Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExtendChange(UMLExtendChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Extend Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Extend Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExtendChangeLeftTarget(UMLExtendChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Extend Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Extend Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExtendChangeRightTarget(UMLExtendChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Execution Specification Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Execution Specification Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExecutionSpecificationChange(UMLExecutionSpecificationChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Execution Specification Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Execution Specification Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExecutionSpecificationChangeLeftTarget(UMLExecutionSpecificationChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Execution Specification Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Execution Specification Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLExecutionSpecificationChangeRightTarget(UMLExecutionSpecificationChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Destruction Event Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Destruction Event Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDestructionEventChange(UMLDestructionEventChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Destruction Event Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Destruction Event Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDestructionEventChangeLeftTarget(UMLDestructionEventChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Destruction Event Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Destruction Event Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLDestructionEventChangeRightTarget(UMLDestructionEventChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Interval Constraint Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Interval Constraint Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLIntervalConstraintChange(UMLIntervalConstraintChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Interval Constraint Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Interval Constraint Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLIntervalConstraintChangeLeftTarget(UMLIntervalConstraintChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Interval Constraint Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Interval Constraint Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLIntervalConstraintChangeRightTarget(UMLIntervalConstraintChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Message Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Message Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLMessageChange(UMLMessageChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Message Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Message Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLMessageChangeLeftTarget(UMLMessageChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Message Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Message Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLMessageChangeRightTarget(UMLMessageChangeRightTarget object) {
 		return null;
 	}
 
@@ -465,6 +1142,66 @@ public class UML2DiffSwitch<T> {
 	 * @generated
 	 */
 	public T caseUMLStereotypeApplicationRemoval(UMLStereotypeApplicationRemoval object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Stereotype Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Stereotype Reference Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLStereotypeReferenceChangeLeftTarget(UMLStereotypeReferenceChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Stereotype Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Stereotype Reference Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLStereotypeReferenceChangeRightTarget(UMLStereotypeReferenceChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Stereotype Update Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Stereotype Update Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLStereotypeUpdateReference(UMLStereotypeUpdateReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Stereotype Reference Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Stereotype Reference Order Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLStereotypeReferenceOrderChange(UMLStereotypeReferenceOrderChange object) {
 		return null;
 	}
 
@@ -615,6 +1352,81 @@ public class UML2DiffSwitch<T> {
 	 * @generated
 	 */
 	public T caseUpdateModelElement(UpdateModelElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferenceChange(ReferenceChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Update Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Update Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUpdateReference(UpdateReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference Order Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferenceOrderChange(ReferenceOrderChange object) {
 		return null;
 	}
 

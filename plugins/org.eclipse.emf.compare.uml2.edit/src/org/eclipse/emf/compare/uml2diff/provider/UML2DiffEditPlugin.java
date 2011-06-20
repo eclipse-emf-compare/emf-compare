@@ -20,6 +20,8 @@ import org.eclipse.emf.compare.match.metamodel.provider.MatchEditPlugin;
 
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 
+import org.eclipse.uml2.uml.edit.UMLEditPlugin;
+
 /**
  * This is the central singleton for the UML2Diff edit plugin.
  * <!-- begin-user-doc -->
@@ -55,6 +57,7 @@ public final class UML2DiffEditPlugin extends EMFPlugin {
 		     DiffEditPlugin.INSTANCE,
 		     EcoreEditPlugin.INSTANCE,
 		     MatchEditPlugin.INSTANCE,
+		     UMLEditPlugin.INSTANCE,
 		   });
 	}
 

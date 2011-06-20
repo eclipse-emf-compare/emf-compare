@@ -11,6 +11,8 @@
 package org.eclipse.emf.compare.uml2.diff;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -20,12 +22,13 @@ import org.eclipse.emf.compare.diff.engine.IDiffEngine;
 import org.eclipse.emf.compare.diff.engine.check.ReferencesCheck;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
@@ -48,27 +51,39 @@ public class UML2DiffEngine extends GenericDiffEngine {
 	private Set<IDiffExtensionFactory> uml2ExtensionFactories;
 
 	@Override
-	protected DiffGroup doDiffThreeWay(MatchModel match) {
-		DiffGroup ret = super.doDiffThreeWay(match);
+	public DiffModel doDiff(MatchModel match, boolean threeWay) {
+		DiffModel ret = super.doDiff(match, threeWay);
 		postProcess(ret);
 		return ret;
 	}
 
 	@Override
-	protected DiffGroup doDiffTwoWay(MatchModel match) {
-		DiffGroup ret = super.doDiffTwoWay(match);
+	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, CrossReferencer crossReferencer) {
+		DiffModel ret = super.doDiffResourceSet(match, threeWay, crossReferencer);
 		postProcess(ret);
 		return ret;
 	}
 
-	void postProcess(DiffGroup dg) {
-		uml2ExtensionFactories = DiffExtensionFactoryRegistry.createExtensionFactories(this);
+	void postProcess(DiffModel dg) {
+		EcoreUtil.CrossReferencer diffModelCrossReferencer = new EcoreUtil.CrossReferencer(dg) {
+			private static final long serialVersionUID = -7188045763674814697L;
+			{
+				crossReference(); // init map
+			}
+		};
+		uml2ExtensionFactories = DiffExtensionFactoryRegistry.createExtensionFactories(this,
+				diffModelCrossReferencer);
 
+		List<DiffElement> toBrowse = new ArrayList<DiffElement>();
 		for (TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
 			EObject next = tit.next();
 			if (next instanceof DiffElement) {
-				applyManagedTypes((DiffElement)next);
+				toBrowse.add((DiffElement)next);
 			}
+		}
+
+		for (DiffElement diffElement : toBrowse) {
+			applyManagedTypes(diffElement);
 		}
 	}
 

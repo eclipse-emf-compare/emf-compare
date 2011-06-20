@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 
 import org.eclipse.emf.compare.diff.provider.AttributeChangeLeftTargetItemProvider;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.diff.provider.AttributeChangeLeftTargetItemProvid
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
+import org.eclipse.emf.compare.util.AdapterUtils;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -74,7 +76,7 @@ public class UMLStereotypeAttributeChangeLeftTargetItemProvider
 
 			addHideElementsPropertyDescriptor(object);
 			addIsCollapsedPropertyDescriptor(object);
-			addStereotypeApplicationsPropertyDescriptor(object);
+			addStereotypePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -124,19 +126,19 @@ public class UMLStereotypeAttributeChangeLeftTargetItemProvider
 	}
 
 	/**
-	 * This adds a property descriptor for the Stereotype Applications feature.
+	 * This adds a property descriptor for the Stereotype feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addStereotypeApplicationsPropertyDescriptor(Object object) {
+	protected void addStereotypePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_UMLStereotypePropertyChange_stereotypeApplications_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_UMLStereotypePropertyChange_stereotypeApplications_feature", "_UI_UMLStereotypePropertyChange_type"),
-				 UML2DiffPackage.Literals.UML_STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE_APPLICATIONS,
+				 getString("_UI_UMLStereotypePropertyChange_stereotype_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_UMLStereotypePropertyChange_stereotype_feature", "_UI_UMLStereotypePropertyChange_type"),
+				 UML2DiffPackage.Literals.UML_STEREOTYPE_PROPERTY_CHANGE__STEREOTYPE,
 				 true,
 				 false,
 				 true,
@@ -149,23 +151,31 @@ public class UMLStereotypeAttributeChangeLeftTargetItemProvider
 	 * This returns UMLStereotypeAttributeChangeLeftTarget.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/UMLStereotypeAttributeChangeLeftTarget"));
+		return super.getImage(object);
 	}
 
 	/**
 	 * This returns the label text for the adapted class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public String getText(Object object) {
-		UMLStereotypeAttributeChangeLeftTarget umlStereotypeAttributeChangeLeftTarget = (UMLStereotypeAttributeChangeLeftTarget)object;
-		return getString("_UI_UMLStereotypeAttributeChangeLeftTarget_type") + " " + umlStereotypeAttributeChangeLeftTarget.isConflicting();
+		final AttributeChangeLeftTarget operation = (AttributeChangeLeftTarget)object;
+
+		final String attributeLabel = AdapterUtils.getItemProviderText(operation.getAttribute());
+		final String elementLabel = AdapterUtils.getItemProviderText(operation.getRightElement());
+
+		if (operation.isRemote())
+			return getString("_UI_RemoteRemoveUMLStereotypeAttribute_type", new Object[] {operation.getLeftTarget(), //$NON-NLS-1$
+					attributeLabel, elementLabel, });
+		return getString("_UI_AddUMLStereotypeAttribute_type", new Object[] {operation.getLeftTarget(), //$NON-NLS-1$
+				attributeLabel, elementLabel, });
 	}
 
 	/**
@@ -201,22 +211,102 @@ public class UMLStereotypeAttributeChangeLeftTargetItemProvider
 		newChildDescriptors.add
 			(createChildParameter
 				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				 UML2DiffFactory.eINSTANCE.createUMLAbstractionChangeLeftTarget()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
-				 UML2DiffFactory.eINSTANCE.createUMLAbstractionChangeRightTarget()));
-
-		newChildDescriptors.add
-			(createChildParameter
-				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				 UML2DiffFactory.eINSTANCE.createUMLAssociationChangeLeftTarget()));
 
 		newChildDescriptors.add
 			(createChildParameter
 				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				 UML2DiffFactory.eINSTANCE.createUMLAssociationChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLAssociationBranchChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLAssociationBranchChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDependencyBranchChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDependencyBranchChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLGeneralizationSetChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLGeneralizationSetChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDependencyChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDependencyChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLExtendChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLExtendChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLExecutionSpecificationChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLExecutionSpecificationChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDestructionEventChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLDestructionEventChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLIntervalConstraintChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLIntervalConstraintChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLMessageChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLMessageChangeRightTarget()));
 
 		newChildDescriptors.add
 			(createChildParameter
@@ -242,6 +332,26 @@ public class UMLStereotypeAttributeChangeLeftTargetItemProvider
 			(createChildParameter
 				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				 UML2DiffFactory.eINSTANCE.createUMLStereotypeApplicationRemoval()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLStereotypeReferenceChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLStereotypeReferenceChangeRightTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLStereotypeUpdateReference()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLStereotypeReferenceOrderChange()));
 	}
 
 	/**

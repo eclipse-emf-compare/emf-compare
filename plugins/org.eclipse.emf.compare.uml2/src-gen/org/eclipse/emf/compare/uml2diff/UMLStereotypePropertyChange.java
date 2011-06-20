@@ -10,19 +10,16 @@
  */
 package org.eclipse.emf.compare.uml2diff;
 
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>UML Stereotype Property Change</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '
+ * <em><b>UML Stereotype Property Change</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange#getStereotypeApplications <em>Stereotype Applications</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange#getStereotype <em>Stereotype</em>}</li>
  * </ul>
  * </p>
  *
@@ -32,19 +29,28 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface UMLStereotypePropertyChange extends UMLDiffExtension {
 	/**
-	 * Returns the value of the '<em><b>Stereotype Applications</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.emf.ecore.EObject}.
+	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Stereotype Applications</em>' reference list isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Stereotype</em>' reference isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Stereotype Applications</em>' reference list.
-	 * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLStereotypePropertyChange_StereotypeApplications()
+	 * @return the value of the '<em>Stereotype</em>' reference.
+	 * @see #setStereotype(Stereotype)
+	 * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage#getUMLStereotypePropertyChange_Stereotype()
 	 * @model
 	 * @generated
 	 */
-	EList<EObject> getStereotypeApplications();
+	Stereotype getStereotype();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange#getStereotype <em>Stereotype</em>}' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Stereotype</em>' reference.
+	 * @see #getStereotype()
+	 * @generated
+	 */
+	void setStereotype(Stereotype value);
 
 } // UMLStereotypePropertyChange

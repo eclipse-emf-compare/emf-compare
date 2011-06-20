@@ -14,35 +14,27 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.compare.diff.merge.IMerger;
-
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-
 import org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeRightTargetImpl;
-
+import org.eclipse.emf.compare.uml2.diff.internal.merger.UML2DiffExtensionMerger;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>UML Association Change Right Target</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>UML Association Change Right Target</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -55,9 +47,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRightTargetImpl implements UMLAssociationChangeRightTarget {
 	/**
-	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getHideElements() <em>Hide Elements</em>}' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #getHideElements()
 	 * @generated
 	 * @ordered
@@ -65,9 +57,9 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	protected EList<DiffElement> hideElements;
 
 	/**
-	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The default value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -76,8 +68,8 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 
 	/**
 	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -85,8 +77,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	protected boolean isCollapsed = IS_COLLAPSED_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected UMLAssociationChangeRightTargetImpl() {
@@ -94,8 +85,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -104,8 +94,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
@@ -116,8 +105,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -125,8 +113,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
@@ -137,8 +124,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void visit(DiffModel diffModel) {
@@ -148,8 +134,8 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public String getText() {
@@ -157,8 +143,8 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated NOT
 	 */
 	public Object getImage() {
@@ -166,19 +152,16 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated NOT
 	 */
 	public IMerger provideMerger() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return new UML2DiffExtensionMerger();
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -192,8 +175,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -206,8 +188,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -222,8 +203,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -242,8 +222,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -260,8 +239,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -276,8 +254,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -303,8 +280,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -330,8 +306,7 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -345,4 +320,4 @@ public class UMLAssociationChangeRightTargetImpl extends ModelElementChangeRight
 		return result.toString();
 	}
 
-} //UMLAssociationChangeRightTargetImpl
+} // UMLAssociationChangeRightTargetImpl

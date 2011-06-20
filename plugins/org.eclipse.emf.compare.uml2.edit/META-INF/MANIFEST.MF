@@ -16,5 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.diff.edit;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
- org.eclipse.emf.compare.match;visibility:=reexport
+ org.eclipse.emf.compare.match;visibility:=reexport,
+ org.eclipse.uml2.uml,
+ org.eclipse.emf.compare,
+ org.eclipse.uml2.uml.edit
 Bundle-ActivationPolicy: lazy
