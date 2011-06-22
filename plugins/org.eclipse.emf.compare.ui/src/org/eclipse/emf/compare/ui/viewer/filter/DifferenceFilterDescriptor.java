@@ -56,9 +56,9 @@ public final class DifferenceFilterDescriptor {
 	 */
 	public DifferenceFilterDescriptor(IConfigurationElement e) {
 		element = e;
-		id = e.getAttribute(ID_PROPERTY, ""); //$NON-NLS-1$
-		name = e.getAttribute(NAME_PROPERTY, ""); //$NON-NLS-1$
-		classname = e.getAttribute(CLASS_PROPERTY, null);
+		id = e.getAttribute(ID_PROPERTY);
+		name = e.getAttribute(NAME_PROPERTY);
+		classname = e.getAttribute(CLASS_PROPERTY);
 
 		checks(this);
 	}
