@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This implementation of an {@link ITypedElement} will allow us to wrap an EObject.
@@ -60,7 +61,10 @@ public class EObjectTypedElement implements ITypedElement, IStreamContentAccesso
 	 */
 	public EObjectTypedElement(EObject eObject, ILabelProvider labelProvider) {
 		this.name = labelProvider.getText(eObject);
-		this.image = labelProvider.getImage(eObject);
+		if (Display.getCurrent() != null)
+			this.image = labelProvider.getImage(eObject);
+		else
+			this.image = null;
 		Resource resource = eObject.eResource();
 		if (resource != null && resource.getURI() != null) {
 			isEditable = !EMFResourceMapping.REMOTE_RESOURCE_SCHEME.equals(eObject.eResource().getURI()
