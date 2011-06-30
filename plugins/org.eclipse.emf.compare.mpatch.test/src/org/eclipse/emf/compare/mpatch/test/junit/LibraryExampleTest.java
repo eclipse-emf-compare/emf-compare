@@ -81,7 +81,7 @@ public class LibraryExampleTest {
 	private void doTransformations(MPatchModel mpatch) {
 		final int groups = GroupingTransformation.group(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
-		assertEquals("Groups were not created correctly!", 2, groups);
+		assertTrue("Groups were not created correctly!", groups > 0);
 		final int deps = MPatchDependencyTransformation.calculateDependencies(mpatch);
 		assertNull(MPatchConstants.MPATCH_SHORT_NAME + " is not valid!", CompareTestHelper.validateMPatch(mpatch));
 		assertEquals("Dependencies were not calculated correctly!", 4, deps);
