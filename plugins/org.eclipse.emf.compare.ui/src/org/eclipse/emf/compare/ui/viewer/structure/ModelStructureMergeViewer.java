@@ -189,9 +189,10 @@ public class ModelStructureMergeViewer extends TreeViewer {
 		final Menu menu = menuMgr.createContextMenu(getTree());
 		getTree().setMenu(menu);
 
-		getCompareConfiguration().getContainer().getWorkbenchPart().getSite()
-				.registerContextMenu(menuMgr, this);
-
+		final IWorkbenchPart part = getCompareConfiguration().getContainer().getWorkbenchPart();
+		if (part != null) {
+			part.getSite().registerContextMenu(menuMgr, this);
+		}
 	}
 
 	/**
