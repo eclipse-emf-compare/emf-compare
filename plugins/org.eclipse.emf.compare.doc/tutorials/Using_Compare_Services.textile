@@ -28,7 +28,7 @@ The whole comparison process is divided in two phases :
 
 When comparing (using the user interface) two models conformed to the AddressBook metamodel you'll get:
 
-images/AddressBookComparaison1.png!
+!images/AddressBookComparaison1.png!
 
 This is an emfdiff model displayed using the emf compare editor. Both match and delta information are kept in this model, let's have 
 a further look on the match part:
