@@ -189,8 +189,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 	public ModelContentMergeTabItem getUIItem(EObject data) {
 		ModelContentMergeTabItem result = null;
 		// If the diff is hidden by another (diff extension), the item won't be
-		// returned
-		// Same goes for diffs that couldn't be matched
+		// returned Same goes for diffs that couldn't be matched
 		final DiffElement diff = dataToDiff.get(data);
 		if (diff != null && DiffAdapterFactory.shouldBeHidden(diff))
 			return result;
@@ -210,8 +209,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 				// The item corresponding to the diff is not visible. We'll wrap
 				// its
 				// first visible ancestor.
-				result = new ModelContentMergeTabItem(diff, item.getActualItem(), treeItem, item
-						.getCurveColor());
+				result = new ModelContentMergeTabItem(diff, item.getActualItem(), treeItem,
+						item.getCurveColor());
 			}
 			computeUIInfoFor(result);
 		}
@@ -828,8 +827,8 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			if (partSide == EMFCompareConstants.LEFT) {
 				if (item.getCurveY() != treeItemBounds.y + treeItemBounds.height / 2) {
 					gc.setLineStyle(SWT.LINE_SOLID);
-					gc.drawLine(rectangleX, item.getCurveY(), treeBounds.width + treeBounds.x, item
-							.getCurveY());
+					gc.drawLine(rectangleX, item.getCurveY(), treeBounds.width + treeBounds.x,
+							item.getCurveY());
 				} else {
 					gc.setLineStyle(SWT.LINE_DASHDOT);
 					gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
@@ -841,9 +840,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 			} else if (partSide == EMFCompareConstants.RIGHT) {
 				if (item.getCurveY() != treeItemBounds.y + treeItemBounds.height / 2) {
 					gc.setLineStyle(SWT.LINE_SOLID);
-					gc
-							.drawLine(rectangleX + rectangleWidth, item.getCurveY(), treeBounds.x, item
-									.getCurveY());
+					gc.drawLine(rectangleX + rectangleWidth, item.getCurveY(), treeBounds.x, item.getCurveY());
 				} else {
 					gc.setLineStyle(SWT.LINE_DASHDOT);
 					gc.drawRoundRectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight,
@@ -930,7 +927,7 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		}
 
 		/**
-		 *{@inheritDoc}
+		 * {@inheritDoc}
 		 * 
 		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#hasChildren(java.lang.Object)
 		 */
