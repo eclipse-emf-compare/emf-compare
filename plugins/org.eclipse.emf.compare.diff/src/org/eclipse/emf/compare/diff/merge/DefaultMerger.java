@@ -54,6 +54,7 @@ public class DefaultMerger implements IMerger {
 	 */
 	public void applyInOrigin() {
 		handleMutuallyDerivedReferences();
+		ensureXMIIDCopied();
 		removeFromContainer(diff);
 	}
 
@@ -91,6 +92,7 @@ public class DefaultMerger implements IMerger {
 	 */
 	public void undoInTarget() {
 		handleMutuallyDerivedReferences();
+		ensureXMIIDCopied();
 		removeFromContainer(diff);
 	}
 
@@ -125,6 +127,21 @@ public class DefaultMerger implements IMerger {
 		copier.copyReferences();
 		copier.copyXMIIDs();
 		return result;
+	}
+
+	/**
+	 * This can be called after a merge operation to ensure that all objects created by the operation share
+	 * the same XMI ID as their original.
+	 * <p>
+	 * Implemented because of bug 351591 : some of the objects we copy mays not have been added to a resource
+	 * when we check their IDs. We thus need to wait till the merge operation has completed.
+	 * </p>
+	 * 
+	 * @since 1.3
+	 */
+	protected void ensureXMIIDCopied() {
+		final EMFCompareEObjectCopier copier = MergeService.getCopier(diff);
+		copier.copyXMIIDs();
 	}
 
 	/**
