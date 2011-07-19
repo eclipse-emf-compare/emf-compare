@@ -137,7 +137,7 @@ public class DefaultMerger implements IMerger {
 	 * when we check their IDs. We thus need to wait till the merge operation has completed.
 	 * </p>
 	 * 
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected void ensureXMIIDCopied() {
 		final EMFCompareEObjectCopier copier = MergeService.getCopier(diff);
