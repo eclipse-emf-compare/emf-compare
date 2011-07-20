@@ -416,7 +416,6 @@ public class ReferencesCheck extends AbstractCheck {
 	private List<EObject> computeAddedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
-		final double similarReferenceURIThreshold = 0.8d;
 
 		if (leftReferences != null) {
 			addedReferences.addAll(leftReferences);
@@ -448,7 +447,6 @@ public class ReferencesCheck extends AbstractCheck {
 	private List<EObject> computeDeletedReferences(List<EObject> leftReferences, List<EObject> rightReferences) {
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
 		final List<EObject> addedReferences = new ArrayList<EObject>();
-		final double similarReferenceURIThreshold = 0.8d;
 
 		if (leftReferences != null) {
 			addedReferences.addAll(leftReferences);
