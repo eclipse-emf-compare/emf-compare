@@ -13,9 +13,12 @@ package org.eclipse.emf.compare.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
@@ -32,6 +35,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
+import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.graphics.Image;
@@ -337,6 +341,15 @@ public class ModelCompareInput implements ICompareInput {
 	public Image getImage() {
 		Image image = null;
 
+		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+			IResource iResource = EclipseModelUtils.findIResource(leftResource);
+			if (iResource == null) {
+				iResource = EclipseModelUtils.findIResource(rightResource);
+			}
+			if (iResource != null) {
+				return CompareUI.getImage(iResource);
+			}
+		}
 		if (getMatch() != null) {
 			image = EMFCompareEObjectUtils.computeObjectImage((EObject)getMatch());
 		} else if (getDiff() != null) {
