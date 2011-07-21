@@ -297,26 +297,23 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 					ancestorReference = ancestorRS.getEObject(proxyURI, true);
 				}
 
-				final EObject resolvedReferencedObject;
+				EObject resolvedReferencedObject = null;
 				if (leftReference != null) {
 					resolvedReferencedObject = leftReference;
-				} else if (rightReference != null) {
+					crossReferenceResolvedObject(object, reference, leftReference);
+				}
+				if (rightReference != null) {
 					resolvedReferencedObject = rightReference;
-				} else {
+					crossReferenceResolvedObject(object, reference, rightReference);
+				}
+				if (ancestorReference != null) {
 					resolvedReferencedObject = ancestorReference;
+					crossReferenceResolvedObject(object, reference, ancestorReference);
 				}
 
 				if (resolvedReferencedObject != null) {
-					if (reference.isMany()) {
-						final List<EObject> values = new ArrayList<EObject>();
-						values.add(resolvedReferencedObject);
-						object.eSet(reference, values);
-					} else {
-						object.eSet(reference, resolvedReferencedObject);
-					}
 					// We'll return false : we want our resolved object to be crossReferenced, not the proxy
 					result = false;
-					add((InternalEObject)object, reference, resolvedReferencedObject);
 				} else {
 					result = super.crossReference(object, reference, crossReferencedEObject);
 				}
@@ -324,6 +321,28 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 				result = super.crossReference(object, reference, crossReferencedEObject);
 			}
 			return result;
+		}
+
+		/**
+		 * Cross references the given resolved object in this CrossReferencer's map.
+		 * 
+		 * @param object
+		 *            an object in the cross referencer's content tree.
+		 * @param reference
+		 *            a reference from the object.
+		 * @param resolvedReferencedObject
+		 *            the resolved target of the specified reference.
+		 */
+		private void crossReferenceResolvedObject(EObject object, EReference reference,
+				final EObject resolvedReferencedObject) {
+			if (reference.isMany()) {
+				final List<EObject> values = new ArrayList<EObject>();
+				values.add(resolvedReferencedObject);
+				object.eSet(reference, values);
+			} else {
+				object.eSet(reference, resolvedReferencedObject);
+			}
+			add((InternalEObject)object, reference, resolvedReferencedObject);
 		}
 	}
 }
