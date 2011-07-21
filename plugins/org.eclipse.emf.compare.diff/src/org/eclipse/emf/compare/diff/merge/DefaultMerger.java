@@ -104,7 +104,7 @@ public class DefaultMerger implements IMerger {
 	 *            {@link DiffGroup} we want to cleanup.
 	 */
 	protected void cleanDiffGroup(DiffGroup diffGroup) {
-		if (diffGroup != null && diffGroup.getSubchanges() == 0) {
+		if (diffGroup != null && diffGroup.getSubDiffElements().size() == 0) {
 			final EObject parent = diffGroup.eContainer();
 			if (parent instanceof DiffGroup) {
 				EcoreUtil.remove(diffGroup);
