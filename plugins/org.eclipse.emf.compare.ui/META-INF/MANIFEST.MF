@@ -34,6 +34,8 @@ Export-Package: org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.ui.viewer.content.part,
  org.eclipse.emf.compare.ui.viewer.content.part.diff,
  org.eclipse.emf.compare.ui.viewer.content.part.property,
+ org.eclipse.emf.compare.ui.viewer.filter,
+ org.eclipse.emf.compare.ui.viewer.group,
  org.eclipse.emf.compare.ui.viewer.structure
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
