@@ -308,33 +308,33 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 				EObject leftReference = leftRS.getEObject(proxyURI, false);
 				EObject rightReference = rightRS.getEObject(proxyURI, false);
 				EObject ancestorReference = ancestorRS.getEObject(proxyURI, false);
+
+				boolean resolved = false;
 				if (reference == MatchPackage.eINSTANCE.getMatchModel_LeftRoots()
 						|| reference == DiffPackage.eINSTANCE.getDiffModel_LeftRoots()) {
 					leftReference = leftRS.getEObject(proxyURI, true);
+					if (leftReference != null) {
+						resolved = true;
+						crossReferenceResolvedObject(object, reference, leftReference);
+					}
 				} else if (reference == MatchPackage.eINSTANCE.getMatchModel_RightRoots()
 						|| reference == DiffPackage.eINSTANCE.getDiffModel_RightRoots()) {
 					rightReference = rightRS.getEObject(proxyURI, true);
+					if (rightReference != null) {
+						resolved = true;
+						crossReferenceResolvedObject(object, reference, rightReference);
+					}
 				} else if (reference == MatchPackage.eINSTANCE.getMatchModel_AncestorRoots()
 						|| reference == DiffPackage.eINSTANCE.getDiffModel_AncestorRoots()) {
 					ancestorReference = ancestorRS.getEObject(proxyURI, true);
+					if (ancestorReference != null) {
+						resolved = true;
+						crossReferenceResolvedObject(object, reference, ancestorReference);
+					}
 				}
 
-				EObject resolvedReferencedObject = null;
-				if (leftReference != null) {
-					resolvedReferencedObject = leftReference;
-					crossReferenceResolvedObject(object, reference, leftReference);
-				}
-				if (rightReference != null) {
-					resolvedReferencedObject = rightReference;
-					crossReferenceResolvedObject(object, reference, rightReference);
-				}
-				if (ancestorReference != null) {
-					resolvedReferencedObject = ancestorReference;
-					crossReferenceResolvedObject(object, reference, ancestorReference);
-				}
-
-				if (resolvedReferencedObject != null) {
-					// We'll return false : we want our resolved object to be crossReferenced, not the proxy
+				if (resolved) {
+					// We'll return false : our resolved object to be crossReferenced, the proxy must not be
 					result = false;
 				} else {
 					result = super.crossReference(object, reference, crossReferencedEObject);
