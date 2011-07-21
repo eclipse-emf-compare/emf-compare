@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Victor Roldan Betancort - bug 352727
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine.internal;
 
@@ -374,7 +375,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	}
 
 	/**
-	 * Checks wether the two given {@link EObject} have the same URI.
+	 * Checks whether the two given {@link EObject} have the same URI.
 	 * 
 	 * @param obj1
 	 *            First of the two {@link EObject} we're comparing.
@@ -382,7 +383,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 *            Second {@link EObject} we're comparing.
 	 * @return <code>True</code> if the {@link EObject}s have the same URI, <code>False</code> otherwise.
 	 */
-	private boolean hasSameUri(EObject obj1, EObject obj2) {
+	protected boolean hasSameUri(EObject obj1, EObject obj2) {
 		if (obj1.eResource() != null && obj2.eResource() != null) {
 			String obj1URIFragment = uriFragmentCache.get(obj1);
 			if (obj1URIFragment == null) {
