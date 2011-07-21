@@ -232,6 +232,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		final Iterator<DiffElement> differences = diffToUIItem.keySet().iterator();
 		while (differences.hasNext()) {
 			final DiffElement diff = differences.next();
+			if (!diff.getIsHiddenBy().isEmpty()) {
+				continue;
+			}
 			final ModelContentMergeTabItem nextItem = diffToUIItem.get(diff);
 
 			// seeks for a perfect match (item is actually visible)
