@@ -341,7 +341,7 @@ public class ModelCompareInput implements ICompareInput {
 	public Image getImage() {
 		Image image = null;
 
-		if (EMFPlugin.IS_ECLIPSE_RUNNING) {
+		if (EMFPlugin.IS_ECLIPSE_RUNNING && leftResource != null) {
 			IResource iResource = EclipseModelUtils.findIResource(leftResource);
 			if (iResource == null) {
 				iResource = EclipseModelUtils.findIResource(rightResource);
