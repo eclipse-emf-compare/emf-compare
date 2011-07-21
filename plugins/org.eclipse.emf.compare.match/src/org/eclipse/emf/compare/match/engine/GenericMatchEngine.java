@@ -180,7 +180,7 @@ public class GenericMatchEngine implements IMatchEngine {
 				&& ancestorScope.isInScope(ancestor)) {
 			root = MatchFactory.eINSTANCE.createMatchModel();
 
-			setModelRoots(root, leftObject, rightObject, ancestor);
+			setModelRoots(root, leftObject, leftScope, rightObject, rightScope, ancestor, ancestorScope);
 
 			final Monitor monitor = createProgressMonitor();
 
@@ -380,7 +380,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		if (leftScope.isInScope(leftObject) && rightScope.isInScope(rightObject)) {
 			root = MatchFactory.eINSTANCE.createMatchModel();
 
-			setModelRoots(root, leftObject, rightObject);
+			setModelRoots(root, leftObject, leftScope, rightObject, rightScope, null, null);
 			/*
 			 * As we could very well be passed two EClasses (as opposed to modelMatch which compares all roots
 			 * of a resource), we cannot filter the model.
@@ -884,7 +884,7 @@ public class GenericMatchEngine implements IMatchEngine {
 			rightRoot = rightContents.get(0);
 		}
 
-		setModelRoots(root, leftRoot, rightRoot);
+		setModelRoots(root, leftRoot, leftScope, rightRoot, rightScope, null, null);
 
 		// filters unused features
 		filterUnused(leftResource);
@@ -1014,7 +1014,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		if (ancestorContents.size() > 0) {
 			ancestorRoot = ancestorContents.get(0);
 		}
-		setModelRoots(root, leftRoot, rightRoot, ancestorRoot);
+		setModelRoots(root, leftRoot, leftScope, rightRoot, rightScope, ancestorRoot, ancestorScope);
 
 		final MatchModel root1AncestorMatch = doMatch(leftResource, leftScope, ancestorResource,
 				ancestorScope, monitor);
@@ -1679,7 +1679,11 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param right
 	 *            Element from which to resolve the right model URI.
 	 * @since 1.1
+	 * @deprecated bug 346607 : roots can be out of the scope too. Use
+	 *             {@link #setModelRoots(MatchModel, EObject, IMatchScope, EObject, IMatchScope, EObject, IMatchScope)}
+	 *             instead.
 	 */
+	@Deprecated
 	protected void setModelRoots(MatchModel modelRoot, EObject left, EObject right) {
 		setModelRoots(modelRoot, left, right, null);
 	}
@@ -1696,17 +1700,57 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @param ancestor
 	 *            Element from which to resolve the ancestor model URI. Can be <code>null</code>.
 	 * @since 1.1
+	 * @deprecated bug 346607 : roots can be out of the scope too. Use
+	 *             {@link #setModelRoots(MatchModel, EObject, IMatchScope, EObject, IMatchScope, EObject, IMatchScope)}
+	 *             instead.
 	 */
+	@Deprecated
 	protected void setModelRoots(MatchModel modelRoot, EObject left, EObject right, EObject ancestor) {
+		setModelRoots(modelRoot, left, null, right, null, ancestor, null);
+	}
+
+	/**
+	 * Sets the values of the {@link MatchModel}'s left, right and ancestor models.
+	 * 
+	 * @param modelRoot
+	 *            Root of the {@link MatchModel}.
+	 * @param left
+	 *            Element from which to resolve the left model URI.
+	 * @param leftScope
+	 *            Scope that should be used to filter out left roots. Can be <code>null</code>.
+	 * @param right
+	 *            Element from which to resolve the right model URI.
+	 * @param rightScope
+	 *            Scope that should be used to filter out right roots. Can be <code>null</code>.
+	 * @param ancestor
+	 *            Element from which to resolve the ancestor model URI. Can be <code>null</code>.
+	 * @param ancestorScope
+	 *            Scope that should be used to filter out ancestor roots. Can be <code>null</code>.
+	 * @since 1.3
+	 */
+	protected void setModelRoots(MatchModel modelRoot, EObject left, IMatchScope leftScope, EObject right,
+			IMatchScope rightScope, EObject ancestor, IMatchScope ancestorScope) {
 		// Sets values of left, right and ancestor model roots
 		if (left != null && left.eResource() != null) {
-			modelRoot.getLeftRoots().addAll(left.eResource().getContents());
+			for (EObject leftRoot : left.eResource().getContents()) {
+				if (leftScope == null || leftScope.isInScope(leftRoot)) {
+					modelRoot.getLeftRoots().add(leftRoot);
+				}
+			}
 		}
 		if (right != null && right.eResource() != null) {
-			modelRoot.getRightRoots().addAll(right.eResource().getContents());
+			for (EObject rightRoot : right.eResource().getContents()) {
+				if (rightScope == null || rightScope.isInScope(rightRoot)) {
+					modelRoot.getRightRoots().add(rightRoot);
+				}
+			}
 		}
 		if (ancestor != null && ancestor.eResource() != null) {
-			modelRoot.getAncestorRoots().addAll(ancestor.eResource().getContents());
+			for (EObject ancestorRoot : ancestor.eResource().getContents()) {
+				if (ancestorScope == null || ancestorScope.isInScope(ancestorRoot)) {
+					modelRoot.getAncestorRoots().add(ancestorRoot);
+				}
+			}
 		}
 	}
 
