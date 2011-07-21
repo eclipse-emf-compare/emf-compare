@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.ui.editor;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -315,21 +314,23 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 					leftReference = leftRS.getEObject(proxyURI, true);
 					if (leftReference != null) {
 						resolved = true;
-						crossReferenceResolvedObject(object, reference, leftReference);
+						crossReferenceResolvedObject(object, reference, crossReferencedEObject, leftReference);
 					}
 				} else if (reference == MatchPackage.eINSTANCE.getMatchModel_RightRoots()
 						|| reference == DiffPackage.eINSTANCE.getDiffModel_RightRoots()) {
 					rightReference = rightRS.getEObject(proxyURI, true);
 					if (rightReference != null) {
 						resolved = true;
-						crossReferenceResolvedObject(object, reference, rightReference);
+						crossReferenceResolvedObject(object, reference, crossReferencedEObject,
+								rightReference);
 					}
 				} else if (reference == MatchPackage.eINSTANCE.getMatchModel_AncestorRoots()
 						|| reference == DiffPackage.eINSTANCE.getDiffModel_AncestorRoots()) {
 					ancestorReference = ancestorRS.getEObject(proxyURI, true);
 					if (ancestorReference != null) {
 						resolved = true;
-						crossReferenceResolvedObject(object, reference, ancestorReference);
+						crossReferenceResolvedObject(object, reference, crossReferencedEObject,
+								ancestorReference);
 					}
 				}
 
@@ -352,15 +353,18 @@ public class ModelCompareEditorInput extends CompareEditorInput {
 		 *            an object in the cross referencer's content tree.
 		 * @param reference
 		 *            a reference from the object.
+		 * @param proxy
+		 *            The proxy object (will be removed from the list of referenced objects).
 		 * @param resolvedReferencedObject
 		 *            the resolved target of the specified reference.
 		 */
-		private void crossReferenceResolvedObject(EObject object, EReference reference,
+		private void crossReferenceResolvedObject(EObject object, EReference reference, final EObject proxy,
 				final EObject resolvedReferencedObject) {
 			if (reference.isMany()) {
-				final List<EObject> values = new ArrayList<EObject>();
-				values.add(resolvedReferencedObject);
-				object.eSet(reference, values);
+				@SuppressWarnings("unchecked")
+				final List<Object> oldValues = (List<Object>)object.eGet(reference);
+				oldValues.remove(proxy);
+				oldValues.add(resolvedReferencedObject);
 			} else {
 				object.eSet(reference, resolvedReferencedObject);
 			}
