@@ -25,7 +25,6 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffAdapterFactory;
-import org.eclipse.emf.compare.ui.TypedElementWrapper;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.util.EMFCompareEObjectUtils;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
@@ -883,11 +882,9 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 		 * 
 		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getElements(java.lang.Object)
 		 */
-		@SuppressWarnings("unchecked")
 		@Override
 		public Object[] getElements(Object object) {
-			// overwritten to ensure contents of ResourceSets, List<Resource>, and Resource are correclty
-			// returned.
+			// overwritten to ensure contents of ResourceSets and List<Resource> are correclty returned.
 			Object[] result = null;
 			if (object instanceof ResourceSet) {
 				final List<Resource> resources = ((ResourceSet)object).getResources();
@@ -899,44 +896,13 @@ public class ModelContentMergeDiffTab extends TreeViewer implements IModelConten
 					}
 				}
 				result = elements.toArray();
-			} else if (object instanceof TypedElementWrapper) {
-				result = new Object[] {((EObject)object).eResource(), };
 			} else if (object instanceof List) {
 				// we may also display a list of resources
-				result = ((List)object).toArray();
-			} else if (object instanceof Resource) {
-				// return contents of resource
-				result = ((Resource)object).getContents().toArray();
+				result = ((List<?>)object).toArray();
 			} else {
 				result = super.getElements(object);
 			}
 			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
-		 */
-		@Override
-		public Object[] getChildren(Object object) {
-			if (object instanceof Resource) {
-				return ((Resource)object).getContents().toArray();
-			}
-			return super.getChildren(object);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#hasChildren(java.lang.Object)
-		 */
-		@Override
-		public boolean hasChildren(Object object) {
-			if (object instanceof Resource) {
-				return ((Resource)object).getContents().size() > 0;
-			}
-			return super.hasChildren(object);
 		}
 	}
 }
