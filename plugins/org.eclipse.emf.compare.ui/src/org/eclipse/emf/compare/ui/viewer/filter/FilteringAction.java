@@ -25,6 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * Action to filter difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class FilteringAction extends AbstractOrderingAction {
 	/** Descriptor for filters. */

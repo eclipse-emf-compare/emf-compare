@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
  * "org.eclipse.emf.compare.ui.diff.filter" extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 1.2
  */
 public enum DifferenceFilterRegistry {
 

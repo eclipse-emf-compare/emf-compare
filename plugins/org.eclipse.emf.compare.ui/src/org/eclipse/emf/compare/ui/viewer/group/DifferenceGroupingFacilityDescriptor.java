@@ -25,6 +25,7 @@ import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility.UIDif
  * The difference group descriptor represents a grouping facility contribution trough the extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 1.2
  */
 public final class DifferenceGroupingFacilityDescriptor {
 	/** Name of the "id" property of the Difference group extension point. */

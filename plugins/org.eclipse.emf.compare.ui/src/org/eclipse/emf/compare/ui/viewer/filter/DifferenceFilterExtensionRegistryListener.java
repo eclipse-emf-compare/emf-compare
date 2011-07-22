@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IRegistryEventListener;
  * point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 1.2
  */
 public class DifferenceFilterExtensionRegistryListener implements IRegistryEventListener {
 	/**

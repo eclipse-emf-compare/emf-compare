@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IAction;
  * The menu to select the filters.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class FiltersMenu extends AbstractOrderingMenu {
 	/** The viewer. */

@@ -1726,7 +1726,7 @@ public class GenericMatchEngine implements IMatchEngine {
 	 *            Element from which to resolve the ancestor model URI. Can be <code>null</code>.
 	 * @param ancestorScope
 	 *            Scope that should be used to filter out ancestor roots. Can be <code>null</code>.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected void setModelRoots(MatchModel modelRoot, EObject left, IMatchScope leftScope, EObject right,
 			IMatchScope rightScope, EObject ancestor, IMatchScope ancestorScope) {
