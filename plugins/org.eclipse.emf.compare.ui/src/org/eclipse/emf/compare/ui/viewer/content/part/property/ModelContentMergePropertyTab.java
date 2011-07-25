@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
+import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -307,12 +308,42 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 	public void setReflectiveInput(Object input) {
 		if (input instanceof Match2Elements) {
 			setInput(input);
+		} else if (input instanceof UnmatchElement) {
+			// 352979 : We no longer display "unmatched element" properties, plus we have a potential NPE if
+			// an unmatched is selected _first_
+			final Side inputSide = ((UnmatchElement)input).getSide();
+			if (sidesMatch(inputSide, getSide())) {
+				setInput(input);
+			} else {
+				setInput(getInput());
+			}
 		} else {
 			// forces refresh
 			setInput(getInput());
 		}
 		mapDifferences();
 		mapTableItems();
+	}
+
+	/**
+	 * This will check whether the two given "sides" constants match.
+	 * 
+	 * @param matchSide
+	 *            Side from the match engines.
+	 * @param partSide
+	 *            Side as understood by the UI.
+	 * @return <code>true</code> if the two given sides match, <code>false</code> otherwise.
+	 */
+	private static boolean sidesMatch(Side matchSide, int partSide) {
+		boolean match = false;
+		if (matchSide == Side.LEFT) {
+			match = partSide == EMFCompareConstants.LEFT;
+		} else if (matchSide == Side.RIGHT) {
+			match = partSide == EMFCompareConstants.RIGHT;
+		} else {
+			match = partSide == EMFCompareConstants.ANCESTOR;
+		}
+		return match;
 	}
 
 	/**
@@ -463,8 +494,8 @@ public final class ModelContentMergePropertyTab extends TableViewer implements I
 			event.gc.setForeground(new Color(item.getActualItem().getDisplay(), ModelContentMergeViewer
 					.getColor(item.getCurveColor())));
 			if (partSide == EMFCompareConstants.LEFT)
-				event.gc.drawLine(getTotalColumnsWidth(), item.getCurveY(), tableBounds.width, item
-						.getCurveY());
+				event.gc.drawLine(getTotalColumnsWidth(), item.getCurveY(), tableBounds.width,
+						item.getCurveY());
 		}
 	}
 
