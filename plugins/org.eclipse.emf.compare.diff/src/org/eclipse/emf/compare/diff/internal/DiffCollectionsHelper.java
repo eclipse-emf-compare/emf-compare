@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Martin Taal - [299641] Compare arrays by their content instead of instance equality
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal;
 
