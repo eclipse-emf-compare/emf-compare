@@ -7,11 +7,10 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
- *     Martin Taal - [299641] Compare arrays by their content instead of instance equality
+ *     Martin Taal - [299641] Compare arrays by their content instead of instance equality - Note : moved to DiffCollectionsHelper
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine.check;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -129,39 +128,6 @@ public class AttributesCheck extends AbstractCheck {
 	 */
 	protected boolean areDistinctValues(Object left, Object right) {
 		return matcherHelper.areDistinctValues(left, right);
-	}
-
-	/**
-	 * Compares two values as arrays, checking that the length and content of both matches each other.
-	 * 
-	 * @param left
-	 *            The value of the attribute from the left compare resource.
-	 * @param right
-	 *            The value of the attribute from the right compare resource.
-	 * @return <code>true</code> if the <code>left</code> value is distinct from the <code>right</code> value.
-	 */
-	private boolean areDistinctArrays(Object left, Object right) {
-		boolean distinct = false;
-		// we know left is a non-null array.
-		if (right == null || !right.getClass().isArray()) {
-			distinct = true;
-		} else {
-			final int leftLength = Array.getLength(left);
-			final int rightLength = Array.getLength(right);
-			if (leftLength != rightLength) {
-				distinct = true;
-			} else {
-				for (int i = 0; i < leftLength; i++) {
-					final Object leftElement = Array.get(left, i);
-					final Object rightElement = Array.get(right, i);
-					if (areDistinctValues(leftElement, rightElement)) {
-						distinct = true;
-						break;
-					}
-				}
-			}
-		}
-		return distinct;
 	}
 
 	/**
