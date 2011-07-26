@@ -254,7 +254,10 @@ public final class MatchService {
 					&& findMatchingResource(matchedResource, remainingLeftResources) == res) {
 				remainingLeftResources.remove(res);
 				remainingRightResources.remove(matchedResource);
-				match.getMatchModels().add(doResourceMatch(res, matchedResource, options));
+				MatchModel comparisonResult = doResourceMatch(res, matchedResource, options);
+				if (comparisonResult != null) {
+					match.getMatchModels().add(comparisonResult);
+				}
 			}
 		}
 		/*
@@ -267,7 +270,10 @@ public final class MatchService {
 					&& findMatchingResource(matchedResource, remainingLeftResources) == res) {
 				remainingLeftResources.remove(res);
 				remainingRightResources.remove(matchedResource);
-				match.getMatchModels().add(doResourceMatch(res, matchedResource, options));
+				MatchModel comparisonResult = doResourceMatch(res, matchedResource, options);
+				if (comparisonResult != null) {
+					match.getMatchModels().add(comparisonResult);
+				}
 			} else {
 				final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 				unmatched.setSide(Side.LEFT);
@@ -282,7 +288,10 @@ public final class MatchService {
 					&& findMatchingResource(matchedResource, remainingRightResources) == res) {
 				remainingLeftResources.remove(matchedResource);
 				remainingRightResources.remove(res);
-				match.getMatchModels().add(doResourceMatch(matchedResource, res, options));
+				MatchModel comparisonResult = doResourceMatch(matchedResource, res, options);
+				if (comparisonResult != null) {
+					match.getMatchModels().add(comparisonResult);
+				}
 			} else {
 				final UnmatchModel unmatched = MatchFactory.eINSTANCE.createUnmatchModel();
 				unmatched.setSide(Side.RIGHT);
@@ -347,7 +356,10 @@ public final class MatchService {
 				remainingLeftResources.remove(res);
 				remainingRightResources.remove(matchedRight);
 				remainingAncestorResources.remove(matchedAncestor);
-				match.getMatchModels().add(doResourceMatch(res, matchedRight, matchedAncestor, options));
+				MatchModel comparisonResult = doResourceMatch(res, matchedRight, matchedAncestor, options);
+				if (comparisonResult != null) {
+					match.getMatchModels().add(comparisonResult);
+				}
 			}
 		}
 		/*
@@ -363,9 +375,15 @@ public final class MatchService {
 				if (matchedAncestor != null
 						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
 					remainingAncestorResources.remove(matchedAncestor);
-					match.getMatchModels().add(doResourceMatch(res, matchedRight, matchedAncestor, options));
+					MatchModel comparisonResult = doResourceMatch(res, matchedRight, matchedAncestor, options);
+					if (comparisonResult != null) {
+						match.getMatchModels().add(comparisonResult);
+					}
 				} else {
-					match.getMatchModels().add(doResourceMatch(res, matchedRight, options));
+					MatchModel comparisonResult = doResourceMatch(res, matchedRight, options);
+					if (comparisonResult != null) {
+						match.getMatchModels().add(comparisonResult);
+					}
 				}
 			} else {
 				remainingLeftResources.remove(res);
@@ -394,9 +412,15 @@ public final class MatchService {
 				if (matchedAncestor != null
 						&& findMatchingResource(matchedAncestor, remainingLeftResources) == res) {
 					remainingAncestorResources.remove(matchedAncestor);
-					match.getMatchModels().add(doResourceMatch(matchedLeft, res, matchedAncestor, options));
+					MatchModel comparisonResult = doResourceMatch(matchedLeft, res, matchedAncestor, options);
+					if (comparisonResult != null) {
+						match.getMatchModels().add(comparisonResult);
+					}
 				} else {
-					match.getMatchModels().add(doResourceMatch(matchedLeft, res, options));
+					MatchModel comparisonResult = doResourceMatch(matchedLeft, res, options);
+					if (comparisonResult != null) {
+						match.getMatchModels().add(comparisonResult);
+					}
 				}
 			} else {
 				remainingRightResources.remove(res);
