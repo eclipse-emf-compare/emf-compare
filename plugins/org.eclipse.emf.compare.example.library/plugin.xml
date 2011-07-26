@@ -14,6 +14,11 @@
 
 <plugin>
 
+<!--
+   Provides EMF Compare with the necessary logic in order to resolve the whole logical mode of library, book and writer
+   models. This will use the default implementation of org.eclipse.emf.compare.logical.extension.ScopedModelResolver,
+   searching through all of the selected file's siblings for references to/from the selected file.
+-->
    <extension point="org.eclipse.emf.compare.modelResolver">
       <modelResolver
             class="org.eclipse.emf.compare.logical.extension.ScopedModelResolver">
@@ -24,6 +29,11 @@
                   org.eclipse.emf.compare.example.library.writerContentType"/>
       </modelResolver>
    </extension>
+   
+<!--
+   Provides the necessary adapter for the double-click (in the synchronize view) on one of the Library, Writers or
+   Books resources to open the compare dialog.
+-->
    <extension point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.emf.compare.example.library.writers.util.WritersResourceImpl"
