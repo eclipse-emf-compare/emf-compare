@@ -92,7 +92,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	}
 
 	/**
-	 * Crates a Copier given the DiffResourceSet it will be used for.
+	 * Creates a Copier given the DiffResourceSet it will be used for.
 	 * 
 	 * @param diff
 	 *            The Diff Resource Set which elements will be merged using this copier.
