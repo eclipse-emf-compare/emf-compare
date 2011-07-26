@@ -12,11 +12,13 @@ package org.eclipse.emf.compare.diff.merge;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFCompareException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
@@ -30,6 +32,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
@@ -190,7 +193,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		if (matchedValue != null) {
 			put(actualValue, matchedValue);
-			final List targetList = (List<Object>)target.eGet(targetReference);
+			final List<Object> targetList = (List<Object>)target.eGet(targetReference);
 			final int targetListSize = targetList.size();
 			if (index > -1 && index < targetListSize) {
 				targetList.add(index, matchedValue);
@@ -341,26 +344,48 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		final EObject referencedEObject = (EObject)referencedObject;
 		// Is the referencedObject in either left or right?
 		final Resource referencedResource = referencedEObject.eResource();
-		final Resource left = diffModel.getLeftRoots().get(0).eResource();
-		final Resource right = diffModel.getRightRoots().get(0).eResource();
+		ResourceSet leftResourceSet = null;
+		ResourceSet rightResourceSet = null;
 
-		if (referencedResource == left) {
+		if (diffResourceSet != null) {
+			final Iterator<DiffModel> diffModels = diffResourceSet.getDiffModels().iterator();
+			while (diffModels.hasNext() && leftResourceSet == null && rightResourceSet == null) {
+				final DiffModel aDiffModel = diffModels.next();
+				if (!aDiffModel.getLeftRoots().isEmpty()
+						&& aDiffModel.getLeftRoots().get(0).eResource() != null) {
+					leftResourceSet = aDiffModel.getLeftRoots().get(0).eResource().getResourceSet();
+				}
+				if (!aDiffModel.getRightRoots().isEmpty()
+						&& aDiffModel.getRightRoots().get(0).eResource() != null) {
+					rightResourceSet = aDiffModel.getRightRoots().get(0).eResource().getResourceSet();
+				}
+			}
+		} else if (diffModel != null) {
+			if (!diffModel.getLeftRoots().isEmpty() && diffModel.getLeftRoots().get(0).eResource() != null) {
+				leftResourceSet = diffModel.getLeftRoots().get(0).eResource().getResourceSet();
+			}
+			if (!diffModel.getRightRoots().isEmpty() && diffModel.getRightRoots().get(0).eResource() != null) {
+				rightResourceSet = diffModel.getRightRoots().get(0).eResource().getResourceSet();
+			}
+		}
+
+		if (referencedResource == leftResourceSet && rightResourceSet != null) {
 			/*
 			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
 			 * has already been copied
 			 */
-			final String proxyURI = referencedResource.getURIFragment(referencedEObject);
-			copyReferencedObject = right.getEObject(proxyURI);
+			final URI proxyURI = EcoreUtil.getURI(referencedEObject);
+			copyReferencedObject = rightResourceSet.getEObject(proxyURI, false);
 			if (copyReferencedObject == null) {
 				// FIXME can we find the referenced object without the match model?
 			}
-		} else if (referencedResource == right) {
+		} else if (referencedResource == rightResourceSet && leftResourceSet != null) {
 			/*
 			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
 			 * has already been copied
 			 */
-			final String proxyURI = referencedResource.getURIFragment(referencedEObject);
-			copyReferencedObject = left.getEObject(proxyURI);
+			final URI proxyURI = EcoreUtil.getURI(referencedEObject);
+			copyReferencedObject = leftResourceSet.getEObject(proxyURI, false);
 			if (copyReferencedObject == null) {
 				// FIXME can we find the referenced object without the match model?
 			}
