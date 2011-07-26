@@ -50,26 +50,58 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	private static final long serialVersionUID = 2701874812215174395L;
 
 	/* (non-javadoc) defined transient since not serializable. */
-	/** The DiffModel on which differences this copier will be used. */
+	/**
+	 * The DiffModel on which differences this copier will be used. Note that this could be <code>null</code>
+	 * if {@link #diffResourceSet} is not.
+	 */
 	private final transient DiffModel diffModel;
+
+	/* (non-javadoc) defined transient since not serializable. */
+	/** The Diff Resource Set on which differences this copier will be used. */
+	private final transient DiffResourceSet diffResourceSet;
 
 	/** If there are any ResourceDependencyChanges in the diffModel, they'll be cached in this. */
 	private final List<ResourceDependencyChange> dependencyChanges = new ArrayList<ResourceDependencyChange>();
 
 	/**
 	 * Creates a Copier given the DiffModel it will be used for.
+	 * <p>
+	 * <b>Note</b> that this should never be used if the given <code>diff</code> is contained in a
+	 * DiffResourceSet.
+	 * </p>
 	 * 
 	 * @param diff
-	 *            The DiffModel Which elements will be merged using this copier.
+	 *            The DiffModel which elements will be merged using this copier.
 	 */
 	public EMFCompareEObjectCopier(DiffModel diff) {
 		super();
 		diffModel = diff;
 		if (diffModel.eContainer() instanceof DiffResourceSet) {
+			diffResourceSet = (DiffResourceSet)diffModel.eContainer();
 			for (final EObject child : diffModel.eContainer().eContents()) {
 				if (child instanceof ResourceDependencyChange) {
 					dependencyChanges.add((ResourceDependencyChange)child);
 				}
+			}
+		} else {
+			diffResourceSet = null;
+		}
+	}
+
+	/**
+	 * Crates a Copier given the DiffResourceSet it will be used for.
+	 * 
+	 * @param diff
+	 *            The Diff Resource Set which elements will be merged using this copier.
+	 * @since 1.3
+	 */
+	public EMFCompareEObjectCopier(DiffResourceSet diff) {
+		super();
+		diffModel = null;
+		diffResourceSet = diff;
+		for (final EObject child : diffResourceSet.eContainer().eContents()) {
+			if (child instanceof ResourceDependencyChange) {
+				dependencyChanges.add((ResourceDependencyChange)child);
 			}
 		}
 	}
@@ -214,12 +246,22 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	}
 
 	/**
-	 * Returns the DiffModel associated to this copier.
+	 * Returns the DiffModel associated with this copier if any.
 	 * 
-	 * @return The DiffModel associated to this copier.
+	 * @return The DiffModel associated with this copier. Could be <code>null</code>.
 	 */
 	public DiffModel getDiffModel() {
 		return diffModel;
+	}
+
+	/**
+	 * Returns the DiffResourceSet associated with this copier if any.
+	 * 
+	 * @return The DiffResourceSet associated with this copier. Could be <code>null</code>.
+	 * @since 1.3
+	 */
+	public DiffResourceSet getDiffResourceSet() {
+		return diffResourceSet;
 	}
 
 	/**
@@ -301,6 +343,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		final Resource referencedResource = referencedEObject.eResource();
 		final Resource left = diffModel.getLeftRoots().get(0).eResource();
 		final Resource right = diffModel.getRightRoots().get(0).eResource();
+
 		if (referencedResource == left) {
 			/*
 			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
@@ -402,7 +445,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 */
 	private boolean mergeLinkedDiff(EObject element) {
 		boolean hasMerged = false;
-		final TreeIterator<EObject> diffIterator = diffModel.eAllContents();
+		final TreeIterator<EObject> diffIterator = diffResourceSet.eAllContents();
 		while (diffIterator.hasNext()) {
 			final EObject next = diffIterator.next();
 			if (next instanceof ModelElementChangeLeftTarget) {

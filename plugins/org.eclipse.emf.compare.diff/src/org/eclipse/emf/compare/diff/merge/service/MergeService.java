@@ -20,6 +20,7 @@ import org.eclipse.emf.compare.diff.merge.MergeEvent;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -65,11 +66,20 @@ public final class MergeService {
 		final DiffModel diffModel = getContainerDiffModel(diff);
 		if (diffModel == null)
 			throw new IllegalArgumentException("The diff element should be contained in a DiffModel instance"); //$NON-NLS-1$
-		if (copier == null) {
-			copier = new EMFCompareEObjectCopier(diffModel);
-		} else if (copier.getDiffModel() != diffModel) {
-			copier.clear();
-			copier = new EMFCompareEObjectCopier(diffModel);
+		if (diffModel.eContainer() instanceof DiffResourceSet) {
+			if (copier == null) {
+				copier = new EMFCompareEObjectCopier((DiffResourceSet)diffModel.eContainer());
+			} else if (copier.getDiffResourceSet() != diffModel.eContainer()) {
+				copier.clear();
+				copier = new EMFCompareEObjectCopier((DiffResourceSet)diffModel.eContainer());
+			}
+		} else {
+			if (copier == null) {
+				copier = new EMFCompareEObjectCopier(diffModel);
+			} else if (copier.getDiffModel() != diffModel) {
+				copier.clear();
+				copier = new EMFCompareEObjectCopier(diffModel);
+			}
 		}
 		return copier;
 	}
