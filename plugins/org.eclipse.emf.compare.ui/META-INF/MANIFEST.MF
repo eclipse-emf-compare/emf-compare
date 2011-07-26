@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.ui;singleton:=true
 Bundle-Version: 1.2.0.qualifier
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ swing2swt.jar
 Bundle-Localization: plugin
 Bundle-Activator: org.eclipse.emf.compare.ui.EMFCompareUIPlugin
 Plugin-Class: org.eclipse.emf.compare.ui.EMFCompareUIPlugin
@@ -17,9 +18,17 @@ Require-Bundle: org.eclipse.compare,
  org.eclipse.ltk.ui.refactoring,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.team.ui,
+ org.eclipse.ui.forms,
  org.eclipse.team.core,
  org.eclipse.core.filesystem,
- org.eclipse.jface.text
+ org.eclipse.jface.text,
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.beans,
+ org.eclipse.core.databinding.observable,
+ org.eclipse.core.databinding.property,
+ org.eclipse.jface.databinding,
+ com.ibm.icu,
+ org.eclipse.emf.databinding
 Bundle-Vendor: %providerName
 Export-Package: org.eclipse.emf.compare.ui,
  org.eclipse.emf.compare.ui.editor,
