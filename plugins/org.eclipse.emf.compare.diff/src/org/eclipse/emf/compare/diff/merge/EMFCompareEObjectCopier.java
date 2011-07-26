@@ -102,7 +102,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		super();
 		diffModel = null;
 		diffResourceSet = diff;
-		for (final EObject child : diffResourceSet.eContainer().eContents()) {
+		for (final EObject child : diffResourceSet.eContents()) {
 			if (child instanceof ResourceDependencyChange) {
 				dependencyChanges.add((ResourceDependencyChange)child);
 			}
