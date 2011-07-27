@@ -25,7 +25,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 public class DiffGroupMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
 	 */
 	@Override
@@ -33,12 +33,11 @@ public class DiffGroupMerger extends DefaultMerger {
 		// Creates a temporary list to avoid ConcurentModificationExceptions
 		final List<DiffElement> subDiffs = new ArrayList<DiffElement>(diff.getSubDiffElements());
 		MergeService.merge(subDiffs, false);
-		super.applyInOrigin();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
 	 */
 	@Override
@@ -46,6 +45,5 @@ public class DiffGroupMerger extends DefaultMerger {
 		// Creates a temporary list to avoid ConcurentModificationExceptions
 		final List<DiffElement> subDiffs = new ArrayList<DiffElement>(diff.getSubDiffElements());
 		MergeService.merge(subDiffs, true);
-		super.undoInTarget();
 	}
 }
