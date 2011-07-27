@@ -341,7 +341,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	private static String pairHashCode(EObject obj1, EObject obj2, char similarityKind) {
 		if (similarityKind == NAME_SIMILARITY || similarityKind == TYPE_SIMILARITY
 				|| similarityKind == VALUE_SIMILARITY || similarityKind == RELATION_SIMILARITY) {
-			final StringBuilder hash = new StringBuilder(similarityKind);
+			final StringBuilder hash = new StringBuilder(String.valueOf(similarityKind));
 
 			final int obj1Hash = obj1.hashCode();
 			final int obj2Hash = obj2.hashCode();
@@ -474,5 +474,4 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	public void init(Resource leftResource, Resource rightResource) throws FactoryException {
 		// this similarity checker needs no initialization.
 	}
-
 }
