@@ -65,9 +65,10 @@ public class DistinctEcoreSimilarityChecker extends StatisticBasedSimilarityChec
 		EPackage eClass2Package = eClass2.getEPackage();
 		if (eClass1Package == eClass2Package) {
 			match = eClass1 == eClass2;
-		} else if (eClass1Package.getNsURI().equals(eClass2Package.getNsURI())) {
+		} else if (eClass1Package.getNsURI() != null
+				&& eClass1Package.getNsURI().equals(eClass2Package.getNsURI())) {
 			match = eClass1.getClassifierID() == eClass2.getClassifierID();
-		} else {
+		} else if (eClass1Package.getNsURI() == null && eClass2Package.getNsURI() == null) {
 			match = EcoreUtil.equals(eClass1, eClass2);
 		}
 

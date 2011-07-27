@@ -680,7 +680,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		} else if (eClass1Package.getNsURI() != null
 				&& eClass1Package.getNsURI().equals(eClass2Package.getNsURI())) {
 			match = eClass1.getClassifierID() == eClass2.getClassifierID();
-		} else {
+		} else if (eClass1Package.getNsURI() == null && eClass2Package.getNsURI() == null) {
 			match = EcoreUtil.equals(eClass1, eClass2);
 		}
 
