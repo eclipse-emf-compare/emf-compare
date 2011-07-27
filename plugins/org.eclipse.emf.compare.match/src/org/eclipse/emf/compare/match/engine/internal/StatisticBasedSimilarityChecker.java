@@ -23,7 +23,6 @@ import org.eclipse.emf.compare.match.engine.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.internal.statistic.NameSimilarity;
 import org.eclipse.emf.compare.match.internal.statistic.StructureSimilarity;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
-import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -60,7 +59,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 * This map is used to cache the comparison results Pair(Element1, Element2) => [nameSimilarity,
 	 * valueSimilarity, relationSimilarity, TypeSimilarity].
 	 */
-	private final Map<String, Double> metricsCache = new EMFCompareMap<String, Double>();
+	private final Map<String, Double> metricsCache = new HashMap<String, Double>();
 
 	/**
 	 * This map will allow us to cache the number of non-null features a given instance of EObject has.
@@ -210,6 +209,7 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 		// we didn't have enough features to compute an accurate metric
 		final double nameWeight = 0.8d;
 		final double positionWeight = 0.2d;
+
 		return (nameSimilarity * nameWeight + positionSimilarity * positionWeight)
 				/ (nameWeight + positionWeight);
 	}
@@ -338,11 +338,19 @@ public class StatisticBasedSimilarityChecker extends AbstractSimilarityChecker {
 	 *            Kind of similarity this key will represent in cache.
 	 * @return Unique key for the similarity cache.
 	 */
-	private String pairHashCode(EObject obj1, EObject obj2, char similarityKind) {
+	private static String pairHashCode(EObject obj1, EObject obj2, char similarityKind) {
 		if (similarityKind == NAME_SIMILARITY || similarityKind == TYPE_SIMILARITY
 				|| similarityKind == VALUE_SIMILARITY || similarityKind == RELATION_SIMILARITY) {
-			final StringBuilder hash = new StringBuilder();
-			hash.append(similarityKind).append(obj1.hashCode()).append(obj2.hashCode());
+			final StringBuilder hash = new StringBuilder(similarityKind);
+
+			final int obj1Hash = obj1.hashCode();
+			final int obj2Hash = obj2.hashCode();
+			if (obj1Hash < obj2Hash) {
+				hash.append(String.valueOf(obj1Hash)).append(String.valueOf(obj2Hash));
+			} else {
+				hash.append(String.valueOf(obj2Hash)).append(String.valueOf(obj1Hash));
+			}
+
 			return hash.toString();
 		}
 		throw new IllegalArgumentException(EMFCompareMatchMessages.getString(
