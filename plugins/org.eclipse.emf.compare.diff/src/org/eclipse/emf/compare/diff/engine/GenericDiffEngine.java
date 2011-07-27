@@ -12,10 +12,11 @@ package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
@@ -68,6 +69,9 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * MatchResourceSet.
 	 */
 	protected EcoreUtil.CrossReferencer matchCrossReferencer;
+
+	/** This will keep track of the diff groups created for this comparison. */
+	private Map<EObject, DiffGroup> diffGroups = new HashMap<EObject, DiffGroup>();
 
 	/**
 	 * {@inheritDoc}
@@ -141,6 +145,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine#reset()
 	 */
 	public void reset() {
+		diffGroups.clear();
 		matchCrossReferencer = null;
 	}
 
@@ -765,11 +770,11 @@ public class GenericDiffEngine implements IDiffEngine {
 	private DiffGroup buildHierarchyGroup(EObject targetParent, DiffGroup root) {
 		// if targetElement has a parent, we call buildgroup on it, else we add
 		// the current group to the root
-		DiffGroup curGroup = DiffFactory.eINSTANCE.createDiffGroup();
-		curGroup.setRightParent(targetParent);
-		final DiffGroup targetGroup = findExistingGroup(root, targetParent);
-		if (targetGroup != null) {
-			curGroup = targetGroup;
+		DiffGroup curGroup = findExistingGroup(root, targetParent);
+		if (curGroup == null) {
+			curGroup = DiffFactory.eINSTANCE.createDiffGroup();
+			curGroup.setRightParent(targetParent);
+			diffGroups.put(targetParent, curGroup);
 		}
 		if (targetParent.eContainer() == null) {
 			root.getSubDiffElements().add(curGroup);
@@ -975,15 +980,6 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @return {@link DiffGroup} for the <code>targetParent</code>.
 	 */
 	private DiffGroup findExistingGroup(DiffGroup root, EObject targetParent) {
-		final TreeIterator<EObject> it = root.eAllContents();
-		while (it.hasNext()) {
-			final EObject obj = it.next();
-			if (obj instanceof DiffGroup) {
-				final EObject groupParent = ((DiffGroup)obj).getRightParent();
-				if (groupParent == targetParent || getMatchedEObject(groupParent) == targetParent)
-					return (DiffGroup)obj;
-			}
-		}
-		return null;
+		return diffGroups.get(targetParent);
 	}
 }
