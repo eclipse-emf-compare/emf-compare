@@ -12,7 +12,9 @@ package org.eclipse.emf.compare.match.engine.internal;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -40,10 +42,35 @@ public class DistinctEcoreSimilarityChecker extends StatisticBasedSimilarityChec
 	 */
 	@Override
 	public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-		if (!EcoreUtil.equals(obj1.eClass(), obj2.eClass())) {
+		if (!eClassMatch(obj1.eClass(), obj2.eClass())) {
 			return false;
 		}
 		return super.isSimilar(obj1, obj2);
 	}
 
+	/**
+	 * This will check whether the two given EClasses are the same. This has been created in order to avoid
+	 * EcoreUtil.equals (perfs).
+	 * 
+	 * @param eClass1
+	 *            First of the two EClasses to consider.
+	 * @param eClass2
+	 *            Second of the two EClasses to consider.
+	 * @return <code>true</code> if the two EClasses match, <code>false</code> otherwise.
+	 */
+	private boolean eClassMatch(EClass eClass1, EClass eClass2) {
+		boolean match = false;
+
+		EPackage eClass1Package = eClass1.getEPackage();
+		EPackage eClass2Package = eClass2.getEPackage();
+		if (eClass1Package == eClass2Package) {
+			match = eClass1 == eClass2;
+		} else if (eClass1Package.getNsURI().equals(eClass2Package.getNsURI())) {
+			match = eClass1.getClassifierID() == eClass2.getClassifierID();
+		} else {
+			match = EcoreUtil.equals(eClass1, eClass2);
+		}
+
+		return match;
+	}
 }

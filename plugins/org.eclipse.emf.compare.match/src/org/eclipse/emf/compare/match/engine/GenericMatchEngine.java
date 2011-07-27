@@ -42,7 +42,9 @@ import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.compare.util.EMFCompareMap;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -647,7 +649,7 @@ public class GenericMatchEngine implements IMatchEngine {
 		while (it.hasNext() && max < 1.0d) {
 			final EObject next = it.next();
 			if (structuredOptions.shouldMatchDistinctMetamodels()
-					|| EcoreUtil.equals(eObj.eClass(), next.eClass())) {
+					|| eClassMatch(eObj.eClass(), next.eClass())) {
 				final double similarity = checker.absoluteMetric(eObj, next);
 				if (similarity > max) {
 					max = similarity;
@@ -656,6 +658,33 @@ public class GenericMatchEngine implements IMatchEngine {
 			}
 		}
 		return resultObject;
+	}
+
+	/**
+	 * This will check whether the two given EClasses are the same. This has been created in order to avoid
+	 * EcoreUtil.equals (perfs).
+	 * 
+	 * @param eClass1
+	 *            First of the two EClasses to consider.
+	 * @param eClass2
+	 *            Second of the two EClasses to consider.
+	 * @return <code>true</code> if the two EClasses match, <code>false</code> otherwise.
+	 */
+	private boolean eClassMatch(EClass eClass1, EClass eClass2) {
+		boolean match = false;
+
+		EPackage eClass1Package = eClass1.getEPackage();
+		EPackage eClass2Package = eClass2.getEPackage();
+		if (eClass1Package == eClass2Package) {
+			match = eClass1 == eClass2;
+		} else if (eClass1Package.getNsURI() != null
+				&& eClass1Package.getNsURI().equals(eClass2Package.getNsURI())) {
+			match = eClass1.getClassifierID() == eClass2.getClassifierID();
+		} else {
+			match = EcoreUtil.equals(eClass1, eClass2);
+		}
+
+		return match;
 	}
 
 	/**
