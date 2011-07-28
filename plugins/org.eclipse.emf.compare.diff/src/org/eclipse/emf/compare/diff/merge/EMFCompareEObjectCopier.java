@@ -291,34 +291,39 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	@Override
 	protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
 		// No use trying to copy the reference if it isn't set in the origin
-		if (!eObject.eIsSet(eReference))
+		if (!eObject.eIsSet(eReference)) {
 			return;
-		if (eReference.isMany()) {
-			final List<?> referencedObjectsList = (List<?>)eObject.eGet(eReference, resolveProxies);
+		}
+		final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
+		if (eReference.isTransient() && referencedEObject instanceof EObject
+				&& ((EObject)referencedEObject).eResource() == null) {
+			// Let the super do its work. This is the case of the "eFactoryInstance" reference
+			super.copyReference(eReference, eObject, copyEObject);
+		} else if (eReference.isMany()) {
+			final List<?> referencedObjectsList = (List<?>)referencedEObject;
 			if (referencedObjectsList == null) {
 				copyEObject.eSet(getTarget(eReference), null);
 			} else if (referencedObjectsList.size() == 0) {
 				copyEObject.eSet(getTarget(eReference), referencedObjectsList);
 			} else {
-				for (final Object referencedEObject : referencedObjectsList) {
-					final Object copyReferencedEObject = get(referencedEObject);
+				for (final Object referencedEObj : referencedObjectsList) {
+					final Object copyReferencedEObject = get(referencedEObj);
 					if (copyReferencedEObject != null) {
 						// The referenced object has been copied via this Copier
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedEObject);
-					} else if (mergeLinkedDiff((EObject)referencedEObject)) {
+					} else if (mergeLinkedDiff((EObject)referencedEObj)) {
 						// referenced object was an unmatched one and we managed to merge its corresponding
 						// diff
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObject));
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObj));
 						// else => don't take any action, this has already been handled
 					} else {
 						// referenced object lies in another resource, simply reference it
-						final Object copyReferencedObject = findReferencedObjectCopy(referencedEObject);
+						final Object copyReferencedObject = findReferencedObjectCopy(referencedEObj);
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedObject);
 					}
 				}
 			}
 		} else {
-			final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
 			if (referencedEObject == null) {
 				copyEObject.eSet(getTarget(eReference), null);
 			} else {
