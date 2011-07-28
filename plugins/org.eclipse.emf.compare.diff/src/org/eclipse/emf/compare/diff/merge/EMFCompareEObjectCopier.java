@@ -161,17 +161,18 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		if (copy.eIsProxy() && copy instanceof InternalEObject) {
 			// only add if the element is not already there.
-			URI proxURI = ((InternalEObject)copy).eProxyURI();
+			final URI proxURI = ((InternalEObject)copy).eProxyURI();
 			boolean found = false;
-			Iterator<Object> it = ((List<Object>)target.eGet(targetReference)).iterator();
+			final Iterator<Object> it = ((List<Object>)target.eGet(targetReference)).iterator();
 			while (!found && it.hasNext()) {
-				Object obj = it.next();
+				final Object obj = it.next();
 				if (obj instanceof InternalEObject) {
 					found = proxURI.equals(((InternalEObject)obj).eProxyURI());
 				}
 			}
-			if (!found)
+			if (!found) {
 				((List<Object>)target.eGet(targetReference)).add(copy);
+			}
 
 		} else {
 			((List<Object>)target.eGet(targetReference)).add(copy);
