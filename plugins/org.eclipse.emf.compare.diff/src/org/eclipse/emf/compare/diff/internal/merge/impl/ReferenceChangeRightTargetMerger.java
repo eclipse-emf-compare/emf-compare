@@ -100,7 +100,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 	public void undoInTarget() {
 		final ReferenceChangeRightTarget theDiff = (ReferenceChangeRightTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
-		final EObject rightTarget = theDiff.getLeftTarget();
+		final EObject rightTarget = theDiff.getRightTarget();
 		try {
 			EFactory.eRemove(element, theDiff.getReference().getName(), rightTarget);
 		} catch (final FactoryException e) {
@@ -114,7 +114,7 @@ public class ReferenceChangeRightTargetMerger extends DefaultMerger {
 				final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
 				// now if I'm in the target References I should put my copy in the origin
 				if (link.getReference().equals(theDiff.getReference().getEOpposite())
-						&& link.getLeftTarget().equals(element)) {
+						&& link.getRightTarget().equals(element)) {
 					removeFromContainer(link);
 				}
 			} else if (op instanceof ResourceDependencyChange) {
