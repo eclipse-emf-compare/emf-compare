@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -31,6 +32,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -228,6 +230,7 @@ public class ReferencesCheck extends AbstractCheck {
 		for (final ReferenceChangeRightTarget removed : removedReferences) {
 			removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(removed.getRightTarget())));
 		}
+
 		int expectedIndex = 0;
 		for (int i = 0; i < leftElementReferences.size(); i++) {
 			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
@@ -430,6 +433,24 @@ public class ReferencesCheck extends AbstractCheck {
 		// have no matching "right" counterpart
 		addedReferences.removeAll(matchedOldReferences);
 
+		// Double check for proxies
+		for (EObject addedValue : new ArrayList<EObject>(addedReferences)) {
+			if (addedValue.eIsProxy() && addedValue instanceof InternalEObject) {
+				boolean found = false;
+				final URI proxyURI = ((InternalEObject)addedValue).eProxyURI();
+				final Iterator<EObject> deletedValuesIterator = deletedReferences.iterator();
+				while (!found && deletedValuesIterator.hasNext()) {
+					final EObject deletedValue = deletedValuesIterator.next();
+					if (deletedValue.eIsProxy() && deletedValue instanceof InternalEObject) {
+						found = proxyURI.equals(((InternalEObject)deletedValue).eProxyURI());
+					}
+				}
+				if (found) {
+					addedReferences.remove(addedValue);
+				}
+			}
+		}
+
 		return addedReferences;
 	}
 
@@ -461,6 +482,24 @@ public class ReferencesCheck extends AbstractCheck {
 		// "deleted" references are the references from the right element that
 		// have no counterpart in the left element
 		deletedReferences.removeAll(matchedNewReferences);
+
+		// Double check for proxies and external dependencies
+		for (EObject deletedValue : new ArrayList<EObject>(deletedReferences)) {
+			if (deletedValue.eIsProxy() && deletedValue instanceof InternalEObject) {
+				boolean found = false;
+				final URI proxyURI = ((InternalEObject)deletedValue).eProxyURI();
+				final Iterator<EObject> addedValuesIterator = addedReferences.iterator();
+				while (!found && addedValuesIterator.hasNext()) {
+					final EObject addedValue = addedValuesIterator.next();
+					if (addedValue.eIsProxy() && addedValue instanceof InternalEObject) {
+						found = proxyURI.equals(((InternalEObject)addedValue).eProxyURI());
+					}
+				}
+				if (found) {
+					deletedReferences.remove(deletedValue);
+				}
+			}
+		}
 
 		return deletedReferences;
 	}
