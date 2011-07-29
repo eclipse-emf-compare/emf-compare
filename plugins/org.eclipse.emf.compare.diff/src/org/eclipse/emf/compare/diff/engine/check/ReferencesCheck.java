@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -216,12 +215,8 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<EObject> leftElementReferencesCopy = new ArrayList<EObject>(leftElementReferences);
 		final List<EObject> rightElementReferencesCopy = new ArrayList<EObject>(rightElementReferences);
 
-		for (EObject addedReference : leftElementReferencesCopy) {
-			rightElementReferences.remove(addedReference);
-		}
-		for (EObject deletedReference : rightElementReferencesCopy) {
-			leftElementReferences.remove(deletedReference);
-		}
+		removeAll(rightElementReferences, leftElementReferencesCopy);
+		removeAll(leftElementReferences, rightElementReferencesCopy);
 
 		// Purge "left" list of all reference values that have been added to it
 		for (final ReferenceChangeLeftTarget added : addedReferences) {
@@ -433,22 +428,7 @@ public class ReferencesCheck extends AbstractCheck {
 		addedReferences.removeAll(matchedOldReferences);
 
 		// Double check for proxies
-		for (EObject addedValue : new ArrayList<EObject>(addedReferences)) {
-			if (addedValue.eIsProxy() && addedValue instanceof InternalEObject) {
-				boolean found = false;
-				final URI proxyURI = ((InternalEObject)addedValue).eProxyURI();
-				final Iterator<EObject> deletedValuesIterator = deletedReferences.iterator();
-				while (!found && deletedValuesIterator.hasNext()) {
-					final EObject deletedValue = deletedValuesIterator.next();
-					if (deletedValue.eIsProxy() && deletedValue instanceof InternalEObject) {
-						found = proxyURI.equals(((InternalEObject)deletedValue).eProxyURI());
-					}
-				}
-				if (found) {
-					addedReferences.remove(addedValue);
-				}
-			}
-		}
+		removeAll(addedReferences, deletedReferences);
 
 		return addedReferences;
 	}
@@ -481,23 +461,8 @@ public class ReferencesCheck extends AbstractCheck {
 		// have no counterpart in the left element
 		deletedReferences.removeAll(matchedNewReferences);
 
-		// Double check for proxies and external dependencies
-		for (EObject deletedValue : new ArrayList<EObject>(deletedReferences)) {
-			if (deletedValue.eIsProxy() && deletedValue instanceof InternalEObject) {
-				boolean found = false;
-				final URI proxyURI = ((InternalEObject)deletedValue).eProxyURI();
-				final Iterator<EObject> addedValuesIterator = addedReferences.iterator();
-				while (!found && addedValuesIterator.hasNext()) {
-					final EObject addedValue = addedValuesIterator.next();
-					if (addedValue.eIsProxy() && addedValue instanceof InternalEObject) {
-						found = proxyURI.equals(((InternalEObject)addedValue).eProxyURI());
-					}
-				}
-				if (found) {
-					deletedReferences.remove(deletedValue);
-				}
-			}
-		}
+		// Double check for proxies
+		removeAll(deletedReferences, addedReferences);
 
 		return deletedReferences;
 	}
@@ -988,6 +953,40 @@ public class ReferencesCheck extends AbstractCheck {
 					&& !rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))
 					&& leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))) {
 				remoteDeletedReferences.add((EObject)origin);
+			}
+		}
+	}
+
+	/**
+	 * This will remove from the <code>original</code> list all of the objects contained in the
+	 * <code>objectsToRemove</code> list.
+	 * 
+	 * @param original
+	 *            The list to purge from all elements contained in <code>objectsToRemove</code>.
+	 * @param objectsToRemove
+	 *            The list of objects to remove from <code>original</code>.
+	 */
+	private void removeAll(List<EObject> original, List<EObject> objectsToRemove) {
+		for (EObject toRemove : objectsToRemove) {
+			int index = original.indexOf(toRemove);
+			if (index != -1) {
+				original.remove(index);
+			} else if (toRemove.eIsProxy() || !isInScope(toRemove)) {
+				final URI toRemoveURI = EcoreUtil.getURI(toRemove);
+
+				index = -1;
+				final Iterator<EObject> originalIterator = original.iterator();
+				while (index == -1 && originalIterator.hasNext()) {
+					final EObject originalValue = originalIterator.next();
+					if (originalValue.eIsProxy() || !isInScope(originalValue)) {
+						if (toRemoveURI.equals(EcoreUtil.getURI(originalValue))) {
+							index = original.indexOf(originalValue);
+						}
+					}
+				}
+				if (index != -1) {
+					original.remove(index);
+				}
 			}
 		}
 	}
