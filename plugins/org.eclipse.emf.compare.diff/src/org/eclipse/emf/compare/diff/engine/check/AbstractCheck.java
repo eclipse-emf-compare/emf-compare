@@ -110,6 +110,26 @@ public abstract class AbstractCheck {
 	}
 
 	/**
+	 * This will check whether the given EObject was part of this comparison's scope.
+	 * 
+	 * @param eObj
+	 *            EObject to check.
+	 * @return <code>true</code> if that EObject is in the scope, <code>false</code> otherwise.
+	 * @since 1.3
+	 */
+	protected final boolean isInScope(EObject eObj) {
+		if (crossReferencer != null && eObj != null && crossReferencer.get(eObj) != null) {
+			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : crossReferencer.get(eObj)) {
+				if (setting.getEObject() instanceof Match2Elements
+						|| setting.getEObject() instanceof UnmatchElement) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Return the specified matched {@link EObject} from the one given.
 	 * 
 	 * @param from
