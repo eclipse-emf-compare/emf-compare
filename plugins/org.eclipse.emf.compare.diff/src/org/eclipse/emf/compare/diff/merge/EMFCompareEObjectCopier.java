@@ -178,7 +178,12 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 			// referenced object was an unmatched one and we managed to merge its corresponding diff
 			copy = get(value);
 		} else {
-			copy = copy(value);
+			if (value.eResource() == null || value.eResource().getURI().isPlatformPlugin()) {
+				// We can't copy that object
+				copy = value;
+			} else {
+				copy = copy(value);
+			}
 		}
 		if (copy.eIsProxy() && copy instanceof InternalEObject) {
 			// only add if the element is not already there.
