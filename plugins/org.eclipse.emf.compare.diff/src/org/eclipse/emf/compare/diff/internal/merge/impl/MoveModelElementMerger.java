@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
+import java.util.List;
+
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
@@ -30,6 +32,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void applyInOrigin() {
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
@@ -37,11 +40,20 @@ public class MoveModelElementMerger extends DefaultMerger {
 		final EObject leftElement = theDiff.getLeftElement();
 		final EReference ref = theDiff.getRightElement().eContainmentFeature();
 		if (ref != null) {
+			// ordering handling:
+			int index = -1;
+			final EObject rightElementParent = theDiff.getRightElement().eContainer();
+			final Object rightRefValue = rightElementParent.eGet(ref);
+			if (rightRefValue instanceof List) {
+				final List<Object> refRightValueList = (List<Object>)rightRefValue;
+				index = refRightValueList.indexOf(theDiff.getRightElement());
+			}
+
 			try {
 				// We'll store the element's ID because moving an element deletes its XMI ID
 				final String elementID = getXMIID(leftElement);
 				EcoreUtil.remove(leftElement);
-				EFactory.eAdd(leftTarget, ref.getName(), leftElement);
+				EFactory.eAdd(leftTarget, ref.getName(), leftElement, index);
 				// Sets anew the element's ID
 				setXMIID(leftElement, elementID);
 			} catch (FactoryException e) {
@@ -59,6 +71,7 @@ public class MoveModelElementMerger extends DefaultMerger {
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void undoInTarget() {
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
@@ -66,10 +79,19 @@ public class MoveModelElementMerger extends DefaultMerger {
 		final EObject rightElement = theDiff.getRightElement();
 		final EReference ref = theDiff.getLeftElement().eContainmentFeature();
 		if (ref != null) {
+			// ordering handling:
+			int index = -1;
+			final EObject leftElementParent = theDiff.getLeftElement().eContainer();
+			final Object leftRefValue = leftElementParent.eGet(ref);
+			if (leftRefValue instanceof List) {
+				final List<Object> refLeftValueList = (List<Object>)leftRefValue;
+				index = refLeftValueList.indexOf(theDiff.getLeftElement());
+			}
+
 			try {
 				final String elementID = getXMIID(rightElement);
 				EcoreUtil.remove(rightElement);
-				EFactory.eAdd(rightTarget, ref.getName(), rightElement);
+				EFactory.eAdd(rightTarget, ref.getName(), rightElement, index);
 				setXMIID(rightElement, elementID);
 			} catch (FactoryException e) {
 				EMFComparePlugin.log(e, true);
