@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.merge;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -72,13 +74,32 @@ public abstract class MergeTestBase extends TestCase {
 		EObject testLeftModel = leftModel;
 		EObject testRightModel = rightModel;
 
+		List<DiffElement> differences = detectDifferences(testLeftModel, testRightModel);
+
+		mergeAndAssertResult(isLeftToRight, testLeftModel, testRightModel, differences);
+
+		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
+		// if (false == mergeOK) {
+		//
+		// System.err.println("Expected :\n" + expected);
+		// System.err.println("Actual   :\n" + actual);
+		// fail(" Merge (leftToRight=" + isLeftToRight + ")failed ");
+		// }
+	}
+
+	protected List<DiffElement> detectDifferences(EObject testLeftModel, EObject testRightModel)
+			throws InterruptedException {
 		Map<String, Object> options = Collections.emptyMap();
 
 		MatchModel match = MatchService.doMatch(testLeftModel, testRightModel, options);
 		DiffModel diff = DiffService.doDiff(match);
 
 		EList<DiffElement> differences = diff.getDifferences();
+		return differences;
+	}
 
+	protected void mergeAndAssertResult(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel,
+			List<DiffElement> differences) throws IOException {
 		preMergeHook(isLeftToRight);
 		MergeService.merge(differences, isLeftToRight);
 		postMergeHook(isLeftToRight);
@@ -93,14 +114,6 @@ public abstract class MergeTestBase extends TestCase {
 		}
 
 		assertEquals(expected, actual);
-
-		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
-		// if (false == mergeOK) {
-		//
-		// System.err.println("Expected :\n" + expected);
-		// System.err.println("Actual   :\n" + actual);
-		// fail(" Merge (leftToRight=" + isLeftToRight + ")failed ");
-		// }
 	}
 
 	/**
