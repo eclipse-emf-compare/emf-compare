@@ -87,7 +87,6 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	public void undoInTarget() {
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 
-		// FIXME respect ordering!
 		final EReference reference = theDiff.getReference();
 
 		final EObject rightElement = theDiff.getRightElement();
