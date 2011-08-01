@@ -1760,23 +1760,44 @@ public class GenericMatchEngine implements IMatchEngine {
 	protected void setModelRoots(MatchModel modelRoot, EObject left, IMatchScope leftScope, EObject right,
 			IMatchScope rightScope, EObject ancestor, IMatchScope ancestorScope) {
 		// Sets values of left, right and ancestor model roots
-		if (left != null && left.eResource() != null) {
-			for (EObject leftRoot : left.eResource().getContents()) {
-				if (leftScope == null || leftScope.isInScope(leftRoot)) {
+		if (left != null) {
+			if (left.eResource() != null) {
+				for (EObject leftRoot : left.eResource().getContents()) {
+					if (leftScope == null || leftScope.isInScope(leftRoot)) {
+						modelRoot.getLeftRoots().add(leftRoot);
+					}
+				}
+			} else {
+				EObject leftRoot = EcoreUtil.getRootContainer(left);
+				if (leftScope.isInScope(leftRoot)) {
 					modelRoot.getLeftRoots().add(leftRoot);
 				}
 			}
 		}
-		if (right != null && right.eResource() != null) {
-			for (EObject rightRoot : right.eResource().getContents()) {
-				if (rightScope == null || rightScope.isInScope(rightRoot)) {
+		if (right != null) {
+			if (right.eResource() != null) {
+				for (EObject rightRoot : right.eResource().getContents()) {
+					if (rightScope == null || rightScope.isInScope(rightRoot)) {
+						modelRoot.getRightRoots().add(rightRoot);
+					}
+				}
+			} else {
+				EObject rightRoot = EcoreUtil.getRootContainer(right);
+				if (rightScope.isInScope(rightRoot)) {
 					modelRoot.getRightRoots().add(rightRoot);
 				}
 			}
 		}
-		if (ancestor != null && ancestor.eResource() != null) {
-			for (EObject ancestorRoot : ancestor.eResource().getContents()) {
-				if (ancestorScope == null || ancestorScope.isInScope(ancestorRoot)) {
+		if (ancestor != null) {
+			if (ancestor.eResource() != null) {
+				for (EObject ancestorRoot : ancestor.eResource().getContents()) {
+					if (ancestorScope == null || ancestorScope.isInScope(ancestorRoot)) {
+						modelRoot.getAncestorRoots().add(ancestorRoot);
+					}
+				}
+			} else {
+				EObject ancestorRoot = EcoreUtil.getRootContainer(ancestor);
+				if (ancestorScope.isInScope(ancestorRoot)) {
 					modelRoot.getAncestorRoots().add(ancestorRoot);
 				}
 			}

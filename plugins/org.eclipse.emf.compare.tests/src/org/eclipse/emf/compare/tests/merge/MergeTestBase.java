@@ -76,8 +76,9 @@ public abstract class MergeTestBase extends TestCase {
 
 		List<DiffElement> differences = detectDifferences(testLeftModel, testRightModel);
 
-		mergeAndAssertResult(isLeftToRight, testLeftModel, testRightModel, differences);
+		merge(isLeftToRight, testLeftModel, testRightModel, differences);
 
+		assertResult(isLeftToRight, testLeftModel, testRightModel);
 		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
 		// if (false == mergeOK) {
 		//
@@ -98,12 +99,16 @@ public abstract class MergeTestBase extends TestCase {
 		return differences;
 	}
 
-	protected void mergeAndAssertResult(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel,
+	protected void merge(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel,
 			List<DiffElement> differences) throws IOException {
 		preMergeHook(isLeftToRight);
 		MergeService.merge(differences, isLeftToRight);
 		postMergeHook(isLeftToRight);
 
+	}
+
+	protected void assertResult(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel)
+			throws IOException {
 		String leftModelString = ModelUtils.serialize(testLeftModel);
 		String rightModelString = ModelUtils.serialize(testRightModel);
 		String expected = leftModelString;

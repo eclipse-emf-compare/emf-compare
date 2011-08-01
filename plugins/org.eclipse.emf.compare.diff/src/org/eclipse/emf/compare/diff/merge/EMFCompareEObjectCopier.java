@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -331,9 +332,8 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 			return;
 		}
 		final Object referencedEObject = eObject.eGet(eReference, resolveProxies);
-		if (eReference.isTransient() && referencedEObject instanceof EObject
-				&& ((EObject)referencedEObject).eResource() == null) {
-			// Let the super do its work. This is the case of the "eFactoryInstance" reference
+		if (eReference == EcorePackage.eINSTANCE.getEPackage_EFactoryInstance()) {
+			// Let the super do its work.
 			super.copyReference(eReference, eObject, copyEObject);
 		} else if (eReference.isMany()) {
 			final List<?> referencedObjectsList = (List<?>)referencedEObject;
@@ -352,10 +352,12 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 						// diff
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObj));
 						// else => don't take any action, this has already been handled
-					} else {
+					} else if (referencedEObj instanceof EObject) {
 						// referenced object lies in another resource, simply reference it
-						final Object copyReferencedObject = findReferencedObjectCopy(referencedEObj);
+						final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObj);
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedObject);
+					} else {
+						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObj);
 					}
 				}
 			}
@@ -370,9 +372,11 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				} else if (mergeLinkedDiff((EObject)referencedEObject)) {
 					// referenced object was an unmatched one and we managed to merge its corresponding diff
 					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
-				} else {
-					final Object copyReferencedObject = findReferencedObjectCopy(referencedEObject);
+				} else if (referencedEObject instanceof EObject) {
+					final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObject);
 					copyEObject.eSet(getTarget(eReference), copyReferencedObject);
+				} else {
+					((List<Object>)copyEObject.eGet(getTarget(eReference))).add(referencedEObject);
 				}
 			}
 		}
@@ -382,21 +386,18 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * We couldn't find a copy of <em>referencedObject</em>. We still need to find its matched object in the
 	 * target resource in order not to simply reference the "old" resource from a copied object.
 	 * 
-	 * @param referencedObject
+	 * @param referencedEObject
 	 *            object referenced from <em>eObject</em> that needs to be copied or found in the target
 	 *            resource.
 	 * @return Copy of the referenced object, located in the target resource if we could find it.
 	 * @since 1.3
 	 */
-	protected Object findReferencedObjectCopy(Object referencedObject) {
-		// If not an EObject, copy it and return
-		if (!(referencedObject instanceof EObject)) {
-			return referencedObject;
+	protected Object findReferencedObjectCopy(EObject referencedEObject) {
+		Object copyReferencedObject = referencedEObject;
+		if (referencedEObject.eResource() == null) {
+			return findReferencedObjectCopyNullResource(referencedEObject);
 		}
 
-		Object copyReferencedObject = referencedObject;
-
-		final EObject referencedEObject = (EObject)referencedObject;
 		// Is the referencedObject in either left or right?
 		final Resource referencedResource = referencedEObject.eResource();
 		final String uriFragment = referencedEObject.eResource().getURIFragment(referencedEObject);
@@ -415,11 +416,13 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 						referencedDiffModel = aDiffModel;
 					}
 				}
-				if (!aDiffModel.getRightRoots().isEmpty()
-						&& aDiffModel.getRightRoots().get(0).eResource() != null) {
-					final Resource resource = aDiffModel.getRightRoots().get(0).eResource();
-					if (referencedEObject.eResource() == resource) {
-						referencedDiffModel = aDiffModel;
+				if (referencedDiffModel == null) {
+					if (!aDiffModel.getRightRoots().isEmpty()
+							&& aDiffModel.getRightRoots().get(0).eResource() != null) {
+						final Resource resource = aDiffModel.getRightRoots().get(0).eResource();
+						if (referencedEObject.eResource() == resource) {
+							referencedDiffModel = aDiffModel;
+						}
 					}
 				}
 				if (referencedDiffModel != null) {
@@ -455,9 +458,112 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				// FIXME can we find the referenced object without the match model?
 			}
 		} else {
+			// Reference lies in another resource. Simply return it as is.
+		}
+
+		return copyReferencedObject;
+	}
+
+	/**
+	 * We couldn't find a copy of <em>referencedObject</em>. We still need to find its matched object in the
+	 * target resource in order not to simply reference the "old" resource from a copied object.
+	 * <p>
+	 * This will only be called after we've made sure that the referenced Object is not attached to a
+	 * resource. We thus can only look within its containment tree.
+	 * </p>
+	 * <p>
+	 * Take good not that this treatment will be extremely costly and should be avoided whenever possible.
+	 * </p>
+	 * 
+	 * @param referencedObject
+	 *            object referenced from <em>eObject</em> that needs to be copied or found in the target
+	 *            containment tree.
+	 * @return Copy of the referenced object, located in the target containment tree if we could find it.
+	 * @since 1.3
+	 */
+	protected Object findReferencedObjectCopyNullResource(EObject referencedObject) {
+		Object copyReferencedObject = referencedObject;
+
+		final EObject rootContainer = EcoreUtil.getRootContainer(referencedObject);
+
+		EObject leftRoot = null;
+		EObject rightRoot = null;
+
+		if (diffResourceSet != null) {
+			final Iterator<DiffModel> diffModels = diffResourceSet.getDiffModels().iterator();
+			while (diffModels.hasNext() && leftRoot == null && rightRoot == null) {
+				final DiffModel aDiffModel = diffModels.next();
+				DiffModel referencedDiffModel = null;
+				int rootIndex = 0;
+
+				for (int i = 0; i < aDiffModel.getLeftRoots().size(); i++) {
+					if (rootContainer == aDiffModel.getLeftRoots().get(i)) {
+						referencedDiffModel = aDiffModel;
+						rootIndex = i;
+					}
+				}
+				if (referencedDiffModel == null) {
+					for (int i = 0; i < aDiffModel.getRightRoots().size(); i++) {
+						if (rootContainer == aDiffModel.getRightRoots().get(i)) {
+							referencedDiffModel = aDiffModel;
+							rootIndex = i;
+						}
+					}
+				}
+				if (referencedDiffModel != null) {
+					if (referencedDiffModel.getLeftRoots().size() >= rootIndex) {
+						leftRoot = referencedDiffModel.getLeftRoots().get(rootIndex);
+					}
+					if (referencedDiffModel.getRightRoots().size() >= rootIndex) {
+						rightRoot = referencedDiffModel.getRightRoots().get(rootIndex);
+					}
+				}
+			}
+		} else if (diffModel != null) {
+			int rootIndex = -1;
+			for (int i = 0; i < diffModel.getLeftRoots().size(); i++) {
+				if (rootContainer == diffModel.getLeftRoots().get(i)) {
+					rootIndex = i;
+				}
+			}
+			for (int i = 0; i < diffModel.getRightRoots().size(); i++) {
+				if (rootContainer == diffModel.getRightRoots().get(i)) {
+					rootIndex = i;
+				}
+			}
+			if (diffModel.getLeftRoots().size() >= rootIndex) {
+				leftRoot = diffModel.getLeftRoots().get(rootIndex);
+			}
+			if (diffModel.getRightRoots().size() >= rootIndex) {
+				rightRoot = diffModel.getRightRoots().get(rootIndex);
+			}
+		}
+
+		// Trims the starting '#//' out
+		final String uriFragment = EcoreUtil.getURI(referencedObject).toString().substring(2);
+		if (rootContainer == leftRoot && rightRoot != null) {
+			/*
+			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
+			 * has already been copied
+			 */
+			copyReferencedObject = getEObject(rightRoot, uriFragment);
+			if (copyReferencedObject == null) {
+				// FIXME can we find the referenced object without the match model?
+			}
+		} else if (rootContainer == rightRoot && leftRoot != null) {
+			/*
+			 * FIXME we should be using the MatchModel, but can't access it. let's hope the referenced object
+			 * has already been copied
+			 */
+			copyReferencedObject = getEObject(leftRoot, uriFragment);
+			if (copyReferencedObject == null) {
+				// FIXME can we find the referenced object without the match model?
+			}
+		} else {
 			// Reference lies in another resource. Simply copy it
 			copyReferencedObject = referencedObject;
 		}
+
 		return copyReferencedObject;
 	}
 
@@ -560,4 +666,91 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		return hasMerged;
 	}
 
+	/**
+	 * Initially copied from {@link org.eclipse.emf.ecore.resource.impl.ResourceImpl#getEObject(String)}.
+	 * 
+	 * @param container
+	 *            The container in which we need to find an EObject.
+	 * @param fragment
+	 *            The fragment we need an EObject for.
+	 * @return The EObject contained in <code>container</code> that lies at <code>uriFragment</code>.
+	 * @since 1.3
+	 */
+	private static EObject getEObject(EObject container, String fragment) {
+		String uriFragment = fragment;
+		final int length = uriFragment.length();
+		if (length > 0) {
+			if (uriFragment.charAt(0) == '/') {
+				final ArrayList<String> uriFragmentPath = new ArrayList<String>(4);
+				int start = 1;
+				for (int i = 1; i < length; ++i) {
+					if (uriFragment.charAt(i) == '/') {
+						if (start == i) {
+							uriFragmentPath.add(""); //$NON-NLS-1$							
+						} else {
+							uriFragmentPath.add(uriFragment.substring(start, i));
+						}
+						start = i + 1;
+					}
+				}
+				uriFragmentPath.add(uriFragment.substring(start));
+				return getEObject(container, uriFragmentPath);
+			} else if (uriFragment.charAt(length - 1) == '?') {
+				final int index = uriFragment.lastIndexOf('?', length - 2);
+				if (index > 0) {
+					uriFragment = uriFragment.substring(0, index);
+				}
+			}
+		}
+
+		return getEObjectByID(container, uriFragment);
+	}
+
+	/**
+	 * Initially copied from {@link org.eclipse.emf.ecore.resource.impl.ResourceImpl#getEObject(List<String>)}
+	 * .
+	 * 
+	 * @param container
+	 *            The container in which we need to find an EObject.
+	 * @param uriFragmentPath
+	 *            Segments of the URI we need an EObject for.
+	 * @return The EObject contained in <code>container</code> that lies at <code>uriFragmentPath</code>.
+	 * @since 1.3
+	 */
+	private static EObject getEObject(EObject container, List<String> uriFragmentPath) {
+		final int size = uriFragmentPath.size();
+		EObject eObject = container;
+		for (int i = 1; i < size && eObject != null; ++i) {
+			eObject = ((InternalEObject)eObject).eObjectForURIFragmentSegment(uriFragmentPath.get(i));
+		}
+
+		return eObject;
+	}
+
+	/**
+	 * Initially copied from {@link org.eclipse.emf.ecore.resource.impl.ResourceImpl#getEObjectByID(String)}.
+	 * 
+	 * @param container
+	 *            The container in which we need to find an EObject.
+	 * @param id
+	 *            The id we need an EObject for.
+	 * @return The EObject contained in <code>container</code> that corresponds to ID <code>id</code>.
+	 * @since 1.3
+	 */
+	private static EObject getEObjectByID(EObject container, String id) {
+		EObject result = null;
+
+		final TreeIterator<EObject> iterator = EcoreUtil.getAllProperContents(container, false);
+		while (result == null && iterator.hasNext()) {
+			final EObject eObject = iterator.next();
+			final String eObjectId = EcoreUtil.getID(eObject);
+			if (eObjectId != null) {
+				if (eObjectId.equals(id)) {
+					result = eObject;
+				}
+			}
+		}
+
+		return result;
+	}
 }
