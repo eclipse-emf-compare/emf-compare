@@ -1,14 +1,10 @@
 package org.eclipse.emf.compare.tests.merge.data;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 
-public class EcoreMergeInputData {
+public class EcoreMergeInputData extends AbstractInputData {
 
 	public EObject getA() throws IOException {
 		String path = "a.ecore";
@@ -53,12 +49,5 @@ public class EcoreMergeInputData {
 
 	public EObject getUML173() throws IOException {
 		return loadFromClassloader("UML173.ecore");
-	}
-
-	private EObject loadFromClassloader(String string) throws IOException {
-		InputStream str = this.getClass().getResourceAsStream(string);
-		XMIResourceImpl res = new XMIResourceImpl(URI.createURI("http://" + string));
-		res.load(str, Collections.EMPTY_MAP);
-		return res.getContents().get(0);
 	}
 }
