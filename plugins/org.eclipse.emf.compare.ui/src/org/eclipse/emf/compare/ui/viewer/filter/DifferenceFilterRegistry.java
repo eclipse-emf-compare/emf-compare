@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
  * "org.eclipse.emf.compare.ui.diff.filter" extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ * @since 1.2
  */
 public enum DifferenceFilterRegistry {
 
@@ -32,6 +33,9 @@ public enum DifferenceFilterRegistry {
 
 	/** Name of the extension point to parse for extensions. */
 	public static final String DIFF_FILTER_EXTENSION_POINT = "org.eclipse.emf.compare.ui.diff.filter"; //$NON-NLS-1$
+
+	/** The separator used to convert the list of descriptors into a string value. */
+	private static final String SEPARATOR = ";"; //$NON-NLS-1$
 
 	/** This Map will be in charge of storing the different contributed descriptors. */
 	private final Map<String, DifferenceFilterDescriptor> storage = new HashMap<String, DifferenceFilterDescriptor>();
@@ -92,5 +96,73 @@ public enum DifferenceFilterRegistry {
 	 */
 	public synchronized void clearRegistry() {
 		storage.clear();
+	}
+
+	/**
+	 * Returns the {@link DifferenceFilterDescriptor} in relation to its id.
+	 * 
+	 * @param id
+	 *            The id.
+	 * @return The descriptor.
+	 */
+	public DifferenceFilterDescriptor getDescriptor(String id) {
+		return storage.get(id);
+
+	}
+
+	/**
+	 * Transforms a list of {@link DifferenceFilterDescriptor} into a string value which owns the id of the
+	 * descriptors, separated by the separator {@link SEPARATOR}.
+	 * 
+	 * @param descriptors
+	 *            The descriptors.
+	 * @return The result.
+	 */
+	public String getDescriptors(List<DifferenceFilterDescriptor> descriptors) {
+		boolean firstElement = true;
+		final StringBuffer result = new StringBuffer();
+		for (DifferenceFilterDescriptor desc : descriptors) {
+			if (!firstElement) {
+				result.append(SEPARATOR);
+			}
+			result.append(desc.getID());
+			firstElement = false;
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Transforms a string value into a list of {@link DifferenceFilterDescriptor}. The string value has to
+	 * own the id of the descriptors, separated by the separator {@link SEPARATOR}.
+	 * 
+	 * @param descriptors
+	 *            The string value.
+	 * @return The list.
+	 */
+	public List<DifferenceFilterDescriptor> getDescriptors(String descriptors) {
+		final List<DifferenceFilterDescriptor> result = new ArrayList<DifferenceFilterDescriptor>();
+		final String[] values = descriptors.split(SEPARATOR);
+		for (String value : values) {
+			final DifferenceFilterDescriptor desc = getDescriptor(value);
+			if (desc != null)
+				result.add(desc);
+		}
+		return result;
+	}
+
+	/**
+	 * Transforms a string value into a list of {@link IDifferenceFilter}. The string value has to own the id
+	 * of the descriptors, separated by the separator {@link SEPARATOR}.
+	 * 
+	 * @param descriptors
+	 *            The string value.
+	 * @return The list.
+	 */
+	public List<IDifferenceFilter> getFilters(String descriptors) {
+		final List<IDifferenceFilter> result = new ArrayList<IDifferenceFilter>();
+		for (DifferenceFilterDescriptor desc : getDescriptors(descriptors)) {
+			result.add(desc.getExtension());
+		}
+		return result;
 	}
 }

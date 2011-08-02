@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IAction;
  * Action to group difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class GroupingAction extends AbstractOrderingAction {
 	/** Descriptor for groups. */

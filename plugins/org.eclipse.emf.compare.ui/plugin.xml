@@ -131,4 +131,12 @@ Contributors:
             name="Added elements">
       </filter>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.diff.filter">
+      <filter
+            class="org.eclipse.emf.compare.ui.viewer.filter.RemovedFilter"
+            id="removedElements"
+            name="Removed elements">
+      </filter>
+   </extension>
 </plugin>

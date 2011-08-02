@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * A facility to group difference elements per kind of changes.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class ChangesKindGrouping implements IDifferenceGroupingFacility {
 	/** Registered groups. */

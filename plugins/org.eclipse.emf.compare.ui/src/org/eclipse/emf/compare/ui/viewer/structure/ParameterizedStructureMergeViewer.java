@@ -26,6 +26,7 @@ import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterRegistry;
 import org.eclipse.emf.compare.ui.viewer.filter.FiltersMenu;
 import org.eclipse.emf.compare.ui.viewer.group.DifferenceGroupingFacilityRegistry;
 import org.eclipse.emf.compare.ui.viewer.group.GroupsMenu;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -69,7 +70,10 @@ public class ParameterizedStructureMergeViewer extends ModelStructureMergeViewer
 	 */
 	@Override
 	protected ModelStructureContentProvider createContentProvider(CompareConfiguration compareConfiguration) {
-		mProvider = new ParameterizedStructureContentProvider(compareConfiguration);
+		String preferenceValue = EMFCompareUIPlugin.getDefault().getPreferenceStore()
+				.getString(EMFComparePreferenceConstants.PREFERENCES_KEY_DEFAULT_FILTERS);
+		mProvider = new ParameterizedStructureContentProvider(compareConfiguration, null,
+				DifferenceFilterRegistry.INSTANCE.getFilters(preferenceValue));
 		return mProvider;
 	}
 

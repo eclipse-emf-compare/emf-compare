@@ -11,6 +11,9 @@
 package org.eclipse.emf.compare.ui.internal.preferences;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -20,6 +23,8 @@ import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
 import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterDescriptor;
+import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterRegistry;
 import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -28,6 +33,13 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -87,6 +99,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		createMatchOptionsGroup();
 		createGUIOptionsGroup();
 		createColorGroup();
+		createFilterOptionsGroup();
 	}
 
 	/**
@@ -170,6 +183,24 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	/**
+	 * Creates the SWT group containing the fields for filters options.
+	 */
+	public void createFilterOptionsGroup() {
+		final Group filterGroup = new Group(getFieldEditorParent(), SWT.SHADOW_ETCHED_IN);
+		filterGroup.setText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.filterGroupTitle")); //$NON-NLS-1$
+		filterGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		final GridLayout filtersLayout = new GridLayout();
+		filtersLayout.marginWidth = 0;
+		filtersLayout.marginHeight = 0;
+		filterGroup.setLayout(filtersLayout);
+		filterGroup.setFont(getFieldEditorParent().getFont());
+
+		addField(new MultiSelectionFieldEditor(EMFComparePreferenceConstants.PREFERENCES_KEY_DEFAULT_FILTERS,
+				EMFCompareConstants.PREFERENCES_DESCRIPTION_FILTERS, filterGroup));
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see IWorkbenchPreferencePage#init(IWorkbench)
@@ -207,7 +238,8 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 		corePreferences.putBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID,
 				getPreferenceStore().getBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_IGNORE_XMIID));
 		// Engine selection
-		corePreferences.putBoolean(EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION,
+		corePreferences.putBoolean(
+				EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION,
 				getPreferenceStore().getBoolean(
 						EMFComparePreferenceConstants.PREFERENCES_KEY_ENGINE_SELECTION));
 		try {
@@ -355,9 +387,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 
 			image = new Label(parent, SWT.NONE);
 			image.setImage(getHelpIcon());
-			image
-					.setToolTipText(EMFCompareUIMessages
-							.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
+			image.setToolTipText(EMFCompareUIMessages.getString("EMFComparePreferencesPage.searchWindowHelp")); //$NON-NLS-1$
 			gd = new GridData();
 			gd.horizontalSpan = 1;
 			gd.grabExcessHorizontalSpace = false;
@@ -418,7 +448,7 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 			} catch (final NumberFormatException e) {
 				isValid = false;
 				showErrorMessage(EMFCompareUIMessages
-						.getString("EMFComparePrefetencesPage.ImageIntegerFieldEditor.invalidInput")); //$NON-NLS-1$
+						.getString("EMFComparePreferencesPage.ImageIntegerFieldEditor.invalidInput")); //$NON-NLS-1$
 			}
 		}
 
@@ -485,6 +515,173 @@ public class EMFComparePreferencesPage extends FieldEditorPreferencePage impleme
 				assert false;
 			}
 			return helpIcon;
+		}
+	}
+
+	/**
+	 * Editor to select several elements.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private final class MultiSelectionFieldEditor extends FieldEditor {
+
+		/** Viewer used to manage checkboxes. */
+		private CheckboxTableViewer checkboxViewer;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param name
+		 *            The id of the editor.
+		 * @param labelText
+		 *            The label used with the editor.
+		 * @param parent
+		 *            The parent composite.
+		 */
+		public MultiSelectionFieldEditor(String name, String labelText, Composite parent) {
+			init(name, labelText);
+			createControl(parent);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
+		 */
+		@Override
+		protected void adjustForNumColumns(int numColumns) {
+			// nothing to do
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+		 *      int)
+		 */
+		@Override
+		protected void doFillIntoGrid(Composite parent, int numColumns) {
+			// Checkbox table viewer of decorators
+			checkboxViewer = CheckboxTableViewer.newCheckList(parent, SWT.SINGLE | SWT.TOP | SWT.BORDER);
+			checkboxViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
+			checkboxViewer.getTable().setFont(parent.getFont());
+			checkboxViewer.setLabelProvider(new LabelProvider() {
+				/**
+				 * {@inheritDoc}
+				 * 
+				 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+				 */
+				@Override
+				public String getText(Object element) {
+					return ((DifferenceFilterDescriptor)element).getName();
+				}
+			});
+
+			checkboxViewer.setContentProvider(new IStructuredContentProvider() {
+				/**
+				 * {@inheritDoc}
+				 */
+				public void dispose() {
+					// Nothing to do on dispose
+				}
+
+				/**
+				 * {@inheritDoc}
+				 */
+				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+					// Nothing to do on input changed
+				}
+
+				/**
+				 * {@inheritDoc}
+				 */
+				public Object[] getElements(Object inputElement) {
+					return DifferenceFilterRegistry.INSTANCE.getDescriptors().toArray();
+				}
+			});
+
+			checkboxViewer.addCheckStateListener(new ICheckStateListener() {
+				/**
+				 * {@inheritDoc}
+				 * 
+				 * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+				 */
+				public void checkStateChanged(CheckStateChangedEvent event) {
+					checkboxViewer.setSelection(new StructuredSelection(event.getElement()));
+				}
+			});
+
+			checkboxViewer.setInput(Collections.EMPTY_LIST);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
+		 */
+		@Override
+		protected void doLoad() {
+			if (checkboxViewer != null) {
+				final String oldValue = getPreferenceStore().getString(getPreferenceName());
+				final List<DifferenceFilterDescriptor> descriptors = DifferenceFilterRegistry.INSTANCE
+						.getDescriptors(oldValue);
+				checkboxViewer.setCheckedElements(descriptors.toArray());
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
+		 */
+		@Override
+		protected void doLoadDefault() {
+			if (checkboxViewer != null) {
+				final String value = getPreferenceStore().getDefaultString(getPreferenceName());
+				final List<DifferenceFilterDescriptor> descriptors = DifferenceFilterRegistry.INSTANCE
+						.getDescriptors(value);
+				checkboxViewer.setCheckedElements(descriptors.toArray());
+			}
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#doStore()
+		 */
+		@Override
+		protected void doStore() {
+			if (checkboxViewer != null) {
+				final String result = DifferenceFilterRegistry.INSTANCE.getDescriptors(getSelection());
+				getPreferenceStore().setValue(getPreferenceName(), result);
+			}
+		}
+
+		/**
+		 * Returns the list of {@link DifferenceFilterDescriptor} selected through the checkboxes.
+		 * 
+		 * @return The filter descriptors
+		 */
+		private List<DifferenceFilterDescriptor> getSelection() {
+			final List<DifferenceFilterDescriptor> result = new ArrayList<DifferenceFilterDescriptor>();
+			final Object[] selection = checkboxViewer.getCheckedElements();
+			for (Object object : selection) {
+				if (object instanceof DifferenceFilterDescriptor) {
+					result.add((DifferenceFilterDescriptor)object);
+				}
+			}
+			return result;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
+		 */
+		@Override
+		public int getNumberOfControls() {
+			// TODO Auto-generated method stub
+			return 1;
 		}
 	}
 }

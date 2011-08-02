@@ -11,16 +11,20 @@
 package org.eclipse.emf.compare.ui.viewer.filter;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.compare.ui.EMFCompareUIMessages;
+import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
 import org.eclipse.emf.compare.ui.viewer.AbstractOrderingMenu;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.jface.action.IAction;
 
 /**
  * The menu to select the filters.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class FiltersMenu extends AbstractOrderingMenu {
 	/** The viewer. */
@@ -48,7 +52,15 @@ public class FiltersMenu extends AbstractOrderingMenu {
 				.getDescriptors().iterator();
 		while (descriptors.hasNext()) {
 			final DifferenceFilterDescriptor desc = descriptors.next();
-			addItemToMenu(desc);
+
+			final String preferenceValue = EMFCompareUIPlugin.getDefault().getPreferenceStore()
+					.getString(EMFComparePreferenceConstants.PREFERENCES_KEY_DEFAULT_FILTERS);
+
+			final List<DifferenceFilterDescriptor> defaultDescriptors = DifferenceFilterRegistry.INSTANCE
+					.getDescriptors(preferenceValue);
+			final boolean hasToBeChecked = defaultDescriptors.contains(desc);
+
+			addItemToMenu(desc, hasToBeChecked);
 		}
 	}
 
@@ -60,6 +72,19 @@ public class FiltersMenu extends AbstractOrderingMenu {
 	 */
 	protected void addItemToMenu(DifferenceFilterDescriptor desc) {
 		final IAction action = new FilteringAction(desc, mViewer);
+		addContribution(action);
+	}
+
+	/**
+	 * Add the filtering action in relation to its descriptor.
+	 * 
+	 * @param desc
+	 *            The descriptor.
+	 * @param checked
+	 *            To check or not the action.
+	 */
+	protected void addItemToMenu(DifferenceFilterDescriptor desc, boolean checked) {
+		final IAction action = new FilteringAction(desc, mViewer, checked);
 		addContribution(action);
 	}
 }

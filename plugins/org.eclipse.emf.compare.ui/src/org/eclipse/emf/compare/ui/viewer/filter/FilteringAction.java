@@ -10,21 +10,17 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.filter;
 
-import java.io.IOException;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.compare.ui.viewer.AbstractOrderingAction;
 import org.eclipse.emf.compare.ui.viewer.OrderingListener;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureContentProvider;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
  * Action to filter difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ * @since 1.2
  */
 public class FilteringAction extends AbstractOrderingAction {
 	/** Descriptor for filters. */
@@ -41,14 +37,30 @@ public class FilteringAction extends AbstractOrderingAction {
 	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer) {
 		super(desc.getName(), IAction.AS_CHECK_BOX, viewer);
 		mDesc = desc;
-		try {
-			final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
-					.getBundle("org.eclipse.emf.compare.diff.edit") //$NON-NLS-1$
-					.getEntry("icons/full/obj16/AddModelElement.gif"))); //$NON-NLS-1$
-			setImageDescriptor(imgDesc);
-		} catch (IOException e) {
-			// No management
-		}
+		// try {
+		// final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
+		//					.getBundle("org.eclipse.emf.compare.diff.edit") //$NON-NLS-1$
+		//					.getEntry("icons/full/obj16/AddModelElement.gif"))); //$NON-NLS-1$
+		// setImageDescriptor(imgDesc);
+		// } catch (IOException e) {
+		// // No management
+		// }
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param desc
+	 *            The descriptor of filters.
+	 * @param viewer
+	 *            The viewer.
+	 * @param checked
+	 *            The flag to check or not the action.
+	 */
+	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer,
+			boolean checked) {
+		this(desc, viewer);
+		setChecked(checked);
 	}
 
 	/**

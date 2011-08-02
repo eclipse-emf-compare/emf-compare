@@ -112,6 +112,10 @@ public interface EMFCompareConstants {
 	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
 
+	/** Preferences description for the filters. */
+	String PREFERENCES_DESCRIPTION_FILTERS = EMFCompareUIMessages
+			.getString("EMFCompareConstants.preferences.filtersLabel") + ':'; //$NON-NLS-1$
+
 	/** Preferences key for the circling color of an added element. */
 	String PREFERENCES_KEY_ADDED_COLOR = "added.color"; //$NON-NLS-1$
 
