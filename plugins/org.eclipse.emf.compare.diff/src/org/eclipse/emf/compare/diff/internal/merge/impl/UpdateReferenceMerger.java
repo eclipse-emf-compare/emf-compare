@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
-import org.eclipse.emf.compare.EMFComparePlugin;
-import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
+import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 
 /**
  * Merger for an {@link UpdateUniqueReferenceValue} operation.
@@ -31,13 +30,14 @@ public class UpdateReferenceMerger extends DefaultMerger {
 	@Override
 	public void applyInOrigin() {
 		final UpdateReference theDiff = (UpdateReference)this.diff;
+		final EReference reference = theDiff.getReference();
 		final EObject element = theDiff.getLeftElement();
-		final EObject leftTarget = theDiff.getLeftTarget();
-		try {
-			EFactory.eSet(element, theDiff.getReference().getName(), leftTarget);
-		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, true);
-		}
+		final EObject leftTarget = (EObject)theDiff.getRightElement().eGet(reference);
+		final EObject matchedLeftTarget = theDiff.getLeftTarget();
+
+		MergeService.getCopier(diff)
+				.copyReferenceValue(reference, element, leftTarget, matchedLeftTarget, -1);
+
 		super.applyInOrigin();
 	}
 
@@ -49,13 +49,14 @@ public class UpdateReferenceMerger extends DefaultMerger {
 	@Override
 	public void undoInTarget() {
 		final UpdateReference theDiff = (UpdateReference)this.diff;
+		final EReference reference = theDiff.getReference();
 		final EObject element = theDiff.getRightElement();
-		final EObject rightTarget = theDiff.getRightTarget();
-		try {
-			EFactory.eSet(element, theDiff.getReference().getName(), rightTarget);
-		} catch (final FactoryException e) {
-			EMFComparePlugin.log(e, true);
-		}
+		final EObject rightTarget = (EObject)theDiff.getLeftElement().eGet(reference);
+		final EObject matchedRightTarget = theDiff.getRightTarget();
+
+		MergeService.getCopier(diff).copyReferenceValue(reference, element, rightTarget, matchedRightTarget,
+				-1);
+
 		super.undoInTarget();
 	}
 }

@@ -141,11 +141,14 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<Integer> removedIndices = new ArrayList<Integer>();
 		// Purge "left" list of all reference values that have been added to it
 		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
-			if (isUnmatched(leftValue) || leftValue.eContainer() != getMatchedEObject(leftValue).eContainer())
+			if (isUnmatched(leftValue)
+					|| getMatchedEObject(leftValue.eContainer()) != getMatchedEObject(leftValue).eContainer())
 				leftElementReferences.remove(leftValue);
 		}
 		for (EObject rightValue : new ArrayList<EObject>(rightElementReferences)) {
-			if (isUnmatched(rightValue)) {
+			if (isUnmatched(rightValue)
+					|| getMatchedEObject(rightValue.eContainer()) != getMatchedEObject(rightValue)
+							.eContainer()) {
 				removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(rightValue)));
 			}
 		}
@@ -686,8 +689,8 @@ public class ReferencesCheck extends AbstractCheck {
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
 
-			EObject leftTarget = getMatchedEObject(remotelyAdded.get(0));
-			EObject rightTarget = getMatchedEObject(remotelyDeleted.get(0));
+			EObject leftTarget = getMatchedEObject(remotelyDeleted.get(0));
+			EObject rightTarget = getMatchedEObject(remotelyAdded.get(0));
 			// checks if target are defined remotely
 			if (leftTarget == null) {
 				leftTarget = remotelyDeleted.get(0);
@@ -796,8 +799,8 @@ public class ReferencesCheck extends AbstractCheck {
 		operation.setRightElement(right);
 		operation.setReference(reference);
 
-		EObject leftTarget = getMatchedEObject(addedValue);
-		EObject rightTarget = getMatchedEObject(deletedValue);
+		EObject leftTarget = getMatchedEObject(deletedValue);
+		EObject rightTarget = getMatchedEObject(addedValue);
 		// checks if target are defined remotely
 		if (leftTarget == null && addedValue != null) {
 			leftTarget = deletedValue;
