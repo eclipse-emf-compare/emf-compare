@@ -1,36 +1,68 @@
-Model Element
+- Model Element
 
- - element A holding only one containment reference
-   - Adding an element after all children of A
-   - Adding an element before all children of A
-   - Adding an element in the middle of the children of A
+	- Changes in a single-value containment reference
+		- Adding a child (noChildSingleContainment.merge -> childSingleContainment.merge)
+		- Deleting a child (childSingleContainment.merge -> noChildSingleContainment.merge)
+		- Changing child to a new value (childSingleContainment.merge -> changedChildSingleContainment.merge)
+
+	- Element A holding only one containment reference
+		- Adding a child after all children of A (useCase001)
+		- Adding a child before all children of A (useCase002)
+		- Adding a child in the middle of the children of A (useCase003)
+
+		- Removing the last of the children of A (useCase004)
+		- Removing the first of the children of A (useCase005)
+		- Removing a child from the middle of the children of A (useCase006)
    
-   - Removing the last of the children of A
-   - Removing the first of the children of A
-   - Removing an element from the middle of the children of A
-   
-   - Moving an element from A to a children of A
-   - Moving an element from a children of A to A
+		- Moving an element from A to a child B of A
+			- First child of A to first child of B (useCase007)
+			- First child of A to last child of B (useCase008)
+			- First child of A to middle of B (useCase009)
+			- Last child of A to first child of B (useCase010)
+			- Last child of A to last child of B (useCase011)
+			- Last child of A to middle of B (useCase012)
+			- Middle of A to first child of B (useCase013)
+			- Middle of A to last child of B (useCase014)
+			- Middle of A to middle of B (useCase015)
+	 
+		- Moving an element from a child B of A to A
+			- First child of B to first child of A (useCase016)
+			- First child of B to last child of A (useCase017)
+			- First child of B to middle of A (useCase018)
+			- Last child of B to first child of A (useCase019)
+			- Last child of B to last child of A (useCase020)
+			- Last child of B to middle of A (useCase021)
+			- Middle of B to first child of A (useCase022)
+			- Middle of B to last child of A (useCase023)
+			- Middle of B to middle of A (useCase024)
+
+		- Changing the order of the children of A
+			- First child of A to last child of A (useCase025)
+			- First child of A to middle of A (useCase026)
+			- Last child of A to first child of A (useCase027)
+			- Last child of A to middle of A (useCase028)
+			- middle of A to first child of A (useCase029)
+			- middle of A to last child of A (useCase030)
  
- - element A holding multiple containment references ref1 and ref2
-   - Adding an element in ref1 after all children of A
-   - Adding an element in ref2 after all children of A
-   - Adding an element in ref1 before all children of A
-   - Adding an element in ref2 before all children of A
-   - Adding an element in ref1 in the middle of all children of A
-   - Adding an element in ref2 in the middle of all children of A
+	- Element A holding multiple containment references ref1 and ref2
+		- Adding an element in ref1 after all children of A
+		- Adding an element in ref2 after all children of A
+		- Adding an element in ref1 before all children of A
+		- Adding an element in ref2 before all children of A
+		- Adding an element in ref1 in the middle of all children of A
+		- Adding an element in ref2 in the middle of all children of A
    
-   - Removing the last element from ref1
-   - Removing the last element from ref2
-   - Removing the first element from ref1
-   - Removing the first element from ref2
-   - Removing an element from the middle of ref1
-   - Removing an element from the middle of ref2
+		- Removing the last element from ref1
+		- Removing the last element from ref2
+		- Removing the first element from ref1
+		- Removing the first element from ref2
+		- Removing an element from the middle of ref1
+		- Removing an element from the middle of ref2
    
-   - Moving an element from ref1 to ref2
-   - Moving an element from ref1 to a children of ref2
-   - Moving an element from ref2 to a children of ref1
-   - Moving an element from a children of ref1 to ref2
-   - Moving an element from a children of ref2 to ref1
-   - Moving an element from a children of ref1 to a children of ref2
-   - Moving an element from a children of ref2 to a children of ref1
+		- Moving an element from ref1 to ref2
+		- Moving an element from ref1 to a children of ref2
+		- Moving an element from ref2 to a children of ref1
+		- Moving an element from a children of ref1 to ref2
+		- Moving an element from a children of ref2 to ref1
+		- Moving an element from a children of ref1 to a children of ref2
+		- Moving an element from a children of ref2 to a children of ref1
