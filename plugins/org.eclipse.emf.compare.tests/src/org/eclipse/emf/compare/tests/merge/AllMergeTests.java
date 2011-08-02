@@ -13,6 +13,15 @@ package org.eclipse.emf.compare.tests.merge;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesWithResourceSet;
+
 public class AllMergeTests {
 
 	public static Test suite() {
@@ -26,10 +35,26 @@ public class AllMergeTests {
 		suite.addTestSuite(ContainmentOrderTest.class);
 		suite.addTestSuite(AttributeOrderTest.class);
 		suite.addTestSuite(TestContainmentRemove.class);
+
+		// Merge test metamodel use cases
+
+		suite.addTestSuite(SimpleMergeUseCases.class);
+		suite.addTestSuite(SimpleMergeUseCasesNoResource.class);
+		suite.addTestSuite(SimpleMergeUseCasesWithResource.class);
+		suite.addTestSuite(SimpleMergeUseCasesWithResourceSet.class);
+
+		suite.addTestSuite(SingleValuedContainmentMergeUseCases.class);
+		suite.addTestSuite(SingleValuedContainmentMergeUseCasesNoResource.class);
+		suite.addTestSuite(SingleValuedContainmentMergeUseCasesWithResource.class);
+		suite.addTestSuite(SingleValuedContainmentMergeUseCasesWithResourceSet.class);
+
+		// End of the merge test metamodel use cases
+
 		suite.addTestSuite(SimpleEcoreHistoryMerge.class);
 		suite.addTestSuite(SimpleEcoreHistoryMergeNoResource.class);
 		suite.addTestSuite(SimpleEcoreHistoryMergeWithResource.class);
 		suite.addTestSuite(SimpleEcoreHistoryMergeWithResourceSet.class);
+
 		suite.addTestSuite(UMLHistoryMerge.class);
 		suite.addTestSuite(UMLHistoryMergeNoResource.class);
 		suite.addTestSuite(UMLHistoryMergeWithResource.class);
