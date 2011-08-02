@@ -164,8 +164,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param value
 	 *            The value that is to be copied.
 	 * @param index
-	 *            an optional index in case the target is a List (-1 is a good default, the value will be
-	 *            appended to the list)
+	 *            An optional index in case the target is a List. -1 can be used to either append to the end
+	 *            of the list, or copy the value of a single-valued reference (
+	 *            <code>targetReference.isMany() == false</code>).
 	 * @return The copied value.
 	 * @since 1.3
 	 */
@@ -186,32 +187,48 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				copy = copy(value);
 			}
 		}
-		if (copy.eIsProxy() && copy instanceof InternalEObject) {
-			// only add if the element is not already there.
-			final URI proxURI = ((InternalEObject)copy).eProxyURI();
-			boolean found = false;
-			final Iterator<Object> it = ((List<Object>)target.eGet(targetReference)).iterator();
-			while (!found && it.hasNext()) {
-				final Object obj = it.next();
-				if (obj instanceof InternalEObject) {
-					found = proxURI.equals(((InternalEObject)obj).eProxyURI());
+
+		final Object referenceValue = target.eGet(targetReference);
+		if (referenceValue instanceof List && targetReference.isMany()) {
+			if (copy.eIsProxy() && copy instanceof InternalEObject) {
+				// only add if the element is not already there.
+				final URI proxURI = ((InternalEObject)copy).eProxyURI();
+				boolean found = false;
+				final Iterator<Object> it = ((List<Object>)referenceValue).iterator();
+				while (!found && it.hasNext()) {
+					final Object obj = it.next();
+					if (obj instanceof InternalEObject) {
+						found = proxURI.equals(((InternalEObject)obj).eProxyURI());
+					}
 				}
-			}
-			if (!found) {
-				final List<Object> targetList = (List<Object>)target.eGet(targetReference);
+				if (!found) {
+					final List<Object> targetList = (List<Object>)referenceValue;
+					if (index > -1 && index < targetList.size()) {
+						targetList.add(index, copy);
+					} else {
+						targetList.add(copy);
+					}
+				}
+
+			} else {
+				final List<Object> targetList = (List<Object>)referenceValue;
 				if (index > -1 && index < targetList.size()) {
 					targetList.add(index, copy);
 				} else {
 					targetList.add(copy);
 				}
 			}
-
 		} else {
-			final List<Object> targetList = (List<Object>)target.eGet(targetReference);
-			if (index > -1 && index < targetList.size()) {
-				targetList.add(index, copy);
+			if (copy.eIsProxy() && copy instanceof InternalEObject) {
+				// only change value if the URI changes
+				final URI proxURI = ((InternalEObject)copy).eProxyURI();
+				if (referenceValue instanceof InternalEObject) {
+					if (!proxURI.equals(((InternalEObject)referenceValue).eProxyURI())) {
+						target.eSet(targetReference, copy);
+					}
+				}
 			} else {
-				targetList.add(copy);
+				target.eSet(targetReference, copy);
 			}
 		}
 		return copy;
@@ -244,12 +261,18 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		}
 		if (matchedValue != null) {
 			put(actualValue, matchedValue);
-			final List<Object> targetList = (List<Object>)target.eGet(targetReference);
-			final int targetListSize = targetList.size();
-			if (index > -1 && index < targetListSize) {
-				targetList.add(index, matchedValue);
+
+			final Object referenceValue = target.eGet(targetReference);
+			if (referenceValue instanceof List) {
+				final List<Object> targetList = (List<Object>)referenceValue;
+				final int targetListSize = targetList.size();
+				if (index > -1 && index < targetListSize) {
+					targetList.add(index, matchedValue);
+				} else {
+					targetList.add(matchedValue);
+				}
 			} else {
-				targetList.add(matchedValue);
+				target.eSet(targetReference, matchedValue);
 			}
 			return matchedValue;
 		}
@@ -269,7 +292,9 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            Matched value of <tt>value</tt> if it is known. Will behave like
 	 *            {@link #copyReferenceValue(EReference, EObject, EObject)} if <code>null</code>.
 	 * @return The copied value.
+	 * @deprecated use {@link #copyReferenceValue(EReference, EObject, EObject, int)} instead
 	 */
+	@Deprecated
 	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value,
 			EObject matchedValue) {
 		return copyReferenceValue(targetReference, target, value, matchedValue, -1);
