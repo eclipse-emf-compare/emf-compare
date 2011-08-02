@@ -1,0 +1,36 @@
+Model Element
+
+ - element A holding only one containment reference
+   - Adding an element after all children of A
+   - Adding an element before all children of A
+   - Adding an element in the middle of the children of A
+   
+   - Removing the last of the children of A
+   - Removing the first of the children of A
+   - Removing an element from the middle of the children of A
+   
+   - Moving an element from A to a children of A
+   - Moving an element from a children of A to A
+ 
+ - element A holding multiple containment references ref1 and ref2
+   - Adding an element in ref1 after all children of A
+   - Adding an element in ref2 after all children of A
+   - Adding an element in ref1 before all children of A
+   - Adding an element in ref2 before all children of A
+   - Adding an element in ref1 in the middle of all children of A
+   - Adding an element in ref2 in the middle of all children of A
+   
+   - Removing the last element from ref1
+   - Removing the last element from ref2
+   - Removing the first element from ref1
+   - Removing the first element from ref2
+   - Removing an element from the middle of ref1
+   - Removing an element from the middle of ref2
+   
+   - Moving an element from ref1 to ref2
+   - Moving an element from ref1 to a children of ref2
+   - Moving an element from ref2 to a children of ref1
+   - Moving an element from a children of ref1 to ref2
+   - Moving an element from a children of ref2 to ref1
+   - Moving an element from a children of ref1 to a children of ref2
+   - Moving an element from a children of ref2 to a children of ref1
