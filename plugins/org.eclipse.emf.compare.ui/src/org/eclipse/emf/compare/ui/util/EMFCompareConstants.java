@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.RGB;
  * Defines constants used throughout EMF Compare's UI.
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface EMFCompareConstants {
 	/** Three-way change constant (value 3) indicating the ancestor. */
@@ -111,6 +112,14 @@ public interface EMFCompareConstants {
 	/** Preferences description for the siblings search window. */
 	String PREFERENCES_DESCRIPTION_SEARCH_WINDOW = EMFCompareUIMessages
 			.getString("EMFCompareConstants.preferences.searchWindowLabel") + ':'; //$NON-NLS-1$
+
+	/**
+	 * Preferences description for the filters.
+	 * 
+	 * @since 1.3
+	 */
+	String PREFERENCES_DESCRIPTION_FILTERS = EMFCompareUIMessages
+			.getString("EMFCompareConstants.preferences.filtersLabel") + ':'; //$NON-NLS-1$
 
 	/** Preferences key for the circling color of an added element. */
 	String PREFERENCES_KEY_ADDED_COLOR = "added.color"; //$NON-NLS-1$

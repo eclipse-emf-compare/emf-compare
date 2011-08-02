@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Menu;
  * Define the menu to launch any execution to filter or group difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public abstract class AbstractOrderingMenu extends Action implements IMenuCreator {
 	/** The menu manager. */

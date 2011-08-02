@@ -15,6 +15,7 @@ package org.eclipse.emf.compare.util;
  * 
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  * @since 1.0
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface EMFComparePreferenceConstants {
 	/**
@@ -41,4 +42,11 @@ public interface EMFComparePreferenceConstants {
 
 	/** Default value for the siblings search window. */
 	int PREFERENCES_DEFAULT_SEARCH_WINDOW = 100;
+
+	/**
+	 * Preferences key for default filters.
+	 * 
+	 * @since 1.3
+	 */
+	String PREFERENCES_KEY_DEFAULT_FILTERS = "emfcompare.default.filters"; //$NON-NLS-1$
 }
