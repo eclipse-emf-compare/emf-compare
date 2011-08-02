@@ -53,4 +53,11 @@ Contributors:
             priority="highest"/>
             -->
    </extension>
+   
+   <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.eclipse.org/emf/compare/tests/merge" 
+       class = "org.eclipse.emf.compare.tests.merge.MergePackage"
+       genModel = "model/merge.genmodel" /> 
+  </extension>
 </plugin>
