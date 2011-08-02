@@ -70,7 +70,7 @@ public class ParameterizedStructureMergeViewer extends ModelStructureMergeViewer
 	 */
 	@Override
 	protected ModelStructureContentProvider createContentProvider(CompareConfiguration compareConfiguration) {
-		String preferenceValue = EMFCompareUIPlugin.getDefault().getPreferenceStore()
+		final String preferenceValue = EMFCompareUIPlugin.getDefault().getPreferenceStore()
 				.getString(EMFComparePreferenceConstants.PREFERENCES_KEY_DEFAULT_FILTERS);
 		mProvider = new ParameterizedStructureContentProvider(compareConfiguration, null,
 				DifferenceFilterRegistry.INSTANCE.getFilters(preferenceValue));

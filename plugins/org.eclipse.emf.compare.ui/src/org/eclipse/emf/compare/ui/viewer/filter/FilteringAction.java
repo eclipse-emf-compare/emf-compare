@@ -56,6 +56,7 @@ public class FilteringAction extends AbstractOrderingAction {
 	 *            The viewer.
 	 * @param checked
 	 *            The flag to check or not the action.
+	 * @since 1.3
 	 */
 	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer,
 			boolean checked) {

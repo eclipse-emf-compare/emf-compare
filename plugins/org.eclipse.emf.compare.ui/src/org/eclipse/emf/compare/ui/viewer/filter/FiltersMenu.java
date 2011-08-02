@@ -82,6 +82,7 @@ public class FiltersMenu extends AbstractOrderingMenu {
 	 *            The descriptor.
 	 * @param checked
 	 *            To check or not the action.
+	 * @since 1.3
 	 */
 	protected void addItemToMenu(DifferenceFilterDescriptor desc, boolean checked) {
 		final IAction action = new FilteringAction(desc, mViewer, checked);

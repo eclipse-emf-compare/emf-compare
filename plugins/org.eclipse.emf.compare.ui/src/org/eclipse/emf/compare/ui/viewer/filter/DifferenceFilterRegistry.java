@@ -104,6 +104,7 @@ public enum DifferenceFilterRegistry {
 	 * @param id
 	 *            The id.
 	 * @return The descriptor.
+	 * @since 1.3
 	 */
 	public DifferenceFilterDescriptor getDescriptor(String id) {
 		return storage.get(id);
@@ -117,6 +118,7 @@ public enum DifferenceFilterRegistry {
 	 * @param descriptors
 	 *            The descriptors.
 	 * @return The result.
+	 * @since 1.3
 	 */
 	public String getDescriptors(List<DifferenceFilterDescriptor> descriptors) {
 		boolean firstElement = true;
@@ -138,6 +140,7 @@ public enum DifferenceFilterRegistry {
 	 * @param descriptors
 	 *            The string value.
 	 * @return The list.
+	 * @since 1.3
 	 */
 	public List<DifferenceFilterDescriptor> getDescriptors(String descriptors) {
 		final List<DifferenceFilterDescriptor> result = new ArrayList<DifferenceFilterDescriptor>();
@@ -157,6 +160,7 @@ public enum DifferenceFilterRegistry {
 	 * @param descriptors
 	 *            The string value.
 	 * @return The list.
+	 * @since 1.3
 	 */
 	public List<IDifferenceFilter> getFilters(String descriptors) {
 		final List<IDifferenceFilter> result = new ArrayList<IDifferenceFilter>();
