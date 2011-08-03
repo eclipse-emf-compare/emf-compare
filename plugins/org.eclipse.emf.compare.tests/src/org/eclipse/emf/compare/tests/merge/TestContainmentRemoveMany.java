@@ -85,4 +85,14 @@ public class TestContainmentRemoveMany extends MergeTestBase {
 			rightPackage.setEFactoryInstance(leftPackage.getEFactoryInstance());
 		}
 	}
+
+	public void testLeftToRight() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(true);
+	}
+
+	public void testRightToLeft() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(false);
+	}
 }

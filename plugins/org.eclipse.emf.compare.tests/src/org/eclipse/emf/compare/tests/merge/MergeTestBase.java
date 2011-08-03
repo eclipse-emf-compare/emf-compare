@@ -139,16 +139,6 @@ public abstract class MergeTestBase extends TestCase {
 		// nothing to do by default
 	}
 
-	public void testLeftToRight() throws Exception {
-		if (leftModel != null && rightModel != null)
-			doPerformTest(true);
-	}
-
-	public void testRightToLeft() throws Exception {
-		if (leftModel != null && rightModel != null)
-			doPerformTest(false);
-	}
-
 	protected void mergeAllDiffsLeftToRight(EObject left, EObject right) throws Exception {
 		leftModel = left;
 		rightModel = right;
