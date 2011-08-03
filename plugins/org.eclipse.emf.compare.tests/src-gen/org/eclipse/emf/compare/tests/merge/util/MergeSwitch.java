@@ -101,6 +101,20 @@ public class MergeSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case MergePackage.NODE_SINGLE_VALUE_ATTRIBUTE: {
+				NodeSingleValueAttribute nodeSingleValueAttribute = (NodeSingleValueAttribute)theEObject;
+				T result = caseNodeSingleValueAttribute(nodeSingleValueAttribute);
+				if (result == null) result = caseNode(nodeSingleValueAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case MergePackage.NODE_MULTI_VALUED_ATTRIBUTE: {
+				NodeMultiValuedAttribute nodeMultiValuedAttribute = (NodeMultiValuedAttribute)theEObject;
+				T result = caseNodeMultiValuedAttribute(nodeMultiValuedAttribute);
+				if (result == null) result = caseNode(nodeMultiValuedAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -147,6 +161,36 @@ public class MergeSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNodeSingleValueContainment(NodeSingleValueContainment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Single Value Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Single Value Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeSingleValueAttribute(NodeSingleValueAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Node Multi Valued Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Node Multi Valued Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeMultiValuedAttribute(NodeMultiValuedAttribute object) {
 		return null;
 	}
 

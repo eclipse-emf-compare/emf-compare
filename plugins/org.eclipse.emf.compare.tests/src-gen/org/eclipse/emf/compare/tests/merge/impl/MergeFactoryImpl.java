@@ -74,6 +74,8 @@ public class MergeFactoryImpl extends EFactoryImpl implements MergeFactory {
 			case MergePackage.NODE: return createNode();
 			case MergePackage.NODE_MULTIPLE_CONTAINMENT: return createNodeMultipleContainment();
 			case MergePackage.NODE_SINGLE_VALUE_CONTAINMENT: return createNodeSingleValueContainment();
+			case MergePackage.NODE_SINGLE_VALUE_ATTRIBUTE: return createNodeSingleValueAttribute();
+			case MergePackage.NODE_MULTI_VALUED_ATTRIBUTE: return createNodeMultiValuedAttribute();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -107,6 +109,26 @@ public class MergeFactoryImpl extends EFactoryImpl implements MergeFactory {
 	public NodeSingleValueContainment createNodeSingleValueContainment() {
 		NodeSingleValueContainmentImpl nodeSingleValueContainment = new NodeSingleValueContainmentImpl();
 		return nodeSingleValueContainment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeSingleValueAttribute createNodeSingleValueAttribute() {
+		NodeSingleValueAttributeImpl nodeSingleValueAttribute = new NodeSingleValueAttributeImpl();
+		return nodeSingleValueAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NodeMultiValuedAttribute createNodeMultiValuedAttribute() {
+		NodeMultiValuedAttributeImpl nodeMultiValuedAttribute = new NodeMultiValuedAttributeImpl();
+		return nodeMultiValuedAttribute;
 	}
 
 	/**
