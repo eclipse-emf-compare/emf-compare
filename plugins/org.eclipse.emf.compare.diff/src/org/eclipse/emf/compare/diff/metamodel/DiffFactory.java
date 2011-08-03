@@ -59,6 +59,7 @@ public interface DiffFactory extends EFactory {
 	 * <!-- end-user-doc -->
 	 * @return a new object of class '<em>Attribute Order Change</em>'.
 	 * @generated
+	 * @since 1.3
 	 */
 	AttributeOrderChange createAttributeOrderChange();
 
