@@ -53,4 +53,13 @@ public class ContainmentOrderTest extends MergeTestBase {
 
 	}
 
+	public void testLeftToRight() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(true);
+	}
+
+	public void testRightToLeft() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(false);
+	}
 }

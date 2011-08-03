@@ -64,4 +64,14 @@ public class DanglingReferenceOnTwoAdds extends MergeTestBase {
 		ModelUtils.attachResource(rightURI, rightModel);
 
 	}
+
+	public void testLeftToRight() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(true);
+	}
+
+	public void testRightToLeft() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(false);
+	}
 }

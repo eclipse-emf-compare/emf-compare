@@ -66,4 +66,14 @@ public class TestContainmentRemove extends MergeTestBase {
 		assertNotNull("Right eFactoryInstance is null ", rightPackage.getEFactoryInstance());
 
 	}
+
+	public void testLeftToRight() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(true);
+	}
+
+	public void testRightToLeft() throws Exception {
+		if (leftModel != null && rightModel != null)
+			doPerformTest(false);
+	}
 }
