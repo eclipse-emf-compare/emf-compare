@@ -4,5 +4,5 @@
 
 	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare(?:\..*)?\.source$" skipComponent="true"/>
 	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" useMaterialization="false" useWorkspace="false"/>
-	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare(?:\..*)?" branchTagPath="1.2"/>
+	<cq:advisorNode namePattern="^org\.eclipse\.emf\.compare(?:\..*)?" branchTagPath="master"/>
 </cq:componentQuery>

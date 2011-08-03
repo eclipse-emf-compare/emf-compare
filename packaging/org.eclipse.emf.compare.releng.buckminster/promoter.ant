@@ -18,7 +18,7 @@
 			<entry key="eclipse.home" value="${eclipse.home}" />
 			<entry key="build.id" value="${build.id}" />
 			<entry key="hudson.build.id" value="${hudson.build.id}" />
-			<entry key="build.root" value="/shared/jobs/emf-compare-1.2.0/lastSuccessful" />
+			<entry key="build.root" value="/shared/jobs/emf-compare-master/lastSuccessful" />
 			<entry key="packages.base" value="EMF.Compare.downloads" />
 			<entry key="downloads.area" value="/home/data/httpd/download.eclipse.org/modeling/emf/compare" />
 		</propertyfile>
