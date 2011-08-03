@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge:NodeMultiValuedAttribute xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:merge="http://www.eclipse.org/emf/compare/tests/merge" name="base">
+  <multiValuedAttribute>FirstValue</multiValuedAttribute>
+  <multiValuedAttribute>SecondValue</multiValuedAttribute>
+  <multiValuedAttribute>ThirdValue</multiValuedAttribute>
+  <multiValuedAttribute>FourthValue</multiValuedAttribute>
+</merge:NodeMultiValuedAttribute>
