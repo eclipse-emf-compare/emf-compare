@@ -209,6 +209,7 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
+	 * @since 1.3
 	 */
 	public AttributeOrderChange createAttributeOrderChange() {
 		AttributeOrderChangeImpl attributeOrderChange = new AttributeOrderChangeImpl();

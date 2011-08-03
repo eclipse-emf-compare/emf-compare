@@ -1369,6 +1369,7 @@ public interface DiffPackage extends EPackage {
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeOrderChangeImpl
 	 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeOrderChange()
 	 * @generated
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE = 17;
 
@@ -1378,6 +1379,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__SUB_DIFF_ELEMENTS = ATTRIBUTE_CHANGE__SUB_DIFF_ELEMENTS;
 
@@ -1387,6 +1389,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__IS_HIDDEN_BY = ATTRIBUTE_CHANGE__IS_HIDDEN_BY;
 
@@ -1396,6 +1399,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__CONFLICTING = ATTRIBUTE_CHANGE__CONFLICTING;
 
@@ -1405,6 +1409,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__KIND = ATTRIBUTE_CHANGE__KIND;
 
@@ -1414,6 +1419,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__REMOTE = ATTRIBUTE_CHANGE__REMOTE;
 
@@ -1423,6 +1429,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__ATTRIBUTE = ATTRIBUTE_CHANGE__ATTRIBUTE;
 
@@ -1432,6 +1439,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__LEFT_ELEMENT = ATTRIBUTE_CHANGE__LEFT_ELEMENT;
 
@@ -1441,6 +1449,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE__RIGHT_ELEMENT = ATTRIBUTE_CHANGE__RIGHT_ELEMENT;
 
@@ -1450,6 +1459,7 @@ public interface DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
+	 * @since 1.3
 	 */
 	int ATTRIBUTE_ORDER_CHANGE_FEATURE_COUNT = ATTRIBUTE_CHANGE_FEATURE_COUNT + 0;
 
@@ -2513,6 +2523,7 @@ public interface DiffPackage extends EPackage {
 	 * @return the meta object for class '<em>Attribute Order Change</em>'.
 	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange
 	 * @generated
+	 * @since 1.3
 	 */
 	EClass getAttributeOrderChange();
 
@@ -3312,6 +3323,7 @@ public interface DiffPackage extends EPackage {
 		 * @see org.eclipse.emf.compare.diff.metamodel.impl.AttributeOrderChangeImpl
 		 * @see org.eclipse.emf.compare.diff.metamodel.impl.DiffPackageImpl#getAttributeOrderChange()
 		 * @generated
+		 * @since 1.3
 		 */
 		EClass ATTRIBUTE_ORDER_CHANGE = eINSTANCE.getAttributeOrderChange();
 
