@@ -13,13 +13,12 @@ package org.eclipse.emf.compare.diff.engine.check;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -131,26 +130,6 @@ public class AttributesCheck extends AbstractCheck {
 	}
 
 	/**
-	 * This can be used to check that the given list contains the given value. This will use the checks
-	 * described in {@link #areDistinctValues(Object, Object)}.
-	 * 
-	 * @param values
-	 *            The list we need to check for a value equivalent to <code>value</code>.
-	 * @param value
-	 *            The value we need to know if it's contained by <code>values</code>.
-	 * @return <code>true</code> if {@link #areDistinctValues(Object, Object)} returned true for one of the
-	 *         objects contained by <code>values</code> when compared with <code>value</code>.
-	 */
-	protected final boolean attributeListContains(List<Object> values, Object value) {
-		for (Object aValue : values) {
-			if (!areDistinctValues(aValue, value)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * This will check that the values of the given attribute from the objects contained by mapping has been
 	 * modified.
 	 * 
@@ -179,17 +158,8 @@ public class AttributesCheck extends AbstractCheck {
 			if (leftValue.size() != rightValue.size()) {
 				distinct = true;
 			} else {
-				for (Object left : leftValue) {
-					distinct = !attributeListContains(rightValue, left);
-					if (distinct) {
-						break;
-					}
-				}
-				for (Object right : rightValue) {
-					distinct = !attributeListContains(leftValue, right);
-					if (distinct) {
-						break;
-					}
+				for (int i = 0; !distinct && i < leftValue.size(); i++) {
+					distinct = areDistinctValues(leftValue.get(i), rightValue.get(i));
 				}
 			}
 		} else {
@@ -235,22 +205,25 @@ public class AttributesCheck extends AbstractCheck {
 			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(
 					mapping.getOriginElement(), attributeName));
 
-			for (Object right : rightValue) {
-				rightDistinctFromOrigin = !attributeListContains(ancestorValue, right);
-				if (rightDistinctFromOrigin) {
-					break;
+			if (rightValue.size() != ancestorValue.size()) {
+				rightDistinctFromOrigin = true;
+			} else {
+				for (int i = 0; !rightDistinctFromOrigin && i < rightValue.size(); i++) {
+					rightDistinctFromOrigin = areDistinctValues(rightValue.get(i), ancestorValue.get(i));
 				}
 			}
-			for (Object right : rightValue) {
-				rightDistinctFromLeft = !attributeListContains(leftValue, right);
-				if (rightDistinctFromLeft) {
-					break;
+			if (leftValue.size() != ancestorValue.size()) {
+				leftDistinctFromOrigin = true;
+			} else {
+				for (int i = 0; !leftDistinctFromOrigin && i < leftValue.size(); i++) {
+					leftDistinctFromOrigin = areDistinctValues(leftValue.get(i), ancestorValue.get(i));
 				}
 			}
-			for (Object left : leftValue) {
-				leftDistinctFromOrigin = !attributeListContains(ancestorValue, left);
-				if (leftDistinctFromOrigin) {
-					break;
+			if (leftValue.size() != rightValue.size()) {
+				rightDistinctFromLeft = true;
+			} else {
+				for (int i = 0; !rightDistinctFromLeft && i < leftValue.size(); i++) {
+					rightDistinctFromLeft = areDistinctValues(leftValue.get(i), rightValue.get(i));
 				}
 			}
 		} else {
@@ -322,40 +295,255 @@ public class AttributesCheck extends AbstractCheck {
 		if (!attribute.isMany()) {
 			createConflictingAttributeChange(root, attribute, mapping);
 		} else {
-			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getLeftElement(), attribute.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getRightElement(), attribute.getName()));
-			final List<Object> ancestorValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getOriginElement(), attribute.getName()));
+			final List<Object> remoteDeletedValues = new ArrayList<Object>();
+			final List<Object> remoteAddedValues = new ArrayList<Object>();
+			final List<Object> deletedValues = new ArrayList<Object>();
+			final List<Object> addedValues = new ArrayList<Object>();
 
-			for (final Object aValue : leftValue) {
-				if (!attributeListContains(rightValue, aValue)) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
+			populateThreeWayAttributeChanges(mapping, attribute, addedValues, deletedValues,
+					remoteAddedValues, remoteDeletedValues);
+			createRemoteAttributeDiffs(root, attribute, mapping.getLeftElement(), mapping.getRightElement(),
+					remoteAddedValues, remoteDeletedValues);
+			createLocalAttributeDiffs(root, attribute, mapping.getLeftElement(), mapping.getRightElement(),
+					addedValues, deletedValues);
+		}
+	}
+
+	/**
+	 * Creates "local" Attribute diffs according to the given information.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param attribute
+	 *            Attribute which value has been changed.
+	 * @param leftElement
+	 *            Left element of the attribute change.
+	 * @param rightElement
+	 *            Right element of the attribute change.
+	 * @param addedValues
+	 *            Values that have been added to the left element.
+	 * @param deletedValues
+	 *            Values that have been deleted from the left element.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the ordering diffs for this attribute.
+	 */
+	private void createLocalAttributeDiffs(DiffGroup root, EAttribute attribute, EObject leftElement,
+			EObject rightElement, List<Object> addedValues, List<Object> deletedValues)
+			throws FactoryException {
+		final List<AttributeChangeLeftTarget> addedValuesDiffs = new ArrayList<AttributeChangeLeftTarget>(
+				addedValues.size());
+		final List<AttributeChangeRightTarget> deletedValuesDiffs = new ArrayList<AttributeChangeRightTarget>(
+				deletedValues.size());
+
+		// ADD Attribute values
+		for (final Object aValue : addedValues) {
+			final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+					.createAttributeChangeLeftTarget();
+			operation.setAttribute(attribute);
+			operation.setRightElement(rightElement);
+			operation.setLeftElement(leftElement);
+			operation.setLeftTarget(aValue);
+			root.getSubDiffElements().add(operation);
+
+			addedValuesDiffs.add(operation);
+		}
+
+		// REMOVE Attribute values
+		for (final Object aValue : deletedValues) {
+			final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+					.createAttributeChangeRightTarget();
+			operation.setAttribute(attribute);
+			operation.setRightElement(rightElement);
+			operation.setLeftElement(leftElement);
+			operation.setRightTarget(aValue);
+			root.getSubDiffElements().add(operation);
+
+			deletedValuesDiffs.add(operation);
+		}
+
+		// ORDER CHANGE
+		if (attribute.isOrdered()) {
+			checkAttributeOrderChange(root, attribute, leftElement, rightElement, addedValuesDiffs,
+					deletedValuesDiffs);
+		}
+	}
+
+	/**
+	 * Creates "remote" Attribute diffs according to the given information.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup root} of the {@link DiffElement} to create.
+	 * @param attribute
+	 *            Attribute which value has been changed.
+	 * @param leftElement
+	 *            Left element of the attribute change.
+	 * @param rightElement
+	 *            Right element of the attribute change.
+	 * @param remoteDeletedValues
+	 *            Values that have been deleted from the remote (right) element.
+	 * @param remoteAddedValues
+	 *            Values that have been added to the remote (right) element.
+	 * @throws FactoryException
+	 *             Thrown if we cannot compute the ordering diffs for this attribute.
+	 */
+	private void createRemoteAttributeDiffs(DiffGroup root, EAttribute attribute, EObject leftElement,
+			EObject rightElement, List<Object> remoteDeletedValues, List<Object> remoteAddedValues)
+			throws FactoryException {
+		final List<AttributeChangeLeftTarget> remoteDeletedValuesDiffs = new ArrayList<AttributeChangeLeftTarget>(
+				remoteDeletedValues.size());
+		final List<AttributeChangeRightTarget> remoteAddedValuesDiffs = new ArrayList<AttributeChangeRightTarget>(
+				remoteAddedValues.size());
+
+		// REMOTE REMOVE Attribute values
+		for (final Object aValue : remoteDeletedValues) {
+			final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
+					.createAttributeChangeLeftTarget();
+			operation.setAttribute(attribute);
+			operation.setRightElement(rightElement);
+			operation.setLeftElement(leftElement);
+			operation.setLeftTarget(aValue);
+			operation.setRemote(true);
+			root.getSubDiffElements().add(operation);
+
+			remoteDeletedValuesDiffs.add(operation);
+		}
+
+		// REMOTE ADD Attribute values
+		for (final Object aValue : remoteAddedValues) {
+			final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
+					.createAttributeChangeRightTarget();
+			operation.setAttribute(attribute);
+			operation.setRightElement(rightElement);
+			operation.setLeftElement(leftElement);
+			operation.setRightTarget(aValue);
+			operation.setRemote(true);
+			root.getSubDiffElements().add(operation);
+
+			remoteAddedValuesDiffs.add(operation);
+		}
+
+		// REMOTE ORDER CHANGE
+		if (attribute.isOrdered()) {
+			checkAttributeRemoteOrderChange(root, attribute, leftElement, rightElement,
+					remoteDeletedValuesDiffs, remoteAddedValuesDiffs);
+		}
+	}
+
+	/**
+	 * Checks a given {@link EAttribute attribute} for changes related to a given <code>mapping</code> and
+	 * populates the given {@link List}s with the attribute values belonging to them.
+	 * <p>
+	 * <ul>
+	 * <li>&quot;Added&quot; values are the values that have been added in the left element since the origin
+	 * and that haven't been added in the right element.</li>
+	 * <li>&quot;Deleted&quot; values are the values that have been removed from the left element since the
+	 * origin but are still present in the right element.</li>
+	 * <li>&quot;Remotely added&quot; values are the values that have been added in the right element since
+	 * the origin but haven't been added in the left element.</li>
+	 * <li>&quot;Remotely deleted&quot; values are the values that have been removed from the right element
+	 * since the origin but are still present in the left element.</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param mapping
+	 *            Contains informations about the left, right and origin elements.
+	 * @param attribute
+	 *            {@link EAttribute} we're checking for changes.
+	 * @param addedValues
+	 *            {@link List} that will be populated with the values that have been added in the left element
+	 *            since the origin.
+	 * @param deletedValues
+	 *            {@link List} that will be populated with the values that have been removed from the left
+	 *            element since the origin.
+	 * @param remoteAddedValues
+	 *            {@link List} that will be populated with the values that have been added in the right
+	 *            element since the origin.
+	 * @param remoteDeletedValues
+	 *            {@link List} that will be populated with the values that have been removed from the right
+	 *            element since the origin.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch the attribute's values in either the left, right or origin
+	 *             element.
+	 */
+	private void populateThreeWayAttributeChanges(Match3Elements mapping, EAttribute attribute,
+			List<Object> addedValues, List<Object> deletedValues, List<Object> remoteAddedValues,
+			List<Object> remoteDeletedValues) throws FactoryException {
+		final String attributeName = attribute.getName();
+
+		final List<Object> leftValues = convertFeatureMapList(EFactory.eGetAsList(mapping.getLeftElement(),
+				attributeName));
+		final List<Object> rightValues = convertFeatureMapList(EFactory.eGetAsList(mapping.getRightElement(),
+				attributeName));
+		final List<Object> ancestorValues = convertFeatureMapList(EFactory.eGetAsList(
+				mapping.getOriginElement(), attributeName));
+
+		// populates remotely added and locally deleted lists
+		final List<Object> leftCopy = new ArrayList<Object>(leftValues);
+		final List<Object> ancestorCopy = new ArrayList<Object>(ancestorValues);
+		for (Object right : rightValues) {
+			Object leftMatched = null;
+			final Iterator<Object> leftIterator = leftCopy.iterator();
+			while (leftMatched == null && leftIterator.hasNext()) {
+				final Object next = leftIterator.next();
+				if (!areDistinctValues(right, next)) {
+					leftMatched = next;
 				}
 			}
-			for (final Object aValue : rightValue) {
-				if (!attributeListContains(leftValue, aValue)) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					if (ancestorValue.contains(aValue)) {
-						operation.setRemote(true);
-					}
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
+
+			Object ancestorMatched = null;
+			final Iterator<Object> ancestorIterator = ancestorCopy.iterator();
+			while (ancestorMatched == null && ancestorIterator.hasNext()) {
+				final Object next = ancestorIterator.next();
+				if (!areDistinctValues(right, next)) {
+					ancestorMatched = next;
 				}
+			}
+
+			if (leftMatched == null && ancestorMatched == null) {
+				remoteAddedValues.add(right);
+			} else if (leftMatched == null) {
+				deletedValues.add(right);
+			}
+			if (leftMatched != null) {
+				leftCopy.remove(leftMatched);
+			}
+			if (ancestorMatched != null) {
+				ancestorCopy.remove(ancestorMatched);
+			}
+		}
+
+		// populates remotely deleted and locally added lists
+		final List<Object> rightCopy = new ArrayList<Object>(rightValues);
+		ancestorCopy.addAll(ancestorValues);
+		for (Object left : leftValues) {
+			Object rightMatched = null;
+			final Iterator<Object> rightIterator = rightCopy.iterator();
+			while (rightMatched == null && rightIterator.hasNext()) {
+				final Object next = rightIterator.next();
+				if (!areDistinctValues(left, next)) {
+					rightMatched = next;
+				}
+			}
+
+			Object ancestorMatched = null;
+			final Iterator<Object> ancestorIterator = ancestorCopy.iterator();
+			while (ancestorMatched == null && ancestorIterator.hasNext()) {
+				final Object next = ancestorIterator.next();
+				if (!areDistinctValues(left, next)) {
+					ancestorMatched = next;
+				}
+			}
+
+			if (rightMatched == null && ancestorMatched == null) {
+				addedValues.add(left);
+			} else if (rightMatched == null) {
+				remoteDeletedValues.add(left);
+			}
+			if (rightMatched != null) {
+				rightCopy.remove(rightMatched);
+			}
+			if (ancestorMatched != null) {
+				ancestorCopy.remove(ancestorMatched);
 			}
 		}
 	}
@@ -416,35 +604,10 @@ public class AttributesCheck extends AbstractCheck {
 			final List<Object> leftValues = convertFeatureMapList(EFactory.eGetAsList(leftElement,
 					attribute.getName()));
 
-			final Set<Object> uniqueLeftValues = new LinkedHashSet(leftValues);
-			final Set<Object> uniqueRightValues = new LinkedHashSet(rightValues);
+			final List<Object> addedValues = computeAddedValues(leftValues, rightValues);
+			final List<Object> deletedValues = computeDeletedValues(leftValues, rightValues);
 
-			for (final Object aValue : uniqueLeftValues) {
-				for (int i = 0; i < matcherHelper.getNumberOfMissingOccurrence(leftValues, rightValues,
-						aValue); i++) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					operation.setAttribute(attribute);
-					operation.setRightElement(rightElement);
-					operation.setLeftElement(leftElement);
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-
-			}
-			for (final Object aValue : uniqueRightValues) {
-				for (int i = 0; i < matcherHelper.getNumberOfMissingOccurrence(rightValues, leftValues,
-						aValue); i++) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					operation.setAttribute(attribute);
-					operation.setRightElement(rightElement);
-					operation.setLeftElement(leftElement);
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-
-			}
+			createLocalAttributeDiffs(root, attribute, leftElement, rightElement, addedValues, deletedValues);
 		} else {
 			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
 			operation.setRightElement(rightElement);
@@ -452,6 +615,203 @@ public class AttributesCheck extends AbstractCheck {
 			operation.setAttribute(attribute);
 			root.getSubDiffElements().add(operation);
 		}
+	}
+
+	/**
+	 * This will be called to check for changes on a given attribute's values. Note that we know that
+	 * <code>attribute.isMany()</code> and <code>attribute.isOrdered()</code> always return <code>true</code>
+	 * here.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffElement}s to create.
+	 * @param attribute
+	 *            {@link EAttribute} to check for modifications.
+	 * @param leftElement
+	 *            Element corresponding to the final holder of the given attribute.
+	 * @param rightElement
+	 *            Element corresponding to the initial holder of the given attribute.
+	 * @param addedValues
+	 *            Contains the created differences for added attribute values.
+	 * @param deletedValues
+	 *            Contains the created differences for removed attribute values.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch the attribute's values.
+	 * @since 1.3
+	 */
+	protected void checkAttributeOrderChange(DiffGroup root, EAttribute attribute, EObject leftElement,
+			EObject rightElement, List<AttributeChangeLeftTarget> addedValues,
+			List<AttributeChangeRightTarget> deletedValues) throws FactoryException {
+		final List<Object> rightValues = convertFeatureMapList(EFactory.eGetAsList(rightElement,
+				attribute.getName()));
+		final List<Object> leftValues = convertFeatureMapList(EFactory.eGetAsList(leftElement,
+				attribute.getName()));
+		final List<Integer> removedIndices = new ArrayList<Integer>(deletedValues.size());
+
+		// Purge "left" list of all attribute values that have been added to it
+		for (AttributeChangeLeftTarget added : addedValues) {
+			leftValues.remove(added.getLeftTarget());
+		}
+
+		// Compute the list of indices that have been removed from the list
+		for (AttributeChangeRightTarget removed : deletedValues) {
+			final int removedIndex = rightValues.indexOf(removed.getRightTarget());
+			removedIndices.add(Integer.valueOf(removedIndex));
+		}
+
+		// Iterate over the list to detect values that actually changed order.
+		int expectedIndex = 0;
+		for (int i = 0; i < leftValues.size(); i++) {
+			for (Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
+				if (i == removedIndex.intValue()) {
+					expectedIndex++;
+					removedIndices.remove(removedIndex);
+				}
+			}
+
+			if (areDistinctValues(leftValues.get(i), rightValues.get(expectedIndex++))) {
+				final AttributeOrderChange attributeChange = DiffFactory.eINSTANCE
+						.createAttributeOrderChange();
+				attributeChange.setAttribute(attribute);
+				attributeChange.setLeftElement(leftElement);
+				attributeChange.setRightElement(rightElement);
+
+				root.getSubDiffElements().add(attributeChange);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * This will be called to check for changes on a given attribute's values. Note that we know that
+	 * <code>attribute.isMany()</code> and <code>attribute.isOrdered()</code> always return <code>true</code>
+	 * here.
+	 * 
+	 * @param root
+	 *            {@link DiffGroup Root} of the {@link DiffElement}s to create.
+	 * @param attribute
+	 *            {@link EAttribute} to check for modifications.
+	 * @param leftElement
+	 *            Element corresponding to the final holder of the given attribute.
+	 * @param rightElement
+	 *            Element corresponding to the initial holder of the given attribute.
+	 * @param remoteDeletedValues
+	 *            Contains the created differences for remotely removed attribute values.
+	 * @param remoteAddedValues
+	 *            Contains the created differences for remotely added attribute values.
+	 * @throws FactoryException
+	 *             Thrown if we cannot fetch the attribute's values.
+	 * @since 1.3
+	 */
+	protected void checkAttributeRemoteOrderChange(DiffGroup root, EAttribute attribute, EObject leftElement,
+			EObject rightElement, List<AttributeChangeLeftTarget> remoteDeletedValues,
+			List<AttributeChangeRightTarget> remoteAddedValues) throws FactoryException {
+		final List<Object> rightValues = convertFeatureMapList(EFactory.eGetAsList(rightElement,
+				attribute.getName()));
+		final List<Object> leftValues = convertFeatureMapList(EFactory.eGetAsList(leftElement,
+				attribute.getName()));
+		final List<Integer> removedIndices = new ArrayList<Integer>(remoteAddedValues.size());
+
+		// Purge "left" list of all attribute values that have been added to it
+		for (AttributeChangeLeftTarget remoteDeleted : remoteDeletedValues) {
+			leftValues.remove(remoteDeleted.getLeftTarget());
+		}
+
+		// Compute the list of indices that have been removed from the list
+		for (AttributeChangeRightTarget remoteAdded : remoteAddedValues) {
+			final int removedIndex = rightValues.indexOf(remoteAdded.getRightTarget());
+			removedIndices.add(Integer.valueOf(removedIndex));
+		}
+
+		// Iterate over the list to detect values that actually changed order.
+		int expectedIndex = 0;
+		for (int i = 0; i < leftValues.size(); i++) {
+			for (Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
+				if (i == removedIndex.intValue()) {
+					expectedIndex++;
+					removedIndices.remove(removedIndex);
+				}
+			}
+
+			if (areDistinctValues(leftValues.get(i), rightValues.get(expectedIndex))) {
+				final AttributeOrderChange attributeChange = DiffFactory.eINSTANCE
+						.createAttributeOrderChange();
+				attributeChange.setAttribute(attribute);
+				attributeChange.setLeftElement(leftElement);
+				attributeChange.setRightElement(rightElement);
+				attributeChange.setRemote(true);
+
+				root.getSubDiffElements().add(attributeChange);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * This will create and populate a {@link List} with all the values from the <code>leftValues</code> list
+	 * that are not present the the <code>rightValues</code> list.
+	 * 
+	 * @param leftValues
+	 *            List of the left element attribute values.
+	 * @param rightValues
+	 *            List of the right element attribute values.
+	 * @return The list of all values that are contained by <code>leftValues</code> but not by
+	 *         <code>rightValues</code>.
+	 */
+	private List<Object> computeAddedValues(List<Object> leftValues, List<Object> rightValues) {
+		final List<Object> result = new ArrayList<Object>(leftValues);
+		final List<Object> rightCopy = new ArrayList<Object>(rightValues);
+
+		for (Object left : leftValues) {
+			Object matched = null;
+			final Iterator<Object> rightIterator = rightCopy.iterator();
+			while (matched == null && rightIterator.hasNext()) {
+				final Object next = rightIterator.next();
+				if (!areDistinctValues(left, next)) {
+					matched = next;
+				}
+			}
+
+			if (matched != null) {
+				rightCopy.remove(matched);
+				result.remove(left);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * This will create and populate a {@link List} with all the values from the <code>rightValues</code> list
+	 * that are not present the the <code>leftValues</code> list.
+	 * 
+	 * @param leftValues
+	 *            List of the left element attribute values.
+	 * @param rightValues
+	 *            List of the right element attribute values.
+	 * @return The list of all values that are contained by <code>rightValues</code> but not by
+	 *         <code>leftValues</code>.
+	 */
+	private List<Object> computeDeletedValues(List<Object> leftValues, List<Object> rightValues) {
+		final List<Object> result = new ArrayList<Object>(rightValues);
+		final List<Object> leftCopy = new ArrayList<Object>(leftValues);
+
+		for (Object right : rightValues) {
+			Object matched = null;
+			final Iterator<Object> leftIterator = leftCopy.iterator();
+			while (matched == null && leftIterator.hasNext()) {
+				final Object next = leftIterator.next();
+				if (!areDistinctValues(right, next)) {
+					matched = next;
+				}
+			}
+
+			if (matched != null) {
+				leftCopy.remove(matched);
+				result.remove(right);
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -472,38 +832,14 @@ public class AttributesCheck extends AbstractCheck {
 	private void createRemoteAttributeChange(DiffGroup root, EAttribute attribute, Match3Elements mapping)
 			throws FactoryException {
 		if (attribute.isMany()) {
-			final List<Object> leftValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getLeftElement(), attribute.getName()));
-			final List<Object> rightValue = convertFeatureMapList(EFactory.eGetAsList(
-					mapping.getRightElement(), attribute.getName()));
-			for (final Object aValue : leftValue) {
-				// if the value is present in the right (latest) but not in the
-				// left (working copy), it's been removed remotely
-				if (!attributeListContains(rightValue, aValue)) {
-					final AttributeChangeLeftTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeLeftTarget();
-					operation.setRemote(true);
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setLeftTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
-			for (final Object aValue : rightValue) {
-				// if the value is present in the left (working copy) but not
-				// in the right (latest), it's been added remotely
-				if (!attributeListContains(leftValue, aValue)) {
-					final AttributeChangeRightTarget operation = DiffFactory.eINSTANCE
-							.createAttributeChangeRightTarget();
-					operation.setRemote(true);
-					operation.setAttribute(attribute);
-					operation.setRightElement(mapping.getRightElement());
-					operation.setLeftElement(mapping.getLeftElement());
-					operation.setRightTarget(aValue);
-					root.getSubDiffElements().add(operation);
-				}
-			}
+			final List<Object> remoteDeletedValues = new ArrayList<Object>();
+			final List<Object> remoteAddedValues = new ArrayList<Object>();
+
+			// We know that there is no "local" diff, thus addedValues and deletedValues are not used.
+			populateThreeWayAttributeChanges(mapping, attribute, new ArrayList<Object>(),
+					new ArrayList<Object>(), remoteAddedValues, remoteDeletedValues);
+			createRemoteAttributeDiffs(root, attribute, mapping.getLeftElement(), mapping.getRightElement(),
+					remoteDeletedValues, remoteAddedValues);
 		} else {
 			final UpdateAttribute operation = DiffFactory.eINSTANCE.createUpdateAttribute();
 			operation.setRemote(true);
@@ -512,5 +848,27 @@ public class AttributesCheck extends AbstractCheck {
 			operation.setAttribute(attribute);
 			root.getSubDiffElements().add(operation);
 		}
+	}
+
+	/**
+	 * This can be used to check that the given list contains the given value. This will use the checks
+	 * described in {@link #areDistinctValues(Object, Object)}.
+	 * 
+	 * @param values
+	 *            The list we need to check for a value equivalent to <code>value</code>.
+	 * @param value
+	 *            The value we need to know if it's contained by <code>values</code>.
+	 * @return <code>true</code> if {@link #areDistinctValues(Object, Object)} returned true for one of the
+	 *         objects contained by <code>values</code> when compared with <code>value</code>.
+	 * @deprecated no longer in use.
+	 */
+	@Deprecated
+	protected final boolean attributeListContains(List<Object> values, Object value) {
+		for (Object aValue : values) {
+			if (!areDistinctValues(aValue, value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
