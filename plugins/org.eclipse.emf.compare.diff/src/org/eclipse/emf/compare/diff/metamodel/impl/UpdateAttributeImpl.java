@@ -46,19 +46,21 @@ public class UpdateAttributeImpl extends AttributeChangeImpl implements UpdateAt
 		String toString = null;
 		if (isRemote()) {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoteUpdateAttributeImpl.ToString", //$NON-NLS-1$
-						NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement), leftElement
-								.eGet(attribute), rightElement.eGet(attribute));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteUpdateAttributeImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(attribute), NameSimilarity.findName(leftElement),
+						leftElement.eGet(attribute), rightElement.eGet(attribute));
 			} catch (final FactoryException e) {
-				toString = EMFCompareDiffMessages.getString("RemoteUpdateAttributeImpl.ToString", //$NON-NLS-1$
-						attribute.eClass().getName(), leftElement.eClass().getName(), leftElement
-								.eGet(attribute), rightElement.eGet(attribute));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteUpdateAttributeImpl.ToString", //$NON-NLS-1$
+						attribute.eClass().getName(), leftElement.eClass().getName(),
+						leftElement.eGet(attribute), rightElement.eGet(attribute));
 			}
 		} else {
 			try {
 				toString = EMFCompareDiffMessages.getString("UpdateAttributeImpl.ToString", NameSimilarity //$NON-NLS-1$
-						.findName(attribute), NameSimilarity.findName(leftElement), rightElement
-						.eGet(attribute), leftElement.eGet(attribute));
+						.findName(attribute), NameSimilarity.findName(leftElement),
+						rightElement.eGet(attribute), leftElement.eGet(attribute));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString("UpdateAttributeImpl.ToString", attribute //$NON-NLS-1$
 						.eClass().getName(), leftElement.eClass().getName(), rightElement.eGet(attribute),

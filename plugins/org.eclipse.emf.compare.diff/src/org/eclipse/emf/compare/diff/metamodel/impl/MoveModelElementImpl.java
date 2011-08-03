@@ -217,9 +217,10 @@ public class MoveModelElementImpl extends UpdateModelElementImpl implements Move
 		String toString = null;
 		if (isRemote()) {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", //$NON-NLS-1$
-						NameSimilarity.findName(leftElement), leftElement.eContainer(), rightElement
-								.eContainer());
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteMoveModelElementImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(leftElement), leftElement.eContainer(),
+						rightElement.eContainer());
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString("RemoteMoveModelElementImpl.ToString", //$NON-NLS-1$
 						leftElement.eClass().getName(), leftElement.eContainer(), rightElement.eContainer());

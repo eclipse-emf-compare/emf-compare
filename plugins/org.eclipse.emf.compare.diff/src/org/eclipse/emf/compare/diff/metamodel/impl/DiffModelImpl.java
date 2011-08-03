@@ -271,7 +271,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 */
 	public EList<DiffElement> getDifferences(EObject modelElement) {
 		List<DiffElement> ownedDifferences = new ArrayList<DiffElement>();
-		
+
 		for (DiffElement diff : getOwnedElements()) {
 			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
 				ownedDifferences.addAll(getDifferencesFrom(diff, modelElement));
@@ -282,7 +282,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 				}
 			}
 		}
-		
+
 		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
 	}
 
@@ -293,7 +293,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 */
 	public EList<DiffElement> getDifferences() {
 		List<DiffElement> ownedDifferences = new ArrayList<DiffElement>();
-		
+
 		for (DiffElement diff : getOwnedElements()) {
 			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
 				ownedDifferences.addAll(getDifferencesFrom(diff));
@@ -302,10 +302,10 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 				ownedDifferences.add(diff);
 			}
 		}
-		
+
 		return new UnmodifiableEList<DiffElement>(ownedDifferences.size(), ownedDifferences.toArray());
 	}
-	
+
 	/**
 	 * Returns the list of all sub-differences of the given DiffGroup recursively.
 	 * 
@@ -316,7 +316,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 */
 	private EList<DiffElement> getDifferencesFrom(DiffElement group) {
 		EList<DiffElement> ownedDifferences = new BasicEList<DiffElement>();
-		
+
 		for (DiffElement diff : group.getSubDiffElements()) {
 			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
 				ownedDifferences.addAll(getDifferencesFrom(diff));
@@ -324,10 +324,10 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 				ownedDifferences.add(diff);
 			}
 		}
-		
+
 		return ownedDifferences;
 	}
-	
+
 	/**
 	 * Returns the list of all sub-differences of the given DiffGroup that concern the given EObject,
 	 * recursively.
@@ -341,7 +341,7 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 	 */
 	private EList<DiffElement> getDifferencesFrom(DiffElement group, EObject modelElement) {
 		EList<DiffElement> ownedDifferences = new BasicEList<DiffElement>();
-		
+
 		for (DiffElement diff : group.getSubDiffElements()) {
 			if (diff instanceof DiffGroup || diff instanceof ConflictingDiffElementImpl) {
 				ownedDifferences.addAll(getDifferencesFrom(diff));
@@ -351,10 +351,10 @@ public class DiffModelImpl extends EObjectImpl implements DiffModel {
 				}
 			}
 		}
-		
+
 		return ownedDifferences;
 	}
-	
+
 	/**
 	 * This will return <code>true</code> iff the given DiffElement concerns the given EObject.
 	 * 

@@ -50,8 +50,8 @@ public class UpdateContainmentFeatureItemProvider extends MoveModelElementItemPr
 		final UpdateContainmentFeature operation = (UpdateContainmentFeature)object;
 
 		if (operation.isRemote())
-			return overlayImage(object, getResourceLocator().getImage(
-					"full/obj16/RemoteUpdateContainmentFeature")); //$NON-NLS-1$
+			return overlayImage(object,
+					getResourceLocator().getImage("full/obj16/RemoteUpdateContainmentFeature")); //$NON-NLS-1$
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/UpdateContainmentFeature")); //$NON-NLS-1$
 	}
 

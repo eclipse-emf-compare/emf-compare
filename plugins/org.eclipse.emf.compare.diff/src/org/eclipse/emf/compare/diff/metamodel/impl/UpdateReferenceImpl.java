@@ -226,9 +226,10 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 		String toString = null;
 		if (isRemote()) {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoteUpdateReferenceImpl.ToString", //$NON-NLS-1$
-						reference.getName(), NameSimilarity.findName(leftElement), leftElement
-								.eGet(reference), rightElement.eGet(reference));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteUpdateReferenceImpl.ToString", //$NON-NLS-1$
+						reference.getName(), NameSimilarity.findName(leftElement),
+						leftElement.eGet(reference), rightElement.eGet(reference));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString(
 						"RemoteUpdateReferenceImpl.ToString", //$NON-NLS-1$
@@ -237,9 +238,10 @@ public class UpdateReferenceImpl extends ReferenceChangeImpl implements UpdateRe
 			}
 		} else {
 			try {
-				toString = EMFCompareDiffMessages.getString("UpdateReferenceImpl.ToString", //$NON-NLS-1$
-						reference.getName(), NameSimilarity.findName(leftElement), rightElement
-								.eGet(reference), leftElement.eGet(reference));
+				toString = EMFCompareDiffMessages.getString(
+						"UpdateReferenceImpl.ToString", //$NON-NLS-1$
+						reference.getName(), NameSimilarity.findName(leftElement),
+						rightElement.eGet(reference), leftElement.eGet(reference));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString(
 						"UpdateReferenceImpl.ToString", //$NON-NLS-1$

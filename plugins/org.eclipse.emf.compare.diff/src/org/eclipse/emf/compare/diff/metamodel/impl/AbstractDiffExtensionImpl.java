@@ -89,7 +89,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
 				return getHideElements();
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-				return isIsCollapsed() ? Boolean.TRUE : Boolean.FALSE;
+				return isIsCollapsed();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -150,7 +150,7 @@ public abstract class AbstractDiffExtensionImpl extends EObjectImpl implements A
 				getHideElements().addAll((Collection<? extends DiffElement>)newValue);
 				return;
 			case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-				setIsCollapsed(((Boolean)newValue).booleanValue());
+				setIsCollapsed((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
