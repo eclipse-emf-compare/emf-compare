@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge:NodeMultipleContainment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:merge="http://www.eclipse.org/emf/compare/tests/merge" name="base">
+  <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child1"/>
+  <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child2">
+    <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child21"/>
+    <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child23"/>
+    <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child24"/>
+  </containmentRef1>
+  <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child3"/>
+  <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child4"/>
+  <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child5">
+    <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child51"/>
+    <containmentRef1 xsi:type="merge:NodeMultipleContainment" name="ref1child52"/>
+    <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child53"/>
+    <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child54"/>
+  </containmentRef2>
+  <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref2child6"/>
+  <containmentRef2 xsi:type="merge:NodeMultipleContainment" name="ref1child22"/>
+</merge:NodeMultipleContainment>

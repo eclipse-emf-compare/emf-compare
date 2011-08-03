@@ -13,6 +13,10 @@ package org.eclipse.emf.compare.tests.merge;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesWithResourceSet;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesWithResource;
@@ -47,6 +51,11 @@ public class AllMergeTests {
 		suite.addTestSuite(SingleValuedContainmentMergeUseCasesNoResource.class);
 		suite.addTestSuite(SingleValuedContainmentMergeUseCasesWithResource.class);
 		suite.addTestSuite(SingleValuedContainmentMergeUseCasesWithResourceSet.class);
+
+		suite.addTestSuite(MultipleContainmentMergeUseCases.class);
+		suite.addTestSuite(MultipleContainmentMergeUseCasesNoResource.class);
+		suite.addTestSuite(MultipleContainmentMergeUseCasesWithResource.class);
+		suite.addTestSuite(MultipleContainmentMergeUseCasesWithResourceSet.class);
 
 		// End of the merge test metamodel use cases
 
