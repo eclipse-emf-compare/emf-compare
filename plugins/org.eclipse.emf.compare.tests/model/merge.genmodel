@@ -18,5 +18,11 @@
     <genClasses ecoreClass="merge.ecore#//NodeSingleValueContainment">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference merge.ecore#//NodeSingleValueContainment/singleValueContainment"/>
     </genClasses>
+    <genClasses ecoreClass="merge.ecore#//NodeSingleValueAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute merge.ecore#//NodeSingleValueAttribute/singleValuedAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="merge.ecore#//NodeMultiValuedAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute merge.ecore#//NodeMultiValuedAttribute/multiValuedAttribute"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
