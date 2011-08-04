@@ -237,7 +237,7 @@ public class NameSimilarityTest extends TestCase {
 				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", "v1",
 				"v2", "v", "v1", };
 		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d,
-				6d / 11d, 0d, 0.999999d, 1d / 2d, 1d / 3d, };
+				6d / 11d, 0d, 1d / 2d, 1d / 2d, 1d / 3d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of nameSimilarityMetric for str1 = " + data[i] + " and str2 = "
 					+ data[i + 1], similarities[i / 2],
