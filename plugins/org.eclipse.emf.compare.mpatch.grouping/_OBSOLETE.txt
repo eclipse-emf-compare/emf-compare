@@ -1,1 +1,0 @@
-This plugin is now obsolete because its contents are merged into the new plugin org.eclipse.emf.compare.mpatch.transform.
