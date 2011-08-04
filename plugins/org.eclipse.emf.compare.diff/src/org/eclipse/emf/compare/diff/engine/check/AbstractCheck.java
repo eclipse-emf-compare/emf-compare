@@ -115,7 +115,7 @@ public abstract class AbstractCheck {
 	 * @param eObj
 	 *            EObject to check.
 	 * @return <code>true</code> if that EObject is in the scope, <code>false</code> otherwise.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected final boolean isInScope(EObject eObj) {
 		if (crossReferencer != null && eObj != null && crossReferencer.get(eObj) != null) {

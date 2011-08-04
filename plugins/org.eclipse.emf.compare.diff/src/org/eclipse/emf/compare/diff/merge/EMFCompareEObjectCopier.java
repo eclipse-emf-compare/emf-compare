@@ -95,7 +95,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * 
 	 * @param diff
 	 *            The Diff Resource Set which elements will be merged using this copier.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	public EMFCompareEObjectCopier(DiffResourceSet diff) {
 		super();
@@ -168,7 +168,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            of the list, or copy the value of a single-valued reference (
 	 *            <code>targetReference.isMany() == false</code>).
 	 * @return The copied value.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	@SuppressWarnings("unchecked")
 	public EObject copyReferenceValue(EReference targetReference, EObject target, EObject value, int index) {
@@ -337,7 +337,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * Returns the DiffResourceSet associated with this copier if any.
 	 * 
 	 * @return The DiffResourceSet associated with this copier. Could be <code>null</code>.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	public DiffResourceSet getDiffResourceSet() {
 		return diffResourceSet;
@@ -504,7 +504,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 *            object referenced from <em>eObject</em> that needs to be copied or found in the target
 	 *            containment tree.
 	 * @return Copy of the referenced object, located in the target containment tree if we could find it.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	protected Object findReferencedObjectCopyNullResource(EObject referencedObject) {
 		Object copyReferencedObject = referencedObject;
@@ -699,7 +699,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param fragment
 	 *            The fragment we need an EObject for.
 	 * @return The EObject contained in <code>container</code> that lies at <code>uriFragment</code>.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	private static EObject getEObject(EObject container, String fragment) {
 		String uriFragment = fragment;
@@ -740,7 +740,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param uriFragmentPath
 	 *            Segments of the URI we need an EObject for.
 	 * @return The EObject contained in <code>container</code> that lies at <code>uriFragmentPath</code>.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	private static EObject getEObject(EObject container, List<String> uriFragmentPath) {
 		final int size = uriFragmentPath.size();
@@ -760,7 +760,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 	 * @param id
 	 *            The id we need an EObject for.
 	 * @return The EObject contained in <code>container</code> that corresponds to ID <code>id</code>.
-	 * @since 1.3
+	 * @since 1.2
 	 */
 	private static EObject getEObjectByID(EObject container, String id) {
 		EObject result = null;
