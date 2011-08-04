@@ -5,9 +5,7 @@
       <children xsi:type="mm:ChildNode" name="Child11"/>
     </children>
     <children xsi:type="mm:ChildNode" name="ChildWithRef" friend="//@tree/@children.0"/>
-    <children xsi:type="mm:ChildNode" name="ChildWithoutRef">
-      <friend href="SimpleMM1Instance2.xmi#//@tree/@children.1"/>
-    </children>
+    <children xsi:type="mm:ChildNode" name="ChildWithoutRef"/>
   </tree>
   <intlist>2</intlist>
   <intlist>4</intlist>
