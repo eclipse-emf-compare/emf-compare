@@ -86,4 +86,79 @@ public class MergeMMMultiValuedAttributeInputData extends AbstractInputData {
 		String path = "useCase121.merge";
 		return loadFromClassloader(path);
 	}
+
+	public EObject getUseCase122() throws IOException {
+		String path = "useCase122.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase123() throws IOException {
+		String path = "useCase123.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase124() throws IOException {
+		String path = "useCase124.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase125() throws IOException {
+		String path = "useCase125.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase126() throws IOException {
+		String path = "useCase126.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase127() throws IOException {
+		String path = "useCase127.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase128() throws IOException {
+		String path = "useCase128.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase129() throws IOException {
+		String path = "useCase129.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase130() throws IOException {
+		String path = "useCase130.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase131() throws IOException {
+		String path = "useCase131.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase132() throws IOException {
+		String path = "useCase132.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase133() throws IOException {
+		String path = "useCase133.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase134() throws IOException {
+		String path = "useCase134.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase135() throws IOException {
+		String path = "useCase135.merge";
+		return loadFromClassloader(path);
+	}
+
+	public EObject getUseCase136() throws IOException {
+		String path = "useCase136.merge";
+		return loadFromClassloader(path);
+	}
 }

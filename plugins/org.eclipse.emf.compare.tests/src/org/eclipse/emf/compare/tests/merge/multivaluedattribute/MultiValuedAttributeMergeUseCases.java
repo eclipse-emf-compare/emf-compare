@@ -119,4 +119,124 @@ public class MultiValuedAttributeMergeUseCases extends MergeTestBase {
 	public void testReverseUseCase121() throws Exception {
 		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase121());
 	}
+
+	public void testUseCase122() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase122());
+	}
+
+	public void testReverseUseCase122() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase122());
+	}
+
+	public void testUseCase123() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase123());
+	}
+
+	public void testReverseUseCase123() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase123());
+	}
+
+	public void testUseCase124() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase124());
+	}
+
+	public void testReverseUseCase124() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase124());
+	}
+
+	public void testUseCase125() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase125());
+	}
+
+	public void testReverseUseCase125() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase125());
+	}
+
+	public void testUseCase126() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase126());
+	}
+
+	public void testReverseUseCase126() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase126());
+	}
+
+	public void testUseCase127() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase127());
+	}
+
+	public void testReverseUseCase127() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase127());
+	}
+
+	public void testUseCase128() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase128());
+	}
+
+	public void testReverseUseCase128() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase128());
+	}
+
+	public void testUseCase129() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase129());
+	}
+
+	public void testReverseUseCase129() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase129());
+	}
+
+	public void testUseCase130() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase130());
+	}
+
+	public void testReverseUseCase130() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase130());
+	}
+
+	public void testUseCase131() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase131());
+	}
+
+	public void testReverseUseCase131() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase131());
+	}
+
+	public void testUseCase132() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase132());
+	}
+
+	public void testReverseUseCase132() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase132());
+	}
+
+	public void testUseCase133() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase133());
+	}
+
+	public void testReverseUseCase133() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase133());
+	}
+
+	public void testUseCase134() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase134());
+	}
+
+	public void testReverseUseCase134() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase134());
+	}
+
+	public void testUseCase135() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase135());
+	}
+
+	public void testReverseUseCase135() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase135());
+	}
+
+	public void testUseCase136() throws Exception {
+		mergeAllDiffsLeftToRight(input.getBase(), input.getUseCase136());
+	}
+
+	public void testReverseUseCase136() throws Exception {
+		mergeAllDiffsRightToLeft(input.getBase(), input.getUseCase136());
+	}
 }

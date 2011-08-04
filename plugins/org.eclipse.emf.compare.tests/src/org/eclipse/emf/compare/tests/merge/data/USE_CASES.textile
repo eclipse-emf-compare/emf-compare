@@ -180,4 +180,21 @@ h2. Attribute changes
 			* First value to middle, last value to middle (useCase120)
 			* Middle to first, middle to last (useCase121)
 			
-		* Moving multiple values to new positions while removing a value
+		h4. Moving multiple values to new positions while removing a value
+			* Removing first, second to last, last to first (useCase122)
+			* Removing first, second to last, last to middle (useCase123)
+			* Removing first, second to middle, last to first (useCase124)
+			* Removing first, second to middle, last to middle (useCase125)
+			* Removing first, middle to first, middle to last (useCase126)
+			
+			* Removing middle, first to last, last to first (useCase127)
+			* Removing middle, first to last, last to middle (useCase128)
+			* Removing middle, first to middle, last to first (useCase129)
+			* Removing middle, first to middle, last to middle (useCase130)
+			* Removing middle, middle to first, middle to last (useCase131)
+			
+			* Removing last, first to last, "next to last" to first (useCase132)
+			* Removing last, first to last, "next to last" to middle (useCase133)
+			* Removing last, first to middle, "next to last" to first (useCase134)
+			* Removing last, first to middle, "next to last" to middle (useCase135)
+			* Removing last, middle to first, middle to last (useCase136)
