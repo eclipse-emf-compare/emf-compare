@@ -43,7 +43,6 @@ public class MatchEngineTestSuite extends TestCase {
 		suite.addTestSuite(MatchEngineSelectionTest.class);
 		suite.addTestSuite(MatchOptionsTest.class);
 		suite.addTestSuite(ThreeWayModelMatchTest.class);
-		suite.addTestSuite(ThreeWayContentMatchTest.class);
 		suite.addTestSuite(ThreeWayResourceMatchTest.class);
 		suite.addTestSuite(TwoWayModelMatchFragments.class);
 		suite.addTestSuite(TwoWayModelMatchTest.class);

@@ -75,6 +75,7 @@ public abstract class MergeTestBase extends TestCase {
 		EObject testRightModel = rightModel;
 
 		List<DiffElement> differences = detectDifferences(testLeftModel, testRightModel);
+		assertFalse(differences.isEmpty());
 
 		merge(isLeftToRight, testLeftModel, testRightModel, differences);
 
