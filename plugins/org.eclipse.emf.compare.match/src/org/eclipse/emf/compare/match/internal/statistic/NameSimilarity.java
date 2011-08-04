@@ -11,8 +11,10 @@
 package org.eclipse.emf.compare.match.internal.statistic;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
@@ -188,8 +190,8 @@ public final class NameSimilarity {
 				final String string1 = str1.toLowerCase();
 				final String string2 = str2.toLowerCase();
 
-				final List<String> pairs1 = pairs(string1);
-				final List<String> pairs2 = pairs(string2);
+				final Set<String> pairs1 = pairsSet(string1);
+				final Set<String> pairs2 = pairsSet(string2);
 
 				final double union = pairs1.size() + pairs2.size();
 				pairs1.retainAll(pairs2);
@@ -221,6 +223,30 @@ public final class NameSimilarity {
 	 */
 	public static List<String> pairs(String source) {
 		final List<String> result = new ArrayList<String>();
+		if (source != null) {
+			final int length = source.length();
+			for (int i = 0; i < length - 1; i++) {
+				result.add(source.substring(i, i + 2));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * This method returns a {@link Set} of {@link String}s called "pairs". For example,
+	 * 
+	 * <pre>
+	 * pairs(&quot;MyString&quot;)
+	 * </pre>
+	 * 
+	 * returns ["My","yS","St","tr","ri","in","ng"]
+	 * 
+	 * @param source
+	 *            The {@link String} to process.
+	 * @return A {@link Set} of {@link String} corresponding to the possibles pairs of the source one.
+	 */
+	public static Set<String> pairsSet(String source) {
+		final Set<String> result = new LinkedHashSet<String>();
 		if (source != null) {
 			final int length = source.length();
 			for (int i = 0; i < length - 1; i++) {

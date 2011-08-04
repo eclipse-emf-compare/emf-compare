@@ -98,8 +98,8 @@ public class NameSimilarityTest extends TestCase {
 				class1ClonedFromCodeContent);
 
 		// Class1 and Class1Altered are distinct in that Class1Altered has its "interface" flag set as "true"
-		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.", class1Content
-				.equals(class1AlteredContent));
+		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.",
+				class1Content.equals(class1AlteredContent));
 	}
 
 	/**
@@ -139,8 +139,8 @@ public class NameSimilarityTest extends TestCase {
 
 		assertNotNull(testedMethod + ' ' + MESSAGE_NULL_RESULT, className);
 
-		assertEquals(testedMethod + ' ' + "didn't return the accurate result for a class.", ((EClass)clazz)
-				.getName(), className);
+		assertEquals(testedMethod + ' ' + "didn't return the accurate result for a class.",
+				((EClass)clazz).getName(), className);
 		assertEquals(testedMethod + ' ' + "didn't return the accurate result for a data type.",
 				((EDataType)datatype).getName(), datatypeName);
 		assertEquals(testedMethod + ' ' + "didn't return the accurate result for an enumeration.",
@@ -237,11 +237,11 @@ public class NameSimilarityTest extends TestCase {
 				"MaClasse", "package", "packageASupprimer", "attribut", "reference", "aa", "aaaa", "v1",
 				"v2", "v", "v1", };
 		final double[] similarities = new double[] {0d, 0d, 0d, 1d, 0.999999d, 10d / 13d, 3d / 4d, 0d,
-				6d / 11d, 0d, 1d / 2d, 1d / 2d, 1d / 3d, };
+				6d / 11d, 0d, 0.999999d, 1d / 2d, 1d / 3d, };
 		for (int i = 0; i < data.length; i += 2) {
 			assertEquals("Unexpected result of nameSimilarityMetric for str1 = " + data[i] + " and str2 = "
-					+ data[i + 1], similarities[i / 2], NameSimilarity.nameSimilarityMetric(data[i],
-					data[i + 1]));
+					+ data[i + 1], similarities[i / 2],
+					NameSimilarity.nameSimilarityMetric(data[i], data[i + 1]));
 		}
 	}
 
@@ -283,8 +283,8 @@ public class NameSimilarityTest extends TestCase {
 				for (int j = 0; j < result.size(); j++) {
 					assertEquals("Unexpected pair size for " + '"' + result.get(j) + '"', 2, result.get(j)
 							.length());
-					assertEquals("Unexpected pair for source " + '"' + data[i] + '"', data[i].substring(j,
-							j + 2), result.get(j));
+					assertEquals("Unexpected pair for source " + '"' + data[i] + '"',
+							data[i].substring(j, j + 2), result.get(j));
 				}
 			}
 		}
@@ -349,8 +349,8 @@ public class NameSimilarityTest extends TestCase {
 				class1ClonedFromCodeContent);
 
 		// Class1 and Class1Altered are distinct in that Class1Altered has its "interface" flag set as "true"
-		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.", class1Content
-				.equals(class1AlteredContent));
+		assertFalse(testedMethod + ' ' + "returned an equal result for two different objects.",
+				class1Content.equals(class1AlteredContent));
 	}
 
 	/**
