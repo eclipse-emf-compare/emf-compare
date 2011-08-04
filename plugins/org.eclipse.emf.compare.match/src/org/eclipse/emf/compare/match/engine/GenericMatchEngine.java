@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.EMFPlugin;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.Monitor;
@@ -242,10 +243,8 @@ public class GenericMatchEngine implements IMatchEngine {
 				processNotFoundElements(root, subMatchRoot);
 				// #createSub3Match(MatchModel, Match3Element, Match2Elements,
 				// Match2Elements) will have updated "remainingUnmatchedElements"
-				processSingleUnmatchedElements(leftObject.eResource(), rightObject.eResource(), root,
-						subMatchRoot, monitor);
-				processUnmatchedMatch2Elements(leftObject.eResource(), rightObject.eResource(), root,
-						subMatchRoot);
+				processSingleUnmatchedElements(leftObject, rightObject, root, subMatchRoot, monitor);
+				processUnmatchedMatch2Elements(leftObject, rightObject, root, subMatchRoot);
 			} catch (final FactoryException e) {
 				EMFComparePlugin.log(e, false);
 			} catch (final InterruptedException e) {
@@ -1439,12 +1438,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * <p>
 	 * We are here handling Match2Elements only. These particular elements cannot be conflicting.
 	 * UnmatchElements will be handled in
-	 * {@link #processSingleUnmatchedElements(Resource, Resource, MatchModel, Match3Elements, Monitor)} .
+	 * {@link #processSingleUnmatchedElements(Notifier, Notifier, MatchModel, Match3Elements, Monitor)} .
 	 * </p>
 	 * 
-	 * @param leftResource
+	 * @param leftModel
 	 *            Left model for the comparison.
-	 * @param rightResource
+	 * @param rightModel
 	 *            Right model for the comparison.
 	 * @param root
 	 *            Root of the {@link MatchModel}.
@@ -1453,18 +1452,21 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws FactoryException
 	 *             Thrown if we couldn't add the new UnmatchElements.
 	 */
-	private void processUnmatchedMatch2Elements(Resource leftResource, Resource rightResource,
-			MatchModel root, Match3Elements subMatchRoot) throws FactoryException {
+	private void processUnmatchedMatch2Elements(Notifier leftModel, Notifier rightModel, MatchModel root,
+			Match3Elements subMatchRoot) throws FactoryException {
 		final Set<Match2Elements> remainingLeft = new LinkedHashSet<Match2Elements>();
 		final Set<Match2Elements> remainingRight = new LinkedHashSet<Match2Elements>();
 		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
 			if (unmatched instanceof Match2Elements) {
 				final EObject element = ((Match2Elements)unmatched).getLeftElement();
-				if (element.eResource() == leftResource) {
+				final EObject rootContainer = EcoreUtil.getRootContainer(element);
+
+				if (rootContainer == leftModel || element.eResource() == leftModel) {
 					remainingLeft.add((Match2Elements)unmatched);
-				} else if (element.eResource() == rightResource) {
+				} else if (rootContainer == rightModel || element.eResource() == rightModel) {
 					remainingRight.add((Match2Elements)unmatched);
 				}
+
 				// unmatched in ancestor can be safely ignored.
 				remainingUnmatchedElements.remove(unmatched);
 			}
@@ -1512,12 +1514,12 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * We are here handling UnmatchElements only. Note that these particular differences can be conflicting if
 	 * they are contained within elements that have themselves been removed from the model. Match2Elements
 	 * have been handled by
-	 * {@link #processUnmatchedMatch2Elements(Resource, Resource, MatchModel, Match3Elements)} .
+	 * {@link #processUnmatchedMatch2Elements(Notifier, Notifier, MatchModel, Match3Elements)} .
 	 * </p>
 	 * 
-	 * @param leftResource
+	 * @param left
 	 *            Left model for the comparison.
-	 * @param rightResource
+	 * @param right
 	 *            Right model for the comparison.
 	 * @param root
 	 *            Root of the {@link MatchModel}.
@@ -1530,19 +1532,21 @@ public class GenericMatchEngine implements IMatchEngine {
 	 * @throws FactoryException
 	 *             Thrown if we couldn't add the new UnmatchElements.
 	 */
-	private void processSingleUnmatchedElements(Resource leftResource, Resource rightResource,
-			MatchModel root, Match3Elements subMatchRoot, Monitor monitor) throws InterruptedException,
-			FactoryException {
+	private void processSingleUnmatchedElements(Notifier left, Notifier right, MatchModel root,
+			Match3Elements subMatchRoot, Monitor monitor) throws InterruptedException, FactoryException {
 		final Set<EObject> remainingLeft = new LinkedHashSet<EObject>();
 		final Set<EObject> remainingRight = new LinkedHashSet<EObject>();
 		for (final EObject unmatched : new ArrayList<EObject>(remainingUnmatchedElements)) {
 			if (unmatched instanceof UnmatchElement) {
 				final EObject element = ((UnmatchElement)unmatched).getElement();
-				if (element.eResource() == leftResource) {
+				final EObject rootContainer = EcoreUtil.getRootContainer(element);
+
+				if (rootContainer == left || element.eResource() == left) {
 					remainingLeft.add(element);
-				} else if (element.eResource() == rightResource) {
+				} else if (rootContainer == right || element.eResource() == right) {
 					remainingRight.add(element);
 				}
+
 				// unmatched in ancestor can be safely ignored.
 				remainingUnmatchedElements.remove(unmatched);
 			}
