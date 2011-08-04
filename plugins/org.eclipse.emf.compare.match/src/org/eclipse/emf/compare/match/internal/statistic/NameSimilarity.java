@@ -190,12 +190,12 @@ public final class NameSimilarity {
 				final String string1 = str1.toLowerCase();
 				final String string2 = str2.toLowerCase();
 
-				final Set<String> pairs1 = pairsSet(string1);
-				final Set<String> pairs2 = pairsSet(string2);
+				final List<String> pairs1 = pairs(string1);
+				final List<String> pairs2 = pairs(string2);
 
 				final double union = pairs1.size() + pairs2.size();
-				pairs1.retainAll(pairs2);
-				final int inter = pairs1.size();
+
+				final int inter = retainCount(pairs1, pairSet(string2));
 
 				result = inter * 2d / union;
 				if (result > 1) {
@@ -206,6 +206,15 @@ public final class NameSimilarity {
 			}
 		}
 		return result;
+	}
+
+	private static int retainCount(List<String> a, Set<String> b) {
+		int count = 0;
+		for (String aPair : a) {
+			if (b.contains(aPair))
+				count++;
+		}
+		return count;
 	}
 
 	/**
@@ -245,7 +254,7 @@ public final class NameSimilarity {
 	 *            The {@link String} to process.
 	 * @return A {@link Set} of {@link String} corresponding to the possibles pairs of the source one.
 	 */
-	public static Set<String> pairsSet(String source) {
+	private static Set<String> pairSet(String source) {
 		final Set<String> result = new LinkedHashSet<String>();
 		if (source != null) {
 			final int length = source.length();
@@ -255,4 +264,5 @@ public final class NameSimilarity {
 		}
 		return result;
 	}
+
 }

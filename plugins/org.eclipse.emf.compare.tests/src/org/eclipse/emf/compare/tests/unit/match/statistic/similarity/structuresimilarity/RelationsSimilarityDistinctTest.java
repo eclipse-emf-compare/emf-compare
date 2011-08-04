@@ -40,7 +40,7 @@ public class RelationsSimilarityDistinctTest extends TestCase {
 	 * Defines a higher threshold for relations similarity when computing without filtering unused (thus
 	 * identical) features.
 	 */
-	private static final double HIGH_UNFILTERED_SIMILARITY_THRESHOLD = 0.65d;
+	private static final double HIGH_UNFILTERED_SIMILARITY_THRESHOLD = 0.6d;
 
 	/** Full path to the model containing this test's input. */
 	private static final String INPUT_MODEL_PATH = "/data/testInput.ecore";

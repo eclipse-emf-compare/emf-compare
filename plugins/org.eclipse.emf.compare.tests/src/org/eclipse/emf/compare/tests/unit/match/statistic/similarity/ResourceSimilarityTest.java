@@ -41,7 +41,7 @@ public class ResourceSimilarityTest extends TestCase {
 				"platform:/resource/folder2/model.dsl#/foo2/bar",
 				"ar:/#/arPackageShortName/arSubPackageShortName/arElementName",
 				"ar:/test#/arPackageShortName/arElementName", "ar:/#/arPackageName/arElementFoo", };
-		final double[] similarities = {1d, 0.6571428571428571, 1d, 1d, 1d, 0.88, 1d, 0.6, 0.9428571428571428 };
+		final double[] similarities = {1d, 0.6571428571428571, 1d, 1d, 1d, 0.88, 1d, 0.6, 0.9886792452830189 };
 
 		for (int i = 0; i < references.length; i++) {
 			final URI reference = URI.createURI(references[i]);
