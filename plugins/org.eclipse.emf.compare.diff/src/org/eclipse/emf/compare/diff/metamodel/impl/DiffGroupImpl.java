@@ -97,7 +97,7 @@ public class DiffGroupImpl extends DiffElementImpl implements DiffGroup {
 					return getRightParent();
 				return basicGetRightParent();
 			case DiffPackage.DIFF_GROUP__SUBCHANGES:
-				return new Integer(getSubchanges());
+				return getSubchanges();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

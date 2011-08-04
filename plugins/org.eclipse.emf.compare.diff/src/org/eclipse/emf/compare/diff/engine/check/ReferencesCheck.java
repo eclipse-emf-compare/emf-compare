@@ -232,10 +232,10 @@ public class ReferencesCheck extends AbstractCheck {
 		int expectedIndex = 0;
 		for (int i = 0; i < leftElementReferences.size(); i++) {
 			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
-			for (final Integer removedIndice : new ArrayList<Integer>(removedIndices)) {
-				if (i == removedIndice) {
+			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
+				if (i == removedIndex.intValue()) {
 					expectedIndex += 1;
-					removedIndices.remove(removedIndice);
+					removedIndices.remove(removedIndex);
 				}
 			}
 			if (rightElementReferences.indexOf(matched) != expectedIndex++) {
@@ -308,8 +308,8 @@ public class ReferencesCheck extends AbstractCheck {
 		if (isConflictual(reference, leftReferences, rightReferences, ancestorReferences)) {
 			createConflictingReferenceUpdate(root, reference, mapping);
 			return;
-			// We know there aren't any conflicting changes
 		}
+		// We know there aren't any conflicting changes
 		final List<EObject> remoteDeletedReferences = new ArrayList<EObject>();
 		final List<EObject> remoteAddedReferences = new ArrayList<EObject>();
 		final List<EObject> deletedReferences = new ArrayList<EObject>();
@@ -627,15 +627,8 @@ public class ReferencesCheck extends AbstractCheck {
 		} else {
 			// check that added references are not in deleted references (FIXME: may be necessary to add non
 			// resolved proxy handling)
-			final List<EObject> addedReferencesCopy = new ArrayList<EObject>(addedReferences);
-			final List<EObject> deletedReferencesCopy = new ArrayList<EObject>(deletedReferences);
-
-			for (EObject addedReference : addedReferencesCopy) {
-				deletedReferences.remove(addedReference);
-			}
-			for (EObject deletedReference : deletedReferencesCopy) {
-				addedReferences.remove(deletedReference);
-			}
+			deletedReferences.removeAll(addedReferences);
+			addedReferences.removeAll(deletedReferences);
 
 			final List<ReferenceChangeLeftTarget> addedReferencesDiffs = new ArrayList<ReferenceChangeLeftTarget>(
 					addedReferences.size());

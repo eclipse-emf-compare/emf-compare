@@ -175,8 +175,8 @@ public class ComparisonResourceSnapshotItemProvider extends ItemProviderAdapter 
 				DiffFactory.eINSTANCE.createDiffModel()));
 
 		newChildDescriptors.add(createChildParameter(
-				DiffPackage.Literals.COMPARISON_RESOURCE_SNAPSHOT__MATCH, MatchFactory.eINSTANCE
-						.createMatchModel()));
+				DiffPackage.Literals.COMPARISON_RESOURCE_SNAPSHOT__MATCH,
+				MatchFactory.eINSTANCE.createMatchModel()));
 	}
 
 	/**

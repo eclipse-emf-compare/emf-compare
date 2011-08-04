@@ -226,18 +226,20 @@ public class ReferenceChangeRightTargetImpl extends ReferenceChangeImpl implemen
 		String toString = null;
 		if (isRemote()) {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", //$NON-NLS-1$
-						NameSimilarity.findName(leftTarget), reference.getName(), NameSimilarity
-								.findName(rightElement));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteAddReferenceValueImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(leftTarget), reference.getName(),
+						NameSimilarity.findName(rightElement));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString("RemoteAddReferenceValueImpl.ToString", //$NON-NLS-1$
 						leftTarget.eClass().getName(), reference.getName(), rightElement.eClass().getName());
 			}
 		} else {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", //$NON-NLS-1$
-						NameSimilarity.findName(leftTarget), reference.getName(), NameSimilarity
-								.findName(rightElement));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoveReferenceValueImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(leftTarget), reference.getName(),
+						NameSimilarity.findName(rightElement));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString("RemoveReferenceValueImpl.ToString", leftTarget //$NON-NLS-1$
 						.eClass().getName(), reference.getName(), rightElement.eClass().getName());

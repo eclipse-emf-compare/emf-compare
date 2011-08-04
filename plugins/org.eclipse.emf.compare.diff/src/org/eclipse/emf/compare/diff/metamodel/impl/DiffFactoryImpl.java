@@ -150,6 +150,8 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 				return createAttributeChangeLeftTarget();
 			case DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET:
 				return createAttributeChangeRightTarget();
+			case DiffPackage.ATTRIBUTE_ORDER_CHANGE:
+				return createAttributeOrderChange();
 			case DiffPackage.UPDATE_ATTRIBUTE:
 				return createUpdateAttribute();
 			case DiffPackage.REFERENCE_CHANGE:
@@ -201,6 +203,17 @@ public class DiffFactoryImpl extends EFactoryImpl implements DiffFactory {
 	public AttributeChangeRightTarget createAttributeChangeRightTarget() {
 		AttributeChangeRightTargetImpl attributeChangeRightTarget = new AttributeChangeRightTargetImpl();
 		return attributeChangeRightTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	public AttributeOrderChange createAttributeOrderChange() {
+		AttributeOrderChangeImpl attributeOrderChange = new AttributeOrderChangeImpl();
+		return attributeOrderChange;
 	}
 
 	/**

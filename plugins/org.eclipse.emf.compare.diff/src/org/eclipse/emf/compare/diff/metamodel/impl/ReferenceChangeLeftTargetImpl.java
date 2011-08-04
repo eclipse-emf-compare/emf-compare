@@ -226,9 +226,10 @@ public class ReferenceChangeLeftTargetImpl extends ReferenceChangeImpl implement
 		String toString = null;
 		if (isRemote()) {
 			try {
-				toString = EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", //$NON-NLS-1$
-						NameSimilarity.findName(rightTarget), reference.getName(), NameSimilarity
-								.findName(leftElement));
+				toString = EMFCompareDiffMessages.getString(
+						"RemoteRemoveReferenceValueImpl.ToString", //$NON-NLS-1$
+						NameSimilarity.findName(rightTarget), reference.getName(),
+						NameSimilarity.findName(leftElement));
 			} catch (final FactoryException e) {
 				toString = EMFCompareDiffMessages.getString("RemoteRemoveReferenceValueImpl.ToString", //$NON-NLS-1$
 						rightTarget.eClass().getName(), reference.getName(), leftElement.eClass().getName());

@@ -144,6 +144,7 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rightTarget" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeOrderChange" eSuperTypes="#//AttributeChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UpdateAttribute" eSuperTypes="#//AttributeChange">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Differences of this kind represent modifications of the value of single-valued attributes."/>

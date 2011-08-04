@@ -286,6 +286,30 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	protected AttributeOrderChangeItemProvider attributeOrderChangeItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createAttributeOrderChangeAdapter() {
+		if (attributeOrderChangeItemProvider == null) {
+			attributeOrderChangeItemProvider = new AttributeOrderChangeItemProvider(this);
+		}
+
+		return attributeOrderChangeItemProvider;
+	}
+
+	/**
 	 * This creates an adapter for a {@link org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement}.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
@@ -723,6 +747,8 @@ public class DiffItemProviderAdapterFactory extends DiffAdapterFactory implement
 			attributeChangeLeftTargetItemProvider.dispose();
 		if (attributeChangeRightTargetItemProvider != null)
 			attributeChangeRightTargetItemProvider.dispose();
+		if (attributeOrderChangeItemProvider != null)
+			attributeOrderChangeItemProvider.dispose();
 		if (updateAttributeItemProvider != null)
 			updateAttributeItemProvider.dispose();
 		if (referenceChangeItemProvider != null)

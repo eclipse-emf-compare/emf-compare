@@ -15,6 +15,7 @@ import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
@@ -111,6 +112,13 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 * @generated
 	 */
 	private EClass attributeChangeRightTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass attributeOrderChangeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -298,9 +306,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 			return (DiffPackage)EPackage.Registry.INSTANCE.getEPackage(DiffPackage.eNS_URI);
 
 		// Obtain or create and register package
-		DiffPackageImpl theDiffPackage = (DiffPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof DiffPackageImpl ? EPackage.Registry.INSTANCE
-				.getEPackage(eNS_URI)
-				: new DiffPackageImpl());
+		DiffPackageImpl theDiffPackage = (DiffPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof DiffPackageImpl ? EPackage.Registry.INSTANCE
+				.get(eNS_URI) : new DiffPackageImpl());
 
 		isInited = true;
 
@@ -317,6 +324,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		// Mark meta-data to indicate it can't be changed
 		theDiffPackage.freeze();
 
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(DiffPackage.eNS_URI, theDiffPackage);
 		return theDiffPackage;
 	}
 
@@ -402,6 +411,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 
 		attributeChangeRightTargetEClass = createEClass(ATTRIBUTE_CHANGE_RIGHT_TARGET);
 		createEAttribute(attributeChangeRightTargetEClass, ATTRIBUTE_CHANGE_RIGHT_TARGET__RIGHT_TARGET);
+
+		attributeOrderChangeEClass = createEClass(ATTRIBUTE_ORDER_CHANGE);
 
 		updateAttributeEClass = createEClass(UPDATE_ATTRIBUTE);
 
@@ -572,6 +583,16 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EAttribute getAttributeChangeRightTarget_RightTarget() {
 		return (EAttribute)attributeChangeRightTargetEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	public EClass getAttributeOrderChange() {
+		return attributeOrderChangeEClass;
 	}
 
 	/**
@@ -1120,6 +1141,7 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		attributeChangeEClass.getESuperTypes().add(this.getDiffElement());
 		attributeChangeLeftTargetEClass.getESuperTypes().add(this.getAttributeChange());
 		attributeChangeRightTargetEClass.getESuperTypes().add(this.getAttributeChange());
+		attributeOrderChangeEClass.getESuperTypes().add(this.getAttributeChange());
 		updateAttributeEClass.getESuperTypes().add(this.getAttributeChange());
 		referenceChangeEClass.getESuperTypes().add(this.getDiffElement());
 		referenceChangeLeftTargetEClass.getESuperTypes().add(this.getReferenceChange());
@@ -1357,6 +1379,9 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				getAttributeChangeRightTarget_RightTarget(),
 				theEcorePackage.getEJavaObject(),
 				"rightTarget", null, 0, 1, AttributeChangeRightTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(attributeOrderChangeEClass, AttributeOrderChange.class,
+				"AttributeOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		initEClass(updateAttributeEClass, UpdateAttribute.class,
 				"UpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

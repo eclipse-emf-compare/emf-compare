@@ -249,6 +249,9 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 				DiffFactory.eINSTANCE.createAttributeChangeRightTarget()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				DiffFactory.eINSTANCE.createAttributeOrderChange()));
+
+		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				DiffFactory.eINSTANCE.createUpdateAttribute()));
 
 		newChildDescriptors.add(createChildParameter(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,

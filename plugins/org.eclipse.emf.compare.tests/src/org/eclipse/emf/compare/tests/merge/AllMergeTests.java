@@ -17,10 +17,18 @@ import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.Multiple
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesWithResource;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCasesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesWithResourceSet;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesWithResource;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCasesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.singlevaluedattribute.SingleValuedAttributeMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.singlevaluedattribute.SingleValuedAttributeMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedattribute.SingleValuedAttributeMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedattribute.SingleValuedAttributeMergeUseCasesWithResourceSet;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCases;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesWithResource;
@@ -29,7 +37,7 @@ import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.Sing
 public class AllMergeTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.emf.compare.tests.merge");
+		TestSuite suite = new TestSuite("Tests the merge use cases");
 		// $JUnit-BEGIN$
 		suite.addTestSuite(TestContainmentRemoveMany.class);
 		suite.addTestSuite(TestContainmentOrderAddMany.class);
@@ -56,6 +64,16 @@ public class AllMergeTests {
 		suite.addTestSuite(MultipleContainmentMergeUseCasesNoResource.class);
 		suite.addTestSuite(MultipleContainmentMergeUseCasesWithResource.class);
 		suite.addTestSuite(MultipleContainmentMergeUseCasesWithResourceSet.class);
+
+		suite.addTestSuite(SingleValuedAttributeMergeUseCases.class);
+		suite.addTestSuite(SingleValuedAttributeMergeUseCasesNoResource.class);
+		suite.addTestSuite(SingleValuedAttributeMergeUseCasesWithResource.class);
+		suite.addTestSuite(SingleValuedAttributeMergeUseCasesWithResourceSet.class);
+
+		suite.addTestSuite(MultiValuedAttributeMergeUseCases.class);
+		suite.addTestSuite(MultiValuedAttributeMergeUseCasesNoResource.class);
+		suite.addTestSuite(MultiValuedAttributeMergeUseCasesWithResource.class);
+		suite.addTestSuite(MultiValuedAttributeMergeUseCasesWithResourceSet.class);
 
 		// End of the merge test metamodel use cases
 

@@ -88,6 +88,7 @@
     <genClasses ecoreClass="diff.ecore#//AttributeChangeRightTarget">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute diff.ecore#//AttributeChangeRightTarget/rightTarget"/>
     </genClasses>
+    <genClasses ecoreClass="diff.ecore#//AttributeOrderChange"/>
     <genClasses ecoreClass="diff.ecore#//UpdateAttribute"/>
     <genClasses ecoreClass="diff.ecore#//ReferenceChange">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ReferenceChange/reference"/>

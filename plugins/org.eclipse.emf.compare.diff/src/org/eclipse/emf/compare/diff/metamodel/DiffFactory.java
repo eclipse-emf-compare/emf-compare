@@ -54,6 +54,16 @@ public interface DiffFactory extends EFactory {
 	AttributeChangeRightTarget createAttributeChangeRightTarget();
 
 	/**
+	 * Returns a new object of class '<em>Attribute Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Attribute Order Change</em>'.
+	 * @generated
+	 * @since 1.3
+	 */
+	AttributeOrderChange createAttributeOrderChange();
+
+	/**
 	 * Returns a new object of class '<em>Conflicting Diff Element</em>'.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

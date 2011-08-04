@@ -153,6 +153,11 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseAttributeOrderChange(AttributeOrderChange object) {
+			return createAttributeOrderChangeAdapter();
+		}
+
+		@Override
 		public Adapter caseUpdateAttribute(UpdateAttribute object) {
 			return createUpdateAttributeAdapter();
 		}
@@ -367,6 +372,21 @@ public class DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createAttributeChangeRightTargetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange <em>Attribute Order Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange
+	 * @generated
+	 * @since 1.3
+	 */
+	public Adapter createAttributeOrderChangeAdapter() {
 		return null;
 	}
 

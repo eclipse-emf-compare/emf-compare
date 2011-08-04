@@ -185,6 +185,22 @@ public class DiffSwitch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Attribute Order Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Attribute Order Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 * @since 1.3
+	 */
+	public T caseAttributeOrderChange(AttributeOrderChange object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Conflicting Diff Element</em>'.
 	 * <!-- begin-user-doc --> This implementation returns null; returning a non-null result will terminate
 	 * the switch. <!-- end-user-doc -->
@@ -690,6 +706,17 @@ public class DiffSwitch<T> {
 					result = caseAttributeChange(attributeChangeRightTarget);
 				if (result == null)
 					result = caseDiffElement(attributeChangeRightTarget);
+				if (result == null)
+					result = defaultCase(theEObject);
+				return result;
+			}
+			case DiffPackage.ATTRIBUTE_ORDER_CHANGE: {
+				AttributeOrderChange attributeOrderChange = (AttributeOrderChange)theEObject;
+				T result = caseAttributeOrderChange(attributeOrderChange);
+				if (result == null)
+					result = caseAttributeChange(attributeOrderChange);
+				if (result == null)
+					result = caseDiffElement(attributeOrderChange);
 				if (result == null)
 					result = defaultCase(theEObject);
 				return result;
