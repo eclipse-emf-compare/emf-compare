@@ -212,10 +212,12 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 
 			} else {
 				final List<Object> targetList = (List<Object>)referenceValue;
-				if (index > -1 && index < targetList.size()) {
-					targetList.add(index, copy);
-				} else {
-					targetList.add(copy);
+				if (!targetList.contains(copy)) {
+					if (index > -1 && index < targetList.size()) {
+						targetList.add(index, copy);
+					} else {
+						targetList.add(copy);
+					}
 				}
 			}
 		} else {
