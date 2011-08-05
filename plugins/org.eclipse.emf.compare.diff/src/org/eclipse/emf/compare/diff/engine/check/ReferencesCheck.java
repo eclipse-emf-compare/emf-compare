@@ -329,13 +329,7 @@ public class ReferencesCheck extends AbstractCheck {
 				deletedValue = deletedReferences.get(0);
 			}
 
-			// One of the two values is null, reference has been unset
-			if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
-				root.getSubDiffElements().add(
-						createUpdatedReferenceOperation(mapping.getLeftElement(), mapping.getRightElement(),
-								reference, addedValue, deletedValue));
-			} else if (addedValue != null && deletedValue != null
-					&& !EcoreUtil.getURI(addedValue).equals(EcoreUtil.getURI(deletedValue))) {
+			if (areDistinct(addedValue, deletedValue)) {
 				root.getSubDiffElements().add(
 						createUpdatedReferenceOperation(mapping.getLeftElement(), mapping.getRightElement(),
 								reference, addedValue, deletedValue));
@@ -371,7 +365,48 @@ public class ReferencesCheck extends AbstractCheck {
 						mapping.getRightElement(), addedReferencesDiffs, removedReferencesDiffs);
 			}
 		}
+	}
 
+	/**
+	 * Checks whether the two given values are distinct.
+	 * 
+	 * @param addedValue
+	 *            The value that's been added to a reference.
+	 * @param deletedValue
+	 *            The value that's been removed from a reference.
+	 * @return <code>true</code> if there is a diff between the two values, <code>false</code> otherwise.
+	 */
+	private boolean areDistinct(EObject addedValue, EObject deletedValue) {
+		final double similarReferenceURIThreshold = 0.8d;
+		boolean createDiff = false;
+
+		// One of the two value is null, reference has been unset
+		if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
+			createDiff = true;
+		} else if (addedValue != null && deletedValue != null) {
+			final EObject matchAdded = getMatchedEObject(addedValue);
+			if (matchAdded != null && matchAdded != deletedValue) {
+				createDiff = true;
+			} else if (getMatchedEObject(deletedValue) != null) {
+				// the deleted object has a match. At this point it can only be distinct from the added
+				// value since this added value itself has no match.
+				createDiff = true;
+			} else {
+				final URI addedURI = EcoreUtil.getURI(addedValue);
+				final URI deletedURI = EcoreUtil.getURI(deletedValue);
+				if (addedValue.eIsProxy() && deletedValue.eIsProxy()) {
+					// Strict equality
+					createDiff = !addedURI.equals(deletedURI);
+				} else if (addedValue.eIsProxy() || deletedValue.eIsProxy()) {
+					// Only one of them is a proxy, thus different since one of the two cannot be resolved
+					createDiff = true;
+				} else if (ResourceSimilarity.computeURISimilarity(addedURI, deletedURI) < similarReferenceURIThreshold) {
+					createDiff = true;
+				}
+			}
+		}
+
+		return createDiff;
 	}
 
 	/**
@@ -583,8 +618,6 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<EObject> addedReferences = computeAddedReferences(leftElementReferences,
 				rightElementReferences);
 
-		final double similarReferenceURIThreshold = 0.8d;
-
 		// REFERENCES UPDATES
 		if (!reference.isMany()) {
 			EObject addedValue = null;
@@ -597,32 +630,10 @@ public class ReferencesCheck extends AbstractCheck {
 				deletedValue = deletedReferences.get(0);
 			}
 
-			// One of the two value is null, reference has been unset
-			if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
+			if (areDistinct(addedValue, deletedValue)) {
 				root.getSubDiffElements().add(
 						createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
 								deletedValue));
-			} else if (addedValue != null && deletedValue != null) {
-				boolean createDiff = false;
-				final EObject matchAdded = getMatchedEObject(addedValue);
-				if (matchAdded != null && matchAdded != deletedValue) {
-					createDiff = true;
-				} else if (getMatchedEObject(deletedValue) != null) {
-					// the deleted object has a match. At this point it can only be distinct from the added
-					// value since this added value itself has no match.
-					createDiff = true;
-				} else {
-					final double uriSimilarity = ResourceSimilarity.computeURISimilarity(
-							EcoreUtil.getURI(addedValue), EcoreUtil.getURI(deletedValue));
-					if (uriSimilarity < similarReferenceURIThreshold) {
-						createDiff = true;
-					}
-				}
-				if (createDiff) {
-					root.getSubDiffElements().add(
-							createUpdatedReferenceOperation(leftElement, rightElement, reference, addedValue,
-									deletedValue));
-				}
 			}
 		} else {
 			// check that added references are not in deleted references (FIXME: may be necessary to add non
@@ -675,21 +686,30 @@ public class ReferencesCheck extends AbstractCheck {
 	 */
 	private void createRemoteReferencesUpdate(DiffGroup root, EReference reference, Match3Elements mapping,
 			List<EObject> remotelyAdded, List<EObject> remotelyDeleted) {
-		if (!reference.isMany() && remotelyAdded.size() > 0 && remotelyDeleted.size() > 0) {
+		if (!reference.isMany() && (remotelyAdded.size() > 0 || remotelyDeleted.size() > 0)) {
+			EObject remoteAdded = null;
+			if (remotelyAdded.size() > 0) {
+				remoteAdded = remotelyAdded.get(0);
+			}
+			EObject remoteDeleted = null;
+			if (remotelyDeleted.size() > 0) {
+				remoteDeleted = remotelyDeleted.get(0);
+			}
+
 			final UpdateReference operation = DiffFactory.eINSTANCE.createUpdateReference();
 			operation.setRemote(true);
 			operation.setLeftElement(mapping.getLeftElement());
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
 
-			EObject leftTarget = getMatchedEObject(remotelyDeleted.get(0));
-			EObject rightTarget = getMatchedEObject(remotelyAdded.get(0));
+			EObject leftTarget = getMatchedEObject(remoteAdded);
+			EObject rightTarget = getMatchedEObject(remoteDeleted);
 			// checks if target are defined remotely
-			if (leftTarget == null) {
-				leftTarget = remotelyDeleted.get(0);
+			if (leftTarget == null && remoteAdded != null) {
+				leftTarget = remoteAdded;
 			}
-			if (rightTarget == null) {
-				rightTarget = remotelyAdded.get(0);
+			if (rightTarget == null && remoteDeleted != null) {
+				rightTarget = remoteDeleted;
 			}
 
 			operation.setLeftTarget(leftTarget);
@@ -795,10 +815,10 @@ public class ReferencesCheck extends AbstractCheck {
 		EObject leftTarget = getMatchedEObject(deletedValue);
 		EObject rightTarget = getMatchedEObject(addedValue);
 		// checks if target are defined remotely
-		if (leftTarget == null && addedValue != null) {
+		if (leftTarget == null && deletedValue != null) {
 			leftTarget = deletedValue;
 		}
-		if (rightTarget == null && deletedValue != null) {
+		if (rightTarget == null && addedValue != null) {
 			rightTarget = addedValue;
 		}
 
@@ -916,6 +936,7 @@ public class ReferencesCheck extends AbstractCheck {
 			List<EObject> remoteAddedReferences, List<EObject> remoteDeletedReferences)
 			throws FactoryException {
 		final String referenceName = reference.getName();
+
 		final List<Object> leftReferences = convertFeatureMapList(EFactory.eGetAsList(
 				mapping.getLeftElement(), referenceName));
 		final List<Object> rightReferences = convertFeatureMapList(EFactory.eGetAsList(
@@ -923,32 +944,91 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<Object> ancestorReferences = convertFeatureMapList(EFactory.eGetAsList(
 				mapping.getOriginElement(), referenceName));
 
-		// populates remotely added references list
+		// populates remotely added and locally deleted lists
+		final List<Object> leftCopy = new ArrayList<Object>(leftReferences);
+		List<Object> ancestorCopy = new ArrayList<Object>(ancestorReferences);
 		for (final Object right : rightReferences) {
-			if (right instanceof EObject
-					&& !ancestorReferences.contains(getMatchedEObject((EObject)right, ANCESTOR_OBJECT))
-					&& !leftReferences.contains(getMatchedEObject((EObject)right))) {
+			EObject leftMatched = null;
+			EObject ancestorMatched = null;
+			boolean hasLeftMatch = false;
+			boolean hasAncestorMatch = false;
+			if (right instanceof EObject && !((EObject)right).eIsProxy()) {
+				ancestorMatched = getMatchedEObject((EObject)right, ANCESTOR_OBJECT);
+				leftMatched = getMatchedEObject((EObject)right);
+				hasLeftMatch = leftMatched != null && leftCopy.contains(leftMatched);
+				hasAncestorMatch = ancestorMatched != null && ancestorCopy.contains(ancestorMatched);
+			} else if (right instanceof EObject && ((EObject)right).eIsProxy()) {
+				final Iterator<Object> ancestorIterator = ancestorCopy.iterator();
+				while (ancestorMatched == null && ancestorIterator.hasNext()) {
+					final Object ancestor = ancestorIterator.next();
+					if (!areDistinct((EObject)right, (EObject)ancestor)) {
+						ancestorMatched = (EObject)ancestor;
+					}
+				}
+				final Iterator<Object> leftIterator = leftCopy.iterator();
+				while (leftMatched == null && leftIterator.hasNext()) {
+					final Object left = leftIterator.next();
+					if (!areDistinct((EObject)right, (EObject)left)) {
+						leftMatched = (EObject)left;
+					}
+				}
+				hasLeftMatch = leftMatched != null;
+				hasAncestorMatch = ancestorMatched != null;
+			}
+			if (!hasLeftMatch && !hasAncestorMatch) {
 				remoteAddedReferences.add((EObject)right);
+			} else if (!hasLeftMatch) {
+				deletedReferences.add((EObject)right);
+			}
+			if (leftMatched != null) {
+				leftCopy.remove(leftMatched);
+			}
+			if (ancestorMatched != null) {
+				ancestorCopy.remove(ancestorMatched);
 			}
 		}
-		// populates localy added list
+
+		// populates remotely deleted and locally added lists
+		final List<Object> rightCopy = new ArrayList<Object>(rightReferences);
+		ancestorCopy = new ArrayList<Object>(ancestorReferences);
 		for (final Object left : leftReferences) {
-			if (left instanceof EObject
-					&& !ancestorReferences.contains(getMatchedEObject((EObject)left, ANCESTOR_OBJECT))
-					&& !rightReferences.contains(getMatchedEObject((EObject)left))) {
-				addedReferences.add((EObject)left);
+			EObject rightMatched = null;
+			EObject ancestorMatched = null;
+			boolean hasRightMatch = false;
+			boolean hasAncestorMatch = false;
+			if (left instanceof EObject && !((EObject)left).eIsProxy()) {
+				ancestorMatched = getMatchedEObject((EObject)left, ANCESTOR_OBJECT);
+				rightMatched = getMatchedEObject((EObject)left);
+				hasRightMatch = rightMatched != null && rightCopy.contains(rightMatched);
+				hasAncestorMatch = ancestorMatched != null && ancestorCopy.contains(ancestorMatched);
+			} else if (left instanceof EObject && ((EObject)left).eIsProxy()) {
+				final Iterator<Object> ancestorIterator = ancestorCopy.iterator();
+				while (ancestorMatched == null && ancestorIterator.hasNext()) {
+					final Object ancestor = ancestorIterator.next();
+					if (!areDistinct((EObject)left, (EObject)ancestor)) {
+						ancestorMatched = (EObject)ancestor;
+					}
+				}
+				final Iterator<Object> rightIterator = rightCopy.iterator();
+				while (rightMatched == null && rightIterator.hasNext()) {
+					final Object right = rightIterator.next();
+					if (!areDistinct((EObject)left, (EObject)right)) {
+						rightMatched = (EObject)right;
+					}
+				}
+				hasRightMatch = rightMatched != null;
+				hasAncestorMatch = ancestorMatched != null;
 			}
-		}
-		// populates remotely deleted and localy added lists
-		for (final Object origin : ancestorReferences) {
-			if (origin instanceof EObject
-					&& !leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))
-					&& rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))) {
-				deletedReferences.add((EObject)origin);
-			} else if (origin instanceof EObject
-					&& !rightReferences.contains(getMatchedEObject((EObject)origin, RIGHT_OBJECT))
-					&& leftReferences.contains(getMatchedEObject((EObject)origin, LEFT_OBJECT))) {
-				remoteDeletedReferences.add((EObject)origin);
+			if (!hasRightMatch && !hasAncestorMatch) {
+				addedReferences.add((EObject)left);
+			} else if (!hasRightMatch) {
+				remoteDeletedReferences.add((EObject)left);
+			}
+			if (rightMatched != null) {
+				leftCopy.remove(rightMatched);
+			}
+			if (ancestorMatched != null) {
+				ancestorCopy.remove(ancestorMatched);
 			}
 		}
 	}
