@@ -56,7 +56,7 @@ public class UML2DiffExtensionMerger extends DefaultMerger {
 		final UMLDiffExtension extension = (UMLDiffExtension)this.diff;
 		List<DiffElement> hideElements = new ArrayList<DiffElement>(extension.getHideElements());
 		for (DiffElement hiddenElement : hideElements) {
-			if (!alreadyMerged.contains(hiddenElement)) {
+			if (!alreadyMerged.contains(hiddenElement) && hiddenElement.eResource() != null) {
 				final IMerger merger = MergeFactory.createMerger(hiddenElement);
 				merger.applyInOrigin();
 			}
@@ -74,7 +74,7 @@ public class UML2DiffExtensionMerger extends DefaultMerger {
 		final UMLDiffExtension extension = (UMLDiffExtension)this.diff;
 		List<DiffElement> hideElements = new ArrayList<DiffElement>(extension.getHideElements());
 		for (DiffElement hiddenElement : hideElements) {
-			if (!alreadyMerged.contains(hiddenElement)) {
+			if (!alreadyMerged.contains(hiddenElement) && hiddenElement.eResource() != null) {
 				final IMerger merger = MergeFactory.createMerger(hiddenElement);
 				merger.undoInTarget();
 			}

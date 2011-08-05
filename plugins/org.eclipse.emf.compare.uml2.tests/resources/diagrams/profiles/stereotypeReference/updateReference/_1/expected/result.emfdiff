@@ -8,7 +8,7 @@
             <reference href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//ACliche/singleValuedReference"/>
             <rightElement href="../original/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
             <leftElement href="../modified/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
-            <rightTarget href="../modified/model.uml#_QNMLEYwrEeCIzv0DzikA6A"/>
+            <leftTarget href="../modified/model.uml#_QNMLEYwrEeCIzv0DzikA6A"/>
           </subDiffElements>
           <rightParent href="../original/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
         </subDiffElements>
@@ -16,7 +16,7 @@
           <reference href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//ACliche/singleValuedReference"/>
           <rightElement href="../original/model.uml#_VGFMoIwrEeCIzv0DzikA6A"/>
           <leftElement href="../modified/model.uml#_VGFMoIwrEeCIzv0DzikA6A"/>
-          <rightTarget href="../modified/model.uml#_QNMLEYwrEeCIzv0DzikA6A"/>
+          <leftTarget href="../modified/model.uml#_QNMLEYwrEeCIzv0DzikA6A"/>
           <stereotype href="platform:/plugin/org.eclipse.emf.compare.uml2.tests/model/uml2.compare.testprofile.profile.uml#_wQjhQIwoEeC_FYHMbTTxXw"/>
         </subDiffElements>
       </ownedElements>
