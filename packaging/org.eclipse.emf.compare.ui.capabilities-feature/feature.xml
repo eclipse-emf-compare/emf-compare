@@ -22,9 +22,6 @@
       <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
    </url>
 
-   <includes
-         id="org.eclipse.emf.compare.ui.capabilities.source"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.ui"/>
