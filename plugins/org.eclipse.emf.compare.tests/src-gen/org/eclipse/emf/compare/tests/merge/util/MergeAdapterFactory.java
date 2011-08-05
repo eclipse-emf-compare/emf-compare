@@ -103,6 +103,14 @@ public class MergeAdapterFactory extends AdapterFactoryImpl {
 				return createNodeMultiValuedAttributeAdapter();
 			}
 			@Override
+			public Adapter caseNodeSingleValueReference(NodeSingleValueReference object) {
+				return createNodeSingleValueReferenceAdapter();
+			}
+			@Override
+			public Adapter caseNodeMultiValueReference(NodeMultiValueReference object) {
+				return createNodeMultiValueReferenceAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -189,6 +197,34 @@ public class MergeAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createNodeMultiValuedAttributeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.merge.NodeSingleValueReference <em>Node Single Value Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeSingleValueReference
+	 * @generated
+	 */
+	public Adapter createNodeSingleValueReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.tests.merge.NodeMultiValueReference <em>Node Multi Value Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeMultiValueReference
+	 * @generated
+	 */
+	public Adapter createNodeMultiValueReferenceAdapter() {
 		return null;
 	}
 

@@ -295,6 +295,99 @@ public interface MergePackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.merge.impl.NodeSingleValueReferenceImpl <em>Node Single Value Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.merge.impl.NodeSingleValueReferenceImpl
+	 * @see org.eclipse.emf.compare.tests.merge.impl.MergePackageImpl#getNodeSingleValueReference()
+	 * @generated
+	 */
+	int NODE_SINGLE_VALUE_REFERENCE = 5;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_REFERENCE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_REFERENCE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Single Valued Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_REFERENCE__SINGLE_VALUED_REFERENCE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Node Single Value Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_SINGLE_VALUE_REFERENCE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.tests.merge.impl.NodeMultiValueReferenceImpl <em>Node Multi Value Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.tests.merge.impl.NodeMultiValueReferenceImpl
+	 * @see org.eclipse.emf.compare.tests.merge.impl.MergePackageImpl#getNodeMultiValueReference()
+	 * @generated
+	 */
+	int NODE_MULTI_VALUE_REFERENCE = 6;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_REFERENCE__NAME = NODE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Containment Ref1</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_REFERENCE__CONTAINMENT_REF1 = NODE__CONTAINMENT_REF1;
+
+	/**
+	 * The feature id for the '<em><b>Multi Valued Reference</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Node Multi Value Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_MULTI_VALUE_REFERENCE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.merge.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -409,6 +502,48 @@ public interface MergePackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getNodeMultiValuedAttribute_MultiValuedAttribute();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.merge.NodeSingleValueReference <em>Node Single Value Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Single Value Reference</em>'.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeSingleValueReference
+	 * @generated
+	 */
+	EClass getNodeSingleValueReference();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.tests.merge.NodeSingleValueReference#getSingleValuedReference <em>Single Valued Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Single Valued Reference</em>'.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeSingleValueReference#getSingleValuedReference()
+	 * @see #getNodeSingleValueReference()
+	 * @generated
+	 */
+	EReference getNodeSingleValueReference_SingleValuedReference();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.tests.merge.NodeMultiValueReference <em>Node Multi Value Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Node Multi Value Reference</em>'.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeMultiValueReference
+	 * @generated
+	 */
+	EClass getNodeMultiValueReference();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.tests.merge.NodeMultiValueReference#getMultiValuedReference <em>Multi Valued Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Multi Valued Reference</em>'.
+	 * @see org.eclipse.emf.compare.tests.merge.NodeMultiValueReference#getMultiValuedReference()
+	 * @see #getNodeMultiValueReference()
+	 * @generated
+	 */
+	EReference getNodeMultiValueReference_MultiValuedReference();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -529,6 +664,42 @@ public interface MergePackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute NODE_MULTI_VALUED_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE = eINSTANCE.getNodeMultiValuedAttribute_MultiValuedAttribute();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.merge.impl.NodeSingleValueReferenceImpl <em>Node Single Value Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.merge.impl.NodeSingleValueReferenceImpl
+		 * @see org.eclipse.emf.compare.tests.merge.impl.MergePackageImpl#getNodeSingleValueReference()
+		 * @generated
+		 */
+		EClass NODE_SINGLE_VALUE_REFERENCE = eINSTANCE.getNodeSingleValueReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Single Valued Reference</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_SINGLE_VALUE_REFERENCE__SINGLE_VALUED_REFERENCE = eINSTANCE.getNodeSingleValueReference_SingleValuedReference();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.tests.merge.impl.NodeMultiValueReferenceImpl <em>Node Multi Value Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.tests.merge.impl.NodeMultiValueReferenceImpl
+		 * @see org.eclipse.emf.compare.tests.merge.impl.MergePackageImpl#getNodeMultiValueReference()
+		 * @generated
+		 */
+		EClass NODE_MULTI_VALUE_REFERENCE = eINSTANCE.getNodeMultiValueReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Multi Valued Reference</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE = eINSTANCE.getNodeMultiValueReference_MultiValuedReference();
 
 	}
 

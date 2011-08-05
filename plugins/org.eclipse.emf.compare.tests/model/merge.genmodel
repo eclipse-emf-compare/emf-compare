@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2011 Obeo.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;    Obeo - initial API and implementation"
     modelDirectory="/org.eclipse.emf.compare.tests/src-gen" modelPluginID="org.eclipse.emf.compare.tests"
     modelName="Merge" nonNLSMarkers="true" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="5.0">
+    complianceLevel="5.0" runtimeVersion="2.4">
   <foreignModel>merge.ecore</foreignModel>
   <genPackages prefix="Merge" basePackage="org.eclipse.emf.compare.tests" disposableProviderFactory="true"
       ecorePackage="merge.ecore#/">
@@ -23,6 +23,12 @@
     </genClasses>
     <genClasses ecoreClass="merge.ecore#//NodeMultiValuedAttribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute merge.ecore#//NodeMultiValuedAttribute/multiValuedAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="merge.ecore#//NodeSingleValueReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference merge.ecore#//NodeSingleValueReference/singleValuedReference"/>
+    </genClasses>
+    <genClasses ecoreClass="merge.ecore#//NodeMultiValueReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference merge.ecore#//NodeMultiValueReference/multiValuedReference"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
