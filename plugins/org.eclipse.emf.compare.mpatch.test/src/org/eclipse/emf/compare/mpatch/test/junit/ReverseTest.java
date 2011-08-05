@@ -145,9 +145,9 @@ public class ReverseTest {
 	}
 
 	private void reverseAndTest(MPatchModel reversed, String info) {
-		final MPatchModel original = EcoreUtil.copy(reversed);
+		final MPatchModel original = (MPatchModel)EcoreUtil.copy(reversed);
 		ReverseTransformation.reverse(reversed);
-		final MPatchModel doubleReversed = EcoreUtil.copy(reversed);
+		final MPatchModel doubleReversed = (MPatchModel)EcoreUtil.copy(reversed);
 		ReverseTransformation.reverse(doubleReversed);
 		final ComparisonResourceSnapshot mpatchDiff = CommonUtils.createEmfdiff(original, doubleReversed);
 		final Collection<DiffElement> differences = CommonUtils.analyzeDiff(mpatchDiff, CommonUtils.DIFF_ORDERINGS);

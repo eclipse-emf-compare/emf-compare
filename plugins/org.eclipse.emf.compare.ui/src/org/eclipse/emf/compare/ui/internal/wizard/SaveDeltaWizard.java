@@ -83,7 +83,7 @@ public class SaveDeltaWizard extends BasicNewFileResourceWizard {
 	public void init(IWorkbench workbench, ComparisonSnapshot inputSnapshot) {
 		super.init(workbench, new StructuredSelection());
 		// ensures no modification will be made to the input
-		input = EcoreUtil.copy(inputSnapshot);
+		input = (ComparisonSnapshot)EcoreUtil.copy(inputSnapshot);
 	}
 
 	/**

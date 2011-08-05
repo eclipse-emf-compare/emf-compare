@@ -11,6 +11,8 @@ Contributors:
     Obeo - initial API and implementation
 -->
 <plugin>
+
+<!-- You should really look to the UML extension itself and not only this example. disabling it to avoid issues with tests.
    <extension
          point="org.eclipse.emf.compare.diff.extension">
       <diffExtension
@@ -18,6 +20,7 @@ Contributors:
             fileExtension="uml">
       </diffExtension>
    </extension>
+-->
 
 </plugin>
 
