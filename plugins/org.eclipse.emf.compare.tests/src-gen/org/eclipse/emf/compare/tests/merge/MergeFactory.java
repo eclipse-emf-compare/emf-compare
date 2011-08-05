@@ -82,6 +82,24 @@ public interface MergeFactory extends EFactory {
 	NodeMultiValuedAttribute createNodeMultiValuedAttribute();
 
 	/**
+	 * Returns a new object of class '<em>Node Single Value Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Single Value Reference</em>'.
+	 * @generated
+	 */
+	NodeSingleValueReference createNodeSingleValueReference();
+
+	/**
+	 * Returns a new object of class '<em>Node Multi Value Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Node Multi Value Reference</em>'.
+	 * @generated
+	 */
+	NodeMultiValueReference createNodeMultiValueReference();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

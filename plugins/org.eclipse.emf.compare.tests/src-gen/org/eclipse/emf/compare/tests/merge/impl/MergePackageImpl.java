@@ -13,11 +13,13 @@ package org.eclipse.emf.compare.tests.merge.impl;
 import org.eclipse.emf.compare.tests.merge.MergeFactory;
 import org.eclipse.emf.compare.tests.merge.MergePackage;
 import org.eclipse.emf.compare.tests.merge.Node;
+import org.eclipse.emf.compare.tests.merge.NodeMultiValueReference;
 import org.eclipse.emf.compare.tests.merge.NodeMultiValuedAttribute;
 import org.eclipse.emf.compare.tests.merge.NodeMultipleContainment;
 
 import org.eclipse.emf.compare.tests.merge.NodeSingleValueAttribute;
 import org.eclipse.emf.compare.tests.merge.NodeSingleValueContainment;
+import org.eclipse.emf.compare.tests.merge.NodeSingleValueReference;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -73,6 +75,20 @@ public class MergePackageImpl extends EPackageImpl implements MergePackage {
 	 * @generated
 	 */
 	private EClass nodeMultiValuedAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeSingleValueReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass nodeMultiValueReferenceEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -239,6 +255,42 @@ public class MergePackageImpl extends EPackageImpl implements MergePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getNodeSingleValueReference() {
+		return nodeSingleValueReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNodeSingleValueReference_SingleValuedReference() {
+		return (EReference)nodeSingleValueReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNodeMultiValueReference() {
+		return nodeMultiValueReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getNodeMultiValueReference_MultiValuedReference() {
+		return (EReference)nodeMultiValueReferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MergeFactory getMergeFactory() {
 		return (MergeFactory)getEFactoryInstance();
 	}
@@ -277,6 +329,12 @@ public class MergePackageImpl extends EPackageImpl implements MergePackage {
 
 		nodeMultiValuedAttributeEClass = createEClass(NODE_MULTI_VALUED_ATTRIBUTE);
 		createEAttribute(nodeMultiValuedAttributeEClass, NODE_MULTI_VALUED_ATTRIBUTE__MULTI_VALUED_ATTRIBUTE);
+
+		nodeSingleValueReferenceEClass = createEClass(NODE_SINGLE_VALUE_REFERENCE);
+		createEReference(nodeSingleValueReferenceEClass, NODE_SINGLE_VALUE_REFERENCE__SINGLE_VALUED_REFERENCE);
+
+		nodeMultiValueReferenceEClass = createEClass(NODE_MULTI_VALUE_REFERENCE);
+		createEReference(nodeMultiValueReferenceEClass, NODE_MULTI_VALUE_REFERENCE__MULTI_VALUED_REFERENCE);
 	}
 
 	/**
@@ -311,6 +369,8 @@ public class MergePackageImpl extends EPackageImpl implements MergePackage {
 		nodeSingleValueContainmentEClass.getESuperTypes().add(this.getNode());
 		nodeSingleValueAttributeEClass.getESuperTypes().add(this.getNode());
 		nodeMultiValuedAttributeEClass.getESuperTypes().add(this.getNode());
+		nodeSingleValueReferenceEClass.getESuperTypes().add(this.getNode());
+		nodeMultiValueReferenceEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -328,6 +388,12 @@ public class MergePackageImpl extends EPackageImpl implements MergePackage {
 
 		initEClass(nodeMultiValuedAttributeEClass, NodeMultiValuedAttribute.class, "NodeMultiValuedAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 		initEAttribute(getNodeMultiValuedAttribute_MultiValuedAttribute(), ecorePackage.getEString(), "multiValuedAttribute", null, 0, -1, NodeMultiValuedAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(nodeSingleValueReferenceEClass, NodeSingleValueReference.class, "NodeSingleValueReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getNodeSingleValueReference_SingleValuedReference(), this.getNode(), null, "singleValuedReference", null, 0, 1, NodeSingleValueReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+
+		initEClass(nodeMultiValueReferenceEClass, NodeMultiValueReference.class, "NodeMultiValueReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getNodeMultiValueReference_MultiValuedReference(), this.getNode(), null, "multiValuedReference", null, 0, -1, NodeMultiValueReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);
