@@ -479,7 +479,7 @@ public class AttributesCheck extends AbstractCheck {
 
 		// populates remotely added and locally deleted lists
 		final List<Object> leftCopy = new ArrayList<Object>(leftValues);
-		final List<Object> ancestorCopy = new ArrayList<Object>(ancestorValues);
+		List<Object> ancestorCopy = new ArrayList<Object>(ancestorValues);
 		for (Object right : rightValues) {
 			Object leftMatched = null;
 			final Iterator<Object> leftIterator = leftCopy.iterator();
@@ -514,7 +514,7 @@ public class AttributesCheck extends AbstractCheck {
 
 		// populates remotely deleted and locally added lists
 		final List<Object> rightCopy = new ArrayList<Object>(rightValues);
-		ancestorCopy.addAll(ancestorValues);
+		ancestorCopy = new ArrayList<Object>(ancestorValues);
 		for (Object left : leftValues) {
 			Object rightMatched = null;
 			final Iterator<Object> rightIterator = rightCopy.iterator();
