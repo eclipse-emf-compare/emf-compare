@@ -672,6 +672,7 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		} else {
 			diffIterator = diffModel.eAllContents();
 		}
+
 		while (diffIterator.hasNext()) {
 			final EObject next = diffIterator.next();
 			if (next instanceof ModelElementChangeLeftTarget) {

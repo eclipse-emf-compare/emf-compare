@@ -35,8 +35,13 @@ public class UpdateReferenceMerger extends DefaultMerger {
 		final EObject leftTarget = (EObject)theDiff.getRightElement().eGet(reference);
 		final EObject matchedLeftTarget = theDiff.getLeftTarget();
 
-		MergeService.getCopier(diff)
-				.copyReferenceValue(reference, element, leftTarget, matchedLeftTarget, -1);
+		if (leftTarget == null) {
+			// We're unsetting the value, no need to copy
+			element.eUnset(reference);
+		} else {
+			MergeService.getCopier(diff).copyReferenceValue(reference, element, leftTarget,
+					matchedLeftTarget, -1);
+		}
 
 		super.applyInOrigin();
 	}
@@ -54,8 +59,13 @@ public class UpdateReferenceMerger extends DefaultMerger {
 		final EObject rightTarget = (EObject)theDiff.getLeftElement().eGet(reference);
 		final EObject matchedRightTarget = theDiff.getRightTarget();
 
-		MergeService.getCopier(diff).copyReferenceValue(reference, element, rightTarget, matchedRightTarget,
-				-1);
+		if (rightTarget == null) {
+			// We're unsetting the value, no need to copy
+			element.eUnset(reference);
+		} else {
+			MergeService.getCopier(diff).copyReferenceValue(reference, element, rightTarget,
+					matchedRightTarget, -1);
+		}
 
 		super.undoInTarget();
 	}
