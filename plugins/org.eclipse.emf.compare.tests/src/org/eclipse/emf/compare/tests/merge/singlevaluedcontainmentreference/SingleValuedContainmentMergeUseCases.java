@@ -11,10 +11,10 @@
 package org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference;
 
 import org.eclipse.emf.compare.tests.merge.MergeTestBase;
-import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.data.MergeMMSingleValuedReferenceInputData;
+import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.data.MergeMMSingleValuedContainmentReferenceInputData;
 
 public class SingleValuedContainmentMergeUseCases extends MergeTestBase {
-	MergeMMSingleValuedReferenceInputData input = new MergeMMSingleValuedReferenceInputData();
+	MergeMMSingleValuedContainmentReferenceInputData input = new MergeMMSingleValuedContainmentReferenceInputData();
 
 	public void testAddChild() throws Exception {
 		mergeAllDiffsLeftToRight(input.getNoChild(), input.getChild());

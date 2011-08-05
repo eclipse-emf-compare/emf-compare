@@ -16,7 +16,7 @@ import org.eclipse.emf.compare.tests.merge.data.AbstractInputData;
 import org.eclipse.emf.ecore.EObject;
 
 @SuppressWarnings("nls")
-public class MergeMMSingleValuedReferenceInputData extends AbstractInputData {
+public class MergeMMSingleValuedContainmentReferenceInputData extends AbstractInputData {
 	public EObject getNoChild() throws IOException {
 		String path = "noChildSingleContainment.merge";
 		return loadFromClassloader(path);
