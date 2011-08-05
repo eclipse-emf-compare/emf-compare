@@ -198,3 +198,18 @@ h2. Attribute changes
 			* Removing last, first to middle, "next to last" to first (useCase134)
 			* Removing last, first to middle, "next to last" to middle (useCase135)
 			* Removing last, middle to first, middle to last (useCase136)
+
+h2. Reference changes
+
+	h3. Simple use-cases : no eOpposite, no "dependent" diff
+	
+		h4. Single-valued reference
+			* Setting the reference to a resolved element (noValue.merge -> value.merge)
+			* Unsetting the reference pointing to a resolved element (value.merge -> noValue.merge)
+			* Changing a reference pointing to a resolved element so that it points to another resolved element (value.merge -> changedValue.merge)
+			* Changing a reference pointing to a resolved element so that it points to an unresolved proxy (value.merge -> changedValueProxy.merge)
+		
+			* Setting the value to an unresolved proxy (noValue.merge -> valueProxy.merge)
+			* Unsetting the reference pointing to an unresolved proxy (valueProxy.merge -> noValue.merge)
+			* Changing a reference pointing to an unresolved proxy so that it points to a resolved element (valueProxy.merge -> changedValue.merge)
+			* Changing a reference pointing to an unresolved proxy so that it points to another unresolved proxy (valueProxy.merge -> changedValueProxy.merge)
