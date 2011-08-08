@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:merge="http://www.eclipse.org/emf/compare/tests/merge" name="root">
+  <containmentRef1 name="anotherNode"/>
+  <containmentRef1 name="justAnotherNode"/>
+  <containmentRef1 xsi:type="merge:NodeSingleValueReference" name="base" singleValuedReference="anotherResource.merge#//unresolvedProxy"/>
+</merge:Node>

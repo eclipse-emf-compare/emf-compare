@@ -49,6 +49,18 @@ import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.Sing
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesWithResource;
 import org.eclipse.emf.compare.tests.merge.singlevaluedcontainmentreference.SingleValuedContainmentMergeUseCasesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayLocalChanges;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayLocalChangesNoResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayLocalChangesWithResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayLocalChangesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayRemoteChanges;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayRemoteChangesNoResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayRemoteChangesWithResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCases3WayRemoteChangesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCasesWithResourceSet;
 
 public class AllMergeTests {
 
@@ -104,6 +116,19 @@ public class AllMergeTests {
 		suite.addTestSuite(MultipleContainmentMergeUseCasesWithResourceSet.class);
 		suite.addTestSuite(MultipleContainmentMergeUseCases3WayLocalChangesWithResourceSet.class);
 		suite.addTestSuite(MultipleContainmentMergeUseCases3WayRemoteChangesWithResourceSet.class);
+
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayLocalChanges.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayRemoteChanges.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCasesNoResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayLocalChangesNoResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayRemoteChangesNoResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCasesWithResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayLocalChangesWithResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayRemoteChangesWithResource.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCasesWithResourceSet.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayLocalChangesWithResourceSet.class);
+		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayRemoteChangesWithResourceSet.class);
 
 		// End of the merge test metamodel use cases
 
