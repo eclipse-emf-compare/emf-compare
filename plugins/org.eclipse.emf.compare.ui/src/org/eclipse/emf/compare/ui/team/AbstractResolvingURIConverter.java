@@ -30,7 +30,7 @@ public abstract class AbstractResolvingURIConverter extends ExtensibleURIConvert
 	@Override
 	public URI normalize(URI uri) {
 		URI normalizedUri = null;
-		if (uri.isRelative()) {
+		if (uri.segmentCount() > 0 && uri.isRelative()) {
 			try {
 				normalizedUri = super.normalize(resolve(uri));
 			} catch (CoreException e) {
