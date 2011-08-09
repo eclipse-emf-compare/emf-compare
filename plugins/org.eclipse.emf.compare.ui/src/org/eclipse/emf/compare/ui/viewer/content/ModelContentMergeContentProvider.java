@@ -76,9 +76,15 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
 					content = new ArrayList<Resource>(res.getResourceSet().getResources());
+				} else {
+					content = ((ModelCompareInput)element).getAncestor();
 				}
 			} else if (diff instanceof DiffModel) {
-				content = res;
+				if (res == null) {
+					content = ((ModelCompareInput)element).getAncestor();
+				} else {
+					content = res;
+				}
 			}
 		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getAncestor();
@@ -118,9 +124,15 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
 					content = new ArrayList<Resource>(res.getResourceSet().getResources());
+				} else {
+					content = ((ModelCompareInput)element).getLeft();
 				}
 			} else if (diff instanceof DiffModel) {
-				content = res;
+				if (res == null) {
+					content = ((ModelCompareInput)element).getLeft();
+				} else {
+					content = res;
+				}
 			}
 		} else if (element instanceof ICompareInput) {
 			content = ((ICompareInput)element).getLeft();
@@ -197,9 +209,15 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 			if (diff instanceof DiffResourceSet) {
 				if (res != null && res.getResourceSet() != null) {
 					content = new ArrayList<Resource>(res.getResourceSet().getResources());
+				} else {
+					content = ((ModelCompareInput)element).getRight();
 				}
 			} else if (diff instanceof DiffModel) {
-				content = res;
+				if (res == null) {
+					content = ((ModelCompareInput)element).getRight();
+				} else {
+					content = res;
+				}
 			}
 		} else if (element instanceof ICompareInput)
 			content = ((ICompareInput)element).getRight();
