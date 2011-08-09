@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.ui.team.AbstractResolvingURIConverter;
 import org.eclipse.emf.compare.ui.team.AbstractTeamHandler;
@@ -159,15 +160,23 @@ public class RevisionComparisonHandler extends AbstractTeamHandler {
 			URI deresolvedURI = uri;
 			// We'll have to change the EMF URI to find the IFile it points to
 			final IStorage storage = baseRevision.getStorage(null);
-			if (uri.isRelative()) {
+			if (uri.segmentCount() > 0 && uri.isRelative()) {
 				// Current revision, yet the proxy could point to a file that has changed since.
 				if (storage instanceof IFile) {
 					final IFile file = (IFile)storage;
 					deresolvedURI = uri.resolve(URI.createURI(file.getLocationURI().toString()));
 				} else {
-					final IResource stateFile = EcorePlugin.getWorkspaceRoot().findMember(
-							storage.getFullPath());
-					deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
+					IResource stateFile = (IResource)storage.getAdapter(IResource.class);
+					if (stateFile == null) {
+						stateFile = (IResource)Platform.getAdapterManager().getAdapter(storage,
+								IResource.class);
+					}
+					if (stateFile == null) {
+						stateFile = EcorePlugin.getWorkspaceRoot().findMember(storage.getFullPath());
+					}
+					if (stateFile != null) {
+						deresolvedURI = uri.resolve(URI.createURI(stateFile.getLocationURI().toString()));
+					}
 				}
 			}
 			deresolvedURI = URI.createPlatformResourceURI(deresolvedURI.deresolve(
