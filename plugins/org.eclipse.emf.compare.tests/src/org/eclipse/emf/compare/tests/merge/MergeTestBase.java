@@ -22,6 +22,9 @@ import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.engine.IMatchScope;
+import org.eclipse.emf.compare.match.engine.IMatchScopeProvider;
+import org.eclipse.emf.compare.match.filter.IResourceFilter;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
@@ -75,7 +78,8 @@ public abstract class MergeTestBase extends TestCase {
 		EObject testRightModel = rightModel;
 
 		List<DiffElement> differences = detectDifferences(testLeftModel, testRightModel);
-		assertFalse(differences.isEmpty());
+
+		assertDiffCount(differences);
 
 		merge(isLeftToRight, testLeftModel, testRightModel, differences);
 
@@ -87,6 +91,10 @@ public abstract class MergeTestBase extends TestCase {
 		// System.err.println("Actual   :\n" + actual);
 		// fail(" Merge (leftToRight=" + isLeftToRight + ")failed ");
 		// }
+	}
+
+	protected void assertDiffCount(List<DiffElement> differences) {
+		assertFalse(differences.isEmpty());
 	}
 
 	protected List<DiffElement> detectDifferences(EObject testLeftModel, EObject testRightModel)
@@ -150,5 +158,34 @@ public abstract class MergeTestBase extends TestCase {
 		leftModel = left;
 		rightModel = right;
 		doPerformTest(false);
+	}
+
+	public class NoLeafScopeProvider implements IMatchScopeProvider {
+		public IMatchScope getLeftScope() {
+			return new NoLeafScope();
+		}
+
+		public IMatchScope getRightScope() {
+			return new NoLeafScope();
+		}
+
+		public IMatchScope getAncestorScope() {
+			return new NoLeafScope();
+		}
+
+		public void applyResourceFilter(IResourceFilter filter) {
+			// Nothing to do
+		}
+	}
+
+	public class NoLeafScope implements IMatchScope {
+		public boolean isInScope(EObject eObject) {
+			return eObject instanceof Node && ((Node)eObject).getName().equals("base") //$NON-NLS-1$
+					|| eObject.eContainer() == null;
+		}
+
+		public boolean isInScope(Resource resource) {
+			return true;
+		}
 	}
 }
