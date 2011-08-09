@@ -141,12 +141,13 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<Integer> removedIndices = new ArrayList<Integer>();
 		// Purge "left" list of all reference values that have been added to it
 		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
-			if (isUnmatched(leftValue)
+			if (!isInScope(leftValue) || isUnmatched(leftValue)
 					|| getMatchedEObject(leftValue.eContainer()) != getMatchedEObject(leftValue).eContainer())
 				leftElementReferences.remove(leftValue);
 		}
 		for (EObject rightValue : new ArrayList<EObject>(rightElementReferences)) {
-			if (isUnmatched(rightValue)
+			if (!isInScope(rightValue)
+					|| isUnmatched(rightValue)
 					|| getMatchedEObject(rightValue.eContainer()) != getMatchedEObject(rightValue)
 							.eContainer()) {
 				removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(rightValue)));
@@ -155,10 +156,10 @@ public class ReferencesCheck extends AbstractCheck {
 		int expectedIndex = 0;
 		for (int i = 0; i < leftElementReferences.size(); i++) {
 			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
-			for (final Integer removedIndice : new ArrayList<Integer>(removedIndices)) {
-				if (i == removedIndice) {
+			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
+				if (expectedIndex == removedIndex) {
 					expectedIndex += 1;
-					removedIndices.remove(removedIndice);
+					removedIndices.remove(removedIndex);
 				}
 			}
 			if (rightElementReferences.indexOf(matched) != expectedIndex++) {
