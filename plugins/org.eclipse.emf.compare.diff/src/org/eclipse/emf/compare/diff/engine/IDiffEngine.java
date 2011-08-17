@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine;
 
@@ -40,6 +41,7 @@ public interface IDiffEngine {
 	 */
 	DiffModel doDiff(MatchModel match, boolean threeWay);
 
+	// FIXME 2.0 : the CrossReferencer is unnecessary as a parameter; we could have initialized it later on.
 	/**
 	 * Return a diffmodel created using the given match model. <code>crossReferencer</code> has been
 	 * initialized on the whole MatchResourceSet.

@@ -7,11 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,8 +20,11 @@ import java.util.Map;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.engine.check.AttributesCheck;
 import org.eclipse.emf.compare.diff.engine.check.ReferencesCheck;
+import org.eclipse.emf.compare.diff.internal.engine.CrossReferencerMatchManager;
+import org.eclipse.emf.compare.diff.internal.engine.MatchCrossReferencer;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -37,14 +40,12 @@ import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.Match3Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchElement;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.MatchPackage;
 import org.eclipse.emf.compare.match.metamodel.Side;
 import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -54,21 +55,42 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  */
 // FIXME this engine must be refactored (e.g create checkers for 'checkxxDiff')
-public class GenericDiffEngine implements IDiffEngine {
-	/** Allows retrieval of the ancestor matched object. */
+public class GenericDiffEngine implements IDiffEngine2 {
+	/**
+	 * Allows retrieval of the ancestor matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int ANCESTOR_OBJECT = 0;
 
-	/** Allows retrieval of the left matched object. */
+	/**
+	 * Allows retrieval of the left matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int LEFT_OBJECT = 1;
 
-	/** Allows retrieval of the right matched object. */
+	/**
+	 * Allows retrieval of the right matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int RIGHT_OBJECT = 2;
 
 	/**
 	 * If we're currently doing a resourceSet differencing, this will have been initialized with the whole
 	 * MatchResourceSet.
+	 * 
+	 * @deprecated this field should no longer be used, use {@link #getMatchManager()} instead.
 	 */
+	@Deprecated
 	protected EcoreUtil.CrossReferencer matchCrossReferencer;
+
+	/** IMatchManager instance used to determine the match for an arbitrary EObject. */
+	private IMatchManager matchManager;
 
 	/** This will keep track of the diff groups created for this comparison. */
 	private Map<EObject, DiffGroup> diffGroups = new HashMap<EObject, DiffGroup>();
@@ -89,15 +111,19 @@ public class GenericDiffEngine implements IDiffEngine {
 	 *      boolean)
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
-		matchCrossReferencer = new EcoreUtil.CrossReferencer(match) {
-			/** Generic Serial ID. */
-			private static final long serialVersionUID = 1L;
+		matchCrossReferencer = new MatchCrossReferencer(match);
+		return doDiff(match, threeWay, new CrossReferencerMatchManager(matchCrossReferencer));
+	}
 
-			/** initializer. */
-			{
-				crossReference();
-			}
-		};
+	/**
+	 * {@inheritDoc}.
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine2#doDiff(org.eclipse.emf.compare.match.metamodel.MatchModel,
+	 *      boolean, org.eclipse.emf.compare.diff.engine.IMatchManager)
+	 * @since 1.3
+	 */
+	public DiffModel doDiff(MatchModel match, boolean threeWay, IMatchManager manager) {
+		matchManager = manager;
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
 		result.getLeftRoots().addAll(match.getLeftRoots());
 		result.getRightRoots().addAll(match.getRightRoots());
@@ -123,6 +149,18 @@ public class GenericDiffEngine implements IDiffEngine {
 	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay,
 			EcoreUtil.CrossReferencer crossReferencer) {
 		matchCrossReferencer = crossReferencer;
+		return doDiffResourceSet(match, threeWay, new CrossReferencerMatchManager(matchCrossReferencer));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.engine.IDiffEngine2#doDiffResourceSet(org.eclipse.emf.compare.match.metamodel.MatchModel,
+	 *      boolean, org.eclipse.emf.compare.diff.engine.IMatchManager)
+	 * @since 1.3
+	 */
+	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, IMatchManager manager) {
+		matchManager = manager;
 		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
 		result.getLeftRoots().addAll(match.getLeftRoots());
 		result.getRightRoots().addAll(match.getRightRoots());
@@ -147,6 +185,10 @@ public class GenericDiffEngine implements IDiffEngine {
 	public void reset() {
 		diffGroups.clear();
 		matchCrossReferencer = null;
+		if (matchManager != null) {
+			matchManager.dispose();
+			matchManager = null;
+		}
 	}
 
 	/**
@@ -168,7 +210,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		DiffGroup targetGroup = findExistingGroup(root, targetParent);
 		if (targetGroup == null) {
 			// Searches for a DiffGroup with the matched parent
-			targetGroup = findExistingGroup(root, getMatchedEObject(targetParent));
+			targetGroup = findExistingGroup(root, getMatchManager().getMatchedEObject(targetParent));
 			if (targetGroup == null) {
 				// we have to create the group
 				targetGroup = buildHierarchyGroup(targetParent, root);
@@ -186,7 +228,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @since 1.0
 	 */
 	protected AttributesCheck getAttributesChecker() {
-		return new AttributesCheck(matchCrossReferencer);
+		return new AttributesCheck(getMatchManager());
 	}
 
 	/**
@@ -198,7 +240,7 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @since 1.0
 	 */
 	protected ReferencesCheck getReferencesChecker() {
-		return new ReferencesCheck(matchCrossReferencer);
+		return new ReferencesCheck(getMatchManager());
 	}
 
 	/**
@@ -255,7 +297,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		if (leftElement.eContainmentFeature() != null && rightElement.eContainmentFeature() != null) {
 			if (!leftElement.eContainmentFeature().getName()
 					.equals(rightElement.eContainmentFeature().getName())
-					&& getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+					&& getMatchManager().getMatchedEObject(leftElement.eContainer()).equals(
+							rightElement.eContainer())) {
 				createUpdateContainmentOperation(current, leftElement, rightElement);
 			}
 		}
@@ -283,17 +326,17 @@ public class GenericDiffEngine implements IDiffEngine {
 				&& leftElement.eContainmentFeature() != null
 				&& !leftElement.eContainmentFeature().getName()
 						.equals(originElement.eContainmentFeature().getName())
-				&& getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(
+				&& getMatchManager().getMatchedEObject(leftElement.eContainer(), MatchSide.ANCESTOR).equals(
 						originElement.eContainer());
 		final boolean rightChangedContainment = originElement.eContainmentFeature() != null
 				&& rightElement.eContainmentFeature() != null
 				&& !rightElement.eContainmentFeature().getName()
 						.equals(originElement.eContainmentFeature().getName())
-				&& getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(
+				&& getMatchManager().getMatchedEObject(rightElement.eContainer(), MatchSide.ANCESTOR).equals(
 						originElement.eContainer());
 
 		// effective change
-		if (getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())
+		if (getMatchManager().getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())
 				&& !leftElement.eContainmentFeature().getName()
 						.equals(rightElement.eContainmentFeature().getName())) {
 			// conflicting change
@@ -302,8 +345,10 @@ public class GenericDiffEngine implements IDiffEngine {
 						.createUpdateContainmentFeature();
 				updateContainment.setLeftElement(leftElement);
 				updateContainment.setRightElement(rightElement);
-				updateContainment.setRightTarget(getMatchedEObject(leftElement.eContainer()));
-				updateContainment.setLeftTarget(getMatchedEObject(rightElement.eContainer()));
+				updateContainment.setRightTarget(getMatchManager()
+						.getMatchedEObject(leftElement.eContainer()));
+				updateContainment.setLeftTarget(getMatchManager()
+						.getMatchedEObject(rightElement.eContainer()));
 
 				final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
 						.createConflictingDiffElement();
@@ -372,7 +417,7 @@ public class GenericDiffEngine implements IDiffEngine {
 		if (left instanceof EGenericType || right instanceof EGenericType)
 			return;
 		if (left.eContainer() != null && right.eContainer() != null
-				&& getMatchedEObject(left.eContainer()) != right.eContainer()) {
+				&& getMatchManager().getMatchedEObject(left.eContainer()) != right.eContainer()) {
 			createMoveOperation(root, left, right);
 		}
 	}
@@ -400,22 +445,22 @@ public class GenericDiffEngine implements IDiffEngine {
 
 		final boolean leftMoved = originElement != null
 				&& leftElement.eContainer() != null
-				&& !getMatchedEObject(leftElement.eContainer(), ANCESTOR_OBJECT).equals(
+				&& !getMatchManager().getMatchedEObject(leftElement.eContainer(), MatchSide.ANCESTOR).equals(
 						originElement.eContainer());
 		final boolean rightMoved = originElement != null
 				&& rightElement.eContainer() != null
-				&& !getMatchedEObject(rightElement.eContainer(), ANCESTOR_OBJECT).equals(
-						originElement.eContainer());
+				&& !getMatchManager().getMatchedEObject(rightElement.eContainer(), MatchSide.ANCESTOR)
+						.equals(originElement.eContainer());
 
 		// effective change
-		if (!getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
+		if (!getMatchManager().getMatchedEObject(leftElement.eContainer()).equals(rightElement.eContainer())) {
 			// conflicting change
 			if (leftMoved && rightMoved) {
 				final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 				operation.setRightElement(rightElement);
 				operation.setLeftElement(leftElement);
-				operation.setRightTarget(getMatchedEObject(leftElement.eContainer()));
-				operation.setLeftTarget(getMatchedEObject(rightElement.eContainer()));
+				operation.setRightTarget(getMatchManager().getMatchedEObject(leftElement.eContainer()));
+				operation.setLeftTarget(getMatchManager().getMatchedEObject(rightElement.eContainer()));
 
 				final ConflictingDiffElement conflictingDiff = DiffFactory.eINSTANCE
 						.createConflictingDiffElement();
@@ -585,22 +630,11 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @param from
 	 *            The original {@link EObject}.
 	 * @return The matched {@link EObject}.
+	 * @deprecated this functionality has been encapsulated in the new {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	protected final EObject getMatchedEObject(EObject from) {
-		EObject matchedEObject = null;
-		final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
-		if (settings == null)
-			return null;
-		for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
-			if (setting.getEObject() instanceof Match2Elements) {
-				if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
-					matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-				} else if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT) {
-					matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-				}
-			}
-		}
-		return matchedEObject;
+		return getMatchManager().getMatchedEObject(from);
 	}
 
 	/**
@@ -619,28 +653,32 @@ public class GenericDiffEngine implements IDiffEngine {
 	 * @return The matched EObject.
 	 * @throws IllegalArgumentException
 	 *             Thrown if <code>side</code> is invalid.
+	 * @deprecated this functionality has been encapsulated in the new {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	protected final EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
+		IMatchManager.MatchSide matchSide;
+		if (side == LEFT_OBJECT) {
+			matchSide = MatchSide.LEFT;
+		} else if (side == RIGHT_OBJECT) {
+			matchSide = MatchSide.RIGHT;
+		} else if (side == ANCESTOR_OBJECT) {
+			matchSide = MatchSide.ANCESTOR;
+		} else {
 			throw new IllegalArgumentException(
 					EMFCompareDiffMessages.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
 		}
-		EObject matchedEObject = null;
-		final Collection<EStructuralFeature.Setting> settings = matchCrossReferencer.get(from);
-		if (settings == null)
-			return null;
-		for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
-			if (setting.getEObject() instanceof Match2Elements) {
-				if (side == LEFT_OBJECT) {
-					matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-				} else if (side == RIGHT_OBJECT) {
-					matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-				} else if (setting.getEObject() instanceof Match3Elements) {
-					matchedEObject = ((Match3Elements)setting.getEObject()).getOriginElement();
-				}
-			}
-		}
-		return matchedEObject;
+		return getMatchManager().getMatchedEObject(from, matchSide);
+	}
+
+	/**
+	 * Returns the match manager used by this engine.
+	 * 
+	 * @return The match manager used by this engine.
+	 * @since 1.3
+	 */
+	protected IMatchManager getMatchManager() {
+		return matchManager;
 	}
 
 	/**
@@ -661,14 +699,14 @@ public class GenericDiffEngine implements IDiffEngine {
 		}
 		for (final UnmatchElement unmatchElement : filteredUnmatched) {
 			final EObject element = unmatchElement.getElement();
-			final EObject leftParent = getMatchedEObject(element.eContainer());
+			final EObject leftParent = getMatchManager().getMatchedEObject(element.eContainer());
 
 			final ConflictingDiffElement container;
 			if (unmatchElement.isConflicting()) {
 				container = DiffFactory.eINSTANCE.createConflictingDiffElement();
 				container.setLeftParent(leftParent);
 				container.setRightParent(element.eContainer());
-				container.setOriginElement(getMatchedEObject(element, ANCESTOR_OBJECT));
+				container.setOriginElement(getMatchManager().getMatchedEObject(element, MatchSide.ANCESTOR));
 			} else {
 				container = null;
 			}
@@ -804,8 +842,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
-		operation.setRightTarget(getMatchedEObject(left.eContainer()));
-		operation.setLeftTarget(getMatchedEObject(right.eContainer()));
+		operation.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
+		operation.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(operation);
 	}
 
@@ -826,8 +864,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		operation.setRemote(true);
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
-		operation.setRightTarget(getMatchedEObject(left.eContainer()));
-		operation.setLeftTarget(getMatchedEObject(right.eContainer()));
+		operation.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
+		operation.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(operation);
 	}
 
@@ -848,8 +886,8 @@ public class GenericDiffEngine implements IDiffEngine {
 		updateContainment.setRemote(true);
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
-		updateContainment.setRightTarget(getMatchedEObject(left.eContainer()));
-		updateContainment.setLeftTarget(getMatchedEObject(right.eContainer()));
+		updateContainment.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
+		updateContainment.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);
 	}
 
@@ -869,8 +907,8 @@ public class GenericDiffEngine implements IDiffEngine {
 				.createUpdateContainmentFeature();
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
-		updateContainment.setRightTarget(getMatchedEObject(left.eContainer()));
-		updateContainment.setLeftTarget(getMatchedEObject(right.eContainer()));
+		updateContainment.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
+		updateContainment.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);
 	}
 

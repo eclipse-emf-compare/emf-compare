@@ -8,6 +8,7 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Taal - [299641] Compare arrays by their content instead of instance equality - Note : moved to DiffCollectionsHelper
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine.check;
 
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.engine.IMatchManager;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange;
@@ -45,9 +47,23 @@ public class AttributesCheck extends AbstractCheck {
 	 * @param referencer
 	 *            CrossReferencer instantiated with the match model or match resource set.
 	 * @see {@link AbstractCheck#DefaultCheck(org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)}
+	 * @deprecated The CrossReferencer mechanism is now hidden behind the {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	public AttributesCheck(EcoreUtil.CrossReferencer referencer) {
 		super(referencer);
+	}
+
+	/**
+	 * Simply delegates to the super constructor.
+	 * 
+	 * @see IMatchManager
+	 * @param manager
+	 *            the IMatchManager instance to determine matches for certain <code>EObject</code>
+	 * @since 1.3
+	 */
+	public AttributesCheck(IMatchManager manager) {
+		super(manager);
 	}
 
 	/**

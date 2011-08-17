@@ -22,6 +22,7 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.engine.IDiffEngine;
+import org.eclipse.emf.compare.diff.internal.engine.MatchCrossReferencer;
 import org.eclipse.emf.compare.diff.internal.service.DefaultDiffEngineSelector;
 import org.eclipse.emf.compare.diff.internal.service.DiffExtensionDescriptor;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
@@ -138,14 +139,7 @@ public final class DiffService {
 	 */
 	public static DiffResourceSet doDiff(MatchResourceSet matchResourceSet, boolean threeWay) {
 		final DiffResourceSet diff = DiffFactory.eINSTANCE.createDiffResourceSet();
-		final CrossReferencer crossReferencer = new CrossReferencer(matchResourceSet) {
-			private static final long serialVersionUID = 1L;
-
-			/** initializer. */
-			{
-				crossReference();
-			}
-		};
+		final CrossReferencer crossReferencer = new MatchCrossReferencer(matchResourceSet);
 		for (final MatchModel match : matchResourceSet.getMatchModels()) {
 			final IDiffEngine engine = getBestDiffEngine(match);
 			final DiffModel diffmodel = engine.doDiffResourceSet(match, threeWay, crossReferencer);

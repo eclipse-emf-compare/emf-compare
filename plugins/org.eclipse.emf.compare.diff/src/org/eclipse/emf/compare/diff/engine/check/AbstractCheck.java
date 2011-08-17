@@ -7,22 +7,19 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine.check;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.diff.EMFCompareDiffMessages;
+import org.eclipse.emf.compare.diff.engine.IMatchManager;
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.internal.DiffCollectionsHelper;
-import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.Match3Elements;
-import org.eclipse.emf.compare.match.metamodel.MatchPackage;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
+import org.eclipse.emf.compare.diff.internal.engine.CrossReferencerMatchManager;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 
@@ -34,19 +31,37 @@ import org.eclipse.emf.ecore.util.FeatureMap;
  * @since 1.0
  */
 public abstract class AbstractCheck {
-	/** Allows retrieval of the ancestor matched object. */
+	/**
+	 * Allows retrieval of the ancestor matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int ANCESTOR_OBJECT = 0;
 
-	/** Allows retrieval of the left matched object. */
+	/**
+	 * Allows retrieval of the left matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int LEFT_OBJECT = 1;
 
-	/** Allows retrieval of the right matched object. */
+	/**
+	 * Allows retrieval of the right matched object.
+	 * 
+	 * @deprecated this is now available as a formal enum at {@link IMatchManager.MatchSide}.
+	 */
+	@Deprecated
 	protected static final int RIGHT_OBJECT = 2;
 
 	/**
 	 * If we're currently doing a resourceSet differencing, this will have been initialized with the whole
 	 * MatchResourceSet.
+	 * 
+	 * @deprecated this field should no longer be used, use {@link #getMatchManager()} instead.
 	 */
+	@Deprecated
 	protected final EcoreUtil.CrossReferencer crossReferencer;
 
 	/**
@@ -57,15 +72,51 @@ public abstract class AbstractCheck {
 	protected DiffCollectionsHelper matcherHelper;
 
 	/**
+	 * IMatchManager instance used to determine the match for an arbitrary EObject.
+	 * 
+	 * @see IMatchManager
+	 */
+	private IMatchManager matchManager;
+
+	/**
 	 * Instantiates the checker given the current crossreferencing members of the diff engine.
 	 * 
 	 * @param referencer
 	 *            This cross referencer has been initialized with the whole MatchResourceSet and can be used
 	 *            to retrieve matched EObjects towards other resources.
+	 * @deprecated The CrossReferencer mechanism is now hidden behind the IMatchManager interface, use the
+	 *             {@link #AbstractCheck(IMatchManager)} constructor instead.
 	 */
+	@Deprecated
 	public AbstractCheck(EcoreUtil.CrossReferencer referencer) {
 		crossReferencer = referencer;
-		matcherHelper = new DiffCollectionsHelper(referencer);
+		matchManager = new CrossReferencerMatchManager(referencer);
+		matcherHelper = new DiffCollectionsHelper(matchManager);
+	}
+
+	/**
+	 * Instantiates the checker given a certain IMatchManager instance.
+	 * 
+	 * @param manager
+	 *            the IMatchManager instance which should be used to determine matches between
+	 *            <code>EObject</code>s.
+	 * @see IMatchManager
+	 * @since 1.3
+	 */
+	public AbstractCheck(IMatchManager manager) {
+		crossReferencer = null;
+		matchManager = manager;
+		matcherHelper = new DiffCollectionsHelper(manager);
+	}
+
+	/**
+	 * Returns the match manager used by this checker.
+	 * 
+	 * @return The match manager used by this checker.
+	 * @since 1.3
+	 */
+	protected IMatchManager getMatchManager() {
+		return matchManager;
 	}
 
 	/**
@@ -92,41 +143,11 @@ public abstract class AbstractCheck {
 	 * @param from
 	 *            The original {@link EObject}.
 	 * @return The matched {@link EObject}.
+	 * @deprecated this functionality has been encapsulated in the new {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	protected final EObject getMatchedEObject(EObject from) {
-		EObject matchedEObject = null;
-		if (crossReferencer != null && from != null && crossReferencer.get(from) != null) {
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : crossReferencer.get(from)) {
-				if (setting.getEObject() instanceof Match2Elements) {
-					if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-					} else if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-					}
-				}
-			}
-		}
-		return matchedEObject;
-	}
-
-	/**
-	 * This will check whether the given EObject was part of this comparison's scope.
-	 * 
-	 * @param eObj
-	 *            EObject to check.
-	 * @return <code>true</code> if that EObject is in the scope, <code>false</code> otherwise.
-	 * @since 1.3
-	 */
-	protected final boolean isInScope(EObject eObj) {
-		if (crossReferencer != null && eObj != null && crossReferencer.get(eObj) != null) {
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : crossReferencer.get(eObj)) {
-				if (setting.getEObject() instanceof Match2Elements
-						|| setting.getEObject() instanceof UnmatchElement) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return getMatchManager().getMatchedEObject(from);
 	}
 
 	/**
@@ -145,30 +166,22 @@ public abstract class AbstractCheck {
 	 * @return The matched EObject.
 	 * @throws IllegalArgumentException
 	 *             Thrown if <code>side</code> is invalid.
+	 * @deprecated this functionality has been encapsulated in the new {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	protected final EObject getMatchedEObject(EObject from, int side) throws IllegalArgumentException {
-		if (side != LEFT_OBJECT && side != RIGHT_OBJECT && side != ANCESTOR_OBJECT) {
+		IMatchManager.MatchSide matchSide;
+		if (side == LEFT_OBJECT) {
+			matchSide = MatchSide.LEFT;
+		} else if (side == RIGHT_OBJECT) {
+			matchSide = MatchSide.RIGHT;
+		} else if (side == ANCESTOR_OBJECT) {
+			matchSide = MatchSide.ANCESTOR;
+		} else {
 			throw new IllegalArgumentException(
 					EMFCompareDiffMessages.getString("GenericDiffEngine.IllegalSide")); //$NON-NLS-1$
 		}
-		EObject matchedEObject = null;
-		if (crossReferencer != null) {
-			final Collection<EStructuralFeature.Setting> settings = crossReferencer.get(from);
-			if (settings == null)
-				return null;
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : settings) {
-				if (setting.getEObject() instanceof Match2Elements) {
-					if (side == LEFT_OBJECT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-					} else if (side == RIGHT_OBJECT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-					} else if (setting.getEObject() instanceof Match3Elements) {
-						matchedEObject = ((Match3Elements)setting.getEObject()).getOriginElement();
-					}
-				}
-			}
-		}
-		return matchedEObject;
+		return getMatchManager().getMatchedEObject(from, matchSide);
 	}
 
 	/**
@@ -179,15 +192,11 @@ public abstract class AbstractCheck {
 	 *            The element for which we need to know whether it is unmatched.
 	 * @return <code>true</code> if the given element corresponds to an UnmatchedElement, <code>false</code>
 	 *         otherwise.
+	 * @deprecated this functionality has been encapsulated in the new {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	protected final boolean isUnmatched(EObject element) {
-		if (crossReferencer != null && crossReferencer.get(element) != null) {
-			final Iterator<EStructuralFeature.Setting> it = crossReferencer.get(element).iterator();
-			if (it.hasNext() && it.next().getEObject() instanceof UnmatchElement) {
-				return true;
-			}
-		}
-		return false;
+		return getMatchManager().isUnmatched(element);
 	}
 
 	/**

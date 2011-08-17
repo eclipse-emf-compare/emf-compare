@@ -8,18 +8,16 @@
  * Contributors:
  *     Obeo - initial API and implementation
  *     Martin Taal - [299641] Compare arrays by their content instead of instance equality
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal;
 
 import java.lang.reflect.Array;
 import java.util.List;
 
-import org.eclipse.emf.compare.match.metamodel.Match2Elements;
-import org.eclipse.emf.compare.match.metamodel.MatchPackage;
+import org.eclipse.emf.compare.diff.engine.IMatchManager;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
  * Utility class to diff Collection values.
@@ -28,18 +26,20 @@ import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
  */
 public class DiffCollectionsHelper {
 	/**
-	 * the cross referencer used to retrive the matches.
+	 * IMatchManager instance used to determine the match for an arbitrary EObject.
+	 * 
+	 * @see IMatchManager
 	 */
-	private EcoreUtil.CrossReferencer crossReferencer;
+	private IMatchManager matchManager;
 
 	/**
 	 * Create a new utility to diff collections.
 	 * 
-	 * @param referencer
-	 *            the cross referencer used to retrieve the matches.
+	 * @param manager
+	 *            the IMatchManager instance used to retrieve the matches.
 	 */
-	public DiffCollectionsHelper(CrossReferencer referencer) {
-		this.crossReferencer = referencer;
+	public DiffCollectionsHelper(IMatchManager manager) {
+		this.matchManager = manager;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class DiffCollectionsHelper {
 			distinct = !value1.toString().equals(value2.toString());
 		} else if (left instanceof EObject && right instanceof EObject) {
 			// [248442] This will handle FeatureMapEntries detection
-			distinct = left != getMatchedEObject((EObject)right);
+			distinct = left != getMatchManager().getMatchedEObject((EObject)right);
 		} else if (left != null && left.getClass().isArray()) {
 			// [299641] compare arrays by their content instead of instance equality
 			distinct = areDistinctArrays(left, right);
@@ -105,31 +105,6 @@ public class DiffCollectionsHelper {
 			distinct = left != null && !left.equals(right) || left == null && left != right;
 		}
 		return distinct;
-	}
-
-	/**
-	 * Return the left or right matched EObject from the one given. More specifically, this will return the
-	 * left matched element if the given {@link EObject} is the right one, or the right matched element if the
-	 * given {@link EObject} is either the left or the origin one.
-	 * 
-	 * @param from
-	 *            The original {@link EObject}.
-	 * @return The matched {@link EObject}.
-	 */
-	protected final EObject getMatchedEObject(EObject from) {
-		EObject matchedEObject = null;
-		if (crossReferencer != null && from != null && crossReferencer.get(from) != null) {
-			for (final org.eclipse.emf.ecore.EStructuralFeature.Setting setting : crossReferencer.get(from)) {
-				if (setting.getEObject() instanceof Match2Elements) {
-					if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__LEFT_ELEMENT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getRightElement();
-					} else if (setting.getEStructuralFeature().getFeatureID() == MatchPackage.MATCH2_ELEMENTS__RIGHT_ELEMENT) {
-						matchedEObject = ((Match2Elements)setting.getEObject()).getLeftElement();
-					}
-				}
-			}
-		}
-		return matchedEObject;
 	}
 
 	/**
@@ -165,4 +140,12 @@ public class DiffCollectionsHelper {
 		return distinct;
 	}
 
+	/**
+	 * Returns the match manager used by this engine.
+	 * 
+	 * @return The match manager used by this engine.
+	 */
+	protected IMatchManager getMatchManager() {
+		return matchManager;
+	}
 }

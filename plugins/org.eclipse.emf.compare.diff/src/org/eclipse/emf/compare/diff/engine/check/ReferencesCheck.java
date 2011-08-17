@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Victor Roldan Betancort - [352002] introduce IMatchManager
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.engine.check;
 
@@ -16,6 +17,8 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.FactoryException;
+import org.eclipse.emf.compare.diff.engine.IMatchManager;
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
@@ -47,9 +50,23 @@ public class ReferencesCheck extends AbstractCheck {
 	 * @param referencer
 	 *            CrossReferencer instantiated with the match model or match resource set.
 	 * @see {@link AbstractCheck#DefaultCheck(org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)}
+	 * @deprecated CrossReferencer mechanism is now hidden behind the {@link IMatchManager} interface.
 	 */
+	@Deprecated
 	public ReferencesCheck(EcoreUtil.CrossReferencer referencer) {
 		super(referencer);
+	}
+
+	/**
+	 * Simply delegates to the super constructor.
+	 * 
+	 * @see IMatchManager
+	 * @param manager
+	 *            the IMatchManager instance to determine matches for certain <code>EObject</code>
+	 * @since 1.3
+	 */
+	public ReferencesCheck(IMatchManager manager) {
+		super(manager);
 	}
 
 	/**
@@ -141,21 +158,23 @@ public class ReferencesCheck extends AbstractCheck {
 		final List<Integer> removedIndices = new ArrayList<Integer>();
 		// Purge "left" list of all reference values that have been added to it
 		for (EObject leftValue : new ArrayList<EObject>(leftElementReferences)) {
-			if (!isInScope(leftValue) || isUnmatched(leftValue)
-					|| getMatchedEObject(leftValue.eContainer()) != getMatchedEObject(leftValue).eContainer())
+			if (!getMatchManager().isInScope(leftValue)
+					|| getMatchManager().isUnmatched(leftValue)
+					|| getMatchManager().getMatchedEObject(leftValue.eContainer()) != getMatchManager()
+							.getMatchedEObject(leftValue).eContainer())
 				leftElementReferences.remove(leftValue);
 		}
 		for (EObject rightValue : new ArrayList<EObject>(rightElementReferences)) {
-			if (!isInScope(rightValue)
-					|| isUnmatched(rightValue)
-					|| getMatchedEObject(rightValue.eContainer()) != getMatchedEObject(rightValue)
-							.eContainer()) {
+			if (!getMatchManager().isInScope(rightValue)
+					|| getMatchManager().isUnmatched(rightValue)
+					|| getMatchManager().getMatchedEObject(rightValue.eContainer()) != getMatchManager()
+							.getMatchedEObject(rightValue).eContainer()) {
 				removedIndices.add(Integer.valueOf(rightElementReferences.indexOf(rightValue)));
 			}
 		}
 		int expectedIndex = 0;
 		for (int i = 0; i < leftElementReferences.size(); i++) {
-			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
+			final EObject matched = getMatchManager().getMatchedEObject(leftElementReferences.get(i));
 			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
 				if (expectedIndex == removedIndex) {
 					expectedIndex += 1;
@@ -232,7 +251,7 @@ public class ReferencesCheck extends AbstractCheck {
 
 		int expectedIndex = 0;
 		for (int i = 0; i < leftElementReferences.size(); i++) {
-			final EObject matched = getMatchedEObject(leftElementReferences.get(i));
+			final EObject matched = getMatchManager().getMatchedEObject(leftElementReferences.get(i));
 			for (final Integer removedIndex : new ArrayList<Integer>(removedIndices)) {
 				if (i == removedIndex.intValue()) {
 					expectedIndex += 1;
@@ -385,10 +404,10 @@ public class ReferencesCheck extends AbstractCheck {
 		if ((addedValue == null || deletedValue == null) && addedValue != deletedValue) {
 			createDiff = true;
 		} else if (addedValue != null && deletedValue != null) {
-			final EObject matchAdded = getMatchedEObject(addedValue);
+			final EObject matchAdded = getMatchManager().getMatchedEObject(addedValue);
 			if (matchAdded != null && matchAdded != deletedValue) {
 				createDiff = true;
-			} else if (getMatchedEObject(deletedValue) != null) {
+			} else if (getMatchManager().getMatchedEObject(deletedValue) != null) {
 				// the deleted object has a match. At this point it can only be distinct from the added
 				// value since this added value itself has no match.
 				createDiff = true;
@@ -571,8 +590,8 @@ public class ReferencesCheck extends AbstractCheck {
 			addOperation.setLeftElement(left);
 			addOperation.setReference(reference);
 			addOperation.setLeftTarget(eobj);
-			if (getMatchedEObject(eobj) != null) {
-				addOperation.setRightTarget(getMatchedEObject(eobj));
+			if (getMatchManager().getMatchedEObject(eobj) != null) {
+				addOperation.setRightTarget(getMatchManager().getMatchedEObject(eobj));
 			}
 			root.getSubDiffElements().add(addOperation);
 			result.add(addOperation);
@@ -703,8 +722,8 @@ public class ReferencesCheck extends AbstractCheck {
 			operation.setRightElement(mapping.getRightElement());
 			operation.setReference(reference);
 
-			EObject leftTarget = getMatchedEObject(remoteAdded);
-			EObject rightTarget = getMatchedEObject(remoteDeleted);
+			EObject leftTarget = getMatchManager().getMatchedEObject(remoteAdded);
+			EObject rightTarget = getMatchManager().getMatchedEObject(remoteDeleted);
 			// checks if target are defined remotely
 			if (leftTarget == null && remoteAdded != null) {
 				leftTarget = remoteAdded;
@@ -728,8 +747,8 @@ public class ReferencesCheck extends AbstractCheck {
 				addOperation.setLeftElement(mapping.getLeftElement());
 				addOperation.setReference(reference);
 				addOperation.setRightTarget(eobj);
-				if (getMatchedEObject(eobj) != null) {
-					addOperation.setLeftTarget(getMatchedEObject(eobj));
+				if (getMatchManager().getMatchedEObject(eobj) != null) {
+					addOperation.setLeftTarget(getMatchManager().getMatchedEObject(eobj));
 				}
 				root.getSubDiffElements().add(addOperation);
 			}
@@ -743,8 +762,8 @@ public class ReferencesCheck extends AbstractCheck {
 				delOperation.setLeftElement(mapping.getLeftElement());
 				delOperation.setReference(reference);
 				delOperation.setLeftTarget(eobj);
-				if (getMatchedEObject(eobj) != null) {
-					delOperation.setRightTarget(getMatchedEObject(eobj));
+				if (getMatchManager().getMatchedEObject(eobj) != null) {
+					delOperation.setRightTarget(getMatchManager().getMatchedEObject(eobj));
 				}
 				root.getSubDiffElements().add(delOperation);
 			}
@@ -782,8 +801,8 @@ public class ReferencesCheck extends AbstractCheck {
 			delOperation.setLeftElement(left);
 			delOperation.setReference(reference);
 			delOperation.setRightTarget(eobj);
-			if (getMatchedEObject(eobj) != null) {
-				delOperation.setLeftTarget(getMatchedEObject(eobj));
+			if (getMatchManager().getMatchedEObject(eobj) != null) {
+				delOperation.setLeftTarget(getMatchManager().getMatchedEObject(eobj));
 			}
 			root.getSubDiffElements().add(delOperation);
 			result.add(delOperation);
@@ -813,8 +832,8 @@ public class ReferencesCheck extends AbstractCheck {
 		operation.setRightElement(right);
 		operation.setReference(reference);
 
-		EObject leftTarget = getMatchedEObject(deletedValue);
-		EObject rightTarget = getMatchedEObject(addedValue);
+		EObject leftTarget = getMatchManager().getMatchedEObject(deletedValue);
+		EObject rightTarget = getMatchManager().getMatchedEObject(addedValue);
 		// checks if target are defined remotely
 		if (leftTarget == null && deletedValue != null) {
 			leftTarget = deletedValue;
@@ -844,7 +863,7 @@ public class ReferencesCheck extends AbstractCheck {
 		while (refIterator.hasNext()) {
 			final Object currentReference = refIterator.next();
 			if (currentReference != null) {
-				final EObject currentMapped = getMatchedEObject((EObject)currentReference);
+				final EObject currentMapped = getMatchManager().getMatchedEObject((EObject)currentReference);
 				if (currentMapped != null) {
 					matchedReferences.add(currentMapped);
 				}
@@ -879,7 +898,8 @@ public class ReferencesCheck extends AbstractCheck {
 				// ... There is a conflict if the value hasn't been erased AND
 				// the left value is different than the right one
 				if (leftReferences.size() > 0
-						&& !leftReferences.get(0).equals(getMatchedEObject((EObject)rightReferences.get(0)))) {
+						&& !leftReferences.get(0).equals(
+								getMatchManager().getMatchedEObject((EObject)rightReferences.get(0)))) {
 					isConflictual = true;
 				}
 				// If the number of values hasn't changed since the origin, there
@@ -887,10 +907,13 @@ public class ReferencesCheck extends AbstractCheck {
 			} else if (leftReferences.size() > 0 && rightReferences.size() > 0) {
 				// There's a conflict if the values are distinct
 				if (!leftReferences.get(0).equals(
-						getMatchedEObject((EObject)ancestorReferences.get(0), LEFT_OBJECT))
+						getMatchManager().getMatchedEObject((EObject)ancestorReferences.get(0),
+								MatchSide.LEFT))
 						&& !rightReferences.get(0).equals(
-								getMatchedEObject((EObject)ancestorReferences.get(0), RIGHT_OBJECT))
-						&& !rightReferences.get(0).equals(getMatchedEObject((EObject)leftReferences.get(0)))) {
+								getMatchManager().getMatchedEObject((EObject)ancestorReferences.get(0),
+										MatchSide.RIGHT))
+						&& !rightReferences.get(0).equals(
+								getMatchManager().getMatchedEObject((EObject)leftReferences.get(0)))) {
 					isConflictual = true;
 				}
 			}
@@ -954,8 +977,8 @@ public class ReferencesCheck extends AbstractCheck {
 			boolean hasLeftMatch = false;
 			boolean hasAncestorMatch = false;
 			if (right instanceof EObject && !((EObject)right).eIsProxy()) {
-				ancestorMatched = getMatchedEObject((EObject)right, ANCESTOR_OBJECT);
-				leftMatched = getMatchedEObject((EObject)right);
+				ancestorMatched = getMatchManager().getMatchedEObject((EObject)right, MatchSide.ANCESTOR);
+				leftMatched = getMatchManager().getMatchedEObject((EObject)right);
 				hasLeftMatch = leftMatched != null && leftCopy.contains(leftMatched);
 				hasAncestorMatch = ancestorMatched != null && ancestorCopy.contains(ancestorMatched);
 			} else if (right instanceof EObject && ((EObject)right).eIsProxy()) {
@@ -998,8 +1021,8 @@ public class ReferencesCheck extends AbstractCheck {
 			boolean hasRightMatch = false;
 			boolean hasAncestorMatch = false;
 			if (left instanceof EObject && !((EObject)left).eIsProxy()) {
-				ancestorMatched = getMatchedEObject((EObject)left, ANCESTOR_OBJECT);
-				rightMatched = getMatchedEObject((EObject)left);
+				ancestorMatched = getMatchManager().getMatchedEObject((EObject)left, MatchSide.ANCESTOR);
+				rightMatched = getMatchManager().getMatchedEObject((EObject)left);
 				hasRightMatch = rightMatched != null && rightCopy.contains(rightMatched);
 				hasAncestorMatch = ancestorMatched != null && ancestorCopy.contains(ancestorMatched);
 			} else if (left instanceof EObject && ((EObject)left).eIsProxy()) {
@@ -1048,14 +1071,14 @@ public class ReferencesCheck extends AbstractCheck {
 			int index = original.indexOf(toRemove);
 			if (index != -1) {
 				original.remove(index);
-			} else if (toRemove.eIsProxy() || !isInScope(toRemove)) {
+			} else if (toRemove.eIsProxy() || !getMatchManager().isInScope(toRemove)) {
 				final URI toRemoveURI = EcoreUtil.getURI(toRemove);
 
 				index = -1;
 				final Iterator<EObject> originalIterator = original.iterator();
 				while (index == -1 && originalIterator.hasNext()) {
 					final EObject originalValue = originalIterator.next();
-					if (originalValue.eIsProxy() || !isInScope(originalValue)) {
+					if (originalValue.eIsProxy() || !getMatchManager().isInScope(originalValue)) {
 						if (toRemoveURI.equals(EcoreUtil.getURI(originalValue))) {
 							index = original.indexOf(originalValue);
 						}
