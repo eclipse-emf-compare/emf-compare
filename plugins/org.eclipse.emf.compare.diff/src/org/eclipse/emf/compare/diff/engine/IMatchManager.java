@@ -63,11 +63,6 @@ public interface IMatchManager {
 	boolean isUnmatched(EObject element);
 
 	/**
-	 * This will be called whenever the engine is reset.
-	 */
-	void dispose();
-
-	/**
 	 * Indicates the actual side of a matched <code>EObject</code>, where it is always placed either at the
 	 * LEFT side or at the RIGHT side. Additionally, the ANCESTOR value is included for three-way delta
 	 * 

@@ -130,13 +130,4 @@ public class CrossReferencerMatchManager implements IMatchManager {
 		}
 		return false;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.eclipse.emf.compare.diff.engine.IMatchManager#dispose()
-	 */
-	public void dispose() {
-		crossReferencer = null;
-	}
 }

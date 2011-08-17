@@ -185,10 +185,7 @@ public class GenericDiffEngine implements IDiffEngine2 {
 	public void reset() {
 		diffGroups.clear();
 		matchCrossReferencer = null;
-		if (matchManager != null) {
-			matchManager.dispose();
-			matchManager = null;
-		}
+		matchManager = null;
 	}
 
 	/**
@@ -345,6 +342,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 						.createUpdateContainmentFeature();
 				updateContainment.setLeftElement(leftElement);
 				updateContainment.setRightElement(rightElement);
+				if (getMatchManager().getMatchedEObject(leftElement.eContainer()) == null) {
+					System.out.println();
+				}
 				updateContainment.setRightTarget(getMatchManager()
 						.getMatchedEObject(leftElement.eContainer()));
 				updateContainment.setLeftTarget(getMatchManager()
@@ -459,6 +459,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 				final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 				operation.setRightElement(rightElement);
 				operation.setLeftElement(leftElement);
+				if (getMatchManager().getMatchedEObject(leftElement.eContainer()) == null) {
+					System.out.println();
+				}
 				operation.setRightTarget(getMatchManager().getMatchedEObject(leftElement.eContainer()));
 				operation.setLeftTarget(getMatchManager().getMatchedEObject(rightElement.eContainer()));
 
@@ -842,6 +845,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 		final MoveModelElement operation = DiffFactory.eINSTANCE.createMoveModelElement();
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
+		if (getMatchManager().getMatchedEObject(left.eContainer()) == null) {
+			System.out.println();
+		}
 		operation.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
 		operation.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(operation);
@@ -864,6 +870,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 		operation.setRemote(true);
 		operation.setRightElement(right);
 		operation.setLeftElement(left);
+		if (getMatchManager().getMatchedEObject(left.eContainer()) == null) {
+			System.out.println();
+		}
 		operation.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
 		operation.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(operation);
@@ -886,6 +895,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 		updateContainment.setRemote(true);
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
+		if (getMatchManager().getMatchedEObject(left.eContainer()) == null) {
+			System.out.println();
+		}
 		updateContainment.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
 		updateContainment.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);
@@ -907,6 +919,9 @@ public class GenericDiffEngine implements IDiffEngine2 {
 				.createUpdateContainmentFeature();
 		updateContainment.setLeftElement(left);
 		updateContainment.setRightElement(right);
+		if (getMatchManager().getMatchedEObject(left.eContainer()) == null) {
+			System.out.println();
+		}
 		updateContainment.setRightTarget(getMatchManager().getMatchedEObject(left.eContainer()));
 		updateContainment.setLeftTarget(getMatchManager().getMatchedEObject(right.eContainer()));
 		root.getSubDiffElements().add(updateContainment);
