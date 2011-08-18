@@ -104,6 +104,7 @@ public class ModelContentMergeTabFolder {
 
 		parentViewer = viewer;
 		partSide = side;
+		tabFolder = new CTabFolder(composite, SWT.BOTTOM);
 		createContents(composite);
 	}
 

@@ -357,7 +357,7 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			if (rightPart != null) {
 				rightPart.navigateToDiff(diffs);
 			}
-			if (isThreeWay) {
+			if (isThreeWay && ancestorPart != null) {
 				ancestorPart.navigateToDiff(diffs.get(0));
 			}
 			switchCopyState(true);
@@ -368,11 +368,13 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * Redraws this viewer.
 	 */
 	public void update() {
-		if (isThreeWay) {
+		if (isThreeWay && ancestorPart != null) {
 			ancestorPart.layout();
 		}
-		rightPart.layout();
-		leftPart.layout();
+		if (rightPart != null)
+			rightPart.layout();
+		if (leftPart != null)
+			leftPart.layout();
 		updateCenter();
 		updateToolItems();
 	}
@@ -664,17 +666,25 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 		super.handleDispose(event);
 		configuration.removePropertyChangeListener(structureSelectionListener);
 		EMFCompareUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceListener);
-		leftPart.removeCompareEditorPartListener(partListener);
-		leftPart.dispose();
-		leftPart = null;
-		rightPart.removeCompareEditorPartListener(partListener);
-		rightPart.dispose();
-		rightPart = null;
-		ancestorPart.removeCompareEditorPartListener(partListener);
-		ancestorPart.dispose();
-		ancestorPart = null;
-		canvas.dispose();
-		canvas = null;
+		if (leftPart != null) {
+			leftPart.removeCompareEditorPartListener(partListener);
+			leftPart.dispose();
+			leftPart = null;
+		}
+		if (rightPart != null) {
+			rightPart.removeCompareEditorPartListener(partListener);
+			rightPart.dispose();
+			rightPart = null;
+		}
+		if (ancestorPart != null) {
+			ancestorPart.removeCompareEditorPartListener(partListener);
+			ancestorPart.dispose();
+			ancestorPart = null;
+		}
+		if (canvas != null) {
+			canvas.dispose();
+			canvas = null;
+		}
 		currentSelection.clear();
 		ModelComparator.removeComparator(configuration);
 	}
