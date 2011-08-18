@@ -21,7 +21,7 @@
    <feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
       <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.uml2_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.uml2" version="1.2.0.qualifier">
+   <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
       <category name="compare"/>
    </feature>
    <category-def name="compare" label="EMF Compare">

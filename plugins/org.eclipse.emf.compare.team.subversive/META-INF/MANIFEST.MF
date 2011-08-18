@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.emf.compare.team.subversive;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.2.1.qualifier
 Bundle-Activator: org.eclipse.emf.compare.team.subversive.EMFCompareSVNPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare.ui,
