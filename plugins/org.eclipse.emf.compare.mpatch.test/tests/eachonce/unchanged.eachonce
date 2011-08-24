@@ -16,7 +16,7 @@
         <children singleAttribute="movedSubElement" singleReference="MoveModelElement"/>
       </children>
     </children>
-    <children singleAttribute="newPlace"/>
+    <children singleAttribute="newPlace" additionalAttribute="\&quot;quoted\&quot;"/>
   </children>
   <children singleAttribute="AddAttribute">
     <children singleAttribute="addAttribute">

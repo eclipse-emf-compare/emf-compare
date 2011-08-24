@@ -8,7 +8,7 @@
   <children singleAttribute="RemoveModelElement"/>
   <children singleAttribute="MoveModelElement">
     <children singleAttribute="oldPlace"/>
-    <children singleAttribute="newPlace">
+    <children singleAttribute="newPlace" additionalAttribute="\&quot;quoted\&quot;">
       <children singleAttribute="toMove">
         <children singleAttribute="movedSubElement" singleReference="MoveModelElement"/>
       </children>
