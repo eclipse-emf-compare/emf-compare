@@ -97,10 +97,11 @@ public class PerformanceTest {
 		for (int i = lowerBound; i <= upperBound; i += step) {
 			for (ISymbolicReferenceCreator symrefCreator : TestConstants.SYM_REF_CREATORS) {
 				for (IModelDescriptorCreator descriptorCreator : TestConstants.MODEL_DESCRIPTOR_CREATORS) {
-					System.out
-							.println(prettyPrint(i * 6, testPerformance(i, symrefCreator, descriptorCreator),
-									"descriptor: " + descriptorCreator.getLabel() + ", symref: "
-											+ symrefCreator.getLabel()));
+					final PerformanceTimes times = testPerformance(i, symrefCreator, descriptorCreator);
+					final String pretty = prettyPrint(i * 6, times,
+							"descriptor: " + descriptorCreator.getLabel() + ", symref: "
+									+ symrefCreator.getLabel());
+					System.out.println(pretty);
 				}
 			}
 		}

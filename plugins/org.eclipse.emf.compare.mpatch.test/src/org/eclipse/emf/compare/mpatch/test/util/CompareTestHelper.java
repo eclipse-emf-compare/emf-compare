@@ -190,8 +190,8 @@ public class CompareTestHelper {
 	 */
 	public static ResolvedSymbolicReferences resolveReferences(MPatchModel mpatch, EObject applyModel, String info) {
 		final ResolvedSymbolicReferences resolved = MPatchResolver.resolveSymbolicReferences(mpatch, applyModel,
-				ResolvedSymbolicReferences.RESOLVE_UNCHANGED);
-		final List<IndepChange> invalidResolution = MPatchValidator.validateResolutions(resolved);
+				ResolvedSymbolicReferences.RESOLVE_UNCHANGED, true);
+		final List<IndepChange> invalidResolution = MPatchValidator.validateResolutions(resolved, true);
 		assertTrue("The following changes did not resolve correctly (" + info + "): " + invalidResolution,
 				invalidResolution.isEmpty());
 		return resolved;

@@ -69,14 +69,17 @@ public class ReferenceResolutionLabelProvider extends AdapterFactoryLabelProvide
 	/** The symbolic reference resolution. */
 	final private ResolvedSymbolicReferences mapping;
 
+	private final boolean respectApplied;
+	
 	/**
 	 * Default constructor.
 	 * 
 	 * @see ReferenceResolutionLabelProvider
 	 */
-	public ReferenceResolutionLabelProvider(ResolvedSymbolicReferences mapping, AdapterFactory adapterFactory) {
+	public ReferenceResolutionLabelProvider(ResolvedSymbolicReferences mapping, AdapterFactory adapterFactory, boolean respectApplied) {
 		super(adapterFactory);
 		this.mapping = mapping;
+		this.respectApplied = respectApplied;
 	}
 
 	@Override
@@ -94,22 +97,21 @@ public class ReferenceResolutionLabelProvider extends AdapterFactoryLabelProvide
 			final boolean forward = mapping.getDirection() == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
 
 			if (element instanceof ModelDescriptorReference)
-				return secondColumnDescriptorImage(element);
+				return secondColumnDescriptorImage((ModelDescriptorReference) element);
 
 			if (element instanceof IElementReference)
-				return secondColumnReferenceImage(element, forward);
+				return secondColumnReferenceImage((IElementReference) element, forward);
 
 			if (element instanceof IndepChange)
-				return secondColumnChangeImage(element, forward);
+				return secondColumnChangeImage((IndepChange) element, forward);
 		}
 		return null;
 	}
 
-	private Image secondColumnChangeImage(Object element, final boolean forward) {
+	private Image secondColumnChangeImage(IndepChange change, final boolean forward) {
 		ImageDescriptor img = null;
 
 		// for changes
-		final IndepChange change = (IndepChange) element;
 		if (mapping.getResolutionByChange().containsKey(change)) {
 			for (final IElementReference ref : mapping.getResolutionByChange().get(change).keySet()) {
 				/*
@@ -129,7 +131,7 @@ public class ReferenceResolutionLabelProvider extends AdapterFactoryLabelProvide
 				
 				if (ValidationResult.STATE_BEFORE.equals(actualState)) {
 					img = GREEN; // everything ok
-				} else if (ValidationResult.STATE_AFTER.equals(actualState)) {
+				} else if (ValidationResult.STATE_AFTER.equals(actualState) && respectApplied) {
 					// TODO: now we got more states.. hence we need more images here to represent them!
 					img = GREEN;
 				} else {
@@ -142,11 +144,10 @@ public class ReferenceResolutionLabelProvider extends AdapterFactoryLabelProvide
 		return img.createImage();
 	}
 
-	private Image secondColumnReferenceImage(Object element, final boolean forward) {
+	private Image secondColumnReferenceImage(IElementReference ref, final boolean forward) {
 		final ImageDescriptor img;
 
 		// for symbolic references
-		final IElementReference ref = (IElementReference) element;
 		final IndepChange change = MPatchUtil.getChangeFor(ref);
 		if (!mapping.getResolutionByChange().containsKey(change))
 			return null; // change is ignored
@@ -174,8 +175,7 @@ public class ReferenceResolutionLabelProvider extends AdapterFactoryLabelProvide
 		return img.createImage();
 	}
 
-	private Image secondColumnDescriptorImage(Object element) {
-		final ModelDescriptorReference ref = (ModelDescriptorReference) element;
+	private Image secondColumnDescriptorImage(ModelDescriptorReference ref) {
 		final IndepChange change = MPatchUtil.getChangeFor(ref);
 		if (!mapping.getResolutionByChange().containsKey(change))
 			return null; // change is ignored

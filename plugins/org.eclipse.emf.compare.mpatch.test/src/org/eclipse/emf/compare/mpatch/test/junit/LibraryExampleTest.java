@@ -14,11 +14,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.compare.mpatch.MPatchModel;
 import org.eclipse.emf.compare.mpatch.apply.generic.util.InternalReferencesTransformation;
 import org.eclipse.emf.compare.mpatch.apply.generic.util.MPatchDependencyTransformation;
 import org.eclipse.emf.compare.mpatch.common.util.ExtensionManager;
 import org.eclipse.emf.compare.mpatch.common.util.MPatchConstants;
+import org.eclipse.emf.compare.mpatch.extension.IMPatchApplication;
 import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
 import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 import org.eclipse.emf.compare.mpatch.extension.MPatchApplicationResult;
@@ -69,7 +73,9 @@ public class LibraryExampleTest {
 		final ResolvedSymbolicReferences resolvedReferences = CompareTestHelper.resolveReferences(mpatch, applyModel, info);
 
 		// apply differences
-		final MPatchApplicationResult result = TestConstants.DIFF_APPLIER.applyMPatch(resolvedReferences, true);
+		final Map<Integer, Boolean> options = new HashMap<Integer, Boolean>();
+		options.put(IMPatchApplication.OPTION_STORE_BINDING, true);
+		final MPatchApplicationResult result = TestConstants.DIFF_APPLIER.applyMPatch(resolvedReferences, options);
 
 		// check application status
 		assertTrue("Some changes failed to apply: " + result.failed, result.failed.isEmpty());

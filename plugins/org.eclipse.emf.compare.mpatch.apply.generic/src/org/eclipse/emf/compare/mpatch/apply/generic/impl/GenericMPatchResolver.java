@@ -98,6 +98,9 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 
 	/** The element selection dialog cell editor. */
 	private ElementSelectionDialogCellEditor elementSelectionDialogCellEditor;
+	
+	/** Whether or not to respect and bind already applied changes in the model. */
+	private boolean respectApplied;
 
 	/**
 	 * {@inheritDoc}
@@ -121,8 +124,8 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	 * @param mapping
 	 *            The resolution that should be refined automatically.
 	 */
-	public void refineResolution(ResolvedSymbolicReferences mapping) {
-		AutoMPatchResolver.resolve(mapping);
+	public void refineResolution(ResolvedSymbolicReferences mapping, boolean respectApplied) {
+		AutoMPatchResolver.resolve(mapping, respectApplied);
 	}
 
 	/**
@@ -134,17 +137,18 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 	 * 
 	 * @see IMPatchResolution
 	 */
-	public void refineResolution(ResolvedSymbolicReferences mapping, IMPatchResolutionHost host) {
+	public void refineResolution(ResolvedSymbolicReferences mapping, boolean respectApplied, IMPatchResolutionHost host) {
 		this.mapping = mapping;
 		this.host = host;
+		this.respectApplied = respectApplied;
 		
 		// update validation states because we need them already for displaying them in the viewer!
-		MPatchValidator.validateResolutions(mapping);
+		MPatchValidator.validateResolutions(mapping, respectApplied);
 		
 		deactivatedChanges = new HashMap<IndepChange, Map<IElementReference, List<EObject>>>();
 		elementSelectionDialogCellEditor.reset(mapping);
 		viewer.setContentProvider(new ReferenceResolutionContentProvider(mapping, adapterFactory));
-		viewer.setLabelProvider(new ReferenceResolutionLabelProvider(mapping, adapterFactory));
+		viewer.setLabelProvider(new ReferenceResolutionLabelProvider(mapping, adapterFactory, respectApplied));
 		viewer.setInput(mapping.getMPatchModel());
 		if (onlyGroups(mapping.getMPatchModel().getChanges()))
 			viewer.expandToLevel(2);
@@ -378,7 +382,7 @@ public class GenericMPatchResolver implements IMPatchResolution, ISelectionChang
 						"A change was active and inactive at the same time: " + change);
 			deactivatedChanges.put(change, mapping.getResolutionByChange().get(change));
 		}
-		refineResolution(mapping);
+		refineResolution(mapping, respectApplied);
 
 		// remove all active changes from deactiveChanges
 		for (IndepChange change : mapping.getResolutionByChange().keySet()) {

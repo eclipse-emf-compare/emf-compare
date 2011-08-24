@@ -69,7 +69,7 @@ public class MPatchResolver {
 	 * @return A wrapper element for the result, see {@link ResolvedSymbolicReferences} for details.
 	 */
 	public static ResolvedSymbolicReferences resolveSymbolicReferences(final MPatchModel mpatch, final EObject model,
-			final int direction) {
+			final int direction, boolean respectApplied) {
 		// 0. prepare result
 		final Map<IElementReference, List<EObject>> rawResult = new HashMap<IElementReference, List<EObject>>();
 		final Map<IndepChange, Map<IElementReference, List<EObject>>> resolution = new LinkedHashMap<IndepChange, Map<IElementReference, List<EObject>>>();
@@ -90,7 +90,7 @@ public class MPatchResolver {
 		final boolean forward = direction == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
 		final List<IndepChange> orderedChanges = MPatchValidator.orderChanges(result.getResolutionByChange().keySet(), forward);
 		for (IndepChange change : orderedChanges) {
-			checkStateResolution(change, result, false, forward);
+			checkStateResolution(change, result, false, forward, respectApplied);
 		}
 		
 		// 4. return wrapper object
@@ -212,7 +212,7 @@ public class MPatchResolver {
 	 *         fixed.
 	 */
 	public static boolean checkStateResolution(IndepChange change, ResolvedSymbolicReferences mapping,
-			boolean reduce, boolean forward) {
+			boolean reduce, boolean forward, boolean respectApplied) {
 
 		final Map<IElementReference, List<EObject>> changeMapping = mapping.getResolutionByChange().get(change);
 
@@ -232,8 +232,8 @@ public class MPatchResolver {
 			return true;
 
 		case STATE_AFTER:
-			// this one is also fine!
-			return true;
+			// this one is only fine if we respect applied changes!
+			return respectApplied;
 
 		case UNKNOWN_CHANGE:
 			// Oups.. where does that one come from?! anyway.. let's kick it out!

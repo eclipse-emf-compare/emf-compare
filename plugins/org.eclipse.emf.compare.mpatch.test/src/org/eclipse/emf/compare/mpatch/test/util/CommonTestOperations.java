@@ -18,7 +18,9 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
@@ -34,6 +36,7 @@ import org.eclipse.emf.compare.mpatch.apply.util.MPatchResolver;
 import org.eclipse.emf.compare.mpatch.apply.util.MPatchValidator;
 import org.eclipse.emf.compare.mpatch.common.util.CommonUtils;
 import org.eclipse.emf.compare.mpatch.emfdiff2mpatch.util.TransformationLauncher;
+import org.eclipse.emf.compare.mpatch.extension.IMPatchApplication;
 import org.eclipse.emf.compare.mpatch.extension.IModelDescriptorCreator;
 import org.eclipse.emf.compare.mpatch.extension.ISymbolicReferenceCreator;
 import org.eclipse.emf.compare.mpatch.extension.MPatchApplicationResult;
@@ -250,7 +253,7 @@ public class CommonTestOperations {
 
 	/**
 	 * Create a copy of the given model and apply the MPatch to it. Then, check whether the application was successful
-	 * by check the {@link MPatchApplicationResult}.
+	 * by checking the {@link MPatchApplicationResult}.
 	 * 
 	 * @param mpatch
 	 *            The MPatch to apply.
@@ -276,7 +279,9 @@ public class CommonTestOperations {
 			times.setCopy(); // model copy time
 
 		// apply differences *with* calculating the binding!
-		final MPatchApplicationResult result = TestConstants.DIFF_APPLIER.applyMPatch(resolved, true);
+		final Map<Integer, Boolean> options = new HashMap<Integer, Boolean>();
+		options.put(IMPatchApplication.OPTION_STORE_BINDING, true);
+		final MPatchApplicationResult result = TestConstants.DIFF_APPLIER.applyMPatch(resolved, options);
 		if (times != null)
 			times.setApply(); // diff application time
 
@@ -306,12 +311,12 @@ public class CommonTestOperations {
 			PerformanceTimes times, String info) {
 		// resolve symbolic references
 		final ResolvedSymbolicReferences resolved = MPatchResolver.resolveSymbolicReferences(mpatch, model,
-				ResolvedSymbolicReferences.RESOLVE_UNCHANGED);
+				ResolvedSymbolicReferences.RESOLVE_UNCHANGED, true);
 		if (times != null)
 			times.setResolve(); // resolution time
 
 		// validate all resolved references
-		final List<IndepChange> invalidResolution = MPatchValidator.validateResolutions(resolved);
+		final List<IndepChange> invalidResolution = MPatchValidator.validateResolutions(resolved, true);
 		assertTrue("The following changes did not resolve correctly (" + info + "): " + invalidResolution,
 				invalidResolution.isEmpty());
 		if (times != null)
@@ -397,11 +402,11 @@ public class CommonTestOperations {
 		try {
 			// resolve symbolic references
 			ResolvedSymbolicReferences mapping = MPatchResolver.resolveSymbolicReferences(mpatch, model,
-					ResolvedSymbolicReferences.RESOLVE_UNCHANGED);
+					ResolvedSymbolicReferences.RESOLVE_UNCHANGED, true);
 			assertNotNull("Result of symbolic reference resolution must not be null!", mapping);
 
 			// validate resolution
-			final List<IndepChange> invalid = MPatchValidator.validateResolutions(mapping);
+			final List<IndepChange> invalid = MPatchValidator.validateResolutions(mapping, true);
 			final List<IndepChange> refs = CommonUtils.filterByValue(mapping.getValidation(),
 					ValidationResult.REFERENCE);
 			final List<IndepChange> applied = CommonUtils.filterByValue(mapping.getValidation(),

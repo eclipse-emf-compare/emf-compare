@@ -34,8 +34,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 
 
 /**
@@ -66,6 +68,9 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 
 	/** The checkbox whether the {@link MPatchModelBinding} should be stored afterwards. */
 	private Button storeBindingButton;
+
+	/** The checkbox whether already applied changes shall be respected. */
+	private Button respectAppliedButton;
 
 	/** Adapter factory for emf model. */
 	private final AdapterFactory adapterFactory;
@@ -112,11 +117,24 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 		infoLabel = new Label(container, SWT.NULL);
 		infoLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 
+		respectAppliedButton = new Button(container, SWT.CHECK);
+		respectAppliedButton.setText("Detect and bind already applied changes (experimental feature)");
+		respectAppliedButton.setSelection(false); // default is false
+		GridData gd = new GridData();
+		gd.horizontalSpan = 3;
+		respectAppliedButton.setLayoutData(gd);
+		respectAppliedButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				iDiffResolution.refineResolution(resolvedElements, respectApplied(), ApplyWizardResolvePage.this);
+				dialogChanged();
+			}
+		});
+
 		// button whether or not intermediate models should be stored
 		storeIntermediateModelsCheckbox = new Button(container, SWT.CHECK);
 		storeIntermediateModelsCheckbox.setText("Store intermediate differences and model");
 		storeIntermediateModelsCheckbox.setSelection(false); // default is false
-		GridData gd = new GridData();
+		gd = new GridData();
 		gd.horizontalSpan = 3;
 		storeIntermediateModelsCheckbox.setLayoutData(gd);
 
@@ -126,7 +144,6 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 		gd = new GridData();
 		gd.horizontalSpan = 3;
 		storeBindingButton.setLayoutData(gd);
-
 		setControl(container);
 	}
 
@@ -143,6 +160,13 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 	 */
 	boolean storeBinding() {
 		return storeBindingButton.getSelection();
+	}
+
+	/**
+	 * @return Whether the user selected to respect already applied changes.
+	 */
+	public boolean respectApplied() {
+		return respectAppliedButton.getSelection();
 	}
 
 	/**
@@ -172,11 +196,11 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 					// if not, create new resolution
 					if (resolvedElements == null || !mpatch.equals(resolvedElements.getMPatchModel()) || !modelTarget.equals(resolvedElements.getModel())) {
 						resolvedElements = MPatchResolver.resolveSymbolicReferences(mpatch, modelTarget,
-								ResolvedSymbolicReferences.RESOLVE_UNCHANGED);
+								ResolvedSymbolicReferences.RESOLVE_UNCHANGED, respectApplied());
 					}
 					
 					// update this page
-					iDiffResolution.refineResolution(resolvedElements, this);
+					iDiffResolution.refineResolution(resolvedElements, respectApplied(), this);
 					dialogChanged();
 				} // else nothing changed
 			} else {
@@ -198,7 +222,8 @@ public class ApplyWizardResolvePage extends WizardPage implements IMPatchResolut
 			if (resolvedElements.getResolutionByChange().size() > 0) {
 				
 				// get statistics
-				final List<IndepChange> invalidResolutions = MPatchValidator.validateResolutions(resolvedElements);
+				final boolean respectApplied = respectApplied();
+				final List<IndepChange> invalidResolutions = MPatchValidator.validateResolutions(resolvedElements, respectApplied);
 				final int unresolved = invalidResolutions.size();
 				final int total = resolvedElements.getResolutionByChange().keySet().size();
 				final int before = CommonUtils.filterByValue(resolvedElements.getValidation(), ValidationResult.STATE_BEFORE).size();

@@ -127,6 +127,9 @@ public class ApplyWizardSummaryPage extends WizardPage {
 
 		initialize();
 		setControl(container);
+		
+		// page must at least be visited once before it is set to complete
+		setPageComplete(false);
 	}
 
 	/**

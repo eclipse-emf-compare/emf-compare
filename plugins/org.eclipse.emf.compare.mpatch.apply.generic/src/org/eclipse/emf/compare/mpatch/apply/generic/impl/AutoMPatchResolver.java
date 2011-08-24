@@ -41,7 +41,7 @@ public class AutoMPatchResolver {
 	 * @param mapping
 	 *            The mapping.
 	 */
-	static void resolve(ResolvedSymbolicReferences mapping) {
+	static void resolve(ResolvedSymbolicReferences mapping, boolean respectApplied) {
 		// throw new UnsupportedOperationException("not yet implemented!");
 
 		// 1. remove all additions for those corresponding parents that have already such an element
@@ -58,13 +58,13 @@ public class AutoMPatchResolver {
 		 */
 
 		// 2. remove all corresponding elements that produce invalid states
-		removeInvalidStateResolutions(mapping);
+		removeInvalidStateResolutions(mapping, respectApplied);
 
 		// 3. remove all dependants of invalid changes
 		removeInvalidDependencies(mapping);
 
 		// 4. final validation whether we succeeded
-		validateBinding(mapping);
+		validateBinding(mapping, respectApplied);
 	}
 
 	/**
@@ -138,13 +138,13 @@ public class AutoMPatchResolver {
 	 * @param mapping
 	 *            The mapping.
 	 */
-	private static void removeInvalidStateResolutions(ResolvedSymbolicReferences mapping) {
+	private static void removeInvalidStateResolutions(ResolvedSymbolicReferences mapping, boolean respectApplied) {
 		final boolean forward = mapping.getDirection() == ResolvedSymbolicReferences.RESOLVE_UNCHANGED;
 		final List<IndepChange> changes = new ArrayList<IndepChange>(mapping.getResolutionByChange().keySet());
 		for (IndepChange change : changes) {
 
 			// get some helper variables and validate the change unstrictly
-			if (!MPatchResolver.checkStateResolution(change, mapping, true, forward)) {
+			if (!MPatchResolver.checkStateResolution(change, mapping, true, forward, respectApplied)) {
 				mapping.getResolutionByChange().remove(change);
 			}
 		}
@@ -157,8 +157,8 @@ public class AutoMPatchResolver {
 	 * @param mapping
 	 *            The mapping that is validated.
 	 */
-	private static void validateBinding(ResolvedSymbolicReferences mapping) {
-		List<IndepChange> violations = MPatchValidator.validateResolutions(mapping);
+	private static void validateBinding(ResolvedSymbolicReferences mapping, boolean respectApplied) {
+		List<IndepChange> violations = MPatchValidator.validateResolutions(mapping, respectApplied);
 
 		// brute force: deactivate all invalid changes.
 		// this will terminate because in the worst case all changes have been removed.
@@ -166,7 +166,7 @@ public class AutoMPatchResolver {
 			for (IndepChange change : violations) {
 				mapping.getResolutionByChange().remove(change);
 			}
-			violations = MPatchValidator.validateResolutions(mapping);
+			violations = MPatchValidator.validateResolutions(mapping, respectApplied);
 		}
 	}
 

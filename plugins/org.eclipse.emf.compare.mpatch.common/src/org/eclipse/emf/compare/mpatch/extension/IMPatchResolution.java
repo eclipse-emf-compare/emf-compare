@@ -54,8 +54,10 @@ public interface IMPatchResolution {
 	 * 
 	 * @param mapping
 	 *            A resolution of symbolic references.
+	 * @param respectApplied
+	 *            Respect and bind already applied changes in the model.
 	 */
-	void refineResolution(final ResolvedSymbolicReferences mapping);
+	void refineResolution(ResolvedSymbolicReferences mapping, boolean respectApplied);
 
 	/**
 	 * Build the GUI for a user-interactive way of refining the resolution of symbolic references.
@@ -65,7 +67,7 @@ public interface IMPatchResolution {
 	 * @param adapterFactory
 	 *            An adapter factory for creating nicer labels for model elements.
 	 */
-	void buildResolutionGUI(final Composite container, final AdapterFactory adapterFactory);
+	void buildResolutionGUI(Composite container, AdapterFactory adapterFactory);
 
 	/**
 	 * The user-interactive way of refining the resolution of symbolic references. This call usually succeeds one or
@@ -74,10 +76,12 @@ public interface IMPatchResolution {
 	 * 
 	 * @param mapping
 	 *            A resolution of symbolic references.
+	 * @param respectApplied
+	 *            Respect and bind already applied changes in the model.
 	 * @param host
 	 *            A callback object for notification of the refinement.
 	 */
-	void refineResolution(final ResolvedSymbolicReferences mapping, final IMPatchResolutionHost host);
+	void refineResolution(ResolvedSymbolicReferences mapping, boolean respectApplied, IMPatchResolutionHost host);
 
 	/**
 	 * The label.

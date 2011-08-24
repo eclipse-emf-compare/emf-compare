@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.AttributeOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
@@ -244,7 +245,7 @@ public class CommonUtils {
 					}
 					break;
 				case DIFF_ORDERINGS:
-					if (!(obj instanceof DiffGroup) && !(obj instanceof ReferenceOrderChange)) {
+					if (!(obj instanceof DiffGroup) && !(obj instanceof ReferenceOrderChange) && !(obj instanceof AttributeOrderChange)) {
 						violations.add((DiffElement) obj);
 					}
 					break;

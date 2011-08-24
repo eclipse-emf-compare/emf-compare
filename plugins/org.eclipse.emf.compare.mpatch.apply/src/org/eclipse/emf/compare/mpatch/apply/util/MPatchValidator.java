@@ -65,10 +65,12 @@ public final class MPatchValidator {
 	 * @param mapping
 	 *            A mapping of resolved symbolic references to a model; typically created by {@link MPatchResolver} and
 	 *            maybe modified by {@link IMPatchResolution}.
+	 * @param respectApplied 
+	 *            Respect and bind changes that have already been applied to the model.
 	 * @return A list of changes for which not all symbolic references were resolved successfully or the state before or
 	 *         after the change could not be found.
 	 */
-	public static List<IndepChange> validateResolutions(ResolvedSymbolicReferences mapping) {
+	public static List<IndepChange> validateResolutions(ResolvedSymbolicReferences mapping, boolean respectApplied) {
 		final Set<IndepChange> result = new HashSet<IndepChange>();
 
 		// update validation states!
@@ -84,6 +86,12 @@ public final class MPatchValidator {
 				continue;
 			}
 
+			// if applied changes are not ok..
+			if (ValidationResult.STATE_AFTER.equals(valid) && !respectApplied) {
+				result.add(change);
+				continue;
+			}
+			
 			// make sure all changes the current change depends on are also validated!
 			if (!mapping.getResolutionByChange().keySet().containsAll(change.getDependsOn())) {
 				result.add(change);
@@ -100,7 +108,7 @@ public final class MPatchValidator {
 			for (IElementReference ref : symrefs.keySet()) {
 				if (ref instanceof ModelDescriptorReference) {
 
-					// special case: modeldescriptorreferences cannot be checked now - but change with model descriptor
+					// special case: model descriptor references cannot be checked now - but change with model descriptor
 					// must be valid!
 					final IndepChange otherChange = (IndepChange) ExtEcoreUtils.getContainerOfType(
 							((ModelDescriptorReference) ref).getResolvesTo(),

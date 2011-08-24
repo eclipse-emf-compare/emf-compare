@@ -13,6 +13,8 @@ package org.eclipse.emf.compare.mpatch.apply.wizards;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.core.resources.IFile;
@@ -82,6 +84,9 @@ public class ApplyWizard extends Wizard implements INewWizard {
 	 * applied, should be saved into a file.
 	 */
 	boolean saveBinding;
+
+	/** Defines whether already applied changes shall be detected and bound. */
+	boolean respectApplied;
 
 	/** Singleton diff applier. */
 	protected IMPatchApplication mPatchApplication;
@@ -271,10 +276,14 @@ public class ApplyWizard extends Wizard implements INewWizard {
 					monitor.beginTask("Applying MPatch...", 10);
 					monitor.worked(2); // PROGRESS MONITOR
 
+					final Map<Integer, Boolean> options = new HashMap<Integer, Boolean>();
+					options.put(IMPatchApplication.OPTION_STORE_BINDING, saveBinding);
+					options.put(IMPatchApplication.OPTION_MATCH_APPLIED_CHANGES, respectApplied);
+
 					try {
 						if (!saveIntermediateFiles && !reviewDiffApplication) {
 							MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements,
-									saveBinding);
+									options);
 							result.showDialog(getShell(), adapterFactory);
 							modelResource.save(null);
 						} else {
@@ -300,7 +309,7 @@ public class ApplyWizard extends Wizard implements INewWizard {
 
 							// apply differences!
 							MPatchApplicationResult result = mPatchApplication.applyMPatch(resolvedElements,
-									saveBinding);
+									options);
 							monitor.worked(2); // PROGRESS MONITOR
 							result.showDialog(getShell(), adapterFactory);
 							modelResource.save(null);

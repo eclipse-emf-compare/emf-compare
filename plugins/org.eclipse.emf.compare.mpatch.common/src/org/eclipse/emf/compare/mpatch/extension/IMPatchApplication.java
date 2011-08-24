@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.mpatch.extension;
 
+import java.util.Map;
+
 /**
  * Implementation of this interface provide the main functionality of applying an {@link MPatchModel} to an emf
  * model.<br>
@@ -38,6 +40,25 @@ public interface IMPatchApplication {
 	String EXTENSION_ID = "org.eclipse.emf.compare.mpatch.apply";
 
 	/**
+	 * If this option is set, {@link ResolvedSymbolicReferences#getMPatchModelBinding()} will be filled with
+	 * {@link ChangeBinding}s which link the applied differences to the particular model elements.
+	 * 
+	 * Default is <code>false</code>.
+	 */
+	Integer OPTION_STORE_BINDING = 1;
+	
+	/**
+	 * If this option is set, the mpatch application engine tries to fine already existing changes in the model;
+	 * e.g., if an element shall be added and an equal element already exists, the existing one is bound and a
+	 * new element is not created.
+	 * 
+	 * If this option is not set, then each change is applied wichout checking whether it was already applied.
+	 * 
+	 * Default is <code>false</code>.
+	 */
+	Integer OPTION_MATCH_APPLIED_CHANGES = 2;
+	
+	/**
 	 * Apply a diff to a given model, having the symbolic references resolved in the given binding.
 	 * 
 	 * <b>Important note:</b> The implementation must fill {@link ResolvedSymbolicReferences#resolutionApplied()}!
@@ -55,19 +76,20 @@ public interface IMPatchApplication {
 	 * @param resolvedElements
 	 *            A resolution of symbolic references, also referring to the model to which the differences should be
 	 *            applied and the mpatch.
-	 * @param storeBinding
-	 *            If set to true, {@link ResolvedSymbolicReferences#getMPatchModelBinding()} will be filled with
-	 *            {@link ChangeBinding}s which link the applied differences to the particular model elements.
+	 * @param options
+	 *            Configuration of MPatch application; available options are:
+	 *            {@link IMPatchApplication#OPTION_STORE_BINDING}, 
+	 *            {@link IMPatchApplication#OPTION_MATCH_APPLIED_CHANGES}.
 	 * 
 	 * @return Summary of what was successfully and what was not successfully applied.
 	 */
 	MPatchApplicationResult applyMPatch(final ResolvedSymbolicReferences resolvedElements,
-			final boolean storeBinding);
+			final Map<Integer, Boolean> options);
 
 	/**
 	 * The label.
 	 * 
-	 * @return A label for this difference applier.
+	 * @return A label for the difference application extension.
 	 */
 	String getLabel();
 
