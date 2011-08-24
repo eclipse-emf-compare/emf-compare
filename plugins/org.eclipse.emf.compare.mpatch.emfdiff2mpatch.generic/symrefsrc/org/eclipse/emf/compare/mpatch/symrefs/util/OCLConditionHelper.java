@@ -117,7 +117,8 @@ public class OCLConditionHelper {
 			try {
 
 				// create the query (costly operation)
-				final OCLExpression<EClassifier> oclExpression = helper.createQuery(condition.getExpression());
+				final String expression = condition.getExpression().replace("\\", "\\\\");
+				final OCLExpression<EClassifier> oclExpression = helper.createQuery(expression);
 				query = ocl.createQuery(oclExpression);
 			} catch (final ParserException e) {
 				Activator.getDefault().logError("Error while parsing ocl condition: " + condition.getExpression(), e);
