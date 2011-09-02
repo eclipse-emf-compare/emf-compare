@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 Obeo.
+ * Copyright (c) 2006, 2011 Obeo and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,11 @@
  * 
  * Contributors:
  *     Obeo - initial API and implementation
+ *     Andreas Mayer - bug 356097
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.provider;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +20,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.util.AdapterUtils;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -29,8 +32,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 
 /**
- * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateReference} object.
- * <!-- begin-user-doc --> <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.eclipse.emf.compare.diff.metamodel.UpdateReference}
+ * object. <!-- begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
@@ -53,12 +57,6 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 	@Override
 	public Object getImage(Object object) {
 		final UpdateReference updateReference = (UpdateReference)object;
-		final Object labelImage;
-		if (updateReference.getLeftTarget() == null) {
-			labelImage = AdapterUtils.getItemProviderImage(updateReference.getRightTarget());
-		} else {
-			labelImage = AdapterUtils.getItemProviderImage(updateReference.getLeftTarget());
-		}
 
 		final Object operationImage;
 		if (updateReference.isRemote()) {
@@ -67,12 +65,19 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 			operationImage = getResourceLocator().getImage("full/obj16/UpdateReference"); //$NON-NLS-1$
 		}
 
-		if (labelImage != null) {
-			final List<Object> images = new ArrayList<Object>(2);
-			images.add(labelImage);
-			images.add(operationImage);
-			return new ComposedImage(images);
+		EObject value = getLeftValue(updateReference);
+		if (value == null) {
+			value = getRightValue(updateReference);
 		}
+
+		if (value != null) {
+			final Object labelImage = AdapterUtils.getItemProviderImage(value);
+			if (labelImage != null) {
+				final List<Object> images = Arrays.asList(labelImage, operationImage);
+				return new ComposedImage(images);
+			}
+		}
+
 		return operationImage;
 	}
 
@@ -140,20 +145,20 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 
 		final String elementLabel = AdapterUtils.getItemProviderText(operation.getLeftElement());
 		final String referenceLabel = AdapterUtils.getItemProviderText(operation.getReference());
-		final String leftValueLabel = AdapterUtils.getItemProviderText(operation.getLeftTarget());
-		final String rightValueLabel = AdapterUtils.getItemProviderText(operation.getRightTarget());
+		final String leftValueLabel = AdapterUtils.getItemProviderText(getLeftValue(operation));
+		final String rightValueLabel = AdapterUtils.getItemProviderText(getRightValue(operation));
 
 		final String diffLabel;
 		if (operation.isRemote()) {
-			diffLabel = getString("_UI_RemoteUpdateReference_type", new Object[] {referenceLabel, //$NON-NLS-1$
-					elementLabel, leftValueLabel, rightValueLabel, });
+			diffLabel = getString("_UI_RemoteUpdateReference_type", //$NON-NLS-1$ 
+					new Object[] {referenceLabel, elementLabel, leftValueLabel, rightValueLabel, });
 		} else {
 			if (operation.isConflicting()) {
-				diffLabel = getString("_UI_UpdateReference_conflicting", new Object[] {referenceLabel, //$NON-NLS-1$
-						elementLabel, rightValueLabel, leftValueLabel, });
+				diffLabel = getString("_UI_UpdateReference_conflicting", //$NON-NLS-1$
+						new Object[] {referenceLabel, elementLabel, rightValueLabel, leftValueLabel, });
 			} else {
-				diffLabel = getString("_UI_UpdateReference_type", new Object[] {referenceLabel, elementLabel, //$NON-NLS-1$
-						rightValueLabel, leftValueLabel, });
+				diffLabel = getString("_UI_UpdateReference_type", //$NON-NLS-1$
+						new Object[] {referenceLabel, elementLabel, rightValueLabel, leftValueLabel, });
 			}
 		}
 
@@ -161,10 +166,34 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 	}
 
 	/**
-	 * This handles model notifications by calling {@link #updateChildren} to update any cached
-	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	 * <!-- begin-user-doc
+	 * Returns the value of the given operation's target reference for the left element.
+	 * 
+	 * @param operation
+	 *            The update reference operation for which we need target information.
+	 * @return The value of the given operation's target reference for the left element.
+	 */
+	private EObject getLeftValue(UpdateReference operation) {
+		final EReference reference = operation.getReference();
+		return (EObject)operation.getLeftElement().eGet(reference);
+	}
+
+	/**
+	 * Returns the value of the given operation's target reference for the right element.
+	 * 
+	 * @param operation
+	 *            The update reference operation for which we need target information.
+	 * @return The value of the given operation's target reference for the right element.
+	 */
+	private EObject getRightValue(UpdateReference operation) {
+		final EReference reference = operation.getReference();
+		return (EObject)operation.getRightElement().eGet(reference);
+	}
+
+	/**
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached children and
+	 * by creating a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -174,9 +203,9 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 	}
 
 	/**
-	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	 * that can be created under this object.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be
+	 * created under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
