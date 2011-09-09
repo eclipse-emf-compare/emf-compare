@@ -331,7 +331,7 @@ public class ModelContentMergeTabFolder {
 	 *            Parent composite of this viewer parts's widgets.
 	 */
 	protected void createContents(Composite composite) {
-		tabFolder = new CTabFolder(composite, SWT.BOTTOM);
+		tabFolder = createTabFolder(composite);
 		final CTabItem treeTab = new CTabItem(tabFolder, SWT.NONE);
 		treeTab.setText(EMFCompareUIMessages.getString("ModelContentMergeViewerTabFolder.tab1.name")); //$NON-NLS-1$
 
@@ -366,6 +366,19 @@ public class ModelContentMergeTabFolder {
 			}
 		});
 		tabFolder.setSelection(treeTab);
+	}
+
+	/**
+	 * Creates the tab folder composite itself. Clients that wish to add their own tabs before the two default
+	 * ones can override this and fo their work after the call to super.
+	 * 
+	 * @param parent
+	 *            The parent Composite for the tab folder.
+	 * @return The {@link CTabFolder} Composite that is to be used for the EMF Compare UI.
+	 * @since 1.3
+	 */
+	protected CTabFolder createTabFolder(Composite parent) {
+		return new CTabFolder(parent, SWT.BOTTOM);
 	}
 
 	/**
