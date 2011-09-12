@@ -44,6 +44,9 @@ import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLMessageChange;
 import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationChange;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
@@ -326,6 +329,27 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	 * @generated
 	 */
 	private EClass umlStereotypeReferenceOrderChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlProfileApplicationChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlProfileApplicationAdditionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlProfileApplicationRemovalEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -751,6 +775,42 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLProfileApplicationChange() {
+		return umlProfileApplicationChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getUMLProfileApplicationChange_Profile() {
+		return (EReference)umlProfileApplicationChangeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLProfileApplicationAddition() {
+		return umlProfileApplicationAdditionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLProfileApplicationRemoval() {
+		return umlProfileApplicationRemovalEClass;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -860,6 +920,13 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlStereotypeUpdateReferenceEClass = createEClass(UML_STEREOTYPE_UPDATE_REFERENCE);
 
 		umlStereotypeReferenceOrderChangeEClass = createEClass(UML_STEREOTYPE_REFERENCE_ORDER_CHANGE);
+
+		umlProfileApplicationChangeEClass = createEClass(UML_PROFILE_APPLICATION_CHANGE);
+		createEReference(umlProfileApplicationChangeEClass, UML_PROFILE_APPLICATION_CHANGE__PROFILE);
+
+		umlProfileApplicationAdditionEClass = createEClass(UML_PROFILE_APPLICATION_ADDITION);
+
+		umlProfileApplicationRemovalEClass = createEClass(UML_PROFILE_APPLICATION_REMOVAL);
 	}
 
 	/**
@@ -964,6 +1031,11 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlStereotypeUpdateReferenceEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
 		umlStereotypeReferenceOrderChangeEClass.getESuperTypes().add(theDiffPackage.getReferenceOrderChange());
 		umlStereotypeReferenceOrderChangeEClass.getESuperTypes().add(this.getUMLStereotypePropertyChange());
+		umlProfileApplicationChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlProfileApplicationAdditionEClass.getESuperTypes().add(theDiffPackage.getUpdateModelElement());
+		umlProfileApplicationAdditionEClass.getESuperTypes().add(this.getUMLProfileApplicationChange());
+		umlProfileApplicationRemovalEClass.getESuperTypes().add(theDiffPackage.getUpdateModelElement());
+		umlProfileApplicationRemovalEClass.getESuperTypes().add(this.getUMLProfileApplicationChange());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(umlDiffExtensionEClass, UMLDiffExtension.class, "UMLDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1051,6 +1123,13 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		initEClass(umlStereotypeUpdateReferenceEClass, UMLStereotypeUpdateReference.class, "UMLStereotypeUpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(umlStereotypeReferenceOrderChangeEClass, UMLStereotypeReferenceOrderChange.class, "UMLStereotypeReferenceOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlProfileApplicationChangeEClass, UMLProfileApplicationChange.class, "UMLProfileApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getUMLProfileApplicationChange_Profile(), theUMLPackage.getProfile(), null, "profile", null, 0, 1, UMLProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(umlProfileApplicationAdditionEClass, UMLProfileApplicationAddition.class, "UMLProfileApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlProfileApplicationRemovalEClass, UMLProfileApplicationRemoval.class, "UMLProfileApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

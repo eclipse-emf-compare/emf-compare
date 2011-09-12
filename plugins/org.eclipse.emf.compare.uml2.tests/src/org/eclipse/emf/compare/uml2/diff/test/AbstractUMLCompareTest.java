@@ -13,12 +13,14 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
@@ -129,12 +131,34 @@ public abstract class AbstractUMLCompareTest {
 		testMerge(testFolderPath, true);
 		testMerge(testFolderPath, false);
 	}
+	
+	protected final void testMerge(String testFolderPath, Class<? extends DiffElement> diffKind) throws IOException, InterruptedException {
+		testMerge(testFolderPath, true, diffKind);
+		testMerge(testFolderPath, false, diffKind);
+	}
 
 	private void testMerge(String testFolderPath, boolean leftToRight) throws IOException,
 			InterruptedException {
 		DiffResourceSet computed_diff = getComputedDiff(testFolderPath);
 		merge(leftToRight, computed_diff);
+		testMerge(testFolderPath, leftToRight, computed_diff);
+	}
+	
+	private void testMerge(String testFolderPath, boolean leftToRight, Class<? extends DiffElement> diffKind) throws IOException,
+			InterruptedException {
+		DiffResourceSet computed_diff = getComputedDiff(testFolderPath);
+		Iterator<EObject> diffs = computed_diff.eAllContents();
+		while (diffs.hasNext()) {
+			EObject next = diffs.next();
+			if (diffKind.isAssignableFrom(next.getClass())) {
+				merge(leftToRight, (DiffElement) next);
+			}
+		}
+		testMerge(testFolderPath, leftToRight, computed_diff);
+	}
 
+	private void testMerge(String testFolderPath, boolean leftToRight, DiffResourceSet computed_diff)
+			throws IOException {
 		Resource originalResource;
 		Resource mergedResource;
 		if (leftToRight) {
@@ -161,6 +185,10 @@ public abstract class AbstractUMLCompareTest {
 		for (DiffModel diffModel : computed_diff.getDiffModels()) {
 			MergeService.merge(diffModel.getOwnedElements(), leftToRight);
 		}
+	}
+	
+	private void merge(boolean leftToRight, DiffElement computed_diff) {
+		MergeService.merge(computed_diff, leftToRight);
 	}
 
 	private ResourceSet getLeftResourceSet(DiffResourceSet diffResourceSet) {

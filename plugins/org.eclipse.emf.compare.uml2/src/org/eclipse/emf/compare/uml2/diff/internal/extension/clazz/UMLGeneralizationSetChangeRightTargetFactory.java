@@ -34,9 +34,8 @@ public class UMLGeneralizationSetChangeRightTargetFactory extends AbstractDiffEx
 		}
 	};
 
-	public UMLGeneralizationSetChangeRightTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLGeneralizationSetChangeRightTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -44,7 +43,7 @@ public class UMLGeneralizationSetChangeRightTargetFactory extends AbstractDiffEx
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof GeneralizationSet;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final GeneralizationSet generalizationSet = (GeneralizationSet)changeRightTarget.getRightElement();
 
@@ -53,10 +52,11 @@ public class UMLGeneralizationSetChangeRightTargetFactory extends AbstractDiffEx
 
 		for (Generalization generalization : generalizationSet.getGeneralizations()) {
 			hideCrossReferences(generalization, DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT, ret,
-					hiddingPredicate);
+					hiddingPredicate, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeRightTarget);
+		ret.getRequires().add(changeRightTarget);
 
 		ret.setRemote(changeRightTarget.isRemote());
 		ret.setRightElement(changeRightTarget.getRightElement());

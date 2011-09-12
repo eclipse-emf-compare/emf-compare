@@ -25,9 +25,8 @@ import org.eclipse.uml2.uml.Property;
 
 public class UMLAssociationChangeRightTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLAssociationChangeRightTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLAssociationChangeRightTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -35,7 +34,7 @@ public class UMLAssociationChangeRightTargetFactory extends AbstractDiffExtensio
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Association;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final Association association = (Association)changeRightTarget.getRightElement();
 
@@ -49,11 +48,13 @@ public class UMLAssociationChangeRightTargetFactory extends AbstractDiffExtensio
 				 * We have to find the corresponding diff element (if it exists in order to hide it)
 				 */
 				hideCrossReferences(memberEnd,
-						DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret);
+						DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret,
+						crossReferencer);
 			}
 		}
 
 		ret.getHideElements().add(changeRightTarget);
+		ret.getRequires().add(changeRightTarget);
 
 		ret.setRemote(input.isRemote());
 		ret.setRightElement(changeRightTarget.getRightElement());

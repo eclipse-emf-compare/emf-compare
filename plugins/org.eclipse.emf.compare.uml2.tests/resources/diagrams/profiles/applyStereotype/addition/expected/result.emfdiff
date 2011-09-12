@@ -28,10 +28,10 @@
     </diffModels>
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
-        <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1">
+        <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" requiredBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1">
           <leftElement href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
         </subDiffElements>
-        <subDiffElements xsi:type="uml2diff:UMLStereotypeApplicationAddition" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0">
+        <subDiffElements xsi:type="uml2diff:UMLStereotypeApplicationAddition" requires="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0">
           <rightElement href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
           <leftElement href="../modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
           <stereotype href="pathmap://UML_PROFILES/Standard.profile.uml#Specification"/>

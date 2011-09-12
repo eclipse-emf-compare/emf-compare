@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.impl.ModelElementChangeLeftTargetImpl;
-import org.eclipse.emf.compare.uml2.diff.internal.merger.UML2DiffExtensionMerger;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
 import org.eclipse.emf.compare.uml2diff.UMLExtendChange;
@@ -157,7 +156,7 @@ public class UMLExtendChangeLeftTargetImpl extends ModelElementChangeLeftTargetI
 	 * @generated NOT
 	 */
 	public IMerger provideMerger() {
-		return new UML2DiffExtensionMerger();
+		return null;
 	}
 
 	/**

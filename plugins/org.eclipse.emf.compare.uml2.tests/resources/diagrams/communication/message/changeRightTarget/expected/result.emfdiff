@@ -6,7 +6,7 @@
         <subDiffElements xsi:type="diff:DiffGroup">
           <subDiffElements xsi:type="diff:DiffGroup">
             <subDiffElements xsi:type="diff:DiffGroup">
-              <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+              <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
                 <reference href="http://www.eclipse.org/uml2/3.0.0/UML#//Lifeline/coveredBy"/>
                 <rightElement href="../original/model.uml#_ONoYcJfvEeCbMPQymh8CnA"/>
                 <leftElement href="../modified/model.uml#_ONoYcJfvEeCbMPQymh8CnA"/>
@@ -15,7 +15,7 @@
               <rightParent href="../original/model.uml#_ONoYcJfvEeCbMPQymh8CnA"/>
             </subDiffElements>
             <subDiffElements xsi:type="diff:DiffGroup">
-              <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+              <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
                 <reference href="http://www.eclipse.org/uml2/3.0.0/UML#//Lifeline/coveredBy"/>
                 <rightElement href="../original/model.uml#_PLOCEJfvEeCbMPQymh8CnA"/>
                 <leftElement href="../modified/model.uml#_PLOCEJfvEeCbMPQymh8CnA"/>
@@ -23,29 +23,29 @@
               </subDiffElements>
               <rightParent href="../original/model.uml#_PLOCEJfvEeCbMPQymh8CnA"/>
             </subDiffElements>
-            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4">
               <leftParent href="../modified/model.uml#_L0jBMJfvEeCbMPQymh8CnA"/>
               <rightElement href="../original/model.uml#_UzZLgJfvEeCbMPQymh8CnA"/>
             </subDiffElements>
-            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4">
               <leftParent href="../modified/model.uml#_L0jBMJfvEeCbMPQymh8CnA"/>
               <rightElement href="../original/model.uml#_UznN8JfvEeCbMPQymh8CnA"/>
             </subDiffElements>
-            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+            <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3">
               <leftParent href="../modified/model.uml#_L0jBMJfvEeCbMPQymh8CnA"/>
               <rightElement href="../original/model.uml#_Uy74gJfvEeCbMPQymh8CnA"/>
             </subDiffElements>
-            <subDiffElements xsi:type="uml2diff:UMLMessageChangeRightTarget" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4">
+            <subDiffElements xsi:type="uml2diff:UMLMessageChangeRightTarget" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.4">
               <leftParent href="../modified/model.uml#_L0jBMJfvEeCbMPQymh8CnA"/>
               <rightElement href="../original/model.uml#_Uy74gJfvEeCbMPQymh8CnA"/>
             </subDiffElements>
             <rightParent href="../original/model.uml#_L0jBMJfvEeCbMPQymh8CnA"/>
           </subDiffElements>
-          <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+          <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.2">
             <leftParent href="../modified/model.uml#_LxpeMJfvEeCbMPQymh8CnA"/>
             <rightElement href="../original/model.uml#_UzMXMJfvEeCbMPQymh8CnA"/>
           </subDiffElements>
-          <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5">
+          <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.5 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.3">
             <leftParent href="../modified/model.uml#_LxpeMJfvEeCbMPQymh8CnA"/>
             <rightElement href="../original/model.uml#_UzZykJfvEeCbMPQymh8CnA"/>
           </subDiffElements>

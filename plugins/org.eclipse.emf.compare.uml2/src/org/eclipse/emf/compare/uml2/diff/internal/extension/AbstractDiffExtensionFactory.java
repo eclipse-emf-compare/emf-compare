@@ -32,31 +32,25 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 
 	private UML2DiffEngine fEngine;
 
-	private EcoreUtil.CrossReferencer fCrossReferencer;
-
-	protected AbstractDiffExtensionFactory(UML2DiffEngine engine, EcoreUtil.CrossReferencer crossReferencer) {
+	protected AbstractDiffExtensionFactory(UML2DiffEngine engine) {
 		fEngine = engine;
-		fCrossReferencer = crossReferencer;
 	}
 
 	protected final UML2DiffEngine getEngine() {
 		return fEngine;
 	}
 
-	protected final EcoreUtil.CrossReferencer getCrossReferencer() {
-		return fCrossReferencer;
-	}
-
-	public DiffElement getParentDiff(DiffElement input) {
+	public DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		return (DiffElement)input.eContainer();
 	}
 
-	protected final DiffGroup findOrCreateDiffGroup(DiffModel diffModel, EObject right) {
-		DiffGroup referencingDiffGroup = firstReferencingDiffGroup(getCrossReferencer().get(right));
+	protected final DiffGroup findOrCreateDiffGroup(DiffModel diffModel, EObject right,
+			EcoreUtil.CrossReferencer crossReferencer) {
+		DiffGroup referencingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(right));
 		if (referencingDiffGroup == null) {
 			List<EObject> ancestors = ancestors(right);
 			for (EObject ancestor : ancestors) {
-				referencingDiffGroup = firstReferencingDiffGroup(getCrossReferencer().get(ancestor));
+				referencingDiffGroup = firstReferencingDiffGroup(crossReferencer.get(ancestor));
 				if (referencingDiffGroup != null) {
 					List<EObject> ancestorsAndSelf = new ArrayList<EObject>(ancestors);
 					ancestorsAndSelf.add(0, right);
@@ -164,14 +158,30 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 		return ret;
 	}
 
-	protected final List<DiffElement> findCrossReferences(EObject lookup, EStructuralFeature inFeature) {
-		return findCrossReferences(lookup, inFeature, alwaysTrue());
-	}
+	// protected final List<DiffElement> findCrossReferences(EObject lookup, EStructuralFeature inFeature) {
+	// return findCrossReferences(lookup, inFeature, alwaysTrue());
+	// }
 
 	protected final List<DiffElement> findCrossReferences(EObject lookup, EStructuralFeature inFeature,
-			UMLPredicate<Setting> p) {
+			EcoreUtil.CrossReferencer crossReferencer) {
+		return findCrossReferences(lookup, inFeature, alwaysTrue(), crossReferencer);
+	}
+
+	// protected final List<DiffElement> findCrossReferences(EObject lookup, EStructuralFeature inFeature,
+	// UMLPredicate<Setting> p) {
+	// Collection<Setting> settings = getCrossReferencer().get(lookup);
+	// return findCrossReferences(inFeature, p, settings);
+	// }
+
+	protected final List<DiffElement> findCrossReferences(EObject lookup, EStructuralFeature inFeature,
+			UMLPredicate<Setting> p, EcoreUtil.CrossReferencer crossReferencer) {
+		Collection<Setting> settings = crossReferencer.get(lookup);
+		return findCrossReferences(inFeature, p, settings);
+	}
+
+	private List<DiffElement> findCrossReferences(EStructuralFeature inFeature, UMLPredicate<Setting> p,
+			Collection<Setting> settings) {
 		List<DiffElement> ret = new ArrayList<DiffElement>();
-		Collection<Setting> settings = getCrossReferencer().get(lookup);
 		if (settings != null) {
 			for (Setting setting : settings) {
 				EStructuralFeature eStructuralFeature = setting.getEStructuralFeature();
@@ -184,15 +194,17 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	}
 
 	protected final void hideCrossReferences(EObject lookup, EStructuralFeature inFeature,
-			AbstractDiffExtension hiddingExtension, UMLPredicate<Setting> p) {
-		for (DiffElement diffElement : findCrossReferences(lookup, inFeature, p)) {
+			AbstractDiffExtension hiddingExtension, UMLPredicate<Setting> p,
+			EcoreUtil.CrossReferencer crossReferencer) {
+		for (DiffElement diffElement : findCrossReferences(lookup, inFeature, p, crossReferencer)) {
 			hiddingExtension.getHideElements().add(diffElement);
+			((DiffElement)hiddingExtension).getRequires().add(diffElement);
 		}
 	}
 
 	protected final void hideCrossReferences(EObject lookup, EStructuralFeature inFeature,
-			AbstractDiffExtension hiddingExtension) {
-		hideCrossReferences(lookup, inFeature, hiddingExtension, alwaysTrue());
+			AbstractDiffExtension hiddingExtension, EcoreUtil.CrossReferencer crossReferencer) {
+		hideCrossReferences(lookup, inFeature, hiddingExtension, alwaysTrue(), crossReferencer);
 	}
 
 	protected static interface UMLPredicate<T> {
@@ -209,4 +221,8 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 			return true;
 		}
 	};
+
+	public void fillRequiredDifferences(AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer) {
+		// Default behavior
+	}
 }

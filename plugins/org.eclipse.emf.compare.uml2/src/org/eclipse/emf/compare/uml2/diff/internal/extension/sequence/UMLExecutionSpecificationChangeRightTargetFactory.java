@@ -27,9 +27,8 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLExecutionSpecificationChangeRightTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLExecutionSpecificationChangeRightTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -37,7 +36,7 @@ public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractD
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof ExecutionSpecification;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final ExecutionSpecification actionExecutionSpecification = (ExecutionSpecification)changeRightTarget
 				.getRightElement();
@@ -45,17 +44,21 @@ public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractD
 		UMLExecutionSpecificationChangeRightTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLExecutionSpecificationChangeRightTarget();
 
-		hideOccurenceSpecification(actionExecutionSpecification.getStart(), ret);
-		hideOccurenceSpecification(actionExecutionSpecification.getFinish(), ret);
+		hideOccurenceSpecification(actionExecutionSpecification.getStart(), ret, crossReferencer);
+		hideOccurenceSpecification(actionExecutionSpecification.getFinish(), ret, crossReferencer);
 
 		hideCrossReferences(actionExecutionSpecification,
-				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate);
+				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate,
+				crossReferencer);
 		hideCrossReferences(actionExecutionSpecification.getStart(),
-				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate);
+				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate,
+				crossReferencer);
 		hideCrossReferences(actionExecutionSpecification.getFinish(),
-				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate);
+				DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET, ret, coveredByPredicate,
+				crossReferencer);
 
 		ret.getHideElements().add(changeRightTarget);
+		ret.getRequires().add(changeRightTarget);
 
 		ret.setRemote(changeRightTarget.isRemote());
 		ret.setRightElement(changeRightTarget.getRightElement());
@@ -71,11 +74,11 @@ public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractD
 	};
 
 	private void hideOccurenceSpecification(OccurrenceSpecification occurrenceSpecification,
-			UMLExecutionSpecificationChangeRightTarget ret) {
+			UMLExecutionSpecificationChangeRightTarget ret, EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(occurrenceSpecification,
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret);
+				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret, crossReferencer);
 		hideCrossReferences(occurrenceSpecification.getEvent(),
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret);
+				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, ret, crossReferencer);
 	}
 
 }

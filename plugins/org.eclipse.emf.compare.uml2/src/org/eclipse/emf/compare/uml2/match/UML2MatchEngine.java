@@ -12,6 +12,7 @@ package org.eclipse.emf.compare.uml2.match;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +41,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftResource,
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftResource,
 				rightResource));
-		return super.resourceMatch(leftResource, rightResource, optionMap);
+		return super.resourceMatch(leftResource, rightResource, uml2OptionsMap);
 	}
 
 	/**
@@ -54,9 +56,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, EObject ancestor,
 			Map<String, Object> optionMap) {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
 				rightObject, ancestor));
-		return super.contentMatch(leftObject, rightObject, ancestor, optionMap);
+		return super.contentMatch(leftObject, rightObject, ancestor, uml2OptionsMap);
 	}
 
 	/**
@@ -67,9 +70,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	 */
 	@Override
 	public MatchModel contentMatch(EObject leftObject, EObject rightObject, Map<String, Object> optionMap) {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftObject,
 				rightObject));
-		return super.contentMatch(leftObject, rightObject, optionMap);
+		return super.contentMatch(leftObject, rightObject, uml2OptionsMap);
 	}
 
 	/**
@@ -81,9 +85,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, EObject ancestor,
 			Map<String, Object> optionMap) throws InterruptedException {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
-				rightRoot, ancestor));
-		return super.modelMatch(leftRoot, rightRoot, ancestor, optionMap);
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
+				rightRoot));
+		return super.modelMatch(leftRoot, rightRoot, ancestor, uml2OptionsMap);
 	}
 
 	/**
@@ -95,9 +100,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	public MatchModel modelMatch(EObject leftRoot, EObject rightRoot, Map<String, Object> optionMap)
 			throws InterruptedException {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftRoot,
 				rightRoot));
-		return super.modelMatch(leftRoot, rightRoot, optionMap);
+		return super.modelMatch(leftRoot, rightRoot, uml2OptionsMap);
 	}
 
 	/**
@@ -109,9 +115,10 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	public MatchModel resourceMatch(Resource leftResource, Resource rightResource, Resource ancestorResource,
 			Map<String, Object> optionMap) throws InterruptedException {
-		optionMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftResource,
+		Map<String, Object> uml2OptionsMap = new HashMap<String, Object>(optionMap);
+		uml2OptionsMap.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, new UML2MatchScopeProvider(leftResource,
 				rightResource, ancestorResource));
-		return super.resourceMatch(leftResource, rightResource, ancestorResource, optionMap);
+		return super.resourceMatch(leftResource, rightResource, ancestorResource, uml2OptionsMap);
 	}
 
 	@Override

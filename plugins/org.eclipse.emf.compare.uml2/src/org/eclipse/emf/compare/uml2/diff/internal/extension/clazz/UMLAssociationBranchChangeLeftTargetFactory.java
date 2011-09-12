@@ -23,9 +23,8 @@ import org.eclipse.uml2.uml.Property;
 
 public class UMLAssociationBranchChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLAssociationBranchChangeLeftTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLAssociationBranchChangeLeftTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -36,13 +35,14 @@ public class UMLAssociationBranchChangeLeftTargetFactory extends AbstractDiffExt
 						.eContainer()).getMemberEnds().size() > 2;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 
 		UMLAssociationBranchChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLAssociationBranchChangeLeftTarget();
 
 		ret.getHideElements().add(changeLeftTarget);
+		ret.getRequires().add(changeLeftTarget);
 
 		ret.setRemote(input.isRemote());
 		ret.setRightParent(changeLeftTarget.getRightParent());

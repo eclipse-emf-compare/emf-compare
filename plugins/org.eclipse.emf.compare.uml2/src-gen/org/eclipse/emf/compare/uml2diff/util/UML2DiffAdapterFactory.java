@@ -260,6 +260,18 @@ public class UML2DiffAdapterFactory extends AdapterFactoryImpl {
 				return createUMLStereotypeReferenceOrderChangeAdapter();
 			}
 			@Override
+			public Adapter caseUMLProfileApplicationChange(UMLProfileApplicationChange object) {
+				return createUMLProfileApplicationChangeAdapter();
+			}
+			@Override
+			public Adapter caseUMLProfileApplicationAddition(UMLProfileApplicationAddition object) {
+				return createUMLProfileApplicationAdditionAdapter();
+			}
+			@Override
+			public Adapter caseUMLProfileApplicationRemoval(UMLProfileApplicationRemoval object) {
+				return createUMLProfileApplicationRemovalAdapter();
+			}
+			@Override
 			public Adapter caseDiffElement(DiffElement object) {
 				return createDiffElementAdapter();
 			}
@@ -924,6 +936,48 @@ public class UML2DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUMLStereotypeReferenceOrderChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange <em>UML Profile Application Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange
+	 * @generated
+	 */
+	public Adapter createUMLProfileApplicationChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition <em>UML Profile Application Addition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition
+	 * @generated
+	 */
+	public Adapter createUMLProfileApplicationAdditionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval <em>UML Profile Application Removal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval
+	 * @generated
+	 */
+	public Adapter createUMLProfileApplicationRemovalAdapter() {
 		return null;
 	}
 

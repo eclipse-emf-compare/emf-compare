@@ -11,8 +11,8 @@
 package org.eclipse.emf.compare.uml2.diff;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -71,27 +71,59 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				crossReference(); // init map
 			}
 		};
-		uml2ExtensionFactories = DiffExtensionFactoryRegistry.createExtensionFactories(this,
-				diffModelCrossReferencer);
 
-		List<DiffElement> toBrowse = new ArrayList<DiffElement>();
+		final Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> mapUml2ExtensionFactories = DiffExtensionFactoryRegistry
+				.createExtensionFactories(this);
+		uml2ExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
+
 		for (TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
 			EObject next = tit.next();
 			if (next instanceof DiffElement) {
-				toBrowse.add((DiffElement)next);
+				applyManagedTypes((DiffElement)next, diffModelCrossReferencer);
 			}
 		}
 
-		for (DiffElement diffElement : toBrowse) {
-			applyManagedTypes(diffElement);
+		diffModelCrossReferencer = null;
+		fillRequiredDifferences(dg, mapUml2ExtensionFactories);
+
+	}
+
+	private void fillRequiredDifferences(DiffModel dg,
+			final Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> mapUml2ExtensionFactories) {
+		EcoreUtil.CrossReferencer diffModelCrossReferencer = new EcoreUtil.CrossReferencer(dg) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5034169206637698601L;
+
+			{
+				crossReference(); // init map
+			}
+		};
+		for (TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
+			EObject next = tit.next();
+			if (next instanceof AbstractDiffExtension) {
+				fillRequiredDifferences(mapUml2ExtensionFactories, (AbstractDiffExtension)next,
+						diffModelCrossReferencer);
+			}
 		}
 	}
 
-	void applyManagedTypes(DiffElement element) {
+	void fillRequiredDifferences(
+			Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> mapUml2ExtensionFactories,
+			AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer) {
+		Class<?> classDiffElement = diff.eClass().getInstanceClass();
+		IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
+		if (diffFactory != null) {
+			diffFactory.fillRequiredDifferences(diff, crossReferencer);
+		}
+	}
+
+	void applyManagedTypes(DiffElement element, EcoreUtil.CrossReferencer diffModelCrossReferencer) {
 		for (IDiffExtensionFactory factory : uml2ExtensionFactories) {
 			if (factory.handles(element)) {
-				AbstractDiffExtension extension = factory.create(element);
-				DiffElement diffParent = factory.getParentDiff(element);
+				AbstractDiffExtension extension = factory.create(element, diffModelCrossReferencer);
+				DiffElement diffParent = factory.getParentDiff(element, diffModelCrossReferencer);
 				diffParent.getSubDiffElements().add((DiffElement)extension);
 			}
 		}

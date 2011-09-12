@@ -34,9 +34,8 @@ public class UMLDependencyChangeLeftTargetFactory extends AbstractDiffExtensionF
 		}
 	};
 
-	public UMLDependencyChangeLeftTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLDependencyChangeLeftTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -44,7 +43,7 @@ public class UMLDependencyChangeLeftTargetFactory extends AbstractDiffExtensionF
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof Dependency;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final Dependency dependency = (Dependency)changeLeftTarget.getLeftElement();
 
@@ -52,10 +51,11 @@ public class UMLDependencyChangeLeftTargetFactory extends AbstractDiffExtensionF
 
 		for (NamedElement namedElement : dependency.getClients()) {
 			hideCrossReferences(namedElement, DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT, ret,
-					hiddingPredicate);
+					hiddingPredicate, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeLeftTarget);
+		ret.getRequires().add(changeLeftTarget);
 
 		ret.setRemote(changeLeftTarget.isRemote());
 		ret.setRightParent(changeLeftTarget.getRightParent());

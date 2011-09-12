@@ -54,5 +54,10 @@
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeReferenceChangeRightTarget"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeUpdateReference"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLStereotypeReferenceOrderChange"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLProfileApplicationChange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference uml2diff.ecore#//UMLProfileApplicationChange/profile"/>
+    </genClasses>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLProfileApplicationAddition"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLProfileApplicationRemoval"/>
   </genPackages>
 </genmodel:GenModel>

@@ -5,14 +5,14 @@
       <ownedElements xsi:type="diff:DiffGroup">
         <subDiffElements xsi:type="diff:DiffGroup">
           <subDiffElements xsi:type="diff:DiffGroup">
-            <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1">
+            <subDiffElements xsi:type="diff:ReferenceChangeRightTarget" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.1">
               <reference href="http://www.eclipse.org/uml2/3.0.0/UML#//Dependency/supplier"/>
               <rightElement href="../original/model.uml#_qObKwIYJEeC_LdOTKS1r7g"/>
               <leftElement href="../modified/model.uml#_qObKwIYJEeC_LdOTKS1r7g"/>
               <rightTarget href="../original/model.uml#_sYGXkYYKEeC3-NIxzC-z2Q"/>
               <leftTarget href="../modified/model.uml#_sYGXkYYKEeC3-NIxzC-z2Q"/>
             </subDiffElements>
-            <subDiffElements xsi:type="uml2diff:UMLDependencyBranchChangeRightTarget" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0">
+            <subDiffElements xsi:type="uml2diff:UMLDependencyBranchChangeRightTarget" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0/@subDiffElements.0">
               <reference href="http://www.eclipse.org/uml2/3.0.0/UML#//Dependency/supplier"/>
               <rightElement href="../original/model.uml#_qObKwIYJEeC_LdOTKS1r7g"/>
               <leftElement href="../modified/model.uml#_qObKwIYJEeC_LdOTKS1r7g"/>

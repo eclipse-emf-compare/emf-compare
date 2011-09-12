@@ -112,6 +112,8 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET: return createUMLStereotypeReferenceChangeRightTarget();
 			case UML2DiffPackage.UML_STEREOTYPE_UPDATE_REFERENCE: return createUMLStereotypeUpdateReference();
 			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_ORDER_CHANGE: return createUMLStereotypeReferenceOrderChange();
+			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION: return createUMLProfileApplicationAddition();
+			case UML2DiffPackage.UML_PROFILE_APPLICATION_REMOVAL: return createUMLProfileApplicationRemoval();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -394,6 +396,26 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 	public UMLStereotypeReferenceOrderChange createUMLStereotypeReferenceOrderChange() {
 		UMLStereotypeReferenceOrderChangeImpl umlStereotypeReferenceOrderChange = new UMLStereotypeReferenceOrderChangeImpl();
 		return umlStereotypeReferenceOrderChange;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UMLProfileApplicationAddition createUMLProfileApplicationAddition() {
+		UMLProfileApplicationAdditionImpl umlProfileApplicationAddition = new UMLProfileApplicationAdditionImpl();
+		return umlProfileApplicationAddition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UMLProfileApplicationRemoval createUMLProfileApplicationRemoval() {
+		UMLProfileApplicationRemovalImpl umlProfileApplicationRemoval = new UMLProfileApplicationRemovalImpl();
+		return umlProfileApplicationRemoval;
 	}
 
 	/**

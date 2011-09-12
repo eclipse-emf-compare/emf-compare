@@ -25,9 +25,8 @@ import org.eclipse.uml2.uml.util.UMLUtil;
 
 public class UMLStereotypeApplicationRemovalFactory extends AbstractDiffExtensionFactory {
 
-	public UMLStereotypeApplicationRemovalFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLStereotypeApplicationRemovalFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -39,7 +38,7 @@ public class UMLStereotypeApplicationRemovalFactory extends AbstractDiffExtensio
 		return false;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget modelElement = (ModelElementChangeRightTarget)input;
 		EObject rightElement = modelElement.getRightElement();
 		EObject base = UMLUtil.getBaseElement(rightElement);
@@ -53,18 +52,19 @@ public class UMLStereotypeApplicationRemovalFactory extends AbstractDiffExtensio
 		ret.setStereotype(UMLUtil.getStereotype(rightElement));
 
 		ret.getHideElements().add(input);
+		ret.getRequires().add(input);
 
 		return ret;
 	}
 
 	@Override
-	public DiffElement getParentDiff(DiffElement input) {
+	public DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget modelElement = (ModelElementChangeRightTarget)input;
 		DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
 
 		EObject rightBase = UMLUtil.getBaseElement(modelElement.getRightElement());
 
-		return findOrCreateDiffGroup(rootDiffGroup, rightBase);
+		return findOrCreateDiffGroup(rootDiffGroup, rightBase, crossReferencer);
 	}
 
 }

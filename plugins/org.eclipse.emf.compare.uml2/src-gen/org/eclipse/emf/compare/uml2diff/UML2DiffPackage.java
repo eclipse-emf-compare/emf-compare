@@ -120,6 +120,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DIFF_EXTENSION__REMOTE = DiffPackage.DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF_EXTENSION__REQUIRES = DiffPackage.DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DIFF_EXTENSION__REQUIRED_BY = DiffPackage.DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -202,6 +220,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_ASSOCIATION_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -282,6 +318,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_ASSOCIATION_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -384,6 +438,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_ASSOCIATION_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -484,6 +556,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_ASSOCIATION_BRANCH_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -564,6 +654,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_ASSOCIATION_BRANCH_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -666,6 +774,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_ASSOCIATION_BRANCH_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ASSOCIATION_BRANCH_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -766,6 +892,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DEPENDENCY_BRANCH_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -846,6 +990,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_DEPENDENCY_BRANCH_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -975,6 +1137,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DEPENDENCY_BRANCH_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_BRANCH_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1102,6 +1282,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_GENERALIZATION_SET_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1182,6 +1380,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_GENERALIZATION_SET_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -1284,6 +1500,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_GENERALIZATION_SET_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_GENERALIZATION_SET_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1384,6 +1618,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DEPENDENCY_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1464,6 +1716,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_DEPENDENCY_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -1566,6 +1836,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DEPENDENCY_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DEPENDENCY_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1666,6 +1954,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_EXTEND_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1746,6 +2052,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_EXTEND_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -1848,6 +2172,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_EXTEND_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXTEND_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1948,6 +2290,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_EXECUTION_SPECIFICATION_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2028,6 +2388,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_EXECUTION_SPECIFICATION_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -2130,6 +2508,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_EXECUTION_SPECIFICATION_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_EXECUTION_SPECIFICATION_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2230,6 +2626,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DESTRUCTION_EVENT_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2310,6 +2724,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_DESTRUCTION_EVENT_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -2412,6 +2844,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_DESTRUCTION_EVENT_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_DESTRUCTION_EVENT_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2512,6 +2962,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_INTERVAL_CONSTRAINT_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2592,6 +3060,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_INTERVAL_CONSTRAINT_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -2694,6 +3180,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_INTERVAL_CONSTRAINT_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_INTERVAL_CONSTRAINT_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2794,6 +3298,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_MESSAGE_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2874,6 +3396,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_MESSAGE_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -2976,6 +3516,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_MESSAGE_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_MESSAGE_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3076,6 +3634,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_PROPERTY_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_PROPERTY_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_PROPERTY_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3165,6 +3741,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -3294,6 +3888,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3421,6 +4033,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_UPDATE_ATTRIBUTE__REMOTE = DiffPackage.UPDATE_ATTRIBUTE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_UPDATE_ATTRIBUTE__REQUIRES = DiffPackage.UPDATE_ATTRIBUTE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_UPDATE_ATTRIBUTE__REQUIRED_BY = DiffPackage.UPDATE_ATTRIBUTE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3539,6 +4169,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_APPLICATION_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3628,6 +4276,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_APPLICATION_ADDITION__REMOTE = DiffPackage.UPDATE_MODEL_ELEMENT__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_ADDITION__REQUIRES = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_ADDITION__REQUIRED_BY = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -3739,6 +4405,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_APPLICATION_REMOVAL__REMOTE = DiffPackage.UPDATE_MODEL_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_REMOVAL__REQUIRES = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_APPLICATION_REMOVAL__REQUIRED_BY = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3847,6 +4531,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_REFERENCE_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.REFERENCE_CHANGE_LEFT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -3983,6 +4685,24 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -4122,6 +4842,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_UPDATE_REFERENCE__REMOTE = DiffPackage.UPDATE_REFERENCE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_UPDATE_REFERENCE__REQUIRES = DiffPackage.UPDATE_REFERENCE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_UPDATE_REFERENCE__REQUIRED_BY = DiffPackage.UPDATE_REFERENCE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4258,6 +4996,24 @@ public interface UML2DiffPackage extends EPackage {
 	int UML_STEREOTYPE_REFERENCE_ORDER_CHANGE__REMOTE = DiffPackage.REFERENCE_ORDER_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_ORDER_CHANGE__REQUIRES = DiffPackage.REFERENCE_ORDER_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_STEREOTYPE_REFERENCE_ORDER_CHANGE__REQUIRED_BY = DiffPackage.REFERENCE_ORDER_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4337,6 +5093,370 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_REFERENCE_ORDER_CHANGE_FEATURE_COUNT = DiffPackage.REFERENCE_ORDER_CHANGE_FEATURE_COUNT + 3;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange <em>UML Profile Application Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationChange()
+	 * @generated
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE = 42;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__SUB_DIFF_ELEMENTS = UML_DIFF_EXTENSION__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__IS_HIDDEN_BY = UML_DIFF_EXTENSION__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__CONFLICTING = UML_DIFF_EXTENSION__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__KIND = UML_DIFF_EXTENSION__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__HIDE_ELEMENTS = UML_DIFF_EXTENSION__HIDE_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__IS_COLLAPSED = UML_DIFF_EXTENSION__IS_COLLAPSED;
+
+	/**
+	 * The feature id for the '<em><b>Profile</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE__PROFILE = UML_DIFF_EXTENSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>UML Profile Application Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_CHANGE_FEATURE_COUNT = UML_DIFF_EXTENSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl <em>UML Profile Application Addition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationAddition()
+	 * @generated
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION = 43;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__SUB_DIFF_ELEMENTS = DiffPackage.UPDATE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__IS_HIDDEN_BY = DiffPackage.UPDATE_MODEL_ELEMENT__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__CONFLICTING = DiffPackage.UPDATE_MODEL_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__KIND = DiffPackage.UPDATE_MODEL_ELEMENT__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__REMOTE = DiffPackage.UPDATE_MODEL_ELEMENT__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__REQUIRES = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__REQUIRED_BY = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__RIGHT_ELEMENT = DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__LEFT_ELEMENT = DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Profile</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION__PROFILE = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>UML Profile Application Addition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_ADDITION_FEATURE_COUNT = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationRemovalImpl <em>UML Profile Application Removal</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationRemovalImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationRemoval()
+	 * @generated
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL = 44;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__SUB_DIFF_ELEMENTS = DiffPackage.UPDATE_MODEL_ELEMENT__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__IS_HIDDEN_BY = DiffPackage.UPDATE_MODEL_ELEMENT__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__CONFLICTING = DiffPackage.UPDATE_MODEL_ELEMENT__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__KIND = DiffPackage.UPDATE_MODEL_ELEMENT__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__REMOTE = DiffPackage.UPDATE_MODEL_ELEMENT__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__REQUIRES = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__REQUIRED_BY = DiffPackage.UPDATE_MODEL_ELEMENT__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__RIGHT_ELEMENT = DiffPackage.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__LEFT_ELEMENT = DiffPackage.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__HIDE_ELEMENTS = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__IS_COLLAPSED = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Profile</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL__PROFILE = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>UML Profile Application Removal</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_PROFILE_APPLICATION_REMOVAL_FEATURE_COUNT = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 3;
 
 
 	/**
@@ -4780,6 +5900,47 @@ public interface UML2DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getUMLStereotypeReferenceOrderChange();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange <em>UML Profile Application Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Profile Application Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange
+	 * @generated
+	 */
+	EClass getUMLProfileApplicationChange();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange#getProfile <em>Profile</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Profile</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange#getProfile()
+	 * @see #getUMLProfileApplicationChange()
+	 * @generated
+	 */
+	EReference getUMLProfileApplicationChange_Profile();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition <em>UML Profile Application Addition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Profile Application Addition</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition
+	 * @generated
+	 */
+	EClass getUMLProfileApplicationAddition();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval <em>UML Profile Application Removal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Profile Application Removal</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval
+	 * @generated
+	 */
+	EClass getUMLProfileApplicationRemoval();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -5238,6 +6399,44 @@ public interface UML2DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UML_STEREOTYPE_REFERENCE_ORDER_CHANGE = eINSTANCE.getUMLStereotypeReferenceOrderChange();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange <em>UML Profile Application Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationChange()
+		 * @generated
+		 */
+		EClass UML_PROFILE_APPLICATION_CHANGE = eINSTANCE.getUMLProfileApplicationChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Profile</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference UML_PROFILE_APPLICATION_CHANGE__PROFILE = eINSTANCE.getUMLProfileApplicationChange_Profile();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl <em>UML Profile Application Addition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationAddition()
+		 * @generated
+		 */
+		EClass UML_PROFILE_APPLICATION_ADDITION = eINSTANCE.getUMLProfileApplicationAddition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationRemovalImpl <em>UML Profile Application Removal</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationRemovalImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLProfileApplicationRemoval()
+		 * @generated
+		 */
+		EClass UML_PROFILE_APPLICATION_REMOVAL = eINSTANCE.getUMLProfileApplicationRemoval();
 
 	}
 

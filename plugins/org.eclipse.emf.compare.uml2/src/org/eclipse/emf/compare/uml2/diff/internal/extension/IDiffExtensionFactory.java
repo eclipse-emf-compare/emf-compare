@@ -14,6 +14,7 @@ import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * An {@link IDiffExtensionFactory} is a factory capable to create an {@link AbstractDiffExtension} from a
@@ -45,9 +46,10 @@ public interface IDiffExtensionFactory {
 	 * element MUST NOT be added to its parent, it will be done by the {@link UML2DiffEngine}.
 	 * 
 	 * @param input
+	 * @param crossReferencer
 	 * @return
 	 */
-	AbstractDiffExtension create(DiffElement input);
+	AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
 
 	/**
 	 * Returns the {@link DiffElement} in which the {@link #create(DiffElement) created}
@@ -55,7 +57,18 @@ public interface IDiffExtensionFactory {
 	 * the model or newly created.
 	 * 
 	 * @param input
+	 * @param crossReferencer
 	 * @return
 	 */
-	DiffElement getParentDiff(DiffElement input);
+	DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
+
+	/**
+	 * Sets the required link of the difference extension created by the related factory.
+	 * 
+	 * @param diff
+	 *            The difference extension.
+	 * @param crossReferencer
+	 *            The DiffModel cross-referencer.
+	 */
+	void fillRequiredDifferences(AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer);
 }

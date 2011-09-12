@@ -25,9 +25,8 @@ import org.eclipse.uml2.uml.ValueSpecification;
 
 public class UMLIntervalConstraintChangeRightTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLIntervalConstraintChangeRightTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLIntervalConstraintChangeRightTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -35,7 +34,7 @@ public class UMLIntervalConstraintChangeRightTargetFactory extends AbstractDiffE
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof IntervalConstraint;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final IntervalConstraint intervalConstraint = (IntervalConstraint)changeRightTarget.getRightElement();
 
@@ -47,13 +46,14 @@ public class UMLIntervalConstraintChangeRightTargetFactory extends AbstractDiffE
 		if (valueSpecification instanceof Interval) {
 			ValueSpecification min = ((Interval)valueSpecification).getMin();
 			hideCrossReferences(min, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
-					ret);
+					ret, crossReferencer);
 			ValueSpecification max = ((Interval)valueSpecification).getMax();
 			hideCrossReferences(max, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
-					ret);
+					ret, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeRightTarget);
+		ret.getRequires().add(changeRightTarget);
 
 		ret.setRemote(changeRightTarget.isRemote());
 		ret.setRightElement(changeRightTarget.getRightElement());

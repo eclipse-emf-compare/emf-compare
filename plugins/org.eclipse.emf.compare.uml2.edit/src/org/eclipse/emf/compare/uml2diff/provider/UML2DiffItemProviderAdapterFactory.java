@@ -747,6 +747,52 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLProfileApplicationAdditionItemProvider umlProfileApplicationAdditionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLProfileApplicationAdditionAdapter() {
+		if (umlProfileApplicationAdditionItemProvider == null) {
+			umlProfileApplicationAdditionItemProvider = new UMLProfileApplicationAdditionItemProvider(this);
+		}
+
+		return umlProfileApplicationAdditionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLProfileApplicationRemovalItemProvider umlProfileApplicationRemovalItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLProfileApplicationRemovalAdapter() {
+		if (umlProfileApplicationRemovalItemProvider == null) {
+			umlProfileApplicationRemovalItemProvider = new UMLProfileApplicationRemovalItemProvider(this);
+		}
+
+		return umlProfileApplicationRemovalItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -874,6 +920,8 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 		if (umlStereotypeReferenceChangeRightTargetItemProvider != null) umlStereotypeReferenceChangeRightTargetItemProvider.dispose();
 		if (umlStereotypeUpdateReferenceItemProvider != null) umlStereotypeUpdateReferenceItemProvider.dispose();
 		if (umlStereotypeReferenceOrderChangeItemProvider != null) umlStereotypeReferenceOrderChangeItemProvider.dispose();
+		if (umlProfileApplicationAdditionItemProvider != null) umlProfileApplicationAdditionItemProvider.dispose();
+		if (umlProfileApplicationRemovalItemProvider != null) umlProfileApplicationRemovalItemProvider.dispose();
 	}
 
 }

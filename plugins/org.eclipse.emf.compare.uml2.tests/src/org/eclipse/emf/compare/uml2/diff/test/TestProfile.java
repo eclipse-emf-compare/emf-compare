@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.uml2.diff.test;
 
 import java.io.IOException;
 
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
 import org.junit.Test;
 
 public class TestProfile extends AbstractUMLCompareTest {
@@ -137,7 +139,27 @@ public class TestProfile extends AbstractUMLCompareTest {
 	public void stereotypeReference_updateReference2_merge() throws IOException, InterruptedException {
 		testMerge("stereotypeReference/updateReference/_2");
 	}
+	
+	@Test
+	public void applyProfile_remove() throws IOException, InterruptedException {
+		testCompare("applyProfile/remove");
+	}
+	
+	@Test
+	public void applyProfile_remove_merge() throws IOException, InterruptedException {
+		testMerge("applyProfile/remove", UMLProfileApplicationRemoval.class);
+	}
+	
+	@Test
+	public void applyProfileStereotype_addition() throws IOException, InterruptedException {
+		testCompare("applyProfileStereotype/addition");
+	}
 
+	@Test
+	public void applyProfileStereotype_addition_merge() throws IOException, InterruptedException {
+		testMerge("applyProfileStereotype/addition", UMLStereotypeApplicationAddition.class);
+	}
+	
 	@Override
 	String getDiagramKindPath() {
 		return DIAGRAM_KIND_PATH;

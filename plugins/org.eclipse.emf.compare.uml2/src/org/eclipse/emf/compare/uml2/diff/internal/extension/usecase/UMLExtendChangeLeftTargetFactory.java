@@ -24,8 +24,8 @@ import org.eclipse.uml2.uml.ExtensionPoint;
 
 public class UMLExtendChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLExtendChangeLeftTargetFactory(UML2DiffEngine engine, EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLExtendChangeLeftTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -33,7 +33,7 @@ public class UMLExtendChangeLeftTargetFactory extends AbstractDiffExtensionFacto
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof Extend;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final Extend extend = (Extend)changeLeftTarget.getLeftElement();
 
@@ -41,10 +41,11 @@ public class UMLExtendChangeLeftTargetFactory extends AbstractDiffExtensionFacto
 
 		for (ExtensionPoint extensionPoint : extend.getExtensionLocations()) {
 			hideCrossReferences(extensionPoint,
-					DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret);
+					DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeLeftTarget);
+		ret.getRequires().add(changeLeftTarget);
 
 		ret.setRemote(changeLeftTarget.isRemote());
 		ret.setRightParent(changeLeftTarget.getRightParent());

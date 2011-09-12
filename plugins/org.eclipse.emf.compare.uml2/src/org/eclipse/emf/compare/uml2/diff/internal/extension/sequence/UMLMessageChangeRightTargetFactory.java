@@ -20,7 +20,7 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensio
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.Event;
 import org.eclipse.uml2.uml.Message;
 import org.eclipse.uml2.uml.MessageEnd;
@@ -29,8 +29,8 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLMessageChangeRightTargetFactory(UML2DiffEngine engine, CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLMessageChangeRightTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -38,7 +38,7 @@ public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFac
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Message;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final Message message = (Message)changeRightTarget.getRightElement();
 
@@ -46,15 +46,16 @@ public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFac
 
 		MessageEnd receiveEvent = message.getReceiveEvent();
 		if (receiveEvent != null) {
-			hideEvent(receiveEvent, ret);
+			hideEvent(receiveEvent, ret, crossReferencer);
 		}
 
 		MessageEnd sendEvent = message.getSendEvent();
 		if (sendEvent != null) {
-			hideEvent(sendEvent, ret);
+			hideEvent(sendEvent, ret, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeRightTarget);
+		ret.getRequires().add(changeRightTarget);
 
 		ret.setRemote(changeRightTarget.isRemote());
 		ret.setLeftParent(changeRightTarget.getLeftParent());
@@ -63,15 +64,17 @@ public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFac
 		return ret;
 	}
 
-	private void hideEvent(MessageEnd messageEnd, AbstractDiffExtension hiddingExtension) {
+	private void hideEvent(MessageEnd messageEnd, AbstractDiffExtension hiddingExtension,
+			EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(messageEnd,
-				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, hiddingExtension);
+				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, hiddingExtension,
+				crossReferencer);
 		hideCrossReferences(messageEnd, DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET,
-				hiddingExtension, coveredByPredicate);
+				hiddingExtension, coveredByPredicate, crossReferencer);
 		if (messageEnd instanceof OccurrenceSpecification) {
 			Event event = ((OccurrenceSpecification)messageEnd).getEvent();
 			hideCrossReferences(event, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
-					hiddingExtension);
+					hiddingExtension, crossReferencer);
 		}
 	}
 

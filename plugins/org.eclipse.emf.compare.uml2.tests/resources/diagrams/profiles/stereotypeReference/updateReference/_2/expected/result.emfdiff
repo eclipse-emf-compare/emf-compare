@@ -4,7 +4,7 @@
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
         <subDiffElements xsi:type="diff:DiffGroup">
-          <subDiffElements xsi:type="diff:UpdateReference" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1">
+          <subDiffElements xsi:type="diff:UpdateReference" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1">
             <reference href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//ACliche/singleValuedReference"/>
             <rightElement href="../original/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
             <leftElement href="../modified/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
@@ -13,7 +13,7 @@
           </subDiffElements>
           <rightParent href="../original/model.uml#_ZdM94IwrEeCIzv0DzikA6A"/>
         </subDiffElements>
-        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateReference" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
+        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateReference" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
           <reference href="http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile#//ACliche/singleValuedReference"/>
           <rightElement href="../original/model.uml#_VGFMoIwrEeCIzv0DzikA6A"/>
           <leftElement href="../modified/model.uml#_VGFMoIwrEeCIzv0DzikA6A"/>

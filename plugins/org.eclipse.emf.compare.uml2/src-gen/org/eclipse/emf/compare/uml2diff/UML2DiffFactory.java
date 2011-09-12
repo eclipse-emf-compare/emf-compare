@@ -291,6 +291,24 @@ public interface UML2DiffFactory extends EFactory {
 	UMLStereotypeReferenceOrderChange createUMLStereotypeReferenceOrderChange();
 
 	/**
+	 * Returns a new object of class '<em>UML Profile Application Addition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Profile Application Addition</em>'.
+	 * @generated
+	 */
+	UMLProfileApplicationAddition createUMLProfileApplicationAddition();
+
+	/**
+	 * Returns a new object of class '<em>UML Profile Application Removal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Profile Application Removal</em>'.
+	 * @generated
+	 */
+	UMLProfileApplicationRemoval createUMLProfileApplicationRemoval();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

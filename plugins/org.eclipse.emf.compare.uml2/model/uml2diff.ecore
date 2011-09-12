@@ -78,4 +78,10 @@
       eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceChangeRightTarget #//UMLStereotypePropertyChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeUpdateReference" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateReference #//UMLStereotypePropertyChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLStereotypeReferenceOrderChange" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ReferenceOrderChange #//UMLStereotypePropertyChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationChange" abstract="true"
+      interface="true" eSuperTypes="#//UMLDiffExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="profile" eType="ecore:EClass platform:/plugin/org.eclipse.uml2.uml/model/UML.ecore#//Profile"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationAddition" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationRemoval" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
 </ecore:EPackage>

@@ -29,25 +29,25 @@
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
         <subDiffElements xsi:type="diff:DiffGroup">
-          <subDiffElements xsi:type="diff:UpdateAttribute" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1">
+          <subDiffElements xsi:type="diff:UpdateAttribute" requiredBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.1">
             <attribute href="pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFhXjqEdy8S4Cr8Rc_NA"/>
             <leftElement href="../modified/model.uml#_ITG0oHxtEeCJOrA24Ue2iw"/>
             <rightElement href="../original/model.uml#_ITG0oHxtEeCJOrA24Ue2iw"/>
           </subDiffElements>
-          <subDiffElements xsi:type="diff:UpdateAttribute" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.2">
+          <subDiffElements xsi:type="diff:UpdateAttribute" requiredBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.2" isHiddenBy="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.2">
             <attribute href="pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFoXjqEdy8S4Cr8Rc_NA"/>
             <leftElement href="../modified/model.uml#_ITG0oHxtEeCJOrA24Ue2iw"/>
             <rightElement href="../original/model.uml#_ITG0oHxtEeCJOrA24Ue2iw"/>
           </subDiffElements>
           <rightParent href="../original/model.uml#_ITG0oHxtEeCJOrA24Ue2iw"/>
         </subDiffElements>
-        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateAttribute" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
+        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateAttribute" requires="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.0" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
           <attribute href="pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFhXjqEdy8S4Cr8Rc_NA"/>
           <leftElement href="../modified/model.uml#_C4IZsHxtEeCJOrA24Ue2iw"/>
           <rightElement href="../original/model.uml#_C4IZsHxtEeCJOrA24Ue2iw"/>
           <stereotype href="pathmap://UML_PROFILES/Ecore.profile.uml#EClass"/>
         </subDiffElements>
-        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateAttribute" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.1">
+        <subDiffElements xsi:type="uml2diff:UMLStereotypeUpdateAttribute" requires="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" hideElements="//@diffResourceSet/@diffModels.5/@ownedElements.0/@subDiffElements.0/@subDiffElements.1">
           <attribute href="pathmap://UML_PROFILES/Ecore.profile.uml#_z1OFoXjqEdy8S4Cr8Rc_NA"/>
           <leftElement href="../modified/model.uml#_C4IZsHxtEeCJOrA24Ue2iw"/>
           <rightElement href="../original/model.uml#_C4IZsHxtEeCJOrA24Ue2iw"/>

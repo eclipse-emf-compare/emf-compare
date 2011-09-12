@@ -32,6 +32,8 @@ import org.eclipse.emf.compare.uml2diff.*;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.util.Switch;
 
 /**
  * <!-- begin-user-doc -->
@@ -46,7 +48,7 @@ import org.eclipse.emf.ecore.EObject;
  * @see org.eclipse.emf.compare.uml2diff.UML2DiffPackage
  * @generated
  */
-public class UML2DiffSwitch<T> {
+public class UML2DiffSwitch<T> extends Switch<T> {
 	/**
 	 * The cached model package
 	 * <!-- begin-user-doc -->
@@ -68,14 +70,16 @@ public class UML2DiffSwitch<T> {
 	}
 
 	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
+	 * Checks whether this is a switch for the given package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the first non-null result returned by a <code>caseXXX</code> call.
+	 * @parameter ePackage the package in question.
+	 * @return whether this is a switch for the given package.
 	 * @generated
 	 */
-	public T doSwitch(EObject theEObject) {
-		return doSwitch(theEObject.eClass(), theEObject);
+	@Override
+	protected boolean isSwitchFor(EPackage ePackage) {
+		return ePackage == modelPackage;
 	}
 
 	/**
@@ -85,26 +89,7 @@ public class UML2DiffSwitch<T> {
 	 * @return the first non-null result returned by a <code>caseXXX</code> call.
 	 * @generated
 	 */
-	protected T doSwitch(EClass theEClass, EObject theEObject) {
-		if (theEClass.eContainer() == modelPackage) {
-			return doSwitch(theEClass.getClassifierID(), theEObject);
-		}
-		else {
-			List<EClass> eSuperTypes = theEClass.getESuperTypes();
-			return
-				eSuperTypes.isEmpty() ?
-					defaultCase(theEObject) :
-					doSwitch(eSuperTypes.get(0), theEObject);
-		}
-	}
-
-	/**
-	 * Calls <code>caseXXX</code> for each class of the model until one returns a non null result; it yields that result.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the first non-null result returned by a <code>caseXXX</code> call.
-	 * @generated
-	 */
+	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
 			case UML2DiffPackage.UML_DIFF_EXTENSION: {
@@ -568,6 +553,39 @@ public class UML2DiffSwitch<T> {
 				if (result == null) result = caseUMLDiffExtension(umlStereotypeReferenceOrderChange);
 				if (result == null) result = caseDiffElement(umlStereotypeReferenceOrderChange);
 				if (result == null) result = caseAbstractDiffExtension(umlStereotypeReferenceOrderChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_PROFILE_APPLICATION_CHANGE: {
+				UMLProfileApplicationChange umlProfileApplicationChange = (UMLProfileApplicationChange)theEObject;
+				T result = caseUMLProfileApplicationChange(umlProfileApplicationChange);
+				if (result == null) result = caseUMLDiffExtension(umlProfileApplicationChange);
+				if (result == null) result = caseDiffElement(umlProfileApplicationChange);
+				if (result == null) result = caseAbstractDiffExtension(umlProfileApplicationChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION: {
+				UMLProfileApplicationAddition umlProfileApplicationAddition = (UMLProfileApplicationAddition)theEObject;
+				T result = caseUMLProfileApplicationAddition(umlProfileApplicationAddition);
+				if (result == null) result = caseUpdateModelElement(umlProfileApplicationAddition);
+				if (result == null) result = caseUMLProfileApplicationChange(umlProfileApplicationAddition);
+				if (result == null) result = caseModelElementChange(umlProfileApplicationAddition);
+				if (result == null) result = caseUMLDiffExtension(umlProfileApplicationAddition);
+				if (result == null) result = caseDiffElement(umlProfileApplicationAddition);
+				if (result == null) result = caseAbstractDiffExtension(umlProfileApplicationAddition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_PROFILE_APPLICATION_REMOVAL: {
+				UMLProfileApplicationRemoval umlProfileApplicationRemoval = (UMLProfileApplicationRemoval)theEObject;
+				T result = caseUMLProfileApplicationRemoval(umlProfileApplicationRemoval);
+				if (result == null) result = caseUpdateModelElement(umlProfileApplicationRemoval);
+				if (result == null) result = caseUMLProfileApplicationChange(umlProfileApplicationRemoval);
+				if (result == null) result = caseModelElementChange(umlProfileApplicationRemoval);
+				if (result == null) result = caseUMLDiffExtension(umlProfileApplicationRemoval);
+				if (result == null) result = caseDiffElement(umlProfileApplicationRemoval);
+				if (result == null) result = caseAbstractDiffExtension(umlProfileApplicationRemoval);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1206,6 +1224,51 @@ public class UML2DiffSwitch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Profile Application Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Profile Application Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLProfileApplicationChange(UMLProfileApplicationChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Profile Application Addition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Profile Application Addition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLProfileApplicationAddition(UMLProfileApplicationAddition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Profile Application Removal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Profile Application Removal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLProfileApplicationRemoval(UMLProfileApplicationRemoval object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1441,6 +1504,7 @@ public class UML2DiffSwitch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject)
 	 * @generated
 	 */
+	@Override
 	public T defaultCase(EObject object) {
 		return null;
 	}

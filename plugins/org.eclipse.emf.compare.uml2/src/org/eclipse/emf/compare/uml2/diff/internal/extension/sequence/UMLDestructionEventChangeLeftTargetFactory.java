@@ -25,9 +25,8 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 public class UMLDestructionEventChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
 
-	public UMLDestructionEventChangeLeftTargetFactory(UML2DiffEngine engine,
-			EcoreUtil.CrossReferencer crossReferencer) {
-		super(engine, crossReferencer);
+	public UMLDestructionEventChangeLeftTargetFactory(UML2DiffEngine engine) {
+		super(engine);
 	}
 
 	public boolean handles(DiffElement input) {
@@ -35,7 +34,7 @@ public class UMLDestructionEventChangeLeftTargetFactory extends AbstractDiffExte
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof DestructionEvent;
 	}
 
-	public AbstractDiffExtension create(DiffElement input) {
+	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final DestructionEvent destructionEvent = (DestructionEvent)changeLeftTarget.getLeftElement();
 
@@ -45,12 +44,13 @@ public class UMLDestructionEventChangeLeftTargetFactory extends AbstractDiffExte
 		for (EObject occurenceSpecification : getInverseReferences(destructionEvent,
 				UMLPackage.Literals.OCCURRENCE_SPECIFICATION__EVENT)) {
 			hideCrossReferences(occurenceSpecification,
-					DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret);
+					DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT, ret, crossReferencer);
 			hideCrossReferences(occurenceSpecification,
-					DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret);
+					DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeLeftTarget);
+		ret.getRequires().add(changeLeftTarget);
 
 		ret.setRemote(changeLeftTarget.isRemote());
 		ret.setRightParent(changeLeftTarget.getRightParent());
