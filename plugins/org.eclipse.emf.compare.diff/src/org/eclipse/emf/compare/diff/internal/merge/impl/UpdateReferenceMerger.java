@@ -10,8 +10,14 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -25,10 +31,10 @@ public class UpdateReferenceMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final UpdateReference theDiff = (UpdateReference)this.diff;
 		final EReference reference = theDiff.getReference();
 		final EObject element = theDiff.getLeftElement();
@@ -42,17 +48,15 @@ public class UpdateReferenceMerger extends DefaultMerger {
 			MergeService.getCopier(diff).copyReferenceValue(reference, element, leftTarget,
 					matchedLeftTarget, -1);
 		}
-
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final UpdateReference theDiff = (UpdateReference)this.diff;
 		final EReference reference = theDiff.getReference();
 		final EObject element = theDiff.getRightElement();
@@ -66,7 +70,24 @@ public class UpdateReferenceMerger extends DefaultMerger {
 			MergeService.getCopier(diff).copyReferenceValue(reference, element, rightTarget,
 					matchedRightTarget, -1);
 		}
+	}
 
-		super.undoInTarget();
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#getDependencies(boolean)
+	 */
+	@Override
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		final List<DiffElement> diffs = diff.getRequires();
+		final List<DiffElement> result = new ArrayList<DiffElement>();
+		for (DiffElement diffElement : diffs) {
+			if (applyInOrigin && diffElement instanceof ModelElementChangeRightTarget) {
+				result.add(diffElement);
+			} else if (!applyInOrigin && diffElement instanceof ModelElementChangeLeftTarget) {
+				result.add(diffElement);
+			}
+		}
+		return result;
 	}
 }

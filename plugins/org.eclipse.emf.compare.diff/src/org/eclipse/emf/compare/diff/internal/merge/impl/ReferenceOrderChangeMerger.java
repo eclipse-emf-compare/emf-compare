@@ -10,13 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.internal.merge.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
-import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.util.EFactory;
 import org.eclipse.emf.ecore.EObject;
@@ -30,10 +28,10 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
 		final EObject element = theDiff.getLeftElement();
 		final List<EObject> leftTarget = theDiff.getLeftTarget();
@@ -42,16 +40,15 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final ReferenceOrderChange theDiff = (ReferenceOrderChange)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final List<EObject> rightTarget = theDiff.getRightTarget();
@@ -60,28 +57,5 @@ public class ReferenceOrderChangeMerger extends DefaultMerger {
 		} catch (final FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
-		super.undoInTarget();
-	}
-
-	private List<ReferenceChange> getRelatedReferenceChanges() {
-		// final Iterator<EObject> related = getDiffModel().eAllContents();
-		// while (related.hasNext()) {
-		// final DiffElement op = (DiffElement)related.next();
-		// if (op instanceof ReferenceChangeRightTarget) {
-		// final ReferenceChangeRightTarget link = (ReferenceChangeRightTarget)op;
-		// // If this is my eOpposite, delete it from the DiffModel (merged along with this one)
-		// if (link.getReference().equals(theDiff.getReference().getEOpposite())
-		// && link.getRightTarget().equals(element)) {
-		// removeFromContainer(link);
-		// }
-		// } else if (op instanceof ReferenceOrderChange) {
-		// final ReferenceOrderChange link = (ReferenceOrderChange)op;
-		// if (link.getReference().equals(theDiff.getReference())) {
-		// // FIXME respect ordering!
-		// link.getLeftTarget().add(copiedValue);
-		// }
-		// }
-		// }
-		return new ArrayList<ReferenceChange>();
 	}
 }

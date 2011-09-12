@@ -12,8 +12,11 @@ package org.eclipse.emf.compare.diff.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -22,14 +25,23 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.engine.IDiffEngine;
+import org.eclipse.emf.compare.diff.internal.DiffReferenceUtil;
 import org.eclipse.emf.compare.diff.internal.engine.MatchCrossReferencer;
 import org.eclipse.emf.compare.diff.internal.service.DefaultDiffEngineSelector;
 import org.eclipse.emf.compare.diff.internal.service.DiffExtensionDescriptor;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChange;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChange;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
+import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.metamodel.MatchResourceSet;
 import org.eclipse.emf.compare.match.metamodel.Side;
@@ -39,7 +51,10 @@ import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
 import org.eclipse.emf.compare.util.EclipseModelUtils;
 import org.eclipse.emf.compare.util.ModelIdentifier;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
@@ -111,6 +126,9 @@ public final class DiffService {
 		}
 
 		engine.reset();
+
+		fillRequiredDifferences(diff);
+
 		return diff;
 	}
 
@@ -168,7 +186,123 @@ public final class DiffService {
 			dependencyChange.getRoots().addAll(unmatch.getRoots());
 			diff.getResourceDiffs().add(dependencyChange);
 		}
+
+		fillRequiredDifferences(diff);
+
 		return diff;
+	}
+
+	/**
+	 * Post-processing on the DiffModel or DiffResourceSet to fill each {@link ModelElementChange} with
+	 * possible required others differences.
+	 * 
+	 * @param model
+	 *            The DiffModel or DiffResourceSet.
+	 */
+	private static void fillRequiredDifferences(EObject model) {
+		EcoreUtil.CrossReferencer crossReferencer = new EcoreUtil.CrossReferencer(model) {
+			/** Generic Serial ID. */
+			private static final long serialVersionUID = 1L;
+
+			{
+				crossReference();
+			}
+		};
+
+		final Iterator<EObject> diffs = model.eAllContents();
+		while (diffs.hasNext()) {
+			final EObject obj = diffs.next();
+			if ((obj instanceof ModelElementChange || obj instanceof ReferenceChange)
+					&& !(obj instanceof AbstractDiffExtension)) {
+				fillRequiredDifferences(crossReferencer, (DiffElement)obj);
+			}
+		}
+	}
+
+	/**
+	 * Fill the specified difference with a possible required other difference.
+	 * 
+	 * @param crossReferencer
+	 *            Cross referencer on the DiffModel or DiffResourceSet.
+	 * @param diff
+	 *            The difference to fill.
+	 */
+	private static void fillRequiredDifferences(EcoreUtil.CrossReferencer crossReferencer,
+			final DiffElement diff) {
+		final Set<EObject> refEObjects = getReferencedEObjects(diff);
+		final Iterator<EObject> referencedEObjects = refEObjects.iterator();
+		while (referencedEObjects.hasNext()) {
+			final EObject referencedEObject = referencedEObjects.next();
+			final Collection<Setting> settings = crossReferencer.get(referencedEObject);
+			if (settings != null) {
+				for (Setting setting : settings) {
+					final EObject crossElt = setting.getEObject();
+					linkDifferences(diff, crossElt);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Get the all the referenced model objects from the specified difference.
+	 * 
+	 * @param diff
+	 *            The difference.
+	 * @return The list of the model objects.
+	 */
+	private static Set<EObject> getReferencedEObjects(final DiffElement diff) {
+		EObject elt = null;
+		final Set<EObject> referencedEObjects = new LinkedHashSet<EObject>();
+		if (diff instanceof ModelElementChangeLeftTarget) {
+			final ModelElementChangeLeftTarget mec = (ModelElementChangeLeftTarget)diff;
+			elt = mec.getLeftElement();
+			referencedEObjects.addAll(DiffReferenceUtil.getReferencedEObjects(elt, true));
+			referencedEObjects.remove(elt);
+		} else if (diff instanceof ModelElementChangeRightTarget) {
+			final ModelElementChangeRightTarget mec = (ModelElementChangeRightTarget)diff;
+			elt = mec.getRightElement();
+			referencedEObjects.addAll(DiffReferenceUtil.getReferencedEObjects(elt, true));
+			referencedEObjects.remove(elt);
+		} else if (diff instanceof ReferenceChangeLeftTarget) {
+			final ReferenceChangeLeftTarget rc = (ReferenceChangeLeftTarget)diff;
+			final EObject leftTarget = rc.getLeftTarget();
+			if (leftTarget != null) {
+				referencedEObjects.add(leftTarget);
+			}
+		} else if (diff instanceof ReferenceChangeRightTarget) {
+			final ReferenceChangeRightTarget rc = (ReferenceChangeRightTarget)diff;
+			final EObject rightTarget = rc.getRightTarget();
+			if (rightTarget != null) {
+				referencedEObjects.add(rightTarget);
+			}
+		} else if (diff instanceof UpdateReference) {
+			final UpdateReference ur = (UpdateReference)diff;
+			if (ur.getLeftTarget() != null && ur.getLeftTarget() != ur.getLeftElement()) {
+				referencedEObjects.add(ur.getLeftTarget());
+			}
+			if (ur.getRightTarget() != null && ur.getRightTarget() != ur.getRightElement()) {
+				referencedEObjects.add(ur.getRightTarget());
+			}
+		}
+		return referencedEObjects;
+	}
+
+	/**
+	 * Checks if the given difference {@link dest} is a good candidate to be added as required difference the
+	 * specified difference {@link origin}. A good candidate is a {@link ModelElementChange} which is not an
+	 * {@link AbstractDiffExtension}.
+	 * 
+	 * @param origin
+	 *            The difference to fill.
+	 * @param dest
+	 *            The difference candidate.
+	 */
+	private static void linkDifferences(final DiffElement origin, final EObject dest) {
+		if (dest instanceof ModelElementChange && !(dest instanceof AbstractDiffExtension)) {
+			final ModelElementChange mec = (ModelElementChange)dest;
+			origin.getRequires().add(mec);
+		}
 	}
 
 	/**

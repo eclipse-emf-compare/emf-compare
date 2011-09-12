@@ -13,6 +13,7 @@ package org.eclipse.emf.compare.tests.merge;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.emf.compare.tests.merge.dependencies.DependenciesMergeTest;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCases;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCases3WayLocalChanges;
 import org.eclipse.emf.compare.tests.merge.multiplecontainmentreference.MultipleContainmentMergeUseCases3WayLocalChangesNoResource;
@@ -204,6 +205,10 @@ public class AllMergeTests {
 		suite.addTestSuite(UMLHistoryMergeNoResource.class);
 		suite.addTestSuite(UMLHistoryMergeWithResource.class);
 		suite.addTestSuite(UMLHistoryMergeWithResourceSet.class);
+
+		// Dependencies tests
+		suite.addTestSuite(DependenciesMergeTest.class);
+
 		// $JUnit-END$
 		return suite;
 	}

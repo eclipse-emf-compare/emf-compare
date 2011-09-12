@@ -29,6 +29,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isConflicting <em>Conflicting</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getKind <em>Kind</em>}</li>
  *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#isRemote <em>Remote</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequires <em>Requires</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequiredBy <em>Required By</em>}</li>
  * </ul>
  * </p>
  *
@@ -113,6 +115,44 @@ public interface DiffElement extends EObject {
 	 * @generated
 	 */
 	void setRemote(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Requires</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.diff.metamodel.DiffElement}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequiredBy <em>Required By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Requires</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Requires</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_Requires()
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequiredBy
+	 * @model opposite="requiredBy"
+	 * @generated
+	 * @since 1.3
+	 */
+	EList<DiffElement> getRequires();
+
+	/**
+	 * Returns the value of the '<em><b>Required By</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.compare.diff.metamodel.DiffElement}.
+	 * It is bidirectional and its opposite is '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequires <em>Requires</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Required By</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Required By</em>' reference list.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffPackage#getDiffElement_RequiredBy()
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequires
+	 * @model opposite="requires"
+	 * @generated
+	 * @since 1.3
+	 */
+	EList<DiffElement> getRequiredBy();
 
 	/**
 	 * Returns the value of the '<em><b>Sub Diff Elements</b></em>' containment reference list.

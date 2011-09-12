@@ -31,10 +31,10 @@ public class AttributeOrderChangeMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final AttributeOrderChange theDiff = (AttributeOrderChange)this.diff;
 		final EAttribute attribute = theDiff.getAttribute();
 		final EObject leftElement = theDiff.getLeftElement();
@@ -83,17 +83,15 @@ public class AttributeOrderChangeMerger extends DefaultMerger {
 		}
 		// Finally, set the value of our attribute to this new list
 		leftElement.eSet(attribute, result);
-
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final AttributeOrderChange theDiff = (AttributeOrderChange)this.diff;
 		final EAttribute attribute = theDiff.getAttribute();
 		final EObject leftElement = theDiff.getLeftElement();
@@ -142,8 +140,6 @@ public class AttributeOrderChangeMerger extends DefaultMerger {
 		}
 		// Finally, set the value of our attribute to this new list
 		rightElement.eSet(attribute, result);
-
-		super.applyInOrigin();
 	}
 
 	/**

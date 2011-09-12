@@ -19,13 +19,10 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.internal.DiffReferenceUtil;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
-import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ResourceDependencyChange;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -34,7 +31,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
-import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 
 /**
@@ -120,18 +116,11 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		for (final Map.Entry<EObject, EObject> entry : entrySetCopy) {
 			final EObject eObject = entry.getKey();
 			final EObject copyEObject = entry.getValue();
-			final EClass eClass = eObject.eClass();
-			for (int j = 0; j < eClass.getFeatureCount(); ++j) {
-				final EStructuralFeature eStructuralFeature = eClass.getEStructuralFeature(j);
-				if (eStructuralFeature.isChangeable() && !eStructuralFeature.isDerived()) {
-					if (eStructuralFeature instanceof EReference) {
-						final EReference eReference = (EReference)eStructuralFeature;
-						if (!eReference.isContainment() && !eReference.isContainer()) {
-							copyReference(eReference, eObject, copyEObject);
-						}
-					} else if (FeatureMapUtil.isFeatureMap(eStructuralFeature)) {
-						copyFeatureMap(eObject, eStructuralFeature);
-					}
+			for (EStructuralFeature feature : DiffReferenceUtil.getCopiableReferences(eObject)) {
+				if (DiffReferenceUtil.isSimpleReference(feature)) {
+					copyReference((EReference)feature, eObject, copyEObject);
+				} else if (DiffReferenceUtil.isFeatureMap(feature)) {
+					copyFeatureMap(eObject, feature);
 				}
 			}
 		}
@@ -176,9 +165,6 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 		final EObject targetValue = get(value);
 		if (targetValue != null) {
 			copy = targetValue;
-		} else if (mergeLinkedDiff(value)) {
-			// referenced object was an unmatched one and we managed to merge its corresponding diff
-			copy = get(value);
 		} else {
 			if (value.eResource() == null || value.eResource().getURI().isPlatformPlugin()) {
 				// We can't copy that object
@@ -374,11 +360,6 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 					if (copyReferencedEObject != null) {
 						// The referenced object has been copied via this Copier
 						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(copyReferencedEObject);
-					} else if (mergeLinkedDiff((EObject)referencedEObj)) {
-						// referenced object was an unmatched one and we managed to merge its corresponding
-						// diff
-						((List<Object>)copyEObject.eGet(getTarget(eReference))).add(get(referencedEObj));
-						// else => don't take any action, this has already been handled
 					} else if (referencedEObj instanceof EObject) {
 						// referenced object lies in another resource, simply reference it
 						final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObj);
@@ -396,9 +377,6 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				if (copyReferencedEObject != null) {
 					// The referenced object has been copied via this Copier
 					copyEObject.eSet(getTarget(eReference), copyReferencedEObject);
-				} else if (mergeLinkedDiff((EObject)referencedEObject)) {
-					// referenced object was an unmatched one and we managed to merge its corresponding diff
-					copyEObject.eSet(getTarget(eReference), get(referencedEObject));
 				} else if (referencedEObject instanceof EObject) {
 					final Object copyReferencedObject = findReferencedObjectCopy((EObject)referencedEObject);
 					copyEObject.eSet(getTarget(eReference), copyReferencedObject);
@@ -657,41 +635,6 @@ public class EMFCompareEObjectCopier extends org.eclipse.emf.ecore.util.EcoreUti
 				break;
 			}
 		}
-	}
-
-	/**
-	 * This will merge the DiffElement corresponding to the given element if it was an unmatched element.
-	 * 
-	 * @param element
-	 *            The element we need a diff for.
-	 * @return <code>True</code> if an element needed merging, <code>False</code> otherwise.
-	 */
-	private boolean mergeLinkedDiff(EObject element) {
-		boolean hasMerged = false;
-		final TreeIterator<EObject> diffIterator;
-		if (diffResourceSet != null) {
-			diffIterator = diffResourceSet.eAllContents();
-		} else {
-			diffIterator = diffModel.eAllContents();
-		}
-
-		while (diffIterator.hasNext()) {
-			final EObject next = diffIterator.next();
-			if (next instanceof ModelElementChangeLeftTarget) {
-				if (((ModelElementChangeLeftTarget)next).getLeftElement() == element) {
-					MergeService.merge((ModelElementChangeLeftTarget)next, true);
-					hasMerged = true;
-					break;
-				}
-			} else if (next instanceof ModelElementChangeRightTarget) {
-				if (((ModelElementChangeRightTarget)next).getRightElement() == element) {
-					MergeService.merge((ModelElementChangeRightTarget)next, false);
-					hasMerged = true;
-					break;
-				}
-			}
-		}
-		return hasMerged;
 	}
 
 	/**

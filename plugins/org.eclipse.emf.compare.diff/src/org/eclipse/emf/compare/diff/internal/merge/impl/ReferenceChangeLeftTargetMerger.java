@@ -43,10 +43,10 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
 		final EObject leftTarget = theDiff.getLeftTarget();
@@ -75,16 +75,15 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 				}
 			}
 		}
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final ReferenceChangeLeftTarget theDiff = (ReferenceChangeLeftTarget)this.diff;
 
 		final EReference reference = theDiff.getReference();
@@ -125,6 +124,18 @@ public class ReferenceChangeLeftTargetMerger extends DefaultMerger {
 				}
 			}
 		}
-		super.undoInTarget();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#getDependencies(boolean)
+	 */
+	@Override
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		if (!applyInOrigin) {
+			return diff.getRequires();
+		}
+		return super.getDependencies(applyInOrigin);
 	}
 }

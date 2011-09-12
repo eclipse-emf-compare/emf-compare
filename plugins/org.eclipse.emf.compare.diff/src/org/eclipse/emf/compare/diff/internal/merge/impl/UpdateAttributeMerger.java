@@ -27,10 +27,10 @@ public class UpdateAttributeMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject origin = theDiff.getLeftElement();
@@ -40,16 +40,15 @@ public class UpdateAttributeMerger extends DefaultMerger {
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final UpdateAttribute theDiff = (UpdateAttribute)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject origin = theDiff.getLeftElement();
@@ -59,7 +58,6 @@ public class UpdateAttributeMerger extends DefaultMerger {
 		} catch (FactoryException e) {
 			EMFComparePlugin.log(e, true);
 		}
-		super.undoInTarget();
 	}
 
 }

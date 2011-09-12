@@ -38,6 +38,8 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffElement/conflicting"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffElement/kind"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute diff.ecore#//DiffElement/remote"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/requires"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//DiffElement/requiredBy"/>
     </genClasses>
     <genClasses ecoreClass="diff.ecore#//ConflictingDiffElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference diff.ecore#//ConflictingDiffElement/leftParent"/>

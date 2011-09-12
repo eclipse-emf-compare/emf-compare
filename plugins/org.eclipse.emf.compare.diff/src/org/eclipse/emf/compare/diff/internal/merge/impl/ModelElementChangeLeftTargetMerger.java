@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
@@ -40,26 +41,25 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	protected void doApplyInOrigin() {
 		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
 		final EObject element = theDiff.getLeftElement();
 		final EObject parent = theDiff.getLeftElement().eContainer();
 		EcoreUtil.remove(element);
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	protected void doUndoInTarget() {
 		final ModelElementChangeLeftTarget theDiff = (ModelElementChangeLeftTarget)this.diff;
 		// we should copy the element to the Origin one.
 		final EObject origin = theDiff.getRightParent();
@@ -106,6 +106,18 @@ public class ModelElementChangeLeftTargetMerger extends DefaultMerger {
 				}
 			}
 		}
-		super.undoInTarget();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#getDependencies(boolean)
+	 */
+	@Override
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		if (!applyInOrigin) {
+			return diff.getRequires();
+		}
+		return super.getDependencies(applyInOrigin);
 	}
 }

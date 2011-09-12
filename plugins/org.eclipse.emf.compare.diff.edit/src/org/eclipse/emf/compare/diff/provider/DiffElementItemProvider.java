@@ -80,6 +80,8 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 			addConflictingPropertyDescriptor(object);
 			addKindPropertyDescriptor(object);
 			addRemotePropertyDescriptor(object);
+			addRequiresPropertyDescriptor(object);
+			addRequiredByPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -203,6 +205,42 @@ public class DiffElementItemProvider extends ItemProviderAdapter implements IEdi
 								"_UI_PropertyDescriptor_description", "_UI_DiffElement_remote_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						DiffPackage.Literals.DIFF_ELEMENT__REMOTE, true, false, false,
 						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Requires feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	protected void addRequiresPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffElement_requires_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffElement_requires_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_ELEMENT__REQUIRES, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Required By feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	protected void addRequiredByPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory)
+						.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiffElement_requiredBy_feature"), //$NON-NLS-1$
+						getString(
+								"_UI_PropertyDescriptor_description", "_UI_DiffElement_requiredBy_feature", "_UI_DiffElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						DiffPackage.Literals.DIFF_ELEMENT__REQUIRED_BY, true, false, true, null, null, null));
 	}
 
 	/**

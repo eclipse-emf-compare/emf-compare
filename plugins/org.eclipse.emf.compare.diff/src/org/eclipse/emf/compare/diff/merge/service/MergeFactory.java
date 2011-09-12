@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.internal.merge.DefaultMergerProvider;
+import org.eclipse.emf.compare.diff.merge.DefaultExtensionMerger;
 import org.eclipse.emf.compare.diff.merge.DefaultMerger;
 import org.eclipse.emf.compare.diff.merge.IMerger;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
@@ -89,6 +90,9 @@ public abstract class MergeFactory {
 		// diff extensions may offer their own merger, so we use it here
 		if (element instanceof AbstractDiffExtension) {
 			elementMerger = ((AbstractDiffExtension)element).provideMerger();
+			if (elementMerger == null) {
+				elementMerger = new DefaultExtensionMerger();
+			}
 		}
 
 		if (elementMerger == null) {

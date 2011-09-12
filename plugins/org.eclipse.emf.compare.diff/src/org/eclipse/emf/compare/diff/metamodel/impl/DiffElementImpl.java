@@ -134,6 +134,26 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 	protected boolean remote = REMOTE_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getRequires() <em>Requires</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRequires()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiffElement> requires;
+
+	/**
+	 * The cached value of the '{@link #getRequiredBy() <em>Required By</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRequiredBy()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiffElement> requiredBy;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -158,6 +178,10 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return getKind();
 			case DiffPackage.DIFF_ELEMENT__REMOTE:
 				return isRemote();
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				return getRequires();
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				return getRequiredBy();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -172,6 +196,12 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 		switch (featureID) {
 			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getIsHiddenBy()).basicAdd(otherEnd,
+						msgs);
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRequires()).basicAdd(otherEnd,
+						msgs);
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRequiredBy()).basicAdd(otherEnd,
 						msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -188,6 +218,10 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return ((InternalEList<?>)getSubDiffElements()).basicRemove(otherEnd, msgs);
 			case DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY:
 				return ((InternalEList<?>)getIsHiddenBy()).basicRemove(otherEnd, msgs);
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				return ((InternalEList<?>)getRequires()).basicRemove(otherEnd, msgs);
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				return ((InternalEList<?>)getRequiredBy()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -209,6 +243,10 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return kind != KIND_EDEFAULT;
 			case DiffPackage.DIFF_ELEMENT__REMOTE:
 				return remote != REMOTE_EDEFAULT;
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				return requires != null && !requires.isEmpty();
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				return requiredBy != null && !requiredBy.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -232,6 +270,14 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 			case DiffPackage.DIFF_ELEMENT__REMOTE:
 				setRemote((Boolean)newValue);
 				return;
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				getRequires().clear();
+				getRequires().addAll((Collection<? extends DiffElement>)newValue);
+				return;
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				getRequiredBy().clear();
+				getRequiredBy().addAll((Collection<? extends DiffElement>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -251,6 +297,12 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 				return;
 			case DiffPackage.DIFF_ELEMENT__REMOTE:
 				setRemote(REMOTE_EDEFAULT);
+				return;
+			case DiffPackage.DIFF_ELEMENT__REQUIRES:
+				getRequires().clear();
+				return;
+			case DiffPackage.DIFF_ELEMENT__REQUIRED_BY:
+				getRequiredBy().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -310,6 +362,32 @@ public abstract class DiffElementImpl extends EObjectImpl implements DiffElement
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, DiffPackage.DIFF_ELEMENT__REMOTE,
 					oldRemote, remote));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<DiffElement> getRequires() {
+		if (requires == null) {
+			requires = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class, this,
+					DiffPackage.DIFF_ELEMENT__REQUIRES, DiffPackage.DIFF_ELEMENT__REQUIRED_BY);
+		}
+		return requires;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<DiffElement> getRequiredBy() {
+		if (requiredBy == null) {
+			requiredBy = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class,
+					this, DiffPackage.DIFF_ELEMENT__REQUIRED_BY, DiffPackage.DIFF_ELEMENT__REQUIRES);
+		}
+		return requiredBy;
 	}
 
 	/**

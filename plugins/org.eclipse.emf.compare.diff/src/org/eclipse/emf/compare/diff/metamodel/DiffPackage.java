@@ -196,13 +196,33 @@ public interface DiffPackage extends EPackage {
 	int DIFF_ELEMENT__REMOTE = 4;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int DIFF_ELEMENT__REQUIRES = 5;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int DIFF_ELEMENT__REQUIRED_BY = 6;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIFF_ELEMENT_FEATURE_COUNT = 5;
+	int DIFF_ELEMENT_FEATURE_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.diff.metamodel.impl.ConflictingDiffElementImpl <em>Conflicting Diff Element</em>}' class.
@@ -314,6 +334,26 @@ public interface DiffPackage extends EPackage {
 	int CONFLICTING_DIFF_ELEMENT__REMOTE = DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int CONFLICTING_DIFF_ELEMENT__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int CONFLICTING_DIFF_ELEMENT__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -393,6 +433,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIFF_GROUP__REMOTE = DIFF_ELEMENT__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int DIFF_GROUP__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int DIFF_GROUP__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -624,6 +684,26 @@ public interface DiffPackage extends EPackage {
 	int MODEL_ELEMENT_CHANGE__REMOTE = DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The number of structural features of the '<em>Model Element Change</em>' class.
 	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
@@ -676,6 +756,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE = MODEL_ELEMENT_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES = MODEL_ELEMENT_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY = MODEL_ELEMENT_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
@@ -748,6 +848,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE = MODEL_ELEMENT_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES = MODEL_ELEMENT_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY = MODEL_ELEMENT_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
@@ -867,6 +987,26 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_MODEL_ELEMENT__REMOTE = MODEL_ELEMENT_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_MODEL_ELEMENT__REQUIRES = MODEL_ELEMENT_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_MODEL_ELEMENT__REQUIRED_BY = MODEL_ELEMENT_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -955,6 +1095,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int MOVE_MODEL_ELEMENT__REMOTE = UPDATE_MODEL_ELEMENT__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MOVE_MODEL_ELEMENT__REQUIRES = UPDATE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int MOVE_MODEL_ELEMENT__REQUIRED_BY = UPDATE_MODEL_ELEMENT__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
@@ -1057,6 +1217,26 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_CONTAINMENT_FEATURE__REMOTE = MOVE_MODEL_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_CONTAINMENT_FEATURE__REQUIRES = MOVE_MODEL_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_CONTAINMENT_FEATURE__REQUIRED_BY = MOVE_MODEL_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Right Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1147,6 +1327,26 @@ public interface DiffPackage extends EPackage {
 	int ATTRIBUTE_CHANGE__REMOTE = DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1226,6 +1426,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE_LEFT_TARGET__REMOTE = ATTRIBUTE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRES = ATTRIBUTE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE_LEFT_TARGET__REQUIRED_BY = ATTRIBUTE_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1316,6 +1536,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int ATTRIBUTE_CHANGE_RIGHT_TARGET__REMOTE = ATTRIBUTE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRES = ATTRIBUTE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_CHANGE_RIGHT_TARGET__REQUIRED_BY = ATTRIBUTE_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
@@ -1424,6 +1664,26 @@ public interface DiffPackage extends EPackage {
 	int ATTRIBUTE_ORDER_CHANGE__REMOTE = ATTRIBUTE_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_ORDER_CHANGE__REQUIRES = ATTRIBUTE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int ATTRIBUTE_ORDER_CHANGE__REQUIRED_BY = ATTRIBUTE_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1509,6 +1769,26 @@ public interface DiffPackage extends EPackage {
 	int UPDATE_ATTRIBUTE__REMOTE = ATTRIBUTE_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_ATTRIBUTE__REQUIRES = ATTRIBUTE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_ATTRIBUTE__REQUIRED_BY = ATTRIBUTE_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1590,6 +1870,26 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE__REMOTE = DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1669,6 +1969,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_CHANGE_LEFT_TARGET__REMOTE = REFERENCE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__REQUIRES = REFERENCE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE_LEFT_TARGET__REQUIRED_BY = REFERENCE_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1770,6 +2090,26 @@ public interface DiffPackage extends EPackage {
 	int REFERENCE_CHANGE_RIGHT_TARGET__REMOTE = REFERENCE_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__REQUIRES = REFERENCE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_CHANGE_RIGHT_TARGET__REQUIRED_BY = REFERENCE_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
 	 * <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1867,6 +2207,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UPDATE_REFERENCE__REMOTE = REFERENCE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_REFERENCE__REQUIRES = REFERENCE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int UPDATE_REFERENCE__REQUIRED_BY = REFERENCE_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -1976,6 +2336,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int REFERENCE_ORDER_CHANGE__REMOTE = REFERENCE_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_ORDER_CHANGE__REQUIRES = REFERENCE_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int REFERENCE_ORDER_CHANGE__REQUIRED_BY = REFERENCE_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -2114,6 +2494,26 @@ public interface DiffPackage extends EPackage {
 	int RESOURCE_DIFF__REMOTE = DIFF_ELEMENT__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DIFF__REQUIRES = DIFF_ELEMENT__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DIFF__REQUIRED_BY = DIFF_ELEMENT__REQUIRED_BY;
+
+	/**
 	 * The number of structural features of the '<em>Resource Diff</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2176,6 +2576,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int RESOURCE_DEPENDENCY_CHANGE__REMOTE = RESOURCE_DIFF__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__REQUIRES = RESOURCE_DIFF__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE__REQUIRED_BY = RESOURCE_DIFF__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Roots</b></em>' reference list.
@@ -2251,6 +2671,26 @@ public interface DiffPackage extends EPackage {
 	int RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET__REMOTE = RESOURCE_DEPENDENCY_CHANGE__REMOTE;
 
 	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET__REQUIRES = RESOURCE_DEPENDENCY_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE_LEFT_TARGET__REQUIRED_BY = RESOURCE_DEPENDENCY_CHANGE__REQUIRED_BY;
+
+	/**
 	 * The feature id for the '<em><b>Roots</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2322,6 +2762,26 @@ public interface DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET__REMOTE = RESOURCE_DEPENDENCY_CHANGE__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET__REQUIRES = RESOURCE_DEPENDENCY_CHANGE__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 * @since 1.3
+	 */
+	int RESOURCE_DEPENDENCY_CHANGE_RIGHT_TARGET__REQUIRED_BY = RESOURCE_DEPENDENCY_CHANGE__REQUIRED_BY;
 
 	/**
 	 * The feature id for the '<em><b>Roots</b></em>' reference list.
@@ -2615,6 +3075,30 @@ public interface DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDiffElement_Remote();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequires <em>Requires</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Requires</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequires()
+	 * @see #getDiffElement()
+	 * @generated
+	 * @since 1.3
+	 */
+	EReference getDiffElement_Requires();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequiredBy <em>Required By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Required By</em>'.
+	 * @see org.eclipse.emf.compare.diff.metamodel.DiffElement#getRequiredBy()
+	 * @see #getDiffElement()
+	 * @generated
+	 * @since 1.3
+	 */
+	EReference getDiffElement_RequiredBy();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.emf.compare.diff.metamodel.DiffElement#getSubDiffElements <em>Sub Diff Elements</em>}'.
@@ -3401,6 +3885,24 @@ public interface DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIFF_ELEMENT__REMOTE = eINSTANCE.getDiffElement_Remote();
+
+		/**
+		 * The meta object literal for the '<em><b>Requires</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 * @since 1.3
+		 */
+		EReference DIFF_ELEMENT__REQUIRES = eINSTANCE.getDiffElement_Requires();
+
+		/**
+		 * The meta object literal for the '<em><b>Required By</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 * @since 1.3
+		 */
+		EReference DIFF_ELEMENT__REQUIRED_BY = eINSTANCE.getDiffElement_RequiredBy();
 
 		/**
 		 * The meta object literal for the '<em><b>Sub Diff Elements</b></em>' containment reference list feature.

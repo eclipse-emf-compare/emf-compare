@@ -16,10 +16,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.util.AdapterUtils;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -54,7 +54,11 @@ public class UpdateModelElementItemProvider extends ModelElementChangeItemProvid
 	@Override
 	public Object getImage(Object object) {
 		final UpdateModelElement updateModelElement = (UpdateModelElement)object;
-		Object labelImage = AdapterUtils.getItemProviderImage(updateModelElement.getLeftElement());
+		EObject element = updateModelElement.getLeftElement();
+		if (element == null) {
+			element = updateModelElement.getRightElement();
+		}
+		Object labelImage = AdapterUtils.getItemProviderImage(element);
 
 		if (labelImage != null) {
 			List<Object> images = new ArrayList<Object>(2);

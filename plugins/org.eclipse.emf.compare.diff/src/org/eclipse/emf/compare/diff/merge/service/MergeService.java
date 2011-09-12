@@ -136,7 +136,7 @@ public final class MergeService {
 		for (DiffElement element : new ArrayList<DiffElement>(elements))
 			// we might remove the diff from the list before merging it
 			// (eOpposite reference)
-			if (element.eContainer() != null && element.getIsHiddenBy().isEmpty())
+			if (element.eContainer() != null)
 				doMerge(element, leftToRight);
 		fireMergeOperationEnd(elements);
 	}

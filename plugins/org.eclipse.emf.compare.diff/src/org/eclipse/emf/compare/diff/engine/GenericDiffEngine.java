@@ -124,20 +124,7 @@ public class GenericDiffEngine implements IDiffEngine2 {
 	 */
 	public DiffModel doDiff(MatchModel match, boolean threeWay, IMatchManager manager) {
 		matchManager = manager;
-		final DiffModel result = DiffFactory.eINSTANCE.createDiffModel();
-		result.getLeftRoots().addAll(match.getLeftRoots());
-		result.getRightRoots().addAll(match.getRightRoots());
-		result.getAncestorRoots().addAll(match.getAncestorRoots());
-		DiffGroup diffRoot = null;
-
-		if (threeWay) {
-			diffRoot = doDiffThreeWay(match);
-		} else {
-			diffRoot = doDiffTwoWay(match);
-		}
-		result.getOwnedElements().add(diffRoot);
-
-		return result;
+		return doDiffResourceSet(match, threeWay, matchManager);
 	}
 
 	/**

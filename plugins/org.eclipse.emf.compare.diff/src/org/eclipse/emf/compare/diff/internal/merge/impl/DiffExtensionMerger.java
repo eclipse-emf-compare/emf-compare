@@ -21,11 +21,11 @@ public class DiffExtensionMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		// TODO code diff extension merger
 		// final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
 		// if (!extension.providesMerger()) {
@@ -46,10 +46,10 @@ public class DiffExtensionMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		// TODO code diff extension merger
 		// final AbstractDiffExtension extension = (AbstractDiffExtension)this.diff;
 		// if (!extension.providesMerger()) {

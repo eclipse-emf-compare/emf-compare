@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.merge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.compare.diff.merge.service.MergeFactory;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -37,6 +41,12 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 public class DefaultMerger implements IMerger {
+	/** Stores the differences which are merged or being merged during a merge operation. */
+	private static List<DiffElement> mergedDiffs;
+
+	/** This listener will be used to reset the {@link mergedDiffs} list at the end of a merge operation. */
+	private static MergedDiffsListener mergedDiffslistener;
+
 	/** {@link DiffElement} to be merged by this merger. */
 	protected DiffElement diff;
 
@@ -49,11 +59,40 @@ public class DefaultMerger implements IMerger {
 	protected Resource rightResource;
 
 	/**
+	 * Reset the {@link mergedDiffs} list.
+	 * 
+	 * @since 1.3
+	 */
+	protected static void resetMergedDiffs() {
+		mergedDiffs = null;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @see org.eclipse.emf.compare.diff.merge.IMerger#applyInOrigin()
 	 */
 	public void applyInOrigin() {
+		mergeRequiredDifferences(true);
+		doApplyInOrigin();
+		postProcess();
+	}
+
+	/**
+	 * Applies the modification in the original (left) model.
+	 * 
+	 * @since 1.3
+	 */
+	protected void doApplyInOrigin() {
+		// To specialize in child class.
+	}
+
+	/**
+	 * Applies a post processing.
+	 * 
+	 * @since 1.3
+	 */
+	protected void postProcess() {
 		handleMutuallyDerivedReferences();
 		ensureXMIIDCopied();
 		removeFromContainer(diff);
@@ -92,9 +131,18 @@ public class DefaultMerger implements IMerger {
 	 * @see org.eclipse.emf.compare.diff.merge.IMerger#undoInTarget()
 	 */
 	public void undoInTarget() {
-		handleMutuallyDerivedReferences();
-		ensureXMIIDCopied();
-		removeFromContainer(diff);
+		mergeRequiredDifferences(false);
+		doUndoInTarget();
+		postProcess();
+	}
+
+	/**
+	 * Cancels the modification in the target (right) model.
+	 * 
+	 * @since 1.3
+	 */
+	protected void doUndoInTarget() {
+		// To specialize in child class.
 	}
 
 	/**
@@ -288,6 +336,100 @@ public class DefaultMerger implements IMerger {
 		if (object != null && object.eResource() instanceof XMIResource) {
 			((XMIResource)object.eResource()).setID(object, id);
 		}
+	}
+
+	/**
+	 * Merge the differences required by the current difference.
+	 * 
+	 * @param applyInOrigin
+	 *            True if the merge has to apply in origin.
+	 * @since 1.3
+	 */
+	protected void mergeRequiredDifferences(boolean applyInOrigin) {
+		if (mergedDiffs == null) {
+			mergedDiffs = new ArrayList<DiffElement>();
+			if (mergedDiffslistener == null) {
+				mergedDiffslistener = new MergedDiffsListener();
+				MergeService.addMergeListener(mergedDiffslistener);
+			}
+		}
+		mergedDiffs.add(diff);
+
+		for (DiffElement requiredDiff : getDependencies(applyInOrigin)) {
+			if (requiredDiff.eContainer() != null && !mergedDiffs.contains(requiredDiff)) {
+				final IMerger merger = MergeFactory.createMerger(requiredDiff);
+				if (applyInOrigin) {
+					merger.applyInOrigin();
+				} else {
+					merger.undoInTarget();
+				}
+			}
+		}
+	}
+
+	/**
+	 * This default merge listener will allow us to reset the {@link #mergedDiffs} list at the end of the
+	 * merge operation.
+	 * 
+	 * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+	 */
+	private class MergedDiffsListener implements IMergeListener {
+		/**
+		 * Default constructor.
+		 */
+		public MergedDiffsListener() {
+			// Enhance visibility of the default constructor.
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeDiffEnd(org.eclipse.emf.compare.diff.merge.MergeEvent)
+		 */
+		public void mergeDiffEnd(MergeEvent event) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeDiffStart(org.eclipse.emf.compare.diff.merge.MergeEvent)
+		 */
+		public void mergeDiffStart(MergeEvent event) {
+			// do nothing
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeOperationEnd(org.eclipse.emf.compare.diff.merge.MergeEvent)
+		 */
+		public void mergeOperationEnd(MergeEvent event) {
+			resetMergedDiffs();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.diff.merge.IMergeListener#mergeOperationStart(org.eclipse.emf.compare.diff.merge.MergeEvent)
+		 */
+		public void mergeOperationStart(MergeEvent event) {
+			// do nothing
+		}
+	}
+
+	/**
+	 * Get the dependencies of the difference {@link diff} to merge. These dependencies will be merged before
+	 * itself. This method may be overridden by a specific merger to choose to exploit or not the 'requires'
+	 * link of the {@link diff} according to the nature of the merger and the direction of the merge.
+	 * 
+	 * @param applyInOrigin
+	 *            The direction of the merge.
+	 * @return The list of the dependencies to exploit.
+	 * @since 1.3
+	 */
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		return new ArrayList<DiffElement>();
 	}
 
 	/**

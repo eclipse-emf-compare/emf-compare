@@ -357,6 +357,8 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 		createEAttribute(diffElementEClass, DIFF_ELEMENT__CONFLICTING);
 		createEAttribute(diffElementEClass, DIFF_ELEMENT__KIND);
 		createEAttribute(diffElementEClass, DIFF_ELEMENT__REMOTE);
+		createEReference(diffElementEClass, DIFF_ELEMENT__REQUIRES);
+		createEReference(diffElementEClass, DIFF_ELEMENT__REQUIRED_BY);
 
 		conflictingDiffElementEClass = createEClass(CONFLICTING_DIFF_ELEMENT);
 		createEReference(conflictingDiffElementEClass, CONFLICTING_DIFF_ELEMENT__LEFT_PARENT);
@@ -665,6 +667,26 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 	 */
 	public EAttribute getDiffElement_Remote() {
 		return (EAttribute)diffElementEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	public EReference getDiffElement_Requires() {
+		return (EReference)diffElementEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @since 1.3
+	 */
+	public EReference getDiffElement_RequiredBy() {
+		return (EReference)diffElementEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -1226,6 +1248,16 @@ public class DiffPackageImpl extends EPackageImpl implements DiffPackage {
 				getDiffElement_Remote(),
 				ecorePackage.getEBoolean(),
 				"remote", null, 0, 1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiffElement_Requires(),
+				this.getDiffElement(),
+				this.getDiffElement_RequiredBy(),
+				"requires", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
+		initEReference(
+				getDiffElement_RequiredBy(),
+				this.getDiffElement(),
+				this.getDiffElement_Requires(),
+				"requiredBy", null, 0, -1, DiffElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		initEClass(conflictingDiffElementEClass, ConflictingDiffElement.class,
 				"ConflictingDiffElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$

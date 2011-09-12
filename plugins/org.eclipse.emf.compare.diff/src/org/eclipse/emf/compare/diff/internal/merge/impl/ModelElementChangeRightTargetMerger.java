@@ -41,10 +41,10 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
 		final EObject origin = theDiff.getLeftParent();
 		final EObject element = theDiff.getRightElement();
@@ -90,32 +90,45 @@ public class ModelElementChangeRightTargetMerger extends DefaultMerger {
 				}
 			}
 		}
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
 		final EObject element = theDiff.getRightElement();
 		final EObject parent = theDiff.getRightElement().eContainer();
 		EcoreUtil.remove(element);
 		// now removes all the dangling references
 		removeDanglingReferences(parent);
-		super.undoInTarget();
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#canUndoInTarget()
 	 */
 	@Override
 	public boolean canUndoInTarget() {
 		final ModelElementChangeRightTarget theDiff = (ModelElementChangeRightTarget)this.diff;
 		final boolean isRightElementNotNull = theDiff.getRightElement() != null;
 		return isRightElementNotNull;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#getDependencies(boolean)
+	 */
+	@Override
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		if (applyInOrigin) {
+			return diff.getRequires();
+		}
+		return super.getDependencies(applyInOrigin);
 	}
 }

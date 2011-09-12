@@ -30,11 +30,11 @@ public class MoveModelElementMerger extends DefaultMerger {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#applyInOrigin()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doApplyInOrigin()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void applyInOrigin() {
+	public void doApplyInOrigin() {
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject leftTarget = theDiff.getLeftTarget();
 		final EObject leftElement = theDiff.getLeftElement();
@@ -63,17 +63,16 @@ public class MoveModelElementMerger extends DefaultMerger {
 			// shouldn't be here
 			assert false;
 		}
-		super.applyInOrigin();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#undoInTarget()
+	 * @see org.eclipse.emf.compare.diff.merge.api.AbstractMerger#doUndoInTarget()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void undoInTarget() {
+	public void doUndoInTarget() {
 		final MoveModelElement theDiff = (MoveModelElement)this.diff;
 		final EObject rightTarget = theDiff.getRightTarget();
 		final EObject rightElement = theDiff.getRightElement();
@@ -100,6 +99,5 @@ public class MoveModelElementMerger extends DefaultMerger {
 			// shouldn't be here
 			assert false;
 		}
-		super.applyInOrigin();
 	}
 }

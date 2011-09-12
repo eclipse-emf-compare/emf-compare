@@ -11,7 +11,7 @@
 package org.eclipse.emf.compare.tests.merge;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,9 +81,7 @@ public abstract class MergeTestBase extends TestCase {
 
 		assertDiffCount(differences);
 
-		merge(isLeftToRight, testLeftModel, testRightModel, differences);
-
-		assertResult(isLeftToRight, testLeftModel, testRightModel);
+		checkMerge(isLeftToRight, testLeftModel, testRightModel, differences);
 		// boolean mergeOK = EcoreUtil.equals(expectedModel, rightModel);
 		// if (false == mergeOK) {
 		//
@@ -93,13 +91,20 @@ public abstract class MergeTestBase extends TestCase {
 		// }
 	}
 
+	protected void checkMerge(boolean isLeftToRight, EObject testLeftModel, EObject testRightModel,
+			List<DiffElement> differences) throws Exception {
+		merge(isLeftToRight, testLeftModel, testRightModel, differences);
+
+		assertResult(isLeftToRight, testLeftModel, testRightModel);
+	}
+
 	protected void assertDiffCount(List<DiffElement> differences) {
 		assertFalse(differences.isEmpty());
 	}
 
 	protected List<DiffElement> detectDifferences(EObject testLeftModel, EObject testRightModel)
 			throws InterruptedException {
-		Map<String, Object> options = Collections.emptyMap();
+		Map<String, Object> options = new HashMap<String, Object>();
 
 		MatchModel match = MatchService.doMatch(testLeftModel, testRightModel, options);
 		DiffModel diff = DiffService.doDiff(match);
