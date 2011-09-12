@@ -124,6 +124,14 @@ Contributors:
       </groupingFacility>
    </extension>
    <extension
+         point="org.eclipse.emf.compare.ui.diff.group">
+      <groupingFacility
+            class="org.eclipse.emf.compare.ui.viewer.group.EClassGrouping"
+            id="eclass.kind"
+            name="Per metamodel element">
+      </groupingFacility>
+   </extension>
+   <extension
          point="org.eclipse.emf.compare.ui.diff.filter">
       <filter
             class="org.eclipse.emf.compare.ui.viewer.filter.AddedFilter"
@@ -137,6 +145,22 @@ Contributors:
             class="org.eclipse.emf.compare.ui.viewer.filter.RemovedFilter"
             id="removedElements"
             name="Removed elements">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.diff.filter">
+      <filter
+            class="org.eclipse.emf.compare.ui.viewer.filter.MovedFilter"
+            id="movedElements"
+            name="Moved elements">
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ui.diff.filter">
+      <filter
+            class="org.eclipse.emf.compare.ui.viewer.filter.ChangedFilter"
+            id="changedElements"
+            name="Changed elements">
       </filter>
    </extension>
 </plugin>
