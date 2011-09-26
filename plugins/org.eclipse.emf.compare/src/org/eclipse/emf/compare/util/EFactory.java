@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * This is a factory for an ecore metamodel. There is a factory by package. Each factory is used to create
@@ -83,16 +84,24 @@ public abstract class EFactory {
 		if (feature.isMany()) {
 			if (arg != null) {
 				final Object manyValue = object.eGet(feature);
-				if (manyValue instanceof BasicEList) {
-					final BasicEList<? super T> basicEList = (BasicEList<? super T>)manyValue;
+				if (manyValue instanceof InternalEList<?>) {
+					final InternalEList<? super T> basicEList = (InternalEList<? super T>)manyValue;
 					final int listSize = basicEList.size();
 					if (elementIndex > -1 && elementIndex < listSize) {
 						basicEList.addUnique(elementIndex, arg);
 					} else {
 						basicEList.addUnique(arg);
 					}
-				} else if (manyValue instanceof Collection) {
-					((Collection)manyValue).add(arg);
+				} else if (manyValue instanceof List<?>) {
+					final List<? super T> list = (List<? super T>)manyValue;
+					final int listSize = list.size();
+					if (elementIndex > -1 && elementIndex < listSize) {
+						list.add(elementIndex, arg);
+					} else {
+						list.add(arg);
+					}
+				} else if (manyValue instanceof Collection<?>) {
+					((Collection<? super T>)manyValue).add(arg);
 				}
 			}
 		} else {
