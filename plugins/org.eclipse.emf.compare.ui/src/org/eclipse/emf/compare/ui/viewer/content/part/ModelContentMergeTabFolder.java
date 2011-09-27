@@ -241,22 +241,22 @@ public class ModelContentMergeTabFolder {
 						.getLeftElement(diffs.get(0))));
 			} else if (!(diffs.get(0) instanceof DiffGroup)) {
 				target = EMFCompareEObjectUtils.getRightElement(diffs.get(0));
-			} else
-				// fall through.
-				return;
+			}
 		} else {
 			target = EMFCompareEObjectUtils.getAncestorElement(findMatchFromElement(EMFCompareEObjectUtils
 					.getLeftElement(diffs.get(0))));
 		}
 
-		// provide input to properties before showing diffs (as properties may be the active tab).
-		properties.setReflectiveInput(findMatchFromElement(target));
+		if (target != null) {
+			// provide input to properties before showing diffs (as properties may be the active tab).
+			properties.setReflectiveInput(findMatchFromElement(target));
 
-		tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
+			tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
 
-		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
-				diffs.get(0));
-		parentViewer.updateCenter();
+			parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
+					diffs.get(0));
+			parentViewer.updateCenter();
+		}
 	}
 
 	/**
