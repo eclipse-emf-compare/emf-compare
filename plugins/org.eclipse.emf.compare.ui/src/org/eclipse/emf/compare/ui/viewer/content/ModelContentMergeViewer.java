@@ -625,12 +625,14 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 			resource = (Resource)input;
 		}
 
-		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		try {
-			resource.save(stream, null);
-			contents = stream.toByteArray();
-		} catch (final IOException e) {
-			EMFComparePlugin.log(e, false);
+		if (resource != null) {
+			final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			try {
+				resource.save(stream, null);
+				contents = stream.toByteArray();
+			} catch (final IOException e) {
+				EMFComparePlugin.log(e, false);
+			}
 		}
 
 		return contents;
