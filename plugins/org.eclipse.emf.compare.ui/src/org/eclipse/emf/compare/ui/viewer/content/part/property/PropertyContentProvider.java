@@ -96,7 +96,7 @@ public class PropertyContentProvider implements IStructuredContentProvider {
 				final EStructuralFeature feature = (EStructuralFeature)descriptor.getFeature(inputEObject);
 				final List<Object> row = new ArrayList<Object>();
 				row.add(feature);
-				row.add(inputEObject.eGet(feature));
+				row.add(descriptor.getPropertyValue(inputEObject));
 				inputElements.add(row);
 			}
 
