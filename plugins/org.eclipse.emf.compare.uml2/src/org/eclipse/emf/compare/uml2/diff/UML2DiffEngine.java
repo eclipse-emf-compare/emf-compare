@@ -21,7 +21,9 @@ import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
 import org.eclipse.emf.compare.diff.engine.IDiffEngine;
 import org.eclipse.emf.compare.diff.engine.check.ReferencesCheck;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
+import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.DiffExtensionFactoryRegistry;
@@ -124,7 +126,19 @@ public class UML2DiffEngine extends GenericDiffEngine {
 			if (factory.handles(element)) {
 				AbstractDiffExtension extension = factory.create(element, diffModelCrossReferencer);
 				DiffElement diffParent = factory.getParentDiff(element, diffModelCrossReferencer);
-				diffParent.getSubDiffElements().add((DiffElement)extension);
+				if (element.isConflicting()) {
+					ConflictingDiffElement conflictingDiffElement = null;
+					if (element.eContainer() != null
+							&& element.eContainer() instanceof ConflictingDiffElement) {
+						conflictingDiffElement = (ConflictingDiffElement)element.eContainer();
+					} else {
+						conflictingDiffElement = DiffFactory.eINSTANCE.createConflictingDiffElement();
+					}
+					conflictingDiffElement.getSubDiffElements().add((DiffElement)extension);
+					diffParent.getSubDiffElements().add((DiffElement)conflictingDiffElement);
+				} else {
+					diffParent.getSubDiffElements().add((DiffElement)extension);
+				}
 			}
 		}
 	}

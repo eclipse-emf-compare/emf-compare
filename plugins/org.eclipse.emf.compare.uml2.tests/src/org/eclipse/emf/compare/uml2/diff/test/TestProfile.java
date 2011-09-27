@@ -54,6 +54,21 @@ public class TestProfile extends AbstractUMLCompareTest {
 	public void stereotypeAttribute_update() throws IOException, InterruptedException {
 		testCompare("stereotypeAttribute/update");
 	}
+	
+	@Test
+	public void stereotypeAttribute_3way_localChange() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeAttribute/update/threeway/localChange");
+	}
+	
+	@Test
+	public void stereotypeAttribute_3way_remoteChange() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeAttribute/update/threeway/remoteChange");
+	}
+	
+	@Test
+	public void stereotypeAttribute_3way_conflict() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeAttribute/update/threeway/conflict");
+	}
 
 	@Test
 	public void stereotypeAttribute_changeLeft() throws IOException, InterruptedException {
@@ -123,6 +138,21 @@ public class TestProfile extends AbstractUMLCompareTest {
 	@Test
 	public void stereotypeReference_updateReference2() throws IOException, InterruptedException {
 		testCompare("stereotypeReference/updateReference/_2");
+	}
+	
+	@Test
+	public void stereotypeReference_3way_localChange() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeReference/updateReference/threeway/localChange");
+	}
+	
+	@Test
+	public void stereotypeReference_3way_remoteChange() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeReference/updateReference/threeway/remoteChange");
+	}
+	
+	@Test
+	public void stereotypeReference_3way_conflict() throws IOException, InterruptedException {
+		testCompare3Way("stereotypeReference/updateReference/threeway/conflict");
 	}
 
 	@Test
