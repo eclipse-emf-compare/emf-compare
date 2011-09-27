@@ -250,13 +250,13 @@ public class ModelContentMergeTabFolder {
 		if (target != null) {
 			// provide input to properties before showing diffs (as properties may be the active tab).
 			properties.setReflectiveInput(findMatchFromElement(target));
-
-			tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
-
-			parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
-					diffs.get(0));
-			parentViewer.updateCenter();
 		}
+
+		tabs.get(tabFolder.getSelectionIndex()).showItems(diffs);
+
+		parentViewer.getConfiguration().setProperty(EMFCompareConstants.PROPERTY_CONTENT_SELECTION,
+				diffs.get(0));
+		parentViewer.updateCenter();
 	}
 
 	/**
