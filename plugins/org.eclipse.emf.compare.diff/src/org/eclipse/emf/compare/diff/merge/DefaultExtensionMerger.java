@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.merge;
 
+import java.util.List;
+
+import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+
 /**
  * Basic implementation of a {@link DefaultMerger}. Clients can extend this class.
  * 
@@ -18,4 +22,13 @@ package org.eclipse.emf.compare.diff.merge;
  */
 public class DefaultExtensionMerger extends DefaultMerger {
 	// This merger delegates the merge on the required differences.
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.diff.merge.DefaultMerger#getDependencies(boolean)
+	 */
+	@Override
+	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
+		return diff.getRequires();
+	}
 }
