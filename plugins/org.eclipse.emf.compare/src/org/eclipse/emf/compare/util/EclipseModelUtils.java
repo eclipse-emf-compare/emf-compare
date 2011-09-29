@@ -156,7 +156,9 @@ public final class EclipseModelUtils {
 		Resource modelResource;
 		IContentType contentType = null;
 		try {
-			contentType = file.getContentDescription().getContentType();
+			if (file.getContentDescription() != null) {
+				contentType = file.getContentDescription().getContentType();
+			}
 		} catch (CoreException e) {
 			// discard
 		}
