@@ -32,3 +32,5 @@ Bundle-Activator: org.eclipse.emf.compare.match.MatchPlugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
+Import-Package: com.google.common.base;version="1.0.0",
+ com.google.common.collect;version="1.0.0"
