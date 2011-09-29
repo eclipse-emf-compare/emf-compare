@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl;
+import org.eclipse.emf.compare.uml2.diff.internal.merger.UMLProfileApplicationAdditionMerger;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
 import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
@@ -221,7 +222,7 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 	 * @generated NOT
 	 */
 	public IMerger provideMerger() {
-		return null;
+		return new UMLProfileApplicationAdditionMerger();
 	}
 
 	/**

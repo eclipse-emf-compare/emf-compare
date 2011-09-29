@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.diff.merge;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 
 /**
@@ -21,7 +23,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * @since 1.3
  */
 public class DefaultExtensionMerger extends DefaultMerger {
-	// This merger delegates the merge on the required differences.
+
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -29,6 +31,43 @@ public class DefaultExtensionMerger extends DefaultMerger {
 	 */
 	@Override
 	protected List<DiffElement> getDependencies(boolean applyInOrigin) {
-		return diff.getRequires();
+		final List<DiffElement> requiredDiffs = diff.getRequires();
+		return getBusinessDependencies(applyInOrigin, requiredDiffs);
 	}
+
+	/**
+	 * Get the difference dependencies to consider in the context of the merge process.
+	 * 
+	 * @param applyInOrigin
+	 *            Direction of merge.
+	 * @param requiredDiffs
+	 *            The required differences.
+	 * @return The required differences to keep.
+	 */
+	protected List<DiffElement> getBusinessDependencies(boolean applyInOrigin, List<DiffElement> requiredDiffs) {
+		final List<DiffElement> result = new ArrayList<DiffElement>();
+		for (DiffElement diffElement : requiredDiffs) {
+			if (!(diffElement instanceof AbstractDiffExtension)
+					|| diffElement instanceof AbstractDiffExtension
+					&& isBusinessDependency(applyInOrigin, (AbstractDiffExtension)diffElement)) {
+				result.add(diffElement);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Check if the given required difference extension has to be considered in relation to the direction of
+	 * merge.
+	 * 
+	 * @param applyInOrigin
+	 *            Direction of merge.
+	 * @param requiredDiff
+	 *            The required difference.
+	 * @return True if it has to be considered in the merge.
+	 */
+	protected boolean isBusinessDependency(boolean applyInOrigin, AbstractDiffExtension requiredDiff) {
+		return true;
+	}
+
 }

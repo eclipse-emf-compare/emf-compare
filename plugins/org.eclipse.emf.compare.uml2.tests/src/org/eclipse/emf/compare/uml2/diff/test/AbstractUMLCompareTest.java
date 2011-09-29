@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
+import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -89,11 +90,11 @@ public abstract class AbstractUMLCompareTest {
 		testMerge(testFolderPath, false);
 	}
 
-	protected final void testMerge(String testFolderPath, Class<? extends DiffElement> diffKind)
-			throws IOException, InterruptedException {
-		testMerge(testFolderPath, true, diffKind);
-		testMerge(testFolderPath, false, diffKind);
-	}
+//	protected final void testMerge(String testFolderPath, Class<? extends DiffElement> diffKind)
+//			throws IOException, InterruptedException {
+//		testMerge(testFolderPath, true, diffKind, expectedDifferencesCount);
+//		testMerge(testFolderPath, false, diffKind, expectedDifferencesCount);
+//	}
 
 	private void testMerge(String testFolderPath, boolean leftToRight) throws IOException,
 			InterruptedException {
@@ -102,7 +103,7 @@ public abstract class AbstractUMLCompareTest {
 		testMerge(testFolderPath, leftToRight, computed_diff);
 	}
 
-	private void testMerge(String testFolderPath, boolean leftToRight, Class<? extends DiffElement> diffKind)
+	protected void testMerge(String testFolderPath, boolean leftToRight, Class<? extends DiffElement> diffKind, int expectedDifferencesCount)
 			throws IOException, InterruptedException {
 		DiffResourceSet computed_diff = getComputedDiff(testFolderPath);
 		Iterator<EObject> diffs = computed_diff.eAllContents();
@@ -112,8 +113,24 @@ public abstract class AbstractUMLCompareTest {
 				merge(leftToRight, (DiffElement)next);
 				break;
 			}
+		}		
+		if (expectedDifferencesCount == 0) {
+			testMerge(testFolderPath, leftToRight, computed_diff);
+		} else {
+			Assert.assertEquals(expectedDifferencesCount, countVisibleDiffs(computed_diff));
+		}	
+	}
+	
+	private int countVisibleDiffs(DiffResourceSet computed_diff) {
+		int result = 0;
+		Iterator<EObject> diffs = computed_diff.eAllContents();
+		while (diffs.hasNext()) {
+			EObject next = diffs.next();
+			if (next instanceof AbstractDiffExtension) {
+				result++;
+			}
 		}
-		testMerge(testFolderPath, leftToRight, computed_diff);
+		return result;
 	}
 
 	private void testMerge(String testFolderPath, boolean leftToRight, DiffResourceSet computed_diff)

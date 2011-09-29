@@ -12,10 +12,11 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
-import org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory;
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
+import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -24,30 +25,54 @@ import org.eclipse.uml2.uml.ProfileApplication;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
-public class UMLProfileApplicationAdditionFactory extends AbstractDiffExtensionFactory {
+/**
+ * Factory for UMLProfileApplicationAddition.
+ * 
+ * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
+ */
+// CHECKSTYLE:OFF
+public class UMLProfileApplicationAdditionFactory extends AbstractUMLApplicationChangeFactory { // CHECKSTYLE:ON
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            UML2DiffEngine
+	 */
 	public UMLProfileApplicationAdditionFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		if (input instanceof ModelElementChangeLeftTarget) {
-			EObject leftElement = ((ModelElementChangeLeftTarget)input).getLeftElement();
+			final EObject leftElement = ((ModelElementChangeLeftTarget)input).getLeftElement();
 			return leftElement.eClass().equals(UMLPackage.eINSTANCE.getProfileApplication());
 		}
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeLeftTarget modelElement = (ModelElementChangeLeftTarget)input;
-		EObject leftElement = modelElement.getLeftElement();
+		final ModelElementChangeLeftTarget modelElement = (ModelElementChangeLeftTarget)input;
+		final EObject leftElement = modelElement.getLeftElement();
 
-		UMLProfileApplicationAddition ret = UML2DiffFactory.eINSTANCE.createUMLProfileApplicationAddition();
+		final UMLProfileApplicationAddition ret = UML2DiffFactory.eINSTANCE
+				.createUMLProfileApplicationAddition();
 
 		ret.setRemote(input.isRemote());
 		ret.setLeftElement(leftElement);
 		ret.setRightElement(getEngine().getMatched(leftElement, UML2DiffEngine.getRightSide()));
-		Profile profile = UMLUtil.getProfile(((ProfileApplication)leftElement).getAppliedDefinition());
+		final Profile profile = UMLUtil.getProfile(((ProfileApplication)leftElement).getAppliedDefinition());
 		ret.setProfile(profile);
 
 		ret.getHideElements().add(input);
@@ -56,9 +81,30 @@ public class UMLProfileApplicationAdditionFactory extends AbstractDiffExtensionF
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory#getParentDiff(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	@Override
 	public DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
 		return (DiffElement)input.eContainer();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
+	@Override
+	public void fillRequiredDifferences(AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer) {
+		final UMLProfileApplicationAddition myDiff = (UMLProfileApplicationAddition)diff;
+		final EObject leftElement = myDiff.getLeftElement();
+		myDiff.getRequires().addAll(
+				getStereotypeDiffs((ProfileApplication)leftElement, crossReferencer,
+						DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT,
+						UML2DiffPackage.Literals.UML_STEREOTYPE_APPLICATION_ADDITION));
+	}
 }

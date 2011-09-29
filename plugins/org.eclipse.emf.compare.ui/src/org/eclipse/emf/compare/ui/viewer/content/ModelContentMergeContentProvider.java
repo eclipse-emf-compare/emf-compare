@@ -18,6 +18,7 @@ import java.util.Iterator;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.contentmergeviewer.IMergeViewerContentProvider;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffResourceSet;
@@ -301,6 +302,12 @@ public class ModelContentMergeContentProvider implements IMergeViewerContentProv
 	 *            The resource that is to be saved.
 	 */
 	private void safeSave(Resource res) {
+		final URI uri = res.getURI();
+		if (uri.isPlatformPlugin() || uri.scheme().startsWith("http") //$NON-NLS-1$
+				|| uri.scheme().startsWith("pathmap")) { //$NON-NLS-1$
+			return;
+		}
+
 		try {
 			res.save(Collections.EMPTY_MAP);
 		} catch (IOException e) {

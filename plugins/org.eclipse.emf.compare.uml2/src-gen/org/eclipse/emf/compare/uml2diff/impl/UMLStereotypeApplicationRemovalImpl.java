@@ -21,6 +21,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
 import org.eclipse.emf.compare.diff.metamodel.impl.UpdateModelElementImpl;
+import org.eclipse.emf.compare.uml2.diff.internal.merger.UMLStereotypeApplicationRemovalMerger;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationChange;
@@ -38,12 +39,15 @@ import org.eclipse.uml2.uml.Stereotype;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#getHideElements <em>Hide Elements</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
- *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#getStereotype <em>Stereotype</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#getHideElements <em>
+ * Hide Elements</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#isIsCollapsed <em>Is
+ * Collapsed</em>}</li>
+ * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeApplicationRemovalImpl#getStereotype <em>
+ * Stereotype</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl implements UMLStereotypeApplicationRemoval {
@@ -68,9 +72,9 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -78,9 +82,9 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 	protected boolean isCollapsed = IS_COLLAPSED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getStereotype() <em>Stereotype</em>}' reference.
-	 * <!-- begin-user-doc
+	 * The cached value of the '{@link #getStereotype() <em>Stereotype</em>}' reference. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getStereotype()
 	 * @generated
 	 * @ordered
@@ -89,6 +93,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected UMLStereotypeApplicationRemovalImpl() {
@@ -97,6 +102,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -106,17 +112,21 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
 		if (hideElements == null) {
-			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class, this, UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS, DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
+			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class,
+					this, UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS,
+					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
 		}
 		return hideElements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -125,17 +135,21 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
 		boolean oldIsCollapsed = isCollapsed;
 		isCollapsed = newIsCollapsed;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED, oldIsCollapsed,
+					isCollapsed));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Stereotype getStereotype() {
@@ -144,7 +158,9 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 			stereotype = (Stereotype)eResolveProxy(oldStereotype);
 			if (stereotype != oldStereotype) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE, oldStereotype, stereotype));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE, oldStereotype,
+							stereotype));
 			}
 		}
 		return stereotype;
@@ -152,6 +168,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public Stereotype basicGetStereotype() {
@@ -160,17 +177,20 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setStereotype(Stereotype newStereotype) {
 		Stereotype oldStereotype = stereotype;
 		stereotype = newStereotype;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE, oldStereotype, stereotype));
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE, oldStereotype, stereotype));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void visit(DiffModel diffModel) {
@@ -203,11 +223,12 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 	 * @generated NOT
 	 */
 	public IMerger provideMerger() {
-		return null;
+		return new UMLStereotypeApplicationRemovalMerger();
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -215,13 +236,15 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(
+						otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -235,6 +258,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -245,7 +269,8 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 			case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED:
 				return isIsCollapsed();
 			case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE:
-				if (resolve) return getStereotype();
+				if (resolve)
+					return getStereotype();
 				return basicGetStereotype();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -253,6 +278,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -275,6 +301,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -295,6 +322,7 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -312,26 +340,33 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (derivedFeatureID) {
-				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS: return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
-				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED: return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
-				default: return -1;
+				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS:
+					return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
+				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED:
+					return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
+				default:
+					return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (derivedFeatureID) {
-				default: return -1;
+				default:
+					return -1;
 			}
 		}
 		if (baseClass == UMLStereotypeApplicationChange.class) {
 			switch (derivedFeatureID) {
-				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE: return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE;
-				default: return -1;
+				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE:
+					return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE;
+				default:
+					return -1;
 			}
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
@@ -339,26 +374,33 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (baseFeatureID) {
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS: return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS;
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED: return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED;
-				default: return -1;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
+					return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__HIDE_ELEMENTS;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
+					return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__IS_COLLAPSED;
+				default:
+					return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (baseFeatureID) {
-				default: return -1;
+				default:
+					return -1;
 			}
 		}
 		if (baseClass == UMLStereotypeApplicationChange.class) {
 			switch (baseFeatureID) {
-				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE: return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE;
-				default: return -1;
+				case UML2DiffPackage.UML_STEREOTYPE_APPLICATION_CHANGE__STEREOTYPE:
+					return UML2DiffPackage.UML_STEREOTYPE_APPLICATION_REMOVAL__STEREOTYPE;
+				default:
+					return -1;
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
@@ -366,11 +408,13 @@ public class UMLStereotypeApplicationRemovalImpl extends UpdateModelElementImpl 
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (isCollapsed: ");

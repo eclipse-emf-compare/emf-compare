@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-09-29T11:39:51.181+0200">
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-09-29T11:16:22.517+0200">
   <diffResourceSet>
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
         <subDiffElements xsi:type="diff:DiffGroup">
           <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1">
-            <rightParent href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-            <leftElement href="../modified/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
+            <rightParent href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+            <leftElement href="../modified/model.uml#_qtX1QGUHEeC0XeUZ1BZPOA"/>
           </subDiffElements>
           <subDiffElements xsi:type="uml2diff:UMLProfileApplicationAddition" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2/@subDiffElements.0" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2/@subDiffElements.0" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
-            <leftElement href="../modified/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
-            <profile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+            <leftElement href="../modified/model.uml#_qtX1QGUHEeC0XeUZ1BZPOA"/>
+            <profile href="pathmap://UML_PROFILES/Ecore.profile.uml#_0"/>
           </subDiffElements>
           <subDiffElements xsi:type="diff:DiffGroup">
             <subDiffElements xsi:type="uml2diff:UMLStereotypeApplicationAddition" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1">
-              <rightElement href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
-              <leftElement href="../modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
-              <stereotype href="pathmap://UML_PROFILES/Standard.profile.uml#Specification"/>
+              <rightElement href="../original/model.uml#_lOAhMNfUEeCgmr8B8wc0rg"/>
+              <leftElement href="../modified/model.uml#_lOAhMNfUEeCgmr8B8wc0rg"/>
+              <stereotype href="pathmap://UML_PROFILES/Ecore.profile.uml#EPackage"/>
             </subDiffElements>
-            <rightParent href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+            <rightParent href="../original/model.uml#_lOAhMNfUEeCgmr8B8wc0rg"/>
           </subDiffElements>
-          <rightParent href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+          <rightParent href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
         </subDiffElements>
         <subDiffElements xsi:type="diff:ModelElementChangeLeftTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2/@subDiffElements.0" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.2/@subDiffElements.0">
-          <leftElement href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
+          <leftElement href="../modified/model.uml#_vEEAUNfUEeCgmr8B8wc0rg"/>
         </subDiffElements>
       </ownedElements>
-      <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-      <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+      <rightRoots href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
     </diffModels>
-    <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
-    </resourceDiffs>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_0"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_kG3ssJNUEdq27qNyfB516A"/>
@@ -40,6 +36,14 @@
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_XWpzEHjqEdy8S4Cr8Rc_NA"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_c6pnIHjqEdy8S4Cr8Rc_NA"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_sH1jAHjqEdy8S4Cr8Rc_NA"/>
+    </resourceDiffs>
+    <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
+      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
+    </resourceDiffs>
+    <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </resourceDiffs>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
       <roots href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
@@ -567,35 +571,27 @@
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uksYdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uk8YdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7ulMYdEduPJbEsMYXjUQ"/>
-    </resourceDiffs>
-    <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
-      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
-      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
     </resourceDiffs>
   </diffResourceSet>
   <matchResourceSet>
     <matchModels>
       <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="../modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
-          <rightElement href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+          <leftElement href="../modified/model.uml#_lOAhMNfUEeCgmr8B8wc0rg"/>
+          <rightElement href="../original/model.uml#_lOAhMNfUEeCgmr8B8wc0rg"/>
         </subMatchElements>
-        <leftElement href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-        <rightElement href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+        <leftElement href="../modified/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+        <rightElement href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
       </matchedElements>
       <unmatchedElements>
-        <element href="../modified/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
+        <element href="../modified/model.uml#_qtX1QGUHEeC0XeUZ1BZPOA"/>
       </unmatchedElements>
       <unmatchedElements>
-        <element href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
+        <element href="../modified/model.uml#_vEEAUNfUEeCgmr8B8wc0rg"/>
       </unmatchedElements>
-      <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-      <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+      <rightRoots href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
     </matchModels>
-    <unmatchedModels>
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
-    </unmatchedModels>
     <unmatchedModels>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_0"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_kG3ssJNUEdq27qNyfB516A"/>
@@ -603,6 +599,14 @@
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_XWpzEHjqEdy8S4Cr8Rc_NA"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_c6pnIHjqEdy8S4Cr8Rc_NA"/>
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_sH1jAHjqEdy8S4Cr8Rc_NA"/>
+    </unmatchedModels>
+    <unmatchedModels>
+      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
+    </unmatchedModels>
+    <unmatchedModels>
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </unmatchedModels>
     <unmatchedModels>
       <roots href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
@@ -1130,10 +1134,6 @@
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uksYdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uk8YdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7ulMYdEduPJbEsMYXjUQ"/>
-    </unmatchedModels>
-    <unmatchedModels>
-      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
-      <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
     </unmatchedModels>
   </matchResourceSet>
 </diff:ComparisonResourceSetSnapshot>

@@ -12,8 +12,10 @@ package org.eclipse.emf.compare.uml2.diff.test;
 
 import java.io.IOException;
 
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
 import org.junit.Test;
 
 public class TestProfile extends AbstractUMLCompareTest {
@@ -176,8 +178,20 @@ public class TestProfile extends AbstractUMLCompareTest {
 	}
 	
 	@Test
-	public void applyProfile_remove_merge() throws IOException, InterruptedException {
-		testMerge("applyProfile/remove", UMLProfileApplicationRemoval.class);
+	public void applyProfile_remove_merge() throws IOException, InterruptedException {		
+		testMerge("applyProfile/remove", true, UMLProfileApplicationRemoval.class, 0);
+		testMerge("applyProfile/remove", false, UMLProfileApplicationRemoval.class, 1);
+	}
+	
+	@Test
+	public void applyProfile_addition() throws IOException, InterruptedException {
+		testCompare("applyProfile/addition");
+	}
+	
+	@Test
+	public void applyProfile_addition_merge() throws IOException, InterruptedException {		
+		testMerge("applyProfile/addition", true, UMLProfileApplicationAddition.class, 1);
+		testMerge("applyProfile/addition", false, UMLProfileApplicationAddition.class, 0);
 	}
 	
 	@Test
@@ -186,8 +200,20 @@ public class TestProfile extends AbstractUMLCompareTest {
 	}
 
 	@Test
-	public void applyProfileStereotype_addition_merge() throws IOException, InterruptedException {
-		testMerge("applyProfileStereotype/addition", UMLStereotypeApplicationAddition.class);
+	public void applyProfileStereotype_addition_merge() throws IOException, InterruptedException {		
+		testMerge("applyProfileStereotype/addition", true, UMLStereotypeApplicationAddition.class, 0);
+		testMerge("applyProfileStereotype/addition", false, UMLStereotypeApplicationAddition.class, 1);
+	}
+	
+	@Test
+	public void applyProfileStereotype_removal() throws IOException, InterruptedException {
+		testCompare("applyProfileStereotype/removal");
+	}
+
+	@Test
+	public void applyProfileStereotype_removal_merge() throws IOException, InterruptedException {		
+		testMerge("applyProfileStereotype/removal", true, UMLStereotypeApplicationRemoval.class, 1);
+		testMerge("applyProfileStereotype/removal", false, UMLStereotypeApplicationRemoval.class, 0);
 	}
 	
 	@Override
