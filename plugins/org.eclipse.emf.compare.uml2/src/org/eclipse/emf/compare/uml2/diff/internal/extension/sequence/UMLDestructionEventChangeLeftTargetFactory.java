@@ -23,22 +23,46 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.DestructionEvent;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for UMLDestructionEventChangeLeftTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLDestructionEventChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
+	// CHECKSTYLE:ON
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLDestructionEventChangeLeftTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeLeftTarget
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof DestructionEvent;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
+		final ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final DestructionEvent destructionEvent = (DestructionEvent)changeLeftTarget.getLeftElement();
 
-		UMLDestructionEventChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLDestructionEventChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLDestructionEventChangeLeftTarget();
 
 		for (EObject occurenceSpecification : getInverseReferences(destructionEvent,

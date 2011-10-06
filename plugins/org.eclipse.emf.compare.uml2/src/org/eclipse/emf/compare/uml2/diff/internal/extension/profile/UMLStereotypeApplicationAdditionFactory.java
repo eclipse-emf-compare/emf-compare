@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -74,8 +75,10 @@ public class UMLStereotypeApplicationAdditionFactory extends AbstractUMLApplicat
 
 		ret.setRemote(input.isRemote());
 		ret.setLeftElement(base);
-		ret.setRightElement(getEngine().getMatched(base, UML2DiffEngine.getRightSide()));
+
+		ret.setRightElement(getEngine().getMatched(base, MatchSide.RIGHT));
 		final Stereotype stereotype = UMLUtil.getStereotype(leftElement);
+
 		ret.setStereotype(stereotype);
 
 		ret.getHideElements().add(input);
@@ -96,7 +99,7 @@ public class UMLStereotypeApplicationAdditionFactory extends AbstractUMLApplicat
 		final DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
 
 		final EObject leftBase = UMLUtil.getBaseElement(modelElement.getLeftElement());
-		final EObject rightBase = getEngine().getMatched(leftBase, UML2DiffEngine.getRightSide());
+		final EObject rightBase = getEngine().getMatched(leftBase, MatchSide.RIGHT);
 
 		return findOrCreateDiffGroup(rootDiffGroup, rightBase, crossReferencer);
 	}

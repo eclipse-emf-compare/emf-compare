@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
@@ -70,7 +71,7 @@ public class UMLProfileApplicationRemovalFactory extends AbstractUMLApplicationC
 				.createUMLProfileApplicationRemoval();
 
 		ret.setRemote(input.isRemote());
-		ret.setLeftElement(getEngine().getMatched(rightElement, UML2DiffEngine.getLeftSide()));
+		ret.setLeftElement(getEngine().getMatched(rightElement, MatchSide.LEFT));
 		ret.setRightElement(rightElement);
 		final Profile profile = UMLUtil.getProfile(((ProfileApplication)rightElement).getAppliedDefinition());
 		ret.setProfile(profile);

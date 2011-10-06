@@ -23,31 +23,55 @@ import org.eclipse.uml2.uml.Interval;
 import org.eclipse.uml2.uml.IntervalConstraint;
 import org.eclipse.uml2.uml.ValueSpecification;
 
+/**
+ * Factory for UMLIntervalConstraintChangeLeftTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLIntervalConstraintChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
+	// CHECKSTYLE:ON
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLIntervalConstraintChangeLeftTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeLeftTarget
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof IntervalConstraint;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
+		final ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final IntervalConstraint intervalConstraint = (IntervalConstraint)changeLeftTarget.getLeftElement();
 
-		UMLIntervalConstraintChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLIntervalConstraintChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLIntervalConstraintChangeLeftTarget();
 
-		ValueSpecification valueSpecification = intervalConstraint.getSpecification();
+		final ValueSpecification valueSpecification = intervalConstraint.getSpecification();
 
 		if (valueSpecification instanceof Interval) {
-			ValueSpecification min = ((Interval)valueSpecification).getMin();
+			final ValueSpecification min = ((Interval)valueSpecification).getMin();
 			hideCrossReferences(min, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT,
 					ret, crossReferencer);
-			ValueSpecification max = ((Interval)valueSpecification).getMax();
+			final ValueSpecification max = ((Interval)valueSpecification).getMax();
 			hideCrossReferences(max, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT,
 					ret, crossReferencer);
 		}

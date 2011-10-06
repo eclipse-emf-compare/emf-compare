@@ -23,26 +23,49 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Property;
 
+/**
+ * Factory for UMLAssociationChangeRightTargetFactory.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLAssociationChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-
+	// CHECKSTYLE:ON
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLAssociationChangeRightTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeRightTarget
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Association;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
+		final ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final Association association = (Association)changeRightTarget.getRightElement();
 
-		UMLAssociationChangeRightTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLAssociationChangeRightTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLAssociationChangeRightTarget();
 
 		for (Property memberEnd : association.getMemberEnds()) {
-			Element memberOwner = memberEnd.getOwner();
+			final Element memberOwner = memberEnd.getOwner();
 			if (memberOwner != association) {
 				/*
 				 * We have to find the corresponding diff element (if it exists in order to hide it)

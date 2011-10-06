@@ -13,6 +13,11 @@ package org.eclipse.emf.compare.uml2;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * Activator.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 public class UMLDiffEnginePlugin extends Plugin {
 
 	/** The plugin ID. */

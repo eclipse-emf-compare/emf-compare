@@ -42,38 +42,73 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.junit.Assert;
 import org.junit.Before;
 
+/**
+ * AbstractUMLCompareTest.
+ * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
+ */
 public abstract class AbstractUMLCompareTest {
 
+	/** MODIFIED_MODEL_UML. */
 	static final String MODIFIED_MODEL_UML = "/modified/model.uml";
 
+	/** ORIGINAL_MODEL_UML. */
 	static final String ORIGINAL_MODEL_UML = "/original/model.uml";
 
+	/** EXPECTED_EMFDIFF. */
 	static final String EXPECTED_EMFDIFF = "result.emfdiff";
 
+	/** EXPECTED_SUFFIX. */
 	static final String EXPECTED_SUFFIX = "/expected/result.emfdiff";
+	
+	/** BACK_PATH. */
+	static final String BACK_PATH = "..";
 
+	/**
+	 * Before treatment.
+	 */
 	@Before
 	public void before() {
 		DiffEngineRegistry.INSTANCE.putValue("uml", new UML2DiffEngine());
 		MatchEngineRegistry.INSTANCE.putValue("uml", new UML2MatchEngine());
 	}
 
+	/**
+	 * Get the path of the diagram.
+	 * @return The path.
+	 */
 	abstract String getDiagramKindPath();
 
+	/**
+	 * test Compare.
+	 * @param testFolderPath folder path.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	protected final void testCompare(String testFolderPath) throws IOException, InterruptedException {
-		DiffModel expected_diff = firstNonEmptyDiffModel(getExpectedDiff(testFolderPath));
-		DiffModel computed_diff = firstNonEmptyDiffModel(getComputedDiff(testFolderPath));
+		final DiffModel expectedDiff = firstNonEmptyDiffModel(getExpectedDiff(testFolderPath));
+		final DiffModel computedDiff = firstNonEmptyDiffModel(getComputedDiff(testFolderPath));
 
-		Assert.assertEquals(ModelUtils.serialize(expected_diff), ModelUtils.serialize(computed_diff));
+		Assert.assertEquals(ModelUtils.serialize(expectedDiff), ModelUtils.serialize(computedDiff));
 	}
 
+	/**
+	 * test Compare 2 way.
+	 * @param testFolderPath folder path.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	protected final void testCompare3Way(String testFolderPath) throws IOException, InterruptedException {
-		DiffModel expected_diff = firstNonEmptyDiffModel(getComputed3WayDiff(testFolderPath));
-		DiffModel computed_diff = firstNonEmptyDiffModel(getComputed3WayDiff(testFolderPath));
+		final DiffModel expectedDiff = firstNonEmptyDiffModel(getComputed3WayDiff(testFolderPath));
+		final DiffModel computedDiff = firstNonEmptyDiffModel(getComputed3WayDiff(testFolderPath));
 
-		Assert.assertEquals(ModelUtils.serialize(expected_diff), ModelUtils.serialize(computed_diff));
+		Assert.assertEquals(ModelUtils.serialize(expectedDiff), ModelUtils.serialize(computedDiff));
 	}
 
+	/**
+	 * Find the first non empty difference model from a resource set.
+	 * @param diffResourceSet The resource set.
+	 * @return The difference model.
+	 */
 	private DiffModel firstNonEmptyDiffModel(DiffResourceSet diffResourceSet) {
 		for (DiffModel diffModel : diffResourceSet.getDiffModels()) {
 			if (diffModel.getOwnedElements().size() > 1
@@ -85,6 +120,11 @@ public abstract class AbstractUMLCompareTest {
 		return null;
 	}
 
+	/** Test merge.
+	 * @param testFolderPath the folder path.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	protected final void testMerge(String testFolderPath) throws IOException, InterruptedException {
 		testMerge(testFolderPath, true);
 		testMerge(testFolderPath, false);
@@ -96,36 +136,55 @@ public abstract class AbstractUMLCompareTest {
 //		testMerge(testFolderPath, false, diffKind, expectedDifferencesCount);
 //	}
 
+	/** Test merge.
+	 * @param testFolderPath the folder path.
+	 * @param leftToRight the direction of merge.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	private void testMerge(String testFolderPath, boolean leftToRight) throws IOException,
 			InterruptedException {
-		DiffResourceSet computed_diff = getComputedDiff(testFolderPath);
-		merge(leftToRight, computed_diff);
-		testMerge(testFolderPath, leftToRight, computed_diff);
+		final DiffResourceSet computedDiff = getComputedDiff(testFolderPath);
+		merge(leftToRight, computedDiff);
+		testMerge(testFolderPath, leftToRight, computedDiff);
 	}
 
+	/**
+	 * Test merge.
+	 * @param testFolderPath the folder path.
+	 * @param leftToRight the direction of merge.
+	 * @param diffKind The kind of difference.
+	 * @param expectedDifferencesCount the expected number of differences after merge.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	protected void testMerge(String testFolderPath, boolean leftToRight, Class<? extends DiffElement> diffKind, int expectedDifferencesCount)
 			throws IOException, InterruptedException {
-		DiffResourceSet computed_diff = getComputedDiff(testFolderPath);
-		Iterator<EObject> diffs = computed_diff.eAllContents();
+		final DiffResourceSet computedDiff = getComputedDiff(testFolderPath);
+		final Iterator<EObject> diffs = computedDiff.eAllContents();
 		while (diffs.hasNext()) {
-			EObject next = diffs.next();
+			final EObject next = diffs.next();
 			if (diffKind.isAssignableFrom(next.getClass())) {
 				merge(leftToRight, (DiffElement)next);
 				break;
 			}
 		}		
 		if (expectedDifferencesCount == 0) {
-			testMerge(testFolderPath, leftToRight, computed_diff);
+			testMerge(testFolderPath, leftToRight, computedDiff);
 		} else {
-			Assert.assertEquals(expectedDifferencesCount, countVisibleDiffs(computed_diff));
+			Assert.assertEquals(expectedDifferencesCount, countVisibleDiffs(computedDiff));
 		}	
 	}
 	
-	private int countVisibleDiffs(DiffResourceSet computed_diff) {
+	/** Count the number of differences in the given difference resource set.
+	 * @param computedDiff The difference resource set.
+	 * @return The count.
+	 */
+	private int countVisibleDiffs(DiffResourceSet computedDiff) {
 		int result = 0;
-		Iterator<EObject> diffs = computed_diff.eAllContents();
+		final Iterator<EObject> diffs = computedDiff.eAllContents();
 		while (diffs.hasNext()) {
-			EObject next = diffs.next();
+			final EObject next = diffs.next();
 			if (next instanceof AbstractDiffExtension) {
 				result++;
 			}
@@ -133,24 +192,33 @@ public abstract class AbstractUMLCompareTest {
 		return result;
 	}
 
-	private void testMerge(String testFolderPath, boolean leftToRight, DiffResourceSet computed_diff)
+	/**
+	 * Test merge.
+	 * @param testFolderPath the folder path.
+	 * @param leftToRight The direction of merge.
+	 * @param computedDiff The difference resource set.
+	 * @throws IOException exception.
+	 */
+	private void testMerge(String testFolderPath, boolean leftToRight, DiffResourceSet computedDiff)
 			throws IOException {
+		final String modifiedModelUmlUri = BACK_PATH + MODIFIED_MODEL_UML;
+		final String originalModelUmlUri = BACK_PATH + ORIGINAL_MODEL_UML;
 		Resource referenceResource;
 		Resource mergedResource;
 		if (leftToRight) {
-			ResourceSet referenceResourceSet = getModelResourceSet(testFolderPath, MODIFIED_MODEL_UML);
-			referenceResource = referenceResourceSet.getResource(URI.createURI(".." + MODIFIED_MODEL_UML),
+			final ResourceSet referenceResourceSet = getModelResourceSet(testFolderPath, MODIFIED_MODEL_UML);
+			referenceResource = referenceResourceSet.getResource(URI.createURI(modifiedModelUmlUri),
 					true);
 
-			ResourceSet mergedResourceSet = getRightResourceSet(computed_diff);
-			mergedResource = mergedResourceSet.getResource(URI.createURI(".." + ORIGINAL_MODEL_UML), true);
+			final ResourceSet mergedResourceSet = getRightResourceSet(computedDiff);
+			mergedResource = mergedResourceSet.getResource(URI.createURI(originalModelUmlUri), true);
 		} else {
-			ResourceSet referenceResourceSet = getModelResourceSet(testFolderPath, ORIGINAL_MODEL_UML);
-			referenceResource = referenceResourceSet.getResource(URI.createURI(".." + ORIGINAL_MODEL_UML),
+			final ResourceSet referenceResourceSet = getModelResourceSet(testFolderPath, ORIGINAL_MODEL_UML);
+			referenceResource = referenceResourceSet.getResource(URI.createURI(originalModelUmlUri),
 					true);
 
-			ResourceSet mergedResourceSet = getLeftResourceSet(computed_diff);
-			mergedResource = mergedResourceSet.getResource(URI.createURI(".." + MODIFIED_MODEL_UML), true);
+			final ResourceSet mergedResourceSet = getLeftResourceSet(computedDiff);
+			mergedResource = mergedResourceSet.getResource(URI.createURI(modifiedModelUmlUri), true);
 		}
 
 		Assert.assertEquals(referenceResource.getContents().size(), mergedResource.getContents().size());
@@ -159,24 +227,50 @@ public abstract class AbstractUMLCompareTest {
 				ModelUtils.serialize(mergedResource.getContents().get(0)));
 	}
 
-	private void merge(boolean leftToRight, DiffResourceSet computed_diff) {
-		for (DiffModel diffModel : computed_diff.getDiffModels()) {
+	/**
+	 * Merge the difference resource set.
+	 * @param leftToRight direction of merge.
+	 * @param computedDiff the difference resource set.
+	 */
+	private void merge(boolean leftToRight, DiffResourceSet computedDiff) {
+		for (DiffModel diffModel : computedDiff.getDiffModels()) {
 			MergeService.merge(diffModel.getOwnedElements(), leftToRight);
 		}
 	}
 
-	private void merge(boolean leftToRight, DiffElement computed_diff) {
-		MergeService.merge(computed_diff, leftToRight);
+	/**
+	 * Merge the difference element.
+	 * @param leftToRight direction of merge.
+	 * @param computedDiff the difference element.
+	 */
+	private void merge(boolean leftToRight, DiffElement computedDiff) {
+		MergeService.merge(computedDiff, leftToRight);
 	}
 
+	/**
+	 * Get the left resource set from the difference resource set.
+	 * @param diffResourceSet the difference resource set.
+	 * @return the left resource set.
+	 */
 	private ResourceSet getLeftResourceSet(DiffResourceSet diffResourceSet) {
 		return getResourceSet(diffResourceSet, DiffPackage.Literals.DIFF_MODEL__LEFT_ROOTS);
 	}
 
+	/**
+	 * Get the right resource set from the difference resource set.
+	 * @param diffResourceSet the difference resource set.
+	 * @return the right resource set.
+	 */
 	private ResourceSet getRightResourceSet(DiffResourceSet diffResourceSet) {
 		return getResourceSet(diffResourceSet, DiffPackage.Literals.DIFF_MODEL__RIGHT_ROOTS);
 	}
 
+	/**
+	 * Get the resource set from the difference resource set and the expected side.
+	 * @param diffResourceSet The difference resource set.
+	 * @param sideRoots The expected side.
+	 * @return The resource set.
+	 */
 	@SuppressWarnings("unchecked")
 	private ResourceSet getResourceSet(DiffResourceSet diffResourceSet, EReference sideRoots) {
 		for (DiffModel diffModel : diffResourceSet.getDiffModels()) {
@@ -189,55 +283,82 @@ public abstract class AbstractUMLCompareTest {
 		return null;
 	}
 
+	/**
+	 * Compute the difference between two models in the given folder path and returns the difference resource set result.
+	 * @param testFolderPath The folder path.
+	 * @return The difference resource set.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	private DiffResourceSet getComputedDiff(String testFolderPath) throws IOException, InterruptedException {
-		ResourceSet originalResourceSet = getModelResourceSet(testFolderPath, ORIGINAL_MODEL_UML);
-		ResourceSet modifiedResourceSet = getModelResourceSet(testFolderPath, MODIFIED_MODEL_UML);
+		final ResourceSet originalResourceSet = getModelResourceSet(testFolderPath, ORIGINAL_MODEL_UML);
+		final ResourceSet modifiedResourceSet = getModelResourceSet(testFolderPath, MODIFIED_MODEL_UML);
 
-		Map<String, Object> matchOptions = new HashMap<String, Object>();
+		final Map<String, Object> matchOptions = new HashMap<String, Object>();
 
-		MatchResourceSet computed_match = MatchService.doResourceSetMatch(modifiedResourceSet,
+		final MatchResourceSet computedMatch = MatchService.doResourceSetMatch(modifiedResourceSet,
 				originalResourceSet, matchOptions);
-		DiffResourceSet computed_diff = DiffService.doDiff(computed_match);
+		final DiffResourceSet computedDiff = DiffService.doDiff(computedMatch);
 
-		ResourceSet computedResourceSet = new ResourceSetImpl();
-		Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
-		computedResource.getContents().add(computed_diff);
-		return computed_diff;
+		final ResourceSet computedResourceSet = new ResourceSetImpl();
+		final Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
+		computedResource.getContents().add(computedDiff);
+		return computedDiff;
 	}
 
+	/**
+	 * Compute the difference between three models in the given folder path and returns the difference resource set result.
+	 * @param testFolderPath The folder path.
+	 * @return The difference resource set.
+	 * @throws IOException exception.
+	 * @throws InterruptedException exception.
+	 */
 	private DiffResourceSet getComputed3WayDiff(String testFolderPath) throws IOException,
 			InterruptedException {
-		ResourceSet originalResourceSet = getModelResourceSet(testFolderPath, "/origin/model.uml");
-		ResourceSet localResourceSet = getModelResourceSet(testFolderPath, "/local/model.uml");
-		ResourceSet remoteResourceSet = getModelResourceSet(testFolderPath, "/remote/model.uml");
+		final ResourceSet originalResourceSet = getModelResourceSet(testFolderPath, "/origin/model.uml");
+		final ResourceSet localResourceSet = getModelResourceSet(testFolderPath, "/local/model.uml");
+		final ResourceSet remoteResourceSet = getModelResourceSet(testFolderPath, "/remote/model.uml");
 
-		Map<String, Object> matchOptions = new HashMap<String, Object>();
+		final Map<String, Object> matchOptions = new HashMap<String, Object>();
 
-		MatchResourceSet computed_match = MatchService.doResourceSetMatch(remoteResourceSet,
+		final MatchResourceSet computedMatch = MatchService.doResourceSetMatch(remoteResourceSet,
 				localResourceSet, originalResourceSet, matchOptions);
-		DiffResourceSet computed_diff = DiffService.doDiff(computed_match);
+		final DiffResourceSet computedDiff = DiffService.doDiff(computedMatch);
 
-		ResourceSet computedResourceSet = new ResourceSetImpl();
-		Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
-		computedResource.getContents().add(computed_diff);
-		return computed_diff;
+		final ResourceSet computedResourceSet = new ResourceSetImpl();
+		final Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
+		computedResource.getContents().add(computedDiff);
+		return computedDiff;
 	}
 
+	/**
+	 * Get a model resource set from the folder path and model name.
+	 * @param testFolderPath the folder path.
+	 * @param model The model name.
+	 * @return The resource set.
+	 * @throws IOException exception.
+	 */
 	private ResourceSet getModelResourceSet(String testFolderPath, String model) throws IOException {
-		ResourceSet resourceSet = new ResourceSetImpl();
-		final Resource original = resourceSet.createResource(URI.createURI(".." + model));
+		final ResourceSet resourceSet = new ResourceSetImpl();
+		final Resource original = resourceSet.createResource(URI.createURI(BACK_PATH + model));
 		original.load(
 				AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
 						+ model), Collections.emptyMap());
 		return resourceSet;
 	}
 
+	/**
+	 * Get the difference resource set from the folder path.
+	 * @param testFolderPath The folder path.
+	 * @return The difference resource set.
+	 * @throws IOException exception.
+	 */
 	private DiffResourceSet getExpectedDiff(String testFolderPath) throws IOException {
-		ResourceSet expectedResourceSet = new ResourceSetImpl();
-		final ComparisonResourceSetSnapshot expected_diff_snapshot = (ComparisonResourceSetSnapshot)ModelUtils
+		final ResourceSet expectedResourceSet = new ResourceSetImpl();
+		final ComparisonResourceSetSnapshot expectedDiffSnapshot = (ComparisonResourceSetSnapshot)ModelUtils
 				.load(AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
 						+ EXPECTED_SUFFIX), EXPECTED_EMFDIFF, expectedResourceSet);
-		return expected_diff_snapshot.getDiffResourceSet();
+		return expectedDiffSnapshot.getDiffResourceSet();
 	}
 
 }

@@ -82,20 +82,28 @@ import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference;
 /**
  * Registry of all {@link IDiffExtensionFactory}.
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikaël Barbero</a>
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class DiffExtensionFactoryRegistry {
+public final class DiffExtensionFactoryRegistry {
+
+	/**
+	 * Constructor.
+	 */
+	private DiffExtensionFactoryRegistry() {
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * Creates and returns all {@link IDiffExtensionFactory} available in this plugin. The returned Set in
 	 * unmodifiable.
 	 * 
 	 * @param engine
+	 *            The UML2 difference engine.
 	 * @return an unmodifiable set of all {@link IDiffExtensionFactory}.
 	 */
 	public static Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> createExtensionFactories(
 			UML2DiffEngine engine) {
-		Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> dataset = new HashMap<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory>();
+		final Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> dataset = new HashMap<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory>();
 
 		/* Class diagram */
 		dataset.put(UMLAssociationChangeLeftTarget.class, new UMLAssociationChangeLeftTargetFactory(engine));

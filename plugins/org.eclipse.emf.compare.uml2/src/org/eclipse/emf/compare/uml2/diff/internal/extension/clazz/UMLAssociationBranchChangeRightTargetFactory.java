@@ -21,12 +21,29 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Property;
 
+/**
+ * Factory for UMLAssociationBranchChangeRightTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLAssociationBranchChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-
+	// CHECKSTYLE:ON
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLAssociationBranchChangeRightTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeRightTarget
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Property
@@ -35,10 +52,16 @@ public class UMLAssociationBranchChangeRightTargetFactory extends AbstractDiffEx
 						.eContainer()).getMemberEnds().size() > 2;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
+		final ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 
-		UMLAssociationBranchChangeRightTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLAssociationBranchChangeRightTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLAssociationBranchChangeRightTarget();
 
 		ret.getHideElements().add(changeRightTarget);

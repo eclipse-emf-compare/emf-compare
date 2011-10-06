@@ -22,31 +22,55 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.util.UMLUtil;
 
+/**
+ * Factory for UMLStereotypeAttributeChangeLeftTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLStereotypeReferenceChangeRightTargetFactory extends AbstractDiffExtensionFactory {
+	// CHECKSTYLE:ON
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLStereotypeReferenceChangeRightTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		if (input instanceof ReferenceChangeRightTarget) {
-			EObject left = ((ReferenceChangeRightTarget)input).getLeftElement();
-			EObject right = ((ReferenceChangeRightTarget)input).getRightElement();
-			EObject leftBase = UMLUtil.getBaseElement(left);
-			EObject rightBase = UMLUtil.getBaseElement(right);
+			final EObject left = ((ReferenceChangeRightTarget)input).getLeftElement();
+			final EObject right = ((ReferenceChangeRightTarget)input).getRightElement();
+			final EObject leftBase = UMLUtil.getBaseElement(left);
+			final EObject rightBase = UMLUtil.getBaseElement(right);
 			return leftBase != null && rightBase != null;
 		}
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)input;
-		EObject leftElement = referenceChangeRightTarget.getLeftElement();
-		EObject rightElement = referenceChangeRightTarget.getRightElement();
-		EObject leftBase = UMLUtil.getBaseElement(leftElement);
-		EObject rightBase = UMLUtil.getBaseElement(rightElement);
+		final ReferenceChangeRightTarget referenceChangeRightTarget = (ReferenceChangeRightTarget)input;
+		final EObject leftElement = referenceChangeRightTarget.getLeftElement();
+		final EObject rightElement = referenceChangeRightTarget.getRightElement();
+		final EObject leftBase = UMLUtil.getBaseElement(leftElement);
+		final EObject rightBase = UMLUtil.getBaseElement(rightElement);
 
-		UMLStereotypeReferenceChangeRightTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLStereotypeReferenceChangeRightTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLStereotypeReferenceChangeRightTarget();
 
 		ret.setStereotype(UMLUtil.getStereotype(rightElement));
@@ -63,12 +87,18 @@ public class UMLStereotypeReferenceChangeRightTargetFactory extends AbstractDiff
 		return ret;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory#getParentDiff(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	@Override
 	public DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		EObject right = ((ReferenceChangeRightTarget)input).getRightElement();
-		EObject rightBase = UMLUtil.getBaseElement(right);
+		final EObject right = ((ReferenceChangeRightTarget)input).getRightElement();
+		final EObject rightBase = UMLUtil.getBaseElement(right);
 
-		DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
+		final DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
 
 		return findOrCreateDiffGroup(rootDiffGroup, rightBase, crossReferencer);
 	}

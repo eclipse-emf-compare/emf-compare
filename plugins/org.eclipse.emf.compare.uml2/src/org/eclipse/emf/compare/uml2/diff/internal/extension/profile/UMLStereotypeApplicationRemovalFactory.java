@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.uml2.diff.internal.extension.profile;
 
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
@@ -72,7 +73,7 @@ public class UMLStereotypeApplicationRemovalFactory extends AbstractUMLApplicati
 				.createUMLStereotypeApplicationRemoval();
 
 		ret.setRemote(input.isRemote());
-		ret.setLeftElement(getEngine().getMatched(base, UML2DiffEngine.getLeftSide()));
+		ret.setLeftElement(getEngine().getMatched(base, MatchSide.LEFT));
 		ret.setRightElement(base);
 		ret.setStereotype(UMLUtil.getStereotype(rightElement));
 

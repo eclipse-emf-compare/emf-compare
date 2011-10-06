@@ -25,36 +25,69 @@ import org.eclipse.uml2.uml.ExecutionSpecification;
 import org.eclipse.uml2.uml.OccurrenceSpecification;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for UMLExecutionSpecificationChangeLeft.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLExecutionSpecificationChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
+	// CHECKSTYLE:ON
 
+	/**
+	 * The predicate to hide difference elements.
+	 */
+	private static final UMLPredicate<Setting> COVERED_BY_PREDICATE = new UMLPredicate<Setting>() {
+		public boolean apply(Setting input) {
+			return ((ReferenceChangeLeftTarget)input.getEObject()).getReference() == UMLPackage.Literals.LIFELINE__COVERED_BY;
+		}
+	};
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLExecutionSpecificationChangeLeftTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeLeftTarget
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof ExecutionSpecification;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
+		final ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final ExecutionSpecification actionExecutionSpecification = (ExecutionSpecification)changeLeftTarget
 				.getLeftElement();
 
-		UMLExecutionSpecificationChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLExecutionSpecificationChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLExecutionSpecificationChangeLeftTarget();
 
 		hideOccurenceSpecification(actionExecutionSpecification.getStart(), ret, crossReferencer);
 		hideOccurenceSpecification(actionExecutionSpecification.getFinish(), ret, crossReferencer);
 
 		hideCrossReferences(actionExecutionSpecification,
-				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, coveredByPredicate,
+				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, COVERED_BY_PREDICATE,
 				crossReferencer);
 		hideCrossReferences(actionExecutionSpecification.getStart(),
-				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, coveredByPredicate,
+				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, COVERED_BY_PREDICATE,
 				crossReferencer);
 		hideCrossReferences(actionExecutionSpecification.getFinish(),
-				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, coveredByPredicate,
+				DiffPackage.Literals.REFERENCE_CHANGE_LEFT_TARGET__LEFT_TARGET, ret, COVERED_BY_PREDICATE,
 				crossReferencer);
 
 		ret.getHideElements().add(changeLeftTarget);
@@ -67,12 +100,16 @@ public class UMLExecutionSpecificationChangeLeftTargetFactory extends AbstractDi
 		return ret;
 	}
 
-	private static final UMLPredicate<Setting> coveredByPredicate = new UMLPredicate<Setting>() {
-		public boolean apply(Setting input) {
-			return ((ReferenceChangeLeftTarget)input.getEObject()).getReference() == UMLPackage.Literals.LIFELINE__COVERED_BY;
-		}
-	};
-
+	/**
+	 * Hide occurrence specifications.
+	 * 
+	 * @param occurrenceSpecification
+	 *            {@link OccurrenceSpecification}
+	 * @param ret
+	 *            {@link UMLExecutionSpecificationChangeLeftTarget}
+	 * @param crossReferencer
+	 *            The cross referencer.
+	 */
 	private void hideOccurenceSpecification(OccurrenceSpecification occurrenceSpecification,
 			UMLExecutionSpecificationChangeLeftTarget ret, EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(occurrenceSpecification,

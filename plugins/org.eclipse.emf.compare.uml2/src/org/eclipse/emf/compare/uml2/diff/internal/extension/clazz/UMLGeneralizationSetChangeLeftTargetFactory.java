@@ -26,33 +26,59 @@ import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.GeneralizationSet;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for UMLGeneralizationSetChangeLeftTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLGeneralizationSetChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
-
-	private final UMLPredicate<Setting> hiddingPredicate = new UMLPredicate<EStructuralFeature.Setting>() {
+	// CHECKSTYLE:ON
+	/**
+	 * The predicate to hide difference elements.
+	 */
+	private static final UMLPredicate<Setting> HIDING_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
 		public boolean apply(EStructuralFeature.Setting input) {
 			return ((ReferenceChange)input.getEObject()).getReference() == UMLPackage.Literals.GENERALIZATION__GENERALIZATION_SET;
 		}
 	};
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLGeneralizationSetChangeLeftTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeLeftTarget
 				&& ((ModelElementChangeLeftTarget)input).getLeftElement() instanceof GeneralizationSet;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
+		final ModelElementChangeLeftTarget changeLeftTarget = (ModelElementChangeLeftTarget)input;
 		final GeneralizationSet generalizationSet = (GeneralizationSet)changeLeftTarget.getLeftElement();
 
-		UMLGeneralizationSetChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
+		final UMLGeneralizationSetChangeLeftTarget ret = UML2DiffFactory.eINSTANCE
 				.createUMLGeneralizationSetChangeLeftTarget();
 
 		for (Generalization generalization : generalizationSet.getGeneralizations()) {
 			hideCrossReferences(generalization, DiffPackage.Literals.REFERENCE_CHANGE__LEFT_ELEMENT, ret,
-					hiddingPredicate, crossReferencer);
+					HIDING_PREDICATE, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeLeftTarget);

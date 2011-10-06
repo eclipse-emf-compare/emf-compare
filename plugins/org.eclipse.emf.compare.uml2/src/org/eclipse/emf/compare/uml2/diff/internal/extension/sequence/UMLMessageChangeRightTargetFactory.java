@@ -27,29 +27,62 @@ import org.eclipse.uml2.uml.MessageEnd;
 import org.eclipse.uml2.uml.OccurrenceSpecification;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for UMLMessageChangeRightTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFactory {
+	// CHECKSTYLE:ON
 
+	/**
+	 * The predicate to hide difference elements.
+	 */
+	private static final UMLPredicate<Setting> COVERED_BY_PREDICATE = new UMLPredicate<Setting>() {
+		public boolean apply(Setting input) {
+			return ((ReferenceChange)input.getEObject()).getReference() == UMLPackage.Literals.LIFELINE__COVERED_BY;
+		}
+	};
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            The UML2 difference engine.
+	 */
 	public UMLMessageChangeRightTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeRightTarget
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Message;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
+		final ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final Message message = (Message)changeRightTarget.getRightElement();
 
-		UMLMessageChangeRightTarget ret = UML2DiffFactory.eINSTANCE.createUMLMessageChangeRightTarget();
+		final UMLMessageChangeRightTarget ret = UML2DiffFactory.eINSTANCE.createUMLMessageChangeRightTarget();
 
-		MessageEnd receiveEvent = message.getReceiveEvent();
+		final MessageEnd receiveEvent = message.getReceiveEvent();
 		if (receiveEvent != null) {
 			hideEvent(receiveEvent, ret, crossReferencer);
 		}
 
-		MessageEnd sendEvent = message.getSendEvent();
+		final MessageEnd sendEvent = message.getSendEvent();
 		if (sendEvent != null) {
 			hideEvent(sendEvent, ret, crossReferencer);
 		}
@@ -64,24 +97,28 @@ public class UMLMessageChangeRightTargetFactory extends AbstractDiffExtensionFac
 		return ret;
 	}
 
+	/**
+	 * Hide events.
+	 * 
+	 * @param messageEnd
+	 *            {@link MessageEnd}
+	 * @param hiddingExtension
+	 *            {@link AbstractDiffExtension}
+	 * @param crossReferencer
+	 *            The cross referencer.
+	 */
 	private void hideEvent(MessageEnd messageEnd, AbstractDiffExtension hiddingExtension,
 			EcoreUtil.CrossReferencer crossReferencer) {
 		hideCrossReferences(messageEnd,
 				DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT, hiddingExtension,
 				crossReferencer);
 		hideCrossReferences(messageEnd, DiffPackage.Literals.REFERENCE_CHANGE_RIGHT_TARGET__RIGHT_TARGET,
-				hiddingExtension, coveredByPredicate, crossReferencer);
+				hiddingExtension, COVERED_BY_PREDICATE, crossReferencer);
 		if (messageEnd instanceof OccurrenceSpecification) {
-			Event event = ((OccurrenceSpecification)messageEnd).getEvent();
+			final Event event = ((OccurrenceSpecification)messageEnd).getEvent();
 			hideCrossReferences(event, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT,
 					hiddingExtension, crossReferencer);
 		}
 	}
-
-	private static final UMLPredicate<Setting> coveredByPredicate = new UMLPredicate<Setting>() {
-		public boolean apply(Setting input) {
-			return ((ReferenceChange)input.getEObject()).getReference() == UMLPackage.Literals.LIFELINE__COVERED_BY;
-		}
-	};
 
 }

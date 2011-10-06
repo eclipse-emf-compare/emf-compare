@@ -26,32 +26,59 @@ import org.eclipse.uml2.uml.Dependency;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.UMLPackage;
 
+/**
+ * Factory for UMLDependencyChangeRightTarget.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
+// CHECKSTYLE:OFF
 public class UMLDependencyChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-
-	private static final UMLPredicate<Setting> hiddingPredicate = new UMLPredicate<EStructuralFeature.Setting>() {
+	// CHECKSTYLE:ON
+	/**
+	 * The predicate to hide difference elements.
+	 */
+	private static final UMLPredicate<Setting> HIDING_PREDICATE = new UMLPredicate<EStructuralFeature.Setting>() {
 		public boolean apply(Setting input) {
 			return ((ReferenceChange)input.getEObject()).getReference() == UMLPackage.Literals.NAMED_ELEMENT__CLIENT_DEPENDENCY;
 		}
 	};
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param engine
+	 *            UML2 difference engine.
+	 */
 	public UMLDependencyChangeRightTargetFactory(UML2DiffEngine engine) {
 		super(engine);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
+	 */
 	public boolean handles(DiffElement input) {
 		return input instanceof ModelElementChangeRightTarget
 				&& ((ModelElementChangeRightTarget)input).getRightElement() instanceof Dependency;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
+	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
+	 */
 	public AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer) {
-		ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
+		final ModelElementChangeRightTarget changeRightTarget = (ModelElementChangeRightTarget)input;
 		final Dependency dependency = (Dependency)changeRightTarget.getRightElement();
 
-		UMLDependencyChangeRightTarget ret = UML2DiffFactory.eINSTANCE.createUMLDependencyChangeRightTarget();
+		final UMLDependencyChangeRightTarget ret = UML2DiffFactory.eINSTANCE
+				.createUMLDependencyChangeRightTarget();
 
 		for (NamedElement namedElement : dependency.getClients()) {
 			hideCrossReferences(namedElement, DiffPackage.Literals.REFERENCE_CHANGE__RIGHT_ELEMENT, ret,
-					hiddingPredicate, crossReferencer);
+					HIDING_PREDICATE, crossReferencer);
 		}
 
 		ret.getHideElements().add(changeRightTarget);

@@ -26,19 +26,27 @@ import org.eclipse.emf.ecore.EObject;
  * A switch that returns true if left and/or right {@link EObject} given as parameters to the constructor are
  * part of a DiffElement.
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikaël Barbero</a>
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class DiffOfSwitch extends DiffSwitch<Boolean> {
 
+	/**
+	 * Left EObject.
+	 */
 	private EObject fLeft;
 
+	/**
+	 * Right EObject.
+	 */
 	private EObject fRight;
 
 	/**
 	 * Construct a new boolean switch.
 	 * 
 	 * @param left
+	 *            left EObject.
 	 * @param right
+	 *            right EObject.
 	 */
 	public DiffOfSwitch(EObject left, EObject right) {
 		fLeft = left;

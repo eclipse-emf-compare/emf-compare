@@ -18,7 +18,8 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.diff.engine.GenericDiffEngine;
-import org.eclipse.emf.compare.diff.engine.IDiffEngine;
+import org.eclipse.emf.compare.diff.engine.IMatchManager;
+import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.engine.check.ReferencesCheck;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.ConflictingDiffElement;
@@ -34,7 +35,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
 
 /**
- * A specific {@link IDiffEngine} to compute differences in UML models.
+ * A specific DiffEngine to compute differences in UML models.
  * <p>
  * In addition to references ignored in the {@link GenericDiffEngine}, it ignores subsets of containment
  * references. The list is stored in the property files <code>
@@ -46,26 +47,35 @@ import org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer;
  * browses a set of extension factory and call them on element it can handle in order to create a specific
  * diff model.
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikaël Barbero</a>
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class UML2DiffEngine extends GenericDiffEngine {
 
+	/**
+	 * UML2 extensions factories.
+	 */
 	private Set<IDiffExtensionFactory> uml2ExtensionFactories;
 
 	@Override
 	public DiffModel doDiff(MatchModel match, boolean threeWay) {
-		DiffModel ret = super.doDiff(match, threeWay);
+		final DiffModel ret = super.doDiff(match, threeWay);
 		postProcess(ret);
 		return ret;
 	}
 
 	@Override
 	public DiffModel doDiffResourceSet(MatchModel match, boolean threeWay, CrossReferencer crossReferencer) {
-		DiffModel ret = super.doDiffResourceSet(match, threeWay, crossReferencer);
+		final DiffModel ret = super.doDiffResourceSet(match, threeWay, crossReferencer);
 		postProcess(ret);
 		return ret;
 	}
 
+	/**
+	 * Executes a post-processing on the resulting {@link DiffModel} of the differences computing.
+	 * 
+	 * @param dg
+	 *            The {@link DiffModel}
+	 */
 	void postProcess(DiffModel dg) {
 		EcoreUtil.CrossReferencer diffModelCrossReferencer = new EcoreUtil.CrossReferencer(dg) {
 			private static final long serialVersionUID = -7188045763674814697L;
@@ -78,8 +88,10 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				.createExtensionFactories(this);
 		uml2ExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
 
-		for (TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
-			EObject next = tit.next();
+		// CHECKSTYLE:OFF
+		for (final TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
+			// CHECKSTYLE:ON
+			final EObject next = tit.next();
 			if (next instanceof DiffElement) {
 				applyManagedTypes((DiffElement)next, diffModelCrossReferencer);
 			}
@@ -90,6 +102,15 @@ public class UML2DiffEngine extends GenericDiffEngine {
 
 	}
 
+	/**
+	 * Scan the {@link DiffModel} to fill the dependencies links ("requires") of {@link AbstractDiffExtension}
+	 * s.
+	 * 
+	 * @param dg
+	 *            The {@link DiffModel}.
+	 * @param mapUml2ExtensionFactories
+	 *            The map of the extensions factories.
+	 */
 	private void fillRequiredDifferences(DiffModel dg,
 			final Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> mapUml2ExtensionFactories) {
 		EcoreUtil.CrossReferencer diffModelCrossReferencer = new EcoreUtil.CrossReferencer(dg) {
@@ -102,8 +123,10 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				crossReference(); // init map
 			}
 		};
-		for (TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
-			EObject next = tit.next();
+		// CHECKSTYLE:OFF
+		for (final TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
+			// CHECKSTYLE:ON
+			final EObject next = tit.next();
 			if (next instanceof AbstractDiffExtension) {
 				fillRequiredDifferences(mapUml2ExtensionFactories, (AbstractDiffExtension)next,
 						diffModelCrossReferencer);
@@ -111,21 +134,40 @@ public class UML2DiffEngine extends GenericDiffEngine {
 		}
 	}
 
+	/**
+	 * Fill the dependency link ("requires") of the {@link AbstractDiffExtension}, delegating this treatment
+	 * to the related factories.
+	 * 
+	 * @param mapUml2ExtensionFactories
+	 *            The map of the extensions factories.
+	 * @param diff
+	 *            The difference extension to complete.
+	 * @param crossReferencer
+	 *            A Cross referencer.
+	 */
 	void fillRequiredDifferences(
 			Map<Class<? extends AbstractDiffExtension>, IDiffExtensionFactory> mapUml2ExtensionFactories,
 			AbstractDiffExtension diff, EcoreUtil.CrossReferencer crossReferencer) {
-		Class<?> classDiffElement = diff.eClass().getInstanceClass();
-		IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
+		final Class<?> classDiffElement = diff.eClass().getInstanceClass();
+		final IDiffExtensionFactory diffFactory = mapUml2ExtensionFactories.get(classDiffElement);
 		if (diffFactory != null) {
 			diffFactory.fillRequiredDifferences(diff, crossReferencer);
 		}
 	}
 
+	/**
+	 * Creates the difference extensions in relation to the existing {@link DiffElement}s.
+	 * 
+	 * @param element
+	 *            The input {@link DiffElement}.
+	 * @param diffModelCrossReferencer
+	 *            The cross referencer.
+	 */
 	void applyManagedTypes(DiffElement element, EcoreUtil.CrossReferencer diffModelCrossReferencer) {
 		for (IDiffExtensionFactory factory : uml2ExtensionFactories) {
 			if (factory.handles(element)) {
-				AbstractDiffExtension extension = factory.create(element, diffModelCrossReferencer);
-				DiffElement diffParent = factory.getParentDiff(element, diffModelCrossReferencer);
+				final AbstractDiffExtension extension = factory.create(element, diffModelCrossReferencer);
+				final DiffElement diffParent = factory.getParentDiff(element, diffModelCrossReferencer);
 				if (element.isConflicting()) {
 					ConflictingDiffElement conflictingDiffElement = null;
 					if (element.eContainer() != null
@@ -143,54 +185,106 @@ public class UML2DiffEngine extends GenericDiffEngine {
 		}
 	}
 
+	/**
+	 * Get the model object from any other model object and the given and expected side.
+	 * 
+	 * @param from
+	 *            The reference model object.
+	 * @param side
+	 *            The expected side.
+	 * @return The model object from the specified side.
+	 * @see use {@link UML2DiffEngine#getMatched(EObject, MatchSide)}
+	 */
+	@Deprecated
 	public EObject getMatched(EObject from, int side) {
 		return getMatchedEObject(from, side);
 
 	}
 
+	/**
+	 * Get the model object from any other model object and the given and expected side.
+	 * 
+	 * @param from
+	 *            The reference model object.
+	 * @param side
+	 *            The expected side.
+	 * @return The model object from the specified side.
+	 */
+	public EObject getMatched(EObject from, MatchSide side) {
+		return getMatchManager().getMatchedEObject(from, side);
+	}
+
+	@Deprecated
 	public static int getRightSide() {
 		return RIGHT_OBJECT;
 	}
 
+	@Deprecated
 	public static int getLeftSide() {
 		return LEFT_OBJECT;
 	}
 
+	@Deprecated
 	public static int getAncestorSide() {
 		return ANCESTOR_OBJECT;
 	}
 
 	@Override
 	protected ReferencesCheck getReferencesChecker() {
-		return new UML2ReferencesCheck(matchCrossReferencer);
+		return new UML2ReferencesCheck(getMatchManager());
 	}
 
+	/**
+	 * Extension of {@link ReferencesCheck} for UML2.
+	 * 
+	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+	 */
 	private static final class UML2ReferencesCheck extends ReferencesCheck {
 
+		/**
+		 * Parameters.
+		 */
 		private static final String SUBSETS_OF_CONTAINMENT_PROPERTIES = "/org/eclipse/emf/compare/uml2/diff/internal/subsets.of.containment.properties"; //$NON-NLS-1$
 
-		private static final Properties subsetsOfContainment = new Properties();
+		/**
+		 * Properties for parameters.
+		 */
+		private static final Properties SUBSETS_OF_CONTAINMENT = new Properties();
 
 		static {
 			try {
-				subsetsOfContainment.load(UML2DiffEngine.class
+				SUBSETS_OF_CONTAINMENT.load(UML2DiffEngine.class
 						.getResourceAsStream(SUBSETS_OF_CONTAINMENT_PROPERTIES));
 			} catch (IOException e) {
+				// ignore
 			}
 		}
 
-		private UML2ReferencesCheck(CrossReferencer referencer) {
-			super(referencer);
+		/**
+		 * Constructor.
+		 * 
+		 * @param matchManager
+		 *            {@link IMatchManager}
+		 */
+		UML2ReferencesCheck(IMatchManager matchManager) {
+			super(matchManager);
 		}
 
 		@Override
 		protected boolean shouldBeIgnored(EReference reference) {
-			String fqn = fqn(reference);
-			return super.shouldBeIgnored(reference) || subsetsOfContainment.getProperty(fqn) != null;
+			final String fqn = fqn(reference);
+			return super.shouldBeIgnored(reference) || SUBSETS_OF_CONTAINMENT.getProperty(fqn) != null;
 		}
 
+		/**
+		 * Transforms the {@link EReference} to a string.
+		 * 
+		 * @param reference
+		 *            The {@link EReference}
+		 * @return The string.
+		 */
 		private String fqn(EReference reference) {
-			StringBuilder fqn = new StringBuilder(reference.getEContainingClass().getName());
+			final StringBuilder fqn = new StringBuilder(reference.getEContainingClass().getName());
 			fqn.append('.').append(reference.getName());
 			return fqn.toString();
 		}

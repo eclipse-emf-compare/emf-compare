@@ -17,7 +17,7 @@ import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
 import org.junit.Test;
-
+//CHECKSTYLE:OFF
 public class TestProfile extends AbstractUMLCompareTest {
 
 	private static final String DIAGRAM_KIND_PATH = "/diagrams/profiles/";

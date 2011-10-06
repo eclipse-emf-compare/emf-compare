@@ -13,7 +13,7 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 
 import org.junit.Test;
-
+//CHECKSTYLE:OFF
 public class TestUseCaseDiagram extends AbstractUMLCompareTest {
 
 	private static final String DIAGRAM_KIND_PATH = "/diagrams/usecase/";

@@ -897,8 +897,9 @@ public class ModelContentMergeViewer extends ContentMergeViewer {
 	 * @param elementWrapper
 	 *            Element that we've been fed.
 	 * @return Actual Object that is to be used as input of the different tabs.
+	 * @since 1.3
 	 */
-	private Object getInputObject(TypedElementWrapper elementWrapper) {
+	protected final Object getInputObject(TypedElementWrapper elementWrapper) {
 		final Resource resource = elementWrapper.getObject().eResource();
 		if (resource != null) {
 			return resource.getResourceSet();

@@ -12,8 +12,6 @@ package org.eclipse.emf.compare.uml2.diff.internal.extension;
 
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.uml2.diff.UML2DiffEngine;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -24,7 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * A factory must be able to say in which parent a {@link AbstractDiffExtension} must be attached if it
  * handles the {@link DiffElement} from which it has been {@link #create(DiffElement) created}.
  * 
- * @author <a href="mailto:mikael.barbero@obeo.fr">Mikaël Barbero</a>
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public interface IDiffExtensionFactory {
 
@@ -33,7 +31,7 @@ public interface IDiffExtensionFactory {
 	 * {@link AbstractDiffExtension}.
 	 * <p>
 	 * <b>Performance note: </b> this method should return as quickly as possible as it will called on every
-	 * {@link DiffElement} of the {@link DiffModel}.
+	 * {@link DiffElement} of the DiffModel.
 	 * 
 	 * @param input
 	 *            the element to test
@@ -43,11 +41,13 @@ public interface IDiffExtensionFactory {
 
 	/**
 	 * Creates and returns an {@link AbstractDiffExtension} from the given {@link DiffElement}. The returned
-	 * element MUST NOT be added to its parent, it will be done by the {@link UML2DiffEngine}.
+	 * element MUST NOT be added to its parent, it will be done by the UML2DiffEngine.
 	 * 
 	 * @param input
+	 *            The input difference element.
 	 * @param crossReferencer
-	 * @return
+	 *            The cross referencer.
+	 * @return The difference extension.
 	 */
 	AbstractDiffExtension create(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
 
@@ -57,8 +57,10 @@ public interface IDiffExtensionFactory {
 	 * the model or newly created.
 	 * 
 	 * @param input
+	 *            The input difference element.
 	 * @param crossReferencer
-	 * @return
+	 *            The cross referencer.
+	 * @return The difference extension.
 	 */
 	DiffElement getParentDiff(DiffElement input, EcoreUtil.CrossReferencer crossReferencer);
 
