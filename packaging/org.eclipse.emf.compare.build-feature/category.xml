@@ -24,6 +24,15 @@
    <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
       <category name="compare"/>
    </feature>
+   <feature url="features/org.eclipse.emf.compare.diagram.ecoretools_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.ecoretools" version="1.3.0.qualifier">
+      <category name="compare"/>
+   </feature>
+   <feature url="features/org.eclipse.emf.compare.diagram.gmf_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.gmf" version="1.3.0.qualifier">
+      <category name="compare"/>
+   </feature>
+   <feature url="features/org.eclipse.emf.compare.diagram.papyrus_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.papyrus" version="1.3.0.qualifier">
+      <category name="compare"/>
+   </feature>
    <category-def name="compare" label="EMF Compare">
       <description>
          EMF Compare features.

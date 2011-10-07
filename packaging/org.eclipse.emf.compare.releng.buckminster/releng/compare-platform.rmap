@@ -5,11 +5,13 @@
   <rm:locator pattern="^org\.eclipse\.emf\.compare\.releng\.buckminster$" searchPathRef="local.releng"/>
   <rm:locator pattern="^org\.eclipse\.emf\.query(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.emf\.validation(?:\..+)?$" searchPathRef="indigo"/>
+  <rm:locator pattern="^org\.eclipse\.emf\.ecoretools(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.emf(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^lpg\.runtime\.java$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.ocl(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.uml2(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.gmf(?:\..+)?$" searchPathRef="indigo"/>
+  <rm:locator pattern="^org\.eclipse\.papyrus(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.gef(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.eclipse\.draw2d(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="orbit"/>

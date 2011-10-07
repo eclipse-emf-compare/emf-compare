@@ -3,6 +3,8 @@
     <cs:dependencies>
     	<cs:dependency name="com.google.collect" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.emf.ecore.editor" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.papyrus.sdk" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.emf.ecoretools.sdk" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.gmf" componentType="eclipse.feature"/>
         <cs:dependency name="org.eclipse.emf.query.ocl" componentType="osgi.bundle"/>        
