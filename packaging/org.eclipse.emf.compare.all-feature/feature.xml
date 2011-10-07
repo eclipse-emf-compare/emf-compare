@@ -16,7 +16,7 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
    <url>
       <update label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
       <discovery label="%ModelingUpdateSiteName" url="http://www.eclipse.org/modeling/updates/"/>
@@ -33,9 +33,21 @@
    <includes
          id="org.eclipse.emf.compare.team.subversive"
          version="0.0.0"/>
-         
+
    <includes
          id="org.eclipse.emf.compare.uml2"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.compare.diagram.ecoretools"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.compare.diagram.gmf"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.compare.diagram.papyrus"
          version="0.0.0"/>
 
 </feature>
