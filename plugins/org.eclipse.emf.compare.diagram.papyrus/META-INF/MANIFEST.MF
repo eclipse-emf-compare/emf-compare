@@ -18,7 +18,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.papyrus.diagram.statemachine,
  org.eclipse.papyrus.diagram.usecase,
  org.eclipse.gmf.runtime.diagram.ui,
- org.eclipse.papyrus.umlutils,
  org.eclipse.papyrus.diagram.common
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse Modeling Project
