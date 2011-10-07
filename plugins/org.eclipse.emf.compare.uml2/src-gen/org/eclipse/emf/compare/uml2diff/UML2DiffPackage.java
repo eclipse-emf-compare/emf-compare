@@ -11,7 +11,6 @@
 package org.eclipse.emf.compare.uml2diff;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -5460,6 +5459,343 @@ public interface UML2DiffPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeImpl <em>UML Element Change</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChange()
+	 * @generated
+	 */
+	int UML_ELEMENT_CHANGE = 45;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__SUB_DIFF_ELEMENTS = UML_DIFF_EXTENSION__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__IS_HIDDEN_BY = UML_DIFF_EXTENSION__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__CONFLICTING = UML_DIFF_EXTENSION__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__KIND = UML_DIFF_EXTENSION__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__REMOTE = UML_DIFF_EXTENSION__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__REQUIRES = UML_DIFF_EXTENSION__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__REQUIRED_BY = UML_DIFF_EXTENSION__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__HIDE_ELEMENTS = UML_DIFF_EXTENSION__HIDE_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE__IS_COLLAPSED = UML_DIFF_EXTENSION__IS_COLLAPSED;
+
+	/**
+	 * The number of structural features of the '<em>UML Element Change</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_FEATURE_COUNT = UML_DIFF_EXTENSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl <em>UML Element Change Left Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChangeLeftTarget()
+	 * @generated
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET = 46;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__KIND = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Right Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__RIGHT_PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Left Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET__LEFT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>UML Element Change Left Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT = DiffPackage.MODEL_ELEMENT_CHANGE_LEFT_TARGET_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeRightTargetImpl <em>UML Element Change Right Target</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeRightTargetImpl
+	 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChangeRightTarget()
+	 * @generated
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET = 47;
+
+	/**
+	 * The feature id for the '<em><b>Sub Diff Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__SUB_DIFF_ELEMENTS;
+
+	/**
+	 * The feature id for the '<em><b>Is Hidden By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__IS_HIDDEN_BY;
+
+	/**
+	 * The feature id for the '<em><b>Conflicting</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__CONFLICTING;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__KIND = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__KIND;
+
+	/**
+	 * The feature id for the '<em><b>Remote</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REMOTE;
+
+	/**
+	 * The feature id for the '<em><b>Requires</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRES;
+
+	/**
+	 * The feature id for the '<em><b>Required By</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__REQUIRED_BY;
+
+	/**
+	 * The feature id for the '<em><b>Left Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__LEFT_PARENT;
+
+	/**
+	 * The feature id for the '<em><b>Right Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET__RIGHT_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Hide Elements</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__HIDE_ELEMENTS = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Is Collapsed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET__IS_COLLAPSED = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>UML Element Change Right Target</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UML_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT = DiffPackage.MODEL_ELEMENT_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 2;
+
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLDiffExtension <em>UML Diff Extension</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5941,6 +6277,36 @@ public interface UML2DiffPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getUMLProfileApplicationRemoval();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChange <em>UML Element Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Element Change</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChange
+	 * @generated
+	 */
+	EClass getUMLElementChange();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget <em>UML Element Change Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Element Change Left Target</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget
+	 * @generated
+	 */
+	EClass getUMLElementChangeLeftTarget();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget <em>UML Element Change Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>UML Element Change Right Target</em>'.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget
+	 * @generated
+	 */
+	EClass getUMLElementChangeRightTarget();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -6437,6 +6803,36 @@ public interface UML2DiffPackage extends EPackage {
 		 * @generated
 		 */
 		EClass UML_PROFILE_APPLICATION_REMOVAL = eINSTANCE.getUMLProfileApplicationRemoval();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeImpl <em>UML Element Change</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChange()
+		 * @generated
+		 */
+		EClass UML_ELEMENT_CHANGE = eINSTANCE.getUMLElementChange();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl <em>UML Element Change Left Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChangeLeftTarget()
+		 * @generated
+		 */
+		EClass UML_ELEMENT_CHANGE_LEFT_TARGET = eINSTANCE.getUMLElementChangeLeftTarget();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeRightTargetImpl <em>UML Element Change Right Target</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeRightTargetImpl
+		 * @see org.eclipse.emf.compare.uml2diff.impl.UML2DiffPackageImpl#getUMLElementChangeRightTarget()
+		 * @generated
+		 */
+		EClass UML_ELEMENT_CHANGE_RIGHT_TARGET = eINSTANCE.getUMLElementChangeRightTarget();
 
 	}
 

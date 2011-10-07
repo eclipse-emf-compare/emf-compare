@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-09-29T11:18:32.296+0200">
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-10-05T16:59:04.328+0200">
   <diffResourceSet>
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
         <subDiffElements xsi:type="diff:DiffGroup">
           <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1">
-            <leftParent href="../removal/modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-            <rightElement href="../removal/original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
+            <leftParent href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+            <rightElement href="../original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
           </subDiffElements>
           <subDiffElements xsi:type="uml2diff:UMLProfileApplicationRemoval" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.2" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.2" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.0">
-            <rightElement href="../removal/original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
+            <rightElement href="../original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
             <profile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
           </subDiffElements>
-          <rightParent href="../removal/modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+          <rightParent href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
         </subDiffElements>
         <subDiffElements xsi:type="diff:ModelElementChangeRightTarget" isHiddenBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.2" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.2">
-          <rightElement href="../removal/original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
+          <rightElement href="../original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
         </subDiffElements>
         <subDiffElements xsi:type="uml2diff:UMLStereotypeApplicationRemoval" requires="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1 //@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" requiredBy="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.0/@subDiffElements.1" hideElements="//@diffResourceSet/@diffModels.0/@ownedElements.0/@subDiffElements.1">
-          <rightElement href="../removal/original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
-          <leftElement href="../removal/modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+          <rightElement href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+          <leftElement href="../modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
           <stereotype href="pathmap://UML_PROFILES/Standard.profile.uml#Specification"/>
         </subDiffElements>
       </ownedElements>
-      <leftRoots href="../removal/modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-      <rightRoots href="../removal/original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <rightRoots href="../original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
     </diffModels>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
       <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
@@ -574,20 +575,21 @@
     <matchModels>
       <matchedElements xsi:type="match:Match2Elements" similarity="1.0">
         <subMatchElements xsi:type="match:Match2Elements" similarity="1.0">
-          <leftElement href="../removal/modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
-          <rightElement href="../removal/original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+          <leftElement href="../modified/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
+          <rightElement href="../original/model.uml#_9F20YGBlEeCwQ5tRW0zUZA"/>
         </subMatchElements>
-        <leftElement href="../removal/modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-        <rightElement href="../removal/original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+        <leftElement href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+        <rightElement href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
       </matchedElements>
       <unmatchedElements side="Right">
-        <element href="../removal/original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
+        <element href="../original/model.uml#__UWsQGBlEeCwQ5tRW0zUZA"/>
       </unmatchedElements>
       <unmatchedElements side="Right">
-        <element href="../removal/original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
+        <element href="../original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
       </unmatchedElements>
-      <leftRoots href="../removal/modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
-      <rightRoots href="../removal/original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <rightRoots href="../original/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
     </matchModels>
     <unmatchedModels side="Right">
       <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>

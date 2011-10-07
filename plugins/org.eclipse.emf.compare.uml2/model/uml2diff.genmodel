@@ -59,5 +59,8 @@
     </genClasses>
     <genClasses ecoreClass="uml2diff.ecore#//UMLProfileApplicationAddition"/>
     <genClasses ecoreClass="uml2diff.ecore#//UMLProfileApplicationRemoval"/>
+    <genClasses image="false" ecoreClass="uml2diff.ecore#//UMLElementChange"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLElementChangeLeftTarget"/>
+    <genClasses ecoreClass="uml2diff.ecore#//UMLElementChangeRightTarget"/>
   </genPackages>
 </genmodel:GenModel>

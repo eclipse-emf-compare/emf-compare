@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-09-29T11:39:51.181+0200">
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-10-05T16:56:59.937+0200">
   <diffResourceSet>
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
@@ -27,6 +27,7 @@
         </subDiffElements>
       </ownedElements>
       <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
       <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
     </diffModels>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeLeftTarget">
@@ -590,6 +591,7 @@
         <element href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
       </unmatchedElements>
       <leftRoots href="../modified/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
+      <leftRoots href="../modified/model.uml#_PUW2gH-yEeCjHpswBC_AyQ"/>
       <rightRoots href="../original/model.uml#_6rQaMGBlEeCwQ5tRW0zUZA"/>
     </matchModels>
     <unmatchedModels>

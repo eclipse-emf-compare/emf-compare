@@ -309,6 +309,24 @@ public interface UML2DiffFactory extends EFactory {
 	UMLProfileApplicationRemoval createUMLProfileApplicationRemoval();
 
 	/**
+	 * Returns a new object of class '<em>UML Element Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Element Change Left Target</em>'.
+	 * @generated
+	 */
+	UMLElementChangeLeftTarget createUMLElementChangeLeftTarget();
+
+	/**
+	 * Returns a new object of class '<em>UML Element Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>UML Element Change Right Target</em>'.
+	 * @generated
+	 */
+	UMLElementChangeRightTarget createUMLElementChangeRightTarget();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

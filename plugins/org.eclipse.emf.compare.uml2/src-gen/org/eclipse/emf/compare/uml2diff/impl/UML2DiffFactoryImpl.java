@@ -10,7 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2diff.impl;
 
-import org.eclipse.emf.compare.uml2diff.*;
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
@@ -21,6 +20,10 @@ import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget;
@@ -29,6 +32,10 @@ import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
@@ -114,6 +121,8 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 			case UML2DiffPackage.UML_STEREOTYPE_REFERENCE_ORDER_CHANGE: return createUMLStereotypeReferenceOrderChange();
 			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION: return createUMLProfileApplicationAddition();
 			case UML2DiffPackage.UML_PROFILE_APPLICATION_REMOVAL: return createUMLProfileApplicationRemoval();
+			case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET: return createUMLElementChangeLeftTarget();
+			case UML2DiffPackage.UML_ELEMENT_CHANGE_RIGHT_TARGET: return createUMLElementChangeRightTarget();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -416,6 +425,26 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 	public UMLProfileApplicationRemoval createUMLProfileApplicationRemoval() {
 		UMLProfileApplicationRemovalImpl umlProfileApplicationRemoval = new UMLProfileApplicationRemovalImpl();
 		return umlProfileApplicationRemoval;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UMLElementChangeLeftTarget createUMLElementChangeLeftTarget() {
+		UMLElementChangeLeftTargetImpl umlElementChangeLeftTarget = new UMLElementChangeLeftTargetImpl();
+		return umlElementChangeLeftTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UMLElementChangeRightTarget createUMLElementChangeRightTarget() {
+		UMLElementChangeRightTargetImpl umlElementChangeRightTarget = new UMLElementChangeRightTargetImpl();
+		return umlElementChangeRightTarget;
 	}
 
 	/**

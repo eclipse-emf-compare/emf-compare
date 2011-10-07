@@ -12,6 +12,8 @@ package org.eclipse.emf.compare.uml2.diff.test;
 
 import java.io.IOException;
 
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
 import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
 import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
@@ -215,6 +217,32 @@ public class TestProfile extends AbstractUMLCompareTest {
 		testMerge("applyProfileStereotype/removal", true, UMLStereotypeApplicationRemoval.class, 1);
 		testMerge("applyProfileStereotype/removal", false, UMLStereotypeApplicationRemoval.class, 0);
 	}
+
+	// BEGIN - Tests for Bug 351593
+
+	@Test
+	public void addModelWithEmbeddedStereotype() throws IOException, InterruptedException {
+		testCompare("changeModelElement/addition/embeddedStereotype");
+	}
+
+	@Test
+	public void addModelWithEmbeddedStereotype_merge() throws IOException, InterruptedException {
+		testMerge("changeModelElement/addition/embeddedStereotype", true, UMLElementChangeLeftTarget.class, 0);
+		testMerge("changeModelElement/addition/embeddedStereotype", false, UMLElementChangeLeftTarget.class, 0);
+	}
+
+	@Test
+	public void removeModelWithEmbeddedStereotype() throws IOException, InterruptedException {
+		testCompare("changeModelElement/remove/embeddedStereotype");
+	}
+
+	@Test
+	public void removeModelWithEmbeddedStereotype_merge() throws IOException, InterruptedException {
+		testMerge("changeModelElement/remove/embeddedStereotype", true, UMLElementChangeRightTarget.class, 0);
+		testMerge("changeModelElement/remove/embeddedStereotype", false, UMLElementChangeRightTarget.class, 0);
+	}
+
+	// END - Tests for Bug 351593
 	
 	@Override
 	String getDiagramKindPath() {

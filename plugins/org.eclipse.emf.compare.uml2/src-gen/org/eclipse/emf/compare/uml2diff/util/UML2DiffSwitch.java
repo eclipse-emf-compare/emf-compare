@@ -10,8 +10,6 @@
  */
 package org.eclipse.emf.compare.uml2diff.util;
 
-import java.util.List;
-
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
@@ -26,11 +24,56 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
-
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.uml2diff.*;
-
-import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
+import org.eclipse.emf.compare.uml2diff.UMLElementChange;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChange;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChange;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChange;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceOrderChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateAttribute;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -586,6 +629,39 @@ public class UML2DiffSwitch<T> extends Switch<T> {
 				if (result == null) result = caseUMLDiffExtension(umlProfileApplicationRemoval);
 				if (result == null) result = caseDiffElement(umlProfileApplicationRemoval);
 				if (result == null) result = caseAbstractDiffExtension(umlProfileApplicationRemoval);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ELEMENT_CHANGE: {
+				UMLElementChange umlElementChange = (UMLElementChange)theEObject;
+				T result = caseUMLElementChange(umlElementChange);
+				if (result == null) result = caseUMLDiffExtension(umlElementChange);
+				if (result == null) result = caseDiffElement(umlElementChange);
+				if (result == null) result = caseAbstractDiffExtension(umlElementChange);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET: {
+				UMLElementChangeLeftTarget umlElementChangeLeftTarget = (UMLElementChangeLeftTarget)theEObject;
+				T result = caseUMLElementChangeLeftTarget(umlElementChangeLeftTarget);
+				if (result == null) result = caseModelElementChangeLeftTarget(umlElementChangeLeftTarget);
+				if (result == null) result = caseUMLElementChange(umlElementChangeLeftTarget);
+				if (result == null) result = caseModelElementChange(umlElementChangeLeftTarget);
+				if (result == null) result = caseUMLDiffExtension(umlElementChangeLeftTarget);
+				if (result == null) result = caseDiffElement(umlElementChangeLeftTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlElementChangeLeftTarget);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case UML2DiffPackage.UML_ELEMENT_CHANGE_RIGHT_TARGET: {
+				UMLElementChangeRightTarget umlElementChangeRightTarget = (UMLElementChangeRightTarget)theEObject;
+				T result = caseUMLElementChangeRightTarget(umlElementChangeRightTarget);
+				if (result == null) result = caseModelElementChangeRightTarget(umlElementChangeRightTarget);
+				if (result == null) result = caseUMLElementChange(umlElementChangeRightTarget);
+				if (result == null) result = caseModelElementChange(umlElementChangeRightTarget);
+				if (result == null) result = caseUMLDiffExtension(umlElementChangeRightTarget);
+				if (result == null) result = caseDiffElement(umlElementChangeRightTarget);
+				if (result == null) result = caseAbstractDiffExtension(umlElementChangeRightTarget);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1265,6 +1341,51 @@ public class UML2DiffSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUMLProfileApplicationRemoval(UMLProfileApplicationRemoval object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Element Change</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Element Change</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLElementChange(UMLElementChange object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Element Change Left Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Element Change Left Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLElementChangeLeftTarget(UMLElementChangeLeftTarget object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>UML Element Change Right Target</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>UML Element Change Right Target</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseUMLElementChangeRightTarget(UMLElementChangeRightTarget object) {
 		return null;
 	}
 

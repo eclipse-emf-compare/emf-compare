@@ -29,6 +29,9 @@ import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
 import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
+import org.eclipse.emf.compare.uml2diff.UMLElementChange;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
@@ -350,6 +353,27 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	 * @generated
 	 */
 	private EClass umlProfileApplicationRemovalEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlElementChangeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlElementChangeLeftTargetEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass umlElementChangeRightTargetEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -811,6 +835,33 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 	}
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLElementChange() {
+		return umlElementChangeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLElementChangeLeftTarget() {
+		return umlElementChangeLeftTargetEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getUMLElementChangeRightTarget() {
+		return umlElementChangeRightTargetEClass;
+	}
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -927,6 +978,12 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlProfileApplicationAdditionEClass = createEClass(UML_PROFILE_APPLICATION_ADDITION);
 
 		umlProfileApplicationRemovalEClass = createEClass(UML_PROFILE_APPLICATION_REMOVAL);
+
+		umlElementChangeEClass = createEClass(UML_ELEMENT_CHANGE);
+
+		umlElementChangeLeftTargetEClass = createEClass(UML_ELEMENT_CHANGE_LEFT_TARGET);
+
+		umlElementChangeRightTargetEClass = createEClass(UML_ELEMENT_CHANGE_RIGHT_TARGET);
 	}
 
 	/**
@@ -1036,6 +1093,11 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlProfileApplicationAdditionEClass.getESuperTypes().add(this.getUMLProfileApplicationChange());
 		umlProfileApplicationRemovalEClass.getESuperTypes().add(theDiffPackage.getUpdateModelElement());
 		umlProfileApplicationRemovalEClass.getESuperTypes().add(this.getUMLProfileApplicationChange());
+		umlElementChangeEClass.getESuperTypes().add(this.getUMLDiffExtension());
+		umlElementChangeLeftTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeLeftTarget());
+		umlElementChangeLeftTargetEClass.getESuperTypes().add(this.getUMLElementChange());
+		umlElementChangeRightTargetEClass.getESuperTypes().add(theDiffPackage.getModelElementChangeRightTarget());
+		umlElementChangeRightTargetEClass.getESuperTypes().add(this.getUMLElementChange());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(umlDiffExtensionEClass, UMLDiffExtension.class, "UMLDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1130,6 +1192,12 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		initEClass(umlProfileApplicationAdditionEClass, UMLProfileApplicationAddition.class, "UMLProfileApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(umlProfileApplicationRemovalEClass, UMLProfileApplicationRemoval.class, "UMLProfileApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlElementChangeEClass, UMLElementChange.class, "UMLElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlElementChangeLeftTargetEClass, UMLElementChangeLeftTarget.class, "UMLElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(umlElementChangeRightTargetEClass, UMLElementChangeRightTarget.class, "UMLElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

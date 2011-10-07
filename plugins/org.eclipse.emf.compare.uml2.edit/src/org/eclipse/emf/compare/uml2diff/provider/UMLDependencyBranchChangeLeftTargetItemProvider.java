@@ -334,6 +334,16 @@ public class UMLDependencyBranchChangeLeftTargetItemProvider
 			(createChildParameter
 				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
 				 UML2DiffFactory.eINSTANCE.createUMLProfileApplicationRemoval()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLElementChangeLeftTarget()));
+
+		newChildDescriptors.add
+			(createChildParameter
+				(DiffPackage.Literals.DIFF_ELEMENT__SUB_DIFF_ELEMENTS,
+				 UML2DiffFactory.eINSTANCE.createUMLElementChangeRightTarget()));
 	}
 
 	/**

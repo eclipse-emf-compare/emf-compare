@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.util.UMLUtil;
 
 /**
  * A specific IMatchEngine that ignores {@link EObject}s created to store UML stereotypes properties (a.k.a.
@@ -123,7 +122,8 @@ public class UML2MatchEngine extends GenericMatchEngine {
 	@Override
 	protected List<EObject> getScopeInternalContents(EObject eObject, IMatchScope scope) {
 		final List<EObject> result = new ArrayList<EObject>(super.getScopeInternalContents(eObject, scope));
-		result.addAll(getStereotypeApplications(eObject));
+		// All is in the scope. See Bug 351593.
+		// result.addAll(getStereotypeApplications(eObject));
 		return result;
 	}
 
@@ -273,8 +273,9 @@ public class UML2MatchEngine extends GenericMatchEngine {
 		 * @see org.eclipse.emf.compare.match.engine.IMatchScope#isInScope(org.eclipse.emf.ecore.EObject)
 		 */
 		public boolean isInScope(EObject eObject) {
-			final boolean isStereotypeApplication = UMLUtil.getStereotype(eObject) != null;
-			return fParentScope.isInScope(eObject) && !isStereotypeApplication;
+			// All is in the scope. See Bug 351593.
+			// boolean isStereotypeApplication = UMLUtil.getStereotype(eObject) != null;
+			return fParentScope.isInScope(eObject)/* && !isStereotypeApplication */;
 		}
 
 		/**

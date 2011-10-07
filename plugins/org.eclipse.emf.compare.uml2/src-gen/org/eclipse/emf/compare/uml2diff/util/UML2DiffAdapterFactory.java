@@ -12,9 +12,7 @@ package org.eclipse.emf.compare.uml2diff.util;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChange;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
@@ -29,10 +27,56 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
-
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
-import org.eclipse.emf.compare.uml2diff.*;
-
+import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChange;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLAssociationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyBranchChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChange;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChange;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLDiffExtension;
+import org.eclipse.emf.compare.uml2diff.UMLElementChange;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChange;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChange;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLExtendChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChange;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLGeneralizationSetChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChange;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLIntervalConstraintChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChange;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLMessageChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange;
+import org.eclipse.emf.compare.uml2diff.UMLProfileApplicationRemoval;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationAddition;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeApplicationRemoval;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeAttributeChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeReferenceOrderChange;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateAttribute;
+import org.eclipse.emf.compare.uml2diff.UMLStereotypeUpdateReference;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -270,6 +314,18 @@ public class UML2DiffAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseUMLProfileApplicationRemoval(UMLProfileApplicationRemoval object) {
 				return createUMLProfileApplicationRemovalAdapter();
+			}
+			@Override
+			public Adapter caseUMLElementChange(UMLElementChange object) {
+				return createUMLElementChangeAdapter();
+			}
+			@Override
+			public Adapter caseUMLElementChangeLeftTarget(UMLElementChangeLeftTarget object) {
+				return createUMLElementChangeLeftTargetAdapter();
+			}
+			@Override
+			public Adapter caseUMLElementChangeRightTarget(UMLElementChangeRightTarget object) {
+				return createUMLElementChangeRightTargetAdapter();
 			}
 			@Override
 			public Adapter caseDiffElement(DiffElement object) {
@@ -978,6 +1034,48 @@ public class UML2DiffAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUMLProfileApplicationRemovalAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChange <em>UML Element Change</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChange
+	 * @generated
+	 */
+	public Adapter createUMLElementChangeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget <em>UML Element Change Left Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget
+	 * @generated
+	 */
+	public Adapter createUMLElementChangeLeftTargetAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget <em>UML Element Change Right Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget
+	 * @generated
+	 */
+	public Adapter createUMLElementChangeRightTargetAdapter() {
 		return null;
 	}
 

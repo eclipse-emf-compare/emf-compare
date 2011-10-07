@@ -26,6 +26,8 @@ import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLDependencyC
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLDependencyChangeRightTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLGeneralizationSetChangeLeftTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.clazz.UMLGeneralizationSetChangeRightTargetFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.element.UMLElementChangeLeftTargetFactory;
+import org.eclipse.emf.compare.uml2.diff.internal.extension.element.UMLElementChangeRightTargetFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLProfileApplicationAdditionFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLProfileApplicationRemovalFactory;
 import org.eclipse.emf.compare.uml2.diff.internal.extension.profile.UMLStereotypeApplicationAdditionFactory;
@@ -57,6 +59,8 @@ import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDependencyChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLDestructionEventChangeRightTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget;
+import org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeLeftTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExecutionSpecificationChangeRightTarget;
 import org.eclipse.emf.compare.uml2diff.UMLExtendChangeLeftTarget;
@@ -166,6 +170,10 @@ public final class DiffExtensionFactoryRegistry {
 
 		dataset.put(UMLProfileApplicationAddition.class, new UMLProfileApplicationAdditionFactory(engine));
 		dataset.put(UMLProfileApplicationRemoval.class, new UMLProfileApplicationRemovalFactory(engine));
+
+		/* Management of model element changes with embedded stereotypes. See Bug 351593. */
+		dataset.put(UMLElementChangeLeftTarget.class, new UMLElementChangeLeftTargetFactory(engine));
+		dataset.put(UMLElementChangeRightTarget.class, new UMLElementChangeRightTargetFactory(engine));
 
 		return Collections.unmodifiableMap(dataset);
 	}

@@ -84,4 +84,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationAddition" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
   <eClassifiers xsi:type="ecore:EClass" name="UMLProfileApplicationRemoval" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//UpdateModelElement #//UMLProfileApplicationChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChange" abstract="true" eSuperTypes="#//UMLDiffExtension"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChangeLeftTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeLeftTarget #//UMLElementChange"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UMLElementChangeRightTarget" eSuperTypes="platform:/plugin/org.eclipse.emf.compare.diff/model/diff.ecore#//ModelElementChangeRightTarget #//UMLElementChange"/>
 </ecore:EPackage>

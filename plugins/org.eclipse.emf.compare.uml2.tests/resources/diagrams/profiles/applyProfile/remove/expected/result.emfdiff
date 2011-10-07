@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-09-29T11:35:55.145+0200">
+<diff:ComparisonResourceSetSnapshot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diff="http://www.eclipse.org/emf/compare/diff/1.1" xmlns:match="http://www.eclipse.org/emf/compare/match/1.1" xmlns:uml2diff="http://www.eclipse.org/emf/compare/diff/uml2/1.0" date="2011-10-05T16:53:25.861+0200">
   <diffResourceSet>
     <diffModels>
       <ownedElements xsi:type="diff:DiffGroup">
@@ -25,6 +25,7 @@
       </ownedElements>
       <leftRoots href="../modified/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
       <rightRoots href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+      <rightRoots href="../original/model.uml#_vEEAUNfUEeCgmr8B8wc0rg"/>
     </diffModels>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_0"/>
@@ -37,10 +38,6 @@
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
       <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
       <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
-    </resourceDiffs>
-    <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </resourceDiffs>
     <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
       <roots href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
@@ -568,6 +565,10 @@
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uksYdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uk8YdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7ulMYdEduPJbEsMYXjUQ"/>
+    </resourceDiffs>
+    <resourceDiffs xsi:type="diff:ResourceDependencyChangeRightTarget">
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </resourceDiffs>
   </diffResourceSet>
   <matchResourceSet>
@@ -588,6 +589,7 @@
       </unmatchedElements>
       <leftRoots href="../modified/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
       <rightRoots href="../original/model.uml#_m5rhMGUHEeC0XeUZ1BZPOA"/>
+      <rightRoots href="../original/model.uml#_vEEAUNfUEeCgmr8B8wc0rg"/>
     </matchModels>
     <unmatchedModels side="Right">
       <roots href="pathmap://UML_PROFILES/Ecore.profile.uml#_0"/>
@@ -600,10 +602,6 @@
     <unmatchedModels side="Right">
       <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
       <roots href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_R_t2UXMkEdq-w6X-VZUD9Q"/>
-    </unmatchedModels>
-    <unmatchedModels side="Right">
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
-      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </unmatchedModels>
     <unmatchedModels side="Right">
       <roots href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
@@ -1131,6 +1129,10 @@
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uksYdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7uk8YdEduPJbEsMYXjUQ"/>
       <roots href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#_iQ7ulMYdEduPJbEsMYXjUQ"/>
+    </unmatchedModels>
+    <unmatchedModels side="Right">
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+      <roots href="pathmap://UML_PROFILES/Standard.profile.uml#_9lO9cJNUEdq27qNyfB516A"/>
     </unmatchedModels>
   </matchResourceSet>
 </diff:ComparisonResourceSetSnapshot>

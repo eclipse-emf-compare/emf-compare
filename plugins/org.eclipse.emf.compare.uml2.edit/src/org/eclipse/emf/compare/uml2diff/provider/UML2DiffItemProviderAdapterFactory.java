@@ -16,9 +16,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.compare.uml2diff.util.UML2DiffAdapterFactory;
-
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -793,6 +791,52 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLElementChangeLeftTargetItemProvider umlElementChangeLeftTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLElementChangeLeftTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLElementChangeLeftTargetAdapter() {
+		if (umlElementChangeLeftTargetItemProvider == null) {
+			umlElementChangeLeftTargetItemProvider = new UMLElementChangeLeftTargetItemProvider(this);
+		}
+
+		return umlElementChangeLeftTargetItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UMLElementChangeRightTargetItemProvider umlElementChangeRightTargetItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link org.eclipse.emf.compare.uml2diff.UMLElementChangeRightTarget}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createUMLElementChangeRightTargetAdapter() {
+		if (umlElementChangeRightTargetItemProvider == null) {
+			umlElementChangeRightTargetItemProvider = new UMLElementChangeRightTargetItemProvider(this);
+		}
+
+		return umlElementChangeRightTargetItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -922,6 +966,8 @@ public class UML2DiffItemProviderAdapterFactory extends UML2DiffAdapterFactory i
 		if (umlStereotypeReferenceOrderChangeItemProvider != null) umlStereotypeReferenceOrderChangeItemProvider.dispose();
 		if (umlProfileApplicationAdditionItemProvider != null) umlProfileApplicationAdditionItemProvider.dispose();
 		if (umlProfileApplicationRemovalItemProvider != null) umlProfileApplicationRemovalItemProvider.dispose();
+		if (umlElementChangeLeftTargetItemProvider != null) umlElementChangeLeftTargetItemProvider.dispose();
+		if (umlElementChangeRightTargetItemProvider != null) umlElementChangeRightTargetItemProvider.dispose();
 	}
 
 }
