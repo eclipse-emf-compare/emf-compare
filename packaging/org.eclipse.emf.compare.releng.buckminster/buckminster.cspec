@@ -7,14 +7,12 @@
         <cs:dependency name="org.eclipse.papyrus.diagram.activity" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.clazz" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.communication" componentType="osgi.bundle"/>
-        <cs:dependency name="org.eclipse.papyrus.diagram.component" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.composite" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.deployement" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.profile" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.sequence" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.statemachine" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.usecase" componentType="osgi.bundle"/>
-        <cs:dependency name="org.eclipse.papyrus.diagram.umlutils" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.common" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.emf.ecoretools.diagram" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.emf.query" componentType="eclipse.feature"/>
