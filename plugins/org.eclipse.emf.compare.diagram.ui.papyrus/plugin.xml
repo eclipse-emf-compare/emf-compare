@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  
+   <extension
+         point="org.eclipse.compare.contentMergeViewers">
+      <viewer
+            class="org.eclipse.emf.compare.papryus.PapyrusContentMergeViewerCreator"
+            id="org.eclipse.emf.compare.ui.papyrus.contentviewer"
+            label="GMF Compare">
+      </viewer>
+      <contentTypeBinding
+            contentMergeViewerId="org.eclipse.emf.compare.ui.papyrus.contentviewer"
+            contentTypeId="org.eclipse.emf.compare.papyrus.ui.papyruscontenttype">
+      </contentTypeBinding>
+   </extension>
+
+</plugin>

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Diagram Comparison UI
+Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ui;singleton:=true
+Bundle-Version: 1.3.0.qualifier
+Bundle-Activator: org.eclipse.emf.compare.diagram.ui.GMFComparePlugin
+Require-Bundle: org.eclipse.compare,
+ org.eclipse.emf.compare,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.emf.compare.diagram,
+ org.eclipse.emf.compare.ui,
+ org.junit
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.emf.compare.diagram.ui,
+ org.eclipse.emf.compare.diagram.ui.decoration,
+ org.eclipse.emf.compare.diagram.ui.decoration.provider,
+ org.eclipse.emf.compare.diagram.ui.mergeviewer,
+ org.eclipse.emf.compare.diagram.ui.service,
+ org.eclipse.emf.compare.diagram.ui.viewmodel
+Bundle-Vendor: Eclipse Modeling Project

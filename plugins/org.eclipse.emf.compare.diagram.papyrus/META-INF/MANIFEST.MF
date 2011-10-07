@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Papyrus Diagram Comparison Support
+Bundle-SymbolicName: org.eclipse.emf.compare.diagram.papyrus;singleton:=true
+Bundle-Version: 1.3.0.qualifier
+Bundle-Activator: org.eclipse.emf.compare.diagram.papyrus.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare.diagram,
+ org.eclipse.gmf.runtime.notation,
+ org.eclipse.papyrus.diagram.activity,
+ org.eclipse.papyrus.diagram.clazz,
+ org.eclipse.papyrus.diagram.communication,
+ org.eclipse.papyrus.diagram.component,
+ org.eclipse.papyrus.diagram.composite,
+ org.eclipse.papyrus.diagram.deployment,
+ org.eclipse.papyrus.diagram.profile,
+ org.eclipse.papyrus.diagram.sequence,
+ org.eclipse.papyrus.diagram.statemachine,
+ org.eclipse.papyrus.diagram.usecase,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.papyrus.umlutils,
+ org.eclipse.papyrus.diagram.common
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: Eclipse Modeling Project

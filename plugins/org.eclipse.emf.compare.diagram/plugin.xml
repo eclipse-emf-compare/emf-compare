@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+   <extension-point id="viewLabelProvider" name="org.eclipse.emf.compare.diagram.viewLabelProvider" schema="schema/viewLabelProvider.exsd"/>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.eclipse.org/emf/compare/diff/diagram/1.0"
+            class="org.eclipse.emf.compare.diagram.diagramdiff.DiagramdiffPackage"
+            genModel="model/diagramdiff.genmodel"/>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.diff.engine">
+      <diffengine
+            engineClass="org.eclipse.emf.compare.diagram.diff.DiagramDiffEngine"
+            namespacePattern="http://www.eclipse.org/gmf/runtime/\d.\d.\d/notation"
+            label="Diagram Diff Engine"
+            priority="highest">
+      </diffengine>
+   </extension>
+   
+   
+   <extension
+           point="org.eclipse.core.contenttype.contentTypes">
+        <content-type
+              base-type="org.eclipse.emf.compare.ui.contenttype.ModelContentType"
+              id="org.eclipse.emf.compare.diagram.gmfcontenttype"
+              name="Base Content Type for Diagram comparison"
+              priority="normal">
+        </content-type>
+     </extension>
+
+</plugin>

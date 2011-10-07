@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_Yu3wYOBuEeC2NdPostZ7ew" name="Model">
+  <packageImport xmi:id="_Yu3wYeBuEeC2NdPostZ7ew">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_aACdUOBuEeC2NdPostZ7ew" name="Class0">
+    <ownedAttribute xmi:id="_ahm5UOBuEeC2NdPostZ7ew" name="Property0"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Collaboration" xmi:id="_c0tkYOBuEeC2NdPostZ7ew" name="Collaboration0" clientDependency="_hyiJQOBuEeC2NdPostZ7ew"/>
+  <packagedElement xmi:type="uml:Activity" xmi:id="_d3i6YOBuEeC2NdPostZ7ew" name="Activity0" clientDependency="_hWV8gOBuEeC2NdPostZ7ew"/>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_e_Vo4OBuEeC2NdPostZ7ew" name="StateMachine0">
+    <generalization xmi:id="_gxaqgOBuEeC2NdPostZ7ew" general="_aACdUOBuEeC2NdPostZ7ew"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Usage" xmi:id="_hWV8gOBuEeC2NdPostZ7ew" name="Usage0" supplier="_e_Vo4OBuEeC2NdPostZ7ew" client="_d3i6YOBuEeC2NdPostZ7ew"/>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_hyiJQOBuEeC2NdPostZ7ew" name="Dependency0" supplier="_aACdUOBuEeC2NdPostZ7ew" client="_c0tkYOBuEeC2NdPostZ7ew"/>
+</uml:Model>

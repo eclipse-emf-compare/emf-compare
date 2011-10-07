@@ -1,0 +1,5 @@
+Tests cases for GMF comparison
+
+Empty_TC contains initial input, 2 blank diagram with no differences.
+
+For the three-ways comparisons, always take TC1 as ancestor. 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_4vND4OBvEeC2NdPostZ7ew" name="Model">
+  <packageImport xmi:id="_4vND4eBvEeC2NdPostZ7ew">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_5aqbsOBvEeC2NdPostZ7ew" name="Actor"/>
+  <packagedElement xmi:type="uml:UseCase" xmi:id="_5we6sOBvEeC2NdPostZ7ew" name="UseCase">
+    <extensionPoint xmi:id="_6y9EUOBvEeC2NdPostZ7ew" name="point"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Actor" xmi:id="_6UaHIOBvEeC2NdPostZ7ew" name="Actor1" clientDependency="_8cnJwOBvEeC2NdPostZ7ew"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_7-cAAOBvEeC2NdPostZ7ew" name="A_actor_usecase" memberEnd="_7-cAAeBvEeC2NdPostZ7ew _7-cABOBvEeC2NdPostZ7ew">
+    <ownedEnd xmi:id="_7-cAAeBvEeC2NdPostZ7ew" name="actor" type="_5aqbsOBvEeC2NdPostZ7ew" association="_7-cAAOBvEeC2NdPostZ7ew">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7-cAAuBvEeC2NdPostZ7ew" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7-cAA-BvEeC2NdPostZ7ew" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_7-cABOBvEeC2NdPostZ7ew" name="usecase" type="_5we6sOBvEeC2NdPostZ7ew" association="_7-cAAOBvEeC2NdPostZ7ew">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7-cABeBvEeC2NdPostZ7ew" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7-cABuBvEeC2NdPostZ7ew" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Dependency" xmi:id="_8cnJwOBvEeC2NdPostZ7ew" name="Dependency0" supplier="_5we6sOBvEeC2NdPostZ7ew" client="_6UaHIOBvEeC2NdPostZ7ew"/>
+</uml:Model>

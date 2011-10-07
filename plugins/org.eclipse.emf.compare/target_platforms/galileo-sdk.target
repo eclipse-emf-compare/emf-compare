@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="EMF Compare based on Helios SDK" sequenceNumber="30">
+<locations>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="com.google.collect" version="1.0.0.v201003051000"/>
+<unit id="org.junit" version="4.8.1.v4_8_1_v20100427-1100"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/updateSite"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.platform.sdk" version="3.5.2.M20100211-1343"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.5"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.team.svn.feature.group" version="0.7.8.I20091023-1300"/>
+<unit id="org.eclipse.emf.emfqtv.all.sdk.feature.group" version="1.3.1.v20090819-1457-4778_90GCMOEJccDOSfSYw5qz-LE"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.5.0.v200906151043"/>
+<unit id="org.eclipse.gmf.sdk.feature.group" version="2.2.2.v20100209-2200-7C7I-BLxlyz-uojrqeOfnk4eytKd"/>
+<unit id="org.eclipse.ocl.all.sdk.feature.group" version="1.3.0.v200901271800-787B8aA3PRRgQUXlKwbe1tshdIma"/>
+<unit id="org.eclipse.uml2.sdk.feature.group" version="3.0.1.v200908281330"/>
+<repository location="http://download.eclipse.org/releases/galileo"/>
+</location>
+</locations>
+</target>

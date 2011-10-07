@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Papyrus Diagram Comparison UI
+Bundle-SymbolicName: org.eclipse.emf.compare.diagram.ui.papyrus;singleton:=true
+Bundle-Version: 1.3.0.qualifier
+Bundle-Activator: org.eclipse.emf.compare.papryus.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.compare.diagram.ui,
+ org.eclipse.compare,
+ org.eclipse.emf.compare.ui,
+ org.eclipse.emf.compare.diff,
+ org.eclipse.papyrus.sasheditor.di,
+ org.eclipse.gmf.runtime.notation,
+ org.eclipse.gmf.runtime.diagram.core,
+ org.eclipse.gmf.runtime.diagram.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.emf.compare.papryus
+Bundle-Vendor: Eclipse Modeling Project

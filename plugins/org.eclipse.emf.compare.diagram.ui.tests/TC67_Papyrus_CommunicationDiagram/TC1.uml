@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_pdLj8OByEeCnY_qWxW0LrA" name="model">
+  <packagedElement xmi:type="uml:Interaction" xmi:id="_pdZmYOByEeCnY_qWxW0LrA" name="Interaction0">
+    <lifeline xmi:id="_r763QOByEeCnY_qWxW0LrA" name="Lifeline0" coveredBy="_tKDeUOByEeCnY_qWxW0LrA"/>
+    <lifeline xmi:id="_spnDsOByEeCnY_qWxW0LrA" name="Lifeline1" coveredBy="_tKfjMOByEeCnY_qWxW0LrA"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_tKDeUOByEeCnY_qWxW0LrA" name="Message0Send0" covered="_r763QOByEeCnY_qWxW0LrA" event="_tJp1sOByEeCnY_qWxW0LrA" message="_tI4ZoOByEeCnY_qWxW0LrA"/>
+    <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_tKfjMOByEeCnY_qWxW0LrA" name="Message0Recv0" covered="_spnDsOByEeCnY_qWxW0LrA" event="_tKEFYOByEeCnY_qWxW0LrA" message="_tI4ZoOByEeCnY_qWxW0LrA"/>
+    <message xmi:id="_tI4ZoOByEeCnY_qWxW0LrA" name="Message0" receiveEvent="_tKfjMOByEeCnY_qWxW0LrA" sendEvent="_tKDeUOByEeCnY_qWxW0LrA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:SendOperationEvent" xmi:id="_tJp1sOByEeCnY_qWxW0LrA" name="SendOperationEvent0"/>
+  <packagedElement xmi:type="uml:ReceiveOperationEvent" xmi:id="_tKEFYOByEeCnY_qWxW0LrA" name="ReceiveOperationEvent0"/>
+  <packagedElement xmi:type="uml:TimeObservation" xmi:id="_uRLecOByEeCnY_qWxW0LrA" name="TimeObservation0"/>
+</uml:Model>
