@@ -8,6 +8,7 @@
         <cs:dependency name="org.eclipse.papyrus.diagram.clazz" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.communication" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.composite" componentType="osgi.bundle"/>
+        <cs:dependency name="org.eclipse.papyrus.diagram.deployment" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.profile" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.sequence" componentType="osgi.bundle"/>
         <cs:dependency name="org.eclipse.papyrus.diagram.statemachine" componentType="osgi.bundle"/>
