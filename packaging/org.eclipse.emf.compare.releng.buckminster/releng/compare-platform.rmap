@@ -16,6 +16,7 @@
   <rm:locator pattern="^org\.eclipse\.draw2d(?:\..+)?$" searchPathRef="indigo"/>
   <rm:locator pattern="^org\.apache(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^org\.w3c(?:\..+)?$" searchPathRef="orbit"/>
+  <rm:locator pattern="^org\.antlr(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^javax(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^com\.google(?:\..+)?$" searchPathRef="orbit"/>
   <rm:locator pattern="^org\.eclipse\.team\.svn(?:\..+)?$" searchPathRef="indigo"/>
