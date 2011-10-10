@@ -226,23 +226,24 @@ public class UML2CompareTestProfilePackageImpl extends EPackageImpl implements U
 		// Add supertypes to classes
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(aClicheEClass, ACliche.class, "ACliche", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(aClicheEClass, ACliche.class, "ACliche", !IS_ABSTRACT, !IS_INTERFACE, //$NON-NLS-1$
 				IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getACliche_SingleValuedAttribute(), ecorePackage.getEString(),
-				"singleValuedAttribute", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"singleValuedAttribute", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
-		initEAttribute(getACliche_ManyValuedAttribute(), ecorePackage.getEString(), "manyValuedAttribute",
+		initEAttribute(getACliche_ManyValuedAttribute(), ecorePackage.getEString(),
+				"manyValuedAttribute", //$NON-NLS-1$
 				null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
 				!IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getACliche_SingleValuedReference(), theUMLPackage.getClass_(), null,
-				"singleValuedReference", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"singleValuedReference", null, 0, 1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				!IS_ORDERED);
 		initEReference(getACliche_ManyValuedReference(), theUMLPackage.getClass_(), null,
-				"manyValuedReference", null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE,
+				"manyValuedReference", null, 0, -1, ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, //$NON-NLS-1$
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
 				IS_ORDERED);
-		initEReference(getACliche_Base_Class(), theUMLPackage.getClass_(), null, "base_Class", null, 1, 1,
+		initEReference(getACliche_Base_Class(), theUMLPackage.getClass_(), null, "base_Class", null, 1, 1, //$NON-NLS-1$
 				ACliche.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, !IS_ORDERED);
 

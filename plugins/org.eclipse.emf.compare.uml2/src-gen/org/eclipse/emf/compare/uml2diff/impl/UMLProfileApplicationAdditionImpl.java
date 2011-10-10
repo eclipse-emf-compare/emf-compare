@@ -39,15 +39,12 @@ import org.eclipse.uml2.uml.Profile;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#getHideElements <em>Hide
- * Elements</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#isIsCollapsed <em>Is
- * Collapsed</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#getProfile <em>Profile
- * </em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#getHideElements <em>Hide Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLProfileApplicationAdditionImpl#getProfile <em>Profile</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl implements UMLProfileApplicationAddition {
@@ -72,9 +69,9 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!-- begin-user-doc
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 * 
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -82,9 +79,9 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 	protected boolean isCollapsed = IS_COLLAPSED_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getProfile() <em>Profile</em>}' reference. <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getProfile() <em>Profile</em>}' reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * 
 	 * @see #getProfile()
 	 * @generated
 	 * @ordered
@@ -93,7 +90,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	protected UMLProfileApplicationAdditionImpl() {
@@ -102,7 +98,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -112,21 +107,17 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
 		if (hideElements == null) {
-			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class,
-					this, UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS,
-					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
+			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class, this, UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS, DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
 		}
 		return hideElements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -135,21 +126,17 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
 		boolean oldIsCollapsed = isCollapsed;
 		isCollapsed = newIsCollapsed;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED, oldIsCollapsed,
-					isCollapsed));
+			eNotify(new ENotificationImpl(this, Notification.SET, UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Profile getProfile() {
@@ -158,8 +145,7 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 			profile = (Profile)eResolveProxy(oldProfile);
 			if (profile != oldProfile) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE, oldProfile, profile));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE, oldProfile, profile));
 			}
 		}
 		return profile;
@@ -167,7 +153,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public Profile basicGetProfile() {
@@ -176,20 +161,17 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void setProfile(Profile newProfile) {
 		Profile oldProfile = profile;
 		profile = newProfile;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE, oldProfile, profile));
+			eNotify(new ENotificationImpl(this, Notification.SET, UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE, oldProfile, profile));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	public void visit(DiffModel diffModel) {
@@ -227,7 +209,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -235,15 +216,13 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(
-						otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -257,7 +236,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -268,8 +246,7 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED:
 				return isIsCollapsed();
 			case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE:
-				if (resolve)
-					return getProfile();
+				if (resolve) return getProfile();
 				return basicGetProfile();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -277,7 +254,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -300,7 +276,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -321,7 +296,6 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
@@ -339,33 +313,26 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (derivedFeatureID) {
-				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS:
-					return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
-				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED:
-					return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
-				default:
-					return -1;
+				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS: return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
+				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED: return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (derivedFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLProfileApplicationChange.class) {
 			switch (derivedFeatureID) {
-				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE:
-					return UML2DiffPackage.UML_PROFILE_APPLICATION_CHANGE__PROFILE;
-				default:
-					return -1;
+				case UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE: return UML2DiffPackage.UML_PROFILE_APPLICATION_CHANGE__PROFILE;
+				default: return -1;
 			}
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
@@ -373,33 +340,26 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (baseFeatureID) {
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-					return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS;
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-					return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED;
-				default:
-					return -1;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS: return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__HIDE_ELEMENTS;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED: return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__IS_COLLAPSED;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (baseFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLProfileApplicationChange.class) {
 			switch (baseFeatureID) {
-				case UML2DiffPackage.UML_PROFILE_APPLICATION_CHANGE__PROFILE:
-					return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE;
-				default:
-					return -1;
+				case UML2DiffPackage.UML_PROFILE_APPLICATION_CHANGE__PROFILE: return UML2DiffPackage.UML_PROFILE_APPLICATION_ADDITION__PROFILE;
+				default: return -1;
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
@@ -407,16 +367,14 @@ public class UMLProfileApplicationAdditionImpl extends UpdateModelElementImpl im
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (isCollapsed: ");
+		result.append(" (isCollapsed: "); //$NON-NLS-1$
 		result.append(isCollapsed);
 		result.append(')');
 		return result.toString();

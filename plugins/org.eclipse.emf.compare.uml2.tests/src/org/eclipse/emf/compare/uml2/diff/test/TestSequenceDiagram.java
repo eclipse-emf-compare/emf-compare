@@ -13,153 +13,153 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 
 import org.junit.Test;
-//CHECKSTYLE:OFF
+
 public class TestSequenceDiagram extends AbstractUMLCompareTest {
 
-	private static final String DIAGRAM_KIND_PATH = "/diagrams/sequence/";
+	private static final String DIAGRAM_KIND_PATH = "/diagrams/sequence/"; //$NON-NLS-1$
 
 	@Test
 	public void actionExecutionSpecification_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("actionExecutionSpecification/changeLeftTarget");
+		testCompare("actionExecutionSpecification/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("actionExecutionSpecification/changeRightTarget");
+		testCompare("actionExecutionSpecification/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeLeftTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("actionExecutionSpecification/changeLeftTarget");
+		testMerge("actionExecutionSpecification/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeRightTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("actionExecutionSpecification/changeRightTarget");
+		testMerge("actionExecutionSpecification/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void behaviorExecutionSpecification_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("behaviorExecutionSpecification/changeLeftTarget");
+		testCompare("behaviorExecutionSpecification/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void behaviorExecutionSpecification_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("behaviorExecutionSpecification/changeRightTarget");
+		testCompare("behaviorExecutionSpecification/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void behaviorExecutionSpecification_changeLeftTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("behaviorExecutionSpecification/changeLeftTarget");
+		testMerge("behaviorExecutionSpecification/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void behaviorExecutionSpecification_changeRightTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("behaviorExecutionSpecification/changeRightTarget");
+		testMerge("behaviorExecutionSpecification/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void destructionEvent_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("destructionEvent/changeLeftTarget");
+		testCompare("destructionEvent/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void destructionEvent_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("destructionEvent/changeRightTarget");
+		testCompare("destructionEvent/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void destructionEvent_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("destructionEvent/changeLeftTarget");
+		testMerge("destructionEvent/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void destructionEvent_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("destructionEvent/changeRightTarget");
+		testMerge("destructionEvent/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void timeConstraint_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("timeConstraint/changeLeftTarget");
+		testCompare("timeConstraint/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void timeConstraint_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("timeConstraint/changeRightTarget");
+		testCompare("timeConstraint/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void timeConstraint_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("timeConstraint/changeLeftTarget");
+		testMerge("timeConstraint/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void timeConstraint_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("timeConstraint/changeRightTarget");
+		testMerge("timeConstraint/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_standard_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("messages/standard/changeLeftTarget");
+		testCompare("messages/standard/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_standard_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("messages/standard/changeRightTarget");
+		testCompare("messages/standard/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_standard_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/standard/changeLeftTarget");
+		testMerge("messages/standard/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_standard_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/standard/changeRightTarget");
+		testMerge("messages/standard/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_lost_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("messages/lost/changeLeftTarget");
+		testCompare("messages/lost/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_lost_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("messages/lost/changeRightTarget");
+		testCompare("messages/lost/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_lost_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/lost/changeLeftTarget");
+		testMerge("messages/lost/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_lost_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/lost/changeRightTarget");
+		testMerge("messages/lost/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_found_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("messages/found/changeLeftTarget");
+		testCompare("messages/found/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_found_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("messages/found/changeRightTarget");
+		testCompare("messages/found/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_found_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/found/changeLeftTarget");
+		testMerge("messages/found/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void message_found_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("messages/found/changeRightTarget");
+		testMerge("messages/found/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Override

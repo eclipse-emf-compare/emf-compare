@@ -374,7 +374,7 @@ public class UMLProfileApplicationRemovalImpl extends UpdateModelElementImpl imp
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (isCollapsed: ");
+		result.append(" (isCollapsed: "); //$NON-NLS-1$
 		result.append(isCollapsed);
 		result.append(')');
 		return result.toString();

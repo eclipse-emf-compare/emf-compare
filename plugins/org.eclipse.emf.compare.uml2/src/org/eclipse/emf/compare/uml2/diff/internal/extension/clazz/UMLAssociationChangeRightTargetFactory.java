@@ -28,9 +28,7 @@ import org.eclipse.uml2.uml.Property;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-// CHECKSTYLE:OFF
 public class UMLAssociationChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
 	/**
 	 * Constructor.
 	 * 

@@ -13,10 +13,10 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 
 import org.junit.Test;
-//CHECKSTYLE:OFF
+
 public class TestCommunicationDiagram extends AbstractUMLCompareTest {
 
-	private static final String DIAGRAM_KIND_PATH = "/diagrams/communication/";
+	private static final String DIAGRAM_KIND_PATH = "/diagrams/communication/"; //$NON-NLS-1$
 
 	@Override
 	String getDiagramKindPath() {
@@ -25,23 +25,23 @@ public class TestCommunicationDiagram extends AbstractUMLCompareTest {
 
 	@Test
 	public void actionExecutionSpecification_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("message/changeLeftTarget");
+		testCompare("message/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("message/changeRightTarget");
+		testCompare("message/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeLeftTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("message/changeLeftTarget");
+		testMerge("message/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void actionExecutionSpecification_changeRightTarget_merge() throws IOException,
 			InterruptedException {
-		testMerge("message/changeRightTarget");
+		testMerge("message/changeRightTarget"); //$NON-NLS-1$
 	}
 }

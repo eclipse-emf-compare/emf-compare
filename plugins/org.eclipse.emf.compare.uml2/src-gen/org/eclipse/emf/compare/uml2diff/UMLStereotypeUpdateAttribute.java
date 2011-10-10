@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
  * @generated
  */
 public interface UMLStereotypeUpdateAttribute extends UpdateAttribute, UMLStereotypePropertyChange {
-} // UMLStereotypeUpdateAttribute
+	// UMLStereotypeUpdateAttribute
+} 

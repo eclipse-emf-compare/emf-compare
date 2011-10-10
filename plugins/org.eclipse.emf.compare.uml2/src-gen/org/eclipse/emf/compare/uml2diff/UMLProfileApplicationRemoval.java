@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
  * @generated
  */
 public interface UMLProfileApplicationRemoval extends UpdateModelElement, UMLProfileApplicationChange {
-} // UMLProfileApplicationRemoval
+	// UMLProfileApplicationRemoval
+} 

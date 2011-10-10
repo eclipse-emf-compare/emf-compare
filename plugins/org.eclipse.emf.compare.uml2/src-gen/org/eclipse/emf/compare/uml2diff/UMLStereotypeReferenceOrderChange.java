@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
  * @generated
  */
 public interface UMLStereotypeReferenceOrderChange extends ReferenceOrderChange, UMLStereotypePropertyChange {
-} // UMLStereotypeReferenceOrderChange
+	// UMLStereotypeReferenceOrderChange
+} 

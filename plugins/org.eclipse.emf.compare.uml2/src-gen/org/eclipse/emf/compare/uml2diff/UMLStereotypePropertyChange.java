@@ -13,8 +13,9 @@ package org.eclipse.emf.compare.uml2diff;
 import org.eclipse.uml2.uml.Stereotype;
 
 /**
- * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>UML Stereotype Property Change</b></em>'. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>UML Stereotype Property Change</b></em>'.
+ * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -32,8 +33,8 @@ public interface UMLStereotypePropertyChange extends UMLDiffExtension {
 	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Stereotype</em>' reference isn't clear, there really should be more of a
-	 * description here...
+	 * If the meaning of the '<em>Stereotype</em>' reference isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Stereotype</em>' reference.
@@ -46,7 +47,8 @@ public interface UMLStereotypePropertyChange extends UMLDiffExtension {
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.emf.compare.uml2diff.UMLStereotypePropertyChange#getStereotype <em>Stereotype</em>}' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Stereotype</em>' reference.
 	 * @see #getStereotype()
 	 * @generated

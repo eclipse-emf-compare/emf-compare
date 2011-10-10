@@ -28,9 +28,7 @@ import org.eclipse.uml2.uml.ValueSpecification;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-// CHECKSTYLE:OFF
 public class UMLIntervalConstraintChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
 
 	/**
 	 * Constructor.

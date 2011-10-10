@@ -24,4 +24,5 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * @generated
  */
 public interface UMLDiffExtension extends DiffElement, AbstractDiffExtension {
-} // UMLDiffExtension
+	// UMLDiffExtension
+}

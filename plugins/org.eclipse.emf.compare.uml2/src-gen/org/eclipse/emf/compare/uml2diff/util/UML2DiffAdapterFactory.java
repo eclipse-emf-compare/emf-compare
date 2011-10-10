@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.UpdateModelElement;
 import org.eclipse.emf.compare.diff.metamodel.UpdateReference;
+import org.eclipse.emf.compare.uml2diff.*;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChange;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;

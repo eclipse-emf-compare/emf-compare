@@ -414,9 +414,9 @@ public class AClicheImpl extends EObjectImpl implements ACliche {
 		}
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (singleValuedAttribute: ");
+		result.append(" (singleValuedAttribute: "); //$NON-NLS-1$
 		result.append(singleValuedAttribute);
-		result.append(", manyValuedAttribute: ");
+		result.append(", manyValuedAttribute: "); //$NON-NLS-1$
 		result.append(manyValuedAttribute);
 		result.append(')');
 		return result.toString();

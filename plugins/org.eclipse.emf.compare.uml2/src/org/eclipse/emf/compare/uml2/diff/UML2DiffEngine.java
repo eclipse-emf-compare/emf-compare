@@ -88,9 +88,8 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				.createExtensionFactories(this);
 		uml2ExtensionFactories = new HashSet<IDiffExtensionFactory>(mapUml2ExtensionFactories.values());
 
-		// CHECKSTYLE:OFF
-		for (final TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
-			// CHECKSTYLE:ON
+		final TreeIterator<EObject> tit = dg.eAllContents();
+		while (tit.hasNext()) {
 			final EObject next = tit.next();
 			if (next instanceof DiffElement) {
 				applyManagedTypes((DiffElement)next, diffModelCrossReferencer);
@@ -123,9 +122,8 @@ public class UML2DiffEngine extends GenericDiffEngine {
 				crossReference(); // init map
 			}
 		};
-		// CHECKSTYLE:OFF
-		for (final TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
-			// CHECKSTYLE:ON
+		final TreeIterator<EObject> tit = dg.eAllContents();
+		while (tit.hasNext()) {
 			final EObject next = tit.next();
 			if (next instanceof AbstractDiffExtension) {
 				fillRequiredDifferences(mapUml2ExtensionFactories, (AbstractDiffExtension)next,

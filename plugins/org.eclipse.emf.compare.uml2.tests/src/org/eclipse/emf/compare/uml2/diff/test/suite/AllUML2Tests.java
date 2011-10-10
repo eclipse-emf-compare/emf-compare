@@ -23,8 +23,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-// CHECKSTYLE:OFF
-
+/**
+ * This suite will launch all UML2 related tests.
+ * 
+ * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
+ */
 @RunWith(Suite.class)
 @SuiteClasses({TestClassDiagram.class, TestCommunicationDiagram.class, TestProfile.class,
 		TestSequenceDiagram.class, TestUseCaseDiagram.class,})

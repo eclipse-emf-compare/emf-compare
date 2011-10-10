@@ -84,8 +84,8 @@ public class UMLElementChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_AbstractDiffExtension_hideElements_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"),
+				 getString("_UI_AbstractDiffExtension_hideElements_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS,
 				 true,
 				 false,
@@ -106,8 +106,8 @@ public class UMLElementChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_AbstractDiffExtension_isCollapsed_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"),
+				 getString("_UI_AbstractDiffExtension_isCollapsed_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED,
 				 true,
 				 false,
@@ -126,7 +126,7 @@ public class UMLElementChangeItemProvider
 	@Override
 	public String getText(Object object) {
 		UMLElementChange umlElementChange = (UMLElementChange)object;
-		return getString("_UI_UMLElementChange_type") + " " + umlElementChange.isConflicting();
+		return getString("_UI_UMLElementChange_type") + " " + umlElementChange.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

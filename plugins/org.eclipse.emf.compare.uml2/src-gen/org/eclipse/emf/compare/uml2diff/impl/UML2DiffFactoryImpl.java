@@ -10,6 +10,7 @@
  */
 package org.eclipse.emf.compare.uml2diff.impl;
 
+import org.eclipse.emf.compare.uml2diff.*;
 import org.eclipse.emf.compare.uml2diff.UML2DiffFactory;
 import org.eclipse.emf.compare.uml2diff.UML2DiffPackage;
 import org.eclipse.emf.compare.uml2diff.UMLAssociationBranchChangeLeftTarget;
@@ -63,7 +64,7 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 	 */
 	public static UML2DiffFactory init() {
 		try {
-			UML2DiffFactory theUML2DiffFactory = (UML2DiffFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/uml2/1.0"); 
+			UML2DiffFactory theUML2DiffFactory = (UML2DiffFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/uml2/1.0"); //$NON-NLS-1$ 
 			if (theUML2DiffFactory != null) {
 				return theUML2DiffFactory;
 			}
@@ -124,7 +125,7 @@ public class UML2DiffFactoryImpl extends EFactoryImpl implements UML2DiffFactory
 			case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET: return createUMLElementChangeLeftTarget();
 			case UML2DiffPackage.UML_ELEMENT_CHANGE_RIGHT_TARGET: return createUMLElementChangeRightTarget();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

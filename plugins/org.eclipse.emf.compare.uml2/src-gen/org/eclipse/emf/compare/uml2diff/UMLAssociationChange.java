@@ -22,4 +22,5 @@ package org.eclipse.emf.compare.uml2diff;
  * @generated
  */
 public interface UMLAssociationChange extends UMLDiffExtension {
-} // UMLAssociationChange
+	// UMLAssociationChange
+}

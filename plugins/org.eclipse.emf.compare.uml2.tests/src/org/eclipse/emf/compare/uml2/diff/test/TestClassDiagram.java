@@ -13,279 +13,279 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 
 import org.junit.Test;
-// CHECKSTYLE:OFF
+
 public class TestClassDiagram extends AbstractUMLCompareTest {
 
-	private static final String DIAGRAM_KIND_PATH = "/diagrams/clazz/";
+	private static final String DIAGRAM_KIND_PATH = "/diagrams/clazz/"; //$NON-NLS-1$
 
 	@Test
 	public void abstraction_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("abstraction/changeLeftTarget");
+		testCompare("abstraction/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void abstraction_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("abstraction/changeRightTarget");
+		testCompare("abstraction/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeLeftTarget_00() throws IOException, InterruptedException {
-		testCompare("association/changeLeftTarget/_00");
+		testCompare("association/changeLeftTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeRightTarget_00() throws IOException, InterruptedException {
-		testCompare("association/changeRightTarget/_00");
+		testCompare("association/changeRightTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeLeftTarget_01() throws IOException, InterruptedException {
-		testCompare("association/changeLeftTarget/_01");
+		testCompare("association/changeLeftTarget/_01"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeRightTarget_01() throws IOException, InterruptedException {
-		testCompare("association/changeRightTarget/_01");
+		testCompare("association/changeRightTarget/_01"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationBranch_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("associationBranch/changeLeftTarget");
+		testCompare("associationBranch/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationBranch_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("associationBranch/changeRightTarget");
+		testCompare("associationBranch/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationClass_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("associationClass/changeLeftTarget");
+		testCompare("associationClass/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationClass_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("associationClass/changeRightTarget");
+		testCompare("associationClass/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void clazz() throws IOException, InterruptedException {
-		testCompare("clazz");
+		testCompare("clazz"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void containmentLink() throws IOException, InterruptedException {
-		testCompare("containmentLink");
+		testCompare("containmentLink"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependency_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("dependency/changeLeftTarget");
+		testCompare("dependency/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependency_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("dependency/changeRightTarget");
+		testCompare("dependency/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependencyBranch_changeLeftTarget_00() throws IOException, InterruptedException {
-		testCompare("dependencyBranch/changeLeftTarget/_00");
+		testCompare("dependencyBranch/changeLeftTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependencyBranch_changeRightTarget_00() throws IOException, InterruptedException {
-		testCompare("dependencyBranch/changeRightTarget/_00");
+		testCompare("dependencyBranch/changeRightTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void generalizationSet_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("generalizationSet/changeLeftTarget");
+		testCompare("generalizationSet/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void generalizationSet_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("generalizationSet/changeRightTarget");
+		testCompare("generalizationSet/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaceRealization_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("interfaceRealization/changeLeftTarget");
+		testCompare("interfaceRealization/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaceRealization_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("interfaceRealization/changeRightTarget");
+		testCompare("interfaceRealization/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaze() throws IOException, InterruptedException {
-		testCompare("interfaze");
+		testCompare("interfaze"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void realization_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("realization/changeLeftTarget");
+		testCompare("realization/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void realization_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("realization/changeRightTarget");
+		testCompare("realization/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void substitution_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("substitution/changeLeftTarget");
+		testCompare("substitution/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void substitution_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("substitution/changeRightTarget");
+		testCompare("substitution/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void usage_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("usage/changeLeftTarget");
+		testCompare("usage/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void usage_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("usage/changeRightTarget");
+		testCompare("usage/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void abstraction_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("abstraction/changeLeftTarget");
+		testMerge("abstraction/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void abstraction_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("abstraction/changeRightTarget");
+		testMerge("abstraction/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeLeftTarget_00_merge() throws IOException, InterruptedException {
-		testMerge("association/changeLeftTarget/_00");
+		testMerge("association/changeLeftTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeRightTarget_00_merge() throws IOException, InterruptedException {
-		testMerge("association/changeRightTarget/_00");
+		testMerge("association/changeRightTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeLeftTarget_01_merge() throws IOException, InterruptedException {
-		testMerge("association/changeLeftTarget/_01");
+		testMerge("association/changeLeftTarget/_01"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void association_changeRightTarget_01_merge() throws IOException, InterruptedException {
-		testMerge("association/changeRightTarget/_01");
+		testMerge("association/changeRightTarget/_01"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationBranch_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("associationBranch/changeLeftTarget");
+		testMerge("associationBranch/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationBranch_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("associationBranch/changeRightTarget");
+		testMerge("associationBranch/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationClass_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("associationClass/changeLeftTarget");
+		testMerge("associationClass/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void associationClass_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("associationClass/changeRightTarget");
+		testMerge("associationClass/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void clazz_merge() throws IOException, InterruptedException {
-		testMerge("clazz");
+		testMerge("clazz"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void containmentLink_merge() throws IOException, InterruptedException {
-		testMerge("containmentLink");
+		testMerge("containmentLink"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependency_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("dependency/changeLeftTarget");
+		testMerge("dependency/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependency_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("dependency/changeRightTarget");
+		testMerge("dependency/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependencyBranch_changeLeftTarget_00_merge() throws IOException, InterruptedException {
-		testMerge("dependencyBranch/changeLeftTarget/_00");
+		testMerge("dependencyBranch/changeLeftTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void dependencyBranch_changeRightTarget_00_merge() throws IOException, InterruptedException {
-		testMerge("dependencyBranch/changeRightTarget/_00");
+		testMerge("dependencyBranch/changeRightTarget/_00"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void generalizationSet_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("generalizationSet/changeLeftTarget");
+		testMerge("generalizationSet/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void generalizationSet_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("generalizationSet/changeRightTarget");
+		testMerge("generalizationSet/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaceRealization_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("interfaceRealization/changeLeftTarget");
+		testMerge("interfaceRealization/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaceRealization_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("interfaceRealization/changeRightTarget");
+		testMerge("interfaceRealization/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void interfaze_merge() throws IOException, InterruptedException {
-		testMerge("interfaze");
+		testMerge("interfaze"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void realization_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("realization/changeLeftTarget");
+		testMerge("realization/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void realization_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("realization/changeRightTarget");
+		testMerge("realization/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void substitution_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("substitution/changeLeftTarget");
+		testMerge("substitution/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void substitution_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("substitution/changeRightTarget");
+		testMerge("substitution/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void usage_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("usage/changeLeftTarget");
+		testMerge("usage/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void usage_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("usage/changeRightTarget");
+		testMerge("usage/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Override

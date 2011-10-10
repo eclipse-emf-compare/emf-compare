@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
  * @generated
  */
 public interface UMLIntervalConstraintChangeLeftTarget extends ModelElementChangeLeftTarget, UMLIntervalConstraintChange {
-} // UMLIntervalConstraintChangeLeftTarget
+	// UMLIntervalConstraintChangeLeftTarget
+} 

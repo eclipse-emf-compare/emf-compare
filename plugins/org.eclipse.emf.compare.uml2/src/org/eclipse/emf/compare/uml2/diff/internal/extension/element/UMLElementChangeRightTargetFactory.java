@@ -27,16 +27,15 @@ import org.eclipse.uml2.uml.Element;
 
 /**
  * Factory for UMLElementChangeRightTarget.
- *
+ * 
  * @see Bug 351593.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-// CHECKSTYLE:OFF
-public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChangeFactory { // CHECKSTYLE:ON
+public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChangeFactory {
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param engine
 	 *            UML2DiffEngine
 	 */
@@ -46,12 +45,12 @@ public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChange
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#handles(org.eclipse.emf.compare.diff.metamodel.DiffElement)
 	 */
 	public boolean handles(DiffElement input) {
 		if (input instanceof ModelElementChangeRightTarget) {
-			EObject right = ((ModelElementChangeRightTarget)input).getRightElement();
+			final EObject right = ((ModelElementChangeRightTarget)input).getRightElement();
 			return right instanceof Element && getAllStereotypeApplications((Element)right).size() > 0;
 		}
 		return false;
@@ -59,7 +58,7 @@ public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChange
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.IDiffExtensionFactory#create(org.eclipse.emf.compare.diff.metamodel.DiffElement,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
@@ -80,7 +79,7 @@ public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChange
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory#getParentDiff(org.eclipse.emf.compare.diff.metamodel.DiffElement,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */
@@ -91,7 +90,7 @@ public class UMLElementChangeRightTargetFactory extends AbstractUMLElementChange
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.uml2.diff.internal.extension.AbstractDiffExtensionFactory#fillRequiredDifferences(org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension,
 	 *      org.eclipse.emf.ecore.util.EcoreUtil.CrossReferencer)
 	 */

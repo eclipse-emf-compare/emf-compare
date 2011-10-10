@@ -23,4 +23,5 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceChangeRightTarget;
  * @generated
  */
 public interface UMLDependencyBranchChangeRightTarget extends ReferenceChangeRightTarget, UMLDependencyBranchChange {
-} // UMLDependencyBranchChangeRightTarget
+	// UMLDependencyBranchChangeRightTarget
+} 

@@ -30,9 +30,7 @@ import org.eclipse.uml2.uml.UMLPackage;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-// CHECKSTYLE:OFF
 public class UMLExecutionSpecificationChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
 
 	/**
 	 * The predicate to hide difference elements.

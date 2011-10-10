@@ -36,21 +36,21 @@ public interface UML2CompareTestProfilePackage extends EPackage {
 	 * 
 	 * @generated
 	 */
-	String eNAME = "uml2comparetestprofile";
+	String eNAME = "uml2comparetestprofile"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile";
+	String eNS_URI = "http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	String eNS_PREFIX = "testProfile";
+	String eNS_PREFIX = "testProfile"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package. <!-- begin-user-doc --> <!-- end-user-doc -->

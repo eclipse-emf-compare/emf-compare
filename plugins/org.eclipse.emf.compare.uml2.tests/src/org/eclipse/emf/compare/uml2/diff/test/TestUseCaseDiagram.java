@@ -13,49 +13,49 @@ package org.eclipse.emf.compare.uml2.diff.test;
 import java.io.IOException;
 
 import org.junit.Test;
-//CHECKSTYLE:OFF
+
 public class TestUseCaseDiagram extends AbstractUMLCompareTest {
 
-	private static final String DIAGRAM_KIND_PATH = "/diagrams/usecase/";
+	private static final String DIAGRAM_KIND_PATH = "/diagrams/usecase/"; //$NON-NLS-1$
 
 	@Test
 	public void extend_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("extend/changeLeftTarget");
+		testCompare("extend/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void extend_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("extend/changeRightTarget");
+		testCompare("extend/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void extend_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("extend/changeLeftTarget");
+		testMerge("extend/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void extend_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("extend/changeRightTarget");
+		testMerge("extend/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void include_changeLeftTarget() throws IOException, InterruptedException {
-		testCompare("include/changeLeftTarget");
+		testCompare("include/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void include_changeRightTarget() throws IOException, InterruptedException {
-		testCompare("include/changeRightTarget");
+		testCompare("include/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void include_changeLeftTarget_merge() throws IOException, InterruptedException {
-		testMerge("include/changeLeftTarget");
+		testMerge("include/changeLeftTarget"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void include_changeRightTarget_merge() throws IOException, InterruptedException {
-		testMerge("include/changeRightTarget");
+		testMerge("include/changeRightTarget"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -25,7 +25,7 @@ import org.eclipse.uml2.uml.Element;
 
 /**
  * Common factory for UML model element changes.
- *
+ * 
  * @see Bug 351593.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
@@ -33,7 +33,7 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * @param engine
 	 *            UML2DiffEngine
 	 */
@@ -46,7 +46,7 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 		final List<DiffElement> result = new ArrayList<DiffElement>();
 		final Iterator<EObject> it = obj.eAllContents();
 		while (it.hasNext()) {
-			EObject next = it.next();
+			final EObject next = it.next();
 			if (next instanceof Element) {
 				if (((Element)next).getStereotypeApplications().size() > 0) {
 					// Look for the UMLStereotypeApplication Difference
@@ -64,11 +64,11 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 	}
 
 	protected List<EObject> getAllStereotypeApplications(Element elt) {
-		List<EObject> result = new ArrayList<EObject>();
+		final List<EObject> result = new ArrayList<EObject>();
 		result.addAll(elt.getStereotypeApplications());
-		Iterator<EObject> it = elt.eAllContents();
+		final Iterator<EObject> it = elt.eAllContents();
 		while (it.hasNext()) {
-			EObject obj = it.next();
+			final EObject obj = it.next();
 			if (obj instanceof Element) {
 				result.addAll(((Element)obj).getStereotypeApplications());
 			}

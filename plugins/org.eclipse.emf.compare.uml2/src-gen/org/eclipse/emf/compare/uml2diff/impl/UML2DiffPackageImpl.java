@@ -1100,104 +1100,104 @@ public class UML2DiffPackageImpl extends EPackageImpl implements UML2DiffPackage
 		umlElementChangeRightTargetEClass.getESuperTypes().add(this.getUMLElementChange());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(umlDiffExtensionEClass, UMLDiffExtension.class, "UMLDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDiffExtensionEClass, UMLDiffExtension.class, "UMLDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationChangeEClass, UMLAssociationChange.class, "UMLAssociationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationChangeEClass, UMLAssociationChange.class, "UMLAssociationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationChangeLeftTargetEClass, UMLAssociationChangeLeftTarget.class, "UMLAssociationChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationChangeLeftTargetEClass, UMLAssociationChangeLeftTarget.class, "UMLAssociationChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationChangeRightTargetEClass, UMLAssociationChangeRightTarget.class, "UMLAssociationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationChangeRightTargetEClass, UMLAssociationChangeRightTarget.class, "UMLAssociationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationBranchChangeEClass, UMLAssociationBranchChange.class, "UMLAssociationBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationBranchChangeEClass, UMLAssociationBranchChange.class, "UMLAssociationBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationBranchChangeLeftTargetEClass, UMLAssociationBranchChangeLeftTarget.class, "UMLAssociationBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationBranchChangeLeftTargetEClass, UMLAssociationBranchChangeLeftTarget.class, "UMLAssociationBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlAssociationBranchChangeRightTargetEClass, UMLAssociationBranchChangeRightTarget.class, "UMLAssociationBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlAssociationBranchChangeRightTargetEClass, UMLAssociationBranchChangeRightTarget.class, "UMLAssociationBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyBranchChangeEClass, UMLDependencyBranchChange.class, "UMLDependencyBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyBranchChangeEClass, UMLDependencyBranchChange.class, "UMLDependencyBranchChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyBranchChangeLeftTargetEClass, UMLDependencyBranchChangeLeftTarget.class, "UMLDependencyBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyBranchChangeLeftTargetEClass, UMLDependencyBranchChangeLeftTarget.class, "UMLDependencyBranchChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyBranchChangeRightTargetEClass, UMLDependencyBranchChangeRightTarget.class, "UMLDependencyBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyBranchChangeRightTargetEClass, UMLDependencyBranchChangeRightTarget.class, "UMLDependencyBranchChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlGeneralizationSetChangeEClass, UMLGeneralizationSetChange.class, "UMLGeneralizationSetChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlGeneralizationSetChangeEClass, UMLGeneralizationSetChange.class, "UMLGeneralizationSetChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlGeneralizationSetChangeLeftTargetEClass, UMLGeneralizationSetChangeLeftTarget.class, "UMLGeneralizationSetChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlGeneralizationSetChangeLeftTargetEClass, UMLGeneralizationSetChangeLeftTarget.class, "UMLGeneralizationSetChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlGeneralizationSetChangeRightTargetEClass, UMLGeneralizationSetChangeRightTarget.class, "UMLGeneralizationSetChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlGeneralizationSetChangeRightTargetEClass, UMLGeneralizationSetChangeRightTarget.class, "UMLGeneralizationSetChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyChangeEClass, UMLDependencyChange.class, "UMLDependencyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyChangeEClass, UMLDependencyChange.class, "UMLDependencyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyChangeLeftTargetEClass, UMLDependencyChangeLeftTarget.class, "UMLDependencyChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyChangeLeftTargetEClass, UMLDependencyChangeLeftTarget.class, "UMLDependencyChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDependencyChangeRightTargetEClass, UMLDependencyChangeRightTarget.class, "UMLDependencyChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDependencyChangeRightTargetEClass, UMLDependencyChangeRightTarget.class, "UMLDependencyChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExtendChangeEClass, UMLExtendChange.class, "UMLExtendChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExtendChangeEClass, UMLExtendChange.class, "UMLExtendChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExtendChangeLeftTargetEClass, UMLExtendChangeLeftTarget.class, "UMLExtendChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExtendChangeLeftTargetEClass, UMLExtendChangeLeftTarget.class, "UMLExtendChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExtendChangeRightTargetEClass, UMLExtendChangeRightTarget.class, "UMLExtendChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExtendChangeRightTargetEClass, UMLExtendChangeRightTarget.class, "UMLExtendChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExecutionSpecificationChangeEClass, UMLExecutionSpecificationChange.class, "UMLExecutionSpecificationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExecutionSpecificationChangeEClass, UMLExecutionSpecificationChange.class, "UMLExecutionSpecificationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExecutionSpecificationChangeLeftTargetEClass, UMLExecutionSpecificationChangeLeftTarget.class, "UMLExecutionSpecificationChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExecutionSpecificationChangeLeftTargetEClass, UMLExecutionSpecificationChangeLeftTarget.class, "UMLExecutionSpecificationChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlExecutionSpecificationChangeRightTargetEClass, UMLExecutionSpecificationChangeRightTarget.class, "UMLExecutionSpecificationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlExecutionSpecificationChangeRightTargetEClass, UMLExecutionSpecificationChangeRightTarget.class, "UMLExecutionSpecificationChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDestructionEventChangeEClass, UMLDestructionEventChange.class, "UMLDestructionEventChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDestructionEventChangeEClass, UMLDestructionEventChange.class, "UMLDestructionEventChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDestructionEventChangeLeftTargetEClass, UMLDestructionEventChangeLeftTarget.class, "UMLDestructionEventChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDestructionEventChangeLeftTargetEClass, UMLDestructionEventChangeLeftTarget.class, "UMLDestructionEventChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlDestructionEventChangeRightTargetEClass, UMLDestructionEventChangeRightTarget.class, "UMLDestructionEventChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlDestructionEventChangeRightTargetEClass, UMLDestructionEventChangeRightTarget.class, "UMLDestructionEventChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlIntervalConstraintChangeEClass, UMLIntervalConstraintChange.class, "UMLIntervalConstraintChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlIntervalConstraintChangeEClass, UMLIntervalConstraintChange.class, "UMLIntervalConstraintChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlIntervalConstraintChangeLeftTargetEClass, UMLIntervalConstraintChangeLeftTarget.class, "UMLIntervalConstraintChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlIntervalConstraintChangeLeftTargetEClass, UMLIntervalConstraintChangeLeftTarget.class, "UMLIntervalConstraintChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlIntervalConstraintChangeRightTargetEClass, UMLIntervalConstraintChangeRightTarget.class, "UMLIntervalConstraintChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlIntervalConstraintChangeRightTargetEClass, UMLIntervalConstraintChangeRightTarget.class, "UMLIntervalConstraintChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlMessageChangeEClass, UMLMessageChange.class, "UMLMessageChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlMessageChangeEClass, UMLMessageChange.class, "UMLMessageChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlMessageChangeLeftTargetEClass, UMLMessageChangeLeftTarget.class, "UMLMessageChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlMessageChangeLeftTargetEClass, UMLMessageChangeLeftTarget.class, "UMLMessageChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlMessageChangeRightTargetEClass, UMLMessageChangeRightTarget.class, "UMLMessageChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlMessageChangeRightTargetEClass, UMLMessageChangeRightTarget.class, "UMLMessageChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypePropertyChangeEClass, UMLStereotypePropertyChange.class, "UMLStereotypePropertyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUMLStereotypePropertyChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(umlStereotypePropertyChangeEClass, UMLStereotypePropertyChange.class, "UMLStereotypePropertyChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getUMLStereotypePropertyChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypePropertyChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(umlStereotypeAttributeChangeLeftTargetEClass, UMLStereotypeAttributeChangeLeftTarget.class, "UMLStereotypeAttributeChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeAttributeChangeLeftTargetEClass, UMLStereotypeAttributeChangeLeftTarget.class, "UMLStereotypeAttributeChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeAttributeChangeRightTargetEClass, UMLStereotypeAttributeChangeRightTarget.class, "UMLStereotypeAttributeChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeAttributeChangeRightTargetEClass, UMLStereotypeAttributeChangeRightTarget.class, "UMLStereotypeAttributeChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeUpdateAttributeEClass, UMLStereotypeUpdateAttribute.class, "UMLStereotypeUpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeUpdateAttributeEClass, UMLStereotypeUpdateAttribute.class, "UMLStereotypeUpdateAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeApplicationChangeEClass, UMLStereotypeApplicationChange.class, "UMLStereotypeApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUMLStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(umlStereotypeApplicationChangeEClass, UMLStereotypeApplicationChange.class, "UMLStereotypeApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getUMLStereotypeApplicationChange_Stereotype(), theUMLPackage.getStereotype(), null, "stereotype", null, 0, 1, UMLStereotypeApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(umlStereotypeApplicationAdditionEClass, UMLStereotypeApplicationAddition.class, "UMLStereotypeApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeApplicationAdditionEClass, UMLStereotypeApplicationAddition.class, "UMLStereotypeApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeApplicationRemovalEClass, UMLStereotypeApplicationRemoval.class, "UMLStereotypeApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeApplicationRemovalEClass, UMLStereotypeApplicationRemoval.class, "UMLStereotypeApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeReferenceChangeLeftTargetEClass, UMLStereotypeReferenceChangeLeftTarget.class, "UMLStereotypeReferenceChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeReferenceChangeLeftTargetEClass, UMLStereotypeReferenceChangeLeftTarget.class, "UMLStereotypeReferenceChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeReferenceChangeRightTargetEClass, UMLStereotypeReferenceChangeRightTarget.class, "UMLStereotypeReferenceChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeReferenceChangeRightTargetEClass, UMLStereotypeReferenceChangeRightTarget.class, "UMLStereotypeReferenceChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeUpdateReferenceEClass, UMLStereotypeUpdateReference.class, "UMLStereotypeUpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeUpdateReferenceEClass, UMLStereotypeUpdateReference.class, "UMLStereotypeUpdateReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlStereotypeReferenceOrderChangeEClass, UMLStereotypeReferenceOrderChange.class, "UMLStereotypeReferenceOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlStereotypeReferenceOrderChangeEClass, UMLStereotypeReferenceOrderChange.class, "UMLStereotypeReferenceOrderChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlProfileApplicationChangeEClass, UMLProfileApplicationChange.class, "UMLProfileApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getUMLProfileApplicationChange_Profile(), theUMLPackage.getProfile(), null, "profile", null, 0, 1, UMLProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(umlProfileApplicationChangeEClass, UMLProfileApplicationChange.class, "UMLProfileApplicationChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getUMLProfileApplicationChange_Profile(), theUMLPackage.getProfile(), null, "profile", null, 0, 1, UMLProfileApplicationChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
-		initEClass(umlProfileApplicationAdditionEClass, UMLProfileApplicationAddition.class, "UMLProfileApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlProfileApplicationAdditionEClass, UMLProfileApplicationAddition.class, "UMLProfileApplicationAddition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlProfileApplicationRemovalEClass, UMLProfileApplicationRemoval.class, "UMLProfileApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlProfileApplicationRemovalEClass, UMLProfileApplicationRemoval.class, "UMLProfileApplicationRemoval", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlElementChangeEClass, UMLElementChange.class, "UMLElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlElementChangeEClass, UMLElementChange.class, "UMLElementChange", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlElementChangeLeftTargetEClass, UMLElementChangeLeftTarget.class, "UMLElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlElementChangeLeftTargetEClass, UMLElementChangeLeftTarget.class, "UMLElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(umlElementChangeRightTargetEClass, UMLElementChangeRightTarget.class, "UMLElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(umlElementChangeRightTargetEClass, UMLElementChangeRightTarget.class, "UMLElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

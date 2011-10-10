@@ -27,9 +27,7 @@ import org.eclipse.uml2.uml.ExtensionPoint;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-// CHECKSTYLE:OFF
 public class UMLExtendChangeRightTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
 
 	/**
 	 * Constructor.

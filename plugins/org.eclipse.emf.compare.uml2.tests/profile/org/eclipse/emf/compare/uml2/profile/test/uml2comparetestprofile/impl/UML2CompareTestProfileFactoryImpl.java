@@ -33,7 +33,7 @@ public class UML2CompareTestProfileFactoryImpl extends EFactoryImpl implements U
 	public static UML2CompareTestProfileFactory init() {
 		try {
 			UML2CompareTestProfileFactory theUML2CompareTestProfileFactory = (UML2CompareTestProfileFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile");
+					.getEFactory("http://www.eclipse.org/emf/compare/uml2/1.0.0/testprofile"); //$NON-NLS-1$
 			if (theUML2CompareTestProfileFactory != null) {
 				return theUML2CompareTestProfileFactory;
 			}
@@ -63,8 +63,8 @@ public class UML2CompareTestProfileFactoryImpl extends EFactoryImpl implements U
 			case UML2CompareTestProfilePackage.ACLICHE:
 				return createACliche();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName()
-						+ "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() //$NON-NLS-1$
+						+ "' is not a valid classifier"); //$NON-NLS-1$
 		}
 	}
 

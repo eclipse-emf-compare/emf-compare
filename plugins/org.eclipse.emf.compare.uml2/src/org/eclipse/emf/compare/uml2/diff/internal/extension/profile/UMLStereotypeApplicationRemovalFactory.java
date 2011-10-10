@@ -31,8 +31,7 @@ import org.eclipse.uml2.uml.util.UMLUtil;
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  */
-// CHECKSTYLE:OFF
-public class UMLStereotypeApplicationRemovalFactory extends AbstractUMLApplicationChangeFactory { // CHECKSTYLE:ON
+public class UMLStereotypeApplicationRemovalFactory extends AbstractUMLApplicationChangeFactory {
 
 	/**
 	 * Constructor.

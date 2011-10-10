@@ -25,9 +25,7 @@ import org.eclipse.uml2.uml.Dependency;
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-// CHECKSTYLE:OFF
 public class UMLDependencyBranchChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
 	/**
 	 * Constructor.
 	 * 

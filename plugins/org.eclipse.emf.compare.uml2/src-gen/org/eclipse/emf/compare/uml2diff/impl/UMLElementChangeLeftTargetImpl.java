@@ -37,10 +37,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl#getHideElements <em>Hide
- * Elements</em>}</li>
- * <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl#isIsCollapsed <em>Is
- * Collapsed</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl#getHideElements <em>Hide Elements</em>}</li>
+ *   <li>{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeLeftTargetImpl#isIsCollapsed <em>Is Collapsed</em>}</li>
  * </ul>
  * </p>
  *
@@ -68,9 +66,9 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 	protected static final boolean IS_COLLAPSED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute. <!-- begin-user-doc
+	 * The cached value of the '{@link #isIsCollapsed() <em>Is Collapsed</em>}' attribute.
+	 * <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
-	 *
 	 * @see #isIsCollapsed()
 	 * @generated
 	 * @ordered
@@ -79,7 +77,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	protected UMLElementChangeLeftTargetImpl() {
@@ -88,7 +85,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -98,21 +94,17 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	public EList<DiffElement> getHideElements() {
 		if (hideElements == null) {
-			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class,
-					this, UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS,
-					DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
+			hideElements = new EObjectWithInverseResolvingEList.ManyInverse<DiffElement>(DiffElement.class, this, UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS, DiffPackage.DIFF_ELEMENT__IS_HIDDEN_BY);
 		}
 		return hideElements;
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	public boolean isIsCollapsed() {
@@ -121,20 +113,17 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	public void setIsCollapsed(boolean newIsCollapsed) {
 		boolean oldIsCollapsed = isCollapsed;
 		isCollapsed = newIsCollapsed;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
+			eNotify(new ENotificationImpl(this, Notification.SET, UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED, oldIsCollapsed, isCollapsed));
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	public void visit(DiffModel diffModel) {
@@ -172,7 +161,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -180,15 +168,13 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(
-						otherEnd, msgs);
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getHideElements()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -202,7 +188,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -218,7 +203,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
@@ -238,7 +222,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -256,7 +239,6 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
@@ -272,31 +254,25 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (derivedFeatureID) {
-				case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS:
-					return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
-				case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED:
-					return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
-				default:
-					return -1;
+				case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS: return DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS;
+				case UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED: return DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (derivedFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLElementChange.class) {
 			switch (derivedFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
@@ -304,31 +280,25 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractDiffExtension.class) {
 			switch (baseFeatureID) {
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS:
-					return UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS;
-				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED:
-					return UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED;
-				default:
-					return -1;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS: return UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__HIDE_ELEMENTS;
+				case DiffPackage.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED: return UML2DiffPackage.UML_ELEMENT_CHANGE_LEFT_TARGET__IS_COLLAPSED;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLDiffExtension.class) {
 			switch (baseFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		if (baseClass == UMLElementChange.class) {
 			switch (baseFeatureID) {
-				default:
-					return -1;
+				default: return -1;
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
@@ -336,16 +306,14 @@ public class UMLElementChangeLeftTargetImpl extends ModelElementChangeLeftTarget
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
-			return super.toString();
+		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (isCollapsed: ");
+		result.append(" (isCollapsed: "); //$NON-NLS-1$
 		result.append(isCollapsed);
 		result.append(')');
 		return result.toString();

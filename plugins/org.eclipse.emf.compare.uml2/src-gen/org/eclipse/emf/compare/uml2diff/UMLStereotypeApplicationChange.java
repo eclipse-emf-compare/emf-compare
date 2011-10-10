@@ -12,7 +12,6 @@ package org.eclipse.emf.compare.uml2diff;
 
 import org.eclipse.uml2.uml.Stereotype;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>UML Stereotype Application Change</b></em>'.
@@ -30,7 +29,6 @@ import org.eclipse.uml2.uml.Stereotype;
  * @generated
  */
 public interface UMLStereotypeApplicationChange extends UMLDiffExtension {
-
 	/**
 	 * Returns the value of the '<em><b>Stereotype</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -56,4 +54,5 @@ public interface UMLStereotypeApplicationChange extends UMLDiffExtension {
 	 * @generated
 	 */
 	void setStereotype(Stereotype value);
+
 } // UMLStereotypeApplicationChange

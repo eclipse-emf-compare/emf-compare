@@ -139,9 +139,8 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 				ancestors.indexOf(referencingDiffGroup.getRightParent()));
 
 		// iterating on reverse order to create the deepest one (index = 0) as the last one.
-		// CHECKSTYLE:OFF
-		for (final ListIterator<EObject> it = subList.listIterator(subList.size()); it.hasPrevious();) {
-			// CHECKSTYLE:ON
+		final ListIterator<EObject> it = subList.listIterator(subList.size());
+		while (it.hasPrevious()) {
 			final EObject previous = it.previous();
 			final DiffGroup newGroup = DiffFactory.eINSTANCE.createDiffGroup();
 			referencingDiffGroup.getSubDiffElements().add(newGroup);
@@ -384,7 +383,7 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	 * 
 	 * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
 	 */
-	protected static interface UMLPredicate<T> {
+	protected interface UMLPredicate<T> {
 		/**
 		 * Apply the predicate.
 		 * 

@@ -11,6 +11,7 @@
 package org.eclipse.emf.compare.uml2diff;
 
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -37,7 +38,7 @@ public interface UML2DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNAME = "uml2diff";
+	String eNAME = "uml2diff"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
@@ -45,7 +46,7 @@ public interface UML2DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/uml2/1.0";
+	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/uml2/1.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -53,7 +54,7 @@ public interface UML2DiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "uml2diff";
+	String eNS_PREFIX = "uml2diff"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.
@@ -4475,7 +4476,6 @@ public interface UML2DiffPackage extends EPackage {
 	 */
 	int UML_STEREOTYPE_APPLICATION_REMOVAL_FEATURE_COUNT = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 3;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeReferenceChangeLeftTargetImpl <em>UML Stereotype Reference Change Left Target</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -4784,7 +4784,6 @@ public interface UML2DiffPackage extends EPackage {
 	 */
 	int UML_STEREOTYPE_REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT = DiffPackage.REFERENCE_CHANGE_RIGHT_TARGET_FEATURE_COUNT + 3;
 
-
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLStereotypeUpdateReferenceImpl <em>UML Stereotype Update Reference</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -5092,7 +5091,6 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_STEREOTYPE_REFERENCE_ORDER_CHANGE_FEATURE_COUNT = DiffPackage.REFERENCE_ORDER_CHANGE_FEATURE_COUNT + 3;
-
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.UMLProfileApplicationChange <em>UML Profile Application Change</em>}' class.
@@ -5456,7 +5454,6 @@ public interface UML2DiffPackage extends EPackage {
 	 * @ordered
 	 */
 	int UML_PROFILE_APPLICATION_REMOVAL_FEATURE_COUNT = DiffPackage.UPDATE_MODEL_ELEMENT_FEATURE_COUNT + 3;
-
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.emf.compare.uml2diff.impl.UMLElementChangeImpl <em>UML Element Change</em>}' class.
