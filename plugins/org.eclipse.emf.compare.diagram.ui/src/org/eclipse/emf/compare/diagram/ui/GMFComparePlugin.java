@@ -47,7 +47,7 @@ public class GMFComparePlugin extends AbstractUIPlugin {
 	 * The constructor.
 	 */
 	public GMFComparePlugin() {
-
+		// Do nothing
 	}
 
 	/**
