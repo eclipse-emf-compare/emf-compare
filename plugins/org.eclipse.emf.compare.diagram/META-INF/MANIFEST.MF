@@ -21,4 +21,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.compare,
  org.eclipse.gmf.runtime.diagram.ui
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.emf.compare.diagram.internal.GMFCompare
+Bundle-Activator: org.eclipse.emf.compare.diagram.GMFCompare
