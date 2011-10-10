@@ -346,24 +346,24 @@ public class DiagramdiffPackageImpl extends EPackageImpl implements DiagramdiffP
 		diagramModelElementChangeRightTargetEClass.getESuperTypes().add(this.getDiagramDiffExtension());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(diagramDiffExtensionEClass, DiagramDiffExtension.class, "DiagramDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramDiffExtensionEClass, DiagramDiffExtension.class, "DiagramDiffExtension", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramShowElementEClass, DiagramShowElement.class, "DiagramShowElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramShowElementEClass, DiagramShowElement.class, "DiagramShowElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramHideElementEClass, DiagramHideElement.class, "DiagramHideElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramHideElementEClass, DiagramHideElement.class, "DiagramHideElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramMoveNodeEClass, DiagramMoveNode.class, "DiagramMoveNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramMoveNodeEClass, DiagramMoveNode.class, "DiagramMoveNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramEdgeChangeEClass, DiagramEdgeChange.class, "DiagramEdgeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramEdgeChangeEClass, DiagramEdgeChange.class, "DiagramEdgeChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramLabelChangeEClass, DiagramLabelChange.class, "DiagramLabelChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramLabelChangeEClass, DiagramLabelChange.class, "DiagramLabelChange", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramModelElementChangeLeftTargetEClass, DiagramModelElementChangeLeftTarget.class, "DiagramModelElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramModelElementChangeLeftTargetEClass, DiagramModelElementChangeLeftTarget.class, "DiagramModelElementChangeLeftTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramModelElementChangeRightTargetEClass, DiagramModelElementChangeRightTarget.class, "DiagramModelElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(diagramModelElementChangeRightTargetEClass, DiagramModelElementChangeRightTarget.class, "DiagramModelElementChangeRightTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
-		initEClass(diagramModelElementChangeEClass, DiagramModelElementChange.class, "DiagramModelElementChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDiagramModelElementChange_SemanticDiff(), theDiffPackage.getModelElementChange(), null, "semanticDiff", null, 0, 1, DiagramModelElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(diagramModelElementChangeEClass, DiagramModelElementChange.class, "DiagramModelElementChange", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+		initEReference(getDiagramModelElementChange_SemanticDiff(), theDiffPackage.getModelElementChange(), null, "semanticDiff", null, 0, 1, DiagramModelElementChange.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
 		// Create resource
 		createResource(eNS_URI);

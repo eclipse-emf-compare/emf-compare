@@ -65,7 +65,7 @@ public class NotationDiffVisitor {
 							DiffDecoratorProvider.DIFF_LABEL_MODIFIED);
 				} else {
 					result &= annotateNotation((View)diff.getRightElement(),
-						DiffDecoratorProvider.DIFF_LABEL_MODIFIED);
+							DiffDecoratorProvider.DIFF_LABEL_MODIFIED);
 				}
 			}
 			return checkResult(result);
@@ -80,7 +80,7 @@ public class NotationDiffVisitor {
 		public IStatus caseDiagramShowElement(DiagramShowElement diff) {
 			boolean result = true;
 			if (!isHiddenDiff(diff)) {
-				if (diff instanceof BusinessDiagramShowHideElement)
+				if (diff instanceof BusinessDiagramShowHideElement) {
 					if (diff.isRemote()) {
 						if (getMatchSide() == MatchSide.RIGHT) {
 							result = annotateNotation(((BusinessDiagramShowHideElement)diff).getRightView(),
@@ -92,6 +92,7 @@ public class NotationDiffVisitor {
 									DiffDecoratorProvider.DIFF_SHOWED);
 						}
 					}
+				}
 			}
 			return checkResult(result);
 		}
@@ -105,7 +106,7 @@ public class NotationDiffVisitor {
 		public IStatus caseDiagramHideElement(DiagramHideElement diff) {
 			boolean result = true;
 			if (!isHiddenDiff(diff)) {
-				if (diff instanceof BusinessDiagramShowHideElement)
+				if (diff instanceof BusinessDiagramShowHideElement) {
 					if (diff.isRemote()) {
 						if (getMatchSide() == MatchSide.LEFT) {
 							result = annotateNotation(((BusinessDiagramShowHideElement)diff).getLeftView(),
@@ -117,6 +118,7 @@ public class NotationDiffVisitor {
 									DiffDecoratorProvider.DIFF_HIDED);
 						}
 					}
+				}
 			}
 			return checkResult(result);
 		}
@@ -168,7 +170,7 @@ public class NotationDiffVisitor {
 		public IStatus caseDiagramModelElementChangeLeftTarget(DiagramModelElementChangeLeftTarget diff) {
 			boolean result = true;
 			if (!isHiddenDiff(diff) && GMFComparePlugin.isValid(diff.getLeftElement())) {
-				if (getMatchSide() == MatchSide.LEFT) { 
+				if (getMatchSide() == MatchSide.LEFT) {
 					result = annotateNotation((View)diff.getLeftElement(), DiffDecoratorProvider.DIFF_ADDED);
 				}
 			}
@@ -183,10 +185,12 @@ public class NotationDiffVisitor {
 		@Override
 		public IStatus caseDiagramModelElementChangeRightTarget(DiagramModelElementChangeRightTarget diff) {
 			boolean result = true;
-			if (!isHiddenDiff(diff) && GMFComparePlugin.isValid(diff.getRightElement()))
+			if (!isHiddenDiff(diff) && GMFComparePlugin.isValid(diff.getRightElement())) {
 				if (getMatchSide() == MatchSide.RIGHT) {
-					result = annotateNotation((View)diff.getRightElement(), DiffDecoratorProvider.DIFF_REMOVED);
+					result = annotateNotation((View)diff.getRightElement(),
+							DiffDecoratorProvider.DIFF_REMOVED);
 				}
+			}
 			return checkResult(result);
 		}
 
@@ -208,7 +212,7 @@ public class NotationDiffVisitor {
 	/** used to add or remove eannotation diffs when visiting. */
 	private boolean annote;
 
-	/** 
+	/**
 	 * The side on which to apply the annotation.
 	 */
 	private MatchSide matchSide;
@@ -221,7 +225,7 @@ public class NotationDiffVisitor {
 	public boolean isAnnote() {
 		return annote;
 	}
-	
+
 	public MatchSide getMatchSide() {
 		return matchSide;
 	}
@@ -231,7 +235,8 @@ public class NotationDiffVisitor {
 	 * 
 	 * @param diffs
 	 *            the list of Diff Elements
-	 * @param side the side to annotate.
+	 * @param side
+	 *            the side to annotate.
 	 */
 	public void addEannotations(List<DiffElement> diffs, MatchSide side) {
 		annote = true;
@@ -244,7 +249,8 @@ public class NotationDiffVisitor {
 	 * 
 	 * @param diffs
 	 *            the list of Diff Elements
-	 * @param side the side to annotate.
+	 * @param side
+	 *            the side to annotate.
 	 */
 	public void removeEAnnotations(List<DiffElement> diffs, MatchSide side) {
 		annote = false;
@@ -260,13 +266,15 @@ public class NotationDiffVisitor {
 	 */
 	private void doVisit(List<DiffElement> diffs) {
 		// visit diff model
+		// FIXME externalize this
 		final MultiStatus status = new MultiStatus(GMFComparePlugin.PLUGIN_ID, IStatus.WARNING,
-				"Diff visitor failed.", null);
+				"Diff visitor failed.", null); //$NON-NLS-1$
 		for (DiffElement diffElement : diffs) {
 			status.merge(diagramdiffSwitch.doSwitch(diffElement));
 		}
-		if (!status.isOK())
+		if (!status.isOK()) {
 			EMFComparePlugin.log(status.getMessage(), false);
+		}
 	}
 
 	/**
@@ -289,7 +297,8 @@ public class NotationDiffVisitor {
 			} else {
 				diffAnnotation = element.getEAnnotation(DiffDecoratorProvider.DIFF);
 			}
-			diffAnnotation.getDetails().put(annotation, "diffDetail");
+			// FIXME should this string be externalized?
+			diffAnnotation.getDetails().put(annotation, "diffDetail"); //$NON-NLS-1$
 			result = true;
 		} else {
 			if (element.getEAnnotation(DiffDecoratorProvider.DIFF) != null) {
@@ -319,8 +328,9 @@ public class NotationDiffVisitor {
 	 * @return a status corresponding to the state of the boolean
 	 */
 	protected IStatus checkResult(boolean ok) {
-		if (ok)
+		if (ok) {
 			return Status.OK_STATUS;
+		}
 		return Status.CANCEL_STATUS;
 	}
 

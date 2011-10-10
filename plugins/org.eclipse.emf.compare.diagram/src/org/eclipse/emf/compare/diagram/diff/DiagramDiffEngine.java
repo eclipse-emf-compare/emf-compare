@@ -99,9 +99,8 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 		};
 		diagramExtensionFactories = DiffExtensionFactoryRegistry.createExtensionFactories(
 				diffModelCrossReferencer, matchModel);
-		// CHECKSTYLE:OFF
-		for (final TreeIterator<EObject> tit = dg.eAllContents(); tit.hasNext();) {
-			// CHECKSTYLE:ON
+		final TreeIterator<EObject> tit = dg.eAllContents();
+		while (tit.hasNext()) {
 			final EObject next = tit.next();
 			if (next instanceof DiffElement) {
 				applyManagedTypes((DiffElement)next, dg);
@@ -307,11 +306,9 @@ public class DiagramDiffEngine extends GenericDiffEngine {
 							&& DiffUtil.isVisible((View)rightElement)) {
 						final String leftLabel = extensionForType.elementLabel(view);
 						final String rightLabel = extensionForType.elementLabel((View)rightElement);
-						// CHECKSTYLE:OFF
 						if (!leftLabel.equals(rightLabel)) {
 							diff = createLabelChange(root, leftElement, rightElement, leftLabel, rightLabel);
 						}
-						// CHECKSTYLE:ON
 					}
 				}
 			}

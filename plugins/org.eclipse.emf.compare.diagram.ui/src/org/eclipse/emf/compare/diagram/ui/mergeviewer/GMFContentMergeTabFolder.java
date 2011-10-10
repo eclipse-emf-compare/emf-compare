@@ -60,7 +60,8 @@ public class GMFContentMergeTabFolder extends ParameterizedContentMergeTabFolder
 		tabFolder = super.createTabFolder(parent);
 		// create gmf viewer tab
 		gmfTab = new CTabItem(tabFolder, SWT.NONE);
-		gmfTab.setText("Graphical Differences");
+		// FIXME externalize this
+		gmfTab.setText("Graphical Differences"); //$NON-NLS-1$
 		final Composite gmfPanel = new Composite(tabFolder, SWT.NONE);
 		gmfPanel.setLayout(new GridLayout());
 		gmfPanel.setLayoutData(new GridData(GridData.FILL_BOTH));

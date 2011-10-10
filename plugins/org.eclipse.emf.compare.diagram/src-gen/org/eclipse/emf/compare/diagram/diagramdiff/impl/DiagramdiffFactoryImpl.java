@@ -36,7 +36,7 @@ public class DiagramdiffFactoryImpl extends EFactoryImpl implements DiagramdiffF
 	 */
 	public static DiagramdiffFactory init() {
 		try {
-			DiagramdiffFactory theDiagramdiffFactory = (DiagramdiffFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/diagram/1.0"); 
+			DiagramdiffFactory theDiagramdiffFactory = (DiagramdiffFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.eclipse.org/emf/compare/diff/diagram/1.0"); //$NON-NLS-1$ 
 			if (theDiagramdiffFactory != null) {
 				return theDiagramdiffFactory;
 			}
@@ -73,7 +73,7 @@ public class DiagramdiffFactoryImpl extends EFactoryImpl implements DiagramdiffF
 			case DiagramdiffPackage.DIAGRAM_MODEL_ELEMENT_CHANGE_LEFT_TARGET: return createDiagramModelElementChangeLeftTarget();
 			case DiagramdiffPackage.DIAGRAM_MODEL_ELEMENT_CHANGE_RIGHT_TARGET: return createDiagramModelElementChangeRightTarget();
 			default:
-				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

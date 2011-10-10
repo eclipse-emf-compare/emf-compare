@@ -60,9 +60,15 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 		super(parent, config);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see org.eclipse.compare.contentmergeviewer.ContentMergeViewer#getTitle()
+	 */
 	@Override
 	public String getTitle() {
-		return "Visualization of graphical differences";
+		// FIXME externalize this
+		return "Visualization of graphical differences"; //$NON-NLS-1$
 	}
 
 	/**
@@ -122,7 +128,8 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
 	 * <code>side</code> is annotated.
 	 * 
-	 * @param side The side to annotate.
+	 * @param side
+	 *            The side to annotate.
 	 */
 	private void annotateSide(final MatchSide side) {
 		TransactionalEditingDomain ted = null;
@@ -134,7 +141,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 
 		// annotate models
 		final RecordingCommand command = new RecordingCommand(ted) {
-
+			@Override
 			protected void doExecute() {
 				if (gmfModelCreator != null) {
 					gmfModelCreator.setInput(getInput());
@@ -149,7 +156,8 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	 * Execute a RecordingCommand to annotate the {@link #getInput() input} of this viewer. Only the given
 	 * <code>side</code> is annotated.
 	 * 
-	 * @param side The side to annotate.
+	 * @param side
+	 *            The side to annotate.
 	 */
 	private void unnannotateSide(final MatchSide side) {
 		TransactionalEditingDomain ted = null;
@@ -161,7 +169,7 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 
 		// annotate models
 		final RecordingCommand command = new RecordingCommand(ted) {
-
+			@Override
 			protected void doExecute() {
 				if (gmfModelCreator != null) {
 					gmfModelCreator.setInput(getInput());
@@ -213,13 +221,16 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	@Override
 	protected void handleDispose(DisposeEvent event) {
 		// needed when switching from diagram to text
-		if (leftTED != null)
+		if (leftTED != null) {
 			leftTED.dispose();
-		if (rightTED != null)
+		}
+		if (rightTED != null) {
 			rightTED.dispose();
+		}
 		// needed if not using 3 way comparison
-		if (ancestorTED != null)
+		if (ancestorTED != null) {
 			ancestorTED.dispose();
+		}
 		super.handleDispose(event);
 	}
 
@@ -230,34 +241,49 @@ public class GMFContentMergeViewer extends ParameterizedContentMergeViewer {
 	 */
 	@Override
 	protected IMergeViewerContentProvider createMergeViewerContentProvider() {
-		// CHECKSTYLE:OFF
-		return new ModelContentMergeContentProvider(configuration) {
-			// CHECKSTYLE:ON
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider#saveLeftContent(java.lang.Object,
-			 *      byte[])
-			 */
-			@Override
-			public void saveLeftContent(Object element, byte[] bytes) {
-				unnannotateSide(MatchSide.LEFT);
-				unnannotateSide(MatchSide.RIGHT);
-				super.saveLeftContent(element, bytes);
-			}
+		return new ModelContentMergeContentProvider(configuration);
+	}
 
-			/**
-			 * {@inheritDoc}
-			 * 
-			 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider#saveRightContent(java.lang.Object,
-			 *      byte[])
-			 */
-			@Override
-			public void saveRightContent(Object element, byte[] bytes) {
-				unnannotateSide(MatchSide.LEFT);
-				unnannotateSide(MatchSide.RIGHT);
-				super.saveRightContent(element, bytes);
-			}
-		};
+	/**
+	 * Implementation of the model content provider for the GMF comparison.
+	 * 
+	 * @author <a href="mailto:stephane.bouchet@obeo.fr">Stephane Bouchet</a>
+	 */
+	private class GMFModelContentMergeContentProvider extends ModelContentMergeContentProvider {
+		/**
+		 * Delegates to the super constructor.
+		 * 
+		 * @param configuration
+		 *            The compare configuration that is to be used.
+		 */
+		public GMFModelContentMergeContentProvider(CompareConfiguration configuration) {
+			super(configuration);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider#saveLeftContent(java.lang.Object,
+		 *      byte[])
+		 */
+		@Override
+		public void saveLeftContent(Object element, byte[] bytes) {
+			unnannotateSide(MatchSide.LEFT);
+			unnannotateSide(MatchSide.RIGHT);
+			super.saveLeftContent(element, bytes);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeContentProvider#saveRightContent(java.lang.Object,
+		 *      byte[])
+		 */
+		@Override
+		public void saveRightContent(Object element, byte[] bytes) {
+			unnannotateSide(MatchSide.LEFT);
+			unnannotateSide(MatchSide.RIGHT);
+			super.saveRightContent(element, bytes);
+		}
 	}
 }

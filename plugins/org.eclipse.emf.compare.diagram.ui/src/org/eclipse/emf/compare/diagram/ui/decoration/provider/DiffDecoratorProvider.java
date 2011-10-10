@@ -34,28 +34,28 @@ import org.eclipse.gmf.runtime.notation.View;
 public class DiffDecoratorProvider extends AbstractProvider implements IDecoratorProvider {
 
 	/** The decorator marker for diff. used also to annotate the diagrams during comparison. */
-	public static final String DIFF = "diff-marker";
+	public static final String DIFF = "diff-marker"; //$NON-NLS-1$
 
 	/** Constant for added element. */
-	public static final String DIFF_ADDED = "diff-added";
+	public static final String DIFF_ADDED = "diff-added"; //$NON-NLS-1$
 
 	/** Constant for removed element. */
-	public static final String DIFF_REMOVED = "diff-removed";
+	public static final String DIFF_REMOVED = "diff-removed"; //$NON-NLS-1$
 
 	/** Constant for moved element. */
-	public static final String DIFF_MOVED = "diff-moved";
+	public static final String DIFF_MOVED = "diff-moved"; //$NON-NLS-1$
 
 	/** Constant for hided element. */
-	public static final String DIFF_HIDED = "diff-hided";
+	public static final String DIFF_HIDED = "diff-hided"; //$NON-NLS-1$
 
 	/** Constant for showed element. */
-	public static final String DIFF_SHOWED = "diff-showed";
+	public static final String DIFF_SHOWED = "diff-showed"; //$NON-NLS-1$
 
 	/** Constant for modified element. */
-	public static final String DIFF_MODIFIED = "diff-modified";
+	public static final String DIFF_MODIFIED = "diff-modified"; //$NON-NLS-1$
 
 	/** Constant for modified element. */
-	public static final String DIFF_LABEL_MODIFIED = "diff-label-modified";
+	public static final String DIFF_LABEL_MODIFIED = "diff-label-modified"; //$NON-NLS-1$
 
 	/**
 	 * {@inheritDoc}
@@ -90,7 +90,8 @@ public class DiffDecoratorProvider extends AbstractProvider implements IDecorato
 			} else if (isNode(view)) {
 				decoratorTarget.installDecorator(DIFF, new DiffNodeDecorator(decoratorTarget));
 			} else {
-				EMFComparePlugin.log("Unable to decorate target " + view, false);
+				// FIXME externalize this
+				EMFComparePlugin.log("Unable to decorate target " + view, false); //$NON-NLS-1$
 			}
 		}
 	}

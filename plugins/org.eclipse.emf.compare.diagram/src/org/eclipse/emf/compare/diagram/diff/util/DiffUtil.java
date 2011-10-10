@@ -69,6 +69,7 @@ public final class DiffUtil {
 	 * Constructor.
 	 */
 	private DiffUtil() {
+		// Hides default constructor
 	}
 
 	/**

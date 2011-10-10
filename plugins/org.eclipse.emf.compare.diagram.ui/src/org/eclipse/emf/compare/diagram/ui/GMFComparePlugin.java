@@ -29,16 +29,16 @@ import org.osgi.framework.BundleContext;
 public class GMFComparePlugin extends AbstractUIPlugin {
 
 	/** The plug-in ID. */
-	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ui";
+	public static final String PLUGIN_ID = "org.eclipse.emf.compare.diagram.ui"; //$NON-NLS-1$
 
 	/** The contant for the moved icon. */
-	public static final String ICON_MOVED = "EMFCompareGMF.icon.moved";
+	public static final String ICON_MOVED = "EMFCompareGMF.icon.moved"; //$NON-NLS-1$
 
 	/** The contant for the added icon. */
-	public static final String ICON_ADDED = "EMFCompareGMF.icon.added";
+	public static final String ICON_ADDED = "EMFCompareGMF.icon.added"; //$NON-NLS-1$
 
 	/** The contant for the deleted icon. */
-	public static final String ICON_DELETED = "EMFCompareGMF.icon.deleted";
+	public static final String ICON_DELETED = "EMFCompareGMF.icon.deleted"; //$NON-NLS-1$
 
 	/** The shared instance. */
 	private static GMFComparePlugin plugin;
@@ -86,10 +86,14 @@ public class GMFComparePlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#initializeImageRegistry(org.eclipse.jface.resource.ImageRegistry)
 	 */
+	@Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
-		registry.put(ICON_ADDED, PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ADD));
-		registry.put(ICON_DELETED, PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_DELETE));
-		registry.put(ICON_MOVED, PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_SYNCED));
+		registry.put(ICON_ADDED,
+				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ADD));
+		registry.put(ICON_DELETED,
+				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ETOOL_DELETE));
+		registry.put(ICON_MOVED,
+				PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_SYNCED));
 	}
 
 	/**

@@ -23,15 +23,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class DiagramModelElementChangeLeftTargetFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
-	/**
-	 * Constructor.
-	 */
-	public DiagramModelElementChangeLeftTargetFactory() {
-		super();
-	}
 
 	/**
 	 * Constructor.

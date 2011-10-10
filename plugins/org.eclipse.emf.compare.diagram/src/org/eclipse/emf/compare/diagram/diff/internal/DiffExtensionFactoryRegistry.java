@@ -47,7 +47,7 @@ public final class DiffExtensionFactoryRegistry {
 		final Set<IDiffExtensionFactory> dataset = new HashSet<IDiffExtensionFactory>();
 		dataset.add(new DiagramMoveNodeFactory());
 		dataset.add(new DiagramEdgeLayoutChangeFactory(crossReferencer));
-		dataset.add(new DiagramHideElementFactory());
+		dataset.add(new DiagramHideElementFactory(match));
 		dataset.add(new DiagramShowElementFactory());
 		dataset.add(new DiagramModelElementChangeLeftTargetFactory(crossReferencer, match));
 		dataset.add(new DiagramModelElementChangeRightTargetFactory(crossReferencer, match));

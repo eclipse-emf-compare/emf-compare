@@ -18,6 +18,7 @@ import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.ResourceNode;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.EMFComparePlugin;
 import org.eclipse.emf.compare.diagram.diagramdiff.BusinessDiagramShowHideElement;
 import org.eclipse.emf.compare.diagram.ui.GMFComparePlugin;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -97,8 +98,8 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				// retrieve the selected diff in structureViewer.
-//				System.out.println("selectionChanged()");
-//				redraw();
+				// System.out.println("selectionChanged()");
+				// redraw();
 			}
 		});
 
@@ -168,8 +169,9 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 	 */
 	public void redraw() {
 		viewer.getControl().redraw();
-		if (viewer.getContents() != null)
+		if (viewer.getContents() != null) {
 			viewer.getContents().refresh();
+		}
 	}
 
 	/**
@@ -184,8 +186,9 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 
 		// load the models
 		final Resource resource = loadResource(input, inputName);
-		if (resource == null)
+		if (resource == null) {
 			return;
+		}
 
 		// retrieve the diagram from the resource and display it
 		displayDiagram(getDiagramFromResource(resource));
@@ -321,8 +324,9 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 		if (!GMFComparePlugin.isValid(eobj)) {
 			if (eobj instanceof Diagram) {
 				checkAndDisplayDiagram((Diagram)eobj);
-			} else
+			} else {
 				return null;
+			}
 		}
 		return eobj;
 	}
@@ -350,10 +354,11 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 	 * @return the first diagram found in the resource
 	 */
 	public Diagram getDiagramFromResource(final Resource resource) {
-		for (Object rootElement : resource.getContents())
+		for (Object rootElement : resource.getContents()) {
 			if (rootElement instanceof Diagram) {
 				return (Diagram)rootElement;
 			}
+		}
 		return null;
 	}
 
@@ -368,12 +373,13 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 	 */
 	private Resource loadResource(Object object, String objectName) {
 		Resource res = null;
-		if (object instanceof List<?> && !((List<?>)object).isEmpty())
+		if (object instanceof List<?> && !((List<?>)object).isEmpty()) {
 			res = loadResource(((List<?>)object).get(0), objectName);
-		else if (object instanceof Resource) {
+		} else if (object instanceof Resource) {
 			res = (Resource)object;
 		} else {
-			System.out.println("unsupported unput type");
+			// FIXME externalize this
+			EMFComparePlugin.log("unsupported unput type", false); //$NON-NLS-1$
 		}
 		return res;
 	}
@@ -386,16 +392,17 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 	 * @return the name of the resource
 	 */
 	private String getName(Object object) {
-		String res = "";
-		if (object instanceof ResourceNode)
+		String res = ""; //$NON-NLS-1$
+		if (object instanceof ResourceNode) {
 			res = URI.createPlatformResourceURI(
 					((ResourceNode)object).getResource().getFullPath().toString(), true).toString();
-		else if (object instanceof Resource)
+		} else if (object instanceof Resource) {
 			res = ((Resource)object).getURI().lastSegment();
-		else if (object instanceof ITypedElement)
+		} else if (object instanceof ITypedElement) {
 			res = ((ITypedElement)object).getName();
-		else if (object instanceof List<?> && !((List<?>)object).isEmpty())
+		} else if (object instanceof List<?> && !((List<?>)object).isEmpty()) {
 			res = getName(((List<?>)object).get(0));
+		}
 		return res;
 	}
 
@@ -406,8 +413,9 @@ public class GMFContentMergeViewerTab implements IModelContentMergeViewerTab {
 	 *            the diagram to display in the viewer
 	 */
 	protected final void displayDiagram(final Diagram diag) {
-		if (diag == null)
+		if (diag == null) {
 			return;
+		}
 		currentDiag = diag;
 		// be sure the viewer will be correctly refreshed ( connections )
 		viewer.getEditPartRegistry().clear();

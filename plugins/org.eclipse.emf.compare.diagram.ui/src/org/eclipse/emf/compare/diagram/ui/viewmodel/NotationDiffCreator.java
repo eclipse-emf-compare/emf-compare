@@ -46,7 +46,8 @@ public final class NotationDiffCreator {
 	public void setInput(Object input) {
 		if (input != null) {
 			if (!(input instanceof ModelCompareInput)) {
-				EMFComparePlugin.log("input must be an instance of ModelCompareInput", true);
+				// FIXME externalize this
+				EMFComparePlugin.log("input must be an instance of ModelCompareInput", true); //$NON-NLS-1$
 				return;
 			}
 			this.compareInput = (ModelCompareInput)input;
@@ -55,7 +56,9 @@ public final class NotationDiffCreator {
 
 	/**
 	 * Annotate models.
-	 * @param side Side to annotate.
+	 * 
+	 * @param side
+	 *            Side to annotate.
 	 */
 	public void addEAnnotations(MatchSide side) {
 		final List<DiffElement> diffs = compareInput.getDiffAsList();
@@ -64,7 +67,9 @@ public final class NotationDiffCreator {
 
 	/**
 	 * De-annotate models.
-	 * @param side Side to annotate.
+	 * 
+	 * @param side
+	 *            Side to annotate.
 	 */
 	public void removeEAnnotations(MatchSide side) {
 		final List<DiffElement> diffs = compareInput.getDiffAsList();

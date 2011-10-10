@@ -31,48 +31,54 @@ import org.eclipse.uml2.uml.util.UMLSwitch;
 
 /**
  * View label provider for UMLView.
+ * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diagram.provider.AbstractLabelProvider#elementLabel(org.eclipse.gmf.runtime.notation.View)
 	 */
+	@Override
 	public String elementLabel(View view) {
 		if (view == null) {
 			throw new IllegalArgumentException("view"); //$NON-NLS-1$
 		}
 		final ITextAwareEditPart editPart = DiffUtil.getTextEditPart(view);
 		final EObject semanticElement = getSemanticElement(editPart);
-		
-		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)editPart.getEditPolicy(IMaskManagedLabelEditPolicy.MASK_MANAGED_LABEL_EDIT_POLICY);
+
+		final IMaskManagedLabelEditPolicy policy = (IMaskManagedLabelEditPolicy)editPart
+				.getEditPolicy(IMaskManagedLabelEditPolicy.MASK_MANAGED_LABEL_EDIT_POLICY);
 		final String label = getLabelSwitch(policy).doSwitch(semanticElement);
-		
+
 		if (label != null && label.length() > 0) {
 			return label;
 		}
-		
-		//fall-through super implementation
+
+		// fall-through super implementation
 		return super.elementLabel(view);
 	}
 
 	/**
 	 * Get the label switch in relation to the label edit policy.
-	 * @param labelEditPolicy The policy.
+	 * 
+	 * @param labelEditPolicy
+	 *            The policy.
 	 * @return The switch.
 	 */
 	protected LabelSwitch getLabelSwitch(IMaskManagedLabelEditPolicy labelEditPolicy) {
 		return new LabelSwitch(labelEditPolicy);
 	}
-	
+
 	/**
 	 * Switch to return the label in relation to the kind of model object.
+	 * 
 	 * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
 	 */
 	static class LabelSwitch extends UMLSwitch<String> {
-		
+
 		/**
 		 * The label edit policy.
 		 */
@@ -80,7 +86,9 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 
 		/**
 		 * Constructor.
-		 * @param pLabelEditPolicy The edit policy.
+		 * 
+		 * @param pLabelEditPolicy
+		 *            The edit policy.
 		 */
 		LabelSwitch(IMaskManagedLabelEditPolicy pLabelEditPolicy) {
 			this.labelEditPolicy = pLabelEditPolicy;
@@ -88,12 +96,13 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 
 		/**
 		 * Returns the label edit policy.
+		 * 
 		 * @return the labelEditPolicy The policy.
 		 */
 		public IMaskManagedLabelEditPolicy getLabelEditPolicy() {
 			return labelEditPolicy;
 		}
-		
+
 		@Override
 		public String caseProperty(Property object) {
 			int displayValue = ICustomAppearence.DEFAULT_UML_PROPERTY;
@@ -102,7 +111,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 			}
 			return PropertyUtil.getCustomLabel(object, displayValue);
 		}
-		
+
 		@Override
 		public String caseOperation(Operation object) {
 			int displayValue = ICustomAppearence.DEFAULT_UML_OPERATION;
@@ -111,7 +120,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 			}
 			return OperationUtil.getCustomLabel(object, displayValue);
 		}
-		
+
 		@Override
 		public String caseInstanceSpecification(InstanceSpecification object) {
 			int displayValue = ICustomAppearence.DEFAULT_UML_INSTANCESPECIFICATION;
@@ -120,7 +129,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 			}
 			return InstanceSpecificationUtil.getCustomLabel(object, displayValue);
 		}
-		
+
 		@Override
 		public String caseCollaborationUse(CollaborationUse object) {
 			int displayValue = ICustomAppearence.DEFAULT_UML_PROPERTY;
@@ -129,7 +138,7 @@ public abstract class AbstractUMLViewLabelProvider extends AbstractLabelProvider
 			}
 			return CollaborationUseUtil.getCustomLabel(object, displayValue);
 		}
-		
+
 		@Override
 		public String caseParameter(Parameter object) {
 			int displayValue = ICustomAppearence.DEFAULT_UML_PARAMETER;

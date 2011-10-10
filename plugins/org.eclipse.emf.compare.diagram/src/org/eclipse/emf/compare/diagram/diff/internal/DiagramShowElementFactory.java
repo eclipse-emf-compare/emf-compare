@@ -21,15 +21,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class DiagramShowElementFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
-	/**
-	 * Constructor.
-	 */
-	public DiagramShowElementFactory() {
-		super();
-	}
 
 	/**
 	 * {@inheritDoc}

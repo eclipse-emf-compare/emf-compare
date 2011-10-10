@@ -22,9 +22,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class BusinessDiagramLabelChangeItemProvider extends DiagramLabelChangeItemProvider {
-	// CHECKSTYLE:ON
 	/**
 	 * Constructor.
 	 * 

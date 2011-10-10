@@ -17,9 +17,7 @@ import org.eclipse.emf.common.notify.Adapter;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class BusinessDiagramdiffItemProviderAdapterFactory extends DiagramdiffItemProviderAdapterFactory {
-	// CHECKSTYLE:ON
 	@Override
 	public Adapter createDiagramMoveNodeAdapter() {
 		if (diagramMoveNodeItemProvider == null) {

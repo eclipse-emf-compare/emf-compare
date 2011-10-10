@@ -33,7 +33,7 @@ public interface DiagramdiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNAME = "diagramdiff";
+	String eNAME = "diagramdiff"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI.
@@ -41,7 +41,7 @@ public interface DiagramdiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/diagram/1.0";
+	String eNS_URI = "http://www.eclipse.org/emf/compare/diff/diagram/1.0"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name.
@@ -49,7 +49,7 @@ public interface DiagramdiffPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_PREFIX = "diagramdiff";
+	String eNS_PREFIX = "diagramdiff"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package.

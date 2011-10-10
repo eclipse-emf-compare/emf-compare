@@ -25,15 +25,20 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * The tab that contains the Papryus viewer.
+ * 
  * @author Mickael Barbero <a href="mailto:mickael.barbero@obeo.fr">mickael.barbero@obeo.fr</a>
  */
 public class PapyrusContentMergeViewerTab extends GMFContentMergeViewerTab {
 
 	/**
 	 * Constructor.
-	 * @param parent The parent composite.
-	 * @param side The side.
-	 * @param parentFolder The parent folder.
+	 * 
+	 * @param parent
+	 *            The parent composite.
+	 * @param side
+	 *            The side.
+	 * @param parentFolder
+	 *            The parent folder.
 	 */
 	public PapyrusContentMergeViewerTab(Composite parent, int side, GMFContentMergeTabFolder parentFolder) {
 		super(parent, side, parentFolder);
@@ -68,7 +73,9 @@ public class PapyrusContentMergeViewerTab extends GMFContentMergeViewerTab {
 
 	/**
 	 * Get the list of diagrams from the given resource.
-	 * @param resource The resource.
+	 * 
+	 * @param resource
+	 *            The resource.
 	 * @return The list of diagrams.
 	 */
 	public List<Diagram> getDiagrams(Resource resource) {
@@ -76,7 +83,7 @@ public class PapyrusContentMergeViewerTab extends GMFContentMergeViewerTab {
 
 		final TreeIterator<EObject> eAllContents = resource.getAllContents();
 		while (eAllContents.hasNext()) {
-			final EObject element = (EObject)eAllContents.next();
+			final EObject element = eAllContents.next();
 			if (element instanceof PageRef) {
 				final EObject emfPageIdentifier = ((PageRef)element).getEmfPageIdentifier();
 				if (emfPageIdentifier instanceof Diagram) {
@@ -93,9 +100,10 @@ public class PapyrusContentMergeViewerTab extends GMFContentMergeViewerTab {
 
 	/**
 	 * {@inheritDoc}
-	 *
+	 * 
 	 * @see org.eclipse.emf.compare.diagram.ui.mergeviewer.GMFContentMergeViewerTab#getDiagramFromResource(org.eclipse.emf.ecore.resource.Resource)
 	 */
+	@Override
 	public Diagram getDiagramFromResource(final Resource resource) {
 		final List<Diagram> diagrams = getDiagrams(resource);
 		return diagrams.get(0);

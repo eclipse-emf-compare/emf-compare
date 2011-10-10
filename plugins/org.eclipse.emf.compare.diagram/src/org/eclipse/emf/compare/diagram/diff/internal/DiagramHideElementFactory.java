@@ -22,16 +22,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class DiagramHideElementFactory extends AbstractDiffExtensionFactory {
-	// CHECKSTYLE:ON
-	/**
-	 * Constructor.
-	 */
-	public DiagramHideElementFactory() {
-		super();
-	}
-
 	/**
 	 * Constructor.
 	 * 

@@ -50,6 +50,7 @@ Checkstyle 5.0 compatible
     </module>
     <module name="AbstractClassName">
       <property name="severity" value="error"/>
+      <property name="format" value="^Abstract.*$"/>
     </module>
     <module name="ConstantName">
       <property name="severity" value="error"/>

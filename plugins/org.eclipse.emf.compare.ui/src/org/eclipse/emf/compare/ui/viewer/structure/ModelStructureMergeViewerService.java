@@ -45,7 +45,7 @@ public final class ModelStructureMergeViewerService {
 	 * Constructor.
 	 */
 	private ModelStructureMergeViewerService() {
-
+		// Do nothing
 	}
 
 	/**

@@ -21,9 +21,7 @@ import org.eclipse.gmf.runtime.notation.Node;
  * 
  * @author Cedric Notot <a href="mailto:cedric.notot@obeo.fr">cedric.notot@obeo.fr</a>
  */
-// CHECKSTYLE:OFF
 public class BusinessDiagramMoveNodeItemProvider extends DiagramMoveNodeItemProvider {
-	// CHECKSTYLE:ON
 	/**
 	 * Constructor.
 	 * 

@@ -19,7 +19,6 @@ import org.eclipse.emf.compare.diagram.diagramdiff.DiagramMoveNode;
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramShowElement;
 import org.eclipse.emf.compare.diagram.diagramdiff.DiagramdiffFactory;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
  * Extension of {@link DiagramdiffFactoryImpl} to divert the creation of the extensions.
@@ -41,16 +40,10 @@ public class BusinessDiagramdiffFactoryImpl extends DiagramdiffFactoryImpl {
 	 * @return The factory.
 	 */
 	public static DiagramdiffFactory init() {
-		try {
-			final DiagramdiffFactory theDiagramdiffFactory = (DiagramdiffFactory)EPackage.Registry.INSTANCE
-					.getEFactory("http://www.eclipse.org/emf/compare/diff/diagram/1.0"); //$NON-NLS-1$
-			if (theDiagramdiffFactory != null) {
-				return theDiagramdiffFactory;
-			}
-			// CHECKSTYLE:OFF
-		} catch (Exception exception) {
-			// CHECKSTYLE:ON
-			EcorePlugin.INSTANCE.log(exception);
+		final DiagramdiffFactory theDiagramdiffFactory = (DiagramdiffFactory)EPackage.Registry.INSTANCE
+				.getEFactory("http://www.eclipse.org/emf/compare/diff/diagram/1.0"); //$NON-NLS-1$
+		if (theDiagramdiffFactory != null) {
+			return theDiagramdiffFactory;
 		}
 		return new BusinessDiagramdiffFactoryImpl();
 	}

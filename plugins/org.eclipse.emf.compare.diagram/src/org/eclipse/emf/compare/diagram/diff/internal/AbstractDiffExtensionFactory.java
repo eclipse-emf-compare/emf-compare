@@ -34,9 +34,10 @@ public abstract class AbstractDiffExtensionFactory implements IDiffExtensionFact
 	private MatchModel match;
 
 	/**
-	 * Constructor.
+	 * Enables use of the default constructor.
 	 */
 	public AbstractDiffExtensionFactory() {
+		// Do nothing
 	}
 
 	/**

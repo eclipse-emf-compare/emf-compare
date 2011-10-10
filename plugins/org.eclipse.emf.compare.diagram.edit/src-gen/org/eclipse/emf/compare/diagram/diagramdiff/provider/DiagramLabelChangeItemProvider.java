@@ -80,8 +80,8 @@ public class DiagramLabelChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_AbstractDiffExtension_hideElements_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"),
+				 getString("_UI_AbstractDiffExtension_hideElements_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_hideElements_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__HIDE_ELEMENTS,
 				 true,
 				 false,
@@ -102,8 +102,8 @@ public class DiagramLabelChangeItemProvider
 			(createItemPropertyDescriptor
 				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
 				 getResourceLocator(),
-				 getString("_UI_AbstractDiffExtension_isCollapsed_feature"),
-				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"),
+				 getString("_UI_AbstractDiffExtension_isCollapsed_feature"), //$NON-NLS-1$
+				 getString("_UI_PropertyDescriptor_description", "_UI_AbstractDiffExtension_isCollapsed_feature", "_UI_AbstractDiffExtension_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				 DiffPackage.Literals.ABSTRACT_DIFF_EXTENSION__IS_COLLAPSED,
 				 true,
 				 false,
@@ -121,7 +121,7 @@ public class DiagramLabelChangeItemProvider
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramLabelChange"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramLabelChange")); //$NON-NLS-1$
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class DiagramLabelChangeItemProvider
 	@Override
 	public String getText(Object object) {
 		DiagramLabelChange diagramLabelChange = (DiagramLabelChange)object;
-		return getString("_UI_DiagramLabelChange_type") + " " + diagramLabelChange.isConflicting();
+		return getString("_UI_DiagramLabelChange_type") + " " + diagramLabelChange.isConflicting(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
