@@ -227,11 +227,6 @@ public final class MatchService {
 	 */
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
 			ResourceSet rightResourceSet, Map<String, Object> options) throws InterruptedException {
-
-		// Resolve all proxies so that all resources get loaded
-		resolveAll(leftResourceSet);
-		resolveAll(rightResourceSet);
-
 		// see if scope provider was passed in via option, otherwise create default one
 		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(options,
 				leftResourceSet, rightResourceSet);
@@ -326,10 +321,6 @@ public final class MatchService {
 	public static MatchResourceSet doResourceSetMatch(ResourceSet leftResourceSet,
 			ResourceSet rightResourceSet, ResourceSet ancestorResourceSet, Map<String, Object> options)
 			throws InterruptedException {
-		resolveAll(leftResourceSet);
-		resolveAll(rightResourceSet);
-		resolveAll(ancestorResourceSet);
-
 		// apply filter to scope provider, then filter resources with provided scopes
 		final IMatchScopeProvider scopeProvider = MatchScopeProviderUtil.getScopeProvider(options,
 				leftResourceSet, rightResourceSet, ancestorResourceSet);
@@ -587,28 +578,5 @@ public final class MatchService {
 			roots.add(proxy);
 		}
 		return roots;
-	}
-
-	/**
-	 * This will allow us to resolve all references from resources contained within <code>resourceSet</code>,
-	 * loading referenced resources along the way.
-	 * 
-	 * @param resourceSet
-	 *            The resourceSet we wish all references of resolved.
-	 */
-	private static void resolveAll(ResourceSet resourceSet) {
-		final List<Resource> resources = resourceSet.getResources();
-		for (int i = 0; i < resources.size(); ++i) {
-			final Resource currentResource = resources.get(i);
-			final Iterator<EObject> resourceContent = currentResource.getAllContents();
-			while (resourceContent.hasNext()) {
-				final EObject eObject = resourceContent.next();
-				final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
-				while (objectChildren.hasNext()) {
-					// Resolves cross references by simply visiting them.
-					objectChildren.next();
-				}
-			}
-		}
 	}
 }
