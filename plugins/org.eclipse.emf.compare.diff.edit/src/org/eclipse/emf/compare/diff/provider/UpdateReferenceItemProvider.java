@@ -65,10 +65,7 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 			operationImage = getResourceLocator().getImage("full/obj16/UpdateReference"); //$NON-NLS-1$
 		}
 
-		EObject value = getLeftValue(updateReference);
-		if (value == null) {
-			value = getRightValue(updateReference);
-		}
+		EObject value = getSemanticElement(updateReference);
 
 		if (value != null) {
 			final Object labelImage = AdapterUtils.getItemProviderImage(value);
@@ -79,6 +76,23 @@ public class UpdateReferenceItemProvider extends ReferenceChangeItemProvider imp
 		}
 
 		return operationImage;
+	}
+
+	/**
+	 * Return the semantic element for the diff operation. This method is interesting for subclasses which
+	 * customize the diff in a way the generic update reference item provider would fail. See bug #360203.
+	 * 
+	 * @param updateReference
+	 *            an update of a reference.
+	 * @return the semantic element corresponding to the element.
+	 * @since 1.3
+	 */
+	protected EObject getSemanticElement(final UpdateReference updateReference) {
+		EObject value = getLeftValue(updateReference);
+		if (value == null) {
+			value = getRightValue(updateReference);
+		}
+		return value;
 	}
 
 	/**
