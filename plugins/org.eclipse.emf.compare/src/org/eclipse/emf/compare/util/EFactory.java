@@ -33,7 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class EFactory {
+public final class EFactory {
 	/**
 	 * Utility classes don't need to (and shouldn't) be instantiated.
 	 */
