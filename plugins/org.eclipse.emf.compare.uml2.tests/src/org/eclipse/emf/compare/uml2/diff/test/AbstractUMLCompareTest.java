@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
@@ -39,6 +41,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -63,6 +66,8 @@ public abstract class AbstractUMLCompareTest {
 
 	/** BACK_PATH. */
 	static final String BACK_PATH = ".."; //$NON-NLS-1$
+
+	private Set<ResourceSet> sets = new LinkedHashSet<ResourceSet>();
 
 	/**
 	 * Before treatment.
@@ -262,6 +267,15 @@ public abstract class AbstractUMLCompareTest {
 
 		Assert.assertEquals(ModelUtils.serialize(referenceResource.getContents().get(0)),
 				ModelUtils.serialize(mergedResource.getContents().get(0)));
+		cleanup(referenceResource.getResourceSet());
+		cleanup(mergedResource.getResourceSet());
+	}
+
+	private void cleanup(ResourceSet resourceSet) {
+		for (Resource res : resourceSet.getResources()) {
+			res.unload();
+		}
+		resourceSet.getResources().clear();
 	}
 
 	/**
@@ -355,10 +369,23 @@ public abstract class AbstractUMLCompareTest {
 				originalResourceSet, matchOptions);
 		final DiffResourceSet computedDiff = DiffService.doDiff(computedMatch);
 
-		final ResourceSet computedResourceSet = new ResourceSetImpl();
+		final ResourceSet computedResourceSet = createResourceSet();
 		final Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
 		computedResource.getContents().add(computedDiff);
 		return computedDiff;
+	}
+
+	protected ResourceSetImpl createResourceSet() {
+		ResourceSetImpl newSet = new ResourceSetImpl();
+		sets.add(newSet);
+		return newSet;
+	}
+
+	@After
+	public void cleanResourceSets() {
+		for (ResourceSet set : sets) {
+			cleanup(set);
+		}
 	}
 
 	/**
@@ -385,7 +412,7 @@ public abstract class AbstractUMLCompareTest {
 				localResourceSet, originalResourceSet, matchOptions);
 		final DiffResourceSet computedDiff = DiffService.doDiff(computedMatch);
 
-		final ResourceSet computedResourceSet = new ResourceSetImpl();
+		final ResourceSet computedResourceSet = createResourceSet();
 		final Resource computedResource = computedResourceSet.createResource(URI.createURI(EXPECTED_EMFDIFF));
 		computedResource.getContents().add(computedDiff);
 		return computedDiff;
@@ -403,7 +430,7 @@ public abstract class AbstractUMLCompareTest {
 	 *             exception.
 	 */
 	private ResourceSet getModelResourceSet(String testFolderPath, String model) throws IOException {
-		final ResourceSet resourceSet = new ResourceSetImpl();
+		final ResourceSet resourceSet = createResourceSet();
 		final Resource original = resourceSet.createResource(URI.createURI(BACK_PATH + model));
 		original.load(
 				AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
@@ -421,7 +448,7 @@ public abstract class AbstractUMLCompareTest {
 	 *             exception.
 	 */
 	private DiffResourceSet getExpectedDiff(String testFolderPath) throws IOException {
-		final ResourceSet expectedResourceSet = new ResourceSetImpl();
+		final ResourceSet expectedResourceSet = createResourceSet();
 		final ComparisonResourceSetSnapshot expectedDiffSnapshot = (ComparisonResourceSetSnapshot)ModelUtils
 				.load(AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
 						+ EXPECTED_SUFFIX), EXPECTED_EMFDIFF, expectedResourceSet);
