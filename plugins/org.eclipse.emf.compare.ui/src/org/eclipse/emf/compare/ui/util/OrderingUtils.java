@@ -29,7 +29,9 @@ public final class OrderingUtils {
 	 * Constructor.
 	 */
 	private OrderingUtils() {
-
+		/*
+		 * nothing special here.
+		 */
 	}
 
 	/**

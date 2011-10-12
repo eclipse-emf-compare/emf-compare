@@ -57,6 +57,9 @@ public class StructureView extends ViewPart {
 	 * The constructor.
 	 */
 	public StructureView() {
+		/*
+		 * nothing to do.
+		 */
 	}
 
 	/**
