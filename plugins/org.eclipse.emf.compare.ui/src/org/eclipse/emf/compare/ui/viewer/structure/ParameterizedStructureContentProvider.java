@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.ui.util.OrderingUtils;
 import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility.UIDifferenceGroup;
@@ -35,11 +36,28 @@ import org.eclipse.emf.ecore.EObject;
  * @since 1.2
  */
 public class ParameterizedStructureContentProvider extends ModelStructureContentProvider {
-	/** The checked group. */
+
+	/**
+	 * The checked group.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	private static IDifferenceGroupingFacility mSelectedGroupFacility;
 
-	/** The checked filters. */
+	/**
+	 * The checked filters.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	private static List<IDifferenceFilter> mSelectedFilters;
+
+	/** The checked group. */
+	private IDifferenceGroupingFacility selectedGroupFacility;
+
+	/** The checked filters. */
+	private List<IDifferenceFilter> selectedFilters;
 
 	/**
 	 * Constructor.
@@ -56,17 +74,20 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 * 
 	 * @param compareConfiguration
 	 *            {@link CompareConfiguration} used for this comparison.
-	 * @param selectedGroupFacility
+	 * @param pSelectedGroupFacility
 	 *            The grouping facility that is to be used to group the children returned by this content
 	 *            provider.
-	 * @param selectedFilters
+	 * @param pSelectedFilters
 	 *            The filters that are to be applied to the children returned by this content provider.
 	 */
 	public ParameterizedStructureContentProvider(CompareConfiguration compareConfiguration,
-			IDifferenceGroupingFacility selectedGroupFacility, List<IDifferenceFilter> selectedFilters) {
+			IDifferenceGroupingFacility pSelectedGroupFacility, List<IDifferenceFilter> pSelectedFilters) {
 		this(compareConfiguration);
-		mSelectedGroupFacility = selectedGroupFacility;
-		mSelectedFilters = selectedFilters;
+		selectedGroupFacility = pSelectedGroupFacility;
+		selectedFilters = pSelectedFilters;
+		// deprecated:
+		mSelectedGroupFacility = pSelectedGroupFacility;
+		mSelectedFilters = pSelectedFilters;
 	}
 
 	/**
@@ -76,7 +97,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 */
 	@Override
 	public Object[] getElements(Object inputElement) {
-		if (mSelectedGroupFacility == null) {
+		if (selectedGroupFacility == null) {
 			return super.getElements(inputElement);
 		}
 		return getGroupsWithChildren().toArray();
@@ -127,7 +148,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 *            The element of which we need to check the "hidden" state.
 	 * @return <code>true</code> if the given element should be hidden, <code>false</code> otherwise.
 	 */
-	private static boolean shouldBeHidden(EObject element) {
+	private boolean shouldBeHidden(EObject element) {
 		boolean result = false;
 		if (element instanceof DiffElement) {
 			final DiffElement diff = (DiffElement)element;
@@ -138,7 +159,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 					result = true;
 				}
 			}
-			result = result || isHidden((DiffElement)element);
+			result = result || isHiddenInMyContext((DiffElement)element);
 		}
 		if (element instanceof DiffGroup) {
 			final DiffGroup group = (DiffGroup)element;
@@ -158,7 +179,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 *            filtered.
 	 * @return The count of changes that are neither hidden nor filtered.
 	 */
-	private static int filteredSubchanges(DiffGroup group) {
+	private int filteredSubchanges(DiffGroup group) {
 		final Iterator<DiffElement> it = group.getSubDiffElements().iterator();
 		int result = 0;
 		while (it.hasNext()) {
@@ -192,7 +213,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 * @return The grouped elements.
 	 */
 	protected Object[] groupElements(Object parentElement) {
-		if (parentElement instanceof UIDifferenceGroup && mSelectedGroupFacility != null) {
+		if (parentElement instanceof UIDifferenceGroup && selectedGroupFacility != null) {
 			final List<DiffElement> diffs = new ArrayList<DiffElement>();
 
 			final Object[] differences = super.getElements(null);
@@ -202,13 +223,15 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 					final DiffModel diffModel = (DiffModel)object;
 					final EList<DiffElement> allDifferences = diffModel.getDifferences();
 					for (DiffElement diffElement : allDifferences) {
-						if (parentElement.equals(mSelectedGroupFacility.belongsTo(diffElement))) {
+						if (parentElement.equals(selectedGroupFacility.belongsTo(diffElement))
+								&& !shouldBeHidden(diffElement)) {
 							diffs.add(diffElement);
 						}
 					}
 				} else if (object instanceof DiffElement) {
 					final DiffElement diffElement = (DiffElement)object;
-					if (parentElement.equals(mSelectedGroupFacility.belongsTo(diffElement))) {
+					if (parentElement.equals(selectedGroupFacility.belongsTo(diffElement))
+							&& !shouldBeHidden(diffElement)) {
 						diffs.add(diffElement);
 					}
 				}
@@ -235,7 +258,8 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 		final Iterator<Object> itResult = lResult.iterator();
 		while (itResult.hasNext()) {
 			final Object obj = itResult.next();
-			if (obj instanceof DiffElement && !(obj instanceof DiffGroup) && isHidden((DiffElement)obj)) {
+			if (obj instanceof DiffElement && !(obj instanceof DiffGroup)
+					&& isHiddenInMyContext((DiffElement)obj)) {
 				filteredResult.remove(obj);
 			}
 		}
@@ -246,23 +270,26 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	/**
 	 * Checks if the element is hidden by a filter at least.
 	 * 
+	 * @deprecated Use ParameterizedStructureContentProvider#isHiddenInMyContext(DiffElement) instead of it.
 	 * @param element
 	 *            The element.
 	 * @return true if it is hidden, false otherwise.
 	 */
+	@Deprecated
 	public static boolean isHidden(DiffElement element) {
-		if (mSelectedFilters != null) {
-			final Iterator<IDifferenceFilter> it = mSelectedFilters.iterator();
-			while (it.hasNext()) {
-				final IDifferenceFilter diffFilter = it.next();
-				// We do not support filtering of DiffGroup
-				// (as its DifferenceKind is always "Change" -- see DiffElementImpl#getKind() for how)
-				if (!(element instanceof DiffGroup) && diffFilter.hides(element)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return OrderingUtils.isHidden(element, mSelectedFilters);
+	}
+
+	/**
+	 * Checks if the element is hidden by a filter at least.
+	 * 
+	 * @param element
+	 *            The element.
+	 * @return true if it is hidden, false otherwise.
+	 * @since 1.3
+	 */
+	public boolean isHiddenInMyContext(DiffElement element) {
+		return OrderingUtils.isHidden(element, selectedFilters);
 	}
 
 	/**
@@ -273,11 +300,11 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	protected List<UIDifferenceGroup> getGroupsWithChildren() {
 		final List<UIDifferenceGroup> result = new ArrayList<IDifferenceGroupingFacility.UIDifferenceGroup>();
 
-		if (mSelectedGroupFacility != null) {
+		if (selectedGroupFacility != null) {
 
 			initGroups();
 
-			final Iterator<UIDifferenceGroup> groups = mSelectedGroupFacility.allGroups().iterator();
+			final Iterator<UIDifferenceGroup> groups = selectedGroupFacility.allGroups().iterator();
 			while (groups.hasNext()) {
 				final UIDifferenceGroup group = groups.next();
 				if (getChildren(group).length > 0) {
@@ -299,7 +326,7 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 			initChildrenGroups(d);
 
 			if (d instanceof DiffElement) {
-				mSelectedGroupFacility.belongsTo((DiffElement)d);
+				selectedGroupFacility.belongsTo((DiffElement)d);
 			}
 		}
 	}
@@ -317,17 +344,31 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 			initChildrenGroups(d);
 
 			if (d instanceof DiffElement) {
-				mSelectedGroupFacility.belongsTo((DiffElement)d);
+				selectedGroupFacility.belongsTo((DiffElement)d);
 			}
 		}
 	}
 
 	/**
-	 * Setter of mSelectedGroupFacility.
+	 * Setter of selectedGroupFacility.
 	 * 
 	 * @param groupingFacility
 	 *            The facility that is to be used to group this content provider children.
+	 * @since 1.3
 	 */
+	public void setSelectedGroup(IDifferenceGroupingFacility groupingFacility) {
+		selectedGroupFacility = groupingFacility;
+	}
+
+	/**
+	 * Setter of mSelectedGroupFacility.
+	 * 
+	 * @deprecated Use ParameterizedStructureContentProvider#setSelectedGroup(IDifferenceGroupingFacility)
+	 *             instead of it.
+	 * @param groupingFacility
+	 *            The facility that is to be used to group this content provider children.
+	 */
+	@Deprecated
 	public static void setSelectedGroupFacility(IDifferenceGroupingFacility groupingFacility) {
 		mSelectedGroupFacility = groupingFacility;
 	}
@@ -339,10 +380,21 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 *            Filter that is to be added to the list of applied difference filters.
 	 */
 	public void addSelectedFilter(IDifferenceFilter filter) {
-		if (mSelectedFilters == null) {
-			mSelectedFilters = new ArrayList<IDifferenceFilter>();
+		if (selectedFilters == null) {
+			selectedFilters = new ArrayList<IDifferenceFilter>();
 		}
-		mSelectedFilters.add(filter);
+		selectedFilters.add(filter);
+	}
+
+	/**
+	 * Set the selected filters.
+	 * 
+	 * @param filters
+	 *            Selected filters.
+	 * @since 1.3
+	 */
+	public void setSelectedFilters(List<IDifferenceFilter> filters) {
+		selectedFilters = filters;
 	}
 
 	/**
@@ -352,8 +404,8 @@ public class ParameterizedStructureContentProvider extends ModelStructureContent
 	 *            Filter that is to be removed from the list of applied difference filters.
 	 */
 	public void removeSelectedFilter(IDifferenceFilter filter) {
-		if (mSelectedFilters != null) {
-			mSelectedFilters.remove(filter);
+		if (selectedFilters != null) {
+			selectedFilters.remove(filter);
 		}
 	}
 }

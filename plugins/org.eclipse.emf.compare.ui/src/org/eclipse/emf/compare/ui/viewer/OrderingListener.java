@@ -13,9 +13,12 @@ package org.eclipse.emf.compare.ui.viewer;
 /**
  * Defines a listener on any ordering changes.
  * 
+ * @deprecated Use org.eclipse.jface.util.IPropertyChangeListener instead of it, on
+ *             org.eclipse.compare.CompareConfiguration.
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @since 1.2
  */
+@Deprecated
 public interface OrderingListener {
 	/**
 	 * Event id for the application of an additional filter.

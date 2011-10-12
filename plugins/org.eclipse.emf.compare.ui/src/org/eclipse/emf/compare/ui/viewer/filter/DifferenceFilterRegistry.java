@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Platform;
  * "org.eclipse.emf.compare.ui.diff.filter" extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 1.2
+ * @since 1.3
  */
 public enum DifferenceFilterRegistry {
 
@@ -33,6 +33,34 @@ public enum DifferenceFilterRegistry {
 
 	/** Name of the extension point to parse for extensions. */
 	public static final String DIFF_FILTER_EXTENSION_POINT = "org.eclipse.emf.compare.ui.diff.filter"; //$NON-NLS-1$
+
+	/**
+	 * ID for filtering of added elements.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String FILTERING_ADDED_ELEMENTS_ID = "addElements"; //$NON-NLS-1$
+
+	/**
+	 * ID for filtering of removed elements.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String FILTERING_REMOVED_ELEMENTS_ID = "removedElements"; //$NON-NLS-1$
+
+	/**
+	 * ID for filtering of moved elements.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String FILTERING_MOVED_ELEMENTS_ID = "movedElements"; //$NON-NLS-1$
+
+	/**
+	 * ID for filtering of changed elements.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String FILTERING_CHANGED_ELEMENTS_ID = "changedElements"; //$NON-NLS-1$
 
 	/** The separator used to convert the list of descriptors into a string value. */
 	private static final String SEPARATOR = ";"; //$NON-NLS-1$

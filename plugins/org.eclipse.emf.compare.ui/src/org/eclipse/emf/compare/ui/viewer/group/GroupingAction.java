@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.group;
 
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewer.AbstractOrderingAction;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureContentProvider;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer;
@@ -19,11 +20,11 @@ import org.eclipse.jface.action.IAction;
  * Action to group difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public class GroupingAction extends AbstractOrderingAction {
 	/** Descriptor for groups. */
-	private DifferenceGroupingFacilityDescriptor mDesc;
+	private IDifferenceGroupingFacility relatedGroup;
 
 	/**
 	 * Constructor.
@@ -47,7 +48,7 @@ public class GroupingAction extends AbstractOrderingAction {
 	 */
 	public GroupingAction(DifferenceGroupingFacilityDescriptor desc, ParameterizedStructureMergeViewer viewer) {
 		super(desc.getName(), IAction.AS_RADIO_BUTTON, viewer);
-		mDesc = desc;
+		relatedGroup = desc.getExtension();
 	}
 
 	/**
@@ -58,12 +59,10 @@ public class GroupingAction extends AbstractOrderingAction {
 	@Override
 	protected void doRun(ParameterizedStructureContentProvider provider) {
 		if (isChecked()) {
-			if (mDesc != null) {
-				ParameterizedStructureContentProvider.setSelectedGroupFacility(mDesc.getExtension());
-			} else {
-				ParameterizedStructureContentProvider.setSelectedGroupFacility(null);
-			}
+			mViewer.getCompareConfiguration().setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_GROUP,
+					relatedGroup);
+		} else {
+			mViewer.getCompareConfiguration().setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_GROUP, null);
 		}
-
 	}
 }

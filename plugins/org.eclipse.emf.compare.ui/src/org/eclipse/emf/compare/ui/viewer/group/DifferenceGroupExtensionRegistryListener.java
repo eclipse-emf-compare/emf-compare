@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IRegistryEventListener;
  * Listener to manage the registration of groups extensions.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public class DifferenceGroupExtensionRegistryListener implements IRegistryEventListener {
 	/**

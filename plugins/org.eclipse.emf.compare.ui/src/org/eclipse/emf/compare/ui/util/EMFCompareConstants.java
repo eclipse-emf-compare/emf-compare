@@ -159,6 +159,20 @@ public interface EMFCompareConstants {
 	 */
 	String PROPERTY_STRUCTURE_SELECTION = "structure.selection.changed"; //$NON-NLS-1$
 
+	/**
+	 * Key of the property associated with an add of filter in the structure merge viewer.
+	 * 
+	 * @since 1.3
+	 */
+	String PROPERTY_STRUCTURE_FILTERS = "structure.ordering.filters"; //$NON-NLS-1$
+
+	/**
+	 * Key of the property associated with any change on filters in the structure merge viewer.
+	 * 
+	 * @since 1.3
+	 */
+	String PROPERTY_STRUCTURE_GROUP = "structure.ordering.group"; //$NON-NLS-1$
+
 	/** Three-way change constant (value 2) indicating right side. */
 	int RIGHT = 2;
 }

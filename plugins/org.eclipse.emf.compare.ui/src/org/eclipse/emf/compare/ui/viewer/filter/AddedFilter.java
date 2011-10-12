@@ -17,7 +17,7 @@ import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
  * A filter to mask all the added elements between two versions of model.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public class AddedFilter implements IDifferenceFilter {
 	/**

@@ -24,14 +24,29 @@ import org.eclipse.core.runtime.Platform;
  * "org.eclipse.emf.compare.ui.diff.group" extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 1.2
+ * @since 1.3
  */
 public enum DifferenceGroupingFacilityRegistry {
+
 	/** Singleton instance of the registry. */
 	INSTANCE;
 
 	/** Name of the extension point to parse for extensions. */
 	public static final String DIFF_GROUPING_EXTENSION_POINT = "org.eclipse.emf.compare.ui.diff.group"; //$NON-NLS-1$
+
+	/**
+	 * ID for grouping per kind of changes.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String GROUPING_PER_KIND_OF_CHANGES_ID = "changes.kind"; //$NON-NLS-1$
+
+	/**
+	 * ID for grouping per meta-model element.
+	 * 
+	 * @since 1.3
+	 */
+	public static final String GROUPING_PER_METAMODEL_ELEMENT_ID = "eclass.kind"; //$NON-NLS-1$
 
 	/** This Map will be in charge of storing the different contributed descriptors. */
 	private final Map<String, DifferenceGroupingFacilityDescriptor> storage = new HashMap<String, DifferenceGroupingFacilityDescriptor>();
@@ -92,5 +107,22 @@ public enum DifferenceGroupingFacilityRegistry {
 	 */
 	public synchronized void clearRegistry() {
 		storage.clear();
+	}
+
+	/**
+	 * Transforms a string value into a {@link IDifferenceGroupingFacility}. The string value has to be the id
+	 * of the descriptor.
+	 * 
+	 * @param descriptor
+	 *            The id of the descriptor.
+	 * @return the {@link IDifferenceGroupingFacility}.
+	 * @since 1.3
+	 */
+	public IDifferenceGroupingFacility getGroupingFacility(String descriptor) {
+		final DifferenceGroupingFacilityDescriptor desc = storage.get(descriptor);
+		if (desc != null) {
+			return desc.getExtension();
+		}
+		return null;
 	}
 }

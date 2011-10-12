@@ -21,7 +21,7 @@ import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
  * The difference filter descriptor represents an filter contribution trough the extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 1.2
+ * @since 1.3
  */
 public final class DifferenceFilterDescriptor {
 	/** Name of the "id" property of the Difference filter extension point. */

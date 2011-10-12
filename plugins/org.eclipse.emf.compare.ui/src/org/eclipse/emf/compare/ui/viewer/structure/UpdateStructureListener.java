@@ -19,9 +19,11 @@ import org.eclipse.jface.viewers.IContentProvider;
  * An {@link OrderingListener} which listens to an ordering event to update the content provider linked to the
  * structure viewer.
  * 
+ * @deprecated
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
  * @since 1.2
  */
+@Deprecated
 public class UpdateStructureListener implements OrderingListener {
 	/** The viewer. */
 	private ContentViewer mViewer;

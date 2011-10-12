@@ -18,7 +18,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * Interface for the grouping facilities that can be provided through the extension point.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 1.2
+ * @since 1.3
  */
 public interface IDifferenceGroupingFacility {
 	/**

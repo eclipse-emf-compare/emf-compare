@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.filter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,11 +25,16 @@ import org.eclipse.jface.action.IAction;
  * The menu to select the filters.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public class FiltersMenu extends AbstractOrderingMenu {
 	/** The viewer. */
 	private ParameterizedStructureMergeViewer mViewer;
+
+	/**
+	 * Selected filters.
+	 */
+	private List<IDifferenceFilter> selectedFilters = new ArrayList<IDifferenceFilter>();
 
 	/**
 	 * Constructor.
@@ -39,6 +45,16 @@ public class FiltersMenu extends AbstractOrderingMenu {
 	public FiltersMenu(ParameterizedStructureMergeViewer viewer) {
 		super(EMFCompareUIMessages.getString("ModelStructureMergeViewer.filtering.tooltip")); //$NON-NLS-1$
 		mViewer = viewer;
+	}
+
+	/**
+	 * Returns the selectedFilters.
+	 * 
+	 * @since 1.3
+	 * @return The selectedFilters.
+	 */
+	public List<IDifferenceFilter> getSelectedFilters() {
+		return selectedFilters;
 	}
 
 	/**
@@ -60,6 +76,10 @@ public class FiltersMenu extends AbstractOrderingMenu {
 					.getDescriptors(preferenceValue);
 			final boolean hasToBeChecked = defaultDescriptors.contains(desc);
 
+			if (hasToBeChecked) {
+				selectedFilters.add(desc.getExtension());
+			}
+
 			addItemToMenu(desc, hasToBeChecked);
 		}
 	}
@@ -71,7 +91,7 @@ public class FiltersMenu extends AbstractOrderingMenu {
 	 *            The descriptor.
 	 */
 	protected void addItemToMenu(DifferenceFilterDescriptor desc) {
-		final IAction action = new FilteringAction(desc, mViewer);
+		final IAction action = new FilteringAction(desc, mViewer, this);
 		addContribution(action);
 	}
 
@@ -85,7 +105,7 @@ public class FiltersMenu extends AbstractOrderingMenu {
 	 * @since 1.3
 	 */
 	protected void addItemToMenu(DifferenceFilterDescriptor desc, boolean checked) {
-		final IAction action = new FilteringAction(desc, mViewer, checked);
+		final IAction action = new FilteringAction(desc, mViewer, checked, this);
 		addContribution(action);
 	}
 }

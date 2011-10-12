@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.filter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewer.AbstractOrderingAction;
-import org.eclipse.emf.compare.ui.viewer.OrderingListener;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureContentProvider;
 import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureMergeViewer;
 import org.eclipse.jface.action.IAction;
@@ -20,11 +23,16 @@ import org.eclipse.jface.action.IAction;
  * Action to filter difference elements.
  * 
  * @author <a href="mailto:cedric.notot@obeo.fr">Cedric Notot</a>
- * @since 1.2
+ * @since 1.3
  */
 public class FilteringAction extends AbstractOrderingAction {
 	/** Descriptor for filters. */
-	private DifferenceFilterDescriptor mDesc;
+	private IDifferenceFilter relatedFilter;
+
+	/**
+	 * Related menu.
+	 */
+	private FiltersMenu menu;
 
 	/**
 	 * Constructor.
@@ -33,18 +41,15 @@ public class FilteringAction extends AbstractOrderingAction {
 	 *            The descriptor of filters.
 	 * @param viewer
 	 *            The viewer.
+	 * @param pMenu
+	 *            The menu managing this action.
+	 * @since 1.3
 	 */
-	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer) {
+	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer,
+			FiltersMenu pMenu) {
 		super(desc.getName(), IAction.AS_CHECK_BOX, viewer);
-		mDesc = desc;
-		// try {
-		// final ImageDescriptor imgDesc = ImageDescriptor.createFromURL(FileLocator.toFileURL(Platform
-		//					.getBundle("org.eclipse.emf.compare.diff.edit") //$NON-NLS-1$
-		//					.getEntry("icons/full/obj16/AddModelElement.gif"))); //$NON-NLS-1$
-		// setImageDescriptor(imgDesc);
-		// } catch (IOException e) {
-		// // No management
-		// }
+		relatedFilter = desc.getExtension();
+		this.menu = pMenu;
 	}
 
 	/**
@@ -56,12 +61,15 @@ public class FilteringAction extends AbstractOrderingAction {
 	 *            The viewer.
 	 * @param checked
 	 *            The flag to check or not the action.
+	 * @param pMenu
+	 *            The menu managing this action.
 	 * @since 1.3
 	 */
 	public FilteringAction(DifferenceFilterDescriptor desc, ParameterizedStructureMergeViewer viewer,
-			boolean checked) {
-		this(desc, viewer);
+			boolean checked, FiltersMenu pMenu) {
+		this(desc, viewer, pMenu);
 		setChecked(checked);
+		this.menu = pMenu;
 	}
 
 	/**
@@ -71,10 +79,14 @@ public class FilteringAction extends AbstractOrderingAction {
 	 */
 	@Override
 	protected void doRun(ParameterizedStructureContentProvider provider) {
+		final List<IDifferenceFilter> filters = new ArrayList<IDifferenceFilter>();
+		filters.addAll(menu.getSelectedFilters());
 		if (isChecked()) {
-			mViewer.fireOrderingChanged(OrderingListener.ADD_FILTER_EVENT, mDesc);
+			filters.add(relatedFilter);
 		} else {
-			mViewer.fireOrderingChanged(OrderingListener.REMOVE_FILTER_EVENT, mDesc);
+			filters.remove(relatedFilter);
 		}
+		mViewer.getCompareConfiguration()
+				.setProperty(EMFCompareConstants.PROPERTY_STRUCTURE_FILTERS, filters);
 	}
 }

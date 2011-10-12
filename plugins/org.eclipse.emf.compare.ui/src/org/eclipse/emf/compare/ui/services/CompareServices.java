@@ -22,9 +22,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.compare.diff.engine.IMatchManager.MatchSide;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSetSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
+import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility;
+import org.eclipse.emf.compare.ui.views.StructureView;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -35,6 +39,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -135,6 +140,112 @@ public final class CompareServices {
 		final List<String> ids = new ArrayList<String>();
 		ids.add(objectId);
 		openEditor(input, ids);
+	}
+
+	/**
+	 * Open a view to display the differences from a difference snapshot input.
+	 * 
+	 * @param input
+	 *            The input.
+	 * @throws InterruptedException
+	 *             The exception.
+	 * @throws InvocationTargetException
+	 *             The exception.
+	 * @throws PartInitException
+	 *             The exception.
+	 */
+	public static void openView(final ComparisonSnapshot input) throws InterruptedException,
+			InvocationTargetException, PartInitException {
+		final IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.showView("org.eclipse.emf.compare.ui.views.StructureView"); //$NON-NLS-1$
+		if (part instanceof StructureView) {
+			((StructureView)part).setInput(input);
+			((StructureView)part).setDifferenceFilters(null);
+			((StructureView)part).setDifferenceGroupingFacility(null);
+		}
+
+	}
+
+	/**
+	 * Open a view to display the differences from a difference snapshot input.
+	 * 
+	 * @param input
+	 *            The input.
+	 * @param filters
+	 *            The filters to apply
+	 * @param group
+	 *            The ordering to apply.
+	 * @throws InterruptedException
+	 *             The exception.
+	 * @throws InvocationTargetException
+	 *             The exception.
+	 * @throws PartInitException
+	 *             The exception.
+	 */
+	public static void openView(final ComparisonSnapshot input, final List<IDifferenceFilter> filters,
+			final IDifferenceGroupingFacility group) throws InterruptedException, InvocationTargetException,
+			PartInitException {
+		final IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+				.showView("org.eclipse.emf.compare.ui.views.StructureView"); //$NON-NLS-1$
+		if (part instanceof StructureView) {
+			((StructureView)part).setInput(input);
+			((StructureView)part).setDifferenceFilters(filters);
+			((StructureView)part).setDifferenceGroupingFacility(group);
+		}
+
+	}
+
+	/**
+	 * Open a view to display the differences from an opened EMF compare editor. Open a view with a difference
+	 * snapshot input.
+	 * 
+	 * @param editor
+	 *            The compare editor.
+	 * @throws InterruptedException
+	 *             exception.
+	 * @throws InvocationTargetException
+	 *             exception.
+	 * @throws PartInitException
+	 *             exception.
+	 */
+	public static void openView(IEditorPart editor) throws InterruptedException, InvocationTargetException,
+			PartInitException {
+		final ISelectionProvider provider = editor.getEditorSite().getSelectionProvider();
+		if (provider instanceof IInputProvider) {
+			final Object root = ((IInputProvider)provider).getInput();
+			if (root instanceof ComparisonSnapshot) {
+				openView((ComparisonSnapshot)root);
+			}
+		}
+	}
+
+	/**
+	 * Open a view to display the differences from an opened EMF compare editor. Open a view with a difference
+	 * snapshot input.
+	 * 
+	 * @param editor
+	 *            The compare editor.
+	 * @param filters
+	 *            The filters to apply
+	 * @param group
+	 *            The ordering to apply.
+	 * @throws InterruptedException
+	 *             exception.
+	 * @throws InvocationTargetException
+	 *             exception.
+	 * @throws PartInitException
+	 *             exception.
+	 */
+	public static void openView(IEditorPart editor, final List<IDifferenceFilter> filters,
+			final IDifferenceGroupingFacility group) throws InterruptedException, InvocationTargetException,
+			PartInitException {
+		final ISelectionProvider provider = editor.getEditorSite().getSelectionProvider();
+		if (provider instanceof IInputProvider) {
+			final Object root = ((IInputProvider)provider).getInput();
+			if (root instanceof ComparisonSnapshot) {
+				openView((ComparisonSnapshot)root, filters, group);
+			}
+		}
 	}
 
 	/**

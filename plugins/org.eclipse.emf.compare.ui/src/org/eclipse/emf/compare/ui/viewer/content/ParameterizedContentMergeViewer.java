@@ -10,11 +10,23 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.ui.viewer.content;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.ui.EMFCompareUIPlugin;
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
+import org.eclipse.emf.compare.ui.util.OrderingUtils;
+import org.eclipse.emf.compare.ui.viewer.content.part.IModelContentMergeViewerTab;
 import org.eclipse.emf.compare.ui.viewer.content.part.ModelContentMergeTabFolder;
 import org.eclipse.emf.compare.ui.viewer.content.part.ParameterizedContentMergeTabFolder;
-import org.eclipse.emf.compare.ui.viewer.structure.ParameterizedStructureContentProvider;
+import org.eclipse.emf.compare.ui.viewer.content.part.diff.ParameterizedContentMergeDiffTab;
+import org.eclipse.emf.compare.ui.viewer.filter.DifferenceFilterRegistry;
+import org.eclipse.emf.compare.ui.viewer.filter.IDifferenceFilter;
+import org.eclipse.emf.compare.util.EMFComparePreferenceConstants;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -24,8 +36,33 @@ import org.eclipse.swt.widgets.Composite;
  * @since 1.2
  */
 public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
-	/** Instance of this viewer. */
+
+	/**
+	 * Instance of this viewer.
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	private static ParameterizedContentMergeViewer instance;
+
+	/**
+	 * Merge tab folder to manage.
+	 * 
+	 * @since 1.3
+	 */
+	protected List<ParameterizedContentMergeTabFolder> folders;
+
+	/**
+	 * Selected filters.
+	 * 
+	 * @since 1.3
+	 */
+	protected List<IDifferenceFilter> selectedFilters = new ArrayList<IDifferenceFilter>();
+
+	/**
+	 * Listener to react on ordering changes.
+	 */
+	private IPropertyChangeListener orderingSelectionListener;
 
 	/**
 	 * Constructor.
@@ -37,7 +74,28 @@ public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
 	 */
 	public ParameterizedContentMergeViewer(Composite parent, CompareConfiguration config) {
 		super(parent, config);
+
+		// deprecated:
 		instance = this;
+
+		final String preferenceValue = EMFCompareUIPlugin.getDefault().getPreferenceStore()
+				.getString(EMFComparePreferenceConstants.PREFERENCES_KEY_DEFAULT_FILTERS);
+		selectedFilters = DifferenceFilterRegistry.INSTANCE.getFilters(preferenceValue);
+		orderingSelectionListener = new IPropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent event) {
+				if (event.getProperty().equals(EMFCompareConstants.PROPERTY_STRUCTURE_FILTERS)) {
+					selectedFilters = (List<IDifferenceFilter>)event.getNewValue();
+					for (ParameterizedContentMergeTabFolder folder : folders) {
+						final IModelContentMergeViewerTab tab = folder.getTreePart();
+						if (tab instanceof ParameterizedContentMergeDiffTab) {
+							((ParameterizedContentMergeDiffTab)tab).setSelectedFilters(selectedFilters);
+						}
+					}
+					update();
+				}
+			}
+		};
+		configuration.addPropertyChangeListener(orderingSelectionListener);
 	}
 
 	/**
@@ -75,7 +133,7 @@ public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
 		 */
 		@Override
 		protected boolean hasLineBeDrawn(DiffElement diff) {
-			return super.hasLineBeDrawn(diff) && !ParameterizedStructureContentProvider.isHidden(diff);
+			return super.hasLineBeDrawn(diff) && !OrderingUtils.isHidden(diff, selectedFilters);
 		}
 
 	}
@@ -83,8 +141,10 @@ public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
 	/**
 	 * Returns the instance of the viewer.
 	 * 
+	 * @deprecated
 	 * @return The instance of the viewer.
 	 */
+	@Deprecated
 	public static ParameterizedContentMergeViewer getInstance() {
 		return instance;
 	}
@@ -95,8 +155,16 @@ public class ParameterizedContentMergeViewer extends ModelContentMergeViewer {
 	 * @see org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer#createModelContentMergeTabFolder(org.eclipse.swt.widgets.Composite,
 	 *      int)
 	 */
+
 	@Override
 	protected ModelContentMergeTabFolder createModelContentMergeTabFolder(Composite composite, int side) {
-		return new ParameterizedContentMergeTabFolder(this, composite, side);
+		final ParameterizedContentMergeTabFolder folder = new ParameterizedContentMergeTabFolder(this,
+				composite, side);
+		if (folders == null) {
+			folders = new ArrayList<ParameterizedContentMergeTabFolder>();
+		}
+		folders.add(folder);
+		return folder;
 	}
+
 }

@@ -163,4 +163,18 @@ Contributors:
             name="Changed elements">
       </filter>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.eclipse.emf.compare.ui"
+            name="EMF Compare">
+      </category>
+      <view
+            category="org.eclipse.emf.compare.ui"
+            class="org.eclipse.emf.compare.ui.views.StructureView"
+            id="org.eclipse.emf.compare.ui.views.StructureView"
+            name="Structure View"
+            restorable="true">
+      </view>
+   </extension>
 </plugin>

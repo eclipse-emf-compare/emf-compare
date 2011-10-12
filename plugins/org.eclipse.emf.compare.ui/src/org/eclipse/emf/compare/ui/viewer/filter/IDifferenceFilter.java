@@ -16,7 +16,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffElement;
  * Interface for EMF Compare's difference filters.
  * 
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
- * @since 1.2
+ * @since 1.3
  */
 public interface IDifferenceFilter {
 	/**
