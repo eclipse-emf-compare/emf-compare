@@ -6,6 +6,8 @@
 		<cs:dependency name="org.eclipse.emf.compare.tests" componentType="eclipse.feature" />
 		<cs:dependency name="org.eclipse.emf.compare.epatch.tests" componentType="osgi.bundle" />
 		<cs:dependency name="org.eclipse.emf.compare.mpatch.test" componentType="osgi.bundle" />
+		<cs:dependency name="org.eclipse.emf.compare.logical.tests" componentType="osgi.bundle" />
+		<cs:dependency name="org.eclipse.emf.compare.uml2.tests" componentType="osgi.bundle" />		
 	</cs:dependencies>
 
 	<cs:actions>
