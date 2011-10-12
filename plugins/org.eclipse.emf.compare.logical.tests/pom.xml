@@ -9,10 +9,9 @@
      <relativePath>../..</relativePath>
   </parent>
   <groupId>org.eclipse.emf.compare</groupId>
-  <artifactId>org.eclipse.emf.compare.epatch.tests</artifactId>
+  <artifactId>org.eclipse.emf.compare.logical.tests</artifactId>
   <version>1.3.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
-  
   
   <build>
     <resources>
@@ -30,7 +29,7 @@
 		<version>${tycho-version}</version>
 		<configuration>
 			<includes>
-				<include>**/*Test.class</include>
+				<include>org/eclipse/emf/compare/logical/tests/suite/AllTests.class</include>
 			</includes>	
 			<useUIHarness>false</useUIHarness>
 			<useUIThread>false</useUIThread>

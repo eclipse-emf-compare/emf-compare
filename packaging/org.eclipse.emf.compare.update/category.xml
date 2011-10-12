@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description url="http://www.obeo.fr">
-      Viewpoint
-   </description>
-   <feature url="features/org.eclipse.emf.compare_1.2.0.qualifier.jar" id="org.eclipse.emf.compare" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare" version="0.0.0">
+      <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.doc_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.doc" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.doc" version="0.0.0">
+      <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.examples_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.examples" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.sdk" version="0.0.0">
+      <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.mpatch_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.mpatch" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.team.subversive" version="0.0.0">
+      <category name="compare_integration"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.nl1_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.nl1" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.mpatch" version="0.0.0">
+      <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.sdk_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.sdk" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.ui.capabilities" version="0.0.0">
+      <category name="compare"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.team.subversive_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.team.subversive" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature id="org.eclipse.emf.compare.uml2" version="0.0.0">
+      <category name="compare_integration"/>
    </feature>
-   <feature url="features/org.eclipse.emf.compare.ui.capabilities_1.2.0.qualifier.jar" id="org.eclipse.emf.compare.ui.capabilities" version="1.2.0.qualifier">
-      <category name="EMF Compare"/>
+   <feature url="features/org.eclipse.emf.compare.diagram.ecoretools_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.ecoretools" version="1.3.0.qualifier">
+      <category name="compare_integration"/>
    </feature>
-   <category-def name="EMF Compare" label="EMF Compare">
+   <feature url="features/org.eclipse.emf.compare.diagram.gmf_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.gmf" version="1.3.0.qualifier">
+      <category name="compare_integration"/>
+   </feature>
+   <feature url="features/org.eclipse.emf.compare.diagram.papyrus_1.3.0.qualifier.jar" id="org.eclipse.emf.compare.diagram.papyrus" version="1.3.0.qualifier">
+      <category name="compare_integration"/>
+   </feature>
+   <category-def name="compare" label="EMF Compare">
       <description>
-         Model Comparison Support
+         EMF Compare features.
+      </description>
+   </category-def>
+   <category-def name="compare_integration" label="EMF Compare Integrations">
+      <description>
+         Features to integrate EMF Compare with other tools.
       </description>
    </category-def>
 </site>
