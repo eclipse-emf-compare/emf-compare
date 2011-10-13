@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.unit.match.engine;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,19 +57,21 @@ public class MatchOptionsTest extends TestCase {
 		final Resource distinctMetaModel = EcoreModelUtils.createModel(writerCount, bookPerWriterCount, seed,
 				false, true).eResource();
 
-		final Map<String, Object> options = new HashMap<String, Object>();
+		Map<String, Object> options = Collections.emptyMap();
 		MatchModel match = MatchService.doResourceMatch(testResource, sameMetaModel, options);
 		assertEquals(
 				"There shouldn't have been a single unmatched element between a model and one using the same metamodel.",
 				0, match.getUnmatchedElements().size());
 
 		// With distinct metamodels, EMF Compare will consider the roots as matched.
+		options = Collections.emptyMap();
 		match = MatchService.doResourceMatch(testResource, distinctMetaModel, options);
 		assertEquals(
 				"We shouldn't have been able to match more than the roots when using distinct metamodel.", 0,
 				match.getMatchedElements().get(0).getSubMatchElements().size());
 
 		// Now let's set this option to true
+		options = new HashMap<String, Object>();
 		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
 
 		// As the tests will now be metamodel-independant, we expect to find a matched element for each
@@ -77,6 +80,8 @@ public class MatchOptionsTest extends TestCase {
 				"There shouldn't have been a single unmatched element between a model and one using the same metamodel.",
 				0, match.getUnmatchedElements().size());
 
+		options = new HashMap<String, Object>();
+		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, true);
 		match = MatchService.doResourceMatch(testResource, distinctMetaModel, options);
 		assertEquals(
 				"There shouldn't have been a single unmatched element with OPTION_DISTINCT_METAMODELS set to true.",
