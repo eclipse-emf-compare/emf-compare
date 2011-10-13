@@ -48,10 +48,9 @@ import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.team.ui.mapping.ISynchronizationCompareAdapter;
 import org.junit.Test;
 
-@SuppressWarnings("nls")
 public class ResourceMappingTest extends AbstractLogicalModelTest {
-	private final String[] ecoreModelPaths = new String[] {"ecore/library.ecore", "ecore/books.ecore",
-			"ecore/writers.ecore",};
+	private final String[] ecoreModelPaths = new String[] {"ecore/library.ecore", "ecore/books.ecore", //$NON-NLS-1$ //$NON-NLS-2$
+			"ecore/writers.ecore",}; //$NON-NLS-1$
 
 	/**
 	 * Make sure that we can find a model provider for each of the models, and that this model provider is
@@ -64,7 +63,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 			ModelProvider modelProvider = getModelProvider(iResource);
 
 			assertNotNull(modelProvider);
-			assertEquals(modelProvider.getId(), EMFModelProvider.PROVIDER_ID);
+			assertEquals(EMFModelProvider.PROVIDER_ID, modelProvider.getId());
 		}
 	}
 
@@ -89,7 +88,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 					assertTrue(mapping instanceof EMFResourceMapping);
 				}
 			} catch (CoreException e) {
-				fail("Exception while retrieving ResourceMappings for '" + iResource + "'");
+				fail("Exception while retrieving ResourceMappings for '" + iResource + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -203,7 +202,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						}
 					}
 				} catch (CoreException e) {
-					fail("Couldn't compare '" + iResource + "' through the ResourceMapping.");
+					fail("Couldn't compare '" + iResource + "' through the ResourceMapping."); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -268,7 +267,7 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 						assertNull(compareInput.getAncestor());
 					}
 				} catch (CoreException e) {
-					fail("Couldn't create a compare input for '" + iResource + "' from the ResourceMapping.");
+					fail("Couldn't create a compare input for '" + iResource + "' from the ResourceMapping."); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -315,9 +314,9 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 			} catch (CoreException e) {
 				final String message;
 				if (context instanceof RemoteResourceMappingContext) {
-					message = "Exception while retrieving remote ResourceMappings for '" + base + "'";
+					message = "Exception while retrieving remote ResourceMappings for '" + base + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					message = "Exception while retrieving ResourceMappings for '" + base + "'";
+					message = "Exception while retrieving ResourceMappings for '" + base + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				fail(message);
 			}
@@ -422,9 +421,9 @@ public class ResourceMappingTest extends AbstractLogicalModelTest {
 			} catch (CoreException e) {
 				final String message;
 				if (context instanceof RemoteResourceMappingContext) {
-					message = "Exception while resolving logical model for '" + base + "'";
+					message = "Exception while resolving logical model for '" + base + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 				} else {
-					message = "Exception while resolving logical model for '" + base + "'";
+					message = "Exception while resolving logical model for '" + base + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				fail(message);
 			}
