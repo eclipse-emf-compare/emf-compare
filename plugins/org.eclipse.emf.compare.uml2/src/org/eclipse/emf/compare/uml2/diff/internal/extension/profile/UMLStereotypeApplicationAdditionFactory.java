@@ -98,8 +98,14 @@ public class UMLStereotypeApplicationAdditionFactory extends AbstractUMLApplicat
 		final DiffModel rootDiffGroup = (DiffModel)EcoreUtil.getRootContainer(input);
 
 		final EObject leftBase = UMLUtil.getBaseElement(modelElement.getLeftElement());
+		final EObject rightBase = getEngine().getMatched(leftBase, MatchSide.RIGHT);
 
-		return findOrCreateDiffGroup(rootDiffGroup, leftBase, crossReferencer);
+		if (rightBase == null) {
+			return findOrCreateDiffGroup(rootDiffGroup, leftBase, crossReferencer);
+		} else {
+			return findOrCreateDiffGroup(rootDiffGroup, rightBase, crossReferencer);
+		}
+
 	}
 
 	/**

@@ -41,6 +41,25 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 		super(engine);
 	}
 
+	/**
+	 * Looks for all the stereotype applications inside the given {@link EObject} of the model from the
+	 * specified side. When stereotype applications are found on the child model objects, this returns the
+	 * potential differences, related to these objects, from a given difference type.
+	 * 
+	 * @param obj
+	 *            The start point to look for child objects on which stereotypes are applied.
+	 * @param crossReferencer
+	 *            A cross referencer to look for difference from model objects.
+	 * @param diffSide
+	 *            The side from which it is required to look for:
+	 *            DiffPackage.Literals.UPDATE_MODEL_ELEMENT__LEFT_ELEMENT or
+	 *            DiffPackage.Literals.UPDATE_MODEL_ELEMENT__RIGHT_ELEMENT
+	 * @param expectedDiff
+	 *            The type of difference to look for:
+	 *            UML2DiffPackage.Literals.UML_STEREOTYPE_APPLICATION_ADDITION or
+	 *            UML2DiffPackage.Literals.UML_STEREOTYPE_APPLICATION_REMOVAL
+	 * @return The list of matching differences.
+	 */
 	protected List<DiffElement> getEmbeddedStereotypeApplicationDiffs(EObject obj,
 			EcoreUtil.CrossReferencer crossReferencer, EReference diffSide, EClass expectedDiff) {
 		final List<DiffElement> result = new ArrayList<DiffElement>();
@@ -63,6 +82,13 @@ public abstract class AbstractUMLElementChangeFactory extends AbstractDiffExtens
 		return result;
 	}
 
+	/**
+	 * Retrieve all the stereotype applied on the given UML element and its children (all descendants).
+	 * 
+	 * @param elt
+	 *            The UML element.
+	 * @return The list of stereotype applications.
+	 */
 	protected List<EObject> getAllStereotypeApplications(Element elt) {
 		final List<EObject> result = new ArrayList<EObject>();
 		result.addAll(elt.getStereotypeApplications());
