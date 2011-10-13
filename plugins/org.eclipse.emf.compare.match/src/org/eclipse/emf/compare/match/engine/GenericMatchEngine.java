@@ -1641,57 +1641,7 @@ public class GenericMatchEngine implements IMatchEngine {
 							subMapping.getRightElement(), current2Scope, monitor));
 		}
 
-		// we also have to match those elements, which are directly referenced but not contained in the
-		// specified match scope. Otherwise the diff engine will detect reference changes also in case
-		// there is no change
-		final List<EObject> current1ScopeExternalReferences = getScopeExternalReferences(current1,
-				current1Scope);
-		final List<EObject> current2ScopeExternalReferences = getScopeExternalReferences(current2,
-				current2Scope);
-		for (EObject leftRef : current1ScopeExternalReferences) {
-			final EObject rightRef = findMostSimilar(leftRef, current2ScopeExternalReferences);
-			if (rightRef != null && findMostSimilar(rightRef, current1ScopeExternalReferences) == leftRef) {
-				// create a mapping to indicate an exact match (as this is out of scope)
-				final Match2Elements externalRefMapping = MatchFactory.eINSTANCE.createMatch2Elements();
-				externalRefMapping.setLeftElement(leftRef);
-				externalRefMapping.setRightElement(rightRef);
-				externalRefMapping.setSimilarity(checker.absoluteMetric(leftRef, rightRef));
-				externalRefMappings.add(externalRefMapping);
-			}
-		}
-
 		return mapping;
-	}
-
-	/**
-	 * Obtain all EObjets, which are referenced by the given eObject ({@link EObject#getEAllReferences()}),
-	 * but are not part of the match scope.
-	 * 
-	 * @param eObject
-	 *            the eObject, whose references are to be regarded
-	 * @param scope
-	 *            the scope to decide whether the target of a given reference has to be included in the list
-	 *            of referenced objects or not
-	 * @return the list of all objects, referenced by the given one, which are not part of the scope
-	 */
-	@SuppressWarnings("unchecked")
-	private List<EObject> getScopeExternalReferences(EObject eObject, IMatchScope scope) {
-		final List<EObject> result = new ArrayList<EObject>();
-		// process all references to outside the scope
-		for (final EReference reference : eObject.eClass().getEAllReferences()) {
-			final Object value = eObject.eGet(reference);
-			if (value instanceof Collection) {
-				for (Object newValue : (Collection)value) {
-					if (!result.contains(newValue) && newValue instanceof EObject
-							&& !scope.isInScope((EObject)newValue))
-						result.add((EObject)newValue);
-				}
-			} else if (!result.contains(value) && value instanceof EObject
-					&& !scope.isInScope((EObject)value)) {
-				result.add((EObject)value);
-			}
-		}
-		return result;
 	}
 
 	/**
