@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.match.engine;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -76,19 +73,13 @@ public class DefaultMatchScope extends GenericMatchScope {
 	 */
 	@Override
 	protected void resolveAll(ResourceSet resourceSet) {
-		if (resourceSet != null) {
-			final List<Resource> resources = resourceSet.getResources();
-			for (int i = 0; i < resources.size(); ++i) {
-				final Iterator<EObject> resourceContent = resources.get(i).getAllContents();
-				while (resourceContent.hasNext()) {
-					final EObject eObject = resourceContent.next();
-					final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
-					while (objectChildren.hasNext()) {
-						// Resolves cross references by simply visiting them.
-						objectChildren.next();
-					}
-					addToScope(eObject.eResource());
-				}
+		if (resourceSet == null) {
+			return;
+		}
+		super.resolveAll(resourceSet);
+		for (Resource res : resourceSet.getResources()) {
+			if (!isInScope(res)) {
+				addToScope(res);
 			}
 		}
 	}

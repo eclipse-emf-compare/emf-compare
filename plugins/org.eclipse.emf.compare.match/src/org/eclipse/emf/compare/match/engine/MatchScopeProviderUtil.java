@@ -56,6 +56,7 @@ public final class MatchScopeProviderUtil {
 				scopeProvider = new DefaultMatchScopeProvider(resourceSets[0], resourceSets[1],
 						resourceSets[2]);
 			}
+			setScopeProvider(options, scopeProvider);
 		}
 		return scopeProvider;
 	}
@@ -82,6 +83,7 @@ public final class MatchScopeProviderUtil {
 			} else {
 				scopeProvider = new DefaultMatchScopeProvider(resources[0], resources[1], resources[2]);
 			}
+			setScopeProvider(options, scopeProvider);
 		}
 		return scopeProvider;
 	}
@@ -108,6 +110,7 @@ public final class MatchScopeProviderUtil {
 			} else {
 				scopeProvider = new DefaultMatchScopeProvider(eObjects[0], eObjects[1], eObjects[2]);
 			}
+			setScopeProvider(options, scopeProvider);
 		}
 		return scopeProvider;
 	}
@@ -127,5 +130,23 @@ public final class MatchScopeProviderUtil {
 			scopeProvider = (IMatchScopeProvider)options.get(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER);
 		}
 		return scopeProvider;
+	}
+
+	/**
+	 * Sets the scope provider to be used for this comparison.
+	 * 
+	 * @param options
+	 *            the options to process.
+	 * @param provider
+	 *            the {@link IMatchScopeProvider} that is to be put in the given option map.
+	 */
+	private static void setScopeProvider(Map<String, Object> options, IMatchScopeProvider provider) {
+		if (options != null) {
+			try {
+				options.put(MatchOptions.OPTION_MATCH_SCOPE_PROVIDER, provider);
+			} catch (UnsupportedOperationException e) {
+				// Don't store the scope provider
+			}
+		}
 	}
 }

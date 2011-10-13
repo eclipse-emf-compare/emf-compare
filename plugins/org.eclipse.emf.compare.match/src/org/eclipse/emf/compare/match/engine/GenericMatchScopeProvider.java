@@ -26,14 +26,26 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
  */
 public class GenericMatchScopeProvider implements IMatchScopeProvider {
 
-	/** The match scope used for the left side of comparison. */
-	private IMatchScope leftScope;
+	/**
+	 * The match scope used for the left side of comparison.
+	 * 
+	 * @since 1.3
+	 */
+	protected IMatchScope leftScope;
 
-	/** The match scope used for the right side of comparison. */
-	private IMatchScope rightScope;
+	/**
+	 * The match scope used for the right side of comparison.
+	 * 
+	 * @since 1.3
+	 */
+	protected IMatchScope rightScope;
 
-	/** The match scope used for the ancestor side of comparison. */
-	private IMatchScope ancestorScope;
+	/**
+	 * The match scope used for the ancestor side of comparison.
+	 * 
+	 * @since 1.3
+	 */
+	protected IMatchScope ancestorScope;
 
 	/**
 	 * Constructs a left and right {@link GenericMatchScope} with the given {@link EObject}s. No ancestor
@@ -162,8 +174,8 @@ public class GenericMatchScopeProvider implements IMatchScopeProvider {
 	public void applyResourceFilter(IResourceFilter filter) {
 		if (ancestorScope != null) {
 			applyExternalFilter(filter, ((GenericMatchScope)leftScope).getResourcesInScope(),
-					((GenericMatchScope)rightScope).getResourcesInScope(), ((GenericMatchScope)ancestorScope)
-							.getResourcesInScope());
+					((GenericMatchScope)rightScope).getResourcesInScope(),
+					((GenericMatchScope)ancestorScope).getResourcesInScope());
 		} else {
 			applyExternalFilter(filter, ((GenericMatchScope)leftScope).getResourcesInScope(),
 					((GenericMatchScope)rightScope).getResourcesInScope());

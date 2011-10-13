@@ -11,15 +11,19 @@
 package org.eclipse.emf.compare.match.engine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+
+import com.google.common.collect.Sets;
 
 /**
  * The default {@link IMatchScope} implementation, which can be constructed with a single {@link Resource} or
@@ -39,7 +43,7 @@ public class GenericMatchScope implements IMatchScope {
 	private final Set<Resource> resourcesInScope = new LinkedHashSet<Resource>();
 
 	/** the list of objects to be included in the scope. */
-	private final List<EObject> eObjectsInScope = new ArrayList<EObject>();
+	private final Set<EObject> eObjectsInScope = new LinkedHashSet<EObject>();
 
 	/**
 	 * Allows to construct a scope based on a single {@link EObject}. The constructed scope will include the
@@ -105,7 +109,11 @@ public class GenericMatchScope implements IMatchScope {
 		if (resource == null) {
 			return false;
 		}
-		return isInScope(resource);
+		final boolean inScope = isInScope(resource);
+		if (inScope) {
+			eObjectsInScope.add(eObject);
+		}
+		return inScope;
 	}
 
 	/**
@@ -133,7 +141,7 @@ public class GenericMatchScope implements IMatchScope {
 		if (eObject.eResource() != null) {
 			return eObject.eResource();
 		}
-		for (Resource resourceInScope : getResourcesInScope()) {
+		for (Resource resourceInScope : resourcesInScope) {
 			if (ModelUtils.contains(resourceInScope, eObject)) {
 				return resourceInScope;
 			}
@@ -147,7 +155,7 @@ public class GenericMatchScope implements IMatchScope {
 	 * @see org.eclipse.emf.compare.match.engine.IMatchScope#isInScope(org.eclipse.emf.ecore.resource.Resource)
 	 */
 	public boolean isInScope(Resource resource) {
-		if (getResourcesInScope().contains(resource)) {
+		if (resourcesInScope.contains(resource)) {
 			return true;
 		}
 		return false;
@@ -172,20 +180,63 @@ public class GenericMatchScope implements IMatchScope {
 	 * @since 1.3
 	 */
 	protected void resolveAll(ResourceSet resourceSet) {
-		if (resourceSet != null) {
-			final List<Resource> resources = resourceSet.getResources();
-			for (int i = 0; i < resources.size(); ++i) {
-				final Iterator<EObject> resourceContent = resources.get(i).getAllContents();
-				while (resourceContent.hasNext()) {
-					final EObject eObject = resourceContent.next();
-					final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
-					while (objectChildren.hasNext()) {
-						// Resolves cross references by simply visiting them.
-						objectChildren.next();
+		if (resourceSet == null) {
+			return;
+		}
+
+		Set<Resource> originalSet = new HashSet<Resource>(resourceSet.getResources());
+		resolveAll(originalSet);
+
+		Set<Resource> newSet = new HashSet<Resource>(resourceSet.getResources());
+		Set<Resource> delta = Sets.difference(originalSet, newSet);
+		while (delta.size() > 0) {
+			originalSet = newSet;
+			resolveAll(delta);
+
+			newSet = new HashSet<Resource>(resourceSet.getResources());
+			delta = Sets.difference(originalSet, newSet);
+		}
+	}
+
+	/**
+	 * Resolves all proxies within the given set of resources.
+	 * 
+	 * @param resources
+	 *            The resources we need to resolve.
+	 */
+	private void resolveAll(Set<Resource> resources) {
+		final Iterator<Resource> resourceIterator = resources.iterator();
+		while (resourceIterator.hasNext()) {
+			Resource current = resourceIterator.next();
+
+			final Iterator<EObject> resourceContent = current.getContents().iterator();
+			while (resourceContent.hasNext()) {
+				final EObject eObject = resourceContent.next();
+				resolveCrossReferences(eObject);
+				final TreeIterator<EObject> childContent = eObject.eAllContents();
+				while (childContent.hasNext()) {
+					final EObject child = childContent.next();
+					if (child.eResource() != current) {
+						childContent.prune();
+					} else {
+						resolveCrossReferences(child);
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Resolves the cross references of the given EObject.
+	 * 
+	 * @param eObject
+	 *            The EObject for which we are to resolve the cross references.
+	 */
+	private void resolveCrossReferences(EObject eObject) {
+		final Iterator<EObject> objectChildren = eObject.eCrossReferences().iterator();
+		while (objectChildren.hasNext()) {
+			// Resolves cross references by simply visiting them.
+			objectChildren.next();
+		}
+	}
 }
