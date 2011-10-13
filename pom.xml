@@ -37,7 +37,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.12.0</tycho-version>
+    <tycho-version>0.13.0</tycho-version>
   </properties>
 
 
@@ -75,13 +75,13 @@
     <module>plugins/org.eclipse.emf.compare.diff.edit</module>
     <module>plugins/org.eclipse.emf.compare.mpatch.common</module>
     <module>plugins/org.eclipse.emf.compare.team.subversive</module>
-    <!--
+
     <module>plugins/org.eclipse.emf.compare.tests</module>
     <module>plugins/org.eclipse.emf.compare.uml2.tests</module>
     <module>plugins/org.eclipse.emf.compare.epatch.tests</module>
     <module>plugins/org.eclipse.emf.compare.diagram.ui.tests</module>
     <module>plugins/org.eclipse.emf.compare.mpatch.test</module>
-   -->    
+
     <module>plugins/org.eclipse.emf.compare.mpatch.test.eachonce</module>
     <module>plugins/org.eclipse.emf.compare.examples</module>
     <module>plugins/org.eclipse.emf.compare.doc</module>
