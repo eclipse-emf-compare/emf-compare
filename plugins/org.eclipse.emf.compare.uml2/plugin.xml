@@ -26,7 +26,7 @@ Contributors:
             engineClass="org.eclipse.emf.compare.uml2.diff.UML2DiffEngine"
             fileExtension="uml"
             label="UML2 Diff Engine"
-            priority="highest">
+            priority="low">
       </diffengine>
    </extension>
    <extension
