@@ -12,6 +12,7 @@ Checkstyle 5.0 compatible
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
+    <property name="cacheFile" value="$\{cachefile\}"/>
     <module name="FileContentsHolder"/>
     <module name="RegexpSinglelineJava">
       <property name="id" value="illegal.regex.equals"/>
