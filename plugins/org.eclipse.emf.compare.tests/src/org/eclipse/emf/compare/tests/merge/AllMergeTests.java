@@ -39,6 +39,18 @@ import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttri
 import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesNoResource;
 import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesWithResource;
 import org.eclipse.emf.compare.tests.merge.multivaluedattribute.MultiValuedAttributeMergeUseCasesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayLocalChanges;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayLocalChangesNoResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayLocalChangesWithResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayLocalChangesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayRemoteChanges;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayRemoteChangesNoResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayRemoteChangesWithResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCases3WayRemoteChangesWithResourceSet;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCasesNoResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCasesWithResource;
+import org.eclipse.emf.compare.tests.merge.multivaluedreference.MultiValuedReferenceMergeUseCasesWithResourceSet;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases3WayLocalChanges;
 import org.eclipse.emf.compare.tests.merge.onemultivaluedcontainmentreference.SimpleMergeUseCases3WayLocalChangesNoResource;
@@ -90,6 +102,7 @@ import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedRef
 import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCasesWithResource;
 import org.eclipse.emf.compare.tests.merge.singlevaluedreference.SingleValuedReferenceMergeUseCasesWithResourceSet;
 
+@SuppressWarnings("nls")
 public class AllMergeTests {
 
 	public static Test suite() {
@@ -191,6 +204,19 @@ public class AllMergeTests {
 		suite.addTestSuite(SingleValuedReferenceMergeUseCasesWithResourceSet.class);
 		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayLocalChangesWithResourceSet.class);
 		suite.addTestSuite(SingleValuedReferenceMergeUseCases3WayRemoteChangesWithResourceSet.class);
+
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayLocalChanges.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayRemoteChanges.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCasesNoResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayLocalChangesNoResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayRemoteChangesNoResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCasesWithResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayLocalChangesWithResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayRemoteChangesWithResource.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCasesWithResourceSet.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayLocalChangesWithResourceSet.class);
+		suite.addTestSuite(MultiValuedReferenceMergeUseCases3WayRemoteChangesWithResourceSet.class);
 
 		/*
 		 * End of merge test metamodel use cases *

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merge:Node xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:merge="http://www.eclipse.org/emf/compare/tests/merge" name="root">
+  <containmentRef1 name="firstNode"/>
+  <containmentRef1 name="secondNode"/>
+  <containmentRef1 name="thirdNode"/>
+  <containmentRef1 name="fourthNode"/>
+  <containmentRef1 name="fifthNode"/>
+  <containmentRef1 name="sixthNode"/>
+  <containmentRef1 xsi:type="merge:NodeMultiValueReference" name="base">
+    <multiValuedReference href="anotherResource.merge#anUnresolvedProxy"/>
+    <multiValuedReference href="#thirdNode"/>
+    <multiValuedReference href="#fourthNode"/>
+    <multiValuedReference href="#fifthNode"/>
+    <multiValuedReference href="anotherResource.merge#anotherUnresolvedProxy"/>
+    <multiValuedReference href="#secondNode"/>
+  </containmentRef1>
+</merge:Node>

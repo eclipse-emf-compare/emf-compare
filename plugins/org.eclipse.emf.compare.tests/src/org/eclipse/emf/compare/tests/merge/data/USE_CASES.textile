@@ -213,3 +213,58 @@ h2. Reference changes
 			* Unsetting the reference pointing to an unresolved proxy (valueProxy.merge -> noValue.merge)
 			* Changing a reference pointing to an unresolved proxy so that it points to a resolved element (valueProxy.merge -> changedValue.merge)
 			* Changing a reference pointing to an unresolved proxy so that it points to another unresolved proxy (valueProxy.merge -> changedValueProxy.merge)
+		
+		h4. Multi-valued reference
+			* Adding a new resolved element as value (useCase137)
+			* Adding an unresolved proxy as value (useCase138)
+			
+			* Removing a resolved element from the list of values (useCase139)
+			* Removing an unresolved proxy from the list of values (useCase140)
+			
+			h5. Moving a value to another position
+				* First value to last position (useCase141)
+				* First value to middle of the list (useCase142)
+				* Last value to first position (useCase143)
+				* Last value to middle of the list (useCase144)
+				* Middle of the list to first position (useCase145)
+				* Middle of the list to last position (useCase146)
+				
+			h5. Moving multiple values to new positions
+				* First value to last position, last value to first (useCase147)
+				* First value to last, last to middle (useCase148)
+				* First value to middle, last value to first (useCase149)
+				* First value to middle, last value to middle (useCase150)
+				* Middle to first, middle to last (useCase151)
+				
+			h5. Moving multiple values to new positions while removing a value
+				* Removing first, second to last, last to first (useCase152)
+				* Removing first, second to last, last to middle (useCase153)
+				* Removing first, second to middle, last to first (useCase154)
+				* Removing first, second to middle, last to middle (useCase155)
+				* Removing first, middle to first, middle to last (useCase156)
+			
+				* Removing middle, first to last, last to first (useCase157)
+				* Removing middle, first to last, last to middle (useCase158)
+				* Removing middle, first to middle, last to first (useCase159)
+				* Removing middle, first to middle, last to middle (useCase160)
+				* Removing middle, middle to first, middle to last (useCase161)
+			
+				* Removing last, first to last, "next to last" to first (useCase162)
+				* Removing last, first to last, "next to last" to middle (useCase163)
+				* Removing last, first to middle, "next to last" to first (useCase164)
+				* Removing last, first to middle, "next to last" to middle (useCase165)
+				* Removing last, middle to first, middle to last (useCase166)
+				
+			h5. Moving multiple values to new positions while removing a value and adding another
+				Complex changes for a reference with six base values named after their initial index, changes in the order they are to be made :
+				* Removing 1, adding '7' after 6, moving 2 to after 7, moving 6 to before 3 (useCase167)
+				* Removing 1, adding '7' before 2, moving 2 to after 6, moving 6 to before 7 (useCase168)
+				* Removing 1, adding '7' before 4, moving 2 to after 6, moving 6 to before 3 (useCase169)
+				
+				* Removing 4, adding '7' after 6, moving 1 to after 7, moving 6 to before 2 (useCase170)
+				* Removing 4, adding '7' before 1, moving 1 to after 6, moving 6 to before 7 (useCase171)
+				* Removing 4, adding '7' before 3, moving 1 to after 6, moving 6 to before 2 (useCase172)
+				
+				* Removing 6, adding '7' after 5, moving 1 to after 7, moving 5 to before 2 (useCase173)
+				* Removing 6, adding '7' before 1, moving 1 to after 5, moving 5 to before 7 (useCase174)
+				* Removing 6, adding '7' before 4, moving 1 to after 5, moving 5 to before 2 (useCase175)
