@@ -419,21 +419,21 @@ public final class ModelUtils {
 		if (root == null)
 			throw new NullPointerException(EMFCompareMessages.getString("ModelUtils.NullSaveRoot")); //$NON-NLS-1$
 
-		final Resource resource;
-		if (root.eResource() instanceof XMLResource) {
-			resource = root.eResource();
+		// Copies the root to avoid modifying it
+		final EObject copyRoot = EcoreUtil.copy(root);
+		final String extension;
+		if (root.eResource() != null) {
+			extension = '.' + root.eResource().getURI().fileExtension();
 		} else {
-			// Copies the root to avoid modifying it
-			final EObject copyRoot = EcoreUtil.copy(root);
-			attachResource(URI.createFileURI("resource.xml"), copyRoot); //$NON-NLS-1$
-			resource = copyRoot.eResource();
+			extension = ".xml"; //$NON-NLS-1$
 		}
+		attachResource(URI.createFileURI("resource" + extension), copyRoot); //$NON-NLS-1$
 
 		final StringWriter writer = new StringWriter();
 		final Map<String, String> options = new EMFCompareMap<String, String>();
 		options.put(XMLResource.OPTION_ENCODING, System.getProperty(ENCODING_PROPERTY));
 		// Should not throw ClassCast since uri calls for an xml resource
-		((XMLResource)resource).save(writer, options);
+		((XMLResource)copyRoot.eResource()).save(writer, options);
 		final String result = writer.toString();
 		writer.flush();
 		return result;
