@@ -25,11 +25,13 @@ import org.eclipse.compare.internal.CompareEditor;
 import org.eclipse.compare.internal.CompareEditorInputNavigator;
 import org.eclipse.compare.structuremergeviewer.ICompareInput;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.ui.viewer.group.IDifferenceGroupingFacility.UIDifferenceGroup;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
 
 /**
@@ -78,15 +80,27 @@ public final class ModelStructureMergeViewerService {
 	 */
 	public static List<DiffElement> getVisibleDiffElements(final CompareConfiguration compareConfiguration,
 			final ICompareNavigator compareNavigator) {
+		final List<DiffElement> ret = new ArrayList<DiffElement>();
 		final CompareEditorInputNavigator compareEditorInputNavigator = (CompareEditorInputNavigator)compareNavigator;
 		final Object[] panes = compareEditorInputNavigator.getPanes();
-		for (Object object : panes) {
-			if (object instanceof CompareViewerSwitchingPane) {
-				final CompareViewerSwitchingPane compareViewerSwitchingPane = (CompareViewerSwitchingPane)object;
-				final Control control = compareViewerSwitchingPane.getContent();
-				if (control instanceof Composite) {
-					return getvisibleDiffElements((ICompareInput)compareViewerSwitchingPane.getViewer()
-							.getInput(), (Composite)control, compareConfiguration);
+		Viewer viewer = null;
+		for (Object pane : panes) {
+			if (pane instanceof CompareViewerSwitchingPane) {
+				final CompareViewerSwitchingPane compareViewerSwitchingPane = (CompareViewerSwitchingPane)pane;
+				viewer = compareViewerSwitchingPane.getViewer();
+				if (viewer instanceof ModelStructureMergeViewer) {
+					final ITreeContentProvider contentProvider = (ITreeContentProvider)((ModelStructureMergeViewer)viewer)
+							.getContentProvider();
+					final Object[] elements = contentProvider.getElements(viewer.getInput());
+					for (Object object : elements) {
+						if (object instanceof DiffGroup || object instanceof DiffModel
+								|| !(object instanceof DiffElement)) {
+							ret.addAll(allChildren(object, contentProvider));
+						} else if (object instanceof DiffElement) {
+							ret.add((DiffElement)object);
+						}
+					}
+					return ret;
 				}
 			}
 		}
@@ -105,7 +119,9 @@ public final class ModelStructureMergeViewerService {
 	 *            The compare configuration.
 	 * @return Returns all visible {@link DiffElement}s from the given compare in and compare configuration in
 	 *         the given viewer
+	 * @deprecated
 	 */
+	@Deprecated
 	public static List<DiffElement> getvisibleDiffElements(ICompareInput input, Composite parent,
 			CompareConfiguration configuration) {
 		final List<DiffElement> ret = new ArrayList<DiffElement>();
@@ -136,11 +152,15 @@ public final class ModelStructureMergeViewerService {
 	private static List<DiffElement> allChildren(Object element, ITreeContentProvider contentProvider) {
 		final List<DiffElement> ret = new ArrayList<DiffElement>();
 		final Object[] children = contentProvider.getChildren(element);
-		for (Object object : children) {
-			if (object instanceof DiffElement) {
-				ret.add((DiffElement)object);
+		if (children != null) {
+			for (Object object : children) {
+				if (object instanceof DiffGroup || object instanceof DiffModel
+						|| !(object instanceof DiffElement)) {
+					ret.addAll(allChildren(object, contentProvider));
+				} else if (object instanceof DiffElement) {
+					ret.add((DiffElement)object);
+				}
 			}
-			ret.addAll(allChildren(element, contentProvider));
 		}
 		return ret;
 	}
@@ -177,15 +197,24 @@ public final class ModelStructureMergeViewerService {
 	 */
 	public static Map<UIDifferenceGroup, List<DiffElement>> getGroupedDiffElements(
 			final CompareConfiguration compareConfiguration, final ICompareNavigator compareNavigator) {
+		final Map<UIDifferenceGroup, List<DiffElement>> ret = new HashMap<UIDifferenceGroup, List<DiffElement>>();
 		final CompareEditorInputNavigator compareEditorInputNavigator = (CompareEditorInputNavigator)compareNavigator;
 		final Object[] panes = compareEditorInputNavigator.getPanes();
-		for (Object object : panes) {
-			if (object instanceof CompareViewerSwitchingPane) {
-				final CompareViewerSwitchingPane compareViewerSwitchingPane = (CompareViewerSwitchingPane)object;
-				final Control control = compareViewerSwitchingPane.getContent();
-				if (control instanceof Composite) {
-					return getGroupedDiffElements((ICompareInput)compareViewerSwitchingPane.getViewer()
-							.getInput(), (Composite)control, compareConfiguration);
+		for (Object pane : panes) {
+			if (pane instanceof CompareViewerSwitchingPane) {
+				final CompareViewerSwitchingPane compareViewerSwitchingPane = (CompareViewerSwitchingPane)pane;
+				final Viewer viewer = compareViewerSwitchingPane.getViewer();
+				if (viewer instanceof ModelStructureMergeViewer) {
+					final ITreeContentProvider contentProvider = (ITreeContentProvider)((ModelStructureMergeViewer)viewer)
+							.getContentProvider();
+					final Object[] elements = contentProvider.getElements(viewer.getInput());
+					for (Object object : elements) {
+						if (object instanceof UIDifferenceGroup) {
+							final UIDifferenceGroup diffGroup = (UIDifferenceGroup)object;
+							ret.put(diffGroup, allChildren(object, contentProvider));
+						}
+					}
+					return ret;
 				}
 			}
 		}
@@ -204,7 +233,9 @@ public final class ModelStructureMergeViewerService {
 	 *            The compare configuration.
 	 * @return all visible elements from the given compare in and compare configuration in the given viewer
 	 *         grouped by selected groups.
+	 * @deprecated
 	 */
+	@Deprecated
 	public static Map<UIDifferenceGroup, List<DiffElement>> getGroupedDiffElements(ICompareInput input,
 			Composite parent, CompareConfiguration configuration) {
 		final Map<UIDifferenceGroup, List<DiffElement>> ret = new HashMap<UIDifferenceGroup, List<DiffElement>>();
