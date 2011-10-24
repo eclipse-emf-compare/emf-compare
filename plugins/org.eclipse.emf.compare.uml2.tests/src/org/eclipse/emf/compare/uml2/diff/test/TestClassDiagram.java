@@ -289,7 +289,7 @@ public class TestClassDiagram extends AbstractUMLCompareTest {
 	}
 
 	@Override
-	String getDiagramKindPath() {
+	protected String getDiagramKindPath() {
 		return DIAGRAM_KIND_PATH;
 	}
 }

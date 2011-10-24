@@ -19,7 +19,7 @@ public class TestCommunicationDiagram extends AbstractUMLCompareTest {
 	private static final String DIAGRAM_KIND_PATH = "/diagrams/communication/"; //$NON-NLS-1$
 
 	@Override
-	String getDiagramKindPath() {
+	protected String getDiagramKindPath() {
 		return DIAGRAM_KIND_PATH;
 	}
 

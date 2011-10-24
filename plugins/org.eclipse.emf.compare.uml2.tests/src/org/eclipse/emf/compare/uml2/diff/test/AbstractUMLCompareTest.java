@@ -83,7 +83,7 @@ public abstract class AbstractUMLCompareTest {
 	 * 
 	 * @return The path.
 	 */
-	abstract String getDiagramKindPath();
+	protected abstract String getDiagramKindPath();
 
 	/**
 	 * test Compare.
@@ -450,7 +450,7 @@ public abstract class AbstractUMLCompareTest {
 	private DiffResourceSet getExpectedDiff(String testFolderPath) throws IOException {
 		final ResourceSet expectedResourceSet = createResourceSet();
 		final ComparisonResourceSetSnapshot expectedDiffSnapshot = (ComparisonResourceSetSnapshot)ModelUtils
-				.load(AbstractUMLCompareTest.class.getResourceAsStream(getDiagramKindPath() + testFolderPath
+				.load(this.getClass().getResourceAsStream(getDiagramKindPath() + testFolderPath
 						+ EXPECTED_SUFFIX), EXPECTED_EMFDIFF, expectedResourceSet);
 		return expectedDiffSnapshot.getDiffResourceSet();
 	}

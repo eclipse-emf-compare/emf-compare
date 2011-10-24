@@ -7,7 +7,8 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
+Export-Package: org.eclipse.emf.compare.uml2.diff.test,
+ org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.impl,
  org.eclipse.emf.compare.uml2.profile.test.uml2comparetestprofile.util
 Require-Bundle: org.eclipse.core.runtime,

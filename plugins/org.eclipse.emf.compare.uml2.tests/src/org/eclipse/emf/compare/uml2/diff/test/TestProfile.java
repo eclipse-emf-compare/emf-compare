@@ -246,7 +246,7 @@ public class TestProfile extends AbstractUMLCompareTest {
 	// END - Tests for Bug 351593
 
 	@Override
-	String getDiagramKindPath() {
+	protected String getDiagramKindPath() {
 		return DIAGRAM_KIND_PATH;
 	}
 }
